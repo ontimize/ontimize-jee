@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://jpaentity.server.jee.imatia.com/setup"
+	xmlns:tns="http://jpaentity.server.jee.imatia.com/setup" elementFormDefault="qualified">
+
+	<element name="JpaEntitySetup" type="tns:JpaEntitySetupType" />
+	<complexType name="JpaEntitySetupType">
+		<annotation>
+			<documentation>
+				Elemento raiz para la configuracion de la entidad.
+			</documentation>
+		</annotation>
+		<sequence>
+			<element name="Queries" type="tns:QueriesType" maxOccurs="1" minOccurs="0"></element>
+		</sequence>
+		<attribute name="bean" type="string">
+			<annotation>
+				<documentation>Bean de la entidad</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="entitymanager" type="string"/>
+	</complexType>
+
+	<complexType name="QueriesType">
+		<sequence>
+			<element name="Query" type="tns:QueryType" maxOccurs="unbounded" minOccurs="0"></element>
+		</sequence>
+	</complexType>
+
+	<complexType name="QueryType">
+		<sequence>
+			<element name="AmbiguousColumns" type="tns:AmbiguousColumnsType" maxOccurs="1" minOccurs="0"></element>
+			<element name="FunctionColumns" type="tns:FunctionColumnsType" maxOccurs="1" minOccurs="0"></element>
+			<element name="Sentence" type="tns:SentenceType" maxOccurs="1" minOccurs="1"></element>
+			<element name="Return" type="tns:ReturnType" maxOccurs="1" minOccurs="0"></element>
+		</sequence>
+		<attribute name="id" type="string"></attribute>
+		<attribute name="syntax">
+			<simpleType>
+				<restriction base="string">
+					<enumeration value="SQL"/>
+					<enumeration value="JPQL"/>
+				</restriction>
+			</simpleType>
+		</attribute>
+	</complexType>
+	
+	<complexType name="ReturnType">
+		<sequence>
+			<element name="column-mapping" minOccurs="0" maxOccurs="unbounded" type="tns:ColumnMapping" />
+		</sequence>
+		<attribute name="returnType" type="string" />
+		<attribute name="returnDbColumn" type="string" />
+		<attribute name="returnDbType" type="string" />
+	</complexType>
+	
+	<complexType name="ColumnMapping">
+		<attribute name="dbColumn" type="string" use="required" />
+		<attribute name="dbColumnType" type="string" use="required" />
+		<attribute name="beanAttribute" type="string" use="required" />
+		<attribute name="beanAttributeType" type="string" use="required" />
+		<attribute name="beanAttributeGetterMethod" type="string" use="optional" />
+		<attribute name="beanAttributeSetterMethod" type="string" use="optional" />	
+	</complexType>
+
+	<complexType name="SentenceType">
+		<simpleContent>
+			<extension base="string">
+			</extension>
+		</simpleContent>
+	</complexType>
+	
+	
+	<complexType name="AmbiguousColumnsType">
+		<sequence>
+			<element name="AmbiguousColumn" type="tns:AmbiguousColumnType" maxOccurs="unbounded"
+				minOccurs="1"></element>
+		</sequence>
+	</complexType>
+
+	<complexType name="AmbiguousColumnType">
+		<attribute name="name" type="string" use="required"></attribute>
+		<attribute name="prefix" type="string"></attribute>
+		<attribute name="databaseName" type="string"></attribute>
+	</complexType>
+
+	<complexType name="FunctionColumnsType">
+		<sequence>
+			<element name="FunctionColumn" type="tns:FunctionColumnType" maxOccurs="unbounded"
+				minOccurs="1"></element>
+		</sequence>
+	</complexType>
+
+	<complexType name="FunctionColumnType">
+		<attribute name="name" type="string" use="required"></attribute>
+		<attribute name="value" type="string" use="required"></attribute>
+	</complexType>
+</schema>
