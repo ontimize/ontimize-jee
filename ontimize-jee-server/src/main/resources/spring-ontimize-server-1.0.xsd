@@ -1,0 +1,508 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns="http://www.ontimize.com/spring-server" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:beans="http://www.springframework.org/schema/beans" targetNamespace="http://www.ontimize.com/spring-server"
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+	<xsd:import namespace="http://www.springframework.org/schema/beans"
+		schemaLocation="http://www.springframework.org/schema/beans/spring-beans-3.2.xsd" />
+
+	<xsd:element name="ontimizeConfiguration">
+		<xsd:annotation>
+			<xsd:documentation>
+				Ontimize server services general configuration.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="beans:identifiedType">
+					<!-- <xsd:attribute name="lenient" type="xsd:boolean"/> -->
+					<xsd:choice minOccurs="0" maxOccurs="unbounded">
+						<xsd:element ref="security" minOccurs="0" maxOccurs="1" />
+						<xsd:element ref="remoteOperation" minOccurs="0" maxOccurs="1" />
+						<xsd:element ref="remotePreferences" minOccurs="0" maxOccurs="1" />
+						<xsd:element ref="remoteI18n" minOccurs="0" maxOccurs="1" />
+						<xsd:element ref="mail" minOccurs="0" maxOccurs="1" />
+					</xsd:choice>
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- REMOTE OPERATION -->
+	<xsd:element name="remoteOperation">
+		<xsd:annotation>
+			<xsd:documentation>
+				Configure remote operations.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:attribute name="maxParallelThreads" type="xsd:integer" default="10" />
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="ontimizeDMSEngine">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="documentsBasePath" minOccurs="1" maxOccurs="1">
+					<xsd:complexType>
+						<xsd:group ref="propertyResolverGroup"></xsd:group>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>	
+
+	<!-- SECURITY AUTHORIZATION AND AUTHENTICATION -->
+
+	<xsd:element name="security">
+		<xsd:annotation>
+			<xsd:documentation>
+				Configure security.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="userInformationService" maxOccurs="1" minOccurs="1" />
+				<xsd:element ref="userRoleInformationService" maxOccurs="1" minOccurs="1" />
+				<xsd:element ref="roleInformationService" maxOccurs="1" minOccurs="1" />
+				<xsd:element ref="authorization" maxOccurs="1" minOccurs="0" />
+			</xsd:sequence>
+
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="userInformationService">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="beans:identifiedType">
+						<xsd:choice minOccurs="1" maxOccurs="unbounded">
+							<xsd:element ref="beans:bean" />
+							<xsd:element ref="beans:ref" />
+							<xsd:element ref="beans:idref" />
+							<xsd:element ref="beans:value" />
+							<xsd:element ref="dataBaseUserInformationService" />
+							<!-- <xsd:any minOccurs="0" /> -->
+						</xsd:choice>
+					<xsd:attribute name="scope" type="xsd:string" />
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="dataBaseUserInformationService">
+		<xsd:complexType>
+			<xsd:attribute name="refUserRepository" type="xsd:string" use="required" />
+			<xsd:attribute name="queryId" type="xsd:string" use="required" />
+			<xsd:attribute name="userLoginColumn" type="xsd:string" use="required" />
+			<xsd:attribute name="userPasswordColumn" type="xsd:string" use="optional" />
+			<xsd:attribute name="userNeedCheckPassColumn" type="xsd:string" use="optional" />			
+			<xsd:attribute name="otherData" type="xsd:string" use="optional" />
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="userRoleInformationService">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="beans:identifiedType">
+<!-- 					<xsd:sequence> -->
+						<xsd:choice minOccurs="1" maxOccurs="unbounded">
+							<xsd:element ref="beans:bean" />
+							<xsd:element ref="beans:ref" />
+							<xsd:element ref="beans:idref" />
+							<xsd:element ref="beans:value" />
+							<xsd:element ref="dataBaseUserRoleInformationService" />
+							<!-- <xsd:any minOccurs="0" /> -->
+						</xsd:choice>
+<!-- 					</xsd:sequence> -->
+					<xsd:attribute name="scope" type="xsd:string" />
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="dataBaseUserRoleInformationService">
+		<xsd:complexType>
+			<xsd:attribute name="refUserRolesRepository" type="xsd:string" use="required" />
+			<xsd:attribute name="queryId" type="xsd:string" use="required" />
+			<xsd:attribute name="userLoginColumn" type="xsd:string" use="required" />
+			<xsd:attribute name="roleNameColumn" type="xsd:string" use="required" />
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="roleInformationService">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="beans:identifiedType">
+<!-- 					<xsd:sequence> -->
+						<xsd:choice minOccurs="1" maxOccurs="unbounded">
+							<xsd:element ref="beans:bean" />
+							<xsd:element ref="beans:ref" />
+							<xsd:element ref="beans:idref" />
+							<xsd:element ref="beans:value" />
+							<xsd:element ref="dataBaseRoleInformationService" />
+							<!-- <xsd:any minOccurs="0" /> -->
+						</xsd:choice>
+<!-- 					</xsd:sequence> -->
+					<xsd:attribute name="scope" type="xsd:string" />
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="dataBaseRoleInformationService">
+		<xsd:complexType>
+			<xsd:attribute name="refRolesRepository" type="xsd:string" use="required" />
+			<xsd:attribute name="roleNameColumn" type="xsd:string" use="required" />
+			<xsd:attribute name="serverPermissionQueryId" type="xsd:string" use="required" />
+			<xsd:attribute name="serverPermissionNameColumn" type="xsd:string" use="required" />
+			<xsd:attribute name="clientPermissionQueryId" type="xsd:string" use="optional" />
+			<xsd:attribute name="clientPermissionColumn" type="xsd:string" use="optional" />
+		</xsd:complexType>
+	</xsd:element>
+	
+
+	<xsd:element name="authorization">
+		<xsd:complexType>
+				<xsd:choice>
+					<xsd:element ref="beans:bean" />
+					<xsd:element ref="beans:ref" />
+					<xsd:element ref="beans:idref" />
+					<xsd:element ref="beans:value" />
+					<xsd:element ref="defaultAuthorizator" />
+					<!-- <xsd:any minOccurs="0" /> -->
+				</xsd:choice>
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="defaultAuthorizator">
+	</xsd:element>
+
+	<!-- REMOTE PREFERENCES -->
+	<xsd:element name="fileRemotePreferencesEngine">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="path" minOccurs="1" maxOccurs="1">
+					<xsd:complexType>
+						<xsd:group ref="propertyResolverGroup"></xsd:group>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+
+
+	<xsd:element name="databaseRemotePreferencesEngine">
+		<xsd:complexType>
+			<xsd:attribute name="refRepository" type="xsd:string" use="required" />
+			<xsd:attribute name="userColumnName" type="xsd:string" use="required" />
+			<xsd:attribute name="preferenceNameColumnName" type="xsd:string" use="required" />
+			<xsd:attribute name="preferenceValueColumnName" type="xsd:string" use="required" />
+			<xsd:attribute name="queryId" type="xsd:string" use="optional" />
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="remotePreferences">
+		<xsd:annotation>
+			<xsd:documentation>
+				Configure remote preferences.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:choice>
+					<xsd:element ref="beans:bean" />
+					<xsd:element ref="beans:ref" />
+					<xsd:element ref="beans:idref" />
+					<xsd:element ref="beans:value" />
+					<xsd:element ref="fileRemotePreferencesEngine" />
+					<xsd:element ref="databaseRemotePreferencesEngine" />
+					<!-- <xsd:any minOccurs="0" /> -->
+				</xsd:choice>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- REMOTE I18N -->
+	
+	<xsd:element name="databaseI18n">
+		<xsd:complexType>
+			<xsd:attribute name="refBundleRepository" type="xsd:string" use="required" />
+			<xsd:attribute name="refBundleValuesRepository" type="xsd:string" use="required" />
+			<xsd:attribute name="bundleKeyColumn" type="xsd:string" use="required" />
+			<xsd:attribute name="bundleClassNameColumn" type="xsd:string" use="required" />
+			<xsd:attribute name="bundleDescriptionColumn" type="xsd:string" use="required" />
+			<xsd:attribute name="bundleValuesKeyColumn" type="xsd:string" use="required" />
+			<xsd:attribute name="bundleValuesTextKeyColumn" type="xsd:string" use="required" />
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="remoteI18n">
+		<xsd:annotation>
+			<xsd:documentation>
+				Configure remote preferences.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="i18nEngine">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:choice>
+								<xsd:element ref="beans:bean" />
+								<xsd:element ref="beans:ref" />
+								<xsd:element ref="beans:idref" />
+								<xsd:element ref="beans:value" />
+								<xsd:element ref="databaseI18n" />
+								<!-- <xsd:any minOccurs="0" /> -->
+							</xsd:choice>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	
+	<!-- MAIL -->
+	<xsd:element name="defaultMailConfigurator">
+		<xsd:complexType>
+			<xsd:attribute name="refRepository" type="xsd:string" use="required" />
+			<xsd:attribute name="filterColumnName" type="xsd:string" use="required" />
+			<xsd:attribute name="valueColumnName" type="xsd:string" use="required" />
+			<xsd:attribute name="queryId" type="xsd:string" use="optional" />
+			<xsd:attribute name="filterColumnValueEncoding" type="xsd:string" use="optional" />
+			<xsd:attribute name="filterColumnValueHost" type="xsd:string" use="required" />
+			<xsd:attribute name="filterColumnValuePort" type="xsd:string" use="optional" />
+			<xsd:attribute name="filterColumnValueProtocol" type="xsd:string" use="optional" />
+			<xsd:attribute name="filterColumnValueUser" type="xsd:string" use="optional" />
+			<xsd:attribute name="filterColumnValuePassword" type="xsd:string" use="optional" />
+			<xsd:attribute name="filterColumnValueJavaMailProperties" type="xsd:string" use="optional" />
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="mail">
+		<xsd:annotation>
+			<xsd:documentation>
+				Configure mail.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="defaultMailEngine">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:choice>
+								<xsd:element ref="beans:bean" />
+								<xsd:element ref="beans:ref" />
+								<xsd:element ref="beans:idref" />
+								<xsd:element ref="beans:value" />
+								<xsd:element ref="defaultMailConfigurator" />
+								<!-- <xsd:any minOccurs="0" /> -->
+							</xsd:choice>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	
+	
+	<!-- REPORT -->
+	<xsd:element name="defaultReportCompiler">
+	</xsd:element>
+	
+	<xsd:element name="defaultReportFiller">
+	</xsd:element>
+	
+	<xsd:element name="compiler">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="beans:identifiedType">
+						<xsd:choice minOccurs="1" maxOccurs="unbounded">
+							<xsd:element ref="beans:bean" />
+							<xsd:element ref="beans:ref" />
+							<xsd:element ref="beans:idref" />
+							<xsd:element ref="beans:value" />
+							<xsd:element ref="defaultReportCompiler" />
+							<!-- <xsd:any minOccurs="0" /> -->
+						</xsd:choice>
+					<xsd:attribute name="scope" type="xsd:string" />
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="filler">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="beans:identifiedType">
+						<xsd:choice minOccurs="1" maxOccurs="unbounded">
+							<xsd:element ref="beans:bean" />
+							<xsd:element ref="beans:ref" />
+							<xsd:element ref="beans:idref" />
+							<xsd:element ref="beans:value" />
+							<xsd:element ref="defaultReportFiller" />
+							<!-- <xsd:any minOccurs="0" /> -->
+						</xsd:choice>
+					<xsd:attribute name="scope" type="xsd:string" />
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="report">
+		<xsd:annotation>
+			<xsd:documentation>
+				Configure report store.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="defaultReportEngine">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="basePath" minOccurs="1" maxOccurs="1">
+								<xsd:complexType>
+									<xsd:group ref="propertyResolverGroup"></xsd:group>
+								</xsd:complexType>
+							</xsd:element>
+							<xsd:element ref="compiler" maxOccurs="1" minOccurs="0" />
+							<xsd:element ref="filler" maxOccurs="1" minOccurs="0" />
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<!-- OTHER -->
+
+	<xsd:element name="databaseProperty">
+		<xsd:annotation>
+			<xsd:documentation>
+				Get a property from database.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:attribute name="refRepository" type="xsd:string" use="required" />
+			<xsd:attribute name="valueColumnName" type="xsd:string" use="required" />
+			<xsd:attribute name="filterColumnName" type="xsd:string" use="required" />
+			<xsd:attribute name="filterColumnValue" type="xsd:string" use="required" />
+			<xsd:attribute name="queryId" type="xsd:string" use="optional" />
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="fixedProperty">
+		<xsd:annotation>
+			<xsd:documentation>
+				Establish a fixed property.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:attribute name="value" type="xsd:string" use="required" />
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:group name="limitedType">
+		<xsd:sequence>
+			<xsd:choice minOccurs="1" maxOccurs="unbounded">
+				<xsd:element ref="beans:bean" />
+				<xsd:element ref="beans:ref" />
+				<xsd:element ref="beans:idref" />
+				<xsd:element ref="beans:value" />
+				<xsd:any minOccurs="0" />
+			</xsd:choice>
+		</xsd:sequence>
+	</xsd:group>
+
+	<xsd:group name="propertyResolverGroup">
+		<xsd:sequence>
+			<xsd:choice minOccurs="1" maxOccurs="unbounded">
+				<xsd:element ref="beans:bean" />
+				<xsd:element ref="beans:ref" />
+				<xsd:element ref="beans:idref" />
+				<xsd:element ref="beans:value" />
+				<xsd:element ref="databaseProperty" />
+				<xsd:element ref="fixedProperty" />
+			</xsd:choice>
+		</xsd:sequence>
+	</xsd:group>
+
+<xsd:element name="cors">
+		<xsd:annotation>
+			<xsd:documentation><![CDATA[
+	Configure cross origin requests processing.
+			]]></xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="mapping" minOccurs="1" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation><![CDATA[
+	Enable cross origin requests processing on the specified path pattern.
+	By default, all origins, GET HEAD POST methods, all headers and credentials
+	are allowed and max age is set to 30 minutes.
+						]]></xsd:documentation>
+					</xsd:annotation>
+					<xsd:complexType>
+						<xsd:attribute name="path" type="xsd:string" use="required">
+							<xsd:annotation>
+								<xsd:documentation><![CDATA[
+	A path into the application that should handle CORS requests.
+	Exact path mapping URIs (such as "/admin") are supported as well as Ant-stype path patterns (such as /admin/**).
+								]]></xsd:documentation>
+							</xsd:annotation>
+						</xsd:attribute>
+						<xsd:attribute name="allowed-origins" type="xsd:string">
+							<xsd:annotation>
+								<xsd:documentation><![CDATA[
+	Comma-separated list of origins to allow, e.g. "http://domain1.com, http://domain2.com".
+	The special value "*" allows all domains (default).
+								]]></xsd:documentation>
+							</xsd:annotation>
+						</xsd:attribute>
+						<xsd:attribute name="allowed-methods" type="xsd:string">
+							<xsd:annotation>
+								<xsd:documentation><![CDATA[
+	Comma-separated list of HTTP methods to allow, e.g. "GET, POST".
+	The special value "*" allows all method.
+	By default GET, HEAD and POST methods are allowed.
+								]]></xsd:documentation>
+							</xsd:annotation>
+						</xsd:attribute>
+						<xsd:attribute name="allowed-headers" type="xsd:string">
+							<xsd:annotation>
+								<xsd:documentation><![CDATA[
+	Comma-separated list of headers that a pre-flight request can list as allowed for use during an actual request.
+	The special value of "*" allows actual requests to send any header (default).
+								]]></xsd:documentation>
+							</xsd:annotation>
+						</xsd:attribute>
+						<xsd:attribute name="exposed-headers" type="xsd:string">
+							<xsd:annotation>
+								<xsd:documentation><![CDATA[
+	Comma-separated list of response headers other than simple headers (i.e.
+	Cache-Control, Content-Language, Content-Type, Expires, Last-Modified, Pragma) that an
+	actual response might have and can be exposed.
+	Empty by default.
+								]]></xsd:documentation>
+							</xsd:annotation>
+						</xsd:attribute>
+						<xsd:attribute name="allow-credentials" type="xsd:boolean">
+							<xsd:annotation>
+								<xsd:documentation><![CDATA[
+	Whether user credentials are supported (true by default).
+								]]></xsd:documentation>
+							</xsd:annotation>
+						</xsd:attribute>
+						<xsd:attribute name="max-age" type="xsd:long">
+							<xsd:annotation>
+								<xsd:documentation><![CDATA[
+	How long, in seconds, the response from a pre-flight request can be cached by clients.
+	1800 seconds (30 minutes) by default.
+								]]></xsd:documentation>
+							</xsd:annotation>
+						</xsd:attribute>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+</xsd:schema>
