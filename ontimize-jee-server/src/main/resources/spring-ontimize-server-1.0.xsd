@@ -6,7 +6,7 @@
 	<xsd:import namespace="http://www.springframework.org/schema/beans"
 		schemaLocation="http://www.springframework.org/schema/beans/spring-beans-3.2.xsd" />
 
-	<xsd:element name="ontimizeConfiguration">
+	<xsd:element name="ontimize-configuration">
 		<xsd:annotation>
 			<xsd:documentation>
 				Ontimize server services general configuration.
@@ -18,9 +18,9 @@
 					<!-- <xsd:attribute name="lenient" type="xsd:boolean"/> -->
 					<xsd:choice minOccurs="0" maxOccurs="unbounded">
 						<xsd:element ref="security" minOccurs="0" maxOccurs="1" />
-						<xsd:element ref="remoteOperation" minOccurs="0" maxOccurs="1" />
-						<xsd:element ref="remotePreferences" minOccurs="0" maxOccurs="1" />
-						<xsd:element ref="remoteI18n" minOccurs="0" maxOccurs="1" />
+						<xsd:element ref="remote-operation" minOccurs="0" maxOccurs="1" />
+						<xsd:element ref="remote-preferences" minOccurs="0" maxOccurs="1" />
+						<xsd:element ref="remote-i18n" minOccurs="0" maxOccurs="1" />
 						<xsd:element ref="mail" minOccurs="0" maxOccurs="1" />
 					</xsd:choice>
 				</xsd:extension>
@@ -29,28 +29,28 @@
 	</xsd:element>
 
 	<!-- REMOTE OPERATION -->
-	<xsd:element name="remoteOperation">
+	<xsd:element name="remote-operation">
 		<xsd:annotation>
 			<xsd:documentation>
 				Configure remote operations.
 			</xsd:documentation>
 		</xsd:annotation>
 		<xsd:complexType>
-			<xsd:attribute name="maxParallelThreads" type="xsd:integer" default="10" />
+			<xsd:attribute name="max-parallel-threads" type="xsd:integer" default="10" />
 		</xsd:complexType>
 	</xsd:element>
 	
-	<xsd:element name="ontimizeDMSEngine">
-		<xsd:complexType>
-			<xsd:sequence>
-				<xsd:element name="documentsBasePath" minOccurs="1" maxOccurs="1">
-					<xsd:complexType>
-						<xsd:group ref="propertyResolverGroup"></xsd:group>
-					</xsd:complexType>
-				</xsd:element>
-			</xsd:sequence>
-		</xsd:complexType>
-	</xsd:element>	
+<!-- 	<xsd:element name="dms-engine"> -->
+<!-- 		<xsd:complexType> -->
+<!-- 			<xsd:sequence> -->
+<!-- 				<xsd:element name="documentsBasePath" minOccurs="1" maxOccurs="1"> -->
+<!-- 					<xsd:complexType> -->
+<!-- 						<xsd:group ref="propertyResolverGroup"></xsd:group> -->
+<!-- 					</xsd:complexType> -->
+<!-- 				</xsd:element> -->
+<!-- 			</xsd:sequence> -->
+<!-- 		</xsd:complexType> -->
+<!-- 	</xsd:element>	 -->
 
 	<!-- SECURITY AUTHORIZATION AND AUTHENTICATION -->
 
@@ -62,16 +62,16 @@
 		</xsd:annotation>
 		<xsd:complexType>
 			<xsd:sequence>
-				<xsd:element ref="userInformationService" maxOccurs="1" minOccurs="1" />
-				<xsd:element ref="userRoleInformationService" maxOccurs="1" minOccurs="1" />
-				<xsd:element ref="roleInformationService" maxOccurs="1" minOccurs="1" />
+				<xsd:element ref="user-information-service" maxOccurs="1" minOccurs="1" />
+				<xsd:element ref="user-role-information-service" maxOccurs="1" minOccurs="1" />
+				<xsd:element ref="role-information-service" maxOccurs="1" minOccurs="1" />
 				<xsd:element ref="authorization" maxOccurs="1" minOccurs="0" />
 			</xsd:sequence>
 
 		</xsd:complexType>
 	</xsd:element>
 
-	<xsd:element name="userInformationService">
+	<xsd:element name="user-information-service">
 		<xsd:complexType>
 			<xsd:complexContent>
 				<xsd:extension base="beans:identifiedType">
@@ -80,7 +80,7 @@
 							<xsd:element ref="beans:ref" />
 							<xsd:element ref="beans:idref" />
 							<xsd:element ref="beans:value" />
-							<xsd:element ref="dataBaseUserInformationService" />
+							<xsd:element ref="database-user-information-service" />
 							<!-- <xsd:any minOccurs="0" /> -->
 						</xsd:choice>
 					<xsd:attribute name="scope" type="xsd:string" />
@@ -89,74 +89,70 @@
 		</xsd:complexType>
 	</xsd:element>
 
-	<xsd:element name="dataBaseUserInformationService">
+	<xsd:element name="database-user-information-service">
 		<xsd:complexType>
-			<xsd:attribute name="refUserRepository" type="xsd:string" use="required" />
-			<xsd:attribute name="queryId" type="xsd:string" use="required" />
-			<xsd:attribute name="userLoginColumn" type="xsd:string" use="required" />
-			<xsd:attribute name="userPasswordColumn" type="xsd:string" use="optional" />
-			<xsd:attribute name="userNeedCheckPassColumn" type="xsd:string" use="optional" />			
-			<xsd:attribute name="otherData" type="xsd:string" use="optional" />
+			<xsd:attribute name="ref-user-repository" type="xsd:string" use="required" />
+			<xsd:attribute name="query-id" type="xsd:string" use="required" />
+			<xsd:attribute name="user-login-column" type="xsd:string" use="required" />
+			<xsd:attribute name="user-password-column" type="xsd:string" use="optional" />
+			<xsd:attribute name="user-need-check-pass-column" type="xsd:string" use="optional" />			
+			<xsd:attribute name="other-data" type="xsd:string" use="optional" />
 		</xsd:complexType>
 	</xsd:element>
 
-	<xsd:element name="userRoleInformationService">
+	<xsd:element name="user-role-information-service">
 		<xsd:complexType>
 			<xsd:complexContent>
 				<xsd:extension base="beans:identifiedType">
-<!-- 					<xsd:sequence> -->
 						<xsd:choice minOccurs="1" maxOccurs="unbounded">
 							<xsd:element ref="beans:bean" />
 							<xsd:element ref="beans:ref" />
 							<xsd:element ref="beans:idref" />
 							<xsd:element ref="beans:value" />
-							<xsd:element ref="dataBaseUserRoleInformationService" />
+							<xsd:element ref="database-user-role-information-service" />
 							<!-- <xsd:any minOccurs="0" /> -->
 						</xsd:choice>
-<!-- 					</xsd:sequence> -->
 					<xsd:attribute name="scope" type="xsd:string" />
 				</xsd:extension>
 			</xsd:complexContent>
 		</xsd:complexType>
 	</xsd:element>
 
-	<xsd:element name="dataBaseUserRoleInformationService">
+	<xsd:element name="database-user-role-information-service">
 		<xsd:complexType>
-			<xsd:attribute name="refUserRolesRepository" type="xsd:string" use="required" />
-			<xsd:attribute name="queryId" type="xsd:string" use="required" />
-			<xsd:attribute name="userLoginColumn" type="xsd:string" use="required" />
-			<xsd:attribute name="roleNameColumn" type="xsd:string" use="required" />
+			<xsd:attribute name="ref-user-role-repository" type="xsd:string" use="required" />
+			<xsd:attribute name="query-id" type="xsd:string" use="required" />
+			<xsd:attribute name="user-login-column" type="xsd:string" use="required" />
+			<xsd:attribute name="role-name-column" type="xsd:string" use="required" />
 		</xsd:complexType>
 	</xsd:element>
 
-	<xsd:element name="roleInformationService">
+	<xsd:element name="role-information-service">
 		<xsd:complexType>
 			<xsd:complexContent>
 				<xsd:extension base="beans:identifiedType">
-<!-- 					<xsd:sequence> -->
 						<xsd:choice minOccurs="1" maxOccurs="unbounded">
 							<xsd:element ref="beans:bean" />
 							<xsd:element ref="beans:ref" />
 							<xsd:element ref="beans:idref" />
 							<xsd:element ref="beans:value" />
-							<xsd:element ref="dataBaseRoleInformationService" />
+							<xsd:element ref="database-role-information-service" />
 							<!-- <xsd:any minOccurs="0" /> -->
 						</xsd:choice>
-<!-- 					</xsd:sequence> -->
 					<xsd:attribute name="scope" type="xsd:string" />
 				</xsd:extension>
 			</xsd:complexContent>
 		</xsd:complexType>
 	</xsd:element>
 
-	<xsd:element name="dataBaseRoleInformationService">
+	<xsd:element name="database-role-information-service">
 		<xsd:complexType>
-			<xsd:attribute name="refRolesRepository" type="xsd:string" use="required" />
-			<xsd:attribute name="roleNameColumn" type="xsd:string" use="required" />
-			<xsd:attribute name="serverPermissionQueryId" type="xsd:string" use="required" />
-			<xsd:attribute name="serverPermissionNameColumn" type="xsd:string" use="required" />
-			<xsd:attribute name="clientPermissionQueryId" type="xsd:string" use="optional" />
-			<xsd:attribute name="clientPermissionColumn" type="xsd:string" use="optional" />
+			<xsd:attribute name="ref-role-repository" type="xsd:string" use="required" />
+			<xsd:attribute name="role-name-column" type="xsd:string" use="required" />
+			<xsd:attribute name="server-permission-query-id" type="xsd:string" use="required" />
+			<xsd:attribute name="server-permission-name-column" type="xsd:string" use="required" />
+			<xsd:attribute name="client-permission-query-id" type="xsd:string" use="optional" />
+			<xsd:attribute name="client-permission-column" type="xsd:string" use="optional" />
 		</xsd:complexType>
 	</xsd:element>
 	
@@ -168,22 +164,22 @@
 					<xsd:element ref="beans:ref" />
 					<xsd:element ref="beans:idref" />
 					<xsd:element ref="beans:value" />
-					<xsd:element ref="defaultAuthorizator" />
+					<xsd:element ref="default-authorizator"/>
 					<!-- <xsd:any minOccurs="0" /> -->
 				</xsd:choice>
 		</xsd:complexType>
 	</xsd:element>
 	
-	<xsd:element name="defaultAuthorizator">
+	<xsd:element name="default-authorizator">
 	</xsd:element>
 
 	<!-- REMOTE PREFERENCES -->
-	<xsd:element name="fileRemotePreferencesEngine">
+	<xsd:element name="file-remote-preference-engine">
 		<xsd:complexType>
 			<xsd:sequence>
 				<xsd:element name="path" minOccurs="1" maxOccurs="1">
 					<xsd:complexType>
-						<xsd:group ref="propertyResolverGroup"></xsd:group>
+						<xsd:group ref="property-resolver-group"></xsd:group>
 					</xsd:complexType>
 				</xsd:element>
 			</xsd:sequence>
@@ -191,17 +187,17 @@
 	</xsd:element>
 
 
-	<xsd:element name="databaseRemotePreferencesEngine">
+	<xsd:element name="database-remote-preference-engine">
 		<xsd:complexType>
-			<xsd:attribute name="refRepository" type="xsd:string" use="required" />
-			<xsd:attribute name="userColumnName" type="xsd:string" use="required" />
-			<xsd:attribute name="preferenceNameColumnName" type="xsd:string" use="required" />
-			<xsd:attribute name="preferenceValueColumnName" type="xsd:string" use="required" />
-			<xsd:attribute name="queryId" type="xsd:string" use="optional" />
+			<xsd:attribute name="ref-repository" type="xsd:string" use="required" />
+			<xsd:attribute name="user-column-name" type="xsd:string" use="required" />
+			<xsd:attribute name="preference-name-column-name" type="xsd:string" use="required" />
+			<xsd:attribute name="preference-value-column-name" type="xsd:string" use="required" />
+			<xsd:attribute name="query-id" type="xsd:string" use="optional" />
 		</xsd:complexType>
 	</xsd:element>
 
-	<xsd:element name="remotePreferences">
+	<xsd:element name="remote-preferences">
 		<xsd:annotation>
 			<xsd:documentation>
 				Configure remote preferences.
@@ -214,8 +210,8 @@
 					<xsd:element ref="beans:ref" />
 					<xsd:element ref="beans:idref" />
 					<xsd:element ref="beans:value" />
-					<xsd:element ref="fileRemotePreferencesEngine" />
-					<xsd:element ref="databaseRemotePreferencesEngine" />
+					<xsd:element ref="file-remote-preference-engine" />
+					<xsd:element ref="database-remote-preference-engine" />
 					<!-- <xsd:any minOccurs="0" /> -->
 				</xsd:choice>
 			</xsd:sequence>
@@ -224,27 +220,27 @@
 
 	<!-- REMOTE I18N -->
 	
-	<xsd:element name="databaseI18n">
+	<xsd:element name="database-i18n">
 		<xsd:complexType>
-			<xsd:attribute name="refBundleRepository" type="xsd:string" use="required" />
-			<xsd:attribute name="refBundleValuesRepository" type="xsd:string" use="required" />
-			<xsd:attribute name="bundleKeyColumn" type="xsd:string" use="required" />
-			<xsd:attribute name="bundleClassNameColumn" type="xsd:string" use="required" />
-			<xsd:attribute name="bundleDescriptionColumn" type="xsd:string" use="required" />
-			<xsd:attribute name="bundleValuesKeyColumn" type="xsd:string" use="required" />
-			<xsd:attribute name="bundleValuesTextKeyColumn" type="xsd:string" use="required" />
+			<xsd:attribute name="ref-bundle-repository" type="xsd:string" use="required" />
+			<xsd:attribute name="ref-bundle-value-repository" type="xsd:string" use="required" />
+			<xsd:attribute name="bundle-key-column" type="xsd:string" use="required" />
+			<xsd:attribute name="bundle-class-name-column" type="xsd:string" use="required" />
+			<xsd:attribute name="bundle-description-column" type="xsd:string" use="required" />
+			<xsd:attribute name="bundle-value-key-column" type="xsd:string" use="required" />
+			<xsd:attribute name="bundle-value-text-key-column" type="xsd:string" use="required" />
 		</xsd:complexType>
 	</xsd:element>
 	
-	<xsd:element name="remoteI18n">
+	<xsd:element name="remote-i18n">
 		<xsd:annotation>
 			<xsd:documentation>
-				Configure remote preferences.
+				Configure remote translations.
 			</xsd:documentation>
 		</xsd:annotation>
 		<xsd:complexType>
 			<xsd:sequence>
-				<xsd:element name="i18nEngine">
+				<xsd:element name="i18n-engine">
 					<xsd:complexType>
 						<xsd:sequence>
 							<xsd:choice>
@@ -252,7 +248,7 @@
 								<xsd:element ref="beans:ref" />
 								<xsd:element ref="beans:idref" />
 								<xsd:element ref="beans:value" />
-								<xsd:element ref="databaseI18n" />
+								<xsd:element ref="database-i18n" />
 								<!-- <xsd:any minOccurs="0" /> -->
 							</xsd:choice>
 						</xsd:sequence>
@@ -263,19 +259,19 @@
 	</xsd:element>
 	
 	<!-- MAIL -->
-	<xsd:element name="defaultMailConfigurator">
+	<xsd:element name="default-mail-configurator">
 		<xsd:complexType>
-			<xsd:attribute name="refRepository" type="xsd:string" use="required" />
-			<xsd:attribute name="filterColumnName" type="xsd:string" use="required" />
-			<xsd:attribute name="valueColumnName" type="xsd:string" use="required" />
-			<xsd:attribute name="queryId" type="xsd:string" use="optional" />
-			<xsd:attribute name="filterColumnValueEncoding" type="xsd:string" use="optional" />
-			<xsd:attribute name="filterColumnValueHost" type="xsd:string" use="required" />
-			<xsd:attribute name="filterColumnValuePort" type="xsd:string" use="optional" />
-			<xsd:attribute name="filterColumnValueProtocol" type="xsd:string" use="optional" />
-			<xsd:attribute name="filterColumnValueUser" type="xsd:string" use="optional" />
-			<xsd:attribute name="filterColumnValuePassword" type="xsd:string" use="optional" />
-			<xsd:attribute name="filterColumnValueJavaMailProperties" type="xsd:string" use="optional" />
+			<xsd:attribute name="ref-repository" type="xsd:string" use="required" />
+			<xsd:attribute name="filter-column-name" type="xsd:string" use="required" />
+			<xsd:attribute name="value-column-name" type="xsd:string" use="required" />
+			<xsd:attribute name="query-id" type="xsd:string" use="optional" />
+			<xsd:attribute name="filter-column-value-encoding" type="xsd:string" use="optional" />
+			<xsd:attribute name="filter-column-value-host" type="xsd:string" use="required" />
+			<xsd:attribute name="filter-column-value-port" type="xsd:string" use="optional" />
+			<xsd:attribute name="filter-column-value-protocol" type="xsd:string" use="optional" />
+			<xsd:attribute name="filter-column-value-user" type="xsd:string" use="optional" />
+			<xsd:attribute name="filter-column-value-password" type="xsd:string" use="optional" />
+			<xsd:attribute name="filter-column-value-javamail-properties" type="xsd:string" use="optional" />
 		</xsd:complexType>
 	</xsd:element>
 
@@ -287,7 +283,7 @@
 		</xsd:annotation>
 		<xsd:complexType>
 			<xsd:sequence>
-				<xsd:element name="defaultMailEngine">
+				<xsd:element name="default-mail-engine">
 					<xsd:complexType>
 						<xsd:sequence>
 							<xsd:choice>
@@ -295,7 +291,7 @@
 								<xsd:element ref="beans:ref" />
 								<xsd:element ref="beans:idref" />
 								<xsd:element ref="beans:value" />
-								<xsd:element ref="defaultMailConfigurator" />
+								<xsd:element ref="default-mail-configurator" />
 								<!-- <xsd:any minOccurs="0" /> -->
 							</xsd:choice>
 						</xsd:sequence>
@@ -307,10 +303,10 @@
 	
 	
 	<!-- REPORT -->
-	<xsd:element name="defaultReportCompiler">
+	<xsd:element name="default-report-compiler">
 	</xsd:element>
 	
-	<xsd:element name="defaultReportFiller">
+	<xsd:element name="default-report-filler">
 	</xsd:element>
 	
 	<xsd:element name="compiler">
@@ -322,7 +318,7 @@
 							<xsd:element ref="beans:ref" />
 							<xsd:element ref="beans:idref" />
 							<xsd:element ref="beans:value" />
-							<xsd:element ref="defaultReportCompiler" />
+							<xsd:element ref="default-report-compiler" />
 							<!-- <xsd:any minOccurs="0" /> -->
 						</xsd:choice>
 					<xsd:attribute name="scope" type="xsd:string" />
@@ -339,7 +335,7 @@
 							<xsd:element ref="beans:ref" />
 							<xsd:element ref="beans:idref" />
 							<xsd:element ref="beans:value" />
-							<xsd:element ref="defaultReportFiller" />
+							<xsd:element ref="default-report-filler" />
 							<!-- <xsd:any minOccurs="0" /> -->
 						</xsd:choice>
 					<xsd:attribute name="scope" type="xsd:string" />
@@ -356,12 +352,12 @@
 		</xsd:annotation>
 		<xsd:complexType>
 			<xsd:sequence>
-				<xsd:element name="defaultReportEngine">
+				<xsd:element name="default-report-engine">
 					<xsd:complexType>
 						<xsd:sequence>
-							<xsd:element name="basePath" minOccurs="1" maxOccurs="1">
+							<xsd:element name="base-path" minOccurs="1" maxOccurs="1">
 								<xsd:complexType>
-									<xsd:group ref="propertyResolverGroup"></xsd:group>
+									<xsd:group ref="property-resolver-group"></xsd:group>
 								</xsd:complexType>
 							</xsd:element>
 							<xsd:element ref="compiler" maxOccurs="1" minOccurs="0" />
@@ -374,22 +370,22 @@
 	</xsd:element>
 	<!-- OTHER -->
 
-	<xsd:element name="databaseProperty">
+	<xsd:element name="database-property">
 		<xsd:annotation>
 			<xsd:documentation>
 				Get a property from database.
 			</xsd:documentation>
 		</xsd:annotation>
 		<xsd:complexType>
-			<xsd:attribute name="refRepository" type="xsd:string" use="required" />
-			<xsd:attribute name="valueColumnName" type="xsd:string" use="required" />
-			<xsd:attribute name="filterColumnName" type="xsd:string" use="required" />
-			<xsd:attribute name="filterColumnValue" type="xsd:string" use="required" />
-			<xsd:attribute name="queryId" type="xsd:string" use="optional" />
+			<xsd:attribute name="ref-repository" type="xsd:string" use="required" />
+			<xsd:attribute name="value-column-name" type="xsd:string" use="required" />
+			<xsd:attribute name="filter-column-name" type="xsd:string" use="required" />
+			<xsd:attribute name="filter-column-value" type="xsd:string" use="required" />
+			<xsd:attribute name="query-id" type="xsd:string" use="optional" />
 		</xsd:complexType>
 	</xsd:element>
 
-	<xsd:element name="fixedProperty">
+	<xsd:element name="fixed-property">
 		<xsd:annotation>
 			<xsd:documentation>
 				Establish a fixed property.
@@ -400,7 +396,7 @@
 		</xsd:complexType>
 	</xsd:element>
 
-	<xsd:group name="limitedType">
+	<xsd:group name="limited-type">
 		<xsd:sequence>
 			<xsd:choice minOccurs="1" maxOccurs="unbounded">
 				<xsd:element ref="beans:bean" />
@@ -412,15 +408,15 @@
 		</xsd:sequence>
 	</xsd:group>
 
-	<xsd:group name="propertyResolverGroup">
+	<xsd:group name="property-resolver-group">
 		<xsd:sequence>
 			<xsd:choice minOccurs="1" maxOccurs="unbounded">
 				<xsd:element ref="beans:bean" />
 				<xsd:element ref="beans:ref" />
 				<xsd:element ref="beans:idref" />
 				<xsd:element ref="beans:value" />
-				<xsd:element ref="databaseProperty" />
-				<xsd:element ref="fixedProperty" />
+				<xsd:element ref="database-property" />
+				<xsd:element ref="fixed-property" />
 			</xsd:choice>
 		</xsd:sequence>
 	</xsd:group>

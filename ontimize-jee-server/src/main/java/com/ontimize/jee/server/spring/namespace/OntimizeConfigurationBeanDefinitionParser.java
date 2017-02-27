@@ -9,6 +9,11 @@ import org.w3c.dom.Element;
 import com.ontimize.jee.server.configuration.OntimizeConfiguration;
 
 public class OntimizeConfigurationBeanDefinitionParser extends AbstractSingleBeanDefinitionParser {
+
+	private static final String REMOTE_OPERATION_ATTR = "remote-operation";
+	private static final String REMOTE_PREFERENCES_ATTR = "remote-preferences";
+	private static final String SECURITY_ATTR = "security";
+
 	/**
 	 * The bean that is created for this tag element
 	 *
@@ -39,7 +44,7 @@ public class OntimizeConfigurationBeanDefinitionParser extends AbstractSingleBea
 		ParserContext nestedCtx = new ParserContext(ctx.getReaderContext(), ctx.getDelegate(), builder.getBeanDefinition());
 
 		// Support for remote operation
-		Element remoteOperation = DomUtils.getChildElementByTagName(element, "remoteOperation");
+		Element remoteOperation = DomUtils.getChildElementByTagName(element, OntimizeConfigurationBeanDefinitionParser.REMOTE_OPERATION_ATTR);
 		if (remoteOperation != null) {
 			// Just make a new Parser for each one and let the parser do the work
 			RemoteOperationBeanDefinitionParser ro = new RemoteOperationBeanDefinitionParser();
@@ -56,7 +61,7 @@ public class OntimizeConfigurationBeanDefinitionParser extends AbstractSingleBea
 		// }
 
 		// Support for authentication and authorization
-		Element security = DomUtils.getChildElementByTagName(element, "security");
+		Element security = DomUtils.getChildElementByTagName(element, OntimizeConfigurationBeanDefinitionParser.SECURITY_ATTR);
 		if (security != null) {
 			// Just make a new Parser for each one and let the parser do the work
 			SecurityBeanDefinitionParser ro = new SecurityBeanDefinitionParser();
@@ -64,7 +69,7 @@ public class OntimizeConfigurationBeanDefinitionParser extends AbstractSingleBea
 		}
 
 		// Support for remote preferences
-		Element remotePreferences = DomUtils.getChildElementByTagName(element, "remotePreferences");
+		Element remotePreferences = DomUtils.getChildElementByTagName(element, OntimizeConfigurationBeanDefinitionParser.REMOTE_PREFERENCES_ATTR);
 		if (remotePreferences != null) {
 			// Just make a new Parser for each one and let the parser do the work
 			RemotePreferencesBeanDefinitionParser ro = new RemotePreferencesBeanDefinitionParser();

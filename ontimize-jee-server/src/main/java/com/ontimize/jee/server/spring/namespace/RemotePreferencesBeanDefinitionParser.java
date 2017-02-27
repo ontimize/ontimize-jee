@@ -43,10 +43,10 @@ public class RemotePreferencesBeanDefinitionParser extends AbstractSingleBeanDef
 		// Set the directory property
 		Element child = DomUtils.getChildElements(element).get(0);
 		Object engine = null;
-		if ("fileRemotePreferencesEngine".equals(child.getLocalName())) {
+		if ("file-remote-preference-engine".equals(child.getLocalName())) {
 			final ParserContext nestedCtx = new ParserContext(ctx.getReaderContext(), ctx.getDelegate(), builder.getBeanDefinition());
 			engine = new FileRemotePreferencesParser().parse(child, nestedCtx);
-		} else if ("databaseRemotePreferencesEngine".equals(child.getLocalName())) {
+		} else if ("database-remote-preference-engine".equals(child.getLocalName())) {
 			final ParserContext nestedCtx = new ParserContext(ctx.getReaderContext(), ctx.getDelegate(), builder.getBeanDefinition());
 			engine = new DatabaseRemotePreferencesParser().parse(child, nestedCtx);
 		} else {
@@ -118,11 +118,11 @@ public class RemotePreferencesBeanDefinitionParser extends AbstractSingleBeanDef
 		 */
 		@Override
 		protected void doParse(final Element element, final ParserContext ctx, final BeanDefinitionBuilder builder) {
-			builder.addPropertyReference("dao", DefinitionParserUtil.nullIfEmpty(element.getAttribute("refRepository")));
-			builder.addPropertyValue("userColumnName", DefinitionParserUtil.nullIfEmpty(element.getAttribute("userColumnName")));
-			builder.addPropertyValue("preferenceNameColumnName", DefinitionParserUtil.nullIfEmpty(element.getAttribute("preferenceNameColumnName")));
-			builder.addPropertyValue("preferenceValueColumnName", DefinitionParserUtil.nullIfEmpty(element.getAttribute("preferenceValueColumnName")));
-			builder.addPropertyValue("queryId", DefinitionParserUtil.nullIfEmpty(element.getAttribute("queryId")));
+			builder.addPropertyReference("dao", DefinitionParserUtil.nullIfEmpty(element.getAttribute("ref-repository")));
+			builder.addPropertyValue("userColumnName", DefinitionParserUtil.nullIfEmpty(element.getAttribute("user-column-name")));
+			builder.addPropertyValue("preferenceNameColumnName", DefinitionParserUtil.nullIfEmpty(element.getAttribute("preference-name-column-name")));
+			builder.addPropertyValue("preferenceValueColumnName", DefinitionParserUtil.nullIfEmpty(element.getAttribute("preference-value-column-name")));
+			builder.addPropertyValue("queryId", DefinitionParserUtil.nullIfEmpty(element.getAttribute("query-id")));
 		}
 	}
 }

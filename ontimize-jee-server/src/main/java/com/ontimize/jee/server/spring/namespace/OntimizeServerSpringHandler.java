@@ -10,7 +10,7 @@ public class OntimizeServerSpringHandler extends NamespaceHandlerSupport {
 
 	@Override
 	public void init() {
-		this.registerBeanDefinitionParser("ontimizeConfiguration", new OntimizeConfigurationBeanDefinitionParser());
+		this.registerBeanDefinitionParser("ontimize-configuration", new OntimizeConfigurationBeanDefinitionParser());
 		this.registerBeanDefinitionParser("cors", new CorsBeanDefinitionParser());
 		this.registerBeanDefinitionParser("fixedProperty", new FixedPropertyBeanDefinitionParser());
 		this.registerBeanDefinitionParser("databaseProperty", new DatabasePropertyBeanDefinitionParser());

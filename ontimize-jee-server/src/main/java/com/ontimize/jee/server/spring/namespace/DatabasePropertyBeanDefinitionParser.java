@@ -12,6 +12,7 @@ import com.ontimize.jee.server.spring.DatabasePropertyResolver;
  * The Class DatabasePropertyBeanDefinitionParser.
  */
 public class DatabasePropertyBeanDefinitionParser extends AbstractSingleBeanDefinitionParser {
+
 	/**
 	 * The Constructor.
 	 */
