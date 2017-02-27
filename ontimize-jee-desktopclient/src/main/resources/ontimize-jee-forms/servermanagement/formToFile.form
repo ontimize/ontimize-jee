@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<Form keys="a" entity="a" columns="a" title="ToFile" buttons="no">
+	<Column expandlast="no" margin="20;0;20;0">
+		<Row attr="FILECHOOSER" expand="yes"/>
+	</Column>
+</Form>

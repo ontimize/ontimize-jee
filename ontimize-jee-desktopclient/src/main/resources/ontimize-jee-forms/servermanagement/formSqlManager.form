@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Form keys="a" entity="a" columns="a" title="formSqlManager" buttons="no" >
+	<Column margin="5;5;5;5" expandlast="no">
+		<Row expand="yes">
+			<Column>
+				<Row expand="no">
+					<Row/>
+					<TextComboDataField attr="CONNECTION_NAME" text="CONNECTION_NAME" editable="yes" size="20" values="" align="center"/>
+					<Button attr="B_REFRESH" key="B_REFRESH" text="B_REFRESH" align="center"/>
+					<Row/>
+				</Row>
+				<com.utilmize.client.gui.UCollapsiblePanel orientation="vertical" expandvertical="yes" expand="yes" startshowed="yes" title="SQL_PANEL" valign="top">	
+					<MemoDataField attr="QUERY" expand="yes" labelvisible="no" dim="text" />
+					
+					<Row expand="no">
+						<Column expand="yes"/>
+						<Column expand="no">
+							<Row>
+								<Button attr="B_QUERY" key="B_QUERY" text="B_QUERY" align="center" labelsize="13" icon="" />
+							</Row>
+						</Column>
+					</Row>	
+				</com.utilmize.client.gui.UCollapsiblePanel>	
+				<com.utilmize.client.gui.UCollapsiblePanel orientation="vertical" expandvertical="yes" expand="yes" startshowed="yes" title="SQL_RESULTS" valign="top">	
+						<Column expandlast="yes">
+							<Table attr="RESULTS" entity="RESULTS" dynamic="yes" translateheader="yes" />
+						</Column>
+				</com.utilmize.client.gui.UCollapsiblePanel>	
+				<CollapsiblePanelFiller />
+			</Column>
+			<com.utilmize.client.gui.UCollapsiblePanel expand="no"  orientation="horizontal" anim="yes" startshowed="no" title="HISTORY" fixbugwithstartshowedforced="yes" ignoreinitpreferences="yes" borderposition="right" insets="0;0;0;21">
+				<Column expand="no" expandlast="no" >
+					<Row expand="no" >
+						<Button key="SaveEntry" tip="SaveEntry" icon="images/save.png"	/>
+						<Button key="SaveAsEntry" tip="SaveAsEntry" icon="images/saveas.png" 	/>
+						<Button key="DeleteEntry" tip="DeleteEntry" icon="images/delete.png" 	/>
+						<Button key="DeleteAll" tip="DeleteAll" icon="images/deleteAll.png" />
+					</Row>
+					<Row expand="yes" >
+						<!-- Jlist -->
+						<com.ontimize.jee.desktopclient.components.servermanagement.window.list.ListSql attr="SQL_LIST" expand="yes"/>
+					</Row>
+				</Column>
+			</com.utilmize.client.gui.UCollapsiblePanel>
+		</Row>
+	</Column>
+</Form>

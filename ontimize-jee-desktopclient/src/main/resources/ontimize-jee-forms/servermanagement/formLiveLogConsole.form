@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<Form keys="a" entity="a" columns="a" title="LiveLogToConsole" buttons="no">
+	<Column expandlast="no" margin="20;0;20;0">
+		<Row expand="yes">
+			<MemoDataField attr="CONSOLE" expand="yes"  dim="text"	labelvisible="no" />
+		</Row>
+		<Row expand="no" >
+			<Column expand="yes"/>
+			<Column expand="no">
+				<Row>
+					<Button key="B_STOP" text="B_STOP" align="center" />
+					<Button key="B_START" text="B_START" align="center" />
+				</Row>
+			</Column>
+		</Row>
+	</Column>
+</Form>

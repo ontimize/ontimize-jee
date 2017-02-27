@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<Form keys="a" entity="a" columns="a" title="ServerAdmin" buttons="no">
+	<Row>
+		<Button labelsize="10" text="RELOAD_DAOS" icon="" textalign="center" key="reloadDaos" />
+	</Row>
+</Form>
