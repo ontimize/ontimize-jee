@@ -23,6 +23,7 @@ import com.ontimize.jee.server.security.authorization.DefaultOntimizeAuthorizato
 public class SecurityBeanDefinitionParser extends AbstractSingleBeanDefinitionParser {
 
 	private static final String AUTHORIZATION_PROPERTY = "authorizator";
+	private static final String DEFAULT_AUTHORIZATOR_PROPERTY = "default-authorizator";
 
 	private static final String AUTHORIZATION = "authorization";
 	private static final String USER_INFORMATION_SERVICE = "user-information-service";
@@ -31,8 +32,27 @@ public class SecurityBeanDefinitionParser extends AbstractSingleBeanDefinitionPa
 	private static final String SCOPE = "scope";
 
 	private static final String DATABASE_USER_INFORMATION_SERVICE = "database-user-information-service";
+	private static final String DUIS_REF_USER_REPOSITORY = "ref-user-repository";
+	private static final String DUIS_QUERY_ID = "query-id";
+	private static final String DUIS_USER_LOGIN_COLUMN = "user-login-column";
+	private static final String DUIS_USER_PASSWORD_COLUMN = "user-password-column";
+	private static final String DUIS_USER_NEED_CHECK_PASS_COLUMN = "user-need-check-pass-column";
+	private static final String DUIS_OTHER_DATA = "other-data";
+
 	private static final String DATABASE_USER_ROLE_INFORMATION_SERVICE = "database-user-role-information-service";
+	private static final String DURIS_REF_USER_ROLE_REPOSITORY = "ref-user-role-repository";
+	private static final String DURIS_QUERY_ID = "query-id";
+	private static final String DURIS_USER_LOGIN_COLUMN = "user-login-column";
+	private static final String DURIS_ROLE_NAME_COLUMN = "role-name-column";
+
 	private static final String DATABASE_ROLE_INFORMATION_SERVICE = "database-role-information-service";
+	private static final String DRIS_REF_ROLE_REPOSITORY = "ref-role-repository";
+	private static final String DRIS_ROLE_NAME_COLUMN = "role-name-column";
+	private static final String DRIS_SERVER_PERMISSION_QUERY_ID = "server-permission-query-id";
+	private static final String DRIS_SERVER_PERMISSION_NAME_COLUMN = "server-permission-name-column";
+	private static final String DRIS_CLIENT_PERMISSION_QUERY_ID = "client-permission-query-id";
+	private static final String DRIS_CLIENT_PERMISSION_COLUMN = "client-permission-column";
+
 
 	/*
 	 * (non-Javadoc)
@@ -97,7 +117,7 @@ public class SecurityBeanDefinitionParser extends AbstractSingleBeanDefinitionPa
 					engine = new DatabaseUserInformationServiceDefinitionParser().parse((Element) item, nestedCtx);
 
 				} else {
-					// construimos el bean que nos venga que deberia ser un
+					// construimos el bean que nos venga que debería ser un
 					// ISecurityAuthorizator
 					final Object ob = DefinitionParserUtil.parseNode(item, ctx, builder.getRawBeanDefinition(), parent.getAttribute(SecurityBeanDefinitionParser.SCOPE), false);
 					if (ob != null) {
@@ -109,7 +129,7 @@ public class SecurityBeanDefinitionParser extends AbstractSingleBeanDefinitionPa
 		if (engine != null) {
 			ctx.getRegistry().registerBeanDefinition(DatabaseUserInformationService.BEAN_NAME, (BeanDefinition) engine);
 		}
-		builder.addPropertyValue(SecurityBeanDefinitionParser.USER_INFORMATION_SERVICE, engine);
+		builder.addPropertyValue("userInformationService", engine);
 	}
 
 	/**
@@ -145,7 +165,7 @@ public class SecurityBeanDefinitionParser extends AbstractSingleBeanDefinitionPa
 		if (engine != null) {
 			ctx.getRegistry().registerBeanDefinition(DatabaseUserRoleInformationService.BEAN_NAME, (BeanDefinition) engine);
 		}
-		builder.addPropertyValue(SecurityBeanDefinitionParser.USER_ROLE_INFORMATION_SERVICE, engine);
+		builder.addPropertyValue("userRoleInformationService", engine);
 	}
 
 	/**
@@ -181,7 +201,7 @@ public class SecurityBeanDefinitionParser extends AbstractSingleBeanDefinitionPa
 		if (engine != null) {
 			ctx.getRegistry().registerBeanDefinition(DatabaseRoleInformationService.BEAN_NAME, (BeanDefinition) engine);
 		}
-		builder.addPropertyValue(SecurityBeanDefinitionParser.ROLE_INFORMATION_SERVICE, engine);
+		builder.addPropertyValue("roleInformationService", engine);
 	}
 
 	/**
@@ -200,7 +220,7 @@ public class SecurityBeanDefinitionParser extends AbstractSingleBeanDefinitionPa
 		for (int i = 0; i < childNodes.getLength(); i++) {
 			final Node item = childNodes.item(i);
 			if (item.getNodeType() == Node.ELEMENT_NODE) {
-				if ("defaultAuthorizator".equals(item.getLocalName())) {
+				if (SecurityBeanDefinitionParser.DEFAULT_AUTHORIZATOR_PROPERTY.equals(item.getLocalName())) {
 					final ParserContext nestedCtx = new ParserContext(ctx.getReaderContext(), ctx.getDelegate(), builder.getBeanDefinition());
 					// construimos un databaseauthenticator
 					authorizator = new DefaultAuthorizatorDefinitionParser().parse((Element) item, nestedCtx);
@@ -222,12 +242,6 @@ public class SecurityBeanDefinitionParser extends AbstractSingleBeanDefinitionPa
 	 * The Class DatabaseUserInformationServiceDefinitionParser.
 	 */
 	public static class DatabaseUserInformationServiceDefinitionParser extends AbstractSingleBeanDefinitionParser {
-
-		private static final String REF_USER_REPOSITORY_ATTR = "ref-user-repository";
-		private static final String USER_LOGIN_COLUMN_ATTR = "user-login-column";
-		private static final String USER_PASSWORD_COLUMN_ATTR = "user-password-column";
-		private static final String OTHER_DATA_ATTR = "other-data";
-		private static final String QUERY_ID_ATTR = "query-id";
 
 		/**
 		 * The bean that is created for this tag element.
@@ -254,25 +268,22 @@ public class SecurityBeanDefinitionParser extends AbstractSingleBeanDefinitionPa
 		@Override
 		protected void doParse(final Element element, final ParserContext ctx, final BeanDefinitionBuilder builder) {
 
-			final String refUserRepository = element.getAttribute(DatabaseUserInformationServiceDefinitionParser.REF_USER_REPOSITORY_ATTR);
+			final String refUserRepository = element.getAttribute(SecurityBeanDefinitionParser.DUIS_REF_USER_REPOSITORY);
 
 			builder.getRawBeanDefinition().setDependsOn(new String[] { refUserRepository });
 			// builder.getRawBeanDefinition().setDependencyCheck(AbstractBeanDefinition.DEPENDENCY_CHECK_ALL);
 
 			// Set the user repository property
-			final Object val = DefinitionParserUtil.parseReferenceValue(ctx, element, DatabaseUserInformationServiceDefinitionParser.REF_USER_REPOSITORY_ATTR);
+			final Object val = DefinitionParserUtil.parseReferenceValue(ctx, element, SecurityBeanDefinitionParser.DUIS_REF_USER_REPOSITORY);
 			final PropertyValue pvUserRepository = new PropertyValue("userRepository", val);
 			pvUserRepository.setSource(ctx.extractSource(element));
 			builder.getBeanDefinition().getPropertyValues().addPropertyValue(pvUserRepository);
 
-			builder.addPropertyValue("userLoginColumn",
-					DefinitionParserUtil.nullIfEmpty(element.getAttribute(DatabaseUserInformationServiceDefinitionParser.USER_LOGIN_COLUMN_ATTR)));
-			builder.addPropertyValue("userPasswordColumn",
-					DefinitionParserUtil.nullIfEmpty(element.getAttribute(DatabaseUserInformationServiceDefinitionParser.USER_PASSWORD_COLUMN_ATTR)));
-			builder.addPropertyValue("userNeedCheckPassColumn", DefinitionParserUtil.nullIfEmpty(element.getAttribute("userNeedCheckPassColumn")));
-			builder.addPropertyValue("userOtherDataColumns",
-					DefinitionParserUtil.nullIfEmpty(element.getAttribute(DatabaseUserInformationServiceDefinitionParser.OTHER_DATA_ATTR)));
-			builder.addPropertyValue("userQueryId", DefinitionParserUtil.nullIfEmpty(element.getAttribute(DatabaseUserInformationServiceDefinitionParser.QUERY_ID_ATTR)));
+			builder.addPropertyValue("userLoginColumn", DefinitionParserUtil.nullIfEmpty(element.getAttribute(SecurityBeanDefinitionParser.DUIS_USER_LOGIN_COLUMN)));
+			builder.addPropertyValue("userPasswordColumn", DefinitionParserUtil.nullIfEmpty(element.getAttribute(SecurityBeanDefinitionParser.DUIS_USER_PASSWORD_COLUMN)));
+			builder.addPropertyValue("userNeedCheckPassColumn", DefinitionParserUtil.nullIfEmpty(element.getAttribute(SecurityBeanDefinitionParser.DUIS_USER_NEED_CHECK_PASS_COLUMN)));
+			builder.addPropertyValue("userOtherDataColumns", DefinitionParserUtil.nullIfEmpty(element.getAttribute(SecurityBeanDefinitionParser.DUIS_OTHER_DATA)));
+			builder.addPropertyValue("userQueryId", DefinitionParserUtil.nullIfEmpty(element.getAttribute(SecurityBeanDefinitionParser.DUIS_QUERY_ID)));
 
 			// Set the scope
 			builder.setScope(element.getAttribute(SecurityBeanDefinitionParser.SCOPE));
@@ -283,11 +294,6 @@ public class SecurityBeanDefinitionParser extends AbstractSingleBeanDefinitionPa
 	 * The Class DatabaseUserInformationServiceDefinitionParser.
 	 */
 	public static class DatabaseUserRoleInformationServiceDefinitionParser extends AbstractSingleBeanDefinitionParser {
-
-		private static final String REF_USER_ROLE_REPOSITORY_ATTR = "ref-user-role-repository";
-		private static final String QUERY_ID_ATTR = "query-id";
-		private static final String USER_LOGIN_COLUMN_ATTR = "user-login-column";
-		private static final String ROLE_NAME_COLUMN_ATTR = "role-name-column";
 
 		/**
 		 * The bean that is created for this tag element.
@@ -313,22 +319,20 @@ public class SecurityBeanDefinitionParser extends AbstractSingleBeanDefinitionPa
 		 */
 		@Override
 		protected void doParse(final Element element, final ParserContext ctx, final BeanDefinitionBuilder builder) {
-			final String refUserRolesRepository = element.getAttribute(DatabaseUserRoleInformationServiceDefinitionParser.REF_USER_ROLE_REPOSITORY_ATTR);
+			final String refUserRolesRepository = element.getAttribute(SecurityBeanDefinitionParser.DURIS_REF_USER_ROLE_REPOSITORY);
 
 			builder.getRawBeanDefinition().setDependsOn(new String[] { refUserRolesRepository });
 			builder.getRawBeanDefinition().setDependencyCheck(AbstractBeanDefinition.DEPENDENCY_CHECK_ALL);
 
 			// Set the user roles repository property
-			final Object val2 = DefinitionParserUtil.parseReferenceValue(ctx, element, DatabaseUserRoleInformationServiceDefinitionParser.REF_USER_ROLE_REPOSITORY_ATTR);
+			final Object val2 = DefinitionParserUtil.parseReferenceValue(ctx, element, SecurityBeanDefinitionParser.DURIS_REF_USER_ROLE_REPOSITORY);
 			final PropertyValue pvUserRoleRepository = new PropertyValue("userRolesRepository", val2);
 			pvUserRoleRepository.setSource(ctx.extractSource(element));
 			builder.getBeanDefinition().getPropertyValues().addPropertyValue(pvUserRoleRepository);
 
-			builder.addPropertyValue("roleLoginColumn",
-					DefinitionParserUtil.nullIfEmpty(element.getAttribute(DatabaseUserRoleInformationServiceDefinitionParser.USER_LOGIN_COLUMN_ATTR)));
-			builder.addPropertyValue("roleNameColumn",
-					DefinitionParserUtil.nullIfEmpty(element.getAttribute(DatabaseUserRoleInformationServiceDefinitionParser.ROLE_NAME_COLUMN_ATTR)));
-			builder.addPropertyValue("roleQueryId", DefinitionParserUtil.nullIfEmpty(element.getAttribute(DatabaseUserRoleInformationServiceDefinitionParser.QUERY_ID_ATTR)));
+			builder.addPropertyValue("roleLoginColumn", DefinitionParserUtil.nullIfEmpty(element.getAttribute(SecurityBeanDefinitionParser.DURIS_USER_LOGIN_COLUMN)));
+			builder.addPropertyValue("roleNameColumn", DefinitionParserUtil.nullIfEmpty(element.getAttribute(SecurityBeanDefinitionParser.DURIS_ROLE_NAME_COLUMN)));
+			builder.addPropertyValue("roleQueryId", DefinitionParserUtil.nullIfEmpty(element.getAttribute(SecurityBeanDefinitionParser.DURIS_QUERY_ID)));
 
 			// Set the scope
 			builder.setScope(element.getAttribute(SecurityBeanDefinitionParser.SCOPE));
@@ -340,13 +344,6 @@ public class SecurityBeanDefinitionParser extends AbstractSingleBeanDefinitionPa
 	 * The Class DatabaseUserInformationServiceDefinitionParser.
 	 */
 	public static class DatabaseRoleInformationServiceDefinitionParser extends AbstractSingleBeanDefinitionParser {
-
-		private static final String REF_ROLE_REPOSITORY_ATTR = "ref-role-repository";
-		private static final String ROLE_NAME_COLUMN_ATTR = "role-name-column";
-		private static final String SERVER_PERMISSION_QUERY_ID_ATTR = "server-permission-query-id";
-		private static final String SERVER_PERMISSION_NAME_COLUMN_ATTR = "server-permission-name-column";
-		private static final String CLIENT_PERMISSION_QUERY_ID_ATTR = "client-permission-query-id";
-		private static final String CLIENT_PERMISSION_COLUMN_ATTR = "client-permission-column";
 
 		/**
 		 * The bean that is created for this tag element.
@@ -372,27 +369,25 @@ public class SecurityBeanDefinitionParser extends AbstractSingleBeanDefinitionPa
 		 */
 		@Override
 		protected void doParse(final Element element, final ParserContext ctx, final BeanDefinitionBuilder builder) {
-			final String refRolesRepository = element.getAttribute(DatabaseRoleInformationServiceDefinitionParser.REF_ROLE_REPOSITORY_ATTR);
+			final String refRolesRepository = element.getAttribute(SecurityBeanDefinitionParser.DRIS_REF_ROLE_REPOSITORY);
 			builder.getRawBeanDefinition().setDependsOn(new String[] { refRolesRepository });
 
 			// Set the user repository property
-			final Object val = DefinitionParserUtil.parseReferenceValue(ctx, element, DatabaseRoleInformationServiceDefinitionParser.REF_ROLE_REPOSITORY_ATTR);
+			final Object val = DefinitionParserUtil.parseReferenceValue(ctx, element, SecurityBeanDefinitionParser.DRIS_REF_ROLE_REPOSITORY);
 			final PropertyValue pvRolesRepository = new PropertyValue("profileRepository", val);
 			pvRolesRepository.setSource(ctx.extractSource(element));
 			builder.getBeanDefinition().getPropertyValues().addPropertyValue(pvRolesRepository);
 
 			// No podemos coger directamente la referencia porque podemos estar
 			// en otro contexto //TODO check this (we need the same reference)
-			builder.addPropertyValue("roleNameColumn",
-					DefinitionParserUtil.nullIfEmpty(element.getAttribute(DatabaseRoleInformationServiceDefinitionParser.ROLE_NAME_COLUMN_ATTR)));
+			builder.addPropertyValue("roleNameColumn", DefinitionParserUtil.nullIfEmpty(element.getAttribute(SecurityBeanDefinitionParser.DRIS_ROLE_NAME_COLUMN)));
 			builder.addPropertyValue("serverPermissionKeyColumn",
-					DefinitionParserUtil.nullIfEmpty(element.getAttribute(DatabaseRoleInformationServiceDefinitionParser.SERVER_PERMISSION_NAME_COLUMN_ATTR)));
-			builder.addPropertyValue("clientPermissionColumn",
-					DefinitionParserUtil.nullIfEmpty(element.getAttribute(DatabaseRoleInformationServiceDefinitionParser.CLIENT_PERMISSION_COLUMN_ATTR)));
+					DefinitionParserUtil.nullIfEmpty(element.getAttribute(SecurityBeanDefinitionParser.DRIS_SERVER_PERMISSION_NAME_COLUMN)));
+			builder.addPropertyValue("clientPermissionColumn", DefinitionParserUtil.nullIfEmpty(element.getAttribute(SecurityBeanDefinitionParser.DRIS_CLIENT_PERMISSION_COLUMN)));
 			builder.addPropertyValue("serverPermissionQueryId",
-					DefinitionParserUtil.nullIfEmpty(element.getAttribute(DatabaseRoleInformationServiceDefinitionParser.SERVER_PERMISSION_QUERY_ID_ATTR)));
+					DefinitionParserUtil.nullIfEmpty(element.getAttribute(SecurityBeanDefinitionParser.DRIS_SERVER_PERMISSION_QUERY_ID)));
 			builder.addPropertyValue("clientPermissionQueryId",
-					DefinitionParserUtil.nullIfEmpty(element.getAttribute(DatabaseRoleInformationServiceDefinitionParser.CLIENT_PERMISSION_COLUMN_ATTR)));
+					DefinitionParserUtil.nullIfEmpty(element.getAttribute(SecurityBeanDefinitionParser.DRIS_CLIENT_PERMISSION_QUERY_ID)));
 
 			// Set the scope
 			builder.setScope(element.getAttribute(SecurityBeanDefinitionParser.SCOPE));

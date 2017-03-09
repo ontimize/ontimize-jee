@@ -77,7 +77,7 @@ public class OntimizeConfigurationBeanDefinitionParser extends AbstractSingleBea
 		}
 
 		// Support for i18n
-		Element remoteI18n = DomUtils.getChildElementByTagName(element, "remoteI18n");
+		Element remoteI18n = DomUtils.getChildElementByTagName(element, "remote-i18n");
 		if (remoteI18n != null) {
 			// Just make a new Parser for each one and let the parser do the work
 			I18nBeanDefinitionParser ro = new I18nBeanDefinitionParser();
