@@ -9,6 +9,7 @@ import java.util.Vector;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import com.ontimize.db.EntityResult;
@@ -21,15 +22,16 @@ import com.ontimize.jee.common.tools.MapTools;
 import com.ontimize.jee.common.tools.ObjectTools;
 
 @Component
+@Lazy(true)
 public class One2OneDaoHelper implements ApplicationContextAware {
 
-	//@formatter:off
+	// @formatter:off
 	/**
 	 * Will define how one to one will work.
 	 * <br>When <b>DIRECT</b> type means that both tables has the same primary key, the first insert in main dao, and the key will be passed to the secondary daos.
 	 * <br>When <b>INVERSE</b> type means that the main dao is really the main entity and have reference to all other daos with foreign key o them.
 	 */
-	//@formatter:on
+	// @formatter:on
 	public enum One2OneType {
 		DIRECT, INVERSE
 	};
@@ -64,62 +66,86 @@ public class One2OneDaoHelper implements ApplicationContextAware {
 		}
 	}
 
-	protected EntityResult insertDirect(DefaultOntimizeDaoHelper daoHelper, IOntimizeDaoSupport mainDao, List<OneToOneSubDao> secondaryDaos,
-			Map<?, ?> attributesValues) {
+	public EntityResult insert(DefaultOntimizeDaoHelper daoHelper, IOntimizeDaoSupport mainDao, List<OneToOneSubDao> inverseSecondaryDaos, List<OneToOneSubDao> directSecondaryDaos,
+			Map<?, ?> attributesValues) throws OntimizeJEERuntimeException {
+		try {
+			this.insertInverseSecondaryDaos(daoHelper, inverseSecondaryDaos, attributesValues);
+			EntityResult insertMainDao = this.insertMainDao(daoHelper, mainDao, attributesValues);
+			this.insertDirectSecondaryDaos(daoHelper, directSecondaryDaos, attributesValues, insertMainDao);
+			return insertMainDao;
+		} catch (Exception ex) {
+			throw new OntimizeJEERuntimeException("E_INSERTING_ONE_TO_ONE_", ex);
+		}
+	}
+
+	protected EntityResult insertDirect(DefaultOntimizeDaoHelper daoHelper, IOntimizeDaoSupport mainDao, List<OneToOneSubDao> secondaryDaos, Map<?, ?> attributesValues) {
 		try {
 			// Insert in main dao
-			EntityResult resInsertMain = daoHelper.insert(mainDao, attributesValues);
-			CheckingTools.checkValidEntityResult(resInsertMain, "E_INSERTING_MAIN_DAO");
+			EntityResult resInsertMain = this.insertMainDao(daoHelper, mainDao, attributesValues);
 
 			// Insert in secondary daos
-			if (secondaryDaos != null) {
-				for (OneToOneSubDao subDao : secondaryDaos) {
-					// Consider to add link Key (it can be primary key or another one)
-					MapTools.safePut((Map<Object, Object>) attributesValues, subDao.getKeySecondary(), resInsertMain.get(subDao.getKey()));
-
-					// Check to insert in second dao + update main dao to reference
-					if (this.checkColumns(subDao.getDao(), attributesValues, subDao.getNotEnoughColumns())) {
-						this.checkRequiredColumns(attributesValues, subDao.getRequiredColumns(), true);
-						EntityResult resInsertSecondary = this.insertSubDao(daoHelper, attributesValues, subDao);
-						CheckingTools.checkValidEntityResult(resInsertSecondary, "E_INSERTING_SEOCONDARY_DAO");
-
-						// TODO consider to add moreover the keys of one2one tables
-					}
-				}
-			}
+			this.insertDirectSecondaryDaos(daoHelper, secondaryDaos, attributesValues, resInsertMain);
 			return resInsertMain;
 		} catch (Exception ex) {
 			throw new OntimizeJEERuntimeException("E_INSERTING_ONE_TO_ONE_", ex);
 		}
 	}
 
-	protected EntityResult insertInverse(DefaultOntimizeDaoHelper daoHelper, IOntimizeDaoSupport mainDao, List<OneToOneSubDao> secondaryDaos,
-			Map<?, ?> attributesValues) {
-		try {
-			// Insert in secondary daos
-			if (secondaryDaos != null) {
-				for (OneToOneSubDao subDao : secondaryDaos) {
-					// Check to insert in second dao + update main dao to reference
-					if (this.checkColumns(subDao.getDao(), attributesValues, subDao.getNotEnoughColumns())//
-							&& !ObjectTools.containsIgnoreCase(attributesValues, subDao.getKeySecondary())) {
-						this.checkRequiredColumns(attributesValues, subDao.getRequiredColumns(), true);
-						EntityResult resInsertSecondary = this.insertSubDao(daoHelper, attributesValues, subDao);
+	protected EntityResult insertMainDao(DefaultOntimizeDaoHelper daoHelper, IOntimizeDaoSupport mainDao, Map<?, ?> attributesValues) throws OntimizeJEEException {
+		EntityResult resInsertMain = daoHelper.insert(mainDao, attributesValues);
+		CheckingTools.checkValidEntityResult(resInsertMain, "E_INSERTING_MAIN_DAO");
+		return resInsertMain;
+	}
 
-						// Consider to add link Key (it can be primary key or another one)
-						MapTools.safePut((Map<Object, Object>) attributesValues, subDao.getKey(), resInsertSecondary.get(subDao.getKeySecondary()));
-					}
+	protected void insertDirectSecondaryDaos(DefaultOntimizeDaoHelper daoHelper, List<OneToOneSubDao> secondaryDaos, Map<?, ?> attributesValues, EntityResult resInsertMain)
+			throws OntimizeJEEException {
+		if (secondaryDaos != null) {
+			for (OneToOneSubDao subDao : secondaryDaos) {
+				// Consider to add link Key (it can be primary key or another
+				// one)
+				MapTools.safePut((Map<Object, Object>) attributesValues, subDao.getKeySecondary(), resInsertMain.get(subDao.getKey()));
+
+				// Check to insert in second dao + update main dao to reference
+				if (this.checkColumns(subDao.getDao(), attributesValues, subDao.getNotEnoughColumns())) {
+					this.checkRequiredColumns(attributesValues, subDao.getRequiredColumns(), true);
+					EntityResult resInsertSecondary = this.insertSubDao(daoHelper, attributesValues, subDao);
+					CheckingTools.checkValidEntityResult(resInsertSecondary, "E_INSERTING_SEOCONDARY_DAO");
+
+					// TODO consider to add moreover the keys of one2one tables
 				}
 			}
+		}
+	}
 
-			// Insert in main dao
-			EntityResult resInsertMain = daoHelper.insert(mainDao, attributesValues);
-			CheckingTools.checkValidEntityResult(resInsertMain, "E_INSERTING_MAIN_DAO");
+	protected EntityResult insertInverse(DefaultOntimizeDaoHelper daoHelper, IOntimizeDaoSupport mainDao, List<OneToOneSubDao> secondaryDaos, Map<?, ?> attributesValues) {
+		try {
+			// Insert in secondary daos
+			this.insertInverseSecondaryDaos(daoHelper, secondaryDaos, attributesValues);
+
+			EntityResult resInsertMain = this.insertMainDao(daoHelper, mainDao, attributesValues);
 
 			// TODO consider to add moreover the keys of one2one tables
 
 			return resInsertMain;
 		} catch (Exception ex) {
 			throw new OntimizeJEERuntimeException("E_INSERTING_ONE_TO_ONE_", ex);
+		}
+	}
+
+	protected void insertInverseSecondaryDaos(DefaultOntimizeDaoHelper daoHelper, List<OneToOneSubDao> secondaryDaos, Map<?, ?> attributesValues) throws OntimizeJEEException {
+		if (secondaryDaos != null) {
+			for (OneToOneSubDao subDao : secondaryDaos) {
+				// Check to insert in second dao + update main dao to reference
+				if (this.checkColumns(subDao.getDao(), attributesValues, subDao.getNotEnoughColumns())//
+						&& !ObjectTools.containsIgnoreCase(attributesValues, subDao.getKeySecondary())) {
+					this.checkRequiredColumns(attributesValues, subDao.getRequiredColumns(), true);
+					EntityResult resInsertSecondary = this.insertSubDao(daoHelper, attributesValues, subDao);
+
+					// Consider to add link Key (it can be primary key or
+					// another one)
+					MapTools.safePut((Map<Object, Object>) attributesValues, subDao.getKey(), resInsertSecondary.get(subDao.getKeySecondary()));
+				}
+			}
 		}
 	}
 
@@ -299,6 +325,7 @@ public class One2OneDaoHelper implements ApplicationContextAware {
 	}
 
 	public static class OneToOneSubDao {
+
 		protected IOntimizeDaoSupport	dao;
 		protected String				key;
 		protected String				keySecondary;
@@ -319,16 +346,16 @@ public class One2OneDaoHelper implements ApplicationContextAware {
 			this(dao, key, key);
 		}
 
-		public OneToOneSubDao(IOntimizeDaoSupport dao, String key, String keyecondary) {
-			this(dao, key, key, null);
+		public OneToOneSubDao(IOntimizeDaoSupport dao, String key, String keySecondary) {
+			this(dao, key, keySecondary, null);
 		}
 
-		public OneToOneSubDao(IOntimizeDaoSupport dao, String key, String keyecondary, List<String> notEnoughColumns) {
-			this(dao, key, key, null, null);
+		public OneToOneSubDao(IOntimizeDaoSupport dao, String key, String keySecondary, List<String> notEnoughColumns) {
+			this(dao, key, keySecondary, notEnoughColumns, null);
 		}
 
 		public OneToOneSubDao(IOntimizeDaoSupport dao, String key, String keySecondary, List<String> notEnoughColumns, List<String> requiredColumns) {
-			this(dao, key, key, null, null, null);
+			this(dao, key, keySecondary, notEnoughColumns, requiredColumns, null);
 		}
 
 		public OneToOneSubDao(IOntimizeDaoSupport dao, String key, String keySecondary, List<String> notEnoughColumns, List<String> requiredColumns,
@@ -367,6 +394,7 @@ public class One2OneDaoHelper implements ApplicationContextAware {
 	}
 
 	public static interface IListenerSubDao {
+
 		void preInsert(IOntimizeDaoSupport dao, Map<?, ?> values);
 
 		void postInsert(IOntimizeDaoSupport dao, Map<?, ?> values, EntityResult resInsert);

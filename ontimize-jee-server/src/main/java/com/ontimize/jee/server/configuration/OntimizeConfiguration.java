@@ -1,5 +1,7 @@
 package com.ontimize.jee.server.configuration;
 
+import org.springframework.context.annotation.Lazy;
+
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
 import com.ontimize.jee.server.security.SecurityConfiguration;
 import com.ontimize.jee.server.services.i18n.I18nConfiguration;
@@ -13,18 +15,23 @@ import com.ontimize.jee.server.services.remoteoperation.RemoteOperationConfigura
 public class OntimizeConfiguration {
 
 	/** The remote operation configuration. */
+	@Lazy
 	protected RemoteOperationConfiguration		remoteOperationConfiguration;
 
 	/** The security configuration. */
+	@Lazy
 	protected SecurityConfiguration				securityConfiguration;
 
 	/** The security configuration. */
+	@Lazy
 	protected RemotePreferencesConfiguration	remotePreferencesConfiguration;
 
 	/** The i18n configuration. */
+	@Lazy
 	protected I18nConfiguration					i18nConfiguration;
 
 	/** The mail configuration. */
+	@Lazy
 	protected MailConfiguration					mailConfiguration;
 
 	/**

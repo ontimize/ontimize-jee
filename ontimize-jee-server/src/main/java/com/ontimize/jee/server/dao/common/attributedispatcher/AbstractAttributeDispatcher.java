@@ -10,6 +10,7 @@ import org.springframework.context.ApplicationContext;
 import com.ontimize.db.EntityResult;
 import com.ontimize.jee.common.services.ServiceTools;
 import com.ontimize.jee.common.tools.ReflectionTools;
+import com.ontimize.jee.server.spring.SpringTools;
 
 /**
  * The Class AbstractAttributeDispatcher.
@@ -101,6 +102,7 @@ public abstract class AbstractAttributeDispatcher<T> implements IAttributeDispat
 		String serviceName = ServiceTools.extractServiceFromEntityName(entityName);
 		String queryId = ServiceTools.extractQueryIdFromEntityName(entityName);
 		Object service = applicationContext.getBean(serviceName);
+		service = SpringTools.getTargetObject(service, Object.class);
 		if (IAttributeDispatcher.QUERY_SUFFIX.equals(methodSufix) && (queryId != null) && !queryId.isEmpty()) {
 			Object[] params = Arrays.copyOf(parameters, parameters.length + 1);
 			params[parameters.length] = queryId;

@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
@@ -42,6 +43,7 @@ import com.ontimize.jee.server.dao.common.attributedispatcher.TableAttributeDisp
  * The Class DefaultOntimizeServiceImpl.
  */
 @Component
+@Lazy(value = true)
 public class DefaultOntimizeDaoHelper implements IOntimizeDaoHelper, ApplicationContextAware {
 
 	/** The logger. */
@@ -178,7 +180,7 @@ public class DefaultOntimizeDaoHelper implements IOntimizeDaoHelper, Application
 	 * @return the entity result
 	 */
 	public EntityResult propagateToOtherEntities(Map<?, ?> generatedValuesInParentEntity, Map<?, ?> attributesValuesReceivedInParentEntity,
-	        Map<?, ICascadeOperationContainer> attributesValuesToPropagate) {
+			Map<?, ICascadeOperationContainer> attributesValuesToPropagate) {
 		EntityResult result = new EntityResult();
 		for (Entry<?, ICascadeOperationContainer> entry : attributesValuesToPropagate.entrySet()) {
 			// El orden de propagación será primero deletes, luego updates y finalmente insert
@@ -195,13 +197,13 @@ public class DefaultOntimizeDaoHelper implements IOntimizeDaoHelper, Application
 						Map<?, ?> generatedValues = null;
 						if (operation instanceof InsertOperation) {
 							generatedValues = dispatcher.processInsertAttribute(entry.getKey(), (InsertOperation) operation, generatedValuesInParentEntity,
-							        attributesValuesReceivedInParentEntity, this.applicationContext);
+									attributesValuesReceivedInParentEntity, this.applicationContext);
 						} else if (operation instanceof UpdateOperation) {
 							generatedValues = dispatcher.processUpdateAttribute(entry.getKey(), (UpdateOperation) operation, generatedValuesInParentEntity,
-							        attributesValuesReceivedInParentEntity, this.applicationContext);
+									attributesValuesReceivedInParentEntity, this.applicationContext);
 						} else if (operation instanceof DeleteOperation) {
 							generatedValues = dispatcher.processDeleteAttribute(entry.getKey(), (DeleteOperation) operation, generatedValuesInParentEntity,
-							        attributesValuesReceivedInParentEntity, this.applicationContext);
+									attributesValuesReceivedInParentEntity, this.applicationContext);
 						}
 
 						if (generatedValues != null) {

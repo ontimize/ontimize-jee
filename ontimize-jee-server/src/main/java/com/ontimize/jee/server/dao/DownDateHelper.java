@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import com.ontimize.db.EntityResult;
@@ -19,6 +20,7 @@ import com.ontimize.jee.common.tools.ObjectTools;
 import com.ontimize.util.ParseUtils;
 
 @Component
+@Lazy(value = true)
 public class DownDateHelper implements ApplicationContextAware, IDownDateHelper {
 
 	/**
