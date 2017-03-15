@@ -93,6 +93,7 @@ public class SecurityBeanDefinitionParser extends AbstractSingleBeanDefinitionPa
 				}
 			}
 		}
+		builder.setLazyInit(true);
 	}
 
 	/**
@@ -130,6 +131,7 @@ public class SecurityBeanDefinitionParser extends AbstractSingleBeanDefinitionPa
 			ctx.getRegistry().registerBeanDefinition(DatabaseUserInformationService.BEAN_NAME, (BeanDefinition) engine);
 		}
 		builder.addPropertyValue("userInformationService", engine);
+		builder.setLazyInit(true);
 	}
 
 	/**
@@ -166,6 +168,7 @@ public class SecurityBeanDefinitionParser extends AbstractSingleBeanDefinitionPa
 			ctx.getRegistry().registerBeanDefinition(DatabaseUserRoleInformationService.BEAN_NAME, (BeanDefinition) engine);
 		}
 		builder.addPropertyValue("userRoleInformationService", engine);
+		builder.setLazyInit(true);
 	}
 
 	/**
@@ -202,6 +205,7 @@ public class SecurityBeanDefinitionParser extends AbstractSingleBeanDefinitionPa
 			ctx.getRegistry().registerBeanDefinition(DatabaseRoleInformationService.BEAN_NAME, (BeanDefinition) engine);
 		}
 		builder.addPropertyValue("roleInformationService", engine);
+		builder.setLazyInit(true);
 	}
 
 	/**
@@ -236,6 +240,7 @@ public class SecurityBeanDefinitionParser extends AbstractSingleBeanDefinitionPa
 			}
 		}
 		builder.addPropertyValue(SecurityBeanDefinitionParser.AUTHORIZATION_PROPERTY, authorizator);
+		builder.setLazyInit(true);
 	}
 
 	/**
@@ -287,6 +292,7 @@ public class SecurityBeanDefinitionParser extends AbstractSingleBeanDefinitionPa
 
 			// Set the scope
 			builder.setScope(element.getAttribute(SecurityBeanDefinitionParser.SCOPE));
+			builder.setLazyInit(true);
 		}
 	}
 
@@ -336,6 +342,7 @@ public class SecurityBeanDefinitionParser extends AbstractSingleBeanDefinitionPa
 
 			// Set the scope
 			builder.setScope(element.getAttribute(SecurityBeanDefinitionParser.SCOPE));
+			builder.setLazyInit(true);
 		}
 
 	}
@@ -391,6 +398,7 @@ public class SecurityBeanDefinitionParser extends AbstractSingleBeanDefinitionPa
 
 			// Set the scope
 			builder.setScope(element.getAttribute(SecurityBeanDefinitionParser.SCOPE));
+			builder.setLazyInit(true);
 		}
 
 	}
@@ -424,6 +432,7 @@ public class SecurityBeanDefinitionParser extends AbstractSingleBeanDefinitionPa
 
 			// Set the scope
 			builder.setScope(element.getAttribute(SecurityBeanDefinitionParser.SCOPE));
+			builder.setLazyInit(true);
 		}
 
 	}

@@ -96,6 +96,7 @@ public class CorsBeanDefinitionParser implements BeanDefinitionParser {
 	public static RuntimeBeanReference registerCorsConfigurations(Map<String, CorsConfiguration> corsConfigurations, ParserContext parserContext, Object source) {
 		if (!parserContext.getRegistry().containsBeanDefinition(CorsBeanDefinitionParser.CORS_CONFIGURATION_BEAN_NAME)) {
 			RootBeanDefinition corsConfigurationsDef = new RootBeanDefinition(LinkedHashMap.class);
+			corsConfigurationsDef.setLazyInit(true);
 			corsConfigurationsDef.setSource(source);
 			corsConfigurationsDef.setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
 			if (corsConfigurations != null) {

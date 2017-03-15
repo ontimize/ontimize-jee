@@ -45,5 +45,6 @@ public class FixedPropertyBeanDefinitionParser extends AbstractSingleBeanDefinit
 	@Override
 	protected void doParse(final Element element, final ParserContext ctx, final BeanDefinitionBuilder builder) {
 		builder.addPropertyValue("value", DefinitionParserUtil.nullIfEmpty(element.getAttribute("value")));
-    }
+		builder.setLazyInit(true);
+	}
 }

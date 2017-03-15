@@ -56,6 +56,7 @@ public class MailBeanDefinitionParser extends AbstractSingleBeanDefinitionParser
 					false);
 		}
 		builder.addPropertyValue("engine", engine);
+		builder.setLazyInit(true);
 	}
 
 	public static class SpringMailEngineParser extends AbstractSingleBeanDefinitionParser {
@@ -95,6 +96,7 @@ public class MailBeanDefinitionParser extends AbstractSingleBeanDefinitionParser
 						element.getAttribute(MailBeanDefinitionParser.SCOPE), false);
 			}
 			builder.addPropertyValue("configurator", configurator);
+			builder.setLazyInit(true);
 		}
 	}
 
@@ -152,6 +154,7 @@ public class MailBeanDefinitionParser extends AbstractSingleBeanDefinitionParser
 							queryId, entry.getValue()).parse(element, nestedCtx));
 				}
 			}
+			builder.setLazyInit(true);
 		}
 	}
 
@@ -203,6 +206,7 @@ public class MailBeanDefinitionParser extends AbstractSingleBeanDefinitionParser
 			builder.addPropertyValue("filterColumnValue", DefinitionParserUtil.nullIfEmpty(this.filterColumnValue));
 			builder.addPropertyValue("queryId", DefinitionParserUtil.nullIfEmpty(this.queryId));
 			builder.addPropertyValue("useMyselfInSpringContext", true);
+			builder.setLazyInit(true);
 		}
 	}
 }

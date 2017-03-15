@@ -3,6 +3,7 @@ package com.ontimize.jee.server.services.preferences;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import com.ontimize.jee.server.configuration.OntimizeConfiguration;
  * The Class RemoteApplicationPreferencesServiceImpl.
  */
 @Service("RemotePreferencesService")
+@Lazy(value = true)
 public class RemoteApplicationPreferencesServiceImpl implements IRemoteApplicationPreferencesService, ApplicationContextAware {
 
 	/** The implementation. */

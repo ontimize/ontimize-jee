@@ -55,6 +55,7 @@ public class RemotePreferencesBeanDefinitionParser extends AbstractSingleBeanDef
 					element.getAttribute(RemotePreferencesBeanDefinitionParser.SCOPE), false);
 		}
 		builder.addPropertyValue("engine", engine);
+		builder.setLazyInit(true);
 	}
 
 	/**
@@ -89,6 +90,7 @@ public class RemotePreferencesBeanDefinitionParser extends AbstractSingleBeanDef
 			// DefinitionParserUtil.parsePropertyResolverProperty(ctx, builder, element, "path", "filePath");
 
 			builder.addPropertyValue("path", DefinitionParserUtil.nullIfEmpty(element.getAttribute("filePath")));
+			builder.setLazyInit(true);
 		}
 	}
 
@@ -123,6 +125,7 @@ public class RemotePreferencesBeanDefinitionParser extends AbstractSingleBeanDef
 			builder.addPropertyValue("preferenceNameColumnName", DefinitionParserUtil.nullIfEmpty(element.getAttribute("preference-name-column-name")));
 			builder.addPropertyValue("preferenceValueColumnName", DefinitionParserUtil.nullIfEmpty(element.getAttribute("preference-value-column-name")));
 			builder.addPropertyValue("queryId", DefinitionParserUtil.nullIfEmpty(element.getAttribute("query-id")));
+			builder.setLazyInit(true);
 		}
 	}
 }

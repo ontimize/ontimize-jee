@@ -35,6 +35,7 @@ public class RemoteOperationBeanDefinitionParser extends AbstractSingleBeanDefin
 	protected void doParse(Element element, ParserContext ctx, BeanDefinitionBuilder builder) {
 		// Set the directory property
 		builder.addPropertyValue("maxParallelThreads", element.getAttribute("max-parallel-threads"));
+		builder.setLazyInit(true);
 		// TODO permitir configurar el manager de operaciones remotas
 	}
 }

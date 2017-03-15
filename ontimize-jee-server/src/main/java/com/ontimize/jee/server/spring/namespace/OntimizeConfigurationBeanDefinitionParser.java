@@ -91,6 +91,7 @@ public class OntimizeConfigurationBeanDefinitionParser extends AbstractSingleBea
 			MailBeanDefinitionParser ro = new MailBeanDefinitionParser();
 			builder.addPropertyValue("mailConfiguration", ro.parse(mail, nestedCtx));
 		}
+		builder.setLazyInit(true);
 
 		// // Support for report
 		// Element report = DomUtils.getChildElementByTagName(element,

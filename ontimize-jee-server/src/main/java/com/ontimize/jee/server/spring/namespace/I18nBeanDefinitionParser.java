@@ -52,6 +52,7 @@ public class I18nBeanDefinitionParser extends AbstractSingleBeanDefinitionParser
 					element.getAttribute(I18nBeanDefinitionParser.SCOPE), false);
 		}
 		builder.addPropertyValue("engine", engine);
+		builder.setLazyInit(true);
 	}
 
 	/**
@@ -91,6 +92,7 @@ public class I18nBeanDefinitionParser extends AbstractSingleBeanDefinitionParser
 			builder.addPropertyValue("bundleDescriptionColumn", DefinitionParserUtil.nullIfEmpty(element.getAttribute("bundleDescriptionColumn")));
 			builder.addPropertyValue("bundleValuesKeyColumn", DefinitionParserUtil.nullIfEmpty(element.getAttribute("bundleValuesKeyColumn")));
 			builder.addPropertyValue("bundleValuesTextKeyColumn", DefinitionParserUtil.nullIfEmpty(element.getAttribute("bundleValuesTextKeyColumn")));
+			builder.setLazyInit(true);
 		}
 	}
 }

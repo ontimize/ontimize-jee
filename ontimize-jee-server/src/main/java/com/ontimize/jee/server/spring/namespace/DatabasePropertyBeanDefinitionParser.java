@@ -49,5 +49,6 @@ public class DatabasePropertyBeanDefinitionParser extends AbstractSingleBeanDefi
 		builder.addPropertyValue("filterColumnName", DefinitionParserUtil.nullIfEmpty(element.getAttribute("filterColumnName")));
 		builder.addPropertyValue("filterColumnValue", DefinitionParserUtil.nullIfEmpty(element.getAttribute("filterColumnValue")));
 		builder.addPropertyValue("queryId", DefinitionParserUtil.nullIfEmpty(element.getAttribute("queryId")));
+		builder.setLazyInit(true);
 	}
 }
