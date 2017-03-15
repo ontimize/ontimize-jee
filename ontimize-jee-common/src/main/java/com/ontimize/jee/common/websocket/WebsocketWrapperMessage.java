@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
+import com.ontimize.util.Base64Utils;
 
 public class WebsocketWrapperMessage {
 
@@ -20,11 +21,7 @@ public class WebsocketWrapperMessage {
 		super();
 		this.type = type;
 		this.subtype = subtype;
-		try {
-			this.message = new ObjectMapper().writeValueAsString(toSerialize);
-		} catch (JsonProcessingException error) {
-			throw new OntimizeJEERuntimeException(error);
-		}
+		this.setMessage(toSerialize);
 	}
 
 	public void setMessage(String message) {
@@ -74,7 +71,7 @@ public class WebsocketWrapperMessage {
 
 	public String serialize() {
 		try {
-			return new ObjectMapper().writeValueAsString(this);
+			return Base64Utils.encode(new ObjectMapper().writeValueAsString(this));
 		} catch (JsonProcessingException error) {
 			throw new OntimizeJEERuntimeException(error);
 		}
@@ -82,7 +79,7 @@ public class WebsocketWrapperMessage {
 
 	public static WebsocketWrapperMessage deserialize(String message) {
 		try {
-			String newMessage = message;
+			String newMessage = Base64Utils.decode(message);
 			return new ObjectMapper().readValue(newMessage, WebsocketWrapperMessage.class);
 		} catch (Exception error) {
 			throw new OntimizeJEERuntimeException(error);
