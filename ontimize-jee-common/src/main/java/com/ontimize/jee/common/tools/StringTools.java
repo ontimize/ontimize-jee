@@ -5,8 +5,11 @@
  */
 package com.ontimize.jee.common.tools;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
- * The Class StringUtils.
+ * The Class StringTools.
  *
  * @author <a href=""></a>
  */
@@ -57,17 +60,28 @@ public final class StringTools {
 	 * @return
 	 */
 	public static String concatWithSeparator(String separator, String... strings) {
+		return StringTools.concatWithSeparator(separator, false, Arrays.asList(strings));
+	}
+
+	public static String concatWithSeparator(String separator, boolean avoidEmpty, String... strings) {
+		return StringTools.concatWithSeparator(separator, avoidEmpty, Arrays.asList(strings));
+	}
+
+	public static String concatWithSeparator(String separator, boolean avoidEmpty, List<String> strings) {
 		StringBuilder sb = new StringBuilder();
-		if ((strings == null) || (strings.length == 0)) {
+		if ((strings == null) || (strings.isEmpty())) {
 			return "";
 		}
 		boolean someRecord = false;
-		for (int i = 0; i < strings.length; i++) {
-			if (strings[i] != null) {
+		for (int i = 0; i < strings.size(); i++) {
+			if (strings.get(i) != null) {
+				if (StringTools.isEmpty(strings.get(i)) && avoidEmpty) {
+					continue;
+				}
 				if ((i > 0) && someRecord && (separator != null)) {
 					sb.append(separator);
 				}
-				sb.append(strings[i]);
+				sb.append(strings.get(i));
 
 				someRecord = true;
 			}
@@ -88,5 +102,16 @@ public final class StringTools {
 			sb.append(string);
 		}
 		return sb.toString();
+	}
+
+	public static Object avoidNull(String string) {
+		return StringTools.avoidNull(string, "");
+	}
+
+	public static String avoidNull(String string, String defaultValue) {
+		if (string == null) {
+			return defaultValue;
+		}
+		return string;
 	}
 }

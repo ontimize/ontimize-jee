@@ -4,16 +4,18 @@
 package com.ontimize.jee.common.tools;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Vector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.table.TableModel;
 
@@ -39,18 +41,19 @@ public final class EntityResultTools {
 	/** The Constant MAX_IN_EXPRESSION_SUPPORT. */
 	public static final int		MAX_IN_EXPRESSION_SUPPORT	= 1000;
 
+	private EntityResultTools() {
+		super();
+	}
+
 	/**
 	 * The Enum JoinType.
 	 */
 	public enum JoinType {
 
 		/** The left. */
-		LEFT, /** The inner. */
+		LEFT,
+		/** The inner. */
 		INNER
-	}
-
-	private EntityResultTools() {
-		super();
 	}
 
 	/**
@@ -99,8 +102,8 @@ public final class EntityResultTools {
 	}
 
 	/**
-	 * Hace un join entre dos {@link EntityResult}. El join puede ser LEFT o INNER. En columnKeysA se indican las columnas por las que se hace el join
-	 * (mismo nombre en los dos EntityResult)
+	 * Hace un join entre dos {@link EntityResult}. El join puede ser LEFT o INNER. En columnKeysA se indican las columnas por las que se hace el join (mismo nombre en los dos
+	 * EntityResult)
 	 *
 	 * @param a
 	 *            the a
@@ -117,8 +120,8 @@ public final class EntityResultTools {
 	}
 
 	/**
-	 * Hace un join entre dos {@link EntityResult}. El join puede ser LEFT o INNER. En columnKeysA y columnKeysB se indican las columnas por las que
-	 * se hace el join (deben estar ordenadas de tal forma que a.columnKeysA[i] = b.columnKeysB[i])
+	 * Hace un join entre dos {@link EntityResult}. El join puede ser LEFT o INNER. En columnKeysA y columnKeysB se indican las columnas por las que se hace el join (deben estar
+	 * ordenadas de tal forma que a.columnKeysA[i] = b.columnKeysB[i])
 	 *
 	 * @param a
 	 *            the a
@@ -155,14 +158,12 @@ public final class EntityResultTools {
 		EntityResultTools.initEntityResult(res, resColumns);
 
 		if (columnKeysA.length == 1) {
-			res = EntityResultTools.doFastJoin(a, b, columnKeysA[0], columnKeysB[0], joinType, res, resColumnsA, resColumnsB, resColumns,
-					resColumnsCommon);
+			res = EntityResultTools.doFastJoin(a, b, columnKeysA[0], columnKeysB[0], joinType, res, resColumnsA, resColumnsB, resColumns, resColumnsCommon);
 		} else {
 			int rcount = a.calculateRecordNumber();
 			for (int i = 0; i < rcount; i++) {
 				Hashtable<Object, Object> row = a.getRecordValues(i);
-				EntityResultTools.doJoinForTable(res, resColumns, resColumnsA, resColumnsB, resColumnsCommon, row, b, columnKeysA, columnKeysB,
-						joinType.equals(JoinType.INNER));
+				EntityResultTools.doJoinForTable(res, resColumns, resColumnsA, resColumnsB, resColumnsCommon, row, b, columnKeysA, columnKeysB, joinType.equals(JoinType.INNER));
 			}
 			if (res.calculateRecordNumber() == 0) {
 				res.clear();
@@ -219,8 +220,8 @@ public final class EntityResultTools {
 	 *            the res columns common
 	 * @return the entity result
 	 */
-	private static EntityResult doFastJoin(EntityResult a, EntityResult b, String keyNameA, String keyNameB, JoinType joinType, EntityResult res,
-			Vector<Object> resColumnsA, Vector<Object> resColumnsB, Vector<Object> resColumns, Vector<Object> resColumnsCommon) {
+	private static EntityResult doFastJoin(EntityResult a, EntityResult b, String keyNameA, String keyNameB, JoinType joinType, EntityResult res, Vector<Object> resColumnsA,
+			Vector<Object> resColumnsB, Vector<Object> resColumns, Vector<Object> resColumnsCommon) {
 
 		Object[] keysSortedA = null;
 		int[] indexesA = null;
@@ -297,8 +298,7 @@ public final class EntityResultTools {
 					((Vector) res.get(col)).add(resIndex, null);
 				}
 				resIndex++;
-			} else if ((found > 0) && (searchIndexB == keysSortedB.length) && (i < (indexesA.length - 1)) && (keysSortedA[i]
-					.equals(keysSortedA[i + 1]))) {
+			} else if ((found > 0) && (searchIndexB == keysSortedB.length) && (i < (indexesA.length - 1)) && (keysSortedA[i].equals(keysSortedA[i + 1]))) {
 				searchIndexB -= found;
 			}
 		}
@@ -329,9 +329,8 @@ public final class EntityResultTools {
 	 * @param onlyInnerJoin
 	 *            the only inner join
 	 */
-	private static void doJoinForTable(EntityResult res, Vector<Object> resColumns, Vector<Object> resColumnsA, Vector<Object> resColumnsB,
-			Vector<Object> resColumnsCommon, Hashtable<Object, Object> rowA, EntityResult b, String[] columnKeysA, String[] columnKeysB,
-			boolean onlyInnerJoin) {
+	private static void doJoinForTable(EntityResult res, Vector<Object> resColumns, Vector<Object> resColumnsA, Vector<Object> resColumnsB, Vector<Object> resColumnsCommon,
+			Hashtable<Object, Object> rowA, EntityResult b, String[] columnKeysA, String[] columnKeysB, boolean onlyInnerJoin) {
 		int rcount = b.calculateRecordNumber();
 		boolean match = false;
 		int index = res.calculateRecordNumber();
@@ -437,6 +436,221 @@ public final class EntityResultTools {
 	/**
 	 * Agrupa los valores de un {@link EntityResult}. Se pueden indicar funciones de agregado
 	 *
+	 * @param a
+	 *            the a
+	 * @param groupColumns
+	 *            the group columns
+	 * @param groupType
+	 *            the group type
+	 * @param columnToGroup
+	 *            the column to group
+	 * @param count
+	 *            the count
+	 * @return the entity result
+	 * @throws Exception
+	 *             the exception
+	 */
+	public static EntityResult doGroup(EntityResult a, String[] groupColumns, GroupType groupType, String columnToGroup, boolean count) throws Exception {
+		if (groupColumns.length <= 0) {
+			throw new Exception("GroupColumns are mandatory");
+		}
+
+		if (a.isEmpty()) {
+			return a;
+		}
+
+		if (groupColumns.length == 1) {
+			return EntityResultTools.doFastGroup(a, groupColumns[0], groupType, columnToGroup, count);
+		} else {
+			return EntityResultTools.doSlowGroup(a, groupColumns, groupType, columnToGroup, count);
+		}
+	}
+
+	/**
+	 * Do slow group.
+	 *
+	 * @param a
+	 *            the a
+	 * @param groupColumns
+	 *            the group columns
+	 * @param groupType
+	 *            the group type
+	 * @param columnToGroup
+	 *            the column to group
+	 * @param count
+	 *            the count
+	 * @return the entity result
+	 * @throws Exception
+	 *             the exception
+	 */
+	private static EntityResult doSlowGroup(EntityResult a, String[] groupColumns, GroupType groupType, String columnToGroup, boolean count) throws Exception {
+
+		Vector<Group> groups = new Vector<Group>();
+
+		int rcount = a.calculateRecordNumber();
+		for (int i = 0; i < rcount; i++) {
+			Hashtable recordValues = a.getRecordValues(i);
+			Group group = EntityResultTools.checkGroup(groups, recordValues);
+			if (group != null) {
+				// Add values
+				group.addValue(recordValues.get(columnToGroup));
+			} else {
+				// Add keys and values
+				Hashtable ks = new Hashtable();
+				for (String s : groupColumns) {
+					Object value = recordValues.get(s);
+					if (value == null) {
+						throw new Exception("GroupColumn \"" + s + "\" is null. It is not supported");
+					}
+					ks.put(s, value);
+				}
+				groups.add(new Group(ks, recordValues.get(columnToGroup)));
+			}
+
+		}
+
+		EntityResult res = new EntityResult();
+		Vector<Object> resultColumns = new Vector<Object>(Arrays.asList(groupColumns));
+		resultColumns.add(groupType.toString());
+		if (count) {
+			resultColumns.add("COUNT");
+		}
+		EntityResultTools.initEntityResult(res, resultColumns);
+
+		for (Group g : groups) {
+			Hashtable record = new Hashtable();
+			// Group columns
+			for (String s : groupColumns) {
+				record.put(s, g.getKeys().get(s));
+			}
+
+			// Grouped column
+			Object value = EntityResultTools.parseGroupFunction(groupType, g.getValues());
+			if (value != null) {
+				record.put(groupType.toString(), value);
+			}
+
+			// Count column
+			if (count) {
+				record.put("COUNT", g.getValues().size());
+			}
+
+			res.addRecord(record);
+		}
+		return res;
+	}
+
+	/**
+	 * Do fast group.
+	 *
+	 * @param er
+	 *            the a
+	 * @param groupColumn
+	 *            the group column
+	 * @param groupType
+	 *            the group type
+	 * @param opColumn
+	 *            the op column
+	 * @param count
+	 *            the count
+	 * @return the entity result
+	 */
+	private static EntityResult doFastGroup(EntityResult er, String groupColumn, GroupType groupType, String opColumn, boolean count) {
+		boolean hasOp = (er.get(opColumn) != null);
+		EntityResult res = new EntityResult();
+		if (count) {
+			EntityResultTools.initEntityResult(res, groupColumn, opColumn, "COUNT");
+		} else {
+			EntityResultTools.initEntityResult(res, groupColumn, opColumn);
+		}
+		Object[] keysSorted = ((Vector) er.get(groupColumn)).toArray();
+		int[] indexes = FastQSortAlgorithm.sort(keysSorted);
+		Object currentKey = null;
+		Object currentOp = null;
+		int resIndex = 0;
+		int counter = 0;
+		for (int i = 0; i < keysSorted.length; i++) {
+			if ((keysSorted[i] == null) || !keysSorted[i].equals(currentKey)) {
+				// cambio de grupo
+				if (currentKey != null) {
+					((Vector) res.get(groupColumn)).add(resIndex, currentKey);
+					if (!groupColumn.equals(opColumn)) {
+						((Vector) res.get(opColumn)).add(resIndex, currentOp);
+					}
+					if (count) {
+						((Vector) res.get("COUNT")).add(resIndex, new Integer(counter));
+					}
+					resIndex++;
+				}
+				currentKey = keysSorted[i];
+				currentOp = null;
+				counter = 0;
+			}
+			if (hasOp) {
+				Object newOp = ((Vector) er.get(opColumn)).get(indexes[i]);
+				switch (groupType) {
+					case NONE:
+						currentOp = null;
+						break;
+					case MAX:
+						Number converted = ((newOp instanceof Number) || (newOp == null)) ? (Number) newOp : new Double((String) newOp);
+						if (currentOp == null) {
+							currentOp = converted;
+						} else if (converted != null) {
+							double c = ((Number) currentOp).doubleValue();
+							double n = converted.doubleValue();
+							currentOp = (n > c) ? converted : currentOp;
+						}
+						break;
+					case SUM:
+						converted = ((newOp instanceof Number) || (newOp == null)) ? (Number) newOp : new Double((String) newOp);
+						if (currentOp == null) {
+							currentOp = converted;
+						} else if (converted != null) {
+							double c = ((Number) currentOp).doubleValue();
+							double n = converted.doubleValue();
+							currentOp = new Double(c + n);
+						}
+						break;
+					default:
+						break;
+				}
+			}
+			counter++;
+		}
+		if (currentKey != null) {
+			((Vector) res.get(groupColumn)).add(resIndex, currentKey);
+			if (!groupColumn.equals(opColumn)) {
+				((Vector) res.get(opColumn)).add(resIndex, currentOp);
+			}
+			if (count) {
+				((Vector) res.get("COUNT")).add(resIndex, new Integer(counter));
+			}
+			resIndex++;
+		}
+
+		if (!groupColumn.equals(opColumn)) {
+			switch (groupType) {
+				case NONE:
+					break;
+				case MAX:
+					EntityResultTools.renameColumn(res, opColumn, "MAX");
+					break;
+				case SUM:
+					EntityResultTools.renameColumn(res, opColumn, "SUM");
+					break;
+				default:
+					break;
+			}
+		}
+		return res;
+
+	}
+
+	/**
+	 * Agrupa los valores de un {@link EntityResult}. Se pueden indicar múltiples funciones de agregado. TODO: versión mejorada de EntityResult doGroup(EntityResult a, String[]
+	 * groupColumns, GroupType groupType, String columnToGroup, boolean count)
+	 *
 	 * @param er
 	 *            the entity result
 	 * @param groupColumns
@@ -468,10 +682,10 @@ public final class EntityResultTools {
 	 *
 	 * @param er
 	 *            the entity result
-	 * @param groupColumn
-	 *            the group column
-	 * @param GroupTypeOperation
-	 *            the group type operations
+	 * @param groupColumns
+	 *            the group columns
+	 * @param groupOperations
+	 *            the GroupTypeOperation
 	 * @return the entity result
 	 * @throws Exception
 	 *             the exception
@@ -533,7 +747,7 @@ public final class EntityResultTools {
 				String renameColumn = groupTypeOperation.getRenameColumn();
 				// Select correct values
 				Vector values = g.getValues();
-				Vector opValues = new Vector<>();
+				Vector opValues = new Vector<Object>();
 				for (int y = i; y <= (values.size() - 1); y += length) {
 					opValues.add(values.get(y));
 				}
@@ -549,29 +763,56 @@ public final class EntityResultTools {
 		return res;
 	}
 
+	static class GroupOperationWrap {
+		GroupTypeOperation	operation;
+		Number				currentValue;
+
+		public GroupOperationWrap(GroupTypeOperation operation) {
+			super();
+			this.operation = operation;
+			this.currentValue = null;
+		}
+
+		public Object getOpColumn() {
+			return this.operation.getOpColumn();
+		}
+
+		public GroupType getGroupType() {
+			return this.operation.getGroupType();
+		}
+
+		public String getRenameColumn() {
+			return this.operation.getRenameColumn();
+		}
+
+	}
+
 	/**
 	 * Do fast group.
 	 *
 	 * @param er
 	 *            the entity result
-	 * @param groupColumn
-	 *            the group column
-	 * @param GroupTypeOperation
-	 *            the group type operations
+	 * @param groupColumns
+	 *            the group columns
+	 * @param groupOperations
+	 *            the GroupTypeOperation
 	 * @return the entity result
 	 */
-	private static EntityResult doFastGroup(EntityResult er, String groupColumn, GroupTypeOperation... groupOperations) {
+	private static EntityResult doFastGroup(EntityResult er, String groupColumn, GroupTypeOperation... gOperations) {
 		boolean hasOp = false;
 		List<String> opColumns = new ArrayList<String>();
-		if (groupOperations != null) {
+		List<GroupOperationWrap> groupOperations = new ArrayList<>();
+		if (gOperations != null) {
 			hasOp = true;
-			for (GroupTypeOperation groupOperation : groupOperations) {
+			for (GroupTypeOperation groupOperation : gOperations) {
 				String opColumn = groupOperation.getOpColumn();
 				String opName = groupOperation.getGroupType().name();
 				opColumns.add(opColumn + "_" + opName);
 				if (er.get(opColumn) == null) {
 					hasOp = false;
 				}
+				groupOperations.add(new GroupOperationWrap(groupOperation));
+
 			}
 		}
 		EntityResult res = new EntityResult();
@@ -584,80 +825,68 @@ public final class EntityResultTools {
 
 		int counter = 0;
 
-		Object currentMinOp = null;
-		Object currentMaxOp = null;
-		Object currentAvgOp = null;
-		Object currentSumOp = null;
-
 		Vector vectorGroupColumn = (Vector) res.get(groupColumn);
 		for (int i = 0; i < keysSorted.length; i++) {
 			if ((keysSorted[i] == null) || !keysSorted[i].equals(currentKey)) {
 				// cambio de grupo
 				if (currentKey != null) {
-					resIndex = EntityResultTools.refactor(groupColumn, res, currentKey, resIndex, counter, currentMinOp, currentMaxOp, currentAvgOp,
-							currentSumOp, vectorGroupColumn, groupOperations);
+					resIndex = EntityResultTools.refactor(groupColumn, res, currentKey, resIndex, counter, vectorGroupColumn, groupOperations.toArray(new GroupOperationWrap[] {}));
 				}
 				currentKey = keysSorted[i];
-
-				// currentOp = null;
-				currentMinOp = null;
-				currentMaxOp = null;
-				currentAvgOp = null;
-				currentSumOp = null;
+				for (GroupOperationWrap groupOperation : groupOperations) {
+					groupOperation.currentValue = null;
+				}
 				counter = 0;
 			}
 			counter++;
 			if (hasOp) {
-				for (GroupTypeOperation groupOperation : groupOperations) {
+				for (GroupOperationWrap groupOperation : groupOperations) {
 					Object newOp = ((Vector) er.get(groupOperation.getOpColumn())).get(indexes[i]);
 					GroupType groupType = groupOperation.getGroupType();
 					if (groupType != null) {
 						switch (groupType) {
 							case NONE:
-								currentSumOp = null;
-								currentMinOp = null;
-								currentMaxOp = null;
-								currentAvgOp = null;
+								groupOperation.currentValue = null;
 								counter = 0;
 								break;
 							case AVG:
 								Number converted = ((newOp instanceof Number) || (newOp == null)) ? (Number) newOp : new Double((String) newOp);
-								if (currentAvgOp == null) {
-									currentAvgOp = converted;
+								if (groupOperation.currentValue == null) {
+									groupOperation.currentValue = converted;
 								} else if (converted != null) {
-									double c = ((Number) currentAvgOp).doubleValue();
+									double c = groupOperation.currentValue.doubleValue();
 									double n = converted.doubleValue();
-									currentAvgOp = new Double((n + (c * (counter - 1))) / counter);
+									groupOperation.currentValue = new Double((n + (c * (counter - 1))) / counter);
 								}
 								break;
 							case MAX:
 								converted = ((newOp instanceof Number) || (newOp == null)) ? (Number) newOp : new Double((String) newOp);
-								if (currentMaxOp == null) {
-									currentMaxOp = converted;
+								if (groupOperation.currentValue == null) {
+									groupOperation.currentValue = converted;
 								} else if (converted != null) {
-									double c = ((Number) currentMaxOp).doubleValue();
+									double c = groupOperation.currentValue.doubleValue();
 									double n = converted.doubleValue();
-									currentMaxOp = (n > c) ? converted : currentMaxOp;
+									groupOperation.currentValue = (n > c) ? converted : groupOperation.currentValue;
 								}
 								break;
 							case MIN:
 								converted = ((newOp instanceof Number) || (newOp == null)) ? (Number) newOp : new Double((String) newOp);
-								if (currentMinOp == null) {
-									currentMinOp = converted;
+								if (groupOperation.currentValue == null) {
+									groupOperation.currentValue = converted;
 								} else if (converted != null) {
-									double c = ((Number) currentMinOp).doubleValue();
+									double c = groupOperation.currentValue.doubleValue();
 									double n = converted.doubleValue();
-									currentMinOp = (n < c) ? converted : currentMinOp;
+									groupOperation.currentValue = (n < c) ? converted : groupOperation.currentValue;
 								}
 								break;
 							case SUM:
 								converted = ((newOp instanceof Number) || (newOp == null)) ? (Number) newOp : new Double((String) newOp);
-								if (currentSumOp == null) {
-									currentSumOp = converted;
+								if (groupOperation.currentValue == null) {
+									groupOperation.currentValue = converted;
 								} else if (converted != null) {
-									double c = ((Number) currentSumOp).doubleValue();
+									double c = groupOperation.currentValue.doubleValue();
 									double n = converted.doubleValue();
-									currentSumOp = new Double(c + n);
+									groupOperation.currentValue = new Double(c + n);
 								}
 								break;
 							default:
@@ -668,55 +897,29 @@ public final class EntityResultTools {
 			}
 		}
 		if (currentKey != null) {
-			resIndex = EntityResultTools.refactor(groupColumn, res, currentKey, resIndex, counter, currentMinOp, currentMaxOp, currentAvgOp,
-					currentSumOp, vectorGroupColumn, groupOperations);
+			resIndex = EntityResultTools.refactor(groupColumn, res, currentKey, resIndex, counter, vectorGroupColumn, groupOperations.toArray(new GroupOperationWrap[] {}));
 		}
 
-		if (groupOperations != null) {
-			for (GroupTypeOperation groupOperation : groupOperations) {
-				String opColumn = groupOperation.getOpColumn() + "_" + groupOperation.getGroupType().name();
-				String renameColumn = groupOperation.getRenameColumn();
-				if (!groupColumn.equals(opColumn)) {
-					GroupType groupType = groupOperation.getGroupType();
-					if (groupType != null) {
-						EntityResultTools.renameColumn(res, opColumn, renameColumn);
-					}
+		for (GroupOperationWrap groupOperation : groupOperations) {
+			String opColumn = groupOperation.getOpColumn() + "_" + groupOperation.getGroupType().name();
+			String renameColumn = groupOperation.getRenameColumn();
+			if (!groupColumn.equals(opColumn)) {
+				GroupType groupType = groupOperation.getGroupType();
+				if (groupType != null) {
+					EntityResultTools.renameColumn(res, opColumn, renameColumn);
 				}
 			}
 		}
 		return res;
 	}
 
-	private static int refactor(String groupColumn, EntityResult res, Object currentKey, int resIndex, int counter, Object currentMinOp,
-			Object currentMaxOp, Object currentAvgOp, Object currentSumOp, Vector vectorGroupColumn, GroupTypeOperation... groupOperations) {
+	private static int refactor(String groupColumn, EntityResult res, Object currentKey, int resIndex, int counter, Vector vectorGroupColumn, GroupOperationWrap... groupOperations) {
 		vectorGroupColumn.add(resIndex, currentKey);
 
-		for (GroupTypeOperation groupOperation : groupOperations) {
+		for (GroupOperationWrap groupOperation : groupOperations) {
 			String opColumn = groupOperation.getOpColumn() + "_" + groupOperation.getGroupType().name();
 			if (!groupColumn.equals(opColumn)) {
-				Object currentOp = null;
-				switch (groupOperation.getGroupType()) {
-					case NONE:
-						break;
-					case COUNT:
-						currentOp = counter;
-						break;
-					case AVG:
-						currentOp = currentAvgOp;
-						break;
-					case MAX:
-						currentOp = currentMaxOp;
-						break;
-					case MIN:
-						currentOp = currentMinOp;
-						break;
-					case SUM:
-						currentOp = currentSumOp;
-						break;
-					default:
-						break;
-				}
-				((Vector) res.get(opColumn)).add(resIndex, currentOp);
+				((Vector) res.get(opColumn)).add(resIndex, groupOperation.currentValue);
 			}
 		}
 		resIndex++;
@@ -734,7 +937,7 @@ public final class EntityResultTools {
 	 * @throws Exception
 	 *             the exception
 	 */
-	private static Object parseGroupFunction(GroupType groupType, List<?> values) throws OntimizeJEEException {
+	private static Object parseGroupFunction(GroupType groupType, List<?> values) throws Exception {
 		// TODO Separar cada funcion (interfaz IGroupFnction)
 		// TODO No necesariamente necesitamos un double, deberia ser del tipo de
 		// dato que nos llega
@@ -761,16 +964,17 @@ public final class EntityResultTools {
 					continue;
 				}
 				try {
-					if (!(o instanceof Number)) {
+					if ((o != null) && !(o instanceof Number)) {
 						o = Double.parseDouble(o.toString());
 					}
 				} catch (Exception e) {
-					throw new OntimizeJEEException("Required numeric column to group.");
+					throw new Exception("Required numeric column to group.");
 				}
 
 				finalValue = ((Number) o).doubleValue() > finalValue.doubleValue() ? new BigDecimal(o.toString()) : finalValue;
 				someValue = true;
 			}
+
 			return someValue ? finalValue : null;
 		} else if (groupType == GroupType.MIN) {
 			BigDecimal finalValue = new BigDecimal(+Double.MAX_VALUE);
@@ -784,7 +988,7 @@ public final class EntityResultTools {
 						o = Double.parseDouble(o.toString());
 					}
 				} catch (Exception e) {
-					throw new OntimizeJEEException("Required numeric column to group.");
+					throw new Exception("Required numeric column to group.");
 				}
 
 				finalValue = ((Number) o).doubleValue() < finalValue.doubleValue() ? new BigDecimal(o.toString()) : finalValue;
@@ -803,11 +1007,11 @@ public final class EntityResultTools {
 					someValue = true;
 				}
 			}
-			return someValue ? finalValue.divide(new BigDecimal(values.size()), new MathContext(10, RoundingMode.UP)) : null;
+			return someValue ? finalValue.divide(new BigDecimal(values.size())) : null;
 		} else if (groupType == GroupType.COUNT) {
 			return new BigDecimal(values.size());
 		} else {
-			throw new OntimizeJEEException("Unsupported group funtion \"" + groupType.toString() + " \".");
+			throw new Exception("Unsupported group funtion \"" + groupType.toString() + " \".");
 		}
 	}
 
@@ -968,7 +1172,7 @@ public final class EntityResultTools {
 		EntityResultTools.initEntityResult(res, new Vector(er.keySet()));
 		int j = 0;
 		for (int i : sorter.getIndexes()) {
-			res.addRecord(er.getRecordValues(i), j);
+			EntityResultTools.fastAddRecord(res, j, er, i);
 			j++;
 		}
 		return res;
@@ -1140,8 +1344,7 @@ public final class EntityResultTools {
 	 *
 	 * @param vRes
 	 *            the v res
-	 * @return the entity result {@link EntityResult} que se han pasado. En caso de que los {@link EntityResult} tengan las columnas con el mismo
-	 *         identificador, se combinan.
+	 * @return the entity result {@link EntityResult} que se han pasado. En caso de que los {@link EntityResult} tengan las columnas con el mismo identificador, se combinan.
 	 */
 	public static EntityResult doUnionAll(EntityResult... vRes) {
 		if ((vRes == null) || (vRes.length == 0)) {
@@ -1184,13 +1387,11 @@ public final class EntityResultTools {
 	}
 
 	/**
-	 * Hace un UNION (elimina duplicados) de los {@link EntityResult} que se pasan como parametro. El {@link EntityResult} final tiene las columnas de
-	 * todos los
+	 * Hace un UNION (elimina duplicados) de los {@link EntityResult} que se pasan como parametro. El {@link EntityResult} final tiene las columnas de todos los
 	 *
 	 * @param vRes
 	 *            the v res
-	 * @return the entity result {@link EntityResult} que se han pasado. En caso de que los {@link EntityResult} tengan las columnas con el mismo
-	 *         identificador, se combinan.
+	 * @return the entity result {@link EntityResult} que se han pasado. En caso de que los {@link EntityResult} tengan las columnas con el mismo identificador, se combinan.
 	 */
 	public static EntityResult doUnion(EntityResult... vRes) {
 		EntityResult doUnionAll = EntityResultTools.doUnionAll(vRes);
@@ -1208,10 +1409,9 @@ public final class EntityResultTools {
 		for (int i = 0; i < num; i++) {
 			Hashtable currentValues = doUnionAll.getRecordValues(i);
 			if (!EntityResultTools.checkRecordExists(newResult, currentValues, columnList)) {
-				newResult.addRecord(currentValues);
+				EntityResultTools.fastAddRecord(newResult, doUnionAll, i);
 			}
 		}
-
 		return newResult;
 	}
 
@@ -1274,15 +1474,6 @@ public final class EntityResultTools {
 		return EntityResultTools.dofilter(er, keysValues, false);
 	}
 
-	/**
-	 * Filtra un {@link EntityResult} a partir del filtro establecido en keysValues. Acepta SearchValue AUN NO ESTA MUY PROBADO!!!!!!
-	 *
-	 * @param er
-	 *            the er
-	 * @param keysValues
-	 *            the keys values
-	 * @return the entity result
-	 */
 	public static EntityResult dofilter(EntityResult er, Hashtable<?, ?> keysValues, boolean remove) {
 		EntityResult res = new EntityResult();
 		res.setCode(EntityResult.OPERATION_SUCCESSFUL);
@@ -1294,7 +1485,7 @@ public final class EntityResultTools {
 		int nregs = er.calculateRecordNumber();
 		for (int i = 0; i < nregs; i++) {
 			if (EntityResultTools.checkFilter(er, i, keysValues)) {
-				res.addRecord(er.getRecordValues(i));
+				EntityResultTools.fastAddRecord(res, er, i);
 				if (remove) {
 					er.deleteRecord(i);
 					i--;
@@ -1304,6 +1495,20 @@ public final class EntityResultTools {
 		}
 
 		return res;
+	}
+
+	public static void fastAddRecord(EntityResult target, EntityResult source, int sourceIndex) {
+		for (Entry entry : (Set<Entry>) target.entrySet()) {
+			List v = (List) entry.getValue();
+			v.add(((List) source.get(entry.getKey())).get(sourceIndex));
+		}
+	}
+
+	public static void fastAddRecord(EntityResult target, int targetIndex, EntityResult source, int sourceIndex) {
+		for (Entry entry : (Set<Entry>) target.entrySet()) {
+			List v = (List) entry.getValue();
+			v.add(targetIndex, ((List) source.get(entry.getKey())).get(sourceIndex));
+		}
 	}
 
 	/**
@@ -1413,6 +1618,8 @@ public final class EntityResultTools {
 					default:
 						break;
 				}
+			} else if (filterValue instanceof IRecordFilter) {
+				isOk = ((IRecordFilter) filterValue).evaluate(test);
 			} else {
 				isOk = filterValue.equals(test);
 			}
@@ -1598,8 +1805,8 @@ public final class EntityResultTools {
 	}
 
 	/**
-	 * Utility to use with Ontimize entities, to specify filters(keys-values) more fast. <br> Will be received a sequence of objects with
-	 * <key><value>[<key><value>...]. <br> Example: query(EntityResultTools.keysvalues("AA", new Integer(1), "BB", identifier), av, ses, con).
+	 * Utility to use with Ontimize entities, to specify filters(keys-values) more fast. <br> Will be received a sequence of objects with <key><value>[<key><value>...]. <br>
+	 * Example: query(EntityResultTools.keysvalues("AA", new Integer(1), "BB", identifier), av, ses, con).
 	 *
 	 * @param objects
 	 * @return
@@ -1611,16 +1818,16 @@ public final class EntityResultTools {
 		if ((objects.length % 2) != 0) {
 			throw new RuntimeException("Review filters, it is mandatory to set dual <key><value>.");
 		}
-		for (Object o : objects) {
-			if (o == null) {
-				throw new RuntimeException("Review filters, it is not acceptable null <key> or null <value>.");
-			}
-		}
 
 		Hashtable<Object, Object> res = new Hashtable<Object, Object>();
 		int i = 0;
 		while (i < objects.length) {
-			res.put(objects[i++], objects[i++]);
+			Object key = objects[i++];
+			Object value = objects[i++];
+			MapTools.safePut(res, key, value);
+			if ((key == null) || (value == null)) {
+				EntityResultTools.logger.debug("skipping pair with null value <{},{}>", key, value);
+			}
 		}
 		return res;
 	}
@@ -1657,12 +1864,6 @@ public final class EntityResultTools {
 	 * @return true, if successful
 	 */
 	public static boolean containsRow(EntityResult res, Map<?, ?> row) {
-		if (res == null) {
-			return false;
-		}
-		if (row == null) {
-			return true;
-		}
 		return EntityResultTools.containsRow(res, res.calculateRecordNumber(), row);
 	}
 
@@ -1681,9 +1882,6 @@ public final class EntityResultTools {
 		if (row == null) {
 			return true;
 		}
-		if ((res == null) || (nregs == 0)) {
-			return false;
-		}
 		for (int i = 0; i < nregs; i++) {
 			Map<?, ?> record = res.getRecordValues(i);
 			if (row.equals(record)) {
@@ -1694,8 +1892,7 @@ public final class EntityResultTools {
 	}
 
 	/**
-	 * Iterates <code>attr</code> list and delete {@link TableAttribute} and {@link ReferenceFieldAttribute} if it's contained in
-	 * <code>toDelete</code> list
+	 * Iterates <code>attr</code> list and delete {@link TableAttribute} and {@link ReferenceFieldAttribute} if it's contained in <code>toDelete</code> list
 	 *
 	 * @param toDelete
 	 *            names to delete
@@ -1717,20 +1914,6 @@ public final class EntityResultTools {
 			if ((nameToDelete != null) && toDelete.contains(nameToDelete)) {
 				attr.remove(i);
 				i--;
-			}
-		}
-	}
-
-	public static SearchValue betweenDatesExpression(Object leftValue, Object rightValue) {
-		if ((leftValue != null) && (rightValue != null)) {
-			return new SearchValue(SearchValue.BETWEEN, new Vector(Arrays.asList(leftValue, rightValue)));
-		} else {
-			if (leftValue != null) {
-				return new SearchValue(SearchValue.MORE_EQUAL, leftValue);
-			} else if (rightValue != null) {
-				return new SearchValue(SearchValue.LESS_EQUAL, rightValue);
-			} else {
-				return null;
 			}
 		}
 	}
@@ -1760,5 +1943,54 @@ public final class EntityResultTools {
 			return true;
 		}
 
+	}
+
+	public static interface IRecordFilter {
+
+		boolean evaluate(Object test);
+
+	}
+
+	public static class RecordLikeFilter implements IRecordFilter {
+
+		protected String	regEx;
+		protected Pattern	p;
+
+		public RecordLikeFilter(String regEx) {
+			this.regEx = regEx;
+			this.p = Pattern.compile(regEx);
+
+		}
+
+		@Override
+		public boolean evaluate(Object test) {
+			Matcher m = this.p.matcher("aaaaab");
+			return m.matches();
+		}
+
+	}
+
+	public static EntityResult pivot(EntityResult er, String pivotColumn, List<String> otherColumns, GroupTypeOperation operationColumn) throws Exception {
+		EntityResult res = new EntityResult();
+		if ((er == null) || (pivotColumn == null) || (operationColumn == null)) {
+			return res;
+		}
+		HashSet<Object> setPivotColumn = new HashSet<>((Vector) er.get(pivotColumn));
+		List<String> resColumns = new ArrayList<>();
+		resColumns.addAll(Arrays.asList(setPivotColumn.toArray(new String[] {})));
+		resColumns.addAll(otherColumns);
+		EntityResultTools.initEntityResult(res, resColumns);
+
+		for (Object pivotValue : setPivotColumn) {
+			EntityResult filteredRes = EntityResultTools.dofilter(er, EntityResultTools.keysvalues(pivotColumn, pivotValue));
+			EntityResult group = EntityResultTools.doGroup(filteredRes, otherColumns.toArray(new String[] {}), operationColumn);
+			EntityResultTools.renameColumn(group, operationColumn.getRenameColumn(), pivotValue.toString());
+			res = EntityResultTools.doUnionAll(res, group);
+		}
+		List<GroupTypeOperation> groupOperations = new ArrayList<>();
+		for (Object pivotValue : setPivotColumn) {
+			groupOperations.add(new GroupTypeOperation(pivotValue.toString(), pivotValue.toString(), GroupType.SUM));
+		}
+		return EntityResultTools.doGroup(res, otherColumns.toArray(new String[] {}), groupOperations.toArray(new GroupTypeOperation[] {}));
 	}
 }

@@ -8,6 +8,7 @@ import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -20,7 +21,11 @@ import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
  *
  */
 public final class ReflectionTools {
-	private static final Map<Class<?>, Class<?>>	primitiveWrapperMap	= new HashMap<Class<?>, Class<?>>();
+
+	/**
+	 * Maps primitive <code>Class</code>es to their corresponding wrapper <code>Class</code>.
+	 */
+	private static final Map<Class<?>, Class<?>> primitiveWrapperMap = new HashMap<Class<?>, Class<?>>();
 	static {
 		ReflectionTools.primitiveWrapperMap.put(Boolean.TYPE, Boolean.class);
 		ReflectionTools.primitiveWrapperMap.put(Byte.TYPE, Byte.class);
@@ -31,6 +36,19 @@ public final class ReflectionTools {
 		ReflectionTools.primitiveWrapperMap.put(Double.TYPE, Double.class);
 		ReflectionTools.primitiveWrapperMap.put(Float.TYPE, Float.class);
 		ReflectionTools.primitiveWrapperMap.put(Void.TYPE, Void.TYPE);
+	}
+	/**
+	 * Maps wrapper <code>Class</code>es to their corresponding primitive types.
+	 */
+	private static final Map<Class<?>, Class<?>> wrapperPrimitiveMap = new HashMap<Class<?>, Class<?>>();
+	static {
+		for (Iterator<Class<?>> it = ReflectionTools.primitiveWrapperMap.keySet().iterator(); it.hasNext();) {
+			Class<?> primitiveClass = it.next();
+			Class<?> wrapperClass = ReflectionTools.primitiveWrapperMap.get(primitiveClass);
+			if (!primitiveClass.equals(wrapperClass)) {
+				ReflectionTools.wrapperPrimitiveMap.put(wrapperClass, primitiveClass);
+			}
+		}
 	}
 
 	/**
@@ -141,6 +159,15 @@ public final class ReflectionTools {
 		throw new OntimizeJEERuntimeException("Can't find constructor for " + theClass.getName());
 	}
 
+	/**
+	 * Find constructor.
+	 *
+	 * @param constructors
+	 *            the constructors
+	 * @param args
+	 *            the args
+	 * @return the constructor
+	 */
 	private static Constructor<?> findConstructor(Constructor<?>[] constructors, Object... args) {
 		for (Constructor<?> ctr : constructors) {
 			if (ctr.getParameterTypes().length == args.length) {
@@ -179,7 +206,13 @@ public final class ReflectionTools {
 	/**
 	 * Returns a method from a {@link Class} by name. Note!!: no polimorphims allowed in the class for the method
 	 *
+	 * @param theClass
+	 *            the the class
 	 * @param name
+	 *            the name
+	 * @param numParameters
+	 *            the num parameters
+	 * @return the method by name and paratemer number
 	 */
 	public static Method getMethodByNameAndParatemerNumber(Class<?> theClass, String name, int numParameters) {
 		Method[] methods = theClass.getMethods();
@@ -197,10 +230,50 @@ public final class ReflectionTools {
 
 		}
 
-		throw new OntimizeJEERuntimeException(String.format("No method %s found in class %s", name,
-				Proxy.class.isAssignableFrom(theClass) ? Arrays.toString(theClass.getInterfaces()) : theClass));
+		throw new OntimizeJEERuntimeException(
+				String.format("No method %s found in class %s", name, Proxy.class.isAssignableFrom(theClass) ? Arrays.toString(theClass.getInterfaces()) : theClass));
 	}
 
+	/**
+	 * Returns a method from a {@link Class} by name and parameters classes.
+	 *
+	 * @param theClass
+	 *            the the class
+	 * @param name
+	 *            the name
+	 * @param numParameters
+	 *            the num parameters
+	 * @return the method by name and paratemer number
+	 */
+	public static Method getMethodByNameAndParatemers(Class<?> theClass, String name, Object... parameters) {
+		Method[] methods = theClass.getMethods();
+		Method method = ReflectionTools.findMethod(methods, name, parameters);
+		if (method != null) {
+			return method;
+		}
+		// search in declared methods
+		for (Class<?> innerClass = theClass; innerClass != null; innerClass = innerClass.getSuperclass()) {
+			Method[] declaredMethods = innerClass.getDeclaredMethods();
+			method = ReflectionTools.findMethod(declaredMethods, name, parameters);
+			if (method != null) {
+				return method;
+			}
+
+		}
+		throw new OntimizeJEERuntimeException("No method " + name + " found in class " + theClass);
+	}
+
+	/**
+	 * Find method.
+	 *
+	 * @param methods
+	 *            the methods
+	 * @param name
+	 *            the name
+	 * @param numParameters
+	 *            the num parameters
+	 * @return the method
+	 */
 	private static Method findMethod(Method[] methods, String name, int numParameters) {
 		for (Method method : methods) {
 			if (name.equals(method.getName()) && ((numParameters == -1) || (method.getParameterTypes().length == numParameters))) {
@@ -210,9 +283,55 @@ public final class ReflectionTools {
 		return null;
 	}
 
+	/**
+	 * Find method.
+	 *
+	 * @param methods
+	 *            the methods
+	 * @param name
+	 *            the name
+	 * @param numParameters
+	 *            the num parameters
+	 * @return the method
+	 */
+	private static Method findMethod(Method[] methods, String name, Object... parameterOrdered) {
+		if ((parameterOrdered == null) || (parameterOrdered.length == 0)) {
+			return ReflectionTools.findMethod(methods, name, 0);
+		}
+		for (Method method : methods) {
+			Class<?>[] parameterTypes = method.getParameterTypes();
+			if ((parameterTypes.length == parameterOrdered.length) && method.getName().equals(name)) {
+				boolean valid = true;
+				for (int i = 0; i < parameterTypes.length; i++) {
+					if (!ReflectionTools.isAssignable(parameterOrdered[i] == null ? null : parameterOrdered[i].getClass(), parameterTypes[i], true)) {
+						valid = false;
+					}
+				}
+				if (valid) {
+					return method;
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Invoke.
+	 *
+	 * @param toInvoke
+	 *            the to invoke
+	 * @param methodName
+	 *            the method name
+	 * @param parameters
+	 *            the parameters
+	 * @return the object
+	 */
 	public static Object invoke(Object toInvoke, String methodName, Object... parameters) {
-		Method method = ReflectionTools.getMethodByNameAndParatemerNumber((toInvoke instanceof Class) ? (Class<?>) toInvoke : toInvoke.getClass(), methodName,
-				parameters == null ? 0 : parameters.length);
+		// Method method =
+		// ReflectionTools.getMethodByNameAndParatemerNumber((toInvoke
+		// instanceof Class) ? (Class<?>) toInvoke : toInvoke.getClass(),
+		// methodName, parameters == null ? 0 : parameters.length);
+		Method method = ReflectionTools.getMethodByNameAndParatemers((toInvoke instanceof Class) ? (Class<?>) toInvoke : toInvoke.getClass(), methodName, parameters);
 		try {
 			method.setAccessible(true);
 			return method.invoke((toInvoke instanceof Class) ? null : toInvoke, parameters);
@@ -222,55 +341,70 @@ public final class ReflectionTools {
 	}
 
 	/**
-	 * Return a {@link Field} reference in the class or superclasses
+	 * Return a {@link Field} reference in the class or superclasses.
 	 *
 	 * @param cl
+	 *            the cl
 	 * @param fieldName
-	 * @return
+	 *            the field name
+	 * @return the field
 	 */
 	public static Field getField(Class<?> cl, String fieldName) {
 
 		for (Class<?> innerClass = cl; innerClass != null; innerClass = innerClass.getSuperclass()) {
 			try {
 				return innerClass.getDeclaredField(fieldName);
-			} catch (Exception e) {
+			} catch (Exception error) {
 				// do nothing
+				for (Class<?> interfaceClass : innerClass.getInterfaces()) {
+					try {
+						return interfaceClass.getDeclaredField(fieldName);
+					} catch (Exception err) {
+						// do nothing
+					}
+				}
 			}
 		}
+
 		throw new OntimizeJEERuntimeException("Field " + fieldName + " not found in" + cl);
 	}
 
 	/**
-	 * Establish thee value of a class field by reflection
+	 * Establish the value of a class field by reflection.
 	 *
 	 * @param toInvoke
+	 *            the to invoke
 	 * @param fieldName
+	 *            the field name
 	 * @param valueToSet
+	 *            the value to set
 	 */
 	public static void setFieldValue(Object toInvoke, String fieldName, Object valueToSet) {
 		try {
-			Field field = ReflectionTools.getField(toInvoke.getClass(), fieldName);
+			Field field = ReflectionTools.getField((toInvoke instanceof Class) ? (Class<?>) toInvoke : toInvoke.getClass(), fieldName);
 			field.setAccessible(true);
-			field.set(toInvoke, valueToSet);
+			field.set((toInvoke instanceof Class) ? null : toInvoke, valueToSet);
 		} catch (Exception e) {
 			throw new OntimizeJEERuntimeException(e);
 		}
 	}
 
 	/**
-	 * Get the value of a class field by reflection
+	 * Get the value of a class field by reflection.
 	 *
 	 * @param toInvoke
+	 *            the to invoke
 	 * @param fieldName
-	 * @return
+	 *            the field name
+	 * @return the field value
 	 */
 	public static Object getFieldValue(Object toInvoke, String fieldName) {
 		try {
-			Field field = ReflectionTools.getField(toInvoke.getClass(), fieldName);
+			Field field = ReflectionTools.getField((toInvoke instanceof Class) ? (Class<?>) toInvoke : toInvoke.getClass(), fieldName);
 			field.setAccessible(true);
-			return field.get(toInvoke);
-		} catch (Exception e) {
-			throw new OntimizeJEERuntimeException(e);
+			return field.get((toInvoke instanceof Class) ? null : toInvoke);
+		} catch (Exception error) {
+			throw new OntimizeJEERuntimeException(error);
 		}
 	}
 
@@ -376,4 +510,140 @@ public final class ReflectionTools {
 		throw new OntimizeJEERuntimeException("Enum constant " + enumConstantName + " not found in" + enumClass);
 	}
 
+
+	/**
+	 * <p> Checks if one <code>Class</code> can be assigned to a variable of another <code>Class</code>. </p>
+	 *
+	 * <p> Unlike the {@link Class#isAssignableFrom(java.lang.Class)} method, this method takes into account widenings of primitive classes and <code>null</code>s. </p>
+	 *
+	 * <p> Primitive widenings allow an int to be assigned to a long, float or double. This method returns the correct result for these cases. </p>
+	 *
+	 * <p> <code>Null</code> may be assigned to any reference type. This method will return <code>true</code> if <code>null</code> is passed in and the toClass is non-primitive.
+	 * </p>
+	 *
+	 * <p> Specifically, this method tests whether the type represented by the specified <code>Class</code> parameter can be converted to the type represented by this
+	 * <code>Class</code> object via an identity conversion widening primitive or widening reference conversion. See <em><a href="http://java.sun.com/docs/books/jls/">The Java
+	 * Language Specification</a></em> , sections 5.1.1, 5.1.2 and 5.1.4 for details. </p>
+	 *
+	 * @param cls
+	 *            the Class to check, may be null
+	 * @param toClass
+	 *            the Class to try to assign into, returns false if null
+	 * @param autoboxing
+	 *            whether to use implicit autoboxing/unboxing between primitives and wrappers
+	 * @return <code>true</code> if assignment possible
+	 */
+	public static boolean isAssignable(Class<?> cls, Class<?> toClass, boolean autoboxing) {
+		if (toClass == null) {
+			return false;
+		}
+		// have to check for null, as isAssignableFrom doesn't
+		if (cls == null) {
+			return !(toClass.isPrimitive());
+		}
+		// autoboxing:
+		if (autoboxing) {
+			if (cls.isPrimitive() && !toClass.isPrimitive()) {
+				cls = ReflectionTools.primitiveToWrapper(cls);
+				if (cls == null) {
+					return false;
+				}
+			}
+			if (toClass.isPrimitive() && !cls.isPrimitive()) {
+				cls = ReflectionTools.wrapperToPrimitive(cls);
+				if (cls == null) {
+					return false;
+				}
+			}
+		}
+		if (cls.equals(toClass)) {
+			return true;
+		}
+		if (cls.isPrimitive()) {
+			if (toClass.isPrimitive() == false) {
+				return false;
+			}
+			if (Integer.TYPE.equals(cls)) {
+				return Long.TYPE.equals(toClass) || Float.TYPE.equals(toClass) || Double.TYPE.equals(toClass);
+			}
+			if (Long.TYPE.equals(cls)) {
+				return Float.TYPE.equals(toClass) || Double.TYPE.equals(toClass);
+			}
+			if (Boolean.TYPE.equals(cls)) {
+				return false;
+			}
+			if (Double.TYPE.equals(cls)) {
+				return false;
+			}
+			if (Float.TYPE.equals(cls)) {
+				return Double.TYPE.equals(toClass);
+			}
+			if (Character.TYPE.equals(cls)) {
+				return Integer.TYPE.equals(toClass) || Long.TYPE.equals(toClass) || Float.TYPE.equals(toClass) || Double.TYPE.equals(toClass);
+			}
+			if (Short.TYPE.equals(cls)) {
+				return Integer.TYPE.equals(toClass) || Long.TYPE.equals(toClass) || Float.TYPE.equals(toClass) || Double.TYPE.equals(toClass);
+			}
+			if (Byte.TYPE.equals(cls)) {
+				return Short.TYPE.equals(toClass) || Integer.TYPE.equals(toClass) || Long.TYPE.equals(toClass) || Float.TYPE.equals(toClass) || Double.TYPE.equals(toClass);
+			}
+			// should never get here
+			return false;
+		}
+		return toClass.isAssignableFrom(cls);
+	}
+
+	/**
+	 * <p> Converts the specified primitive Class object to its corresponding wrapper Class object. </p>
+	 *
+	 *
+	 * @param cls
+	 *            the class to convert, may be null
+	 * @return the wrapper class for <code>cls</code> or <code>cls</code> if <code>cls</code> is not a primitive. <code>null</code> if null input.
+	 */
+	private static Class<?> primitiveToWrapper(Class<?> cls) {
+		Class<?> convertedClass = cls;
+		if ((cls != null) && cls.isPrimitive()) {
+			convertedClass = ReflectionTools.primitiveWrapperMap.get(cls);
+		}
+		return convertedClass;
+	}
+
+	/**
+	 * <p> Converts the specified wrapper class to its corresponding primitive class. </p>
+	 *
+	 * <p> This method is the counter part of <code>primitiveToWrapper()</code>. If the passed in class is a wrapper class for a primitive type, this primitive type will be
+	 * returned (e.g. <code>Integer.TYPE</code> for <code>Integer.class</code>). For other classes, or if the parameter is <b>null</b>, the return value is <b>null</b>. </p>
+	 *
+	 * @param cls
+	 *            the class to convert, may be <b>null</b>
+	 * @return the corresponding primitive type if <code>cls</code> is a wrapper class, <b>null</b> otherwise
+	 * @see #primitiveToWrapper(Class)
+	 */
+	public static Class wrapperToPrimitive(Class cls) {
+		return ReflectionTools.wrapperPrimitiveMap.get(cls);
+	}
+
+	public static Class<?> classForName(String string) {
+		try {
+			return Class.forName(string);
+		} catch (ClassNotFoundException error) {
+			throw new OntimizeJEERuntimeException(error);
+		}
+	}
+
+	/**
+	 * Return all fields, own class fields, included inherited from superclasses
+	 *
+	 * @param obj
+	 */
+	public static List<Field> getAllFields(Class initialClass) {
+		List<Field> fieldList = new ArrayList<Field>();
+		Class tmpClass = initialClass;
+		while (tmpClass != null) {
+			fieldList.addAll(Arrays.asList(tmpClass.getDeclaredFields()));
+			tmpClass = tmpClass.getSuperclass();
+		}
+		return fieldList;
+	}
 }

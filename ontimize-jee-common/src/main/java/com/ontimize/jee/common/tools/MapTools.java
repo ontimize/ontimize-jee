@@ -175,7 +175,7 @@ public final class MapTools {
 	 *            the keys values
 	 * @return the map
 	 */
-	public static <P, Q> Map<P, Q> newMap(Map<P, Q> map, Object... keysValues) {
+	public static <R extends Map<P, Q>, P, Q> R newMap(R map, Object... keysValues) {
 		if (keysValues == null) {
 			return map;
 		}

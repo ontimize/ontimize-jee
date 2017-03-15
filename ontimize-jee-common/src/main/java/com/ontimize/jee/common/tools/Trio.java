@@ -9,21 +9,23 @@ import java.io.Serializable;
  *            the key type
  * @param <L>
  *            the generic type
+ * @param <M>
+ *            the generic type
  */
-public class Pair<K, L> implements Serializable {
-
-	private static final long	serialVersionUID	= 1L;
+public class Trio<K, L, M> implements Serializable {
 
 	/** The first. */
 	private K	first;
 
 	/** The second. */
 	private L	second;
+	/** The second. */
+	private M	third;
 
 	/**
 	 * Instantiates a new pair.
 	 */
-	public Pair() {
+	public Trio() {
 		super();
 	}
 
@@ -34,10 +36,13 @@ public class Pair<K, L> implements Serializable {
 	 *            the first
 	 * @param second
 	 *            the second
+	 * @param third
+	 *            the third
 	 */
-	public Pair(K first, L second) {
+	public Trio(K first, L second, M third) {
 		this.first = first;
 		this.second = second;
+		this.third = third;
 	}
 
 	/**
@@ -78,6 +83,25 @@ public class Pair<K, L> implements Serializable {
 		this.second = second;
 	}
 
+	/**
+	 * Gets the third.
+	 *
+	 * @return the third
+	 */
+	public M getThird() {
+		return this.third;
+	}
+
+	/**
+	 * Sets the third.
+	 *
+	 * @param third
+	 *            the third
+	 */
+	public void setThird(M third) {
+		this.third = third;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
@@ -88,6 +112,7 @@ public class Pair<K, L> implements Serializable {
 		int result = 1;
 		result = (prime * result) + ((this.first == null) ? 0 : this.first.hashCode());
 		result = (prime * result) + ((this.second == null) ? 0 : this.second.hashCode());
+		result = (prime * result) + ((this.third == null) ? 0 : this.third.hashCode());
 		return result;
 	}
 
@@ -106,7 +131,7 @@ public class Pair<K, L> implements Serializable {
 		if (this.getClass() != obj.getClass()) {
 			return false;
 		}
-		Pair other = (Pair) obj;
+		Trio other = (Trio) obj;
 		if (this.first == null) {
 			if (other.first != null) {
 				return false;
@@ -121,6 +146,13 @@ public class Pair<K, L> implements Serializable {
 		} else if (!this.second.equals(other.second)) {
 			return false;
 		}
+		if (this.third == null) {
+			if (other.third != null) {
+				return false;
+			}
+		} else if (!this.third.equals(other.third)) {
+			return false;
+		}
 		return true;
 	}
 
@@ -130,6 +162,6 @@ public class Pair<K, L> implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		return String.format("Pair{ first=%s, second=%s}", this.first, this.second);
+		return String.format("Trio{ first=%s, second=%s, third=%s}", this.first, this.second, this.third);
 	}
 }

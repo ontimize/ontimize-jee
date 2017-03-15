@@ -89,16 +89,16 @@ public final class CheckingTools {
 	 * @throws Exception
 	 *             Cuando o es reaultado NULL o no es correcto.
 	 */
-	public static void checkValidEntityResult(EntityResult rs, String messageFormat) throws OntimizeJEEException {
+	public static void checkValidEntityResult(EntityResult rs, String messageFormat, Object... messageParameters) throws OntimizeJEEException {
 		try {
 			if (rs == null) {
 				throw new OntimizeJEEException("EMPTY_RESULT");
 			} else if (rs.getCode() == EntityResult.OPERATION_WRONG) {
-				throw new OntimizeJEEException(rs.getMessage());
+				throw new OntimizeJEEException(rs.getMessage(),rs.getMessageParameter());
 			}
 		} catch (OntimizeJEEException ex) {
 			if (messageFormat != null) {
-				throw new OntimizeJEEException(messageFormat, ex);
+				throw new OntimizeJEEException(messageFormat, messageParameters, ex);
 			}
 			throw ex;
 		}
@@ -122,8 +122,8 @@ public final class CheckingTools {
 	 * @throws Exception
 	 *             Cuando o es reaultado NULL o no es correcto.
 	 */
-	public static void checkValidEntityResult(EntityResult res, String messageFormat, boolean checkSomeRecordRequired, boolean checkOnlyOneRecord) throws Exception {
-		CheckingTools.checkValidEntityResult(res, messageFormat);
+	public static void checkValidEntityResult(EntityResult res, String messageFormat, boolean checkSomeRecordRequired, boolean checkOnlyOneRecord, Object... messageParameters) throws Exception {
+		CheckingTools.checkValidEntityResult(res, messageFormat,messageParameters);
 		try {
 			int num = res.calculateRecordNumber();
 			if (checkSomeRecordRequired && (num <= 0)) {
@@ -135,7 +135,7 @@ public final class CheckingTools {
 
 		} catch (Exception ex) {
 			if (messageFormat != null) {
-				throw new OntimizeJEEException(messageFormat, ex);
+				throw new OntimizeJEEException(messageFormat, messageParameters, ex);
 			}
 			throw ex;
 		}

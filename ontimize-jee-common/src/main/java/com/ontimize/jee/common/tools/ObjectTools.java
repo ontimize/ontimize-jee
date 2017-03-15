@@ -6,8 +6,13 @@
  */
 package com.ontimize.jee.common.tools;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
 
 /**
  * Utilidades de objetos.
@@ -74,7 +79,7 @@ public final class ObjectTools {
 	 * @return the t
 	 */
 	public static <T> T coalesce(T... values) {
-		if (values == null) {
+		if ((values == null) || (values.length == 0)) {
 			return null;
 		}
 		for (T ob : values) {
@@ -163,5 +168,48 @@ public final class ObjectTools {
 			}
 		}
 		return false;
+	}
+
+	public static String getStringRepresentation(Object o, boolean expandInnerChilds) {
+		StringBuilder sb = new StringBuilder();
+
+		ObjectTools.getStringRepresentation(o, expandInnerChilds, sb, 0, "Object", new ArrayList<Object>());
+
+		return sb.toString();
+	}
+
+	private static void getStringRepresentation(Object o, boolean expandInnerChilds, StringBuilder sb, int tabLevel, String fieldName, List<Object> visited) {
+		if (visited.contains(o)) {
+			return;
+		}
+		visited.add(o);
+		sb.append(StringTools.toString(StringTools.replicate("\t", tabLevel)) + fieldName + " : " + StringTools.toString(o) + "\r\n");
+
+		if (o instanceof List) {
+			for (int i = 0; i < ((List) o).size(); i++) {
+				Object o2 = ((List) o).get(i);
+				StringBuilder sb2 = new StringBuilder();
+				ObjectTools.getStringRepresentation(o2, expandInnerChilds, sb2, tabLevel + 1, "[" + i + "]", visited);
+				sb.append(sb2.toString());
+			}
+		}
+
+		if (o != null) {
+			List<Field> allFields = ReflectionTools.getAllFields(o.getClass());
+			for (Field field : allFields) {
+				// Ignore static
+				try {
+					Object fieldValue = ReflectionTools.getFieldValue(o, field.getName());
+					if (!expandInnerChilds || Modifier.isStatic(field.getModifiers())) {
+						sb.append(StringTools.toString(StringTools.replicate("\t", tabLevel + 1)) + field.getName() + " : " + StringTools.toString(fieldValue) + "\r\n");
+					} else {
+						StringBuilder sb2 = new StringBuilder();
+						ObjectTools.getStringRepresentation(fieldValue, expandInnerChilds, sb2, tabLevel + 1, field.getName(), visited);
+						sb.append(sb2.toString());
+					}
+				} catch (OntimizeJEERuntimeException ex) {
+				}
+			}
+		}
 	}
 }

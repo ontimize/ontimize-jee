@@ -75,6 +75,9 @@ public class FastQSortAlgorithm {
 	 * @return the int
 	 */
 	private static int compare(Object a, Object b) {
+		if ((a == null) && (b == null)) {
+			return 0;
+		}
 		if (a == null) {
 			return -1;
 		} else if (b == null) {
