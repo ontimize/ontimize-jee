@@ -101,7 +101,8 @@ public final class JPAUtils {
         if (method != null) {
             return method.invoke(beanObject);
         } else {
-            throw new Exception("GET method must not be null");
+			// throw new Exception("GET method must not be null");
+			return null;
         }
     }
 

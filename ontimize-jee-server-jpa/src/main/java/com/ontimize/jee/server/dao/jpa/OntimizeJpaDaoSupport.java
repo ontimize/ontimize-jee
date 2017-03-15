@@ -1648,10 +1648,12 @@ public class OntimizeJpaDaoSupport implements ApplicationContextAware, IOntimize
      */
     protected String adaptAttribute(final Object attribute) {
         if (attribute instanceof TableAttribute) {
-            return ((TableAttribute) attribute).getEntity(); // no nos interesa
+			// return ((TableAttribute) attribute).getEntity(); // see queryotherentities
+			return null;
         }
         if (attribute instanceof MultipleTableAttribute) {
-            return ((MultipleTableAttribute) attribute).getAttribute().toString();
+			return null;
+			// return ((MultipleTableAttribute) attribute).getAttribute().toString();
         }
         // TODO else controlar los demas tipos de keys que nos pueden pasar aqui
         // TODO check if entity bean contains attribute, if it doesn't return null;
