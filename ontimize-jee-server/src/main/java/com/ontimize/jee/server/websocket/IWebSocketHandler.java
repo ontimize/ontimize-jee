@@ -1,6 +1,7 @@
 package com.ontimize.jee.server.websocket;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.web.socket.WebSocketSession;
 
@@ -21,7 +22,13 @@ public interface IWebSocketHandler {
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
+	void sendMessage(Integer messageType, String messageSubtype, Object ob, WebSocketSession... receiver);
+
 	void sendMessage(Integer messageType, String messageSubtype, Object ob, WebSocketSession receiver) throws IOException;
+
+	void sendBroadcastMessage(Integer messageType, String messageSubtype, Object ob);
+
+	List<WebSocketSession> getSessionsForUser(String userLogin);
 
 	/**
 	 * Adds the web socket message listener.

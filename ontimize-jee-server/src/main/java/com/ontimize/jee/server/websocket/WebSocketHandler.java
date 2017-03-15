@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -18,6 +19,7 @@ import com.ontimize.jee.common.websocket.WebsocketWrapperMessage;
  * The Class WebSocketHandler.
  */
 @Component("websocketHandler")
+@Lazy(value = true)
 public class WebSocketHandler extends TextWebSocketHandler implements IWebSocketHandler {
 
 	/** The Constant logger. */
@@ -98,20 +100,54 @@ public class WebSocketHandler extends TextWebSocketHandler implements IWebSocket
 	 * @throws IOException
 	 */
 	@Override
-	public void sendMessage(Integer messageType, String subtype, Object ob, WebSocketSession receiver) throws IOException {
-		TextMessage textMessage = new TextMessage(new WebsocketWrapperMessage(messageType, subtype, ob).serialize());
-		if (receiver == null) {
-			for (WebSocketSession session : this.sessions) {
-				try {
-					session.sendMessage(textMessage);
-				} catch (IOException error) {
-					// TODO deberia lanzar excepcion si falla con una session?
-					WebSocketHandler.logger.error(null, error);
-				}
+	public void sendMessage(Integer messageType, String messageSubtype, Object ob, WebSocketSession... receivers) {
+		TextMessage textMessage = this.buildTextMessage(messageType, messageSubtype, ob);
+		for (WebSocketSession session : receivers) {
+			try {
+				session.sendMessage(textMessage);
+			} catch (IOException error) {
+				// TODO deberia lanzar excepcion si falla con una session?
+				WebSocketHandler.logger.error(null, error);
 			}
-		} else {
-			receiver.sendMessage(textMessage);
 		}
 	}
+
+	@Override
+	public void sendMessage(Integer messageType, String messageSubtype, Object ob, WebSocketSession receiver) throws IOException {
+		TextMessage textMessage = this.buildTextMessage(messageType, messageSubtype, ob);
+		receiver.sendMessage(textMessage);
+	}
+
+	@Override
+	public void sendBroadcastMessage(Integer messageType, String messageSubtype, Object ob) {
+		TextMessage textMessage = this.buildTextMessage(messageType, messageSubtype, ob);
+		for (WebSocketSession session : this.sessions) {
+			try {
+				session.sendMessage(textMessage);
+			} catch (IOException error) {
+				// TODO deberia lanzar excepcion si falla con una session?
+				WebSocketHandler.logger.error(null, error);
+			}
+		}
+	}
+
+	private TextMessage buildTextMessage(Integer messageType, String messageSubtype, Object ob) {
+		return new TextMessage(new WebsocketWrapperMessage(messageType, messageSubtype, ob).serialize());
+	}
+
+	@Override
+	public List<WebSocketSession> getSessionsForUser(String userLogin) {
+		List<WebSocketSession> res = new ArrayList<>();
+		if (userLogin == null) {
+			return res;
+		}
+		for (WebSocketSession session : this.sessions) {
+			if (userLogin.equals(session.getPrincipal().getName())) {
+				res.add(session);
+			}
+		}
+		return res;
+	}
+
 
 }
