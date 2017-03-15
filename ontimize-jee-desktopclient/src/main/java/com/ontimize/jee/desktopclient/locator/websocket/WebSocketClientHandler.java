@@ -163,7 +163,7 @@ public class WebSocketClientHandler extends TextWebSocketHandler implements IWeb
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
 		super.afterConnectionClosed(session, status);
-		WebSocketClientHandler.logger.info("websocket conneciton closed");
+		WebSocketClientHandler.logger.info("websocket connection closed");
 		this.connected = false;
 		this.webSocketSession = null;
 		this.reconnectInThread();

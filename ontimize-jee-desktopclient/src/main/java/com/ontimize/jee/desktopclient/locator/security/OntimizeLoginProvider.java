@@ -41,6 +41,7 @@ public class OntimizeLoginProvider implements ILoginProvider {
 		} catch (InvalidCredentialsException ex) {
 			throw ex;
 		} catch (Exception ex) {
+			OntimizeLoginProvider.logger.error(null, ex);
 			throw new InvalidCredentialsException(ex);
 		} finally {
 			if ((user != null) && (password != null)) {

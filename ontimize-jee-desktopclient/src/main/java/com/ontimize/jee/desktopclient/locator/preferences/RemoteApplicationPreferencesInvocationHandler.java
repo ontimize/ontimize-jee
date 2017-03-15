@@ -6,12 +6,14 @@ import java.util.concurrent.LinkedBlockingQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ontimize.gui.ApplicationManager;
 import com.ontimize.gui.preferences.RemoteApplicationPreferences;
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
 import com.ontimize.jee.common.services.preferences.IRemoteApplicationPreferencesService;
 import com.ontimize.jee.common.tools.ReflectionTools;
 import com.ontimize.jee.common.tools.proxy.AbstractInvocationDelegate;
 import com.ontimize.jee.desktopclient.i18n.I18NNaming;
+import com.ontimize.jee.desktopclient.locator.OJeeClientPermissionLocator;
 import com.ontimize.jee.desktopclient.spring.BeansFactory;
 
 /**
@@ -84,16 +86,25 @@ public class RemoteApplicationPreferencesInvocationHandler extends AbstractInvoc
 	 */
 	@Override
 	public void saveRemotePreferences(int sessionId) throws Exception {
+		if (!this.isLogged()) {
+			return;
+		}
 		// this.queue.put(new Operation("savePreferences", new Object[] {}));
 		this.getRemotePreferencesService().savePreferences();
 	}
 
+	private boolean isLogged() {
+		return ((OJeeClientPermissionLocator) ApplicationManager.getApplication().getReferenceLocator()).getUserInformation() != null;
+	}
 	/*
 	 * (non-Javadoc)
 	 * @see com.ontimize.gui.preferences.RemoteApplicationPreferences#loadRemotePreferences(int)
 	 */
 	@Override
 	public void loadRemotePreferences(int sessionId) throws Exception {
+		if (!this.isLogged()) {
+			return;
+		}
 		this.getRemotePreferencesService().loadPreferences();
 	}
 

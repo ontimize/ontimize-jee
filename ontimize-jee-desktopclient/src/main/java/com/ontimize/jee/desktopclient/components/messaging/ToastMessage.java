@@ -12,8 +12,8 @@ import javax.swing.JPanel;
 
 import com.ontimize.gui.ApplicationManager;
 import com.ontimize.jee.common.tools.MessageType;
+import com.ontimize.jee.common.tools.ParseUtilsExtended;
 import com.ontimize.jee.desktopclient.components.WindowTools;
-import com.ontimize.util.ParseUtils;
 
 /**
  * The Class UToastMessage.
@@ -21,13 +21,13 @@ import com.ontimize.util.ParseUtils;
 public class ToastMessage {
 
 	/** The icon warning. */
-	public static ImageIcon				ICON_WARNING		= ParseUtils.getImageIcon("com/ontimize/gui/images/warning.png", null);
+	public static ImageIcon ICON_WARNING = ParseUtilsExtended.getImageIcon("com/ontimize/gui/images/warning.png", null);
 
 	/** The icon error. */
-	public static ImageIcon				ICON_ERROR			= ParseUtils.getImageIcon("com/ontimize/gui/images/error.png", null);
+	public static ImageIcon ICON_ERROR = ParseUtilsExtended.getImageIcon("com/ontimize/gui/images/error.png", null);
 
 	/** The icon information. */
-	public static ImageIcon				ICON_INFORMATION	= ParseUtils.getImageIcon("com/ontimize/gui/images/info_16.png", null);
+	public static ImageIcon ICON_INFORMATION = ParseUtilsExtended.getImageIcon("com/ontimize/gui/images/info_16.png", null);
 
 	/** The message time short. */
 	public static int					MESSAGE_TIME_SHORT	= 1200;
@@ -182,18 +182,18 @@ public class ToastMessage {
 	protected void setIconByType(MessageType msgType) {
 		if (msgType != null) {
 			switch (msgType) {
-				case INFORMATION:
-					this.icon = ToastMessage.ICON_INFORMATION;
-					break;
-				case WARNING:
-					this.icon = ToastMessage.ICON_WARNING;
-					break;
-				case ERROR:
-					this.icon = ToastMessage.ICON_ERROR;
-					break;
+			case INFORMATION:
+				this.icon = ToastMessage.ICON_INFORMATION;
+				break;
+			case WARNING:
+				this.icon = ToastMessage.ICON_WARNING;
+				break;
+			case ERROR:
+				this.icon = ToastMessage.ICON_ERROR;
+				break;
 
-				default:
-					break;
+			default:
+				break;
 			}
 		}
 	}
