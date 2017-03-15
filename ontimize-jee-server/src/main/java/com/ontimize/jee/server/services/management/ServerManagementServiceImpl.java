@@ -19,6 +19,7 @@ import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +35,7 @@ import com.ontimize.util.logging.Level;
 import com.ontimize.util.logging.LogManagerFactory;
 
 @Service("ServerManagementService")
+@Lazy(value = true)
 public class ServerManagementServiceImpl implements ApplicationContextAware, IServerManagementService {
 
 	@Autowired
@@ -99,7 +101,7 @@ public class ServerManagementServiceImpl implements ApplicationContextAware, ISe
 		 * this.applicationContext.getBean(SQLStatementHandler.class);
 		 * template.setDataSource(dataSource); return template.execute(new
 		 * StatementCallback<EntityResult>() {
-		 * 
+		 *
 		 * @Override public EntityResult doInStatement(Statement stmt) throws
 		 * SQLException, DataAccessException { if (stmt.execute(sql)) {
 		 * ResultSet rs = stmt.getResultSet(); EntityResult res = new

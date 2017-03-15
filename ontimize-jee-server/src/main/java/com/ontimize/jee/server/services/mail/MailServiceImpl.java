@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ import com.ontimize.jee.server.configuration.OntimizeConfiguration;
  * The Class RemoteApplicationPreferencesServiceImpl.
  */
 @Service("MailService")
+@Lazy(value = true)
 public class MailServiceImpl implements IMailService, ApplicationContextAware {
 
 	/** The implementation. */

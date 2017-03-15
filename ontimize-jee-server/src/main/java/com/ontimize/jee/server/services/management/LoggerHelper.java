@@ -22,6 +22,7 @@ import java.util.zip.ZipOutputStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StreamUtils;
 
@@ -39,6 +40,7 @@ import ch.qos.logback.core.FileAppender;
 import ch.qos.logback.core.OutputStreamAppender;
 
 @Component
+@Lazy(value = true)
 public class LoggerHelper {
 
 	private static final Logger logger = LoggerFactory.getLogger(LoggerHelper.class);

@@ -7,11 +7,13 @@ import java.nio.file.Path;
 
 import javax.management.MBeanServer;
 
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import com.ontimize.jee.common.tools.ReflectionTools;
 
 @Component
+@Lazy(value = true)
 public class HeapDumperHelper {
 	// This is the name of the HotSpot Diagnostic MBean
 	private static final String						HOTSPOT_BEAN_NAME	= "com.sun.management:type=HotSpotDiagnostic";

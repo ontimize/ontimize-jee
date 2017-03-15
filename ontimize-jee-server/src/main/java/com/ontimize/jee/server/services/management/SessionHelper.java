@@ -12,6 +12,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.session.ExpiringSession;
 import org.springframework.session.SessionRepository;
@@ -23,6 +24,7 @@ import com.ontimize.jee.common.session.SessionDto;
 import com.ontimize.jee.server.session.StatisticsMapSessionRepository;
 
 @Component
+@Lazy(value = true)
 public class SessionHelper implements ApplicationContextAware {
 
 	private static final Logger		LOG					= LoggerFactory.getLogger(SessionHelper.class);

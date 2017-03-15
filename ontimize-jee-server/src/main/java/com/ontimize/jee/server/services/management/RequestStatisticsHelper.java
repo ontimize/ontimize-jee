@@ -10,10 +10,12 @@ import java.util.Vector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import com.ontimize.db.EntityResult;
 import com.ontimize.gui.SearchValue;
+import com.ontimize.jee.common.tools.DateTools;
 import com.ontimize.jee.common.tools.EntityResultTools;
 import com.ontimize.jee.common.tools.MapTools;
 import com.ontimize.jee.server.dao.DefaultOntimizeDaoHelper;
@@ -23,6 +25,7 @@ import com.ontimize.jee.server.services.management.dao.IRequestStatisticsDao;
  * The Class DMSServiceCategoryHelper.
  */
 @Component
+@Lazy(value = true)
 public class RequestStatisticsHelper {
 
 	/** The logger. */
@@ -129,7 +132,7 @@ public class RequestStatisticsHelper {
 			dateAfter = calAfter.getTime();
 		}
 		if ((dateAfter != null) || (dateBefore != null)) {
-			keysValues.put("EXECUTION_DATE", EntityResultTools.betweenDatesExpression(dateBefore, dateAfter));
+			keysValues.put("EXECUTION_DATE", DateTools.betweenDatesExpression(dateBefore, dateAfter));
 		}
 
 		EntityResult query = null;
