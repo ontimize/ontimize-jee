@@ -10,8 +10,9 @@ import com.ontimize.jee.common.tools.MessageType;
  * @author joaquin.romero
  */
 public class OntimizeJEEException extends Exception implements IParametrizedException {
-	/** The msg parameters. */
-	private final Object[]		msgParameters;
+
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = 1L;
 
 	/** The msg type. */
 	private final MessageType	msgType;
@@ -19,11 +20,12 @@ public class OntimizeJEEException extends Exception implements IParametrizedExce
 	/** The msg blocking. */
 	private final boolean		msgBlocking;
 
+	/** The msg parameters. */
+	private final Object[] msgParameters;
+
 	/** The silent. */
 	private boolean				silent;
 
-	/** The Constant serialVersionUID. */
-	private static final long	serialVersionUID	= 1L;
 
 	public OntimizeJEEException() {
 		this((String) null);
@@ -184,7 +186,7 @@ public class OntimizeJEEException extends Exception implements IParametrizedExce
 	 * @return the msg parameters
 	 */
 	@Override
-	public Object[] getMsgParameters() {
+	public Object[] getMessageParameters() {
 		return this.msgParameters == null ? null : Arrays.copyOf(this.msgParameters, this.msgParameters.length);
 	}
 

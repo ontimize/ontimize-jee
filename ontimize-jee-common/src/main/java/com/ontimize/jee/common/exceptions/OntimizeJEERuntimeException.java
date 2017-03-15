@@ -63,7 +63,7 @@ public class OntimizeJEERuntimeException extends RuntimeException implements IPa
 	 * @param msgParameters
 	 *            the msg parameters
 	 */
-	public OntimizeJEERuntimeException(String message, Object[] msgParameters) {
+	public OntimizeJEERuntimeException(String message, Object... msgParameters) {
 		this(message, msgParameters, MessageType.ERROR);
 	}
 
@@ -191,7 +191,7 @@ public class OntimizeJEERuntimeException extends RuntimeException implements IPa
 	 * @return the msg parameters
 	 */
 	@Override
-	public Object[] getMsgParameters() {
+	public Object[] getMessageParameters() {
 		return this.msgParameters == null ? null : Arrays.copyOf(this.msgParameters, this.msgParameters.length);
 	}
 

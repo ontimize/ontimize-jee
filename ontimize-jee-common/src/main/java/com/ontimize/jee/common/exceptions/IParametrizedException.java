@@ -26,7 +26,7 @@ public interface IParametrizedException {
 	 *
 	 * @return the msg parameters
 	 */
-	Object[] getMsgParameters();
+	Object[] getMessageParameters();
 
 	/**
 	 * Gets the message.
