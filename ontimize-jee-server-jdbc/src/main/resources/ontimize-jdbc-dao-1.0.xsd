@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://jdbcentity.server.jee.imatia.com/setup"
-	xmlns:tns="http://jdbcentity.server.jee.imatia.com/setup" elementFormDefault="qualified">
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.ontimize.com/schema/jdbc"
+	xmlns:tns="http://www.ontimize.com/schema/jdbc" elementFormDefault="qualified">
 
 	<element name="JdbcEntitySetup" type="tns:JdbcEntitySetupType" />
 	<complexType name="JdbcEntitySetupType">
