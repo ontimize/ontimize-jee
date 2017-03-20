@@ -82,16 +82,17 @@
 		<jee.version>7.0</jee.version>
 		<aspectjweaver.version>1.6.6</aspectjweaver.version>
 	</properties>
-	
-	
-	
+
+
+
 	<build>
 		<!-- =========================================================== -->
 		<!-- Plugins -->
 		<!-- =========================================================== -->
 		<pluginManagement>
 			<plugins>
-				<!-- Resources plugin (2.4.x versions do not correctly filter files containing '@' character). -->
+				<!-- Resources plugin (2.4.x versions do not correctly filter files containing 
+					'@' character). -->
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-resources-plugin</artifactId>
@@ -137,7 +138,7 @@
 			</plugins>
 		</pluginManagement>
 	</build>
-	
+
 	<dependencyManagement>
 		<dependencies>
 			<!-- Project dependencies -->
@@ -481,7 +482,7 @@
 				<artifactId>mesp</artifactId>
 				<version>${mesp.version}</version>
 			</dependency>
-			
+
 			<!-- Ontimize -->
 			<dependency>
 				<groupId>com.ontimize</groupId>
@@ -586,14 +587,14 @@
 				<version>${jackson.version}</version>
 			</dependency>
 			<dependency>
-    			<groupId>com.fasterxml.jackson.core</groupId>
-    			<artifactId>jackson-databind</artifactId>
-    			<version>${jackson.version}</version>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-databind</artifactId>
+				<version>${jackson.version}</version>
 			</dependency>
 			<dependency>
-    			<groupId>com.fasterxml.jackson.core</groupId>
-    			<artifactId>jackson-annotations</artifactId>
-    			<version>${jackson.version}</version>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-annotations</artifactId>
+				<version>${jackson.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -607,8 +608,14 @@
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jcl-over-slf4j</artifactId>
+		</dependency>
+
 	</dependencies>
-	
+
 	<modules>
 		<module>ontimize-jee-server</module>
 		<module>ontimize-jee-common</module>
