@@ -44,11 +44,11 @@ public class DatabasePropertyBeanDefinitionParser extends AbstractSingleBeanDefi
 	 */
 	@Override
 	protected void doParse(final Element element, final ParserContext ctx, final BeanDefinitionBuilder builder) {
-		builder.addPropertyReference("dao", DefinitionParserUtil.nullIfEmpty(element.getAttribute("refRepository")));
-		builder.addPropertyValue("valueColumnName", DefinitionParserUtil.nullIfEmpty(element.getAttribute("valueColumnName")));
-		builder.addPropertyValue("filterColumnName", DefinitionParserUtil.nullIfEmpty(element.getAttribute("filterColumnName")));
-		builder.addPropertyValue("filterColumnValue", DefinitionParserUtil.nullIfEmpty(element.getAttribute("filterColumnValue")));
-		builder.addPropertyValue("queryId", DefinitionParserUtil.nullIfEmpty(element.getAttribute("queryId")));
+		builder.addPropertyReference("dao", DefinitionParserUtil.nullIfEmpty(element.getAttribute("ref-repository")));
+		builder.addPropertyValue("valueColumnName", DefinitionParserUtil.nullIfEmpty(element.getAttribute("value-column-name")));
+		builder.addPropertyValue("filterColumnName", DefinitionParserUtil.nullIfEmpty(element.getAttribute("filter-column-name")));
+		builder.addPropertyValue("filterColumnValue", DefinitionParserUtil.nullIfEmpty(element.getAttribute("filter-column-value")));
+		builder.addPropertyValue("queryId", DefinitionParserUtil.nullIfEmpty(element.getAttribute("query-id")));
 		builder.setLazyInit(true);
 	}
 }

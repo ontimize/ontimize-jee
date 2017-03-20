@@ -47,7 +47,7 @@ public class MailBeanDefinitionParser extends AbstractSingleBeanDefinitionParser
 	protected void doParse(Element element, ParserContext ctx, BeanDefinitionBuilder builder) {
 		Element child = DomUtils.getChildElements(element).get(0);
 		Object engine = null;
-		if ("defaultMailEngine".equals(child.getLocalName())) {
+		if ("default-mail-engine".equals(child.getLocalName())) {
 			final ParserContext nestedCtx = new ParserContext(ctx.getReaderContext(), ctx.getDelegate(), builder.getBeanDefinition());
 			engine = new SpringMailEngineParser().parse(child, nestedCtx);
 		} else {
@@ -87,7 +87,7 @@ public class MailBeanDefinitionParser extends AbstractSingleBeanDefinitionParser
 		protected void doParse(final Element element, final ParserContext ctx, final BeanDefinitionBuilder builder) {
 			Element child = DomUtils.getChildElements(element).get(0);
 			Object configurator = null;
-			if ("defaultMailConfigurator".equals(child.getLocalName())) {
+			if ("default-mail-configurator".equals(child.getLocalName())) {
 				final ParserContext nestedCtx = new ParserContext(ctx.getReaderContext(), ctx.getDelegate(), builder.getBeanDefinition());
 				configurator = new SpringMailEngineConfiguratorParser().parse(child, nestedCtx);
 			} else {
@@ -126,18 +126,18 @@ public class MailBeanDefinitionParser extends AbstractSingleBeanDefinitionParser
 		 */
 		@Override
 		protected void doParse(final Element element, final ParserContext ctx, final BeanDefinitionBuilder builder) {
-			String filterColumnName = DefinitionParserUtil.nullIfEmpty(element.getAttribute("filterColumnName"));
-			String valueColumnName = DefinitionParserUtil.nullIfEmpty(element.getAttribute("valueColumnName"));
-			String refRepository = DefinitionParserUtil.nullIfEmpty(element.getAttribute("refRepository"));
-			String queryId = DefinitionParserUtil.nullIfEmpty(element.getAttribute("queryId"));
-			String filterColumnValueEncoding = DefinitionParserUtil.nullIfEmpty(element.getAttribute("filterColumnValueEncoding"));
-			String filterColumnValueHost = DefinitionParserUtil.nullIfEmpty(element.getAttribute("filterColumnValueHost"));
-			String filterColumnValuePort = DefinitionParserUtil.nullIfEmpty(element.getAttribute("filterColumnValuePort"));
-			String filterColumnValueProtocol = DefinitionParserUtil.nullIfEmpty(element.getAttribute("filterColumnValueProtocol"));
-			String filterColumnValueUser = DefinitionParserUtil.nullIfEmpty(element.getAttribute("filterColumnValueUser"));
-			String filterColumnValuePassword = DefinitionParserUtil.nullIfEmpty(element.getAttribute("filterColumnValuePassword"));
+			String filterColumnName = DefinitionParserUtil.nullIfEmpty(element.getAttribute("filter-column-name"));
+			String valueColumnName = DefinitionParserUtil.nullIfEmpty(element.getAttribute("value-column-name"));
+			String refRepository = DefinitionParserUtil.nullIfEmpty(element.getAttribute("ref-repository"));
+			String queryId = DefinitionParserUtil.nullIfEmpty(element.getAttribute("query-id"));
+			String filterColumnValueEncoding = DefinitionParserUtil.nullIfEmpty(element.getAttribute("filter-column-value-encoding"));
+			String filterColumnValueHost = DefinitionParserUtil.nullIfEmpty(element.getAttribute("filter-column-value-host"));
+			String filterColumnValuePort = DefinitionParserUtil.nullIfEmpty(element.getAttribute("filter-column-value-port"));
+			String filterColumnValueProtocol = DefinitionParserUtil.nullIfEmpty(element.getAttribute("filter-column-value-protocol"));
+			String filterColumnValueUser = DefinitionParserUtil.nullIfEmpty(element.getAttribute("filter-column-value-user"));
+			String filterColumnValuePassword = DefinitionParserUtil.nullIfEmpty(element.getAttribute("filter-column-value-password"));
 			String filterColumnValueJavaMailProperties = DefinitionParserUtil
-					.nullIfEmpty(element.getAttribute("filterColumnValueJavaMailProperties"));
+					.nullIfEmpty(element.getAttribute("filter-column-value-javamail-properties"));
 
 			Map<String, String> propertiesToSet = new HashMap<>();
 			propertiesToSet.put("encodingResolver", filterColumnValueEncoding);

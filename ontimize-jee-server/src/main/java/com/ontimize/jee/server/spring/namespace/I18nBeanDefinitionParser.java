@@ -84,14 +84,14 @@ public class I18nBeanDefinitionParser extends AbstractSingleBeanDefinitionParser
 		 */
 		@Override
 		protected void doParse(final Element element, final ParserContext ctx, final BeanDefinitionBuilder builder) {
-			builder.addPropertyReference("daoBundles", DefinitionParserUtil.nullIfEmpty(element.getAttribute("refBundleRepository")));
-			builder.addPropertyReference("daoBundleValues", DefinitionParserUtil.nullIfEmpty(element.getAttribute("refBundleValuesRepository")));
+			builder.addPropertyReference("daoBundles", DefinitionParserUtil.nullIfEmpty(element.getAttribute("ref-bundle-repository")));
+			builder.addPropertyReference("daoBundleValues", DefinitionParserUtil.nullIfEmpty(element.getAttribute("ref-bundle-value-repository")));
 
-			builder.addPropertyValue("bundleKeyColumn", DefinitionParserUtil.nullIfEmpty(element.getAttribute("bundleKeyColumn")));
-			builder.addPropertyValue("bundleClassNameColumn", DefinitionParserUtil.nullIfEmpty(element.getAttribute("bundleClassNameColumn")));
-			builder.addPropertyValue("bundleDescriptionColumn", DefinitionParserUtil.nullIfEmpty(element.getAttribute("bundleDescriptionColumn")));
-			builder.addPropertyValue("bundleValuesKeyColumn", DefinitionParserUtil.nullIfEmpty(element.getAttribute("bundleValuesKeyColumn")));
-			builder.addPropertyValue("bundleValuesTextKeyColumn", DefinitionParserUtil.nullIfEmpty(element.getAttribute("bundleValuesTextKeyColumn")));
+			builder.addPropertyValue("bundleKeyColumn", DefinitionParserUtil.nullIfEmpty(element.getAttribute("bundle-key-column")));
+			builder.addPropertyValue("bundleClassNameColumn", DefinitionParserUtil.nullIfEmpty(element.getAttribute("bundle-class-name-column")));
+			builder.addPropertyValue("bundleDescriptionColumn", DefinitionParserUtil.nullIfEmpty(element.getAttribute("bundle-description-column")));
+			builder.addPropertyValue("bundleValuesKeyColumn", DefinitionParserUtil.nullIfEmpty(element.getAttribute("bundle-value-key-column")));
+			builder.addPropertyValue("bundleValuesTextKeyColumn", DefinitionParserUtil.nullIfEmpty(element.getAttribute("bundle-value-text-key-column")));
 			builder.setLazyInit(true);
 		}
 	}
