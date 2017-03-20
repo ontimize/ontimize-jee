@@ -1,1 +1,1 @@
-http\://www.ontimize.com/spring-server=com.ontimize.jee.server.spring.namespace.OntimizeServerSpringHandler
+http\://www.ontimize.com/schema/beans=com.ontimize.jee.server.spring.namespace.OntimizeServerSpringHandler
