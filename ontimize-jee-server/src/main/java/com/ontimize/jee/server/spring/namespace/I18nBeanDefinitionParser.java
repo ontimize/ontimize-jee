@@ -17,6 +17,17 @@ public class I18nBeanDefinitionParser extends AbstractSingleBeanDefinitionParser
 
 	/** The Constant SCOPE. */
 	private static final String	SCOPE	= "scope";
+	private static final String I18N_ENGINE_PROPERTY = "i18n-engine";
+	private static final String I18N_DATABASE_CONFIGURATION_PROPERTY = "database-i18n";
+	private static final String ENGINE = "engine";
+
+	private static final String I18N_REF_BUNDLE_REPOSITORY = "ref-bundle-repository";
+	private static final String I18N_REF_BUNDLE_VALUE_REPOSITORY = "ref-bundle-value-repository";
+	private static final String I18N_BUNDLE_KEY_COLUMN = "bundle-key-column";
+	private static final String I18N_BUNDLE_CLASS_NAME_COLUMN = "bundle-class-name-column";
+	private static final String I18N_BUNDLE_DESCRIPTION_COLUMN = "bundle-description-column";
+	private static final String I18N_BUNDLE_VALUE_KEY_COLUMN = "bundle-value-key-column";
+	private static final String I18N_BUNDLE_VALUE_TEXT_KEY_COLUMN = "bundle-value-text-key-column";
 
 	/*
 	 * (non-Javadoc)
@@ -40,10 +51,10 @@ public class I18nBeanDefinitionParser extends AbstractSingleBeanDefinitionParser
 	@Override
 	protected void doParse(Element element, ParserContext ctx, BeanDefinitionBuilder builder) {
 		// Set the directory property
-		Element item = DomUtils.getChildElementByTagName(element, "i18nEngine");
+		Element item = DomUtils.getChildElementByTagName(element, I18nBeanDefinitionParser.I18N_ENGINE_PROPERTY);
 		Element child = DomUtils.getChildElements(item).get(0);
 		Object engine = null;
-		if ("databaseI18n".equals(child.getLocalName())) {
+		if (I18nBeanDefinitionParser.I18N_DATABASE_CONFIGURATION_PROPERTY.equals(child.getLocalName())) {
 			final ParserContext nestedCtx = new ParserContext(ctx.getReaderContext(), ctx.getDelegate(), builder.getBeanDefinition());
 			engine = new DatabaseI18nParser().parse(child, nestedCtx);
 		} else {
@@ -51,7 +62,7 @@ public class I18nBeanDefinitionParser extends AbstractSingleBeanDefinitionParser
 			engine = DefinitionParserUtil.parseNode(child, ctx, builder.getBeanDefinition(),
 					element.getAttribute(I18nBeanDefinitionParser.SCOPE), false);
 		}
-		builder.addPropertyValue("engine", engine);
+		builder.addPropertyValue(I18nBeanDefinitionParser.ENGINE, engine);
 		builder.setLazyInit(true);
 	}
 
@@ -84,14 +95,15 @@ public class I18nBeanDefinitionParser extends AbstractSingleBeanDefinitionParser
 		 */
 		@Override
 		protected void doParse(final Element element, final ParserContext ctx, final BeanDefinitionBuilder builder) {
-			builder.addPropertyReference("daoBundles", DefinitionParserUtil.nullIfEmpty(element.getAttribute("ref-bundle-repository")));
-			builder.addPropertyReference("daoBundleValues", DefinitionParserUtil.nullIfEmpty(element.getAttribute("ref-bundle-value-repository")));
+			builder.addPropertyReference("daoBundles", DefinitionParserUtil.nullIfEmpty(element.getAttribute(I18nBeanDefinitionParser.I18N_REF_BUNDLE_REPOSITORY)));
+			builder.addPropertyReference("daoBundleValues", DefinitionParserUtil.nullIfEmpty(element.getAttribute(I18nBeanDefinitionParser.I18N_REF_BUNDLE_VALUE_REPOSITORY)));
 
-			builder.addPropertyValue("bundleKeyColumn", DefinitionParserUtil.nullIfEmpty(element.getAttribute("bundle-key-column")));
-			builder.addPropertyValue("bundleClassNameColumn", DefinitionParserUtil.nullIfEmpty(element.getAttribute("bundle-class-name-column")));
-			builder.addPropertyValue("bundleDescriptionColumn", DefinitionParserUtil.nullIfEmpty(element.getAttribute("bundle-description-column")));
-			builder.addPropertyValue("bundleValuesKeyColumn", DefinitionParserUtil.nullIfEmpty(element.getAttribute("bundle-value-key-column")));
-			builder.addPropertyValue("bundleValuesTextKeyColumn", DefinitionParserUtil.nullIfEmpty(element.getAttribute("bundle-value-text-key-column")));
+			builder.addPropertyValue("bundleKeyColumn", DefinitionParserUtil.nullIfEmpty(element.getAttribute(I18nBeanDefinitionParser.I18N_BUNDLE_KEY_COLUMN)));
+			builder.addPropertyValue("bundleClassNameColumn", DefinitionParserUtil.nullIfEmpty(element.getAttribute(I18nBeanDefinitionParser.I18N_BUNDLE_CLASS_NAME_COLUMN)));
+			builder.addPropertyValue("bundleDescriptionColumn", DefinitionParserUtil.nullIfEmpty(element.getAttribute(I18nBeanDefinitionParser.I18N_BUNDLE_DESCRIPTION_COLUMN)));
+			builder.addPropertyValue("bundleValuesKeyColumn", DefinitionParserUtil.nullIfEmpty(element.getAttribute(I18nBeanDefinitionParser.I18N_BUNDLE_VALUE_KEY_COLUMN)));
+			builder.addPropertyValue("bundleValuesTextKeyColumn",
+					DefinitionParserUtil.nullIfEmpty(element.getAttribute(I18nBeanDefinitionParser.I18N_BUNDLE_VALUE_TEXT_KEY_COLUMN)));
 			builder.setLazyInit(true);
 		}
 	}
