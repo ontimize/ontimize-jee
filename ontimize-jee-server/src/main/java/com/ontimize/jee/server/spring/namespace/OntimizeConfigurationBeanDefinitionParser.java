@@ -10,6 +10,8 @@ import com.ontimize.jee.server.configuration.OntimizeConfiguration;
 
 public class OntimizeConfigurationBeanDefinitionParser extends AbstractSingleBeanDefinitionParser {
 
+	private static final String REMOTE_I18N = "remote-i18n";
+	private static final String REMOTE_MAIL = "mail";
 	private static final String REMOTE_OPERATION_ATTR = "remote-operation";
 	private static final String REMOTE_PREFERENCES_ATTR = "remote-preferences";
 	private static final String SECURITY_ATTR = "security";
@@ -77,7 +79,7 @@ public class OntimizeConfigurationBeanDefinitionParser extends AbstractSingleBea
 		}
 
 		// Support for i18n
-		Element remoteI18n = DomUtils.getChildElementByTagName(element, "remote-i18n");
+		Element remoteI18n = DomUtils.getChildElementByTagName(element, OntimizeConfigurationBeanDefinitionParser.REMOTE_I18N);
 		if (remoteI18n != null) {
 			// Just make a new Parser for each one and let the parser do the work
 			I18nBeanDefinitionParser ro = new I18nBeanDefinitionParser();
@@ -85,7 +87,7 @@ public class OntimizeConfigurationBeanDefinitionParser extends AbstractSingleBea
 		}
 
 		// Support for mail
-		Element mail = DomUtils.getChildElementByTagName(element, "mail");
+		Element mail = DomUtils.getChildElementByTagName(element, OntimizeConfigurationBeanDefinitionParser.REMOTE_MAIL);
 		if (mail != null) {
 			// Just make a new Parser for each one and let the parser do the work
 			MailBeanDefinitionParser ro = new MailBeanDefinitionParser();
