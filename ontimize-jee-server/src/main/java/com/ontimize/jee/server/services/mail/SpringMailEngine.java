@@ -55,8 +55,8 @@ public class SpringMailEngine implements IMailEngine, InitializingBean {
 	 * @throws MessagingException
 	 *             the messaging exception
 	 */
-	public void sendMailSpring(String from, List<String> to, List<String> cc, List<String> bcc, String subject, String body,
-			Map<String, Resource> attachments, Map<String, Resource> inlineResources) throws MessagingException {
+	public void sendMailSpring(String from, List<String> to, List<String> cc, List<String> bcc, String subject, String body, Map<String, Resource> attachments,
+			Map<String, Resource> inlineResources) throws MessagingException {
 		MimeMessage message = this.mailSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message, this.hasAttachments(inlineResources, attachments));
 		// hay que establecer el texto antes de los adjuntos inline
@@ -158,8 +158,8 @@ public class SpringMailEngine implements IMailEngine, InitializingBean {
 	 * java.lang.String, java.lang.String, java.util.Map, java.util.Map)
 	 */
 	@Override
-	public void sendMail(String from, List<String> to, List<String> cc, List<String> bcc, String subject, String body,
-			Map<String, byte[]> attachments, Map<String, byte[]> inlineResources) throws Exception {
+	public void sendMail(String from, List<String> to, List<String> cc, List<String> bcc, String subject, String body, Map<String, byte[]> attachments,
+			Map<String, byte[]> inlineResources) throws Exception {
 		Map<String, Resource> inline = new HashMap<>();
 		Map<String, Resource> attach = new HashMap<>();
 		if (attachments != null) {
@@ -168,8 +168,14 @@ public class SpringMailEngine implements IMailEngine, InitializingBean {
 			}
 		}
 		if (inlineResources != null) {
-			for (Entry<String, byte[]> entry : inlineResources.entrySet()) {
-				inline.put(entry.getKey(), new ByteArrayResource(entry.getValue()));
+			for (final Entry<String, byte[]> entry : inlineResources.entrySet()) {
+				inline.put(entry.getKey(), new ByteArrayResource(entry.getValue()) {
+					// ByteArrayResource.getFilename() returns null but Spring needs a value in that method
+					@Override
+					public String getFilename() {
+						return entry.getKey();
+					}
+				});
 			}
 		}
 		this.sendMailSpring(from, to, cc, bcc, subject, body, attach, inline);
