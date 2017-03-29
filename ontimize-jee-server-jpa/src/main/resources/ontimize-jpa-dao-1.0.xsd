@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://jpaentity.server.jee.imatia.com/setup"
-	xmlns:tns="http://jpaentity.server.jee.imatia.com/setup" elementFormDefault="qualified">
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.ontimize.com/schema/jpa"
+	xmlns:tns="http://www.ontimize.com/schema/jpa" elementFormDefault="qualified">
 
 	<element name="JpaEntitySetup" type="tns:JpaEntitySetupType" />
 	<complexType name="JpaEntitySetupType">
