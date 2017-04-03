@@ -12,20 +12,19 @@ import com.ontimize.jee.common.tools.MessageType;
 public class OntimizeJEEException extends Exception implements IParametrizedException {
 
 	/** The Constant serialVersionUID. */
-	private static final long serialVersionUID = 1L;
+	private static final long	serialVersionUID	= 1L;
 
 	/** The msg type. */
 	private final MessageType	msgType;
 
 	/** The msg blocking. */
 	private final boolean		msgBlocking;
-
+	
 	/** The msg parameters. */
-	private final Object[] msgParameters;
+	private final Object[]		msgParameters;
 
 	/** The silent. */
 	private boolean				silent;
-
 
 	public OntimizeJEEException() {
 		this((String) null);
@@ -59,7 +58,7 @@ public class OntimizeJEEException extends Exception implements IParametrizedExce
 	 * @param msgParameters
 	 *            the msg parameters
 	 */
-	public OntimizeJEEException(String message, Object[] msgParameters) {
+	public OntimizeJEEException(String message, Object... msgParameters) {
 		this(message, msgParameters, MessageType.ERROR);
 	}
 

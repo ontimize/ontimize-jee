@@ -41,6 +41,18 @@ public class ParseUtilsExtended extends ParseUtils {
 		return ParseUtilsExtended.getBoolean(s, false);
 	}
 
+	public static Boolean getBooleanOrNull(Object s) {
+		if ((s != null)) {
+			String value = s.toString();
+			if (value.equalsIgnoreCase("yes") || value.equalsIgnoreCase("true") || value.equalsIgnoreCase("1") || value.equalsIgnoreCase("y") || value.equalsIgnoreCase("s")) {
+				return true;
+			} else if (value.equalsIgnoreCase("no") || value.equalsIgnoreCase("false") || value.equalsIgnoreCase("0") || value.equalsIgnoreCase("n")) {
+				return false;
+			}
+		}
+		return null;
+	}
+
 	/**
 	 * Gets the boolean.
 	 *
@@ -53,9 +65,9 @@ public class ParseUtilsExtended extends ParseUtils {
 	public static boolean getBoolean(Object s, boolean defaultValue) {
 		if ((s != null)) {
 			String value = s.toString();
-			if (value.equalsIgnoreCase("yes") || value.equalsIgnoreCase("true") || value.equalsIgnoreCase("1")) {
+			if (value.equalsIgnoreCase("yes") || value.equalsIgnoreCase("true") || value.equalsIgnoreCase("1") || value.equalsIgnoreCase("y") || value.equalsIgnoreCase("s")) {
 				return true;
-			} else if (value.equalsIgnoreCase("no") || value.equalsIgnoreCase("false") || value.equalsIgnoreCase("0")) {
+			} else if (value.equalsIgnoreCase("no") || value.equalsIgnoreCase("false") || value.equalsIgnoreCase("0") || value.equalsIgnoreCase("n")) {
 				return false;
 			}
 		}
@@ -87,7 +99,7 @@ public class ParseUtilsExtended extends ParseUtils {
 			if (mids.length == 2) {
 				res.put(mids[0], mids[1]);
 			} else {
-				ParseUtilsExtended.logger.warn("Error parsing map, must be 2 size");
+				res.put(mids[0], mids[0]);
 			}
 		}
 		return res;
@@ -273,6 +285,7 @@ public class ParseUtilsExtended extends ParseUtils {
 		if ((s == null) || "".equals(s)) {
 			return defaultValue;
 		}
+		s = s.trim();
 		List<String> res = new ArrayList<String>();
 		if (separator == null) {
 			res.add(s);

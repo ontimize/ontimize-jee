@@ -4,7 +4,9 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 import java.net.URI;
 import java.rmi.Remote;
+import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 
 import javax.swing.JDialog;
@@ -44,11 +46,15 @@ public class OJeeClientPermissionLocator extends PermissionReferenceLocator {
 	private static final Logger	logger								= LoggerFactory.getLogger(OJeeClientPermissionLocator.class);
 	private static final String	REMOTE_LOCATOR_INVOCATION_HANDLER	= "remoteLocatorInvocationHandler";
 
+	protected List<ISessionListener>	sessionListeners;
+
 	// protected String authorizationToken;
 	protected UserInformation	userInformation;
 
 	public OJeeClientPermissionLocator(Hashtable params) {
 		super(params);
+		this.sessionListeners = new ArrayList<>();
+
 		InvocationHandler handler = BeansFactory.getBean(OJeeClientPermissionLocator.REMOTE_LOCATOR_INVOCATION_HANDLER, InvocationHandler.class);
 		if (handler == null) {
 			handler = ReflectionTools.newInstance((String) params.get(OJeeClientPermissionLocator.REMOTE_LOCATOR_INVOCATION_HANDLER),
@@ -87,7 +93,23 @@ public class OJeeClientPermissionLocator extends PermissionReferenceLocator {
 		} catch (Exception ex) {
 			throw new SecurityException("E_LOGIN__ERROR", ex);
 		}
-		return super.startSession(user, password, cw);
+
+		int sesId = super.startSession(user, password, cw);
+		for (ISessionListener listener : this.sessionListeners) {
+			listener.sessionStarted(sesId);
+		}
+		return sesId;
+	}
+
+	@Override
+	public boolean closeSession(String id, int sessionId) throws Exception {
+		boolean closeSession = super.closeSession(id, sessionId);
+		if (closeSession) {
+			for (ISessionListener listener : this.sessionListeners) {
+				listener.sessionClosed(sessionId);
+			}
+		}
+		return closeSession;
 	}
 
 	/**
@@ -141,6 +163,14 @@ public class OJeeClientPermissionLocator extends PermissionReferenceLocator {
 
 	public UserInformation getUserInformation() {
 		return this.userInformation;
+	}
+
+	public void registerSessionListener(ISessionListener listener) {
+		this.sessionListeners.add(listener);
+	}
+
+	public void unregisterSessionListener(ISessionListener listener) {
+		this.sessionListeners.remove(listener);
 	}
 
 }

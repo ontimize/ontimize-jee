@@ -46,4 +46,26 @@ public class ListTools {
 		}
 		return false;
 	}
+
+	public static <T> void ensureAllValues(List<T> list, T... value) {
+		if ((list == null) || (value == null)) {
+			return;
+		}
+		for (T v : value) {
+			if (!list.contains(v)) {
+				list.add(v);
+			}
+		}
+	}
+
+	public static <T> void ensureAllValues(List<T> list, List<T> values) {
+		if ((list == null) || (values == null)) {
+			return;
+		}
+		for (T v : values) {
+			if (!list.contains(v)) {
+				list.add(v);
+			}
+		}
+	}
 }

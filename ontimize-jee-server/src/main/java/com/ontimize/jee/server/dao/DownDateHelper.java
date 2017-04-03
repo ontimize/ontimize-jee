@@ -1,5 +1,6 @@
 package com.ontimize.jee.server.dao;
 
+import java.sql.Types;
 import java.util.Date;
 import java.util.Map;
 
@@ -10,6 +11,8 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import com.ontimize.db.EntityResult;
+import com.ontimize.db.SQLStatementBuilder.BasicOperator;
+import com.ontimize.db.NullValue;
 import com.ontimize.db.SQLStatementBuilder.Expression;
 import com.ontimize.db.SQLStatementBuilder.ExtendedSQLConditionValuesProcessor;
 import com.ontimize.db.SQLStatementBuilder.Field;
@@ -20,7 +23,7 @@ import com.ontimize.jee.common.tools.ObjectTools;
 import com.ontimize.util.ParseUtils;
 
 @Component
-@Lazy(value = true)
+@Lazy(value=true)
 public class DownDateHelper implements ApplicationContextAware, IDownDateHelper {
 
 	/**
@@ -58,7 +61,12 @@ public class DownDateHelper implements ApplicationContextAware, IDownDateHelper 
 	}
 
 	@Override
-	public boolean checkDowndateQueryKeys(Map keysValues, String downDateColumn, String daoKeyColumn) {
+	public EntityResult upRecord(DefaultOntimizeDaoHelper daoHelper, IOntimizeDaoSupport dao, String downDateColumn, Map<?, ?> keysValues) {
+		return daoHelper.update(dao, EntityResultTools.keysvalues(downDateColumn, new NullValue(Types.TIMESTAMP)), keysValues);
+	}
+
+	@Override
+	public boolean checkDowndateQueryKeys(Map keysValues, String downDateColumn, String... daoKeyColumn) {
 		boolean includeDowndateFilter = this.checkIncludeDowndateFilter(keysValues, downDateColumn + DownDateHelper.INCLUDE);
 		if (includeDowndateFilter) {
 			return false;
@@ -72,8 +80,21 @@ public class DownDateHelper implements ApplicationContextAware, IDownDateHelper 
 		return hasDowndateFilter;
 	}
 
-	public boolean isDirectRecordAccess(Map keysValues, String daoKeyColumn) {
-		return keysValues.containsKey(daoKeyColumn) && !(keysValues.get(daoKeyColumn) instanceof SearchValue);
+	public boolean isDirectRecordAccess(Map keysValues, String... daoKeyColumns) {
+		for (String daoKeyColumn : daoKeyColumns) {
+			if (keysValues.containsKey(daoKeyColumn) && !(keysValues.get(daoKeyColumn) instanceof SearchValue)) {
+				return true;
+			}
+		}
+		if (keysValues.containsKey(ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY)) {
+			Expression exp = (Expression) keysValues.get(ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY);
+			for (String daoKeyColumn : daoKeyColumns) {
+				if (this.hasDowndateFilterByExpr(exp, daoKeyColumn)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	public boolean hasDowndateFilter(Map keysValues, String downDateColumn) {
@@ -93,10 +114,10 @@ public class DownDateHelper implements ApplicationContextAware, IDownDateHelper 
 		if (exp == null) {
 			return false;
 		}
-		if (this.hasDowndateFilterByExprChild(exp.getLeftOperand(), downDateColumn)) {
+		if (this.hasDowndateFilterByExprChild(exp.getLeftOperand(), downDateColumn) && (exp.getOperator().equals(BasicOperator.EQUAL_OP))) {
 			return true;
 		}
-		if (this.hasDowndateFilterByExprChild(exp.getRightOperand(), downDateColumn)) {
+		if (this.hasDowndateFilterByExprChild(exp.getRightOperand(), downDateColumn) && (exp.getOperator().equals(BasicOperator.EQUAL_OP))) {
 			return true;
 		}
 		return false;

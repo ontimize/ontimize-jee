@@ -1,8 +1,10 @@
 package com.ontimize.jee.server.dao;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -16,7 +18,13 @@ import org.springframework.stereotype.Component;
 import com.ontimize.db.EntityResult;
 import com.ontimize.db.NullValue;
 import com.ontimize.gui.SearchValue;
+import com.ontimize.gui.field.EntityFunctionAttribute;
+import com.ontimize.gui.field.MultipleReferenceDataFieldAttribute;
+import com.ontimize.gui.field.MultipleTableAttribute;
+import com.ontimize.gui.field.ReferenceFieldAttribute;
+import com.ontimize.gui.table.TableAttribute;
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
+import com.ontimize.jee.common.tools.MapTools;
 import com.ontimize.jee.server.dao.One2OneDaoHelper.One2OneType;
 import com.ontimize.jee.server.dao.One2OneDaoHelper.OneToOneSubDao;
 
@@ -24,10 +32,8 @@ import com.ontimize.jee.server.dao.One2OneDaoHelper.OneToOneSubDao;
 @Lazy(true)
 public class MassiveModificationHelper implements ApplicationContextAware, IMassiveModificationHelper {
 
-	public static final String		MASSIVE_MODIFICATION_UNIQUE_IDENTIFIER	= "MASSIVE_MODIFICATION_UNIQUE_IDENTIFIER";
-
 	/** The application context. */
-	protected ApplicationContext	applicationContext;
+	protected ApplicationContext applicationContext;
 
 	/*
 	 * (non-Javadoc)
@@ -55,9 +61,19 @@ public class MassiveModificationHelper implements ApplicationContextAware, IMass
 	@Override
 	public EntityResult query(DefaultOntimizeDaoHelper daoHelper, IOntimizeDaoSupport dao, String pkColumn, Map<?, ?> keysValues, List<?> attributes, String queryId) {
 		if (keysValues.containsKey(pkColumn) && (keysValues.get(pkColumn) instanceof int[])) {
-			EntityResult query = this.getQuery(daoHelper, dao, pkColumn, keysValues, attributes, queryId);
+
+			// TODO first approximation we obviate TableAttribute
+			List<Object> finalAttributes = new ArrayList<>();
+			for (Iterator<Object> iter = (Iterator<Object>) attributes.listIterator(); iter.hasNext();) {
+				Object attribute = iter.next();
+				if (!(attribute instanceof TableAttribute)) {
+					finalAttributes.add(attribute);
+				}
+			}
+
+			EntityResult query = this.getQuery(daoHelper, dao, pkColumn, keysValues, finalAttributes, queryId);
 			if (query.calculateRecordNumber() > 0) {
-				return this.compareData(pkColumn, keysValues, attributes, query);
+				return this.compareData(pkColumn, keysValues, finalAttributes, query);
 			}
 		}
 		return daoHelper.query(dao, keysValues, attributes, queryId);
@@ -65,10 +81,11 @@ public class MassiveModificationHelper implements ApplicationContextAware, IMass
 
 	public EntityResult compareData(String pkColumn, Map<?, ?> keysValues, List<?> attributes, EntityResult query) {
 		EntityResult resFinal = new EntityResult(query.getRecordValues(0));
+		EntityResult resMassiveMod = (EntityResult) resFinal.clone();
 		attributes.remove(pkColumn);
-		attributes.remove(MassiveModificationHelper.MASSIVE_MODIFICATION_UNIQUE_IDENTIFIER);
+		attributes.remove(IMassiveModificationHelper.MASSIVE_MODIFICATION_UNIQUE_IDENTIFIER);
 		for (Object attribute : attributes) {
-			Vector<Object> vValues = (Vector<Object>) query.get(attribute);
+			Vector<Object> vValues = (Vector<Object>) query.get(MassiveModificationHelper.getStringAttr(attribute));
 			boolean areEquals = true;
 			if (vValues != null) {
 				Object lastValue = vValues.get(0);
@@ -80,18 +97,20 @@ public class MassiveModificationHelper implements ApplicationContextAware, IMass
 						lastValue = value;
 					}
 				}
-				this.safePut(resFinal, attribute, areEquals ? lastValue : new NullValue());
+				Vector<? extends Object> value = areEquals ? new Vector<>(Arrays.asList(lastValue)) : new Vector<>(Arrays.asList(new NullValue()));
+				MapTools.safePut(resFinal, attribute, value);
 				// FIXME debug mode
-				this.safePut(resFinal, attribute + "_INFO", vValues.toString());
+				MapTools.safePut(resMassiveMod, attribute, vValues);
 			}
 		}
 		resFinal.put(pkColumn, keysValues.get(pkColumn));
-		resFinal.put(MassiveModificationHelper.MASSIVE_MODIFICATION_UNIQUE_IDENTIFIER, resFinal.clone());
+		resMassiveMod.put(pkColumn, keysValues.get(pkColumn));
+		resFinal.put(IMassiveModificationHelper.MASSIVE_MODIFICATION_UNIQUE_IDENTIFIER, resMassiveMod);
 		return resFinal;
 	}
 
 	@Override
-	public EntityResult update(DefaultOntimizeDaoHelper daoHelper, IOntimizeDaoSupport dao, String pkColumn, Map<?, ?> keysValues, Map<?, ?> attributesValues)
+	public EntityResult update(DefaultOntimizeDaoHelper daoHelper, IOntimizeDaoSupport dao, String pkColumn, Map<?, ?> attributesValues, Map<?, ?> keysValues)
 	        throws OntimizeJEERuntimeException {
 		if (keysValues.containsKey(pkColumn) && (keysValues.get(pkColumn) instanceof int[])) {
 			int[] ids = (int[]) keysValues.get(pkColumn);
@@ -137,24 +156,6 @@ public class MassiveModificationHelper implements ApplicationContextAware, IMass
 		return daoHelper.query(dao, keys, attributes, queryId);
 	}
 
-	protected <T, Q> boolean safePut(Map<T, Q> map, T key, Q value) {
-		if ((map != null) && (key != null) && (value != null)) {
-			map.put(key, value);
-			return true;
-		}
-		return false;
-	}
-
-	protected boolean safeIsEquals(final Object oba, final Object obb) {
-		boolean equals = true;
-		if (oba == null) {
-			equals = (obb == null);
-		} else {
-			equals = oba.equals(obb);
-		}
-		return equals;
-	}
-
 	@Override
 	public EntityResult insert(DefaultOntimizeDaoHelper daoHelper, IOntimizeDaoSupport dao, String vKeysColumn, String pkColumn, Map<?, ?> attributesValues) {
 		if (attributesValues.containsKey(vKeysColumn) && (attributesValues.get(vKeysColumn) instanceof int[])) {
@@ -174,8 +175,50 @@ public class MassiveModificationHelper implements ApplicationContextAware, IMass
 		return daoHelper.insert(dao, attributesValues);
 	}
 
+	@Override
+	public EntityResult insert(DefaultOntimizeDaoHelper daoHelper, One2OneDaoHelper one2oneHelper, IOntimizeDaoSupport mainDao, String pkColumn, List<OneToOneSubDao> secondaryDaos,
+	        Map<?, ?> attributesValues, One2OneType type) throws OntimizeJEERuntimeException {
+		if (attributesValues.containsKey(pkColumn) && (attributesValues.get(pkColumn) instanceof int[])) {
+			int[] ids = (int[]) attributesValues.get(pkColumn);
+			attributesValues.remove(pkColumn);
+			for (int id : ids) {
+				MapTools.safePut((Map<Object, Object>) attributesValues, pkColumn, id);
+				one2oneHelper.insert(daoHelper, mainDao, secondaryDaos, attributesValues, type);
+			}
+			return new EntityResult();
+		}
+		return one2oneHelper.insert(daoHelper, mainDao, secondaryDaos, attributesValues, type);
+	}
+
 	public boolean isMassiveModification(Object key, Map<?, ?> keysValues) {
 		return keysValues.containsKey(key) && (keysValues.get(key) instanceof int[]);
+	}
+
+	protected boolean safeIsEquals(final Object oba, final Object obb) {
+		boolean equals = true;
+		if (oba == null) {
+			equals = (obb == null);
+		} else {
+			equals = oba.equals(obb);
+		}
+		return equals;
+	}
+
+	public static String getStringAttr(Object attribute) {
+		if (attribute instanceof String) {
+			return (String) attribute;
+		} else if (attribute instanceof ReferenceFieldAttribute) {
+			return ((ReferenceFieldAttribute) attribute).getAttr();
+		} else if (attribute instanceof TableAttribute) {
+			return ((TableAttribute) attribute).getEntity();
+		} else if (attribute instanceof MultipleTableAttribute) {
+			return ((MultipleTableAttribute) attribute).getAttribute().toString();
+		} else if (attribute instanceof MultipleReferenceDataFieldAttribute) {
+			return ((MultipleReferenceDataFieldAttribute) attribute).getAttr();
+		} else if (attribute instanceof EntityFunctionAttribute) {
+			return ((EntityFunctionAttribute) attribute).getAttr();
+		}
+		return attribute.toString();
 	}
 
 }
