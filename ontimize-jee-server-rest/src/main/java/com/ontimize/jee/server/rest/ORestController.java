@@ -207,7 +207,7 @@ public abstract class ORestController<S> {
 			Object value = next.getValue();
 			if ((hSqlTypes != null) && hSqlTypes.containsKey(key)) {
 				int sqlType = (Integer) hSqlTypes.get(key);
-				value = ParseUtilsExtended.getValueForSQLType(value, sqlType);
+				value = ParseUtilsExt.getValueForSQLType(value, sqlType);
 				if (value == null) {
 					value = new NullValue(sqlType);
 				}
