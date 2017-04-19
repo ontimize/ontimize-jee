@@ -85,7 +85,7 @@ public class MassiveModificationHelper implements ApplicationContextAware, IMass
 		attributes.remove(pkColumn);
 		attributes.remove(IMassiveModificationHelper.MASSIVE_MODIFICATION_UNIQUE_IDENTIFIER);
 		for (Object attribute : attributes) {
-			Vector<Object> vValues = (Vector<Object>) query.get(MassiveModificationHelper.getStringAttr(attribute));
+			Vector<Object> vValues = (Vector<Object>) query.get(attribute);
 			boolean areEquals = true;
 			if (vValues != null) {
 				Object lastValue = vValues.get(0);
