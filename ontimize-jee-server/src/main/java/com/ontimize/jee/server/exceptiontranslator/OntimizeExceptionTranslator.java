@@ -30,7 +30,7 @@ public class OntimizeExceptionTranslator implements IExceptionTranslator, com.on
 		if (original instanceof OntimizeJEEException) {
 			try {
 				OntimizeJEEException oee = (OntimizeJEEException) original;
-				return ReflectionTools.newInstance(original.getClass(), oee.getMessage(), null, oee.getMessageParameters(), false, false);
+				return ReflectionTools.newInstance(original.getClass(), oee.getMessage(), oee.getMessageParameters(), null, false, false);
 			} catch (Exception ex) {
 				// do nothing
 			}
@@ -38,7 +38,7 @@ public class OntimizeExceptionTranslator implements IExceptionTranslator, com.on
 		if (original instanceof OntimizeJEERuntimeException) {
 			try {
 				OntimizeJEERuntimeException oee = (OntimizeJEERuntimeException) original;
-				return ReflectionTools.newInstance(original.getClass(), oee.getMessage(), null, oee.getMessageParameters(), false, false);
+				return ReflectionTools.newInstance(original.getClass(), oee.getMessage(), oee.getMessageParameters(), null, false, false);
 			} catch (Exception ex) {
 				// do nothing
 			}
