@@ -25,7 +25,7 @@
 	</distributionManagement>
 
 	<properties>
-		<jdk.version.client>1.7</jdk.version.client>
+		<jdk.version.client>1.8</jdk.version.client>
 		<jdk.version.server>1.7</jdk.version.server>
 
 		<projectGroupId>com.ontimize.jee</projectGroupId>
