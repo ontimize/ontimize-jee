@@ -26,7 +26,6 @@ import com.ontimize.db.NullValue;
 import com.ontimize.db.SQLStatementBuilder;
 import com.ontimize.db.SQLStatementBuilder.BasicExpression;
 import com.ontimize.jee.common.tools.CheckingTools;
-import com.ontimize.jee.common.tools.ParseUtilsExtended;
 import com.ontimize.jee.common.tools.ReflectionTools;
 
 public abstract class ORestController<S> {
