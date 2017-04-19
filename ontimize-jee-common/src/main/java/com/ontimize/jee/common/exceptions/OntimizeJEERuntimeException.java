@@ -102,6 +102,20 @@ public class OntimizeJEERuntimeException extends RuntimeException implements IPa
 	 *            the message
 	 * @param msgParameters
 	 *            the msg parameters
+	 * @param cause
+	 *            the cause
+	 */
+	public OntimizeJEERuntimeException(String message, Object[] msgParameters, Throwable cause, boolean msgBlocking, boolean silent) {
+		this(message, msgParameters, cause, MessageType.ERROR, msgBlocking, silent);
+	}
+
+	/**
+	 * Instantiates a new u exception.
+	 *
+	 * @param message
+	 *            the message
+	 * @param msgParameters
+	 *            the msg parameters
 	 * @param msgType
 	 *            the msg type
 	 * @param msgBlocking
