@@ -105,12 +105,12 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-websocket</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>javafx</groupId>
-			<artifactId>jfxrt</artifactId>
-			<version>1.7</version>
-			<scope>system</scope>
-			<systemPath>${JAVA_1_7_HOME}/jre/lib/jfxrt.jar</systemPath>
-		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>javafx</groupId> -->
+<!-- 			<artifactId>jfxrt</artifactId> -->
+<!-- 			<version>1.7</version> -->
+<!-- 			<scope>system</scope> -->
+<!-- 			<systemPath>${JAVA_1_7_HOME}/jre/lib/jfxrt.jar</systemPath> -->
+<!-- 		</dependency> -->
 	</dependencies>
 </project>
