@@ -47,6 +47,10 @@ public class ListTools {
 		return false;
 	}
 
+	public static <T> void safeAdd(List<T> list, T... value) {
+		ListTools.ensureAllValues(list, value);
+	}
+
 	public static <T> void ensureAllValues(List<T> list, T... value) {
 		if ((list == null) || (value == null)) {
 			return;
