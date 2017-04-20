@@ -1,5 +1,7 @@
 package com.ontimize.jee.server.services.mail;
 
+import java.io.FileInputStream;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +12,8 @@ import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.InputStreamSource;
 import org.springframework.core.io.Resource;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -31,75 +35,6 @@ public class SpringMailEngine implements IMailEngine, InitializingBean {
 	public SpringMailEngine() {
 		super();
 		this.mailSender = new JavaMailSenderImpl();
-	}
-
-	/**
-	 * Send mail spring.
-	 *
-	 * @param from
-	 *            the from
-	 * @param to
-	 *            the to
-	 * @param cc
-	 *            the cc
-	 * @param bcc
-	 *            the bcc
-	 * @param subject
-	 *            the subject
-	 * @param body
-	 *            the body
-	 * @param attachments
-	 *            the attachments
-	 * @param inlineResources
-	 *            the inline resources
-	 * @throws MessagingException
-	 *             the messaging exception
-	 */
-	public void sendMailSpring(String from, List<String> to, List<String> cc, List<String> bcc, String subject, String body, Map<String, Resource> attachments,
-			Map<String, Resource> inlineResources) throws MessagingException {
-		MimeMessage message = this.mailSender.createMimeMessage();
-		MimeMessageHelper helper = new MimeMessageHelper(message, this.hasAttachments(inlineResources, attachments));
-		// hay que establecer el texto antes de los adjuntos inline
-		if (body != null) {
-			helper.setText(body, this.isHtml(body));
-		}
-		if (to != null) {
-			helper.setTo(to.toArray(new String[] {}));
-		}
-		if (cc != null) {
-			helper.setCc(cc.toArray(new String[] {}));
-		}
-		if (bcc != null) {
-			helper.setBcc(bcc.toArray(new String[] {}));
-		}
-		if (from != null) {
-			helper.setFrom(from);
-		}
-		helper.setSubject(subject);
-		if (attachments != null) {
-			for (Entry<String, Resource> entry : attachments.entrySet()) {
-				helper.addAttachment(entry.getKey(), entry.getValue());
-			}
-		}
-		if (inlineResources != null) {
-			for (Entry<String, Resource> entry : inlineResources.entrySet()) {
-				helper.addInline(entry.getKey(), entry.getValue());
-			}
-		}
-		this.mailSender.send(message);
-	}
-
-	/**
-	 * Checks for attachments.
-	 *
-	 * @param inlineResources
-	 *            the inline resources
-	 * @param attachments
-	 *            the attachments
-	 * @return true, if successful
-	 */
-	private boolean hasAttachments(Map<String, Resource> inlineResources, Map<String, Resource> attachments) {
-		return ((inlineResources != null) && !inlineResources.isEmpty()) || ((attachments != null) && !attachments.isEmpty());
 	}
 
 	/**
@@ -160,13 +95,13 @@ public class SpringMailEngine implements IMailEngine, InitializingBean {
 	@Override
 	public void sendMail(String from, List<String> to, List<String> cc, List<String> bcc, String subject, String body, Map<String, byte[]> attachments,
 			Map<String, byte[]> inlineResources) throws Exception {
-		Map<String, Resource> inline = new HashMap<>();
-		Map<String, Resource> attach = new HashMap<>();
+		Map<String, InputStreamSource> attach = new HashMap<>();
 		if (attachments != null) {
 			for (Entry<String, byte[]> entry : attachments.entrySet()) {
 				attach.put(entry.getKey(), new ByteArrayResource(entry.getValue()));
 			}
 		}
+		Map<String, Resource> inline = new HashMap<>();
 		if (inlineResources != null) {
 			for (final Entry<String, byte[]> entry : inlineResources.entrySet()) {
 				inline.put(entry.getKey(), new ByteArrayResource(entry.getValue()) {
@@ -179,5 +114,102 @@ public class SpringMailEngine implements IMailEngine, InitializingBean {
 			}
 		}
 		this.sendMailSpring(from, to, cc, bcc, subject, body, attach, inline);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.ontimize.jee.server.services.mail.IMailEngine#sendMail(java.lang.String, java.util.List, java.util.List, java.util.List, java.lang.String, java.lang.String,
+	 * java.util.Map, java.util.Map)
+	 */
+	@Override
+	public void sendMailFromInputSteams(String from, List<String> to, List<String> cc, List<String> bcc, String subject, String body, Map<String, Path> attachments,
+			Map<String, Path> inlineResources) throws Exception {
+		Map<String, InputStreamSource> attach = new HashMap<>();
+		if (attachments != null) {
+			for (final Entry<String, Path> entry : attachments.entrySet()) {
+				attach.put(entry.getKey(), new InputStreamSource() {
+					@Override
+					public java.io.InputStream getInputStream() throws java.io.IOException {
+						return new FileInputStream(entry.getValue().toFile());
+					};
+				});
+			}
+		}
+		Map<String, Resource> inline = new HashMap<>();
+		if (inlineResources != null) {
+			for (final Entry<String, Path> entry : inlineResources.entrySet()) {
+				inline.put(entry.getKey(), new InputStreamResource(new FileInputStream(entry.getValue().toFile())));
+			}
+		}
+		this.sendMailSpring(from, to, cc, bcc, subject, body, attach, inline);
+	}
+
+	/**
+	 * Send mail spring.
+	 *
+	 * @param from
+	 *            the from
+	 * @param to
+	 *            the to
+	 * @param cc
+	 *            the cc
+	 * @param bcc
+	 *            the bcc
+	 * @param subject
+	 *            the subject
+	 * @param body
+	 *            the body
+	 * @param attachments
+	 *            the attachments
+	 * @param inlineResources
+	 *            the inline resources
+	 * @throws MessagingException
+	 *             the messaging exception
+	 */
+	protected void sendMailSpring(String from, List<String> to, List<String> cc, List<String> bcc, String subject, String body, Map<String, InputStreamSource> attachments,
+			Map<String, Resource> inlineResources) throws MessagingException {
+		MimeMessage message = this.mailSender.createMimeMessage();
+		MimeMessageHelper helper = new MimeMessageHelper(message, this.hasAttachments(inlineResources, attachments));
+		// hay que establecer el texto antes de los adjuntos inline
+		if (body != null) {
+			helper.setText(body, this.isHtml(body));
+		}
+		if (to != null) {
+			helper.setTo(to.toArray(new String[] {}));
+		}
+		if (cc != null) {
+			helper.setCc(cc.toArray(new String[] {}));
+		}
+		if (bcc != null) {
+			helper.setBcc(bcc.toArray(new String[] {}));
+		}
+		if (from != null) {
+			helper.setFrom(from);
+		}
+		helper.setSubject(subject);
+		if (attachments != null) {
+			for (Entry<String, InputStreamSource> entry : attachments.entrySet()) {
+				helper.addAttachment(entry.getKey(), entry.getValue());
+			}
+		}
+		if (inlineResources != null) {
+			for (Entry<String, Resource> entry : inlineResources.entrySet()) {
+				helper.addInline(entry.getKey(), entry.getValue());
+			}
+		}
+		this.mailSender.send(message);
+	}
+
+	/**
+	 * Checks for attachments.
+	 *
+	 * @param inlineResources
+	 *            the inline resources
+	 * @param attachments
+	 *            the attachments
+	 * @return true, if successful
+	 */
+	private boolean hasAttachments(Map<String, Resource> inlineResources, Map<String, InputStreamSource> attachments) {
+		return ((inlineResources != null) && !inlineResources.isEmpty()) || ((attachments != null) && !attachments.isEmpty());
 	}
 }

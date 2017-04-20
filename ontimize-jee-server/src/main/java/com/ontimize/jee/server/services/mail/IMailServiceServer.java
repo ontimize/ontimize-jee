@@ -4,12 +4,13 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
+import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
+import com.ontimize.jee.common.services.mail.IMailService;
 
 /**
- * The Interface IMailEngine.
+ * The Interface IMailServiceServer.
  */
-public interface IMailEngine {
-
+public interface IMailServiceServer extends IMailService {
 
 	/**
 	 * Send mail.
@@ -33,27 +34,7 @@ public interface IMailEngine {
 	 * @throws Exception
 	 *             the exception
 	 */
-	void sendMail(String from, List<String> to, List<String> cc, List<String> bcc, String subject, String body, Map<String, byte[]> attachments,
-			Map<String, byte[]> inlineResources) throws Exception;
-
-	/**
-	 * Send email with attachments and inlineresources from path, non loaded bytes.
-	 * 
-	 * @param from
-	 * @param to
-	 * @param cc
-	 * @param bcc
-	 * @param subject
-	 * @param body
-	 * @param attachments
-	 * @param inlineResources
-	 * @throws Exception
-	 */
 	void sendMailFromInputSteams(String from, List<String> to, List<String> cc, List<String> bcc, String subject, String body, Map<String, Path> attachments,
-			Map<String, Path> inlineResources) throws Exception;
+			Map<String, Path> inlineResources) throws OntimizeJEERuntimeException;
 
-	/**
-	 * Update settings.
-	 */
-	void updateSettings();
 }

@@ -1,5 +1,6 @@
 package com.ontimize.jee.server.services.mail;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
@@ -14,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
 import com.ontimize.jee.common.security.PermissionsProviderSecured;
-import com.ontimize.jee.common.services.mail.IMailService;
 import com.ontimize.jee.common.services.user.UserInformation;
 import com.ontimize.jee.common.tools.CheckingTools;
 import com.ontimize.jee.server.configuration.OntimizeConfiguration;
@@ -24,7 +24,7 @@ import com.ontimize.jee.server.configuration.OntimizeConfiguration;
  */
 @Service("MailService")
 @Lazy(value = true)
-public class MailServiceImpl implements IMailService, ApplicationContextAware {
+public class MailServiceImpl implements IMailServiceServer, ApplicationContextAware {
 
 	/** The implementation. */
 	private IMailEngine	implementation;
@@ -76,6 +76,16 @@ public class MailServiceImpl implements IMailService, ApplicationContextAware {
 	@Override
 	public void sendMailWithoutAttach(String from, List<String> to, String subject, String body) throws OntimizeJEERuntimeException {
 		this.sendMail(from, to, null, null, subject, body, null, null);
+	}
+
+	@Override
+	public void sendMailFromInputSteams(String from, List<String> to, List<String> cc, List<String> bcc, String subject, String body, Map<String, Path> attachments,
+			Map<String, Path> inlineResources) throws OntimizeJEERuntimeException {
+		try {
+			this.getImplementation().sendMailFromInputSteams(from, to, cc, bcc, subject, body, attachments, inlineResources);
+		} catch (Exception error) {
+			throw new OntimizeJEERuntimeException(error);
+		}
 	}
 
 }
