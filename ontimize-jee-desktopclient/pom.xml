@@ -21,28 +21,6 @@
 					<target>${jdk.version.client}</target>
 				</configuration>
 			</plugin>
-
-			<!-- JAR plugin adding entries to manifest -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<configuration>
-					<archive>
-						<addMavenDescriptor>false</addMavenDescriptor>
-						<manifestEntries>
-							<Trusted-Library>true</Trusted-Library>
-							<Permissions>all-permissions</Permissions>
-							<Codebase>*</Codebase>
-						</manifestEntries>
-					</archive>
-				</configuration>
-			</plugin>
-
-			<!-- Source -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-			</plugin>
 		</plugins>
 	</build>
 	<dependencies>
@@ -105,12 +83,5 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-websocket</artifactId>
 		</dependency>
-<!-- 		<dependency> -->
-<!-- 			<groupId>javafx</groupId> -->
-<!-- 			<artifactId>jfxrt</artifactId> -->
-<!-- 			<version>1.7</version> -->
-<!-- 			<scope>system</scope> -->
-<!-- 			<systemPath>${JAVA_1_7_HOME}/jre/lib/jfxrt.jar</systemPath> -->
-<!-- 		</dependency> -->
 	</dependencies>
 </project>

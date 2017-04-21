@@ -38,40 +38,4 @@
 			<artifactId>spring-orm</artifactId>
 		</dependency>
 	</dependencies>
-
-	<build>
-		<plugins>
-			<!-- Compiler configuration -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>${jdk.version.server}</source>
-					<target>${jdk.version.server}</target>
-				</configuration>
-			</plugin>
-
-			<!-- JAR plugin adding entries to manifest -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<configuration>
-					<archive>
-						<addMavenDescriptor>false</addMavenDescriptor>
-						<manifestEntries>
-							<Trusted-Library>true</Trusted-Library>
-							<Permissions>all-permissions</Permissions>
-							<Codebase>*</Codebase>
-						</manifestEntries>
-					</archive>
-				</configuration>
-			</plugin>
-			<!-- Source -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
-	
 </project>
