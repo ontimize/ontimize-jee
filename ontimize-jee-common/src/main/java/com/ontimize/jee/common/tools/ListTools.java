@@ -47,6 +47,25 @@ public class ListTools {
 		return false;
 	}
 
+	/**
+	 * Returns if the list contains this object
+	 * 
+	 * @param value
+	 * @param objects
+	 * @return
+	 */
+	public static <T> boolean in(final T value, final List<T> objects) {
+		if ((value == null) || (objects == null) || objects.isEmpty()) {
+			return false;
+		}
+		for (Object ob : objects) {
+			if (value.equals(ob)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public static <T> void safeAdd(List<T> list, T... value) {
 		ListTools.ensureAllValues(list, value);
 	}
