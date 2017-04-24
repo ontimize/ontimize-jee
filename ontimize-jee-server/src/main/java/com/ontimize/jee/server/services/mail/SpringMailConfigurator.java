@@ -54,27 +54,13 @@ public class SpringMailConfigurator implements IMailConfigurator {
 		String pass = this.getResolverValue(this.passwordResolver);
 		Properties javaMailProperties = this.resolveJavaMailProperties();
 
-		if (encoding != null) {
-			((SpringMailEngine) engine).getMailSender().setDefaultEncoding(encoding);
-		}
-		if (host != null) {
-			((SpringMailEngine) engine).getMailSender().setHost(host);
-		}
-		if (port != null) {
-			((SpringMailEngine) engine).getMailSender().setPort(Integer.valueOf(port));
-		}
-		if (protocol != null) {
-			((SpringMailEngine) engine).getMailSender().setProtocol(protocol);
-		}
-		if (user != null) {
-			((SpringMailEngine) engine).getMailSender().setUsername(user);
-		}
-		if (pass != null) {
-			((SpringMailEngine) engine).getMailSender().setPassword(pass);
-		}
-		if (javaMailProperties != null) {
-			((SpringMailEngine) engine).getMailSender().setJavaMailProperties(javaMailProperties);
-		}
+		((SpringMailEngine) engine).getMailSender().setDefaultEncoding(encoding);
+		((SpringMailEngine) engine).getMailSender().setHost(host);
+		((SpringMailEngine) engine).getMailSender().setPort(Integer.valueOf(port));
+		((SpringMailEngine) engine).getMailSender().setProtocol(protocol);
+		((SpringMailEngine) engine).getMailSender().setUsername(user);
+		((SpringMailEngine) engine).getMailSender().setPassword(pass);
+		((SpringMailEngine) engine).getMailSender().setJavaMailProperties(javaMailProperties);
 	}
 
 	/**

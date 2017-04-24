@@ -88,4 +88,9 @@ public class MailServiceImpl implements IMailServiceServer, ApplicationContextAw
 		}
 	}
 
+	@Override
+	public void updateSettings() {
+		this.getImplementation().updateSettings();
+	}
+
 }

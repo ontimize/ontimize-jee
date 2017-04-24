@@ -37,4 +37,8 @@ public interface IMailServiceServer extends IMailService {
 	void sendMailFromInputSteams(String from, List<String> to, List<String> cc, List<String> bcc, String subject, String body, Map<String, Path> attachments,
 			Map<String, Path> inlineResources) throws OntimizeJEERuntimeException;
 
+	/**
+	 * Update settings.
+	 */
+	void updateSettings();
 }
