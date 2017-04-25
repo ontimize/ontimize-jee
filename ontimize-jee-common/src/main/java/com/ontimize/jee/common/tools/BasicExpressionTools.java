@@ -386,7 +386,9 @@ public final class BasicExpressionTools {
 		Object[] toCheck = new Object[] { leftOperand, rightOperand };
 		for (Object check : toCheck) {
 			if (check instanceof BasicExpression) {
-				return BasicExpressionTools.containsField((BasicExpression) check, fieldName);
+				if (BasicExpressionTools.containsField((BasicExpression) check, fieldName)) {
+					return true;
+				}
 			} else if (check instanceof BasicField) {
 				if (fieldName.equals(((BasicField) check).toString())) {
 					return true;
