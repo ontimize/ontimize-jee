@@ -17,6 +17,17 @@ public class FixedPropertyResolver<T> extends AbstractPropertyResolver<T> {
 	}
 
 	/**
+	 * Instantiates a new fixed property resolver.
+	 *
+	 * @param value
+	 *            the value
+	 */
+	public FixedPropertyResolver(T value) {
+		this();
+		this.setValue(value);
+	}
+
+	/**
 	 * Gets the value.
 	 *
 	 * @return the value
