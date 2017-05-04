@@ -5,7 +5,6 @@ package com.caucho.hessian.client;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.net.HttpURLConnection;
@@ -17,7 +16,6 @@ import org.slf4j.LoggerFactory;
 
 import com.caucho.hessian.io.AbstractHessianInput;
 import com.caucho.hessian.io.AbstractHessianOutput;
-import com.caucho.hessian.io.HessianDebugInputStream;
 import com.caucho.hessian.io.HessianDebugOutputStream;
 import com.caucho.hessian.io.HessianProtocolException;
 import com.ontimize.jee.common.exceptions.InvalidCredentialsException;
@@ -120,15 +118,6 @@ public class OntimizeHessianProxy extends HessianProxy {
 			conn = this.sendRequest(mangleName, args);
 
 			is = conn.getInputStream();
-
-			if (OntimizeHessianProxy.logger.isTraceEnabled()) {
-				PrintWriter dbg = new PrintWriter(new LogWriter(OntimizeHessianProxy.logger));
-				HessianDebugInputStream dIs = new HessianDebugInputStream(is, dbg);
-
-				dIs.startTop2();
-
-				is = dIs;
-			}
 
 			AbstractHessianInput in;
 
@@ -255,14 +244,7 @@ public class OntimizeHessianProxy extends HessianProxy {
 
 			AbstractHessianOutput out;
 
-			if (OntimizeHessianProxy.logger.isTraceEnabled()) {
-				PrintWriter dbg = new PrintWriter(new LogWriter(OntimizeHessianProxy.logger));
-				dOs = new HessianDebugOutputStream(os, dbg);
-				dOs.startTop2();
-				out = this.getFactory().getHessianOutput(dOs);
-			} else {
-				out = this.getFactory().getHessianOutput(os);
-			}
+			out = this.getFactory().getHessianOutput(os);
 
 			out.call(methodName, args);
 			out.flush();

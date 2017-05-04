@@ -283,7 +283,7 @@ public final class OntimizeJpaUtils {
             // get select columns
             if ((fromIdx > 0) && (fromIdx > (selectIdx + 6))) {
                 str = selectQuery.substring(selectIdx + 6, fromIdx);
-            } else if (fromIdx < 0) {
+			} else {
                 str = selectQuery.substring(selectIdx + 6);
             }
             final String[] columns = str.split(",");

@@ -424,10 +424,8 @@ public final class FileTools {
 	 */
 	public static Map<String, String> readManifest(File jarFile) {
 		Map<String, String> values = new HashMap<String, String>();
-		try {
-			JarFile jar = new JarFile(jarFile);
+		try (JarFile jar = new JarFile(jarFile)) {
 			Manifest mf = jar.getManifest();
-
 			FileTools.catchValuesFromManifest(values, mf);
 		} catch (Exception ex) {
 			FileTools.logger.error("Error reading JAR file MANIFEST. Detail:" + ex.getMessage());

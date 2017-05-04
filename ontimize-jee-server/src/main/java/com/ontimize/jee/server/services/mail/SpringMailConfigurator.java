@@ -71,11 +71,11 @@ public class SpringMailConfigurator implements IMailConfigurator {
 	protected Properties resolveJavaMailProperties() {
 		String prop = this.getResolverValue(this.javaMailProperties);
 		if (prop == null) {
-			return null;
+			return new Properties();
 		}
 		Map<String, String> map = ParseUtilsExtended.getMap(prop, null);
 		if (map == null) {
-			return null;
+			return new Properties();
 		}
 		Properties res = new Properties();
 		res.putAll(map);

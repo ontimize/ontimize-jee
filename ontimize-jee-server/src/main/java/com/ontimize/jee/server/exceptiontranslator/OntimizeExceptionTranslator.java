@@ -14,7 +14,7 @@ import com.ontimize.jee.common.tools.ReflectionTools;
 
 public class OntimizeExceptionTranslator implements IExceptionTranslator, com.ontimize.jee.server.exceptiontranslator.IExceptionTranslator {
 
-	private DBErrorMessagesTranslator	dbErrorMessagesTranslator;
+	private DBErrorMessagesTranslator dbErrorMessagesTranslator;
 
 	@Override
 	public Throwable translateException(Throwable original) {
@@ -71,10 +71,7 @@ public class OntimizeExceptionTranslator implements IExceptionTranslator, com.on
 		}
 		int code = sqlException.getErrorCode();
 		String sqlState = sqlException.getSQLState();
-		String message = null;
-		if (message == null) {
-			message = this.dbErrorMessagesTranslator.getVendorCodeMessage(code);
-		}
+		String message = this.dbErrorMessagesTranslator.getVendorCodeMessage(code);
 		if (message != null) {
 			return message;
 		} else {

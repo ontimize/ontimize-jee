@@ -35,9 +35,7 @@ public class DefaultValueToQLLiteralProcessor extends AbstractValueToQLLiteralPr
 		} else if (value instanceof Collection<?>) {
 			literal = "";
 			for (Object o : ((Collection) value)) {
-				if (value != null) {
-					literal += this.valueToLiteral(o) + ", ";
-				}
+				literal += this.valueToLiteral(o) + ", ";
 			}
 			if (literal.length() > 0) {
 				literal = literal.substring(0, literal.length() - 2);

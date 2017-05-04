@@ -11,8 +11,7 @@ public class DeleteRequestStatisticsHistory extends Thread {
 
 	private static final Logger			logger		= LoggerFactory.getLogger(DeleteRequestStatisticsHistory.class);
 
-	private int							count		= 0;
-	private final Integer				semaphore	= new Integer(this.count);
+	private final Object				semaphore	= new Object();
 	private volatile boolean			isRunning	= false;
 
 	@Autowired
@@ -44,7 +43,6 @@ public class DeleteRequestStatisticsHistory extends Thread {
 				try {
 					DeleteRequestStatisticsHistory.logger.info("STOPPED!...");
 					synchronized (DeleteRequestStatisticsHistory.this.semaphore) {
-						DeleteRequestStatisticsHistory.this.count++;
 						DeleteRequestStatisticsHistory.this.semaphore.wait();
 					}
 				} catch (InterruptedException e) {
@@ -64,7 +62,6 @@ public class DeleteRequestStatisticsHistory extends Thread {
 					try {
 						new TimerThread(DeleteRequestStatisticsHistory.this.millisWait).start();
 						synchronized (DeleteRequestStatisticsHistory.this.semaphore) {
-							DeleteRequestStatisticsHistory.this.count++;
 							DeleteRequestStatisticsHistory.this.semaphore.wait();
 						}
 					} catch (Exception e) {
@@ -83,7 +80,6 @@ public class DeleteRequestStatisticsHistory extends Thread {
 
 	protected void awake() {
 		synchronized (this.semaphore) {
-			this.count++;
 			this.semaphore.notify();
 			this.setRunning(true);
 		}

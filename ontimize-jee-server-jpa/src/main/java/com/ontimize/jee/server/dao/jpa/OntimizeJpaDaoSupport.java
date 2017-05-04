@@ -276,13 +276,6 @@ public class OntimizeJpaDaoSupport implements ApplicationContextAware, IOntimize
             final String query = this.prepareQuery(queryTemplateInformation.getSyntax(), queryTemplateInformation, validAttributes, keysValues, validSort, queryResultClass);
             // if return type is this entity and no column mapping specified then we delegate in jpa support
             if (queryTemplateInformation.getResultClass().equals(queryResultClass)) {
-                if (queryResultClass == null) {
-                    if (EntityResult.class.isAssignableFrom(resultStyleClass)) {
-                        return (T) this.newEntityResultErrorQueryEntityClassNull();
-                    } else {
-                        throw new RuntimeException("Entity class is null");
-                    }
-                }
                 if ((queryTemplateInformation.getMappingInfo().getColumnMappings().size() == 0) && !queryTemplateInformation.getMappingInfo().getReturnTypeClassNameIsPrimitive()) {
                     selectQuery = this.entityManager.createNativeQuery(query, queryResultClass);
                     this.adaptQuery(selectQuery);

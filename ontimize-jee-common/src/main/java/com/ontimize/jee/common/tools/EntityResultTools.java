@@ -964,7 +964,7 @@ public final class EntityResultTools {
 					continue;
 				}
 				try {
-					if ((o != null) && !(o instanceof Number)) {
+					if (!(o instanceof Number)) {
 						o = Double.parseDouble(o.toString());
 					}
 				} catch (Exception e) {
@@ -984,7 +984,7 @@ public final class EntityResultTools {
 					continue;
 				}
 				try {
-					if ((o != null) && !(o instanceof Number)) {
+					if (!(o instanceof Number)) {
 						o = Double.parseDouble(o.toString());
 					}
 				} catch (Exception e) {
@@ -1926,7 +1926,9 @@ public final class EntityResultTools {
 	 * @return true if exact match, false in other case
 	 */
 	public static boolean compare(EntityResult erBackup, EntityResult er) {
-		if (((erBackup == null) || erBackup.isEmpty()) && ((er != null) && !er.isEmpty())) {
+		if ((erBackup == null) && (er == null)) {
+			return true;
+		} else if (((erBackup == null) || erBackup.isEmpty()) && ((er != null) && !er.isEmpty())) {
 			return false;
 		} else if (((er == null) || er.isEmpty()) && ((erBackup != null) && !erBackup.isEmpty())) {
 			return false;

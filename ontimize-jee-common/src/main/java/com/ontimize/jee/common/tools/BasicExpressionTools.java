@@ -40,7 +40,7 @@ public final class BasicExpressionTools {
 	public static boolean areEquals(BasicExpression newExpr, BasicExpression oldExpr) {
 		if (((newExpr == null) && (oldExpr != null)) || ((newExpr != null) && (oldExpr == null))) {
 			return false;
-		} else if ((newExpr == null) && (oldExpr == null)) {
+		} else if (newExpr == null) {
 			return true;
 		}
 		Object[] newOperands = new Object[] { newExpr.getLeftOperand(), newExpr.getRightOperand() };
