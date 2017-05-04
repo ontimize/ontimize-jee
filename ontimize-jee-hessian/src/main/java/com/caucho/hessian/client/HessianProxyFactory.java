@@ -18,7 +18,6 @@ package com.caucho.hessian.client;
 
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 import java.net.URI;
@@ -36,7 +35,6 @@ import com.caucho.hessian.io.AbstractHessianInput;
 import com.caucho.hessian.io.AbstractHessianOutput;
 import com.caucho.hessian.io.Hessian2Input;
 import com.caucho.hessian.io.Hessian2Output;
-import com.caucho.hessian.io.HessianDebugInputStream;
 import com.caucho.hessian.io.HessianRemoteObject;
 import com.caucho.hessian.io.HessianRemoteResolver;
 import com.caucho.hessian.io.SerializerFactory;
@@ -368,10 +366,6 @@ public class HessianProxyFactory implements ServiceProxyFactory, ObjectFactory {
 
 	public AbstractHessianInput getHessian2Input(InputStream is) {
 		AbstractHessianInput in;
-
-		if (this.isDebug) {
-			is = new HessianDebugInputStream(is, new PrintWriter(System.out));
-		}
 
 		in = new Hessian2Input(is);
 

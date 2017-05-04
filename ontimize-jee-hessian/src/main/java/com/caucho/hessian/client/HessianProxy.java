@@ -21,9 +21,7 @@ package com.caucho.hessian.client;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.io.Serializable;
-import java.io.Writer;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -38,8 +36,6 @@ import org.slf4j.LoggerFactory;
 
 import com.caucho.hessian.io.AbstractHessianInput;
 import com.caucho.hessian.io.AbstractHessianOutput;
-import com.caucho.hessian.io.HessianDebugInputStream;
-import com.caucho.hessian.io.HessianDebugOutputStream;
 import com.caucho.hessian.io.HessianProtocolException;
 import com.caucho.hessian.io.HessianRemote;
 import com.caucho.services.server.AbstractSkeleton;
@@ -149,13 +145,6 @@ public class HessianProxy implements InvocationHandler, Serializable {
 
 			is = this.getInputStream(conn);
 
-			if (HessianProxy.log.isTraceEnabled()) {
-				PrintWriter dbg = new PrintWriter(new LogWriter(HessianProxy.log));
-				HessianDebugInputStream dIs = new HessianDebugInputStream(is, dbg);
-				dIs.startTop2();
-				is = dIs;
-			}
-
 			AbstractHessianInput in;
 
 			int code = is.read();
@@ -250,13 +239,6 @@ public class HessianProxy implements InvocationHandler, Serializable {
 				os = conn.getOutputStream();
 			} catch (Exception e) {
 				throw new HessianRuntimeException(e);
-			}
-
-			if (HessianProxy.log.isTraceEnabled()) {
-				PrintWriter dbg = new PrintWriter(new LogWriter(HessianProxy.log));
-				HessianDebugOutputStream dOs = new HessianDebugOutputStream(os, dbg);
-				dOs.startTop2();
-				os = dOs;
 			}
 
 			AbstractHessianOutput out = this.factory.getHessianOutput(os);
@@ -397,45 +379,4 @@ public class HessianProxy implements InvocationHandler, Serializable {
 		}
 	}
 
-	static class LogWriter extends Writer {
-		private final Logger		_log;
-		private final StringBuilder	_sb	= new StringBuilder();
-
-		LogWriter(Logger log) {
-			this._log = log;
-		}
-
-		public void write(char ch) {
-			if ((ch == '\n') && (this._sb.length() > 0)) {
-				this._log.trace(this._sb.toString());
-				this._sb.setLength(0);
-			} else {
-				this._sb.append(ch);
-			}
-		}
-
-		@Override
-		public void write(char[] buffer, int offset, int length) {
-			for (int i = 0; i < length; i++) {
-				char ch = buffer[offset + i];
-
-				if ((ch == '\n') && (this._sb.length() > 0)) {
-					this._log.trace(this._sb.toString());
-					this._sb.setLength(0);
-				} else {
-					this._sb.append(ch);
-				}
-			}
-		}
-
-		@Override
-		public void flush() {}
-
-		@Override
-		public void close() {
-			if (this._sb.length() > 0) {
-				this._log.trace(this._sb.toString());
-			}
-		}
-	}
 }

@@ -88,12 +88,8 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 	// the chunk length
 	private int								chunkLength;
 
-	private HessianDebugInputStream			dIs;
-
 	public Hessian2Input() {
-		if (Hessian2Input.log.isTraceEnabled()) {
-			this.dIs = new HessianDebugInputStream(Hessian2Input.log);
-		}
+		super();
 	}
 
 	/**
@@ -169,22 +165,12 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 
 	@Override
 	public void init(InputStream is) {
-		if (this.dIs != null) {
-			this.dIs.initPacket(is);
-			is = this.dIs;
-		}
-
 		this.is = is;
 
 		this.reset();
 	}
 
 	public void initPacket(InputStream is) {
-		if (this.dIs != null) {
-			this.dIs.initPacket(is);
-			is = this.dIs;
-		}
-
 		this.is = is;
 
 		this.resetReferences();

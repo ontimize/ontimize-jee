@@ -19,8 +19,6 @@ package com.caucho.hessian.server;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.io.Writer;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -29,8 +27,6 @@ import org.slf4j.LoggerFactory;
 
 import com.caucho.hessian.io.AbstractHessianInput;
 import com.caucho.hessian.io.AbstractHessianOutput;
-import com.caucho.hessian.io.HessianDebugInputStream;
-import com.caucho.hessian.io.HessianDebugOutputStream;
 import com.caucho.hessian.io.HessianFactory;
 import com.caucho.hessian.io.HessianInputFactory;
 import com.caucho.hessian.io.SerializerFactory;
@@ -124,18 +120,6 @@ public class HessianSkeleton extends AbstractSkeleton {
 	 */
 	public void invoke(InputStream is, OutputStream os, SerializerFactory serializerFactory) throws Exception {
 		boolean isDebug = false;
-
-		if (this.isDebugInvoke()) {
-			isDebug = true;
-
-			PrintWriter dbg = this.createDebugPrintWriter();
-			HessianDebugInputStream dIs = new HessianDebugInputStream(is, dbg);
-			dIs.startTop2();
-			is = dIs;
-			HessianDebugOutputStream dOs = new HessianDebugOutputStream(os, dbg);
-			dOs.startTop2();
-			os = dOs;
-		}
 
 		HessianInputFactory.HeaderType header = this.inputFactory.readHeader(is);
 
@@ -333,52 +317,4 @@ public class HessianSkeleton extends AbstractSkeleton {
 		return sb.toString();
 	}
 
-	protected boolean isDebugInvoke() {
-		return (HessianSkeleton.log.isTraceEnabled() || (this.isDebug() && HessianSkeleton.log.isInfoEnabled()));
-	}
-
-	/**
-	 * Creates the PrintWriter for debug output. The default is to write to java.util.Logging.
-	 */
-	protected PrintWriter createDebugPrintWriter() throws IOException {
-		return new PrintWriter(new LogWriter(HessianSkeleton.log));
-	}
-
-	static class LogWriter extends Writer {
-		private final Logger		_log;
-		private final StringBuilder	_sb	= new StringBuilder();
-
-		LogWriter(Logger log) {
-			this._log = log;
-		}
-
-		public void write(char ch) {
-			if ((ch == '\n') && (this._sb.length() > 0)) {
-				this._log.info(this._sb.toString());
-				this._sb.setLength(0);
-			} else {
-				this._sb.append(ch);
-			}
-		}
-
-		@Override
-		public void write(char[] buffer, int offset, int length) {
-			for (int i = 0; i < length; i++) {
-				char ch = buffer[offset + i];
-
-				if ((ch == '\n') && (this._sb.length() > 0)) {
-					this._log.info(this._sb.toString());
-					this._sb.setLength(0);
-				} else {
-					this._sb.append(ch);
-				}
-			}
-		}
-
-		@Override
-		public void flush() {}
-
-		@Override
-		public void close() {}
-	}
 }

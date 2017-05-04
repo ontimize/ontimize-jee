@@ -16,7 +16,6 @@ import org.slf4j.LoggerFactory;
 
 import com.caucho.hessian.io.AbstractHessianInput;
 import com.caucho.hessian.io.AbstractHessianOutput;
-import com.caucho.hessian.io.HessianDebugOutputStream;
 import com.caucho.hessian.io.HessianProtocolException;
 import com.ontimize.jee.common.exceptions.InvalidCredentialsException;
 import com.ontimize.jee.common.hessian.OntimizeHessianHttpClientConnection;
@@ -231,7 +230,6 @@ public class OntimizeHessianProxy extends HessianProxy {
 		}
 		boolean isValid = false;
 		OutputStream os = null;
-		HessianDebugOutputStream dOs = null;
 
 		try {
 			this.addRequestHeaders(conn);
@@ -260,14 +258,6 @@ public class OntimizeHessianProxy extends HessianProxy {
 			try {
 				if (os != null) {
 					os.close();
-				}
-			} catch (Exception e) {
-				OntimizeHessianProxy.logger.info(e.toString(), e);
-			}
-
-			try {
-				if (dOs != null) {
-					dOs.close();
 				}
 			} catch (Exception e) {
 				OntimizeHessianProxy.logger.info(e.toString(), e);

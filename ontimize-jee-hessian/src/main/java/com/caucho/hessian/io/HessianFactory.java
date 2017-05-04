@@ -21,8 +21,6 @@ package com.caucho.hessian.io;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import org.slf4j.Logger;
-
 import com.caucho.hessian.util.HessianFreeList;
 
 /**
@@ -160,11 +158,4 @@ public class HessianFactory {
 		this.freeHessian2Output(out.getHessian2Output());
 	}
 
-	public OutputStream createHessian2DebugOutput(OutputStream os, Logger log) {
-		HessianDebugOutputStream out = new HessianDebugOutputStream(os, log);
-
-		out.startTop2();
-
-		return out;
-	}
 }
