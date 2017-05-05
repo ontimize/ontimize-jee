@@ -5,6 +5,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
 
 /**
@@ -12,6 +15,8 @@ import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
  *
  */
 public final class CloneTools {
+
+	private static final Logger logger = LoggerFactory.getLogger(CloneTools.class);
 
 	/**
 	 * This class should not be instantiated.
@@ -27,6 +32,7 @@ public final class CloneTools {
 				return ReflectionTools.invoke(obj, "clone");
 			}
 		} catch (Exception ex) {
+			CloneTools.logger.debug("could not call clone method, trying serialization", ex);
 			// do nothing
 		}
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();

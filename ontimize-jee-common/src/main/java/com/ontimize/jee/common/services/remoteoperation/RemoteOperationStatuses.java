@@ -3,7 +3,7 @@ package com.ontimize.jee.common.services.remoteoperation;
 import org.apache.commons.lang3.Range;
 
 public class RemoteOperationStatuses {
-	public static Range<Integer>	REMOTE_OPERATION_MESSAGE_TYPE_RANGE	= Range.between(-50, -1);
+	public final static Range<Integer>	REMOTE_OPERATION_MESSAGE_TYPE_RANGE	= Range.between(-50, -1);
 
 	public static final Integer	WEBSOCKET_MESSAGE_TYPE_REQUEST		= -1;
 	public static final Integer	WEBSOCKET_MESSAGE_TYPE_CANCEL		= -2;

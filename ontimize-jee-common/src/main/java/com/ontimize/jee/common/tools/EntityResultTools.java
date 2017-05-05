@@ -480,10 +480,10 @@ public final class EntityResultTools {
 	 * @param count
 	 *            the count
 	 * @return the entity result
-	 * @throws Exception
+	 * @throws OntimizeJEEException
 	 *             the exception
 	 */
-	private static EntityResult doSlowGroup(EntityResult a, String[] groupColumns, GroupType groupType, String columnToGroup, boolean count) throws Exception {
+	private static EntityResult doSlowGroup(EntityResult a, String[] groupColumns, GroupType groupType, String columnToGroup, boolean count) throws OntimizeJEEException {
 
 		Vector<Group> groups = new Vector<Group>();
 
@@ -500,7 +500,7 @@ public final class EntityResultTools {
 				for (String s : groupColumns) {
 					Object value = recordValues.get(s);
 					if (value == null) {
-						throw new Exception("GroupColumn \"" + s + "\" is null. It is not supported");
+						throw new OntimizeJEEException("GroupColumn \"" + s + "\" is null. It is not supported");
 					}
 					ks.put(s, value);
 				}
@@ -578,7 +578,7 @@ public final class EntityResultTools {
 						((Vector) res.get(opColumn)).add(resIndex, currentOp);
 					}
 					if (count) {
-						((Vector) res.get("COUNT")).add(resIndex, new Integer(counter));
+						((Vector) res.get("COUNT")).add(resIndex, Integer.valueOf(counter));
 					}
 					resIndex++;
 				}
@@ -934,10 +934,10 @@ public final class EntityResultTools {
 	 * @param values
 	 *            the values
 	 * @return the object
-	 * @throws Exception
+	 * @throws OntimizeJEEException
 	 *             the exception
 	 */
-	private static Object parseGroupFunction(GroupType groupType, List<?> values) throws Exception {
+	private static Object parseGroupFunction(GroupType groupType, List<?> values) throws OntimizeJEEException {
 		// TODO Separar cada funcion (interfaz IGroupFnction)
 		// TODO No necesariamente necesitamos un double, deberia ser del tipo de
 		// dato que nos llega
@@ -968,7 +968,7 @@ public final class EntityResultTools {
 						o = Double.parseDouble(o.toString());
 					}
 				} catch (Exception e) {
-					throw new Exception("Required numeric column to group.");
+					throw new OntimizeJEEException("Required numeric column to group.");
 				}
 
 				finalValue = ((Number) o).doubleValue() > finalValue.doubleValue() ? new BigDecimal(o.toString()) : finalValue;
@@ -988,7 +988,7 @@ public final class EntityResultTools {
 						o = Double.parseDouble(o.toString());
 					}
 				} catch (Exception e) {
-					throw new Exception("Required numeric column to group.");
+					throw new OntimizeJEEException("Required numeric column to group.");
 				}
 
 				finalValue = ((Number) o).doubleValue() < finalValue.doubleValue() ? new BigDecimal(o.toString()) : finalValue;
@@ -1011,7 +1011,7 @@ public final class EntityResultTools {
 		} else if (groupType == GroupType.COUNT) {
 			return new BigDecimal(values.size());
 		} else {
-			throw new Exception("Unsupported group funtion \"" + groupType.toString() + " \".");
+			throw new OntimizeJEEException("Unsupported group funtion \"" + groupType.toString() + " \".");
 		}
 	}
 

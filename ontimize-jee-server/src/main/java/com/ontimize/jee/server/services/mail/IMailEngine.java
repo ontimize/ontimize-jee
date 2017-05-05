@@ -4,6 +4,8 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
+import com.ontimize.jee.common.exceptions.OntimizeJEEException;
+
 
 /**
  * The Interface IMailEngine.
@@ -34,11 +36,11 @@ public interface IMailEngine {
 	 *             the exception
 	 */
 	void sendMail(String from, List<String> to, List<String> cc, List<String> bcc, String subject, String body, Map<String, byte[]> attachments,
-			Map<String, byte[]> inlineResources) throws Exception;
+			Map<String, byte[]> inlineResources) throws OntimizeJEEException;
 
 	/**
 	 * Send email with attachments and inlineresources from path, non loaded bytes.
-	 * 
+	 *
 	 * @param from
 	 * @param to
 	 * @param cc
@@ -50,10 +52,10 @@ public interface IMailEngine {
 	 * @throws Exception
 	 */
 	void sendMailFromInputSteams(String from, List<String> to, List<String> cc, List<String> bcc, String subject, String body, Map<String, Path> attachments,
-			Map<String, Path> inlineResources) throws Exception;
+			Map<String, Path> inlineResources) throws OntimizeJEEException;
 
 	/**
 	 * Update settings.
 	 */
-	void updateSettings();
+	void updateSettings() throws OntimizeJEEException;
 }

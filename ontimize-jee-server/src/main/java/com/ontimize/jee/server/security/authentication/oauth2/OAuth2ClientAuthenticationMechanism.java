@@ -100,7 +100,7 @@ public class OAuth2ClientAuthenticationMechanism implements IAuthenticationMecha
 		String[] receivedStates = parameters.get(this.oAuth2ClientProperties.getStateParamName());
 		if ((receivedStates == null) || (receivedStates.length == 0) || !receivedStates[0].equals(originalState)) {
 			OAuth2ClientAuthenticationMechanism.log.error("Received states {} was not equal to original state {}", receivedStates, originalState);
-			throw new AuthenticationServiceException(MessageFormat.format("Received states {} was not equal to original state {}", receivedStates, originalState));
+			throw new AuthenticationServiceException(MessageFormat.format("Received states %s was not equal to original state %s", receivedStates, originalState));
 		}
 	}
 
@@ -117,9 +117,10 @@ public class OAuth2ClientAuthenticationMechanism implements IAuthenticationMecha
 			final String error = errorValues[0];
 			final String errorReason = (errorReasonValues != null) && (errorReasonValues.length > 0) ? errorReasonValues[0] : null;
 			final String errorDescription = (errorDescriptionValues != null) && (errorDescriptionValues.length > 0) ? errorDescriptionValues[0] : null;
-			OAuth2ClientAuthenticationMechanism.log.info("An error was returned by the OAuth Provider: error: {} error_reason: {}, error_description: {}", error, errorReason,
+			OAuth2ClientAuthenticationMechanism.log.info("An error was returned by the OAuth Provider: error: %s error_reason: %s, error_description: %s", error, errorReason,
 					errorDescription);
-			throw new AuthenticationServiceException(MessageFormat.format("An error was returned by the OAuth Provider: error: {} error_reason: {}, error_description: {}", error,
+			throw new AuthenticationServiceException(
+					MessageFormat.format("An error was returned by the OAuth Provider: error: %s error_reason: %s, error_description: %s", error,
 					errorReason, errorDescription));
 		}
 	}
@@ -169,7 +170,7 @@ public class OAuth2ClientAuthenticationMechanism implements IAuthenticationMecha
 			Map<String, Object> userData = this.getUserDataMapFrom(codeToken, authenticationDetails);
 			if (userData.containsKey("error")) {
 				OAuth2ClientAuthenticationMechanism.log.error("Got error response from the OAuth Provider {}", userData);
-				throw new AuthenticationServiceException(MessageFormat.format("Credentials were rejected by the OAuth Provider {}", userData));
+				throw new AuthenticationServiceException(MessageFormat.format("Credentials were rejected by the OAuth Provider %s", userData));
 			}
 
 			accessToken = (String) userData.get(this.oAuth2ClientProperties.getAccessTokenName());

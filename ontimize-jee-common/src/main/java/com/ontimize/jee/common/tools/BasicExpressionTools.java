@@ -9,17 +9,23 @@ import java.util.Set;
 import java.util.Vector;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.ontimize.db.SQLStatementBuilder.BasicExpression;
 import com.ontimize.db.SQLStatementBuilder.BasicField;
 import com.ontimize.db.SQLStatementBuilder.BasicOperator;
 import com.ontimize.gui.Form;
 import com.ontimize.gui.SearchValue;
+import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
 import com.ontimize.util.ParseUtils;
 
 /**
  * The Class BasicExpressionTools.
  */
 public final class BasicExpressionTools {
+
+	private static final Logger logger = LoggerFactory.getLogger(BasicExpressionTools.class);
 
 	/**
 	 * Instantiates a new basic expression tools.
@@ -139,9 +145,9 @@ public final class BasicExpressionTools {
 				return new BasicExpression(new BasicExpression(basicField, BasicOperator.LESS_OP, ((List) searchValue.getValue()).get(0)), BasicOperator.OR_OP,
 						new BasicExpression(basicField, BasicOperator.MORE_OP, ((List) searchValue.getValue()).get(1)));
 			case SearchValue.EXISTS:
-				throw new RuntimeException("NOT_IMPLEMENTED");
+				throw new OntimizeJEERuntimeException("NOT_IMPLEMENTED");
 			default:
-				throw new RuntimeException("INVALID_OP");
+				throw new OntimizeJEERuntimeException("INVALID_OP");
 		}
 	}
 
@@ -202,6 +208,7 @@ public final class BasicExpressionTools {
 						try {
 							checked = ((Boolean) dataFieldValue).booleanValue();
 						} catch (Exception ex) {
+							BasicExpressionTools.logger.debug("error getting boolean value, parsing...", ex);
 							checked = ParseUtils.getBoolean(String.valueOf(dataFieldValue), false);
 						}
 						if (checked) {

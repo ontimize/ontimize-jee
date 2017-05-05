@@ -1,6 +1,7 @@
 package com.ontimize.jee.server.services.mail;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +18,8 @@ import org.springframework.core.io.InputStreamSource;
 import org.springframework.core.io.Resource;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
+
+import com.ontimize.jee.common.exceptions.OntimizeJEEException;
 
 /**
  * The Class SpringMailEngine.
@@ -89,12 +92,12 @@ public class SpringMailEngine implements IMailEngine, InitializingBean {
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.ontimize.jee.server.services.mail.IMailEngine#sendMail(java.lang.String, java.util.List, java.util.List, java.util.List,
-	 * java.lang.String, java.lang.String, java.util.Map, java.util.Map)
+	 * @see com.ontimize.jee.server.services.mail.IMailEngine#sendMail(java.lang.String, java.util.List, java.util.List, java.util.List, java.lang.String, java.lang.String,
+	 * java.util.Map, java.util.Map)
 	 */
 	@Override
 	public void sendMail(String from, List<String> to, List<String> cc, List<String> bcc, String subject, String body, Map<String, byte[]> attachments,
-			Map<String, byte[]> inlineResources) throws Exception {
+			Map<String, byte[]> inlineResources) throws OntimizeJEEException {
 		Map<String, InputStreamSource> attach = new HashMap<>();
 		if (attachments != null) {
 			for (Entry<String, byte[]> entry : attachments.entrySet()) {
@@ -123,7 +126,7 @@ public class SpringMailEngine implements IMailEngine, InitializingBean {
 	 */
 	@Override
 	public void sendMailFromInputSteams(String from, List<String> to, List<String> cc, List<String> bcc, String subject, String body, Map<String, Path> attachments,
-			Map<String, Path> inlineResources) throws Exception {
+			Map<String, Path> inlineResources) throws OntimizeJEEException {
 		Map<String, InputStreamSource> attach = new HashMap<>();
 		if (attachments != null) {
 			for (final Entry<String, Path> entry : attachments.entrySet()) {
@@ -138,7 +141,11 @@ public class SpringMailEngine implements IMailEngine, InitializingBean {
 		Map<String, Resource> inline = new HashMap<>();
 		if (inlineResources != null) {
 			for (final Entry<String, Path> entry : inlineResources.entrySet()) {
-				inline.put(entry.getKey(), new InputStreamResource(new FileInputStream(entry.getValue().toFile())));
+				try {
+					inline.put(entry.getKey(), new InputStreamResource(new FileInputStream(entry.getValue().toFile())));
+				} catch (FileNotFoundException error) {
+					throw new OntimizeJEEException(error);
+				}
 			}
 		}
 		this.sendMailSpring(from, to, cc, bcc, subject, body, attach, inline);
@@ -167,37 +174,41 @@ public class SpringMailEngine implements IMailEngine, InitializingBean {
 	 *             the messaging exception
 	 */
 	protected void sendMailSpring(String from, List<String> to, List<String> cc, List<String> bcc, String subject, String body, Map<String, InputStreamSource> attachments,
-			Map<String, Resource> inlineResources) throws MessagingException {
-		MimeMessage message = this.mailSender.createMimeMessage();
-		MimeMessageHelper helper = new MimeMessageHelper(message, this.hasAttachments(inlineResources, attachments));
-		// hay que establecer el texto antes de los adjuntos inline
-		if (body != null) {
-			helper.setText(body, this.isHtml(body));
-		}
-		if (to != null) {
-			helper.setTo(to.toArray(new String[] {}));
-		}
-		if (cc != null) {
-			helper.setCc(cc.toArray(new String[] {}));
-		}
-		if (bcc != null) {
-			helper.setBcc(bcc.toArray(new String[] {}));
-		}
-		if (from != null) {
-			helper.setFrom(from);
-		}
-		helper.setSubject(subject);
-		if (attachments != null) {
-			for (Entry<String, InputStreamSource> entry : attachments.entrySet()) {
-				helper.addAttachment(entry.getKey(), entry.getValue());
+			Map<String, Resource> inlineResources) throws OntimizeJEEException {
+		try {
+			MimeMessage message = this.mailSender.createMimeMessage();
+			MimeMessageHelper helper = new MimeMessageHelper(message, this.hasAttachments(inlineResources, attachments));
+			// hay que establecer el texto antes de los adjuntos inline
+			if (body != null) {
+				helper.setText(body, this.isHtml(body));
 			}
-		}
-		if (inlineResources != null) {
-			for (Entry<String, Resource> entry : inlineResources.entrySet()) {
-				helper.addInline(entry.getKey(), entry.getValue());
+			if (to != null) {
+				helper.setTo(to.toArray(new String[] {}));
 			}
+			if (cc != null) {
+				helper.setCc(cc.toArray(new String[] {}));
+			}
+			if (bcc != null) {
+				helper.setBcc(bcc.toArray(new String[] {}));
+			}
+			if (from != null) {
+				helper.setFrom(from);
+			}
+			helper.setSubject(subject);
+			if (attachments != null) {
+				for (Entry<String, InputStreamSource> entry : attachments.entrySet()) {
+					helper.addAttachment(entry.getKey(), entry.getValue());
+				}
+			}
+			if (inlineResources != null) {
+				for (Entry<String, Resource> entry : inlineResources.entrySet()) {
+					helper.addInline(entry.getKey(), entry.getValue());
+				}
+			}
+			this.mailSender.send(message);
+		} catch (MessagingException error) {
+			throw new OntimizeJEEException(error);
 		}
-		this.mailSender.send(message);
 	}
 
 	/**

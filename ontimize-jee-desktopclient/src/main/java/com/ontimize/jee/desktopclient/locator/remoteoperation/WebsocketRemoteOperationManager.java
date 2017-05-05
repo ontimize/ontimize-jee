@@ -32,7 +32,7 @@ public class WebsocketRemoteOperationManager implements RemoteOperationManager {
 	 * @see com.ontimize.util.operation.RemoteOperationManager#run(java.lang.String, java.util.HashMap, int)
 	 */
 	@Override
-	public String run(final String clase, final HashMap parameters, int sessionId) throws Exception {
+	public String run(final String clase, final HashMap parameters, int sessionId) {
 		throw new OntimizeJEERuntimeException("Cast to WebsocketRemoteOperationManager and use listener");
 	}
 
@@ -51,7 +51,7 @@ public class WebsocketRemoteOperationManager implements RemoteOperationManager {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public RemoteOperationDelegate run(final String clase, final Map<String, Object> parameters, int sessionId, IRemoteOperationListener<?> listener) throws Exception {
+	public RemoteOperationDelegate run(final String clase, final Map<String, Object> parameters, int sessionId, IRemoteOperationListener<?> listener) {
 		RemoteOperationDelegate delegate = new RemoteOperationDelegate(String.valueOf(WebsocketRemoteOperationManager.ID_GENERATOR.incrementAndGet()), clase, parameters, listener);
 		delegate.run();
 		return delegate;

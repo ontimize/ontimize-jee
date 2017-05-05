@@ -12,6 +12,9 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ontimize.jee.common.exceptions.OntimizeJEEException;
+import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
+
 /**
  * The Class GenericCache.
  *
@@ -78,7 +81,7 @@ public abstract class AbstractGenericCache<K, V> {
 			}
 			return cachedItem.getValue();
 		} catch (Exception ex) {
-			throw new RuntimeException(ex);
+			throw new OntimizeJEERuntimeException(ex);
 		}
 	}
 
@@ -140,5 +143,5 @@ public abstract class AbstractGenericCache<K, V> {
 	 *            the key
 	 * @return the v
 	 */
-	protected abstract V requestData(K key) throws Exception;
+	protected abstract V requestData(K key) throws OntimizeJEEException;
 }

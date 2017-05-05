@@ -1175,7 +1175,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 			try {
 				this.getJdbcTemplate().afterPropertiesSet();
 			} catch (final IllegalArgumentException ex) {
-				throw new InvalidDataAccessApiUsageException(ex.getMessage());
+				throw new InvalidDataAccessApiUsageException(ex.getMessage(), ex);
 			}
 			this.compileInternal();
 			this.compiled = true;
@@ -1279,7 +1279,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	 * @param configurationFile
 	 *            the new configuration file
 	 */
-	public void setConfigurationFile(final String configurationFile) {
+	public synchronized void setConfigurationFile(final String configurationFile) {
 		this.configurationFile = configurationFile;
 	}
 
@@ -1289,7 +1289,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	 * @param configurationFilePlaceholder
 	 *            the new configuration file placeholder
 	 */
-	public void setConfigurationFilePlaceholder(final String configurationFilePlaceholder) {
+	public synchronized void setConfigurationFilePlaceholder(final String configurationFilePlaceholder) {
 		this.configurationFilePlaceholder = configurationFilePlaceholder;
 	}
 
@@ -1712,6 +1712,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 							// TODO segun el driver puede ser que sea mas rapido llamar al metodo con la longitud
 							preparedStatement.setBlob(colIndex, (InputStream) value);
 						} catch (AbstractMethodError ex) {
+							OntimizeJdbcDaoSupport.logger.debug(null, ex);
 							try {
 								preparedStatement.setBinaryStream(colIndex, (InputStream) value, ((InputStream) value).available());
 							} catch (IOException error) {

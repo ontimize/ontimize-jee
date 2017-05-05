@@ -3,7 +3,7 @@ package com.ontimize.jee.common.services.mail;
 import java.util.List;
 import java.util.Map;
 
-import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
+import com.ontimize.jee.common.exceptions.OntimizeJEEException;
 
 /**
  * The Interface IMailService.
@@ -33,7 +33,7 @@ public interface IMailService {
 	 *             the exception
 	 */
 	void sendMail(String from, List<String> to, List<String> cc, List<String> bcc, String subject, String body, Map<String, byte[]> attachments,
-			Map<String, byte[]> inlineResources) throws OntimizeJEERuntimeException;
+			Map<String, byte[]> inlineResources) throws OntimizeJEEException;
 
 	/**
 	 * Send mail.
@@ -47,5 +47,5 @@ public interface IMailService {
 	 * @param body
 	 *            the body
 	 */
-	void sendMailWithoutAttach(String from, List<String> to, String subject, String body) throws OntimizeJEERuntimeException;
+	void sendMailWithoutAttach(String from, List<String> to, String subject, String body) throws OntimizeJEEException;
 }

@@ -1,12 +1,11 @@
 package com.ontimize.jee.server.rest;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.slf4j.Logger;
@@ -31,14 +30,14 @@ import com.ontimize.jee.common.tools.ReflectionTools;
 public abstract class ORestController<S> {
 
 	/** The logger. */
-	private final static Logger logger = LoggerFactory.getLogger(ORestController.class);
+	private final static Logger	logger				= LoggerFactory.getLogger(ORestController.class);
 
-	public static final String QUERY = "Query";
-	public static final String INSERT = "Insert";
-	public static final String DELETE = "Delete";
-	public static final String UPDATE = "Update";
+	public static final String	QUERY				= "Query";
+	public static final String	INSERT				= "Insert";
+	public static final String	DELETE				= "Delete";
+	public static final String	UPDATE				= "Update";
 
-	public static final String BASIC_EXPRESSION = "@basic_expression";
+	public static final String	BASIC_EXPRESSION	= "@basic_expression";
 
 	public abstract S getService();
 
@@ -46,8 +45,7 @@ public abstract class ORestController<S> {
 	OntimizeMapper mapper;
 
 	@RequestMapping(value = "/{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<EntityResult> query(@PathVariable("name") String name,
-			@RequestParam(name = "filter", required = false) String filter,
+	public ResponseEntity<EntityResult> query(@PathVariable("name") String name, @RequestParam(name = "filter", required = false) String filter,
 			@RequestParam(name = "columns", required = false) String columns) {
 		CheckingTools.failIf(this.getService() == null, NullPointerException.class, "Service is null");
 		StringBuffer buffer = new StringBuffer();
@@ -66,8 +64,7 @@ public abstract class ORestController<S> {
 	}
 
 	@RequestMapping(value = "/{name}/search", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<EntityResult> query(@PathVariable("name") String name, @RequestBody QueryParameter queryParameter)
-			throws Exception {
+	public ResponseEntity<EntityResult> query(@PathVariable("name") String name, @RequestBody QueryParameter queryParameter) throws Exception {
 		ORestController.logger.debug("Invoked /{}/search", name);
 		CheckingTools.failIf(this.getService() == null, NullPointerException.class, "Service is null");
 		ORestController.logger.debug("Service name: {}", this.getService());
@@ -75,9 +72,9 @@ public abstract class ORestController<S> {
 			StringBuffer buffer = new StringBuffer();
 			buffer.append(name).append(ORestController.QUERY);
 
-			Map<Object, Object> kvQueryParameter = queryParameter.getFilter();
-			List<Object> avQueryParameter = queryParameter.getColumns();
-			HashMap<Object, Object> hSqlTypes = queryParameter.getSqltypes();
+			Map<? extends Serializable, ? extends Serializable> kvQueryParameter = queryParameter.getFilter();
+			List<? extends Serializable> avQueryParameter = queryParameter.getColumns();
+			HashMap<? extends Serializable, ? extends Serializable> hSqlTypes = queryParameter.getSqltypes();
 
 			Map<Object, Object> keysValues = this.createKeysValues(kvQueryParameter, hSqlTypes);
 			List<Object> attributesValues = this.createAttributesValues(avQueryParameter, hSqlTypes);
@@ -98,9 +95,9 @@ public abstract class ORestController<S> {
 		StringBuffer buffer = new StringBuffer();
 		buffer.append(name).append(ORestController.INSERT);
 		try {
-			Map<Object, Object> avInsertParameter = insertParameter.getData();
-			Map<Object, Object> hSqlTypes = insertParameter.getSqltypes();
-			Map<Object, Object> attributes = this.createKeysValues(avInsertParameter, hSqlTypes);
+			Map<?, ?> avInsertParameter = insertParameter.getData();
+			Map<?, ?> hSqlTypes = insertParameter.getSqltypes();
+			Map<?, ?> attributes = this.createKeysValues(avInsertParameter, hSqlTypes);
 			EntityResult eR = (EntityResult) ReflectionTools.invoke(this.getService(), buffer.toString(), attributes);
 			return new ResponseEntity<EntityResult>(eR, HttpStatus.OK);
 		} catch (Exception e) {
@@ -118,9 +115,9 @@ public abstract class ORestController<S> {
 		StringBuffer buffer = new StringBuffer();
 		buffer.append(name).append(ORestController.DELETE);
 		try {
-			Map<Object, Object> kvDeleteParameter = deleteParameter.getFilter();
-			Map<Object, Object> hSqlTypes = deleteParameter.getSqltypes();
-			Map<Object, Object> attributes = this.createKeysValues(kvDeleteParameter, hSqlTypes);
+			Map<?, ?> kvDeleteParameter = deleteParameter.getFilter();
+			Map<?, ?> hSqlTypes = deleteParameter.getSqltypes();
+			Map<?, ?> attributes = this.createKeysValues(kvDeleteParameter, hSqlTypes);
 			EntityResult eR = (EntityResult) ReflectionTools.invoke(this.getService(), buffer.toString(), attributes);
 			return new ResponseEntity<EntityResult>(eR, HttpStatus.OK);
 		} catch (Exception e) {
@@ -137,11 +134,11 @@ public abstract class ORestController<S> {
 		StringBuffer buffer = new StringBuffer();
 		buffer.append(name).append(ORestController.UPDATE);
 		try {
-			Map<Object, Object> filter = updateParameter.getFilter();
-			Map<Object, Object> data = updateParameter.getData();
-			Map<Object, Object> hSqlTypes = updateParameter.getSqltypes();
-			Map<Object, Object> kv = this.createKeysValues(filter, hSqlTypes);
-			Map<Object, Object> av = this.createKeysValues(data, hSqlTypes);
+			Map<?, ?> filter = updateParameter.getFilter();
+			Map<?, ?> data = updateParameter.getData();
+			Map<?, ?> hSqlTypes = updateParameter.getSqltypes();
+			Map<?, ?> kv = this.createKeysValues(filter, hSqlTypes);
+			Map<?, ?> av = this.createKeysValues(data, hSqlTypes);
 			EntityResult eR = (EntityResult) ReflectionTools.invoke(this.getService(), buffer.toString(), av, kv);
 			return new ResponseEntity<EntityResult>(eR, HttpStatus.OK);
 		} catch (Exception e) {
@@ -185,23 +182,18 @@ public abstract class ORestController<S> {
 		return attributes;
 	}
 
-	protected Map<Object, Object> createKeysValues(Map<Object, Object> kvQueryParam, Map<Object, Object> hSqlTypes) {
+	protected Map<Object, Object> createKeysValues(Map<?, ?> kvQueryParam, Map<?, ?> hSqlTypes) {
 		Map<Object, Object> kv = new HashMap<Object, Object>();
 		if ((kvQueryParam == null) || kvQueryParam.isEmpty()) {
 			return kv;
 		}
 
-
 		if (kvQueryParam.containsKey(ORestController.BASIC_EXPRESSION)) {
-            Object basicExpressionValue = kvQueryParam.remove(ORestController.BASIC_EXPRESSION);
-            this.processBasicExpression(kv, basicExpressionValue, hSqlTypes);
-        }
+			Object basicExpressionValue = kvQueryParam.remove(ORestController.BASIC_EXPRESSION);
+			this.processBasicExpression(kv, basicExpressionValue, hSqlTypes);
+		}
 
-
-		Set<Entry<Object, Object>> eSet = kvQueryParam.entrySet();
-		Iterator<Entry<Object, Object>> iter = eSet.iterator();
-		while (iter.hasNext()) {
-			Entry<Object, Object> next = iter.next();
+		for (Entry<?, ?> next : kvQueryParam.entrySet()) {
 			Object key = next.getKey();
 			Object value = next.getValue();
 			if ((hSqlTypes != null) && hSqlTypes.containsKey(key)) {
@@ -218,7 +210,7 @@ public abstract class ORestController<S> {
 		return kv;
 	}
 
-	protected List<Object> createAttributesValues(List<Object> avQueryParam, Map<Object, Object> hSqlTypes) {
+	protected List<Object> createAttributesValues(List<?> avQueryParam, Map<?, ?> hSqlTypes) {
 		List<Object> av = new ArrayList<Object>();
 		if ((avQueryParam == null) || avQueryParam.isEmpty()) {
 			av.add("*");
@@ -228,12 +220,11 @@ public abstract class ORestController<S> {
 		return av;
 	}
 
-	protected void processBasicExpression(Map<Object, Object> keysValues, Object basicExpression, Map<Object, Object> hSqlTypes) {
+	protected void processBasicExpression(Map<?, ?> keysValues, Object basicExpression, Map<?, ?> hSqlTypes) {
 		if (basicExpression instanceof Map) {
 			try {
-				BasicExpression bE = BasicExpressionProcessor.getInstance().processBasicEspression(basicExpression,
-						hSqlTypes);
-				keysValues.put(SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY, bE);
+				BasicExpression bE = BasicExpressionProcessor.getInstance().processBasicEspression(basicExpression, hSqlTypes);
+				((Map<Object, Object>) keysValues).put(SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY, bE);
 			} catch (Exception error) {
 				ORestController.logger.error(null, error);
 			}

@@ -8,6 +8,7 @@ import com.ontimize.db.SQLStatementBuilder.BasicExpression;
 import com.ontimize.db.SQLStatementBuilder.BasicField;
 import com.ontimize.db.SQLStatementBuilder.BasicOperator;
 import com.ontimize.db.SQLStatementBuilder.Operator;
+import com.ontimize.jee.common.exceptions.OntimizeJEEException;
 
 public class BasicExpressionProcessor {
 	protected static BasicExpressionProcessor processor;
@@ -39,23 +40,23 @@ public class BasicExpressionProcessor {
 		return BasicExpressionProcessor.processor;
 	}
 
-	public BasicExpression processBasicEspression(Object value) throws Exception {
+	public BasicExpression processBasicEspression(Object value) throws OntimizeJEEException {
 		return this.processBasicEspression(value, new HashMap<Object, Object>());
 	}
 
-	public BasicExpression processBasicEspression(Object value, Map<Object, Object> hSqlTypes) throws Exception {
+	public BasicExpression processBasicEspression(Object value, Map<?, ?> hSqlTypes) throws OntimizeJEEException {
 		Object lo, ro;
 		Operator operator;
 		if (value instanceof Map) {
 			Object lValue = ((Map) value).get(BasicExpressionProcessor.LEFT_OPERAND);
 			if (lValue == null) {
-				throw new Exception("'lop' isn't defined in basicexpression");
+				throw new OntimizeJEEException("'lop' isn't defined in basicexpression");
 			}
 			lo = this.processLeftOperand(lValue);
 
 			Object operatorValue = ((Map) value).get(BasicExpressionProcessor.OPERATOR);
 			if (operatorValue == null) {
-				throw new Exception("'op' isn't defined in basicexpression");
+				throw new OntimizeJEEException("'op' isn't defined in basicexpression");
 			}
 			operator = this.processOperator(operatorValue);
 
@@ -64,7 +65,7 @@ public class BasicExpressionProcessor {
 				if (operator.equals(BasicOperator.NULL_OP) || operator.equals(BasicOperator.NOT_NULL_OP)) {
 					ro = null;
 				} else {
-					throw new Exception("'rop' isn't defined in basicexpression");
+					throw new OntimizeJEEException("'rop' isn't defined in basicexpression");
 				}
 			} else {
 				if (lo instanceof BasicField) {
@@ -74,16 +75,16 @@ public class BasicExpressionProcessor {
 				}
 			}
 		} else {
-			throw new Exception("value hasn't a BasicExpression format");
+			throw new OntimizeJEEException("value hasn't a BasicExpression format");
 		}
 		return new BasicExpression(lo, operator, ro);
 	}
 
-	protected Object processLeftOperand(Object lValue) throws Exception {
+	protected Object processLeftOperand(Object lValue) throws OntimizeJEEException {
 		return this.processLeftOperand(lValue, new HashMap<Object, Object>());
 	}
 
-	protected Object processLeftOperand(Object lValue, HashMap<Object, Object> hSqlTypes) throws Exception {
+	protected Object processLeftOperand(Object lValue, HashMap<?, ?> hSqlTypes) throws OntimizeJEEException {
 		if (lValue instanceof Map) {
 			return this.processBasicEspression(lValue, hSqlTypes);
 		} else {
@@ -91,12 +92,12 @@ public class BasicExpressionProcessor {
 		}
 	}
 
-	protected Object processRightOperand(Object rValue) throws Exception {
+	protected Object processRightOperand(Object rValue) throws OntimizeJEEException {
 		return this.processRightOperand(rValue, null, new HashMap<Object, Object>());
 	}
 
-	protected Object processRightOperand(Object rValue, BasicField bF, Map<Object, Object> hSqlTypes)
-			throws Exception {
+	protected Object processRightOperand(Object rValue, BasicField bF, Map<?, ?> hSqlTypes)
+			throws OntimizeJEEException {
 		if (rValue instanceof Map) {
 			return this.processBasicEspression(rValue, hSqlTypes);
 		} else {
@@ -109,7 +110,7 @@ public class BasicExpressionProcessor {
 		}
 	}
 
-	protected Operator processOperator(Object operatorValue) throws Exception {
+	protected Operator processOperator(Object operatorValue) throws OntimizeJEEException {
 		if (operatorValue instanceof String) {
 			if (BasicExpressionProcessor.OR.equalsIgnoreCase((String) operatorValue)) {
 				return BasicOperator.OR_OP;
@@ -171,9 +172,9 @@ public class BasicExpressionProcessor {
 				return new BasicOperator(SQLStatementBuilder.IN);
 			}
 
-			throw new Exception("operator doesn't defined: " + operatorValue);
+			throw new OntimizeJEEException("operator doesn't defined: " + operatorValue);
 		} else {
-			throw new Exception("operator must be a String instance");
+			throw new OntimizeJEEException("operator must be a String instance");
 		}
 	}
 }

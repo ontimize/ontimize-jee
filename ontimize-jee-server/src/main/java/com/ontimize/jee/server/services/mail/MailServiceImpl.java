@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ontimize.jee.common.exceptions.OntimizeJEEException;
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
 import com.ontimize.jee.common.security.PermissionsProviderSecured;
 import com.ontimize.jee.common.services.user.UserInformation;
@@ -27,7 +28,7 @@ import com.ontimize.jee.server.configuration.OntimizeConfiguration;
 public class MailServiceImpl implements IMailServiceServer, ApplicationContextAware {
 
 	/** The implementation. */
-	private IMailEngine	implementation;
+	private IMailEngine implementation;
 
 	/**
 	 * Gets the implementation.
@@ -62,8 +63,8 @@ public class MailServiceImpl implements IMailServiceServer, ApplicationContextAw
 	@Secured({ PermissionsProviderSecured.SECURED })
 	@Transactional(rollbackFor = Exception.class)
 	@Override
-	public void sendMail(String from, List<String> to, List<String> cc, List<String> bcc, String subject, String body,
-			Map<String, byte[]> attachments, Map<String, byte[]> inlineResources) throws OntimizeJEERuntimeException {
+	public void sendMail(String from, List<String> to, List<String> cc, List<String> bcc, String subject, String body, Map<String, byte[]> attachments,
+			Map<String, byte[]> inlineResources) throws OntimizeJEEException {
 		try {
 			this.getImplementation().sendMail(from, to, cc, bcc, subject, body, attachments, inlineResources);
 		} catch (Exception error) {
@@ -74,13 +75,13 @@ public class MailServiceImpl implements IMailServiceServer, ApplicationContextAw
 	@Secured({ PermissionsProviderSecured.SECURED })
 	@Transactional(rollbackFor = Exception.class)
 	@Override
-	public void sendMailWithoutAttach(String from, List<String> to, String subject, String body) throws OntimizeJEERuntimeException {
+	public void sendMailWithoutAttach(String from, List<String> to, String subject, String body) throws OntimizeJEEException {
 		this.sendMail(from, to, null, null, subject, body, null, null);
 	}
 
 	@Override
 	public void sendMailFromInputSteams(String from, List<String> to, List<String> cc, List<String> bcc, String subject, String body, Map<String, Path> attachments,
-			Map<String, Path> inlineResources) throws OntimizeJEERuntimeException {
+			Map<String, Path> inlineResources) throws OntimizeJEEException {
 		try {
 			this.getImplementation().sendMailFromInputSteams(from, to, cc, bcc, subject, body, attachments, inlineResources);
 		} catch (Exception error) {
@@ -89,7 +90,7 @@ public class MailServiceImpl implements IMailServiceServer, ApplicationContextAw
 	}
 
 	@Override
-	public void updateSettings() {
+	public void updateSettings() throws OntimizeJEEException {
 		this.getImplementation().updateSettings();
 	}
 

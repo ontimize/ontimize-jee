@@ -117,6 +117,7 @@ public class OntimizeHessianProxyFactoryBean extends RemoteAccessor implements M
 		try {
 			return invocation.getMethod().invoke(this.hessianProxy, invocation.getArguments());
 		} catch (InvocationTargetException ex) {
+			this.logger.debug("version checking", ex);
 			Throwable targetEx = ex.getTargetException();
 			// Hessian 4.0 check: another layer of InvocationTargetException.
 			if (targetEx instanceof InvocationTargetException) {

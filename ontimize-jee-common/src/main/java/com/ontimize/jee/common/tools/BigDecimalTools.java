@@ -17,11 +17,11 @@ import java.math.MathContext;
 public final class BigDecimalTools {
 
 	/** The one. */
-	public static BigDecimal		ONE		= BigDecimal.ONE;
+	public final static BigDecimal	ONE		= BigDecimal.ONE;
 
 	/** The zero. */
-	public static BigDecimal		ZERO	= BigDecimal.ZERO;
-	public static BigDecimal		TWO		= new BigDecimal("2.0");
+	public final static BigDecimal	ZERO	= BigDecimal.ZERO;
+	public final static BigDecimal	TWO		= new BigDecimal("2.0");
 
 	/** The Constant E. */
 	public final static BigDecimal	E		= new BigDecimal("2.71828182845904523536028747135266249775724709369995");

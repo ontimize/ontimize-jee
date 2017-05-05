@@ -4,7 +4,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
-import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
+import com.ontimize.jee.common.exceptions.OntimizeJEEException;
 import com.ontimize.jee.common.services.mail.IMailService;
 
 /**
@@ -35,10 +35,10 @@ public interface IMailServiceServer extends IMailService {
 	 *             the exception
 	 */
 	void sendMailFromInputSteams(String from, List<String> to, List<String> cc, List<String> bcc, String subject, String body, Map<String, Path> attachments,
-			Map<String, Path> inlineResources) throws OntimizeJEERuntimeException;
+			Map<String, Path> inlineResources) throws OntimizeJEEException;
 
 	/**
 	 * Update settings.
 	 */
-	void updateSettings();
+	void updateSettings() throws OntimizeJEEException;;
 }
