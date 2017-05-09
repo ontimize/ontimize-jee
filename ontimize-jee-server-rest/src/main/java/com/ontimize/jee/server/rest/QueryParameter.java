@@ -13,35 +13,35 @@ public class QueryParameter implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @XmlElement
-	protected List<? extends Serializable>								columns;
+	protected List<Object>				columns;
 
     @XmlElement
-	protected Map<? extends Serializable, ? extends Serializable>		filter;
+	protected Map<Object, Object>		filter;
 
     @XmlElement
-	protected HashMap<? extends Serializable, ? extends Serializable>	sqltypes;
+	protected HashMap<Object, Object>	sqltypes;
 
-	public Map<? extends Serializable, ? extends Serializable> getFilter() {
+	public Map<Object, Object> getFilter() {
         return this.filter;
     }
 
-	public void setKv(Map<? extends Serializable, ? extends Serializable> filter) {
+	public void setKv(Map<Object, Object> filter) {
         this.filter = filter;
     }
 
-	public List<? extends Serializable> getColumns() {
-        return this.columns;
+	public List<Object> getColumns() {
+		return this.columns;
     }
 
-	public void setColumns(List<? extends Serializable> columns) {
+	public void setColumns(List<Object> columns) {
         this.columns = columns;
     }
 
-	public HashMap<? extends Serializable, ? extends Serializable> getSqltypes() {
-        return this.sqltypes;
+	public HashMap<Object, Object> getSqltypes() {
+		return this.sqltypes;
     }
 
-	public void setSqltypes(HashMap<? extends Serializable, ? extends Serializable> sqltypes) {
+	public void setSqltypes(HashMap<Object, Object> sqltypes) {
         this.sqltypes = sqltypes;
     }
 }

@@ -11,24 +11,24 @@ public class DeleteParameter implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @XmlElement
-	protected Map<? extends Serializable, ? extends Serializable>	filter;
+	protected Map<Object, Object>	filter;
 
     @XmlElement
-	protected Map<? extends Serializable, ? extends Serializable>	sqltypes;
+	protected Map<Object, Object>	sqltypes;
 
-	public Map<? extends Serializable, ? extends Serializable> getFilter() {
-        return this.filter;
+	public Map<Object, Object> getFilter() {
+		return this.filter;
     }
 
-	public void setFilter(Map<? extends Serializable, ? extends Serializable> filter) {
+	public void setFilter(Map<Object, Object> filter) {
         this.filter = filter;
     }
 
-	public Map<? extends Serializable, ? extends Serializable> getSqltypes() {
-        return this.sqltypes;
+	public Map<Object, Object> getSqltypes() {
+		return this.sqltypes;
     }
 
-	public void setSqltypes(Map<? extends Serializable, ? extends Serializable> sqltypes) {
+	public void setSqltypes(Map<Object, Object> sqltypes) {
         this.sqltypes = sqltypes;
     }
 

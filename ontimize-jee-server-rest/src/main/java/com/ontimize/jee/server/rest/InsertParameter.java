@@ -11,24 +11,24 @@ public class InsertParameter implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @XmlElement
-	protected Map<? extends Serializable, ? extends Serializable>	data;
+	protected Map<Object, Object>	data;
 
     @XmlElement
-	protected Map<? extends Serializable, ? extends Serializable>	sqltypes;
+	protected Map<Object, Object>	sqltypes;
 
-	public Map<? extends Serializable, ? extends Serializable> getData() {
-        return this.data;
+	public Map<Object, Object> getData() {
+		return this.data;
     }
 
-	public void setData(Map<? extends Serializable, ? extends Serializable> data) {
+	public void setData(Map<Object, Object> data) {
         this.data = data;
     }
 
-	public Map<? extends Serializable, ? extends Serializable> getSqltypes() {
-        return this.sqltypes;
+	public Map<Object, Object> getSqltypes() {
+		return this.sqltypes;
     }
 
-	public void setSqltypes(Map<? extends Serializable, ? extends Serializable> sqltypes) {
+	public void setSqltypes(Map<Object, Object> sqltypes) {
         this.sqltypes = sqltypes;
     }
 }

@@ -1,6 +1,5 @@
 package com.ontimize.jee.server.rest;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -72,9 +71,9 @@ public abstract class ORestController<S> {
 			StringBuffer buffer = new StringBuffer();
 			buffer.append(name).append(ORestController.QUERY);
 
-			Map<? extends Serializable, ? extends Serializable> kvQueryParameter = queryParameter.getFilter();
-			List<? extends Serializable> avQueryParameter = queryParameter.getColumns();
-			HashMap<? extends Serializable, ? extends Serializable> hSqlTypes = queryParameter.getSqltypes();
+			Map<?, ?> kvQueryParameter = queryParameter.getFilter();
+			List<?> avQueryParameter = queryParameter.getColumns();
+			HashMap<?, ?> hSqlTypes = queryParameter.getSqltypes();
 
 			Map<Object, Object> keysValues = this.createKeysValues(kvQueryParameter, hSqlTypes);
 			List<Object> attributesValues = this.createAttributesValues(avQueryParameter, hSqlTypes);
