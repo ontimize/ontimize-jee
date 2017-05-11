@@ -80,4 +80,15 @@ public interface II18nService {
 	 */
 	void updateBundleValues(DatabaseBundleValues values) throws OntimizeJEERuntimeException;
 
+	/**
+	 * Delete the specified key and its translations values in the database
+	 * bundle
+	 *
+	 * @param values
+	 *            the values
+	 * @throws OntimizeJEERuntimeException
+	 *             the ontimize jee runtime exception
+	 */
+	void deleteBundleValues(DatabaseBundleValues values) throws OntimizeJEERuntimeException;
+
 }

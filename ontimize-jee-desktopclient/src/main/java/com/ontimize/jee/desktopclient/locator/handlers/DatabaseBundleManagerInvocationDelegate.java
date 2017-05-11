@@ -83,4 +83,10 @@ public class DatabaseBundleManagerInvocationDelegate extends AbstractInvocationD
 		return i18nService;
 	}
 
+	@Override
+	public void deleteBundleValues(DatabaseBundleValues values, int sessionId) throws Exception {
+		this.getI18nService().deleteBundleValues(values);
+
+	}
+
 }

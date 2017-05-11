@@ -101,6 +101,21 @@ public class I18nServiceImpl implements II18nService, ApplicationContextAware {
 		this.getEngine().updateBundleValues(values);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.ontimize.jee.common.services.i18n.II18nService#deleteBundleValues(com
+	 * .ontimize.gui.i18n.DatabaseBundleValues)
+	 */
+
+	@Secured({ PermissionsProviderSecured.SECURED })
+	@Transactional(rollbackFor = Exception.class)
+	@Override
+	public void deleteBundleValues(DatabaseBundleValues values) throws OntimizeJEERuntimeException {
+		this.getEngine().deleteBundleValues(values);
+	}
+
 	/**
 	 * Sets the engine.
 	 *
@@ -128,5 +143,6 @@ public class I18nServiceImpl implements II18nService, ApplicationContextAware {
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		this.setEngine(applicationContext.getBean(OntimizeConfiguration.class).getI18nConfiguration().getEngine());
 	}
+
 
 }

@@ -16,6 +16,7 @@ import com.ontimize.db.EntityResult;
 import com.ontimize.gui.ApplicationManager;
 import com.ontimize.gui.SearchValue;
 import com.ontimize.gui.i18n.DatabaseBundleDescriptor;
+import com.ontimize.gui.i18n.DatabaseBundleManager;
 import com.ontimize.gui.i18n.DatabaseBundleValues;
 import com.ontimize.gui.i18n.DatabaseBundleValues.BundleValue;
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
@@ -234,6 +235,40 @@ public class DatabaseI18nEngine implements II18nService, InitializingBean {
 				this.daoBundleValues.insert(hValues);
 			}
 		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * com.ontimize.jee.common.services.i18n.II18nService#deleteBundleValues(com
+	 * .ontimize.gui.i18n.DatabaseBundleValues)
+	 */
+	@Override
+	public void deleteBundleValues(DatabaseBundleValues dbvalues) throws OntimizeJEERuntimeException {
+		List<BundleValue> bundleValues = dbvalues.getBundleValues();
+		DatabaseBundleDescriptor[] availableBundlesArray = this.getAvailableBundles();
+		List<DatabaseBundleDescriptor> availableBundles = new ArrayList<DatabaseBundleDescriptor>(Arrays.asList(availableBundlesArray));
+
+		Hashtable filter = new Hashtable();
+		for (int i = 0; i < bundleValues.size(); i++) {
+
+			BundleValue bv = bundleValues.get(i);
+			Object bundleId = this.getBundleId(bv.getBundleClassName(), availableBundles);
+
+			filter.clear();
+			filter.put(this.bundleKeyColumn, bundleId);
+			filter.put(this.bundleValuesTextKeyColumn, bundleValues.get(i).getTextKey());
+
+			Object key = this.getBundleValueKey(filter);
+			if (key != null) {
+				// delete
+				filter.put(DatabaseBundleManager.bundleValuesKeyColumn, key);
+				this.daoBundleValues.delete(filter);
+			}
+
+		}
+
 	}
 
 	/**
