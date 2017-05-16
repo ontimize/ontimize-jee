@@ -14,6 +14,7 @@ public class OntimizeServerSpringHandler extends NamespaceHandlerSupport {
 		this.registerBeanDefinitionParser("cors", new CorsBeanDefinitionParser());
 		this.registerBeanDefinitionParser("fixed-property", new FixedPropertyBeanDefinitionParser());
 		this.registerBeanDefinitionParser("database-property", new DatabasePropertyBeanDefinitionParser());
+		this.registerBeanDefinitionParser("ref-property", new PropertyBeanDefinitionParser());
 		this.registerBeanDefinitionParser("remoteoperation-provider", new RemoteOperationBeanDefinitionParser());
 	}
 

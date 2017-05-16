@@ -39,18 +39,18 @@
 			<xsd:attribute name="max-parallel-threads" type="xsd:integer" default="10" />
 		</xsd:complexType>
 	</xsd:element>
-	
-<!-- 	<xsd:element name="dms-engine"> -->
-<!-- 		<xsd:complexType> -->
-<!-- 			<xsd:sequence> -->
-<!-- 				<xsd:element name="documentsBasePath" minOccurs="1" maxOccurs="1"> -->
-<!-- 					<xsd:complexType> -->
-<!-- 						<xsd:group ref="propertyResolverGroup"></xsd:group> -->
-<!-- 					</xsd:complexType> -->
-<!-- 				</xsd:element> -->
-<!-- 			</xsd:sequence> -->
-<!-- 		</xsd:complexType> -->
-<!-- 	</xsd:element>	 -->
+
+	<!-- <xsd:element name="dms-engine"> -->
+	<!-- <xsd:complexType> -->
+	<!-- <xsd:sequence> -->
+	<!-- <xsd:element name="documentsBasePath" minOccurs="1" maxOccurs="1"> -->
+	<!-- <xsd:complexType> -->
+	<!-- <xsd:group ref="propertyResolverGroup"></xsd:group> -->
+	<!-- </xsd:complexType> -->
+	<!-- </xsd:element> -->
+	<!-- </xsd:sequence> -->
+	<!-- </xsd:complexType> -->
+	<!-- </xsd:element> -->
 
 	<!-- SECURITY AUTHORIZATION AND AUTHENTICATION -->
 
@@ -396,6 +396,16 @@
 		</xsd:complexType>
 	</xsd:element>
 
+	<xsd:element name="ref-property">
+		<xsd:annotation>
+			<xsd:documentation>Get a property from properties.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:attribute name="property" type="xsd:string" use="required" />
+			<xsd:attribute name="properties" type="xsd:string" use="required" />
+		</xsd:complexType>
+	</xsd:element>
+
 	<xsd:group name="limited-type">
 		<xsd:sequence>
 			<xsd:choice minOccurs="1" maxOccurs="unbounded">
@@ -417,6 +427,7 @@
 				<xsd:element ref="beans:value" />
 				<xsd:element ref="database-property" />
 				<xsd:element ref="fixed-property" />
+				<xsd:element ref="ref-property" />
 			</xsd:choice>
 		</xsd:sequence>
 	</xsd:group>
