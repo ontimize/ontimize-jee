@@ -4,11 +4,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
 import org.springframework.beans.factory.config.RuntimeBeanReference;
+import org.springframework.beans.factory.parsing.BeanComponentDefinition;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
-import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.xml.BeanDefinitionParserDelegate;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.expression.Expression;
@@ -103,7 +104,7 @@ public final class DefinitionParserUtil {
 			}
 			// Either of these is a just a lookup of an existing bean
 			else if (tagName.equals("ref") || tagName.equals("idref")) {
-				List<String> deps = new ArrayList<String>();
+				List<String> deps = new ArrayList<>();
 				if (parentBean.getDependsOn() != null) {
 					deps.addAll(Arrays.asList(parentBean.getDependsOn()));
 				}
@@ -114,24 +115,38 @@ public final class DefinitionParserUtil {
 			}
 			// We need to create the bean
 			else if (tagName.equals("bean")) {
-				// There is no quick little util I could find to create a bean
-				// on the fly programmatically in Spring and still support all
-				// Spring functionality so basically I mimic what Spring actually
-				// does but on a smaller scale. Everything Spring allows is
-				// still supported
+				BeanDefinitionHolder bdHolder = ctx.getDelegate().parseBeanDefinitionElement(elem);
+				if (bdHolder != null) {
+					bdHolder = ctx.getDelegate().decorateBeanDefinitionIfRequired(elem, bdHolder);
+					try {
+						// Register the final decorated instance.
+						BeanDefinitionReaderUtils.registerBeanDefinition(bdHolder, ctx.getReaderContext().getRegistry());
+					} catch (BeanDefinitionStoreException ex) {
+						ctx.getReaderContext().error("Failed to register bean definition with name '" + bdHolder.getBeanName() + "'", elem, ex);
+					}
+					// Send registration event.
+					ctx.getReaderContext().fireComponentRegistered(new BeanComponentDefinition(bdHolder));
+				}
+				return bdHolder.getBeanDefinition();
 
-				// Create a factory to make the bean
-				DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
-				// Set up a parser for the bean
-				BeanDefinitionParserDelegate pd = new BeanDefinitionParserDelegate(ctx.getReaderContext());
-				// Parse the bean get its information, now in a DefintionHolder
-				BeanDefinitionHolder bh = pd.parseBeanDefinitionElement(elem, parentBean);
-				// Register the bean will all the other beans Spring is aware of
-				BeanDefinitionReaderUtils.registerBeanDefinition(bh, beanFactory);
-				// Get the bean from the factory. This will allows Spring
-				// to do all its work (EL processing, scope, etc) and give us
-				// the actual bean itself
-				return beanFactory.getBean(bh.getBeanName());
+				// // There is no quick little util I could find to create a bean
+				// // on the fly programmatically in Spring and still support all
+				// // Spring functionality so basically I mimic what Spring actually
+				// // does but on a smaller scale. Everything Spring allows is
+				// // still supported
+				//
+				// // Create a factory to make the bean
+				// DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
+				// // Set up a parser for the bean
+				// BeanDefinitionParserDelegate pd = new BeanDefinitionParserDelegate(ctx.getReaderContext());
+				// // Parse the bean get its information, now in a DefintionHolder
+				// BeanDefinitionHolder bh = pd.parseBeanDefinitionElement(elem, parentBean);
+				// // Register the bean will all the other beans Spring is aware of
+				// BeanDefinitionReaderUtils.registerBeanDefinition(bh, beanFactory);
+				// // Get the bean from the factory. This will allows Spring
+				// // to do all its work (EL processing, scope, etc) and give us
+				// // the actual bean itself
+				// return beanFactory.getBean(bh.getBeanName());
 			}
 			/*
 			 * This is handled a bit differently in that it actually sets the property on the parent bean for us based on the property
