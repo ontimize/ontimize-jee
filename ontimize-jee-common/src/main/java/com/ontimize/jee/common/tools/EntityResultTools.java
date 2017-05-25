@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
@@ -62,15 +63,21 @@ public final class EntityResultTools {
 	public enum GroupType {
 
 		/** The none. */
-		NONE, /** The sum. */
-		SUM, /** The min. */
-		MIN, /** The max. */
-		MAX, /** The avg. */
-		AVG, /** The count */
+		NONE,
+		/** The sum. */
+		SUM,
+		/** The min. */
+		MIN,
+		/** The max. */
+		MAX,
+		/** The avg. */
+		AVG,
+		/** The count */
 		COUNT
 	}
 
 	public static class GroupTypeOperation {
+
 		private final String	opColumn;
 		private final GroupType	groupType;
 		private final String	renameColumn;
@@ -137,12 +144,12 @@ public final class EntityResultTools {
 	 */
 	public static EntityResult doJoin(EntityResult a, EntityResult b, String[] columnKeysA, String[] columnKeysB, JoinType joinType) {
 		EntityResult res = new EntityResult();
-		Vector<Object> resColumnsA = new Vector<Object>(a.keySet());
+		Vector<Object> resColumnsA = new Vector<>(a.keySet());
 		EntityResultTools.ensureCols(resColumnsA, columnKeysA);
-		Vector<Object> resColumnsB = new Vector<Object>(b.keySet());
+		Vector<Object> resColumnsB = new Vector<>(b.keySet());
 		EntityResultTools.ensureCols(resColumnsB, columnKeysB);
-		Vector<Object> resColumns = new Vector<Object>();
-		Vector<Object> resColumnsCommon = new Vector<Object>();
+		Vector<Object> resColumns = new Vector<>();
+		Vector<Object> resColumnsCommon = new Vector<>();
 		resColumns.addAll(resColumnsA);
 		for (int i = 0; i < resColumnsB.size(); i++) {
 			Object col = resColumnsB.get(i);
@@ -221,7 +228,7 @@ public final class EntityResultTools {
 	 * @return the entity result
 	 */
 	private static EntityResult doFastJoin(EntityResult a, EntityResult b, String keyNameA, String keyNameB, JoinType joinType, EntityResult res, Vector<Object> resColumnsA,
-			Vector<Object> resColumnsB, Vector<Object> resColumns, Vector<Object> resColumnsCommon) {
+	        Vector<Object> resColumnsB, Vector<Object> resColumns, Vector<Object> resColumnsCommon) {
 
 		Object[] keysSortedA = null;
 		int[] indexesA = null;
@@ -330,7 +337,7 @@ public final class EntityResultTools {
 	 *            the only inner join
 	 */
 	private static void doJoinForTable(EntityResult res, Vector<Object> resColumns, Vector<Object> resColumnsA, Vector<Object> resColumnsB, Vector<Object> resColumnsCommon,
-			Hashtable<Object, Object> rowA, EntityResult b, String[] columnKeysA, String[] columnKeysB, boolean onlyInnerJoin) {
+	        Hashtable<Object, Object> rowA, EntityResult b, String[] columnKeysA, String[] columnKeysB, boolean onlyInnerJoin) {
 		int rcount = b.calculateRecordNumber();
 		boolean match = false;
 		int index = res.calculateRecordNumber();
@@ -405,7 +412,7 @@ public final class EntityResultTools {
 	 */
 	public static void initEntityResult(EntityResult res, List<?> columns, int length) {
 		for (Object col : columns) {
-			res.put(col, new Vector<Object>(length > 0 ? length : 10));
+			res.put(col, new Vector<>(length > 0 ? length : 10));
 		}
 	}
 
@@ -485,7 +492,7 @@ public final class EntityResultTools {
 	 */
 	private static EntityResult doSlowGroup(EntityResult a, String[] groupColumns, GroupType groupType, String columnToGroup, boolean count) throws OntimizeJEEException {
 
-		Vector<Group> groups = new Vector<Group>();
+		Vector<Group> groups = new Vector<>();
 
 		int rcount = a.calculateRecordNumber();
 		for (int i = 0; i < rcount; i++) {
@@ -691,7 +698,7 @@ public final class EntityResultTools {
 	 *             the exception
 	 */
 	private static EntityResult doSlowGroup(EntityResult er, String[] groupColumns, GroupTypeOperation... groupOperations) throws Exception {
-		Vector<Group> groups = new Vector<Group>();
+		Vector<Group> groups = new Vector<>();
 
 		int rcount = er.calculateRecordNumber();
 		for (int i = 0; i < rcount; i++) {
@@ -705,13 +712,13 @@ public final class EntityResultTools {
 				}
 			} else {
 				// Add keys and values
-				Hashtable ks = new Hashtable();
+				HashMap ks = new HashMap();
 				for (String s : groupColumns) {
 					Object value = recordValues.get(s);
-					if (value == null) {
-						value = "WARN-no method";
-						// throw new Exception("GroupColumn \"" + s + "\" is null. It is not supported");
-					}
+					// if (value == null) {
+					// value = "WARN-no method";
+					// throw new Exception("GroupColumn \"" + s + "\" is null. It is not supported");
+					// }
 					ks.put(s, value);
 				}
 				Group newGroup = new Group(ks);
@@ -736,7 +743,7 @@ public final class EntityResultTools {
 			Hashtable record = new Hashtable();
 			// Group columns
 			for (String s : groupColumns) {
-				record.put(s, g.getKeys().get(s));
+				MapTools.safePut(record, s, g.getKeys().get(s));
 			}
 
 			// Grouped column
@@ -746,8 +753,8 @@ public final class EntityResultTools {
 				GroupType groupType = groupTypeOperation.getGroupType();
 				String renameColumn = groupTypeOperation.getRenameColumn();
 				// Select correct values
-				Vector values = g.getValues();
-				Vector opValues = new Vector<Object>();
+				List values = g.getValues();
+				Vector opValues = new Vector<>();
 				for (int y = i; y <= (values.size() - 1); y += length) {
 					opValues.add(values.get(y));
 				}
@@ -764,6 +771,7 @@ public final class EntityResultTools {
 	}
 
 	static class GroupOperationWrap {
+
 		GroupTypeOperation	operation;
 		Number				currentValue;
 
@@ -800,7 +808,7 @@ public final class EntityResultTools {
 	 */
 	private static EntityResult doFastGroup(EntityResult er, String groupColumn, GroupTypeOperation... gOperations) {
 		boolean hasOp = false;
-		List<String> opColumns = new ArrayList<String>();
+		List<String> opColumns = new ArrayList<>();
 		List<GroupOperationWrap> groupOperations = new ArrayList<>();
 		if (gOperations != null) {
 			hasOp = true;
@@ -913,7 +921,8 @@ public final class EntityResultTools {
 		return res;
 	}
 
-	private static int refactor(String groupColumn, EntityResult res, Object currentKey, int resIndex, int counter, Vector vectorGroupColumn, GroupOperationWrap... groupOperations) {
+	private static int refactor(String groupColumn, EntityResult res, Object currentKey, int resIndex, int counter, Vector vectorGroupColumn,
+	        GroupOperationWrap... groupOperations) {
 		vectorGroupColumn.add(resIndex, currentKey);
 
 		for (GroupOperationWrap groupOperation : groupOperations) {
@@ -1042,31 +1051,18 @@ public final class EntityResultTools {
 	 * @return the group
 	 */
 	private static Group checkGroup(Vector<Group> groups, Hashtable recordValues) {
-		for (Group g : groups) {
-			Hashtable groupKeys = g.getKeys();
-			Enumeration keys = groupKeys.keys();
+		for (Group group : groups) {
 			boolean isEqGroup = true;
-
-			while (keys.hasMoreElements()) {
-				Object curKey = keys.nextElement();
-
-				if (groupKeys.get(curKey) instanceof String) {
-					if (!((String) groupKeys.get(curKey)).equals(recordValues.get(curKey))) {
-						isEqGroup = false;
-						break;
-					}
-				} else {
-					if (!groupKeys.get(curKey).equals(recordValues.get(curKey))) {
-						isEqGroup = false;
-						break;
-					}
+			for (Entry<Object, Object> entry : group.getKeys().entrySet()) {
+				if (!ObjectTools.safeIsEquals(entry.getValue(), recordValues.get(entry.getKey()))) {
+					isEqGroup = false;
+					break;
 				}
 			}
 			if (isEqGroup) {
-				return g;
+				return group;
 			}
 		}
-
 		return null;
 	}
 
@@ -1129,6 +1125,7 @@ public final class EntityResultTools {
 		if (res != null) {
 			TableModel model = com.ontimize.db.EntityResultUtils.createTableModel(res, new Vector(res.keySet()), false, false, false);
 			TableSorter sorter = new TableSorter(model) {
+
 				@Override
 				public int compareRowsByColumn(int row1, int row2, int column) {
 					Class type = this.model.getColumnClass(column);
@@ -1230,10 +1227,10 @@ public final class EntityResultTools {
 	static class Group {
 
 		/** The keys. */
-		protected Hashtable	keys;
+		protected Map<Object, Object>	keys;
 
 		/** The values. */
-		protected Vector	values;
+		protected List<Object>			values;
 
 		/**
 		 * Instantiates a new group.
@@ -1243,7 +1240,7 @@ public final class EntityResultTools {
 		 * @param values
 		 *            the values
 		 */
-		public Group(Hashtable keys) {
+		public Group(Map<Object, Object> keys) {
 			this.keys = keys;
 		}
 
@@ -1255,7 +1252,7 @@ public final class EntityResultTools {
 		 * @param values
 		 *            the values
 		 */
-		public Group(Hashtable keys, Vector values) {
+		public Group(Map<Object, Object> keys, List<Object> values) {
 			this.keys = keys;
 			this.values = values;
 		}
@@ -1268,7 +1265,7 @@ public final class EntityResultTools {
 		 * @param value
 		 *            the value
 		 */
-		public Group(Hashtable keys, Object value) {
+		public Group(Map<Object, Object> keys, Object value) {
 			this.keys = keys;
 			this.values = new Vector();
 			this.values.add(value);
@@ -1279,7 +1276,7 @@ public final class EntityResultTools {
 		 *
 		 * @return the keys
 		 */
-		public Hashtable getKeys() {
+		public Map<Object, Object> getKeys() {
 			return this.keys;
 		}
 
@@ -1288,7 +1285,7 @@ public final class EntityResultTools {
 		 *
 		 * @return the values
 		 */
-		public Vector getValues() {
+		public List<Object> getValues() {
 			return this.values;
 		}
 
@@ -1321,7 +1318,7 @@ public final class EntityResultTools {
 			int nregs = er.calculateRecordNumber();
 			sb.append("Total de registros: ").append(nregs).append("\r\n");
 			// Primero las cabeceras
-			List<?> keyList = new ArrayList<Object>(er.keySet());
+			List<?> keyList = new ArrayList<>(er.keySet());
 
 			for (Object key : keyList) {
 				sb.append(key).append("\t");
@@ -1448,7 +1445,7 @@ public final class EntityResultTools {
 	 * @return the column list
 	 */
 	private static List<Object> getColumnList(EntityResult... vRes) {
-		List<Object> list = new ArrayList<Object>();
+		List<Object> list = new ArrayList<>();
 		for (EntityResult er : vRes) {
 			Enumeration keys = er.keys();
 			while (keys.hasMoreElements()) {
@@ -1732,7 +1729,7 @@ public final class EntityResultTools {
 			return null;
 		}
 
-		Vector<Object> vThousands = new Vector<Object>();
+		Vector<Object> vThousands = new Vector<>();
 		BasicExpression be = null;
 		int counter = 0;
 		for (Object item : listValues) {
@@ -1746,7 +1743,7 @@ public final class EntityResultTools {
 					be = new BasicExpression(be, BasicOperator.OR_OP, be1);
 				}
 				counter = 0;
-				vThousands = new Vector<Object>();
+				vThousands = new Vector<>();
 			}
 		}
 		if (!vThousands.isEmpty()) {
@@ -1770,7 +1767,7 @@ public final class EntityResultTools {
 	 * @return the hashtable
 	 */
 	public static Hashtable<String, Object> createRecord(String[] keys, Object[] values) {
-		Hashtable<String, Object> record = new Hashtable<String, Object>();
+		Hashtable<String, Object> record = new Hashtable<>();
 
 		for (int i = 0; i < keys.length; i++) {
 			if ((values[i] != null) && (keys[i] != null)) {
@@ -1799,7 +1796,7 @@ public final class EntityResultTools {
 
 	public static Vector<String> attributes(String... attributes) {
 		if ((attributes == null) || (attributes.length == 0)) {
-			return new Vector<String>();
+			return new Vector<>();
 		}
 		return new Vector(Arrays.asList(attributes));
 	}
@@ -1813,13 +1810,13 @@ public final class EntityResultTools {
 	 */
 	public static Hashtable<Object, Object> keysvalues(Object... objects) {
 		if (objects == null) {
-			return new Hashtable<Object, Object>();
+			return new Hashtable<>();
 		}
 		if ((objects.length % 2) != 0) {
 			throw new RuntimeException("Review filters, it is mandatory to set dual <key><value>.");
 		}
 
-		Hashtable<Object, Object> res = new Hashtable<Object, Object>();
+		Hashtable<Object, Object> res = new Hashtable<>();
 		int i = 0;
 		while (i < objects.length) {
 			Object key = objects[i++];
