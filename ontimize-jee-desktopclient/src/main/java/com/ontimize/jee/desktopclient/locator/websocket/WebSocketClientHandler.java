@@ -32,10 +32,13 @@ import org.springframework.web.socket.sockjs.client.SockJsClient;
 import org.springframework.web.socket.sockjs.client.Transport;
 import org.springframework.web.socket.sockjs.client.WebSocketTransport;
 
+import com.ontimize.gui.ApplicationManager;
 import com.ontimize.jee.common.exceptions.OntimizeJEEException;
 import com.ontimize.jee.common.hessian.OntimizeHessianHttpClientSessionProcessorFactory;
 import com.ontimize.jee.common.hessian.OntimizeHessianProxyFactoryBean;
 import com.ontimize.jee.common.services.user.IUserInformationService;
+import com.ontimize.jee.common.tools.ParseUtilsExtended;
+import com.ontimize.jee.common.tools.ReflectionTools;
 import com.ontimize.jee.common.websocket.WebsocketWrapperMessage;
 import com.ontimize.jee.desktopclient.spring.BeansFactory;
 
@@ -198,6 +201,10 @@ public class WebSocketClientHandler extends TextWebSocketHandler implements IWeb
 						// do nothing
 					}
 					try {
+						// Avoid trying reconnect whilst the user in not logged
+						if (!ParseUtilsExtended.getBoolean(ReflectionTools.getFieldValue(ApplicationManager.getApplication(), "loggedIn"), true)) {
+							continue;
+						}
 						WebSocketClientHandler.this.connect();
 						WebSocketClientHandler.logger.info("conectado");
 						return;
