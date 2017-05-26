@@ -44,9 +44,9 @@ public class TaskManagerGUI extends javax.swing.JFrame {
 
 	/** Creates new form TransferManagerGUI */
 	public TaskManagerGUI() {
-		super(ApplicationManager.getTranslation("task.transfermanager"));
+		super(ApplicationManager.getTranslation("task.DOWNLOAD_MANAGER_TITLE"));
 		this.setModalExclusionType(ModalExclusionType.APPLICATION_EXCLUDE);
-		this.setIconImage(ImageManager.getIcon("ontimize-dms-images/download_manager_22x22.png").getImage());
+		this.setIconImage(ImageManager.getIcon("ontimize-jee-images/download_manager_22x22.png").getImage());
 		this.initComponents();
 		this.initialize();
 	}

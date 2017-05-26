@@ -21,11 +21,11 @@ import com.ontimize.gui.images.ImageManager;
 public class IconToolTipRenderer extends JLabel implements TableCellRenderer {
 	private static final long		serialVersionUID	= -4716351834035301680L;
 
-	private static final ImageIcon	iconRunning			= ImageManager.getIcon("ontimize-dms-images/loading_16x16.gif");
-	private static final ImageIcon	iconPause			= ImageManager.getIcon("ontimize-dms-images/pause_16x16.png");
-	private static final ImageIcon	iconCancel			= ImageManager.getIcon("ontimize-dms-images/cancel_16x16.png");
-	private static final ImageIcon	iconError			= ImageManager.getIcon("ontimize-dms-images/error_16x16.png");
-	private static final ImageIcon	iconSucceed			= ImageManager.getIcon("ontimize-dms-images/succeed_16x16.png");
+	private static final ImageIcon	iconRunning			= ImageManager.getIcon("ontimize-jee-images/loading_16x16.gif");
+	private static final ImageIcon	iconPause			= ImageManager.getIcon("ontimize-jee-images/pause_16x16.png");
+	private static final ImageIcon	iconCancel			= ImageManager.getIcon("ontimize-jee-images/cancel_16x16.png");
+	private static final ImageIcon	iconError			= ImageManager.getIcon("ontimize-jee-images/error_16x16.png");
+	private static final ImageIcon	iconSucceed			= ImageManager.getIcon("ontimize-jee-images/succeed_16x16.png");
 
 	private static HashSet<JTable>	registeredTables	= new HashSet<JTable>();
 
