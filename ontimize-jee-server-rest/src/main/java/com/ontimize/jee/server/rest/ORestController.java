@@ -23,6 +23,7 @@ import com.ontimize.db.EntityResult;
 import com.ontimize.db.NullValue;
 import com.ontimize.db.SQLStatementBuilder;
 import com.ontimize.db.SQLStatementBuilder.BasicExpression;
+import com.ontimize.jee.common.jackson.OntimizeMapper;
 import com.ontimize.jee.common.tools.CheckingTools;
 import com.ontimize.jee.common.tools.ReflectionTools;
 

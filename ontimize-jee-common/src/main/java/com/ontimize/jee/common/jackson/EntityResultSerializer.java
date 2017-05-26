@@ -1,4 +1,4 @@
-package com.ontimize.jee.server.rest.jackson.serialize;
+package com.ontimize.jee.common.jackson;
 
 import java.io.IOException;
 import java.util.Enumeration;

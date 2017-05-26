@@ -3,8 +3,8 @@ package com.ontimize.jee.common.websocket;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
+import com.ontimize.jee.common.jackson.OntimizeMapper;
 import com.ontimize.util.Base64Utils;
 
 public class WebsocketWrapperMessage {
@@ -30,7 +30,7 @@ public class WebsocketWrapperMessage {
 
 	public void setMessage(Object toSerialize) {
 		try {
-			this.message = new ObjectMapper().writeValueAsString(toSerialize);
+			this.message = new OntimizeMapper().writeValueAsString(toSerialize);
 		} catch (JsonProcessingException error) {
 			throw new OntimizeJEERuntimeException(error);
 		}
@@ -63,7 +63,7 @@ public class WebsocketWrapperMessage {
 			if (unescapeJson.startsWith("\"") && unescapeJson.endsWith("\"")) {
 				unescapeJson = unescapeJson.substring(1, unescapeJson.length() - 1);
 			}
-			return new ObjectMapper().readValue(unescapeJson, cl);
+			return new OntimizeMapper().readValue(unescapeJson.replaceAll("\n", ""), cl);
 		} catch (Exception error) {
 			throw new OntimizeJEERuntimeException(error);
 		}
@@ -71,7 +71,7 @@ public class WebsocketWrapperMessage {
 
 	public String serialize() {
 		try {
-			return Base64Utils.encode(new ObjectMapper().writeValueAsString(this));
+			return Base64Utils.encode(new OntimizeMapper().writeValueAsString(this));
 		} catch (JsonProcessingException error) {
 			throw new OntimizeJEERuntimeException(error);
 		}
@@ -80,7 +80,7 @@ public class WebsocketWrapperMessage {
 	public static WebsocketWrapperMessage deserialize(String message) {
 		try {
 			String newMessage = Base64Utils.decode(message);
-			return new ObjectMapper().readValue(newMessage, WebsocketWrapperMessage.class);
+			return new OntimizeMapper().readValue(newMessage, WebsocketWrapperMessage.class);
 		} catch (Exception error) {
 			throw new OntimizeJEERuntimeException(error);
 		}
