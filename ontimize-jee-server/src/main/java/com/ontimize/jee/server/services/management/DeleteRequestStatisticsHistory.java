@@ -105,6 +105,7 @@ public class DeleteRequestStatisticsHistory extends Thread {
 		private final long millis;
 
 		public TimerThread(long millis) {
+			super("Delete Request Statistics");
 			this.millis = millis;
 		}
 
