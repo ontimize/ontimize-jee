@@ -14,7 +14,11 @@ public interface ITask {
 	 */
 	String getName();
 
-	/** The description. */
+	/**
+	 * The description.
+	 *
+	 * @return the description
+	 */
 	String getDescription();
 
 	/**
@@ -64,4 +68,32 @@ public interface ITask {
 	 * On task clicked.
 	 */
 	void onTaskClicked();
+
+	/**
+	 * Checks if is finished.
+	 *
+	 * @return true, if is finished
+	 */
+	boolean isFinished();
+
+	/**
+	 * Checks if is pausable.
+	 *
+	 * @return true, if is pausable
+	 */
+	boolean isPausable();
+
+	/**
+	 * Checks if is cancellable.
+	 *
+	 * @return true, if is cancellable
+	 */
+	boolean isCancellable();
+
+	/**
+	 * Checks for result details.
+	 *
+	 * @return true, if successful
+	 */
+	boolean hasResultDetails();
 }

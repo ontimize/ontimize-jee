@@ -20,14 +20,15 @@ public class TaskTableModel extends AbstractTableModel implements Observer {
 
 	public static final String			COLUMN_DESCRIPTION	= "task.DESC";
 	public static final String			COLUMN_SYNC_STATUS	= "task.SYNC_STATUS";
+	public static final String			COLUMN_EXEC_DETAILS	= "task.EXEC_DETAILS";
 	public static final String			COLUMN_PROGRESS		= "task.PROGRESS";
 	public static final String			COLUMN_NAME			= "task.NAME";
 
 	// These are the names for the table's columns.
-	private static final String[]		columnNames			= { TaskTableModel.COLUMN_NAME, TaskTableModel.COLUMN_DESCRIPTION, TaskTableModel.COLUMN_PROGRESS, TaskTableModel.COLUMN_SYNC_STATUS };
+	private static final String[]		columnNames			= { TaskTableModel.COLUMN_NAME, TaskTableModel.COLUMN_DESCRIPTION, TaskTableModel.COLUMN_PROGRESS, TaskTableModel.COLUMN_SYNC_STATUS, TaskTableModel.COLUMN_EXEC_DETAILS };
 
 	// These are the classes for each column's values.
-	private static final Class<?>[]		columnClasses		= { String.class, Object.class, Number.class, TaskStatus.class };
+	private static final Class<?>[]		columnClasses		= { String.class, Object.class, Number.class, TaskStatus.class, Object.class };
 	private final transient List<ITask>	taskList;
 
 	public TaskTableModel() {
@@ -44,6 +45,29 @@ public class TaskTableModel extends AbstractTableModel implements Observer {
 			// Fire table row deletion notification to table.
 			this.fireTableRowsDeleted(row, row);
 		}
+	}
+
+	public void removeTask(ITask task) {
+		this.removeRow(this.taskList.indexOf(task));
+	}
+
+	/**
+	 * Clean all.
+	 */
+	public void cleanFinishedTasks() {
+		for (int i = 0; i< this.taskList.size(); i++) {
+			ITask task = this.taskList.get(i);
+			if (task.isFinished()) {
+				this.taskList.remove(i);
+				i--;
+			}
+		}
+		this.fireTableDataChanged();
+	}
+
+	@Override
+	public boolean isCellEditable(int rowIndex, int columnIndex) {
+		return TaskTableModel.COLUMN_EXEC_DETAILS.equals(TaskTableModel.columnNames[columnIndex]) && this.taskList.get(rowIndex).hasResultDetails();
 	}
 
 	/**
@@ -95,6 +119,8 @@ public class TaskTableModel extends AbstractTableModel implements Observer {
 				return task.getProgress();
 			case 3: // Sync Status
 				return task.getStatus();
+			case 4:
+				return task;
 		}
 		return "";
 	}
@@ -140,4 +166,5 @@ public class TaskTableModel extends AbstractTableModel implements Observer {
 		}
 		return null;
 	}
+
 }

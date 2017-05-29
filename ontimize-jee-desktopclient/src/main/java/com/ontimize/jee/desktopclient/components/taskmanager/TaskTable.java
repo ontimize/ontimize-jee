@@ -1,8 +1,5 @@
 package com.ontimize.jee.desktopclient.components.taskmanager;
 
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.TableCellRenderer;
@@ -24,6 +21,7 @@ public class TaskTable extends JTable {
 	private static final long	serialVersionUID			= 1L;
 
 	private final static int	COLUMN_SYNC_STATUS_WIDTH	= 24;
+	private static final int	COLUMN_PROGRESS_WIDTH		= 100;
 
 	/**
 	 * Instantiates a new task table.
@@ -33,18 +31,17 @@ public class TaskTable extends JTable {
 
 		// Allow only one row at a time to be selected.
 		this.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		this.addMouseListener(new MouseListenerFireActionTask());
 
 		// Set up ProgressBar as renderer for progress column.
 		ProgressRenderer progressRenderer = new ProgressRenderer();
 		this.setDefaultRenderer(Object.class, new ObjectCellRenderer());
 
 		this.getColumn(TaskTableModel.COLUMN_PROGRESS).setCellRenderer(progressRenderer);
-		this.getColumn(TaskTableModel.COLUMN_SYNC_STATUS).setCellRenderer(new IconToolTipRenderer());
+		this.getColumn(TaskTableModel.COLUMN_SYNC_STATUS).setCellRenderer(new TaskStatusTableCellRenderer());
+		this.getColumn(TaskTableModel.COLUMN_EXEC_DETAILS).setCellRenderer(new TaskResultTableCellRenderer());
+		this.getColumn(TaskTableModel.COLUMN_EXEC_DETAILS).setCellEditor(new TaskResultTableCellEditor());
 		try {
-			this.getColumn(TaskTableModel.COLUMN_DESCRIPTION).setCellRenderer(new DescriptionTableCellRenderer()
-
-			);
+			this.getColumn(TaskTableModel.COLUMN_DESCRIPTION).setCellRenderer(new DescriptionTableCellRenderer());
 		} catch (Throwable ex) {
 			TaskTable.logger.error(null, ex);
 		}
@@ -61,6 +58,16 @@ public class TaskTable extends JTable {
 		this.getColumn(TaskTableModel.COLUMN_SYNC_STATUS).setPreferredWidth(TaskTable.COLUMN_SYNC_STATUS_WIDTH);
 		this.getColumn(TaskTableModel.COLUMN_SYNC_STATUS).setResizable(false);
 		this.getColumn(TaskTableModel.COLUMN_SYNC_STATUS).setHeaderValue("");
+
+		this.getColumn(TaskTableModel.COLUMN_EXEC_DETAILS).setMinWidth(TaskTable.COLUMN_SYNC_STATUS_WIDTH);
+		this.getColumn(TaskTableModel.COLUMN_EXEC_DETAILS).setMaxWidth(TaskTable.COLUMN_SYNC_STATUS_WIDTH);
+		this.getColumn(TaskTableModel.COLUMN_EXEC_DETAILS).setWidth(TaskTable.COLUMN_SYNC_STATUS_WIDTH);
+		this.getColumn(TaskTableModel.COLUMN_EXEC_DETAILS).setPreferredWidth(TaskTable.COLUMN_SYNC_STATUS_WIDTH);
+		this.getColumn(TaskTableModel.COLUMN_EXEC_DETAILS).setResizable(false);
+		this.getColumn(TaskTableModel.COLUMN_EXEC_DETAILS).setHeaderValue("");
+
+		this.getColumn(TaskTableModel.COLUMN_PROGRESS).setWidth(TaskTable.COLUMN_PROGRESS_WIDTH);
+		this.getColumn(TaskTableModel.COLUMN_PROGRESS).setPreferredWidth(TaskTable.COLUMN_PROGRESS_WIDTH);
 	}
 
 	/**
@@ -82,14 +89,4 @@ public class TaskTable extends JTable {
 		this.getTaskModel().addTask(task);
 	}
 
-	class MouseListenerFireActionTask extends MouseAdapter {
-		@Override
-		public void mousePressed(MouseEvent me) {
-			if (me.getClickCount() == 2) {
-				int rowAtPoint = TaskTable.this.rowAtPoint(me.getPoint());
-				TaskTable.this.getTaskModel().getRow(rowAtPoint).onTaskClicked();
-			}
-		}
-
-	}
 }
