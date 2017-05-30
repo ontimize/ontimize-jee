@@ -87,51 +87,51 @@ import com.ontimize.jee.server.dao.jdbc.setup.QueryType;
 public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements ApplicationContextAware, IOntimizeDaoSupport {
 
 	/** The logger. */
-	private final static Logger							logger							= LoggerFactory.getLogger(OntimizeJdbcDaoSupport.class);
+	protected final static Logger logger = LoggerFactory.getLogger(OntimizeJdbcDaoSupport.class);
 
 	/** The Constant PLACEHOLDER_ORDER. */
-	private static final String							PLACEHOLDER_ORDER				= "#ORDER#";
+	protected static final String PLACEHOLDER_ORDER = "#ORDER#";
 	/** The Constant PLACEHOLDER_ORDER_CONCAT. */
-	private static final String							PLACEHOLDER_ORDER_CONCAT		= "#ORDER_CONCAT#";
+	protected static final String PLACEHOLDER_ORDER_CONCAT = "#ORDER_CONCAT#";
 	/** The Constant PLACEHOLDER_WHERE. */
-	private static final String							PLACEHOLDER_WHERE				= "#WHERE#";
+	protected static final String PLACEHOLDER_WHERE = "#WHERE#";
 	/** The Constant PLACEHOLDER_WHERE_CONCAT. */
-	private static final String							PLACEHOLDER_WHERE_CONCAT		= "#WHERE_CONCAT#";
+	protected static final String PLACEHOLDER_WHERE_CONCAT = "#WHERE_CONCAT#";
 	/** The Constant PLACEHOLDER_COLUMNS. */
-	private static final String							PLACEHOLDER_COLUMNS				= "#COLUMNS#";
+	protected static final String PLACEHOLDER_COLUMNS = "#COLUMNS#";
 
 	/** Context used to retrieve and manage database metadata. */
-	private final OntimizeTableMetaDataContext			tableMetaDataContext			;
+	protected final OntimizeTableMetaDataContext tableMetaDataContext;
 	/** List of columns objects to be used in insert statement. */
-	private final List<String>							declaredColumns					= new ArrayList<>();
+	protected final List<String> declaredColumns = new ArrayList<>();
 	/**
 	 * Has this operation been compiled? Compilation means at least checking that a DataSource or JdbcTemplate has been provided, but subclasses may also implement their own custom
 	 * validation.
 	 */
-	private boolean										compiled						= false;
-	private String[]									generatedKeyNames				= new String[0];
+	protected boolean compiled = false;
+	protected String[] generatedKeyNames = new String[0];
 	/** The statement builder. */
-	private SQLStatementHandler							statementHandler;
+	protected SQLStatementHandler statementHandler;
 	/** The bean property converter. */
-	private INameConverter								nameConverter;
+	protected INameConverter nameConverter;
 	/** Mandatory delete keys. */
-	private List<String>								deleteKeys;
+	protected List<String> deleteKeys;
 	/** Mandatory update keys. */
-	private List<String>								updateKeys;
+	protected List<String> updateKeys;
 	/** Queries. */
-	private final Map<String, QueryTemplateInformation>	sqlQueries						= new HashMap<>();
+	protected final Map<String, QueryTemplateInformation> sqlQueries = new HashMap<>();
 
 	/** The application context. */
-	private ApplicationContext							applicationContext;
+	protected ApplicationContext applicationContext;
 
 	/**
 	 * Configuration file
 	 */
-	private String										configurationFile				= null;
+	protected String configurationFile = null;
 	/**
 	 * Configuration file placeholder
 	 */
-	private String										configurationFilePlaceholder	= null;
+	protected String configurationFilePlaceholder = null;
 
 	/**
 	 * Instantiates a new ontimize jdbc dao support.
@@ -447,7 +447,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	 *            the value
 	 * @return the object
 	 */
-	private BasicExpression applyTransformationsToBasicExpression(final BasicExpression original, List<AmbiguousColumnType> ambiguousColumns,
+	protected BasicExpression applyTransformationsToBasicExpression(final BasicExpression original, List<AmbiguousColumnType> ambiguousColumns,
 			List<FunctionColumnType> functionColumns) {
 		Object originalLeftOperand = original.getLeftOperand();
 		Operator originalOperator = original.getOperator();
@@ -485,7 +485,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	 *            the function columns
 	 * @return the basic field
 	 */
-	private BasicField applyTransformationsToBasicField(BasicField originalField, List<AmbiguousColumnType> ambiguousColumns, List<FunctionColumnType> functionColumns) {
+	protected BasicField applyTransformationsToBasicField(BasicField originalField, List<AmbiguousColumnType> ambiguousColumns, List<FunctionColumnType> functionColumns) {
 		String columnName = originalField.toString();
 		String resolvedAmbiguousColumn = this.resolveAmbiguousColumn(columnName, ambiguousColumns);
 		if (resolvedAmbiguousColumn != null) {
@@ -906,7 +906,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	 * @param validColumns
 	 * @return
 	 */
-	private Hashtable<Object, Object> getValidQueryingKeysValues(Hashtable<Object, Object> inputKeysValues, List<String> validColumns) {
+	protected Hashtable<Object, Object> getValidQueryingKeysValues(Hashtable<Object, Object> inputKeysValues, List<String> validColumns) {
 		if ((validColumns == null) || validColumns.isEmpty()) {
 			return inputKeysValues;
 		}
@@ -1425,7 +1425,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	 *            the values
 	 * @return the int
 	 */
-	private int executeInsertInternal(InsertMetaInfoHolder holder) {
+	protected int executeInsertInternal(InsertMetaInfoHolder holder) {
 		OntimizeJdbcDaoSupport.logger.debug("The following parameters are used for insert {} with: {}", holder.getInsertString(), holder.getValues());
 		return this.getJdbcTemplate().update(holder.getInsertString(), holder.getValues().toArray(), holder.getInsertTypes());
 	}
@@ -1489,7 +1489,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	 *            the values
 	 * @return the number
 	 */
-	private Number executeInsertAndReturnKeyInternal(final InsertMetaInfoHolder holder) {
+	protected Number executeInsertAndReturnKeyInternal(final InsertMetaInfoHolder holder) {
 		final KeyHolder kh = this.executeInsertAndReturnKeyHolderInternal(holder);
 		if ((kh != null) && (kh.getKey() != null)) {
 			return kh.getKey();
@@ -1505,7 +1505,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	 *            the values
 	 * @return the key holder
 	 */
-	private KeyHolder executeInsertAndReturnKeyHolderInternal(final InsertMetaInfoHolder holder) {
+	protected KeyHolder executeInsertAndReturnKeyHolderInternal(final InsertMetaInfoHolder holder) {
 		OntimizeJdbcDaoSupport.logger.debug("The following parameters are used for call {} with: {}", holder.getInsertString(), holder.getValues());
 		final KeyHolder keyHolder = new GeneratedKeyHolder();
 		if (this.tableMetaDataContext.isGetGeneratedKeysSupported()) {
@@ -1592,7 +1592,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	 * @throws SQLException
 	 *             the sQL exception
 	 */
-	private PreparedStatement prepareInsertStatementForGeneratedKeys(final Connection con, String insertString) throws SQLException {
+	protected PreparedStatement prepareInsertStatementForGeneratedKeys(final Connection con, String insertString) throws SQLException {
 		if (this.getGeneratedKeyNames().length < 1) {
 			throw new InvalidDataAccessApiUsageException(
 					"Generated Key Name(s) not specificed. " + "Using the generated keys features requires specifying the name(s) of the generated column(s)");
@@ -1653,7 +1653,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	 *            the batch values
 	 * @return the int[]
 	 */
-	private int[] executeInsertBatchInternal(final List<Object>[] batchValues, final String insertString, final int[] insertTypes) {
+	protected int[] executeInsertBatchInternal(final List<Object>[] batchValues, final String insertString, final int[] insertTypes) {
 		OntimizeJdbcDaoSupport.logger.debug("Executing statement {} with batch of size: {}", insertString, batchValues.length);
 		return this.getJdbcTemplate().batchUpdate(insertString, new BatchPreparedStatementSetter() {
 
