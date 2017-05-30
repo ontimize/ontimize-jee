@@ -1,15 +1,18 @@
 package com.ontimize.jee.server.spring;
 
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.dao.DataAccessException;
 
 import com.ontimize.jee.common.spring.parser.AbstractPropertyResolver;
 import com.ontimize.jee.common.tools.CheckingTools;
+import com.ontimize.jee.common.tools.ObjectTools;
 
 /**
- * The Class DatabasePropertyResolver.
+ * The Class PropertyResolver.
  */
 public class PropertyResolver<T> extends AbstractPropertyResolver<T> implements InitializingBean {
 
@@ -72,7 +75,23 @@ public class PropertyResolver<T> extends AbstractPropertyResolver<T> implements 
 	 */
 	@Override
 	public T getValue() throws DataAccessException {
-		Object object = this.properties.get(this.property);
+		Object object = this.resolveEnvVars(String.valueOf(this.properties.get(this.property)));
 		return (T) (object);
+	}
+
+	protected String resolveEnvVars(String input) {
+		if (null == input) {
+			return null;
+		}
+		Pattern p = Pattern.compile("\\$\\{(\\w+)\\}|\\$(\\w+)");
+		Matcher m = p.matcher(input);
+		StringBuffer sb = new StringBuffer();
+		while (m.find()) {
+			String envVarName = null == m.group(1) ? m.group(2) : m.group(1);
+			String envVarValue = ObjectTools.coalesce(System.getProperty(envVarName), System.getenv(envVarName));
+			m.appendReplacement(sb, null == envVarValue ? "" : Matcher.quoteReplacement(envVarValue));
+		}
+		m.appendTail(sb);
+		return sb.toString();
 	}
 }
