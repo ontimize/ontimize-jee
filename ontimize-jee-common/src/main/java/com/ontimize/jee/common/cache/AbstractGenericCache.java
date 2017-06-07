@@ -137,6 +137,16 @@ public abstract class AbstractGenericCache<K, V> {
 	}
 
 	/**
+	 * Check key existence.
+	 *
+	 * @param key
+	 * @return
+	 */
+	public boolean containsKey(final K key) {
+		return this.cache.containsKey(key);
+	}
+
+	/**
 	 * Request data.
 	 *
 	 * @param key
