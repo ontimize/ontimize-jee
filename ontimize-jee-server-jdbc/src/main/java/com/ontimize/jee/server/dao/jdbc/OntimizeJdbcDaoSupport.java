@@ -108,30 +108,30 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	 * Has this operation been compiled? Compilation means at least checking that a DataSource or JdbcTemplate has been provided, but subclasses may also implement their own custom
 	 * validation.
 	 */
-	protected boolean compiled = false;
-	protected String[] generatedKeyNames = new String[0];
+	private boolean											compiled						= false;
+	private String[]										generatedKeyNames				= new String[0];
 	/** The statement builder. */
-	protected SQLStatementHandler statementHandler;
+	private SQLStatementHandler								statementHandler;
 	/** The bean property converter. */
-	protected INameConverter nameConverter;
+	private INameConverter									nameConverter;
 	/** Mandatory delete keys. */
-	protected List<String> deleteKeys;
+	private List<String>									deleteKeys;
 	/** Mandatory update keys. */
-	protected List<String> updateKeys;
+	private List<String>									updateKeys;
 	/** Queries. */
 	protected final Map<String, QueryTemplateInformation> sqlQueries = new HashMap<>();
 
 	/** The application context. */
-	protected ApplicationContext applicationContext;
+	private ApplicationContext								applicationContext;
 
 	/**
 	 * Configuration file
 	 */
-	protected String configurationFile = null;
+	private String											configurationFile				= null;
 	/**
 	 * Configuration file placeholder
 	 */
-	protected String configurationFilePlaceholder = null;
+	private String											configurationFilePlaceholder	= null;
 
 	/**
 	 * Instantiates a new ontimize jdbc dao support.
@@ -1284,6 +1284,15 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	}
 
 	/**
+	 * Gets the configuration file.
+	 *
+	 * @return the configuration file
+	 */
+	public String getConfigurationFile() {
+		return this.configurationFile;
+	}
+
+	/**
 	 * Sets the configuration file placeholder.
 	 *
 	 * @param configurationFilePlaceholder
@@ -1291,6 +1300,15 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	 */
 	public synchronized void setConfigurationFilePlaceholder(final String configurationFilePlaceholder) {
 		this.configurationFilePlaceholder = configurationFilePlaceholder;
+	}
+
+	/**
+	 * Gets the configuration file placeholder.
+	 *
+	 * @return the configuration file placeholder
+	 */
+	public String getConfigurationFilePlaceholder() {
+		return this.configurationFilePlaceholder;
 	}
 
 	/**
