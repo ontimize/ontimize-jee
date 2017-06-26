@@ -110,7 +110,6 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-websocket</artifactId>
-			<optional>true</optional>
 		</dependency>
 	</dependencies>
 </project>
