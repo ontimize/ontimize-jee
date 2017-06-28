@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
  *
  * For best performance, use HessianFactory:
  *
- * <code><pre> HessianFactory factory = new HessianFactory(); Hessian2StreamingInput hIn = factory.createHessian2StreamingInput(is); </pre></code>
+ * <pre><code> HessianFactory factory = new HessianFactory(); Hessian2StreamingInput hIn = factory.createHessian2StreamingInput(is); </code></pre>
  */
 public class Hessian2StreamingInput {
 

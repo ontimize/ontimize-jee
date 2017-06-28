@@ -277,9 +277,12 @@ abstract public class AbstractHessianInput {
 	abstract public Object readObject() throws IOException;
 
 	/**
-	 * Reads a remote object reference to the stream. The type is the type of the remote interface.
+	 * Reads a remote object reference to the stream. The type is the type of
+	 * the remote interface.
 	 *
-	 * <code><pre> 'r' 't' b16 b8 type url </pre></code>
+	 * <pre>
+	 * <code>'r' 't' b16 b8 type url </code>
+	 * </pre>
 	 */
 	abstract public Object readRemote() throws IOException;
 

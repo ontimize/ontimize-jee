@@ -96,7 +96,7 @@ public class HessianOutput extends AbstractHessianOutput {
 	 * Starts the method call. Clients would use <code>startCall</code> instead of <code>call</code> if they wanted finer control over writing the
 	 * arguments, or needed to write headers.
 	 *
-	 * <code><pre> c major minor m b16 b8 method-name </pre></code>
+	 * <pre><code> c major minor m b16 b8 method-name </code></pre>
 	 *
 	 * @param method
 	 *            the method name to call.
@@ -117,7 +117,7 @@ public class HessianOutput extends AbstractHessianOutput {
 	/**
 	 * Writes the call tag. This would be followed by the headers and the method tag.
 	 *
-	 * <code><pre> c major minor </pre></code>
+	 * <pre><code> c major minor </code></pre>
 	 *
 	 * @param method
 	 *            the method name to call.
@@ -132,7 +132,7 @@ public class HessianOutput extends AbstractHessianOutput {
 	/**
 	 * Writes the method tag.
 	 *
-	 * <code><pre> m b16 b8 method-name </pre></code>
+	 * <pre><code> m b16 b8 method-name </code></pre>
 	 *
 	 * @param method
 	 *            the method name to call.
@@ -149,7 +149,7 @@ public class HessianOutput extends AbstractHessianOutput {
 	/**
 	 * Completes.
 	 *
-	 * <code><pre> z </pre></code>
+	 * <pre><code> z </code></pre>
 	 */
 	@Override
 	public void completeCall() throws IOException {
@@ -185,7 +185,7 @@ public class HessianOutput extends AbstractHessianOutput {
 	/**
 	 * Writes a header name. The header value must immediately follow.
 	 *
-	 * <code><pre> H b16 b8 foo <em>value</em> </pre></code>
+	 * <pre><code> H b16 b8 foo <em>value</em> </code></pre>
 	 */
 	@Override
 	public void writeHeader(String name) throws IOException {
@@ -201,11 +201,11 @@ public class HessianOutput extends AbstractHessianOutput {
 	/**
 	 * Writes a fault. The fault will be written as a descriptive string followed by an object:
 	 *
-	 * <code><pre> f &lt;string>code &lt;string>the fault code
+	 * <pre><code> f &lt;string>code &lt;string>the fault code
 	 *
 	 * &lt;string>message &lt;string>the fault mesage
 	 *
-	 * &lt;string>detail mt\x00\xnnjavax.ejb.FinderException ... z z </pre></code>
+	 * &lt;string>detail mt\x00\xnnjavax.ejb.FinderException ... z z </code></pre>
 	 *
 	 * @param code
 	 *            the fault code, a three digit
@@ -254,7 +254,7 @@ public class HessianOutput extends AbstractHessianOutput {
 	 * Writes the list header to the stream. List writers will call <code>writeListBegin</code> followed by the list contents and then call
 	 * <code>writeListEnd</code>.
 	 *
-	 * <code><pre> V t b16 b8 type l b32 b24 b16 b8 </pre></code>
+	 * <pre><code> V t b16 b8 type l b32 b24 b16 b8 </code></pre>
 	 */
 	@Override
 	public boolean writeListBegin(int length, String type) throws IOException {
@@ -288,7 +288,7 @@ public class HessianOutput extends AbstractHessianOutput {
 	 * Writes the map header to the stream. Map writers will call <code>writeMapBegin</code> followed by the map contents and then call
 	 * <code>writeMapEnd</code>.
 	 *
-	 * <code><pre> Mt b16 b8 (<key> <value>)z </pre></code>
+	 * <pre><code> Mt b16 b8 (<key> <value>)z </code></pre>
 	 */
 	@Override
 	public void writeMapBegin(String type) throws IOException {
@@ -308,7 +308,7 @@ public class HessianOutput extends AbstractHessianOutput {
 	/**
 	 * Writes a remote object reference to the stream. The type is the type of the remote interface.
 	 *
-	 * <code><pre> 'r' 't' b16 b8 type url </pre></code>
+	 * <pre><code> 'r' 't' b16 b8 type url </code></pre>
 	 */
 	public void writeRemote(String type, String url) throws IOException {
 		this.os.write('r');
@@ -321,7 +321,7 @@ public class HessianOutput extends AbstractHessianOutput {
 	/**
 	 * Writes a boolean value to the stream. The boolean will be written with the following syntax:
 	 *
-	 * <code><pre> T F </pre></code>
+	 * <pre><code> T F </code></pre>
 	 *
 	 * @param value
 	 *            the boolean value to write.
@@ -338,7 +338,7 @@ public class HessianOutput extends AbstractHessianOutput {
 	/**
 	 * Writes an integer value to the stream. The integer will be written with the following syntax:
 	 *
-	 * <code><pre> I b32 b24 b16 b8 </pre></code>
+	 * <pre><code> I b32 b24 b16 b8 </code></pre>
 	 *
 	 * @param value
 	 *            the integer value to write.
@@ -355,7 +355,7 @@ public class HessianOutput extends AbstractHessianOutput {
 	/**
 	 * Writes a long value to the stream. The long will be written with the following syntax:
 	 *
-	 * <code><pre> L b64 b56 b48 b40 b32 b24 b16 b8 </pre></code>
+	 * <pre><code> L b64 b56 b48 b40 b32 b24 b16 b8 </code></pre>
 	 *
 	 * @param value
 	 *            the long value to write.
@@ -376,7 +376,7 @@ public class HessianOutput extends AbstractHessianOutput {
 	/**
 	 * Writes a double value to the stream. The double will be written with the following syntax:
 	 *
-	 * <code><pre> D b64 b56 b48 b40 b32 b24 b16 b8 </pre></code>
+	 * <pre><code> D b64 b56 b48 b40 b32 b24 b16 b8 </code></pre>
 	 *
 	 * @param value
 	 *            the double value to write.
@@ -399,7 +399,7 @@ public class HessianOutput extends AbstractHessianOutput {
 	/**
 	 * Writes a date to the stream.
 	 *
-	 * <code><pre> T b64 b56 b48 b40 b32 b24 b16 b8 </pre></code>
+	 * <pre><code> T b64 b56 b48 b40 b32 b24 b16 b8 </code></pre>
 	 *
 	 * @param time
 	 *            the date in milliseconds from the epoch in UTC
@@ -420,7 +420,7 @@ public class HessianOutput extends AbstractHessianOutput {
 	/**
 	 * Writes a null value to the stream. The null will be written with the following syntax
 	 *
-	 * <code><pre> N </pre></code>
+	 * <pre><code> N </code></pre>
 	 *
 	 * @param value
 	 *            the string value to write.
@@ -433,11 +433,11 @@ public class HessianOutput extends AbstractHessianOutput {
 	/**
 	 * Writes a string value to the stream using UTF-8 encoding. The string will be written with the following syntax:
 	 *
-	 * <code><pre> S b16 b8 string-value </pre></code>
+	 * <pre><code> S b16 b8 string-value </code></pre>
 	 *
 	 * If the value is null, it will be written as
 	 *
-	 * <code><pre> N </pre></code>
+	 * <pre><code> N </code></pre>
 	 *
 	 * @param value
 	 *            the string value to write.
@@ -481,11 +481,11 @@ public class HessianOutput extends AbstractHessianOutput {
 	/**
 	 * Writes a string value to the stream using UTF-8 encoding. The string will be written with the following syntax:
 	 *
-	 * <code><pre> S b16 b8 string-value </pre></code>
+	 * <pre><code> S b16 b8 string-value </code></pre>
 	 *
 	 * If the value is null, it will be written as
 	 *
-	 * <code><pre> N </pre></code>
+	 * <pre><code> N </code></pre>
 	 *
 	 * @param value
 	 *            the string value to write.
@@ -526,11 +526,11 @@ public class HessianOutput extends AbstractHessianOutput {
 	/**
 	 * Writes a byte array to the stream. The array will be written with the following syntax:
 	 *
-	 * <code><pre> B b16 b18 bytes </pre></code>
+	 * <pre><code> B b16 b18 bytes </code></pre>
 	 *
 	 * If the value is null, it will be written as
 	 *
-	 * <code><pre> N </pre></code>
+	 * <pre><code> N </code></pre>
 	 *
 	 * @param value
 	 *            the string value to write.
@@ -547,11 +547,11 @@ public class HessianOutput extends AbstractHessianOutput {
 	/**
 	 * Writes a byte array to the stream. The array will be written with the following syntax:
 	 *
-	 * <code><pre> B b16 b18 bytes </pre></code>
+	 * <pre><code> B b16 b18 bytes </code></pre>
 	 *
 	 * If the value is null, it will be written as
 	 *
-	 * <code><pre> N </pre></code>
+	 * <pre><code> N </code></pre>
 	 *
 	 * @param value
 	 *            the string value to write.
@@ -584,7 +584,7 @@ public class HessianOutput extends AbstractHessianOutput {
 	/**
 	 * Writes a byte buffer to the stream.
 	 *
-	 * <code><pre> </pre></code>
+	 * <pre><code> </code></pre>
 	 */
 	@Override
 	public void writeByteBufferStart() throws IOException {}
@@ -592,7 +592,7 @@ public class HessianOutput extends AbstractHessianOutput {
 	/**
 	 * Writes a byte buffer to the stream.
 	 *
-	 * <code><pre> b b16 b18 bytes </pre></code>
+	 * <pre><code> b b16 b18 bytes </code></pre>
 	 */
 	@Override
 	public void writeByteBufferPart(byte[] buffer, int offset, int length) throws IOException {
@@ -617,7 +617,7 @@ public class HessianOutput extends AbstractHessianOutput {
 	/**
 	 * Writes a byte buffer to the stream.
 	 *
-	 * <code><pre> b b16 b18 bytes </pre></code>
+	 * <pre><code> b b16 b18 bytes </code></pre>
 	 */
 	@Override
 	public void writeByteBufferEnd(byte[] buffer, int offset, int length) throws IOException {
@@ -627,7 +627,7 @@ public class HessianOutput extends AbstractHessianOutput {
 	/**
 	 * Writes a reference.
 	 *
-	 * <code><pre> R b32 b24 b16 b8 </pre></code>
+	 * <pre><code> R b32 b24 b16 b8 </code></pre>
 	 *
 	 * @param value
 	 *            the integer value to write.
@@ -644,7 +644,7 @@ public class HessianOutput extends AbstractHessianOutput {
 	/**
 	 * Writes a placeholder.
 	 *
-	 * <code><pre> P </pre></code>
+	 * <pre><code> P </code></pre>
 	 */
 	public void writePlaceholder() throws IOException {
 		this.os.write('P');

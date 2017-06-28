@@ -108,7 +108,7 @@ abstract public class AbstractHessianOutput {
 	/**
 	 * Starts the method call:
 	 *
-	 * <code><pre> C </pre></code>
+	 * <pre><code> C </code></pre>
 	 *
 	 * @param method
 	 *            the method name to call.
@@ -118,7 +118,7 @@ abstract public class AbstractHessianOutput {
 	/**
 	 * Starts the method call:
 	 *
-	 * <code><pre> C string int </pre></code>
+	 * <pre><code> C string int </code></pre>
 	 *
 	 * @param method
 	 *            the method name to call.
@@ -138,7 +138,7 @@ abstract public class AbstractHessianOutput {
 	/**
 	 * Writes the method tag.
 	 *
-	 * <code><pre> string </pre></code>
+	 * <pre><code> string </code></pre>
 	 *
 	 * @param method
 	 *            the method name to call.
@@ -148,14 +148,14 @@ abstract public class AbstractHessianOutput {
 	/**
 	 * Completes the method call:
 	 *
-	 * <code><pre> </pre></code>
+	 * <pre><code> </code></pre>
 	 */
 	abstract public void completeCall() throws IOException;
 
 	/**
 	 * Writes a boolean value to the stream. The boolean will be written with the following syntax:
 	 *
-	 * <code><pre> T F </pre></code>
+	 * <pre><code> T F </code></pre>
 	 *
 	 * @param value
 	 *            the boolean value to write.
@@ -165,7 +165,7 @@ abstract public class AbstractHessianOutput {
 	/**
 	 * Writes an integer value to the stream. The integer will be written with the following syntax:
 	 *
-	 * <code><pre> I b32 b24 b16 b8 </pre></code>
+	 * <pre><code> I b32 b24 b16 b8 </code></pre>
 	 *
 	 * @param value
 	 *            the integer value to write.
@@ -175,7 +175,7 @@ abstract public class AbstractHessianOutput {
 	/**
 	 * Writes a long value to the stream. The long will be written with the following syntax:
 	 *
-	 * <code><pre> L b64 b56 b48 b40 b32 b24 b16 b8 </pre></code>
+	 * <pre><code> L b64 b56 b48 b40 b32 b24 b16 b8 </code></pre>
 	 *
 	 * @param value
 	 *            the long value to write.
@@ -185,7 +185,7 @@ abstract public class AbstractHessianOutput {
 	/**
 	 * Writes a double value to the stream. The double will be written with the following syntax:
 	 *
-	 * <code><pre> D b64 b56 b48 b40 b32 b24 b16 b8 </pre></code>
+	 * <pre><code> D b64 b56 b48 b40 b32 b24 b16 b8 </code></pre>
 	 *
 	 * @param value
 	 *            the double value to write.
@@ -195,7 +195,7 @@ abstract public class AbstractHessianOutput {
 	/**
 	 * Writes a date to the stream.
 	 *
-	 * <code><pre> T b64 b56 b48 b40 b32 b24 b16 b8 </pre></code>
+	 * <pre><code> T b64 b56 b48 b40 b32 b24 b16 b8 </code></pre>
 	 *
 	 * @param time
 	 *            the date in milliseconds from the epoch in UTC
@@ -205,7 +205,7 @@ abstract public class AbstractHessianOutput {
 	/**
 	 * Writes a null value to the stream. The null will be written with the following syntax
 	 *
-	 * <code><pre> N </pre></code>
+	 * <pre><code> N </code></pre>
 	 *
 	 * @param value
 	 *            the string value to write.
@@ -215,11 +215,11 @@ abstract public class AbstractHessianOutput {
 	/**
 	 * Writes a string value to the stream using UTF-8 encoding. The string will be written with the following syntax:
 	 *
-	 * <code><pre> S b16 b8 string-value </pre></code>
+	 * <pre><code> S b16 b8 string-value </code></pre>
 	 *
 	 * If the value is null, it will be written as
 	 *
-	 * <code><pre> N </pre></code>
+	 * <pre><code> N </code></pre>
 	 *
 	 * @param value
 	 *            the string value to write.
@@ -229,11 +229,11 @@ abstract public class AbstractHessianOutput {
 	/**
 	 * Writes a string value to the stream using UTF-8 encoding. The string will be written with the following syntax:
 	 *
-	 * <code><pre> S b16 b8 string-value </pre></code>
+	 * <pre><code> S b16 b8 string-value </code></pre>
 	 *
 	 * If the value is null, it will be written as
 	 *
-	 * <code><pre> N </pre></code>
+	 * <pre><code> N </code></pre>
 	 *
 	 * @param value
 	 *            the string value to write.
@@ -243,11 +243,11 @@ abstract public class AbstractHessianOutput {
 	/**
 	 * Writes a byte array to the stream. The array will be written with the following syntax:
 	 *
-	 * <code><pre> B b16 b18 bytes </pre></code>
+	 * <pre><code> B b16 b18 bytes </code></pre>
 	 *
 	 * If the value is null, it will be written as
 	 *
-	 * <code><pre> N </pre></code>
+	 * <pre><code> N </code></pre>
 	 *
 	 * @param value
 	 *            the string value to write.
@@ -257,11 +257,11 @@ abstract public class AbstractHessianOutput {
 	/**
 	 * Writes a byte array to the stream. The array will be written with the following syntax:
 	 *
-	 * <code><pre> B b16 b18 bytes </pre></code>
+	 * <pre><code> B b16 b18 bytes </code></pre>
 	 *
 	 * If the value is null, it will be written as
 	 *
-	 * <code><pre> N </pre></code>
+	 * <pre><code> N </code></pre>
 	 *
 	 * @param value
 	 *            the string value to write.
@@ -276,7 +276,7 @@ abstract public class AbstractHessianOutput {
 	/**
 	 * Writes a byte buffer to the stream.
 	 *
-	 * <code><pre> b b16 b18 bytes </pre></code>
+	 * <pre><code> b b16 b18 bytes </code></pre>
 	 *
 	 * @param value
 	 *            the string value to write.
@@ -286,7 +286,7 @@ abstract public class AbstractHessianOutput {
 	/**
 	 * Writes the last chunk of a byte buffer to the stream.
 	 *
-	 * <code><pre> b b16 b18 bytes </pre></code>
+	 * <pre><code> b b16 b18 bytes </code></pre>
 	 *
 	 * @param value
 	 *            the string value to write.
@@ -331,7 +331,7 @@ abstract public class AbstractHessianOutput {
 	/**
 	 * Writes a reference.
 	 *
-	 * <code><pre> Q int </pre></code>
+	 * <pre><code> Q int </code></pre>
 	 *
 	 * @param value
 	 *            the integer value to write.
@@ -354,7 +354,7 @@ abstract public class AbstractHessianOutput {
 	 * Adds an object to the reference list. If the object already exists, writes the reference, otherwise, the caller is responsible for the
 	 * serialization.
 	 *
-	 * <code><pre> R b32 b24 b16 b8 </pre></code>
+	 * <pre><code> R b32 b24 b16 b8 </code></pre>
 	 *
 	 * @param object
 	 *            the object to add as a reference.
@@ -383,7 +383,7 @@ abstract public class AbstractHessianOutput {
 	 * Writes the list header to the stream. List writers will call <code>writeListBegin</code> followed by the list contents and then call
 	 * <code>writeListEnd</code>.
 	 *
-	 * <code><pre> V x13 java.util.ArrayList # type x93 # length=3 x91 # 1 x92 # 2 x93 # 3 &lt;/list> </pre></code>
+	 * <pre><code> V x13 java.util.ArrayList # type x93 # length=3 x91 # 1 x92 # 2 x93 # 3 &lt;/list> </code></pre>
 	 */
 	abstract public boolean writeListBegin(int length, String type) throws IOException;
 
@@ -396,7 +396,7 @@ abstract public class AbstractHessianOutput {
 	 * Writes the map header to the stream. Map writers will call <code>writeMapBegin</code> followed by the map contents and then call
 	 * <code>writeMapEnd</code>.
 	 *
-	 * <code><pre> M type (<key> <value>)* Z </pre></code>
+	 * <pre><code> M type (<key> <value>)* Z </code></pre>
 	 */
 	abstract public void writeMapBegin(String type) throws IOException;
 
@@ -409,7 +409,7 @@ abstract public class AbstractHessianOutput {
 	 * Writes the object header to the stream (for Hessian 2.0), or a Map for Hessian 1.0. Object writers will call <code>writeObjectBegin</code>
 	 * followed by the map contents and then call <code>writeObjectEnd</code>.
 	 *
-	 * <code><pre> C type int <key>* C int <value>* </pre></code>
+	 * <pre><code> C type int <key>* C int <value>* </code></pre>
 	 *
 	 * @return true if the object has already been defined.
 	 */

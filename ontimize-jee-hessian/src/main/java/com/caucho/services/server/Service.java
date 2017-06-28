@@ -26,7 +26,7 @@ import javax.servlet.ServletException;
  *
  * <p>The lifecycle for a service starts with the <code>init</code> method when the service starts.
  *
- * <code><pre> myService.init(config); ... myService.hello(); ... myService.hello(); ... myService.destroy(); </pre></code>
+ * <pre><code> myService.init(config); ... myService.hello(); ... myService.hello(); ... myService.destroy(); </code></pre>
  */
 public interface Service {
 	/**
