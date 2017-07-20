@@ -202,7 +202,8 @@ public class WebSocketClientHandler extends TextWebSocketHandler implements IWeb
 					}
 					try {
 						// Avoid trying reconnect whilst the user in not logged
-						if (!ParseUtilsExtended.getBoolean(ReflectionTools.getFieldValue(ApplicationManager.getApplication(), "loggedIn"), true)) {
+						if ((ApplicationManager.getApplication() == null) || !ParseUtilsExtended
+								.getBoolean(ReflectionTools.getFieldValue(ApplicationManager.getApplication(), "loggedIn"), true)) {
 							continue;
 						}
 						WebSocketClientHandler.this.connect();
