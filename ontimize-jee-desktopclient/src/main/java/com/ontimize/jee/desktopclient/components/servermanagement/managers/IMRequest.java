@@ -6,9 +6,6 @@ import java.util.Date;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.ontimize.annotation.FormComponent;
 import com.ontimize.gui.BasicInteractionManager;
 import com.ontimize.gui.Form;
@@ -24,8 +21,6 @@ import com.ontimize.jee.desktopclient.spring.BeansFactory;
  * The Class IMLiveLogConsole.
  */
 public class IMRequest extends BasicInteractionManager {
-
-	private static final Logger			logger	= LoggerFactory.getLogger(IMRequest.class);
 
 	@FormComponent(attr = "DETAILS")
 	protected Table						tDetails;
