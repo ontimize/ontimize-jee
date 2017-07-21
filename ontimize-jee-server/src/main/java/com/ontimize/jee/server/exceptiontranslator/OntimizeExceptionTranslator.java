@@ -3,21 +3,25 @@ package com.ontimize.jee.server.exceptiontranslator;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.NestedRuntimeException;
 
 import com.caucho.hessian.util.IExceptionTranslator;
+import com.ontimize.jee.common.exceptions.IParametrizedException;
 import com.ontimize.jee.common.exceptions.NoTraceOntimizeJEEException;
-import com.ontimize.jee.common.exceptions.OntimizeJEEException;
-import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
 import com.ontimize.jee.common.tools.ExceptionTools;
 import com.ontimize.jee.common.tools.ReflectionTools;
 
 public class OntimizeExceptionTranslator implements IExceptionTranslator, com.ontimize.jee.server.exceptiontranslator.IExceptionTranslator {
 
+	private static final Logger			logger	= LoggerFactory.getLogger(OntimizeExceptionTranslator.class);
+
 	private DBErrorMessagesTranslator dbErrorMessagesTranslator;
 
 	@Override
 	public Throwable translateException(Throwable original) {
+		OntimizeExceptionTranslator.logger.error(null, original);
 		if (original instanceof InvocationTargetException) {
 			original = ((InvocationTargetException) original).getTargetException();
 		}
@@ -27,20 +31,12 @@ public class OntimizeExceptionTranslator implements IExceptionTranslator, com.on
 		if (original instanceof SQLException) {
 			return new NoTraceOntimizeJEEException(this.getSqlErrorMessage(((SQLException) original)));
 		}
-		if (original instanceof OntimizeJEEException) {
+		if (original instanceof IParametrizedException) {
+			IParametrizedException oee = (IParametrizedException) original;
 			try {
-				OntimizeJEEException oee = (OntimizeJEEException) original;
-				return ReflectionTools.newInstance(original.getClass(), oee.getMessage(), oee.getMessageParameters(), null, false, false);
+				return ReflectionTools.newInstance(original.getClass(), oee.getMessage(), oee.getMessageParameters(), null, oee.getMessageType(), false, false);
 			} catch (Exception ex) {
-				// do nothing
-			}
-		}
-		if (original instanceof OntimizeJEERuntimeException) {
-			try {
-				OntimizeJEERuntimeException oee = (OntimizeJEERuntimeException) original;
-				return ReflectionTools.newInstance(original.getClass(), oee.getMessage(), oee.getMessageParameters(), null, false, false);
-			} catch (Exception ex) {
-				// do nothing
+				return new NoTraceOntimizeJEEException(oee.getMessage(), null, oee.getMessageParameters(), null, false, false);
 			}
 		}
 
