@@ -159,7 +159,7 @@ public class LoggerHelper {
 			layout.setPattern(LoggerHelper.LAYOUT_PATTERN);
 			layout.setContext(logbackLogger.getLoggerContext());
 			layout.start();
-			outputStreamAppender.getEncoder().init(wrapperOutputStream);
+			// outputStreamAppender.getEncoder().init(wrapperOutputStream);
 			// outputStreamAppender.setLayout(layout);
 			outputStreamAppender.setContext(logbackLogger.getLoggerContext());
 			logbackLogger.addAppender(outputStreamAppender);
