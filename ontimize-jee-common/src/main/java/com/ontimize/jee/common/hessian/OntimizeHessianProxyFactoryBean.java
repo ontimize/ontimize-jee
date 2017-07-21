@@ -8,6 +8,8 @@ import java.net.URISyntaxException;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
@@ -33,6 +35,8 @@ import com.caucho.hessian.io.SerializerFactory;
  *
  */
 public class OntimizeHessianProxyFactoryBean extends RemoteAccessor implements MethodInterceptor, FactoryBean<Object>, InitializingBean {
+
+	private static final Logger	logger				= LoggerFactory.getLogger(OntimizeHessianProxyFactoryBean.class);
 
 	public static final String	SERVICES_BASE_URL	= "com.ontimize.services.baseUrl";
 
@@ -117,7 +121,7 @@ public class OntimizeHessianProxyFactoryBean extends RemoteAccessor implements M
 		try {
 			return invocation.getMethod().invoke(this.hessianProxy, invocation.getArguments());
 		} catch (InvocationTargetException ex) {
-			this.logger.debug("version checking", ex);
+			OntimizeHessianProxyFactoryBean.logger.debug("version checking", ex);
 			Throwable targetEx = ex.getTargetException();
 			// Hessian 4.0 check: another layer of InvocationTargetException.
 			if (targetEx instanceof InvocationTargetException) {
