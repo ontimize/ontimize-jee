@@ -87,23 +87,23 @@ import com.ontimize.jee.server.dao.jdbc.setup.QueryType;
 public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements ApplicationContextAware, IOntimizeDaoSupport {
 
 	/** The logger. */
-	protected final static Logger logger = LoggerFactory.getLogger(OntimizeJdbcDaoSupport.class);
+	protected final static Logger							logger							= LoggerFactory.getLogger(OntimizeJdbcDaoSupport.class);
 
 	/** The Constant PLACEHOLDER_ORDER. */
-	protected static final String PLACEHOLDER_ORDER = "#ORDER#";
+	protected static final String							PLACEHOLDER_ORDER				= "#ORDER#";
 	/** The Constant PLACEHOLDER_ORDER_CONCAT. */
-	protected static final String PLACEHOLDER_ORDER_CONCAT = "#ORDER_CONCAT#";
+	protected static final String							PLACEHOLDER_ORDER_CONCAT		= "#ORDER_CONCAT#";
 	/** The Constant PLACEHOLDER_WHERE. */
-	protected static final String PLACEHOLDER_WHERE = "#WHERE#";
+	protected static final String							PLACEHOLDER_WHERE				= "#WHERE#";
 	/** The Constant PLACEHOLDER_WHERE_CONCAT. */
-	protected static final String PLACEHOLDER_WHERE_CONCAT = "#WHERE_CONCAT#";
+	protected static final String							PLACEHOLDER_WHERE_CONCAT		= "#WHERE_CONCAT#";
 	/** The Constant PLACEHOLDER_COLUMNS. */
-	protected static final String PLACEHOLDER_COLUMNS = "#COLUMNS#";
+	protected static final String							PLACEHOLDER_COLUMNS				= "#COLUMNS#";
 
 	/** Context used to retrieve and manage database metadata. */
-	protected final OntimizeTableMetaDataContext tableMetaDataContext;
+	protected final OntimizeTableMetaDataContext			tableMetaDataContext;
 	/** List of columns objects to be used in insert statement. */
-	protected final List<String> declaredColumns = new ArrayList<>();
+	protected final List<String>							declaredColumns					= new ArrayList<>();
 	/**
 	 * Has this operation been compiled? Compilation means at least checking that a DataSource or JdbcTemplate has been provided, but subclasses may also implement their own custom
 	 * validation.
@@ -119,7 +119,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	/** Mandatory update keys. */
 	private List<String>									updateKeys;
 	/** Queries. */
-	protected final Map<String, QueryTemplateInformation> sqlQueries = new HashMap<>();
+	protected final Map<String, QueryTemplateInformation>	sqlQueries						= new HashMap<>();
 
 	/** The application context. */
 	private ApplicationContext								applicationContext;
@@ -270,33 +270,26 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	@Override
 	public <T> List<T> query(final Map<?, ?> keysValues, final List<?> sort, final String queryId, final Class<T> clazz) {
 		this.checkCompiled();
-
-		final SQLStatement stSQL = this.composeQuerySql(queryId, this.convertBeanPropertiesToDB(clazz), keysValues, sort);
-
+		BeanPropertyRowMapper<T> rowMapper = this.createRowMapper(clazz);
+		final SQLStatement stSQL = this.composeQuerySql(queryId, rowMapper.convertBeanPropertiesToDB(clazz), keysValues, sort);
 		final String sqlQuery = stSQL.getSQLStatement();
 		final Vector<?> vValues = stSQL.getValues();
-
-		return this.getJdbcTemplate().query(sqlQuery, vValues.toArray(), new BeanPropertyRowMapper<>(this.getNameConverter(), this.getDataSource(), clazz));
+		return this.getJdbcTemplate().query(sqlQuery, vValues.toArray(), rowMapper);
 	}
 
 	/**
-	 * Convert bean properties to db.
+	 * Creates the row mapper.
 	 *
+	 * @param <T>
+	 *            the generic type
 	 * @param clazz
 	 *            the clazz
-	 * @return the list
+	 * @return the bean property row mapper
 	 */
-	protected List<String> convertBeanPropertiesToDB(final Class<?> clazz) {
-		CheckingTools.failIfNull(this.getNameConverter(), "No name converter definded");
-
-		final List<String> beanProperties = ReflectionTools.getProperties(clazz, false);
-		final List<String> res = new ArrayList<>();
-		for (final String beanName : beanProperties) {
-			res.add(this.getNameConverter().convertToDb(clazz, beanName, this.getDataSource()));
-		}
-		return res;
-
+	protected <T> BeanPropertyRowMapper<T> createRowMapper(final Class<T> clazz) {
+		return new BeanPropertyRowMapper<>(this.getNameConverter(), this.getDataSource(), clazz);
 	}
+
 
 	/**
 	 * Apply template prefix.
@@ -1546,8 +1539,8 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 			}
 			if (this.getGeneratedKeyNames().length > 1) {
 				throw new InvalidDataAccessApiUsageException(
-						"Current database only supports retreiving the key for a single column. There are " + this.getGeneratedKeyNames().length + " columns specified: "
-								+ Arrays.asList(this.getGeneratedKeyNames()));
+						"Current database only supports retreiving the key for a single column. There are " + this.getGeneratedKeyNames().length + " columns specified: " + Arrays
+						.asList(this.getGeneratedKeyNames()));
 			}
 			// This is a hack to be able to get the generated key from a
 			// database that doesn't support
@@ -1738,8 +1731,8 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 							}
 						}
 					}
-				} else if( value instanceof NullValue ) {
-					//TODO At this point we could retrieve sqlType from ((NullValue)value).getSQLDataType()
+				} else if (value instanceof NullValue) {
+					// TODO At this point we could retrieve sqlType from ((NullValue)value).getSQLDataType()
 					// but it is preferable to use the sqlType retrieved from table metadata.
 					value = new SqlParameterValue(sqlType, null);
 					StatementCreatorUtils.setParameterValue(preparedStatement, colIndex, sqlType, value);

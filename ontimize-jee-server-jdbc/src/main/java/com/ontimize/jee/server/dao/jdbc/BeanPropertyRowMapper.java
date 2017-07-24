@@ -4,7 +4,9 @@ import java.beans.PropertyDescriptor;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.sql.DataSource;
@@ -38,7 +40,8 @@ public class BeanPropertyRowMapper<T> implements RowMapper<T> {
 	private Map<String, PropertyDescriptor>	mappedFields;
 
 	/** The property converter. */
-	private INameConverter		propertyConverter;
+	private INameConverter					propertyConverter;
+	private DataSource						dataSource;
 
 	/**
 	 * Instantiates a new bean property row mapper.
@@ -74,6 +77,7 @@ public class BeanPropertyRowMapper<T> implements RowMapper<T> {
 		this.propertyConverter = propertyConverter;
 		this.mappedClass = mappedClass;
 		this.mappedFields = new HashMap<String, PropertyDescriptor>();
+		this.dataSource = ds;
 		PropertyDescriptor[] pds = BeanUtils.getPropertyDescriptors(mappedClass);
 		for (PropertyDescriptor pd : pds) {
 			if (pd.getWriteMethod() != null) {
@@ -87,6 +91,10 @@ public class BeanPropertyRowMapper<T> implements RowMapper<T> {
 	 */
 	public final Class<T> getMappedClass() {
 		return this.mappedClass;
+	}
+
+	public DataSource getDataSource() {
+		return this.dataSource;
 	}
 
 	/**
@@ -110,15 +118,14 @@ public class BeanPropertyRowMapper<T> implements RowMapper<T> {
 			if (pd != null) {
 				Object value = this.getColumnValue(rs, index, pd);
 				if (BeanPropertyRowMapper.logger.isDebugEnabled() && (rowNumber == 0)) {
-					BeanPropertyRowMapper.logger.debug("Mapping column '" + column + "' to property '" + pd.getName() + "' of type " + pd
-							.getPropertyType());
+					BeanPropertyRowMapper.logger.debug("Mapping column '" + column + "' to property '" + pd.getName() + "' of type " + pd.getPropertyType());
 				}
 				try {
 					bw.setPropertyValue(pd.getName(), value);
 				} catch (TypeMismatchException e) {
 					BeanPropertyRowMapper.logger
-							.error("Intercepted TypeMismatchException for row " + rowNumber + " and column '" + column + "' with value " + value + " when setting property '" + pd
-									.getName() + "' of type " + pd.getPropertyType() + " on object: " + mappedObject);
+					.error("Intercepted TypeMismatchException for row " + rowNumber + " and column '" + column + "' with value " + value + " when setting property '" + pd
+							.getName() + "' of type " + pd.getPropertyType() + " on object: " + mappedObject);
 					throw e;
 				}
 			}
@@ -128,8 +135,7 @@ public class BeanPropertyRowMapper<T> implements RowMapper<T> {
 	}
 
 	/**
-	 * Initialize the given BeanWrapper to be used for row mapping. To be called for each row. <p>The default implementation is empty. Can be
-	 * overridden in subclasses.
+	 * Initialize the given BeanWrapper to be used for row mapping. To be called for each row. <p>The default implementation is empty. Can be overridden in subclasses.
 	 *
 	 * @param bw
 	 *            the BeanWrapper to initialize
@@ -137,9 +143,8 @@ public class BeanPropertyRowMapper<T> implements RowMapper<T> {
 	protected void initBeanWrapper(BeanWrapper bw) {}
 
 	/**
-	 * Retrieve a JDBC object value for the specified column. <p>The default implementation calls
-	 * {@link JdbcUtils#getResultSetValue(java.sql.ResultSet, int, Class)}. Subclasses may override this to check specific value types upfront, or to
-	 * post-process values return from {@code getResultSetValue}.
+	 * Retrieve a JDBC object value for the specified column. <p>The default implementation calls {@link JdbcUtils#getResultSetValue(java.sql.ResultSet, int, Class)}. Subclasses
+	 * may override this to check specific value types upfront, or to post-process values return from {@code getResultSetValue}.
 	 *
 	 * @param rs
 	 *            is the ResultSet holding the data
@@ -153,7 +158,21 @@ public class BeanPropertyRowMapper<T> implements RowMapper<T> {
 	 * @see org.springframework.jdbc.support.JdbcUtils#getResultSetValue(java.sql.ResultSet, int, Class)
 	 */
 	protected Object getColumnValue(ResultSet rs, int index, PropertyDescriptor pd) throws SQLException {
+		if (pd.getPropertyType().isArray()) {
+			return rs.getArray(index).getArray();
+		}
 		return JdbcUtils.getResultSetValue(rs, index, pd.getPropertyType());
+	}
+
+	/**
+	 * Convert bean properties to db.
+	 *
+	 * @param clazz
+	 *            the clazz
+	 * @return the list
+	 */
+	public List<String> convertBeanPropertiesToDB(final Class<?> clazz) {
+		return new ArrayList<>(this.mappedFields.keySet());
 	}
 
 }
