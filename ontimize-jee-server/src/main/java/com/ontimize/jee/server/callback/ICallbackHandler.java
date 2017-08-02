@@ -1,14 +1,12 @@
-package com.ontimize.jee.server.websocket;
+package com.ontimize.jee.server.callback;
 
 import java.io.IOException;
 import java.util.List;
 
-import org.springframework.web.socket.WebSocketSession;
-
 /**
  * The Interface IWebSocketHandler.
  */
-public interface IWebSocketHandler {
+public interface ICallbackHandler {
 
 	/**
 	 * Send message.
@@ -22,13 +20,13 @@ public interface IWebSocketHandler {
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
-	void sendMessage(Integer messageType, String messageSubtype, Object ob, WebSocketSession... receiver);
+	void sendMessage(Integer messageType, String messageSubtype, Object ob, CallbackSession... receiver);
 
-	void sendMessage(Integer messageType, String messageSubtype, Object ob, WebSocketSession receiver) throws IOException;
+	void sendMessage(Integer messageType, String messageSubtype, Object ob, CallbackSession receiver) throws IOException;
 
 	void sendBroadcastMessage(Integer messageType, String messageSubtype, Object ob);
 
-	List<WebSocketSession> getSessionsForUser(String userLogin);
+	List<CallbackSession> getSessionsForUser(String userLogin);
 
 	/**
 	 * Adds the web socket message listener.
@@ -36,5 +34,5 @@ public interface IWebSocketHandler {
 	 * @param listener
 	 *            the listener
 	 */
-	void addWebSocketEventListener(IWebSocketEventListener listener);
+	void addCallbackEventListener(ICallbackEventListener listener);
 }

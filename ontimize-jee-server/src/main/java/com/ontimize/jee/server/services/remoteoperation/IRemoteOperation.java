@@ -1,6 +1,6 @@
 package com.ontimize.jee.server.services.remoteoperation;
 
-import com.ontimize.jee.common.websocket.WebsocketWrapperMessage;
+import com.ontimize.jee.common.callback.CallbackWrapperMessage;
 
 /**
  * The Interface IRemoteOperation.
@@ -30,7 +30,7 @@ public interface IRemoteOperation extends Runnable {
 	 *            the msg
 	 * @return the object
 	 */
-	Object onCustomMessageReceived(WebsocketWrapperMessage msg);
+	Object onCustomMessageReceived(CallbackWrapperMessage msg);
 
 	/**
 	 * On cancel received.

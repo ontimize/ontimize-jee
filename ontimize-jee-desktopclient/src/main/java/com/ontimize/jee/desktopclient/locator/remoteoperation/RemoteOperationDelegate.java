@@ -5,6 +5,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ontimize.jee.common.callback.CallbackWrapperMessage;
 import com.ontimize.jee.common.exceptions.OntimizeJEEException;
 import com.ontimize.jee.common.services.remoteoperation.RemoteOperationCancelMessage;
 import com.ontimize.jee.common.services.remoteoperation.RemoteOperationErrorMessage;
@@ -13,15 +14,14 @@ import com.ontimize.jee.common.services.remoteoperation.RemoteOperationRequestMe
 import com.ontimize.jee.common.services.remoteoperation.RemoteOperationStatusMessage;
 import com.ontimize.jee.common.services.remoteoperation.RemoteOperationStatuses;
 import com.ontimize.jee.common.tools.Pair;
-import com.ontimize.jee.common.websocket.WebsocketWrapperMessage;
-import com.ontimize.jee.desktopclient.locator.websocket.IWebSocketClientHandler;
-import com.ontimize.jee.desktopclient.locator.websocket.IWebSocketEventListener;
+import com.ontimize.jee.desktopclient.callback.ICallbackClientHandler;
+import com.ontimize.jee.desktopclient.callback.ICallbackEventListener;
 import com.ontimize.jee.desktopclient.spring.BeansFactory;
 
 /**
  * The Class RemoteOperationDelegate.
  */
-public class RemoteOperationDelegate implements IWebSocketEventListener {
+public class RemoteOperationDelegate implements ICallbackEventListener {
 
 	/** The logger. */
 	private final static Logger					logger	= LoggerFactory.getLogger(RemoteOperationDelegate.class);
@@ -33,7 +33,7 @@ public class RemoteOperationDelegate implements IWebSocketEventListener {
 	private final IRemoteOperationListener<?>	listener;
 	/** The finished. */
 	private final String						operationId;
-	private final IWebSocketClientHandler		webSocketClientHandler;
+	private final ICallbackClientHandler		webSocketClientHandler;
 
 	/**
 	 * Instantiates a new remote operation delegate.
@@ -51,7 +51,7 @@ public class RemoteOperationDelegate implements IWebSocketEventListener {
 		this.className = className;
 		this.parameters = parameters;
 		this.listener = listener;
-		this.webSocketClientHandler = BeansFactory.getBean(IWebSocketClientHandler.class);
+		this.webSocketClientHandler = BeansFactory.getBean(ICallbackClientHandler.class);
 	}
 
 	public void run() {
@@ -73,7 +73,7 @@ public class RemoteOperationDelegate implements IWebSocketEventListener {
 	}
 
 	@Override
-	public void onWebSocketMessageReceived(WebsocketWrapperMessage message) {
+	public void onCallbackMessageReceived(CallbackWrapperMessage message) {
 		if (this.operationId.equals(message.getSubtype())) {
 			if (RemoteOperationStatuses.WEBSOCKET_MESSAGE_TYPE_STATUS.equals(message.getType())) {
 				RemoteOperationStatusMessage statusMessage = message.getMessage(RemoteOperationStatusMessage.class);

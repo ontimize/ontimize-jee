@@ -6,11 +6,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ontimize.gui.ApplicationManager;
+import com.ontimize.jee.common.callback.CallbackWrapperMessage;
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
 import com.ontimize.jee.common.services.remoteoperation.RemoteOperationFinishMessage;
 import com.ontimize.jee.common.services.remoteoperation.RemoteOperationStatusMessage;
 import com.ontimize.jee.common.tools.Pair;
-import com.ontimize.jee.common.websocket.WebsocketWrapperMessage;
 import com.ontimize.jee.desktopclient.components.task.OSwingWorker;
 import com.ontimize.jee.desktopclient.components.task.WorkerStatusInfo;
 import com.ontimize.locator.ReferenceLocator;
@@ -88,7 +88,7 @@ public class RemoteOperationSwingWorker<T, V> extends OSwingWorker<T, V> {
 	 *            the message
 	 * @return the object
 	 */
-	public Pair<Integer, Object> unknowMessageReceived(WebsocketWrapperMessage message) {
+	public Pair<Integer, Object> unknowMessageReceived(CallbackWrapperMessage message) {
 		return null;
 	}
 
@@ -132,7 +132,7 @@ public class RemoteOperationSwingWorker<T, V> extends OSwingWorker<T, V> {
 		 * @see com.ontimize.jee.desktopclient.locator.remoteoperation.IRemoteOperationListener#onUnknowMessage(java.lang.Object)
 		 */
 		@Override
-		public Pair<Integer, Object> onUnknowMessage(WebsocketWrapperMessage message) {
+		public Pair<Integer, Object> onUnknowMessage(CallbackWrapperMessage message) {
 			return RemoteOperationSwingWorker.this.unknowMessageReceived(message);
 		}
 

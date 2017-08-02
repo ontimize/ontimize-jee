@@ -1,10 +1,10 @@
 package com.ontimize.jee.desktopclient.locator.remoteoperation;
 
+import com.ontimize.jee.common.callback.CallbackWrapperMessage;
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
 import com.ontimize.jee.common.services.remoteoperation.RemoteOperationFinishMessage;
 import com.ontimize.jee.common.services.remoteoperation.RemoteOperationStatusMessage;
 import com.ontimize.jee.common.tools.Pair;
-import com.ontimize.jee.common.websocket.WebsocketWrapperMessage;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -45,7 +45,7 @@ public interface IRemoteOperationListener<T> {
 	 *            the response mesage
 	 * @return the message type and de response Object
 	 */
-	Pair<Integer, Object> onUnknowMessage(WebsocketWrapperMessage message);
+	Pair<Integer, Object> onUnknowMessage(CallbackWrapperMessage message);
 
 	/**
 	 * On finish.

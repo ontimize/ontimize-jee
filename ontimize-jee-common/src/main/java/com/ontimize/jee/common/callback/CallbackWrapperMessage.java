@@ -1,4 +1,4 @@
-package com.ontimize.jee.common.websocket;
+package com.ontimize.jee.common.callback;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 
@@ -7,17 +7,17 @@ import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
 import com.ontimize.jee.common.jackson.OntimizeMapper;
 import com.ontimize.util.Base64Utils;
 
-public class WebsocketWrapperMessage {
+public class CallbackWrapperMessage {
 
 	private Integer	type;
 	private String	subtype;
 	private String	message;
 
-	public WebsocketWrapperMessage() {
+	public CallbackWrapperMessage() {
 		super();
 	}
 
-	public WebsocketWrapperMessage(Integer type, String subtype, Object toSerialize) {
+	public CallbackWrapperMessage(Integer type, String subtype, Object toSerialize) {
 		super();
 		this.type = type;
 		this.subtype = subtype;
@@ -77,10 +77,10 @@ public class WebsocketWrapperMessage {
 		}
 	}
 
-	public static WebsocketWrapperMessage deserialize(String message) {
+	public static CallbackWrapperMessage deserialize(String message) {
 		try {
 			String newMessage = Base64Utils.decode(message);
-			return new OntimizeMapper().readValue(newMessage, WebsocketWrapperMessage.class);
+			return new OntimizeMapper().readValue(newMessage, CallbackWrapperMessage.class);
 		} catch (Exception error) {
 			throw new OntimizeJEERuntimeException(error);
 		}

@@ -3,8 +3,8 @@ package com.ontimize.jee.server.services.remoteoperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
-import org.springframework.web.socket.WebSocketSession;
 
+import com.ontimize.jee.common.callback.CallbackWrapperMessage;
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
 import com.ontimize.jee.common.services.remoteoperation.RemoteOperationCancelMessage;
 import com.ontimize.jee.common.services.remoteoperation.RemoteOperationErrorMessage;
@@ -12,8 +12,8 @@ import com.ontimize.jee.common.services.remoteoperation.RemoteOperationFinishMes
 import com.ontimize.jee.common.services.remoteoperation.RemoteOperationStatusMessage;
 import com.ontimize.jee.common.services.remoteoperation.RemoteOperationStatuses;
 import com.ontimize.jee.common.services.remoteoperation.RemoteOperationStatuses.RemoteOperationStatus;
-import com.ontimize.jee.common.websocket.WebsocketWrapperMessage;
-import com.ontimize.jee.server.websocket.IWebSocketHandler;
+import com.ontimize.jee.server.callback.CallbackSession;
+import com.ontimize.jee.server.callback.ICallbackHandler;
 
 /**
  * The Class RemoteOperationDelegate.
@@ -27,12 +27,12 @@ public class RemoteOperationDelegate implements IRemoteOperationListener {
 	private IRemoteOperation		operation;
 
 	/** The session. */
-	private final WebSocketSession	session;
+	private final CallbackSession	session;
 
 	/** The status. */
 	private RemoteOperationStatus	status;
 
-	private IWebSocketHandler		webSocketHandler;
+	private ICallbackHandler		webSocketHandler;
 	private String					operationId;
 
 	/**
@@ -47,12 +47,12 @@ public class RemoteOperationDelegate implements IRemoteOperationListener {
 	 * @param parameters
 	 *            the parameters
 	 */
-	public RemoteOperationDelegate(ApplicationContext context, WebSocketSession session, String operationId, String className, Object parameters) {
+	public RemoteOperationDelegate(ApplicationContext context, CallbackSession session, String operationId, String className, Object parameters) {
 		super();
 		try {
 			this.session = session;
 			this.operationId = operationId;
-			this.webSocketHandler = context.getBean(IWebSocketHandler.class);
+			this.webSocketHandler = context.getBean(ICallbackHandler.class);
 			this.operation = (IRemoteOperation) Class.forName(className).newInstance();
 			this.operation.setListener(this);
 			this.operation.init(parameters);
@@ -89,7 +89,7 @@ public class RemoteOperationDelegate implements IRemoteOperationListener {
 	 * @param msg
 	 *            the msg
 	 */
-	public void onCustomMessage(WebsocketWrapperMessage msg) {
+	public void onCustomMessage(CallbackWrapperMessage msg) {
 		Object res = this.operation.onCustomMessageReceived(msg);
 		if (res != null) {
 			try {

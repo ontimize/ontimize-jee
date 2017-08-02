@@ -1,8 +1,6 @@
-package com.ontimize.jee.server.websocket;
+package com.ontimize.jee.server.callback;
 
-import org.springframework.web.socket.WebSocketSession;
-
-import com.ontimize.jee.common.websocket.WebsocketWrapperMessage;
+import com.ontimize.jee.common.callback.CallbackWrapperMessage;
 
 /**
  * The listener interface for receiving IWebSocketMessage events. The class that is interested in processing a IWebSocketMessage event implements this interface, and the object
@@ -11,7 +9,7 @@ import com.ontimize.jee.common.websocket.WebsocketWrapperMessage;
  *
  * @see IWebSocketMessageEvent
  */
-public interface IWebSocketEventListener {
+public interface ICallbackEventListener {
 
 	/**
 	 * On web socket message received.
@@ -21,5 +19,5 @@ public interface IWebSocketEventListener {
 	 * @param message
 	 *            the message
 	 */
-	void onWebSocketMessageReceived(WebSocketSession from, WebsocketWrapperMessage message);
+	void onCallbackMessageReceived(CallbackSession from, CallbackWrapperMessage message);
 }

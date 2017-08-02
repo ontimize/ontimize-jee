@@ -44,7 +44,7 @@ public class OntimizeExceptionTranslator implements IExceptionTranslator, com.on
 		if (someSQLException != null) {
 			return new NoTraceOntimizeJEEException(this.getSqlErrorMessage(someSQLException));
 		}
-		return new NoTraceOntimizeJEEException(original);
+		return new NoTraceOntimizeJEEException(original.getMessage());
 	}
 
 	public void setDbErrorMessagesTranslator(DBErrorMessagesTranslator dbErrorMessagesTranslator) {

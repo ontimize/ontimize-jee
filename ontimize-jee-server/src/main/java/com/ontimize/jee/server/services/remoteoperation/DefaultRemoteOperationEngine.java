@@ -11,19 +11,19 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.web.socket.WebSocketSession;
 
+import com.ontimize.jee.common.callback.CallbackWrapperMessage;
 import com.ontimize.jee.common.services.remoteoperation.RemoteOperationCancelMessage;
 import com.ontimize.jee.common.services.remoteoperation.RemoteOperationRequestMessage;
 import com.ontimize.jee.common.services.remoteoperation.RemoteOperationStatuses;
-import com.ontimize.jee.common.websocket.WebsocketWrapperMessage;
-import com.ontimize.jee.server.websocket.IWebSocketEventListener;
-import com.ontimize.jee.server.websocket.IWebSocketHandler;
+import com.ontimize.jee.server.callback.CallbackSession;
+import com.ontimize.jee.server.callback.ICallbackEventListener;
+import com.ontimize.jee.server.callback.ICallbackHandler;
 
 /**
  * The Class DefaultRemoteOperationManager.
  */
-public class DefaultRemoteOperationEngine implements IRemoteOperationEngine, InitializingBean, IWebSocketEventListener {
+public class DefaultRemoteOperationEngine implements IRemoteOperationEngine, InitializingBean, ICallbackEventListener {
 
 	/** The logger. */
 	private static Logger											logger							= LoggerFactory.getLogger(DefaultRemoteOperationEngine.class);
@@ -34,7 +34,7 @@ public class DefaultRemoteOperationEngine implements IRemoteOperationEngine, Ini
 
 	/** The running sessions. */
 	@Autowired(required = false)
-	private IWebSocketHandler										websocketHandler;
+	private ICallbackHandler										callbackHandler;
 	@Autowired
 	private ApplicationContext										context;
 
@@ -48,15 +48,15 @@ public class DefaultRemoteOperationEngine implements IRemoteOperationEngine, Ini
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		if (this.websocketHandler == null) {
+		if (this.callbackHandler == null) {
 			DefaultRemoteOperationEngine.logger.warn("No websocket handler defined, remoteoperation progress will not work!");
 		} else {
-			this.websocketHandler.addWebSocketEventListener(this);
+			this.callbackHandler.addCallbackEventListener(this);
 		}
 	}
 
 	@Override
-	public void onWebSocketMessageReceived(WebSocketSession from, WebsocketWrapperMessage message) {
+	public void onCallbackMessageReceived(CallbackSession from, CallbackWrapperMessage message) {
 		if (!RemoteOperationStatuses.REMOTE_OPERATION_MESSAGE_TYPE_RANGE.contains(message.getType())) {
 			return;
 		}
@@ -99,10 +99,10 @@ public class DefaultRemoteOperationEngine implements IRemoteOperationEngine, Ini
 	}
 
 	public static class RemoteOperationId {
-		private final WebSocketSession	session;
+		private final CallbackSession	session;
 		private final String			id;
 
-		public RemoteOperationId(WebSocketSession session, String id) {
+		public RemoteOperationId(CallbackSession session, String id) {
 			super();
 			this.session = session;
 			this.id = id;

@@ -3,7 +3,7 @@ package com.imatia.jee.server.test.remoteoperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ontimize.jee.common.websocket.WebsocketWrapperMessage;
+import com.ontimize.jee.common.callback.CallbackWrapperMessage;
 import com.ontimize.jee.server.services.remoteoperation.AbstractRemoteOperation;
 
 public class TestRemoteOperation extends AbstractRemoteOperation {
@@ -17,7 +17,7 @@ public class TestRemoteOperation extends AbstractRemoteOperation {
 	}
 
 	@Override
-	public Object onCustomMessageReceived(WebsocketWrapperMessage msg) {
+	public Object onCustomMessageReceived(CallbackWrapperMessage msg) {
 		TestRemoteOperation.logger.warn("custom message received");
 		return null;
 	}
