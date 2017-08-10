@@ -29,10 +29,10 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="DeleteKeys" type="{http://jdbcentity.server.jee.imatia.com/setup}ColumnGroupType" minOccurs="0"/>
- *         &lt;element name="UpdateKeys" type="{http://jdbcentity.server.jee.imatia.com/setup}ColumnGroupType" minOccurs="0"/>
+ *         &lt;element name="DeleteKeys" type="{http://www.ontimize.com/schema/jdbc}ColumnGroupType" minOccurs="0"/>
+ *         &lt;element name="UpdateKeys" type="{http://www.ontimize.com/schema/jdbc}ColumnGroupType" minOccurs="0"/>
  *         &lt;element name="GeneratedKey" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
- *         &lt;element name="Queries" type="{http://jdbcentity.server.jee.imatia.com/setup}QueriesType" minOccurs="0"/>
+ *         &lt;element name="Queries" type="{http://www.ontimize.com/schema/jdbc}QueriesType" minOccurs="0"/>
  *       &lt;/sequence>
  *       &lt;attribute name="table" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="schema" type="{http://www.w3.org/2001/XMLSchema}string" />

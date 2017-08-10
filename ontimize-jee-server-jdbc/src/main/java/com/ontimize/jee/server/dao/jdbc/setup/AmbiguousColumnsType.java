@@ -26,7 +26,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="AmbiguousColumn" type="{http://jdbcentity.server.jee.imatia.com/setup}AmbiguousColumnType" maxOccurs="unbounded"/>
+ *         &lt;element name="AmbiguousColumn" type="{http://www.ontimize.com/schema/jdbc}AmbiguousColumnType" maxOccurs="unbounded"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>

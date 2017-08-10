@@ -25,10 +25,10 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="AmbiguousColumns" type="{http://jdbcentity.server.jee.imatia.com/setup}AmbiguousColumnsType" minOccurs="0"/>
- *         &lt;element name="ValidColumns" type="{http://jdbcentity.server.jee.imatia.com/setup}ColumnGroupType" minOccurs="0"/>
- *         &lt;element name="FunctionColumns" type="{http://jdbcentity.server.jee.imatia.com/setup}FunctionColumnsType" minOccurs="0"/>
- *         &lt;element name="Sentence" type="{http://jdbcentity.server.jee.imatia.com/setup}SentenceType"/>
+ *         &lt;element name="AmbiguousColumns" type="{http://www.ontimize.com/schema/jdbc}AmbiguousColumnsType" minOccurs="0"/>
+ *         &lt;element name="ValidColumns" type="{http://www.ontimize.com/schema/jdbc}ColumnGroupType" minOccurs="0"/>
+ *         &lt;element name="FunctionColumns" type="{http://www.ontimize.com/schema/jdbc}FunctionColumnsType" minOccurs="0"/>
+ *         &lt;element name="Sentence" type="{http://www.ontimize.com/schema/jdbc}SentenceType"/>
  *       &lt;/sequence>
  *       &lt;attribute name="id" type="{http://www.w3.org/2001/XMLSchema}string" />
  *     &lt;/restriction>

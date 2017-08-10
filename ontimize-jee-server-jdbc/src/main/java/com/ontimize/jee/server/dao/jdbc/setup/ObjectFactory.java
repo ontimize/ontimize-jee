@@ -31,7 +31,7 @@ import javax.xml.namespace.QName;
 @XmlRegistry
 public class ObjectFactory {
 
-    private final static QName _JdbcEntitySetup_QNAME = new QName("http://jdbcentity.server.jee.imatia.com/setup", "JdbcEntitySetup");
+    private final static QName _JdbcEntitySetup_QNAME = new QName("http://www.ontimize.com/schema/jdbc", "JdbcEntitySetup");
 
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: com.ontimize.jee.server.dao.jdbc.setup
@@ -116,7 +116,7 @@ public class ObjectFactory {
      * Create an instance of {@link JAXBElement }{@code <}{@link JdbcEntitySetupType }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://jdbcentity.server.jee.imatia.com/setup", name = "JdbcEntitySetup")
+    @XmlElementDecl(namespace = "http://www.ontimize.com/schema/jdbc", name = "JdbcEntitySetup")
     public JAXBElement<JdbcEntitySetupType> createJdbcEntitySetup(JdbcEntitySetupType value) {
         return new JAXBElement<JdbcEntitySetupType>(_JdbcEntitySetup_QNAME, JdbcEntitySetupType.class, null, value);
     }

@@ -26,7 +26,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="FunctionColumn" type="{http://jdbcentity.server.jee.imatia.com/setup}FunctionColumnType" maxOccurs="unbounded"/>
+ *         &lt;element name="FunctionColumn" type="{http://www.ontimize.com/schema/jdbc}FunctionColumnType" maxOccurs="unbounded"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
