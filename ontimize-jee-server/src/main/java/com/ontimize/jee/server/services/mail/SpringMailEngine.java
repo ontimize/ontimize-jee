@@ -1,7 +1,7 @@
 package com.ontimize.jee.server.services.mail;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
@@ -11,11 +11,14 @@ import java.util.Map.Entry;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.InputStreamSource;
 import org.springframework.core.io.Resource;
+import org.springframework.mail.MailSendException;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 
@@ -26,6 +29,7 @@ import com.ontimize.jee.common.exceptions.OntimizeJEEException;
  */
 public class SpringMailEngine implements IMailEngine, InitializingBean {
 
+	private static final Logger			logger	= LoggerFactory.getLogger(SpringMailEngine.class);
 	/** The mail sender. */
 	private final JavaMailSenderImpl	mailSender;
 
@@ -133,8 +137,8 @@ public class SpringMailEngine implements IMailEngine, InitializingBean {
 				attach.put(entry.getKey(), new InputStreamSource() {
 					@Override
 					public java.io.InputStream getInputStream() throws java.io.IOException {
-						return new FileInputStream(entry.getValue().toFile());
-					};
+						return Files.newInputStream(entry.getValue());
+					}
 				});
 			}
 		}
@@ -142,8 +146,8 @@ public class SpringMailEngine implements IMailEngine, InitializingBean {
 		if (inlineResources != null) {
 			for (final Entry<String, Path> entry : inlineResources.entrySet()) {
 				try {
-					inline.put(entry.getKey(), new InputStreamResource(new FileInputStream(entry.getValue().toFile())));
-				} catch (FileNotFoundException error) {
+					inline.put(entry.getKey(), new InputStreamResource(Files.newInputStream(entry.getValue())));
+				} catch (IOException error) {
 					throw new OntimizeJEEException(error);
 				}
 			}
@@ -206,6 +210,13 @@ public class SpringMailEngine implements IMailEngine, InitializingBean {
 				}
 			}
 			this.mailSender.send(message);
+		} catch (MailSendException error) {
+			if (error.getFailedMessages() != null) {
+				for (Entry<Object, Exception> entry : error.getFailedMessages().entrySet()) {
+					SpringMailEngine.logger.error(null, entry.getValue());
+				}
+			}
+			throw new OntimizeJEEException(error);
 		} catch (MessagingException error) {
 			throw new OntimizeJEEException(error);
 		}
