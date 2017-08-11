@@ -55,7 +55,7 @@ public class RemoteOperationDelegate implements ICallbackEventListener {
 	}
 
 	public void run() {
-		this.webSocketClientHandler.addWebSocketEventListener(this);
+		this.webSocketClientHandler.addCallbackEventListener(this);
 		try {
 			this.webSocketClientHandler.sendMessage(RemoteOperationStatuses.WEBSOCKET_MESSAGE_TYPE_REQUEST, this.operationId, new RemoteOperationRequestMessage(this.className,
 					this.parameters));
@@ -69,7 +69,7 @@ public class RemoteOperationDelegate implements ICallbackEventListener {
 	}
 
 	private void close() {
-		this.webSocketClientHandler.removeWebSocketEventListener(this);
+		this.webSocketClientHandler.removeCallbackEventListener(this);
 	}
 
 	@Override

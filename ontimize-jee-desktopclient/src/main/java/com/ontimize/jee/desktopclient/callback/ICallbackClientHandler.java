@@ -43,7 +43,7 @@ public interface ICallbackClientHandler {
 	 * @param listener
 	 *            the listener
 	 */
-	void addWebSocketEventListener(ICallbackEventListener listener);
+	void addCallbackEventListener(ICallbackEventListener listener);
 
 	/**
 	 * Removes the web socket event listener.
@@ -51,5 +51,5 @@ public interface ICallbackClientHandler {
 	 * @param remoteOperationDelegate
 	 *            the remote operation delegate
 	 */
-	void removeWebSocketEventListener(ICallbackEventListener remoteOperationDelegate);
+	void removeCallbackEventListener(ICallbackEventListener remoteOperationDelegate);
 }
