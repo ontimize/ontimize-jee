@@ -2,6 +2,7 @@ package com.ontimize.jee.desktopclient.locator;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
+import java.net.ConnectException;
 import java.net.URI;
 import java.rmi.Remote;
 import java.util.ArrayList;
@@ -90,6 +91,8 @@ public class OJeeClientPermissionLocator extends PermissionReferenceLocator {
 			this.userInformation.setPassword(password);
 		} catch (InvalidCredentialsException ex) {
 			throw new SecurityException("E_LOGIN__INVALID_CREDENTIALS", ex);
+		} catch (ConnectException ex) {
+			throw new SecurityException("E_CONNECT_SERVER", ex);
 		} catch (Exception ex) {
 			throw new SecurityException("E_LOGIN__ERROR", ex);
 		}
