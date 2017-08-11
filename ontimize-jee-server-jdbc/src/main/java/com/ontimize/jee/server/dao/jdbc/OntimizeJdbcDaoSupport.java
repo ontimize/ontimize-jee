@@ -71,6 +71,7 @@ import com.ontimize.jee.common.naming.I18NNaming;
 import com.ontimize.jee.common.tools.CheckingTools;
 import com.ontimize.jee.common.tools.ObjectTools;
 import com.ontimize.jee.common.tools.ReflectionTools;
+import com.ontimize.jee.common.tools.StringTools;
 import com.ontimize.jee.common.tools.streamfilter.ReplaceTokensFilterReader;
 import com.ontimize.jee.server.dao.DaoProperty;
 import com.ontimize.jee.server.dao.IOntimizeDaoSupport;
@@ -996,7 +997,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	 */
 	public void setSchemaName(final String schemaName) {
 		this.checkIfConfigurationModificationIsAllowed();
-		this.tableMetaDataContext.setSchemaName(schemaName);
+		this.tableMetaDataContext.setSchemaName(StringTools.isEmpty(schemaName) ? null : schemaName);
 	}
 
 	/**
@@ -1017,7 +1018,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	 */
 	public void setCatalogName(final String catalogName) {
 		this.checkIfConfigurationModificationIsAllowed();
-		this.tableMetaDataContext.setCatalogName(catalogName);
+		this.tableMetaDataContext.setCatalogName(StringTools.isEmpty(catalogName) ? null : catalogName);
 	}
 
 	/**
