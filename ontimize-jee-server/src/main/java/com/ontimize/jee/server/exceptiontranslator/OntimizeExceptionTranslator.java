@@ -31,6 +31,10 @@ public class OntimizeExceptionTranslator implements IExceptionTranslator, com.on
 		if (original instanceof SQLException) {
 			return new NoTraceOntimizeJEEException(this.getSqlErrorMessage(((SQLException) original)));
 		}
+		SQLException someSQLException = ExceptionTools.lookForInDepth(original, SQLException.class);
+		if (someSQLException != null) {
+			return new NoTraceOntimizeJEEException(this.getSqlErrorMessage(someSQLException));
+		}
 		if (original instanceof IParametrizedException) {
 			IParametrizedException oee = (IParametrizedException) original;
 			try {
@@ -38,11 +42,6 @@ public class OntimizeExceptionTranslator implements IExceptionTranslator, com.on
 			} catch (Exception ex) {
 				return new NoTraceOntimizeJEEException(oee.getMessage(), null, oee.getMessageParameters(), null, false, false);
 			}
-		}
-
-		SQLException someSQLException = ExceptionTools.lookForInDepth(original, SQLException.class);
-		if (someSQLException != null) {
-			return new NoTraceOntimizeJEEException(this.getSqlErrorMessage(someSQLException));
 		}
 		return new NoTraceOntimizeJEEException(original.getMessage());
 	}
