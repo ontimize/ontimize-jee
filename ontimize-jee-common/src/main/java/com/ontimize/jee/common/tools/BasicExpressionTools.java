@@ -3,8 +3,10 @@ package com.ontimize.jee.common.tools;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 import java.util.regex.Pattern;
@@ -164,11 +166,41 @@ public final class BasicExpressionTools {
 	 * @return the basic expression
 	 */
 	public static BasicExpression completeExpresionFromKeys(BasicExpression sourceExpr, Form form, List<Object> otherKeys) {
-
+		Map<Object, Object> kv = new HashMap<>();
 		for (Object obj : otherKeys) {
 			if (obj instanceof String) {
 				// Direct filter from attr in form to db column
 				Object value = form.getDataFieldValue((String) obj);
+				if (value != null) {
+					kv.put(obj, value);
+				}
+			} else if (obj instanceof SimpleFieldFilter) {
+				// Simple filter from attr in form to another named db column
+				Object value = form.getDataFieldValue(((SimpleFieldFilter) obj).getFormFieldAttr());
+				if (value != null) {
+					kv.put(((SimpleFieldFilter) obj).getFormFieldAttr(), value);
+				}
+			} else if (obj instanceof BetweenDateFilter) {
+				// Simple filter from two attrs in form (since - to) to single db column
+				Object value = form.getDataFieldValue(((BetweenDateFilter) obj).getSinceFormFieldAttr());
+				if (value != null) {
+					kv.put(((BetweenDateFilter) obj).getSinceFormFieldAttr(), value);
+				}
+				value = form.getDataFieldValue(((BetweenDateFilter) obj).getToFormFieldAttr());
+				if (value != null) {
+					kv.put(((BetweenDateFilter) obj).getToFormFieldAttr(), value);
+				}
+			}
+		}
+		return BasicExpressionTools.completeExpresionFromKeys(sourceExpr, kv, otherKeys);
+	}
+
+	public static BasicExpression completeExpresionFromKeys(BasicExpression sourceExpr, Map<Object, Object> kv, List<Object> otherKeys) {
+
+		for (Object obj : otherKeys) {
+			if (obj instanceof String) {
+				// Direct filter from attr in form to db column
+				Object value = kv.get(obj);
 				if (value != null) {
 					BasicField basicField = new BasicField((String) obj);
 					BasicExpression fieldExpr = BasicExpressionTools.composeExpressionFromValue(basicField, value);
@@ -176,7 +208,7 @@ public final class BasicExpressionTools {
 				}
 			} else if (obj instanceof SimpleFieldFilter) {
 				// Simple filter from attr in form to another named db column
-				Object value = form.getDataFieldValue(((SimpleFieldFilter) obj).getFormFieldAttr());
+				Object value = kv.get(((SimpleFieldFilter) obj).getFormFieldAttr());
 				if (value != null) {
 					BasicField basicField = new BasicField(((SimpleFieldFilter) obj).getDbAttr());
 					if (((SimpleFieldFilter) obj).isUseContains()) {
@@ -187,8 +219,8 @@ public final class BasicExpressionTools {
 				}
 			} else if (obj instanceof BetweenDateFilter) {
 				// Simple filter from two attrs in form (since - to) to single db column
-				Object fromDate = BasicExpressionTools.getDate(form.getDataFieldValue(((BetweenDateFilter) obj).getSinceFormFieldAttr()));
-				Object toDate = BasicExpressionTools.getDate(form.getDataFieldValue(((BetweenDateFilter) obj).getToFormFieldAttr()));
+				Object fromDate = BasicExpressionTools.getDate(kv.get(((BetweenDateFilter) obj).getSinceFormFieldAttr()));
+				Object toDate = BasicExpressionTools.getDate(kv.get(((BetweenDateFilter) obj).getToFormFieldAttr()));
 				BasicExpression fieldExpr = null;
 				BasicField basicField = new BasicField(((BetweenDateFilter) obj).getDbAttr());
 				if ((fromDate != null) && (toDate != null)) {
@@ -202,7 +234,7 @@ public final class BasicExpressionTools {
 				if (fieldExpr != null) {
 					sourceExpr = BasicExpressionTools.combineExpression(sourceExpr, fieldExpr);
 				} else if (((BetweenDateFilter) obj).getCheckFieldAttr() != null) {
-					Object dataFieldValue = form.getDataFieldValue(((BetweenDateFilter) obj).getCheckFieldAttr());
+					Object dataFieldValue = kv.get(((BetweenDateFilter) obj).getCheckFieldAttr());
 					if (dataFieldValue != null) {
 						boolean checked = false;
 						try {
