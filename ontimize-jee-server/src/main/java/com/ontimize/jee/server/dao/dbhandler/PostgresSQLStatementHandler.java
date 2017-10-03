@@ -3,6 +3,9 @@ package com.ontimize.jee.server.dao.dbhandler;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.sql.Array;
+import java.sql.ResultSet;
+import java.sql.Types;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -15,6 +18,15 @@ public class PostgresSQLStatementHandler extends com.ontimize.db.handler.Postgre
 	private static final Logger	logger	= LoggerFactory.getLogger(PostgresSQLStatementHandler.class);
 	public PostgresSQLStatementHandler() {
 		super();
+	}
+
+	@Override
+	protected Object getResultSetValue(ResultSet resultSet, String columnName, int columnType) throws Exception {
+		if (columnType == Types.ARRAY) {
+			Array value = resultSet.getArray(columnName);
+			return value == null ? null : value.getArray();
+		}
+		return super.getResultSetValue(resultSet, columnName, columnType);
 	}
 
 	/**
