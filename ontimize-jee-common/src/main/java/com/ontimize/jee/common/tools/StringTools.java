@@ -7,6 +7,8 @@ package com.ontimize.jee.common.tools;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * The Class StringTools.
@@ -113,5 +115,19 @@ public final class StringTools {
 			return defaultValue;
 		}
 		return string;
+	}
+
+	public static Pair<String, Integer> replaceAll(String text, String repFrom, String repTo) {
+		Pattern pattern = Pattern.compile(repFrom, Pattern.LITERAL);
+		Matcher matcher = pattern.matcher(text);
+		int counter = 0;
+		StringBuffer sb = new StringBuffer();
+		while (matcher.find()) {
+			counter++;
+			matcher.appendReplacement(sb, repTo);
+		}
+		matcher.appendTail(sb);
+
+		return new Pair<>(sb.toString(), counter);
 	}
 }
