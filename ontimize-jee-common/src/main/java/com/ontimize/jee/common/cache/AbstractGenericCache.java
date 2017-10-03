@@ -66,15 +66,20 @@ public abstract class AbstractGenericCache<K, V> {
 				AbstractGenericCache.logger.debug("Cache descartada para la clave: " + key);
 			}
 			if (cachedItem == null) {
-				cachedItem = new CachedItem<V>();
-				final V result = this.requestData(key);
-				if (result != null) {
-					cachedItem.setValue(result);
-					cachedItem.setTimestamp(System.currentTimeMillis());
-					this.cache.put(key, cachedItem);
-					AbstractGenericCache.logger.debug("Cache cargada para clave: " + key + ". Valor: " + result);
-				} else {
-					return null;
+				synchronized (this) {
+					cachedItem = this.cache.get(key);
+					if (cachedItem == null) {
+						cachedItem = new CachedItem<V>();
+						final V result = this.requestData(key);
+						if (result != null) {
+							cachedItem.setValue(result);
+							cachedItem.setTimestamp(System.currentTimeMillis());
+							this.cache.put(key, cachedItem);
+							AbstractGenericCache.logger.debug("Cache cargada para clave: " + key + ". Valor: " + result);
+						} else {
+							return null;
+						}
+					}
 				}
 			} else {
 				AbstractGenericCache.logger.debug("Acierto de cache para la clave: " + key + ". Valor: " + cachedItem.getValue());
