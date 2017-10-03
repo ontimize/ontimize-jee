@@ -70,6 +70,7 @@ import com.ontimize.gui.field.ReferenceFieldAttribute;
 import com.ontimize.jee.common.naming.I18NNaming;
 import com.ontimize.jee.common.tools.CheckingTools;
 import com.ontimize.jee.common.tools.ObjectTools;
+import com.ontimize.jee.common.tools.Pair;
 import com.ontimize.jee.common.tools.ReflectionTools;
 import com.ontimize.jee.common.tools.StringTools;
 import com.ontimize.jee.common.tools.streamfilter.ReplaceTokensFilterReader;
@@ -237,8 +238,21 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 			}
 			cond = cond.trim();
 
-			sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_WHERE_CONCAT, cond.length() == 0 ? "" : (SQLStatementBuilder.AND + " " + cond));
-			sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_WHERE, cond.length() == 0 ? "" : (SQLStatementBuilder.WHERE + " " + cond));
+			Pair<String, Integer> replaceAll = StringTools.replaceAll(sqlTemplate, OntimizeJdbcDaoSupport.PLACEHOLDER_WHERE_CONCAT,
+					cond.length() == 0 ? "" : (SQLStatementBuilder.AND + " " + cond));
+			sqlTemplate = replaceAll.getFirst();
+			for (int i = 1; i < replaceAll.getSecond(); i++) {
+				vValues.addAll(vValues);
+			}
+			// sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_WHERE_CONCAT, cond.length() == 0 ? "" : (SQLStatementBuilder.AND + " " + cond));
+
+			replaceAll = StringTools.replaceAll(sqlTemplate, OntimizeJdbcDaoSupport.PLACEHOLDER_WHERE, cond.length() == 0 ? "" : (SQLStatementBuilder.WHERE + " " + cond));
+			sqlTemplate = replaceAll.getFirst();
+			for (int i = 1; i < replaceAll.getSecond(); i++) {
+				vValues.addAll(vValues);
+			}
+			// sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_WHERE, cond.length() == 0 ? "" : (SQLStatementBuilder.WHERE + " " + cond));
+
 			// Order by
 			String order = sort == null ? "" : (String) ReflectionTools.invoke(this.getStatementHandler(), "createSortStatement", new Vector<>(sort), false);
 			if (order.length() > 0) {
