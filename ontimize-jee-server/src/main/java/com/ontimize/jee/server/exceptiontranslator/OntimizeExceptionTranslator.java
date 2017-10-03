@@ -6,12 +6,15 @@ import java.sql.SQLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.NestedRuntimeException;
+import org.springframework.remoting.RemoteAccessException;
 
 import com.caucho.hessian.util.IExceptionTranslator;
 import com.ontimize.jee.common.exceptions.IParametrizedException;
 import com.ontimize.jee.common.exceptions.NoTraceOntimizeJEEException;
+import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
 import com.ontimize.jee.common.tools.ExceptionTools;
 import com.ontimize.jee.common.tools.ReflectionTools;
+import com.ontimize.jee.common.tools.proxy.InvalidDelegateException;
 
 public class OntimizeExceptionTranslator implements IExceptionTranslator, com.ontimize.jee.server.exceptiontranslator.IExceptionTranslator {
 
@@ -22,29 +25,38 @@ public class OntimizeExceptionTranslator implements IExceptionTranslator, com.on
 	@Override
 	public Throwable translateException(Throwable original) {
 		OntimizeExceptionTranslator.logger.error(null, original);
-		if (original instanceof InvocationTargetException) {
-			original = ((InvocationTargetException) original).getTargetException();
-		}
-		if (original instanceof NestedRuntimeException) {
-			original = ((NestedRuntimeException) original).getMostSpecificCause();
-		}
-		if (original instanceof SQLException) {
-			return new NoTraceOntimizeJEEException(this.getSqlErrorMessage(((SQLException) original)));
-		}
+
 		SQLException someSQLException = ExceptionTools.lookForInDepth(original, SQLException.class);
 		if (someSQLException != null) {
 			return new NoTraceOntimizeJEEException(this.getSqlErrorMessage(someSQLException));
 		}
-		if (original instanceof IParametrizedException) {
-			IParametrizedException oee = (IParametrizedException) original;
+		Throwable error = this.rescueCorrectExceptionToClient(original);
+		if (error instanceof IParametrizedException) {
+			IParametrizedException oee = (IParametrizedException) error;
 			try {
-				return ReflectionTools.newInstance(original.getClass(), oee.getMessage(), oee.getMessageParameters(), null, oee.getMessageType(), false, false);
+				return ReflectionTools.newInstance(error.getClass(), oee.getMessage(), oee.getMessageParameters(), null, oee.getMessageType(), false, false);
 			} catch (Exception ex) {
 				return new NoTraceOntimizeJEEException(oee.getMessage(), null, oee.getMessageParameters(), null, false, false);
 			}
 		}
-		return new NoTraceOntimizeJEEException(original.getMessage());
+		return new NoTraceOntimizeJEEException(error.getMessage());
 	}
+
+	protected Throwable rescueCorrectExceptionToClient(Throwable error) {
+		if ((error instanceof InvalidDelegateException) && (error.getCause() != null)) {
+			return this.rescueCorrectExceptionToClient(error.getCause());
+		} else if ((error instanceof RemoteAccessException) && (error.getCause() != null)) {
+			return this.rescueCorrectExceptionToClient(error.getCause());
+		} else if ((error instanceof OntimizeJEERuntimeException) && (error.getCause() != null) && (error.getMessage() == null)) {
+			return this.rescueCorrectExceptionToClient(error.getCause());
+		} else if ((error instanceof InvocationTargetException) && (((InvocationTargetException) error).getTargetException() != null) && (error.getMessage() == null)) {
+			return this.rescueCorrectExceptionToClient(((InvocationTargetException) error).getTargetException());
+		} else if ((error instanceof NestedRuntimeException) && (((NestedRuntimeException) error).getMostSpecificCause() != null) && (error.getMessage() == null)) {
+			return this.rescueCorrectExceptionToClient(((NestedRuntimeException) error).getMostSpecificCause());
+		}
+		return error;
+	}
+
 
 	public void setDbErrorMessagesTranslator(DBErrorMessagesTranslator dbErrorMessagesTranslator) {
 		this.dbErrorMessagesTranslator = dbErrorMessagesTranslator;
