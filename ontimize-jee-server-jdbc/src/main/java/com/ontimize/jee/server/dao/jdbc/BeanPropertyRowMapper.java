@@ -76,12 +76,12 @@ public class BeanPropertyRowMapper<T> implements RowMapper<T> {
 	protected void initialize(INameConverter propertyConverter, DataSource ds, Class<T> mappedClass) {
 		this.propertyConverter = propertyConverter;
 		this.mappedClass = mappedClass;
-		this.mappedFields = new HashMap<String, PropertyDescriptor>();
+		this.mappedFields = new HashMap<>();
 		this.dataSource = ds;
 		PropertyDescriptor[] pds = BeanUtils.getPropertyDescriptors(mappedClass);
 		for (PropertyDescriptor pd : pds) {
 			if (pd.getWriteMethod() != null) {
-				this.mappedFields.put(propertyConverter.convertToDb(mappedClass, pd.getName(), ds).toLowerCase(), pd);
+				this.mappedFields.put(propertyConverter.convertToDb(mappedClass, pd.getName(), ds).toUpperCase(), pd);
 			}
 		}
 	}
@@ -114,7 +114,7 @@ public class BeanPropertyRowMapper<T> implements RowMapper<T> {
 
 		for (int index = 1; index <= columnCount; index++) {
 			String column = JdbcUtils.lookupColumnName(rsmd, index);
-			PropertyDescriptor pd = this.mappedFields.get(column.toLowerCase());
+			PropertyDescriptor pd = this.mappedFields.get(column.toUpperCase());
 			if (pd != null) {
 				Object value = this.getColumnValue(rs, index, pd);
 				if (BeanPropertyRowMapper.logger.isDebugEnabled() && (rowNumber == 0)) {
