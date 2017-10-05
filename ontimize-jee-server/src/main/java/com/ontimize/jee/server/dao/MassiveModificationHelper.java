@@ -24,7 +24,9 @@ import com.ontimize.gui.field.MultipleTableAttribute;
 import com.ontimize.gui.field.ReferenceFieldAttribute;
 import com.ontimize.gui.table.TableAttribute;
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
+import com.ontimize.jee.common.tools.EntityResultTools;
 import com.ontimize.jee.common.tools.MapTools;
+import com.ontimize.jee.common.tools.ObjectTools;
 import com.ontimize.jee.server.dao.One2OneDaoHelper.One2OneType;
 import com.ontimize.jee.server.dao.One2OneDaoHelper.OneToOneSubDao;
 
@@ -84,28 +86,41 @@ public class MassiveModificationHelper implements ApplicationContextAware, IMass
 		EntityResult resMassiveMod = (EntityResult) resFinal.clone();
 		attributes.remove(pkColumn);
 		attributes.remove(IMassiveModificationHelper.MASSIVE_MODIFICATION_UNIQUE_IDENTIFIER);
+
+		List<TableAttribute> tableAttrs = new ArrayList<>();
 		for (Object attribute : attributes) {
-			Vector<Object> vValues = (Vector<Object>) query.get(attribute);
-			boolean areEquals = true;
-			if (vValues != null) {
-				Object lastValue = vValues.get(0);
-				for (Object value : vValues) {
-					if (!this.safeIsEquals(value, lastValue)) {
-						areEquals = false;
-						break;
-					} else {
-						lastValue = value;
+			if (attribute instanceof TableAttribute) {
+				tableAttrs.add((TableAttribute) attribute);
+			} else {
+				Vector<Object> values = (Vector<Object>) query.get(attribute);
+				boolean isEquals = true;
+				if ((values != null) && !values.isEmpty()) {
+					Object lastValue = values.get(0);
+					for (Object value : values) {
+						try {
+							ObjectTools.isEquals(value, lastValue);
+							lastValue = value;
+						} catch (Exception e) {
+							isEquals = false;
+							break;
+						}
 					}
+					Vector<? extends Object> value = isEquals ? new Vector<>(Arrays.asList(lastValue)) : new Vector<>(Arrays.asList(new NullValue()));
+					MapTools.safePut(resFinal, attribute, value);
+					MapTools.safePut(resMassiveMod, attribute, values);// debug mode
 				}
-				Vector<? extends Object> value = areEquals ? new Vector<>(Arrays.asList(lastValue)) : new Vector<>(Arrays.asList(new NullValue()));
-				MapTools.safePut(resFinal, attribute, value);
-				// FIXME debug mode
-				MapTools.safePut(resMassiveMod, attribute, vValues);
 			}
 		}
-		resFinal.put(pkColumn, keysValues.get(pkColumn));
-		resMassiveMod.put(pkColumn, keysValues.get(pkColumn));
-		resFinal.put(IMassiveModificationHelper.MASSIVE_MODIFICATION_UNIQUE_IDENTIFIER, resMassiveMod);
+		for (TableAttribute tableAttr : tableAttrs) {
+			Vector<EntityResult> vValues = (Vector<EntityResult>) query.get(tableAttr);
+			EntityResult doUnionAll = EntityResultTools.doUnionAll(vValues.toArray(new EntityResult[vValues.size()]));
+			EntityResult doRemoveDuplicates = EntityResultTools.doRemoveDuplicates(doUnionAll);
+			MapTools.safePut(resFinal, tableAttr, doRemoveDuplicates);
+		}
+
+		MapTools.safePut(resFinal, pkColumn, keysValues.get(pkColumn));
+		MapTools.safePut(resMassiveMod, pkColumn, keysValues.get(pkColumn));
+		MapTools.safePut(resFinal, IMassiveModificationHelper.MASSIVE_MODIFICATION_UNIQUE_IDENTIFIER, resMassiveMod);
 		return resFinal;
 	}
 
@@ -192,16 +207,6 @@ public class MassiveModificationHelper implements ApplicationContextAware, IMass
 
 	public boolean isMassiveModification(Object key, Map<?, ?> keysValues) {
 		return keysValues.containsKey(key) && (keysValues.get(key) instanceof int[]);
-	}
-
-	protected boolean safeIsEquals(final Object oba, final Object obb) {
-		boolean equals = true;
-		if (oba == null) {
-			equals = (obb == null);
-		} else {
-			equals = oba.equals(obb);
-		}
-		return equals;
 	}
 
 	public static String getStringAttr(Object attribute) {

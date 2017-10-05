@@ -7,6 +7,8 @@ import com.ontimize.db.EntityResult;
 
 public interface IDownDateHelper {
 
+	public static final String DOWNDATE_DEFAULT_ATTR = "DOWNDATE_DEFAULT";
+
 	/**
 	 * Ensures to unsubscribe element referenced by received dao + keysvalues, ensuring to UPDATE doenDate column
 	 *

@@ -11,8 +11,8 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import com.ontimize.db.EntityResult;
-import com.ontimize.db.SQLStatementBuilder.BasicOperator;
 import com.ontimize.db.NullValue;
+import com.ontimize.db.SQLStatementBuilder.BasicOperator;
 import com.ontimize.db.SQLStatementBuilder.Expression;
 import com.ontimize.db.SQLStatementBuilder.ExtendedSQLConditionValuesProcessor;
 import com.ontimize.db.SQLStatementBuilder.Field;
@@ -23,7 +23,7 @@ import com.ontimize.jee.common.tools.ObjectTools;
 import com.ontimize.util.ParseUtils;
 
 @Component
-@Lazy(value=true)
+@Lazy(value = true)
 public class DownDateHelper implements ApplicationContextAware, IDownDateHelper {
 
 	/**
@@ -54,8 +54,10 @@ public class DownDateHelper implements ApplicationContextAware, IDownDateHelper 
 
 	@Override
 	public EntityResult downRecord(DefaultOntimizeDaoHelper daoHelper, IOntimizeDaoSupport dao, String downDateColumn, Date downDate, Map<?, ?> keysValues) {
-		if (downDate == null) {
+		if ((downDate == null)) {
 			downDate = new Date();
+		} else if (keysValues.containsKey(IDownDateHelper.DOWNDATE_DEFAULT_ATTR)) {
+			downDate = (Date) keysValues.get(IDownDateHelper.DOWNDATE_DEFAULT_ATTR);
 		}
 		return daoHelper.update(dao, EntityResultTools.keysvalues(downDateColumn, downDate), keysValues);
 	}
@@ -206,6 +208,7 @@ public class DownDateHelper implements ApplicationContextAware, IDownDateHelper 
 	}
 
 	protected class CheckIncludePair {
+
 		protected boolean	availableToRemove;
 		protected boolean	evaluation;
 
