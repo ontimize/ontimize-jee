@@ -52,7 +52,7 @@ public class BasicExpressionProcessor {
 			if (lValue == null) {
 				throw new OntimizeJEEException("'lop' isn't defined in basicexpression");
 			}
-			lo = this.processLeftOperand(lValue);
+			lo = this.processLeftOperand(lValue, hSqlTypes);
 
 			Object operatorValue = ((Map) value).get(BasicExpressionProcessor.OPERATOR);
 			if (operatorValue == null) {
@@ -84,7 +84,7 @@ public class BasicExpressionProcessor {
 		return this.processLeftOperand(lValue, new HashMap<Object, Object>());
 	}
 
-	protected Object processLeftOperand(Object lValue, HashMap<?, ?> hSqlTypes) throws OntimizeJEEException {
+	protected Object processLeftOperand(Object lValue, Map<?, ?> hSqlTypes) throws OntimizeJEEException {
 		if (lValue instanceof Map) {
 			return this.processBasicEspression(lValue, hSqlTypes);
 		} else {
