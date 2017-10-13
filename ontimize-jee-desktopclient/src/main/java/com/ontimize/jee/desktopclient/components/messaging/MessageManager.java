@@ -320,15 +320,14 @@ public class MessageManager implements IMessageManager {
 			if (parent == null) {
 				parent = WindowTools.getActiveWindow();
 			}
-			if (!MessageManager.USE_ADVANCED_MESSAGING || messageType.equals(MessageType.QUESTION)) {
+			if ((blocking) && (!MessageManager.USE_ADVANCED_MESSAGING || messageType.equals(MessageType.QUESTION))) {
 				return this.oldMessageStyle(WindowTools.getWindowAncestor(parent), translatedMessage, messageType, translatedDetail, this.getResourceBundle(parent));
-			} else {
-				ImageIcon ico = this.getMessageIcon(messageType);
-				ToastMessage toastMessage = new ToastMessage(parent, blocking, translatedMessage, translatedDetail, ico, ToastMessage.MESSAGE_TIME_SHORT, null,
-						blocking ? ToastBlockingPanel.class : ToastNoblockingPanel.class, null, null, null);
-				Toast.showMessage(toastMessage);
-				return 0;
 			}
+			ImageIcon ico = this.getMessageIcon(messageType);
+			ToastMessage toastMessage = new ToastMessage(parent, blocking, translatedMessage, translatedDetail, ico, ToastMessage.MESSAGE_TIME_SHORT, null,
+					blocking ? ToastBlockingPanel.class : ToastNoblockingPanel.class, null, null, null);
+			Toast.showMessage(toastMessage);
+			return 0;
 		} finally {
 			this.fireMessageEvent(translatedMessage, messageType, parent);
 		}
@@ -368,33 +367,33 @@ public class MessageManager implements IMessageManager {
 		int res = JOptionPane.CLOSED_OPTION;
 		if (w instanceof Dialog) {
 			switch (messageType) {
-			case QUESTION:
-				res = MessageDialog.showMessage((Dialog) w, translatedMessage, detail, JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION, bundle, (Object[]) null);
-				break;
-			case INFORMATION:
-				res = MessageDialog.showMessage((Dialog) w, translatedMessage, detail, JOptionPane.INFORMATION_MESSAGE, bundle, (Object[]) null);
-				break;
-			case ERROR:
-				res = MessageDialog.showMessage((Dialog) w, translatedMessage, detail, JOptionPane.ERROR_MESSAGE, bundle, (Object[]) null);
-				break;
-			case WARNING:
-				res = MessageDialog.showMessage((Dialog) w, translatedMessage, detail, JOptionPane.WARNING_MESSAGE, bundle, (Object[]) null);
-				break;
+				case QUESTION:
+					res = MessageDialog.showMessage((Dialog) w, translatedMessage, detail, JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION, bundle, (Object[]) null);
+					break;
+				case INFORMATION:
+					res = MessageDialog.showMessage((Dialog) w, translatedMessage, detail, JOptionPane.INFORMATION_MESSAGE, bundle, (Object[]) null);
+					break;
+				case ERROR:
+					res = MessageDialog.showMessage((Dialog) w, translatedMessage, detail, JOptionPane.ERROR_MESSAGE, bundle, (Object[]) null);
+					break;
+				case WARNING:
+					res = MessageDialog.showMessage((Dialog) w, translatedMessage, detail, JOptionPane.WARNING_MESSAGE, bundle, (Object[]) null);
+					break;
 			}
 		} else if (w instanceof Frame) {
 			switch (messageType) {
-			case QUESTION:
-				res = MessageDialog.showMessage((Frame) w, translatedMessage, detail, JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION, bundle, (Object[]) null);
-				break;
-			case INFORMATION:
-				res = MessageDialog.showMessage((Frame) w, translatedMessage, detail, JOptionPane.INFORMATION_MESSAGE, bundle, (Object[]) null);
-				break;
-			case ERROR:
-				res = MessageDialog.showMessage((Frame) w, translatedMessage, detail, JOptionPane.ERROR_MESSAGE, bundle, (Object[]) null);
-				break;
-			case WARNING:
-				res = MessageDialog.showMessage((Frame) w, translatedMessage, detail, JOptionPane.WARNING_MESSAGE, bundle, (Object[]) null);
-				break;
+				case QUESTION:
+					res = MessageDialog.showMessage((Frame) w, translatedMessage, detail, JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION, bundle, (Object[]) null);
+					break;
+				case INFORMATION:
+					res = MessageDialog.showMessage((Frame) w, translatedMessage, detail, JOptionPane.INFORMATION_MESSAGE, bundle, (Object[]) null);
+					break;
+				case ERROR:
+					res = MessageDialog.showMessage((Frame) w, translatedMessage, detail, JOptionPane.ERROR_MESSAGE, bundle, (Object[]) null);
+					break;
+				case WARNING:
+					res = MessageDialog.showMessage((Frame) w, translatedMessage, detail, JOptionPane.WARNING_MESSAGE, bundle, (Object[]) null);
+					break;
 			}
 		}
 		return res;
@@ -432,17 +431,17 @@ public class MessageManager implements IMessageManager {
 	protected boolean isMessageBlocking(MessageType messageType) {
 		boolean blocking = true;
 		switch (messageType) {
-		case INFORMATION:
-			blocking = false;
-			break;
-		case WARNING:
-			blocking = true;
-			break;
-		case ERROR:
-			blocking = true;
-			break;
-		case QUESTION:
-			blocking = true;
+			case INFORMATION:
+				blocking = false;
+				break;
+			case WARNING:
+				blocking = true;
+				break;
+			case ERROR:
+				blocking = true;
+				break;
+			case QUESTION:
+				blocking = true;
 		}
 		return blocking;
 	}
@@ -457,18 +456,18 @@ public class MessageManager implements IMessageManager {
 	protected ImageIcon getMessageIcon(MessageType type) {
 		ImageIcon ico = ToastMessage.ICON_ERROR;
 		switch (type) {
-		case INFORMATION:
-			ico = ToastMessage.ICON_INFORMATION;
-			break;
-		case WARNING:
-			ico = ToastMessage.ICON_WARNING;
-			break;
-		case ERROR:
-			ico = ToastMessage.ICON_ERROR;
-			break;
-		default:
-			ico = ToastMessage.ICON_ERROR;
-			break;
+			case INFORMATION:
+				ico = ToastMessage.ICON_INFORMATION;
+				break;
+			case WARNING:
+				ico = ToastMessage.ICON_WARNING;
+				break;
+			case ERROR:
+				ico = ToastMessage.ICON_ERROR;
+				break;
+			default:
+				ico = ToastMessage.ICON_ERROR;
+				break;
 		}
 		return ico;
 	}
@@ -673,18 +672,18 @@ public class MessageManager implements IMessageManager {
 	public static MessageType translateMessageType(int oldMsgType) {
 		MessageType res = MessageType.INFORMATION;
 		switch (oldMsgType) {
-		case Form.ERROR_MESSAGE:
-			res = MessageType.ERROR;
-			break;
-		case Form.WARNING_MESSAGE:
-			res = MessageType.WARNING;
-			break;
-		case Form.INFORMATION_MESSAGE:
-			res = MessageType.INFORMATION;
-			break;
-		case Form.QUESTION_MESSAGE:
-			res = MessageType.QUESTION;
-			break;
+			case Form.ERROR_MESSAGE:
+				res = MessageType.ERROR;
+				break;
+			case Form.WARNING_MESSAGE:
+				res = MessageType.WARNING;
+				break;
+			case Form.INFORMATION_MESSAGE:
+				res = MessageType.INFORMATION;
+				break;
+			case Form.QUESTION_MESSAGE:
+				res = MessageType.QUESTION;
+				break;
 		}
 		return res;
 	}

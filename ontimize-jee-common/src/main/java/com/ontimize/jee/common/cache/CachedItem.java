@@ -1,8 +1,8 @@
 /**
  * CachedItem.java 18-abr-2013
  *
- * 
- * 
+ *
+ *
  */
 package com.ontimize.jee.common.cache;
 

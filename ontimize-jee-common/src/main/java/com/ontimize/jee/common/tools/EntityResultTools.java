@@ -228,7 +228,7 @@ public final class EntityResultTools {
 	 * @return the entity result
 	 */
 	private static EntityResult doFastJoin(EntityResult a, EntityResult b, String keyNameA, String keyNameB, JoinType joinType, EntityResult res, Vector<Object> resColumnsA,
-	        Vector<Object> resColumnsB, Vector<Object> resColumns, Vector<Object> resColumnsCommon) {
+			Vector<Object> resColumnsB, Vector<Object> resColumns, Vector<Object> resColumnsCommon) {
 
 		Object[] keysSortedA = null;
 		int[] indexesA = null;
@@ -337,7 +337,7 @@ public final class EntityResultTools {
 	 *            the only inner join
 	 */
 	private static void doJoinForTable(EntityResult res, Vector<Object> resColumns, Vector<Object> resColumnsA, Vector<Object> resColumnsB, Vector<Object> resColumnsCommon,
-	        Hashtable<Object, Object> rowA, EntityResult b, String[] columnKeysA, String[] columnKeysB, boolean onlyInnerJoin) {
+			Hashtable<Object, Object> rowA, EntityResult b, String[] columnKeysA, String[] columnKeysB, boolean onlyInnerJoin) {
 		int rcount = b.calculateRecordNumber();
 		boolean match = false;
 		int index = res.calculateRecordNumber();
@@ -922,7 +922,7 @@ public final class EntityResultTools {
 	}
 
 	private static int refactor(String groupColumn, EntityResult res, Object currentKey, int resIndex, int counter, Vector vectorGroupColumn,
-	        GroupOperationWrap... groupOperations) {
+			GroupOperationWrap... groupOperations) {
 		vectorGroupColumn.add(resIndex, currentKey);
 
 		for (GroupOperationWrap groupOperation : groupOperations) {
@@ -1498,6 +1498,13 @@ public final class EntityResultTools {
 		for (Entry entry : (Set<Entry>) target.entrySet()) {
 			List v = (List) entry.getValue();
 			v.add(((List) source.get(entry.getKey())).get(sourceIndex));
+		}
+	}
+
+	public static void fastAddRecord(EntityResult target, Map<Object, Object> source) {
+		for (Entry entry : (Set<Entry>) target.entrySet()) {
+			List v = (List) entry.getValue();
+			v.add((source.get(entry.getKey())));
 		}
 	}
 
