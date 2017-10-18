@@ -3,6 +3,8 @@ package com.ontimize.jee.common.hessian;
 import java.io.IOException;
 import java.net.URI;
 import java.security.MessageDigest;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -28,10 +30,14 @@ import org.apache.http.client.protocol.RequestTargetAuthentication;
 import org.apache.http.client.protocol.ResponseProcessCookies;
 import org.apache.http.config.SocketConfig;
 import org.apache.http.config.SocketConfig.Builder;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpProcessor;
@@ -40,9 +46,11 @@ import org.apache.http.protocol.RequestContent;
 import org.apache.http.protocol.RequestExpectContinue;
 import org.apache.http.protocol.RequestTargetHost;
 import org.apache.http.protocol.RequestUserAgent;
+import org.apache.http.ssl.SSLContextBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ontimize.jee.common.tools.ParseUtilsExtended;
 import com.ontimize.jee.common.tools.SafeCasting;
 import com.ontimize.util.Base64Utils;
 
@@ -67,17 +75,17 @@ public final class OntimizeHessianHttpClientSessionProcessorFactory {
 	public static String						JWT_TOKEN			= null;
 	/** The httpproc. */
 	private static HttpProcessor				httpproc			= HttpProcessorBuilder.create().add(new RequestAddCookies()).add(new ResponseProcessCookies())
-																			.add(OntimizeHessianHttpClientSessionProcessorFactory.requestInterceptor)
-																			.add(OntimizeHessianHttpClientSessionProcessorFactory.responseInterceptor)
-																			.add(new RequestDefaultHeaders())
-																			// Required protocol interceptors
-																			.add(new RequestContent()).add(new RequestTargetHost())
-																			// Recommended protocol interceptors
-																			.add(new RequestClientConnControl()).add(new RequestUserAgent()).add(new RequestExpectContinue(false))
-																			// HTTP state management interceptors
-																			// HTTP authentication interceptors
-																			// httpproc.addInterceptor(new RequestAuthCache());
-																			.add(new RequestTargetAuthentication()).add(new RequestProxyAuthentication()).build();
+			.add(OntimizeHessianHttpClientSessionProcessorFactory.requestInterceptor)
+			.add(OntimizeHessianHttpClientSessionProcessorFactory.responseInterceptor)
+			.add(new RequestDefaultHeaders())
+			// Required protocol interceptors
+			.add(new RequestContent()).add(new RequestTargetHost())
+			// Recommended protocol interceptors
+			.add(new RequestClientConnControl()).add(new RequestUserAgent()).add(new RequestExpectContinue(false))
+			// HTTP state management interceptors
+			// HTTP authentication interceptors
+			// httpproc.addInterceptor(new RequestAuthCache());
+			.add(new RequestTargetAuthentication()).add(new RequestProxyAuthentication()).build();
 
 	private static Map<AuthScope, Credentials>	credentials			= new HashMap<>();
 
@@ -242,17 +250,40 @@ public final class OntimizeHessianHttpClientSessionProcessorFactory {
 	}
 
 	public static CloseableHttpClient createClient(long connectTimeout) {
-		long time = System.currentTimeMillis();
 		Builder socketConfigBuilder = SocketConfig.custom().setSoKeepAlive(true);
 		if (connectTimeout >= 0) {
 			socketConfigBuilder.setSoTimeout(SafeCasting.longToInt(connectTimeout));
 		}
 		SocketConfig config = socketConfigBuilder.build();
 		CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-		CloseableHttpClient client = HttpClients.custom().disableAutomaticRetries().disableAuthCaching().setDefaultCredentialsProvider(credentialsProvider)
+
+		HttpClientBuilder clientBuilder = HttpClients.custom().disableAutomaticRetries().disableAuthCaching().setDefaultCredentialsProvider(credentialsProvider)
 				.setDefaultSocketConfig(config).setHttpProcessor(OntimizeHessianHttpClientSessionProcessorFactory.getHttpProcessor())
-				.setDefaultCookieStore(OntimizeHessianHttpClientSessionProcessorFactory.getCookieStore()).disableRedirectHandling().build();
+				.setDefaultCookieStore(OntimizeHessianHttpClientSessionProcessorFactory.getCookieStore()).disableRedirectHandling();
+
+		OntimizeHessianHttpClientSessionProcessorFactory.checkIgnoreSSLCerts(clientBuilder);
+		CloseableHttpClient client = clientBuilder.build();
 		return client;
+	}
+
+	private static void checkIgnoreSSLCerts(HttpClientBuilder clientBuilder) {
+		boolean ignoreSSLCerts = ParseUtilsExtended.getBoolean(System.getProperty("ignoreSSLCerts"), false);
+		if (ignoreSSLCerts) {
+			SSLConnectionSocketFactory sslsf = null;
+			try {
+				SSLContextBuilder sshbuilder = new SSLContextBuilder();
+				sshbuilder.loadTrustMaterial(new TrustStrategy() {
+					@Override
+					public boolean isTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
+						return true;
+					}
+				});
+				sslsf = new SSLConnectionSocketFactory(sshbuilder.build(), NoopHostnameVerifier.INSTANCE);
+				clientBuilder.setSSLSocketFactory(sslsf);
+			} catch (Exception error) {
+				OntimizeHessianHttpClientSessionProcessorFactory.logger.error(null, error);
+			}
+		}
 	}
 
 	public static Object getSESSIONID() {
