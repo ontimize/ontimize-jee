@@ -17,7 +17,7 @@ public class XmlObjectBuilder {
 	}
 
 	public Object buildFromXml(final Object parent, final InputStream is, Map<String, String> equivalences, final Map<String, String> extraRootParameters)
-			throws ParserConfigurationException, SAXException, IOException {
+	        throws ParserConfigurationException, SAXException, IOException {
 		SAXParserFactory factory = SAXParserFactory.newInstance();
 		SAXParser saxParser = factory.newSAXParser();
 		XmlObjectBuilderSaxHandler handler = new XmlObjectBuilderSaxHandler(parent, equivalences, extraRootParameters);

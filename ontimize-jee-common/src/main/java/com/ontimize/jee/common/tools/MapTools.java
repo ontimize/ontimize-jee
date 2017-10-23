@@ -121,7 +121,7 @@ public final class MapTools {
 	 */
 	public static <U, V> Map<U, ? extends V> union(Map<U, V> first, Map<U, ? extends V> second) {
 		if ((first == null) && (second == null)) {
-			return new Hashtable<U, V>();
+			return new Hashtable<>();
 		}
 		Map<U, V> res = null;
 		try {
@@ -254,7 +254,7 @@ public final class MapTools {
 	 */
 	public static <T, Q> Map<T, Q> keysvalues(Object... objects) {
 		if (objects == null) {
-			return new HashMap<T, Q>();
+			return new HashMap<>();
 		}
 		if ((objects.length % 2) != 0) {
 			throw new RuntimeException("Review filters, it is mandatory to set dual <key><value>.");
@@ -265,7 +265,7 @@ public final class MapTools {
 			}
 		}
 
-		HashMap<T, Q> res = new HashMap<T, Q>();
+		HashMap<T, Q> res = new HashMap<>();
 		int i = 0;
 		while (i < objects.length) {
 			res.put((T) objects[i++], (Q) objects[i++]);

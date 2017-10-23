@@ -5,7 +5,7 @@ import org.springframework.dao.DataAccessException;
 public class ConstraintLogicException extends DataAccessException {
 
 	public ConstraintLogicException(String msg) {
-		super(msg,null);
+		super(msg, null);
 	}
 
 }

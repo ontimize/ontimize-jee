@@ -12,7 +12,7 @@ import java.util.Collection;
 public class StaticHeaderAttributesProvider extends HeaderAttributesProviderChain {
 
 	/** The static attributes. */
-	private final Collection<HeaderAttribute>	staticAttributes;
+	private final Collection<HeaderAttribute> staticAttributes;
 
 	/**
 	 * Instantiates a new static header attributes provider.

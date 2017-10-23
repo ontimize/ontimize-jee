@@ -8,7 +8,9 @@ import com.ontimize.jee.common.tools.ObjectWrapper;
 import com.ontimize.jee.desktopclient.components.WindowTools;
 
 public class LoginIntoOAuth2Dialog extends JDialog {
-	private final LoginIntoOAuth2Component	component;
+
+	private final LoginIntoOAuth2Component component;
+
 	public LoginIntoOAuth2Dialog() {
 		super(WindowTools.getActiveWindow());
 		this.setTitle("Oauth2");
@@ -18,8 +20,8 @@ public class LoginIntoOAuth2Dialog extends JDialog {
 		this.setLocationRelativeTo(null);
 	}
 
-	public void showLoginScreen(String url,ObjectWrapper<String> redirectUrl) {
-		this.component.showLoginScreen(url,redirectUrl);
+	public void showLoginScreen(String url, ObjectWrapper<String> redirectUrl) {
+		this.component.showLoginScreen(url, redirectUrl);
 		this.setVisible(true);
 	}
 

@@ -6,46 +6,46 @@ import java.util.Map;
 
 /**
  * Replaces tokens in the original input with user-supplied values.
- * 
+ *
  */
 public final class ReplaceTokensFilterReader extends AbstractBaseFilterReader {
+
 	/** Default "begin token" character. */
-	private static final char	DEFAULT_IGNORE_TOKEN	= '$';
+	private static final char			DEFAULT_IGNORE_TOKEN	= '$';
 	/** Default "begin token" character. */
-	private static final char	DEFAULT_BEGIN_TOKEN		= '{';
+	private static final char			DEFAULT_BEGIN_TOKEN		= '{';
 
 	/** Default "end token" character. */
-	private static final char	DEFAULT_END_TOKEN		= '}';
+	private static final char			DEFAULT_END_TOKEN		= '}';
 
 	/** Data to be used before reading from stream again */
-	private String				queuedData				= null;
+	private String						queuedData				= null;
 
 	/** replacement test from a token */
-	private String				replaceData				= null;
+	private String						replaceData				= null;
 
 	/** Index into replacement data */
-	private int					replaceIndex			= -1;
+	private int							replaceIndex			= -1;
 
 	/** Index into queue data */
-	private int					queueIndex				= -1;
+	private int							queueIndex				= -1;
 
 	/** Hashtable to hold the replacee-replacer pairs (String to String). */
-	private Map<String, String>	hash;
+	private final Map<String, String>	hash;
 
 	/** Character marking the beginning of a token. */
-	private char				beginToken				= DEFAULT_BEGIN_TOKEN;
+	private char						beginToken				= ReplaceTokensFilterReader.DEFAULT_BEGIN_TOKEN;
 
 	/** Character marking the end of a token. */
-	private char				endToken				= DEFAULT_END_TOKEN;
+	private char						endToken				= ReplaceTokensFilterReader.DEFAULT_END_TOKEN;
 	/** Character marking the ignore token. */
-	private char				ignoreToken				= DEFAULT_IGNORE_TOKEN;
+	private final char					ignoreToken				= ReplaceTokensFilterReader.DEFAULT_IGNORE_TOKEN;
 
 	/**
 	 * Creates a new filtered reader.
-	 * 
+	 *
 	 * @param in
-	 *            A Reader object providing the underlying stream. Must not be
-	 *            <code>null</code>.
+	 *            A Reader object providing the underlying stream. Must not be <code>null</code>.
 	 */
 	public ReplaceTokensFilterReader(final Reader in, Map<String, String> hash) {
 		super(in);
@@ -53,84 +53,82 @@ public final class ReplaceTokensFilterReader extends AbstractBaseFilterReader {
 	}
 
 	private int getNextChar() throws IOException {
-		if (queueIndex != -1) {
-			final int ch = queuedData.charAt(queueIndex++);
-			if (queueIndex >= queuedData.length()) {
-				queueIndex = -1;
+		if (this.queueIndex != -1) {
+			final int ch = this.queuedData.charAt(this.queueIndex++);
+			if (this.queueIndex >= this.queuedData.length()) {
+				this.queueIndex = -1;
 			}
 			return ch;
 		}
 
-		return in.read();
+		return this.in.read();
 	}
 
 	/**
-	 * Returns the next character in the filtered stream, replacing tokens from
-	 * the original stream.
-	 * 
-	 * @return the next character in the resulting stream, or -1 if the end of
-	 *         the resulting stream has been reached
-	 * 
+	 * Returns the next character in the filtered stream, replacing tokens from the original stream.
+	 *
+	 * @return the next character in the resulting stream, or -1 if the end of the resulting stream has been reached
+	 *
 	 * @exception IOException
-	 *                if the underlying stream throws an IOException during
-	 *                reading
+	 *                if the underlying stream throws an IOException during reading
 	 */
+	@Override
 	public int read() throws IOException {
-		if (replaceIndex != -1) {
-			final int ch = replaceData.charAt(replaceIndex++);
-			if (replaceIndex >= replaceData.length()) {
-				replaceIndex = -1;
+		if (this.replaceIndex != -1) {
+			final int ch = this.replaceData.charAt(this.replaceIndex++);
+			if (this.replaceIndex >= this.replaceData.length()) {
+				this.replaceIndex = -1;
 			}
 			return ch;
 		}
 
-		int ch = getNextChar();
-		if (ch == ignoreToken) {
-			ch = getNextChar();
+		int ch = this.getNextChar();
+		if (ch == this.ignoreToken) {
+			ch = this.getNextChar();
 		}
 
-		if (ch == beginToken) {
-			final StringBuffer key = new StringBuffer("");
+		if (ch == this.beginToken) {
+			final StringBuilder key = new StringBuilder("");
 			do {
-				ch = getNextChar();
+				ch = this.getNextChar();
 				if (ch != -1) {
 					key.append((char) ch);
 				} else {
 					break;
 				}
-			} while (ch != endToken);
+			} while (ch != this.endToken);
 
 			if (ch == -1) {
-				if (queuedData == null || queueIndex == -1) {
-					queuedData = key.toString();
+				if ((this.queuedData == null) || (this.queueIndex == -1)) {
+					this.queuedData = key.toString();
 				} else {
-					queuedData = key.toString() + queuedData.substring(queueIndex);
+					this.queuedData = key.toString() + this.queuedData.substring(this.queueIndex);
 				}
-				if (queuedData.length() > 0) {
-					queueIndex = 0;
+				if (this.queuedData.length() > 0) {
+					this.queueIndex = 0;
 				} else {
-					queueIndex = -1;
+					this.queueIndex = -1;
 				}
-				return beginToken;
+				return this.beginToken;
 			} else {
 				key.setLength(key.length() - 1);
 
-				final String replaceWith = (String) hash.get(key.toString());
+				final String replaceWith = this.hash.get(key.toString());
 				if (replaceWith != null) {
 					if (replaceWith.length() > 0) {
-						replaceData = replaceWith;
-						replaceIndex = 0;
+						this.replaceData = replaceWith;
+						this.replaceIndex = 0;
 					}
-					return read();
+					return this.read();
 				} else {
-					String newData = key.toString() + endToken;
-					if (queuedData == null || queueIndex == -1) {
-						queuedData = newData;
+					String newData = key.toString() + this.endToken;
+					if ((this.queuedData == null) || (this.queueIndex == -1)) {
+						this.queuedData = newData;
 					} else {
-						queuedData = newData + queuedData.substring(queueIndex);
+						this.queuedData = newData + this.queuedData.substring(this.queueIndex);
 					}
-					queueIndex = 0;
-					return beginToken;
+					this.queueIndex = 0;
+					return this.beginToken;
 				}
 			}
 		}
@@ -139,7 +137,7 @@ public final class ReplaceTokensFilterReader extends AbstractBaseFilterReader {
 
 	/**
 	 * Sets the "begin token" character.
-	 * 
+	 *
 	 * @param beginToken
 	 *            the character used to denote the beginning of a token
 	 */
@@ -149,7 +147,7 @@ public final class ReplaceTokensFilterReader extends AbstractBaseFilterReader {
 
 	/**
 	 * Sets the "end token" character.
-	 * 
+	 *
 	 * @param endToken
 	 *            the character used to denote the end of a token
 	 */
@@ -159,13 +157,12 @@ public final class ReplaceTokensFilterReader extends AbstractBaseFilterReader {
 
 	/**
 	 * Adds a token element to the map of tokens to replace.
-	 * 
+	 *
 	 * @param token
-	 *            The token to add to the map of replacements. Must not be
-	 *            <code>null</code>.
+	 *            The token to add to the map of replacements. Must not be <code>null</code>.
 	 */
 	public void addConfiguredToken(final Token token) {
-		hash.put(token.getKey(), token.getValue());
+		this.hash.put(token.getKey(), token.getValue());
 	}
 
 	/**
@@ -181,7 +178,7 @@ public final class ReplaceTokensFilterReader extends AbstractBaseFilterReader {
 
 		/**
 		 * Sets the token key
-		 * 
+		 *
 		 * @param key
 		 *            The key for this token. Must not be <code>null</code>.
 		 */
@@ -191,7 +188,7 @@ public final class ReplaceTokensFilterReader extends AbstractBaseFilterReader {
 
 		/**
 		 * Sets the token value
-		 * 
+		 *
 		 * @param value
 		 *            The value for this token. Must not be <code>null</code>.
 		 */
@@ -201,20 +198,20 @@ public final class ReplaceTokensFilterReader extends AbstractBaseFilterReader {
 
 		/**
 		 * Returns the key for this token.
-		 * 
+		 *
 		 * @return the key for this token
 		 */
 		public final String getKey() {
-			return key;
+			return this.key;
 		}
 
 		/**
 		 * Returns the value for this token.
-		 * 
+		 *
 		 * @return the value for this token
 		 */
 		public final String getValue() {
-			return value;
+			return this.value;
 		}
 	}
 }

@@ -1,18 +1,16 @@
 /*
- * Copyright (c) 2001-2008 Caucho Technology, Inc. All rights reserved. The Apache Software License, Version 1.1 Redistribution and use in source and
- * binary forms, with or without modification, are permitted provided that the following conditions are met: 1. Redistributions of source code must
- * retain the above copyright notice, this list of conditions and the following disclaimer. 2. Redistributions in binary form must reproduce the above
- * copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
- * 3. The end-user documentation included with the redistribution, if any, must include the following acknowlegement: "This product includes software
- * developed by the Caucho Technology (http://www.caucho.com/)." Alternately, this acknowlegement may appear in the software itself, if and wherever
- * such third-party acknowlegements normally appear. 4. The names "Burlap", "Resin", and "Caucho" must not be used to endorse or promote products
- * derived from this software without prior written permission. For written permission, please contact info@caucho.com. 5. Products derived from this
- * software may not be called "Resin" nor may "Resin" appear in their names without prior written permission of Caucho Technology. THIS SOFTWARE IS
- * PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL CAUCHO TECHNOLOGY OR ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * Copyright (c) 2001-2008 Caucho Technology, Inc. All rights reserved. The Apache Software License, Version 1.1 Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met: 1. Redistributions of source code must retain the above copyright notice, this list of conditions and
+ * the following disclaimer. 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution. 3. The end-user documentation included with the redistribution, if any, must include the following acknowlegement: "This
+ * product includes software developed by the Caucho Technology (http://www.caucho.com/)." Alternately, this acknowlegement may appear in the software itself, if and wherever such
+ * third-party acknowlegements normally appear. 4. The names "Burlap", "Resin", and "Caucho" must not be used to endorse or promote products derived from this software without
+ * prior written permission. For written permission, please contact info@caucho.com. 5. Products derived from this software may not be called "Resin" nor may "Resin" appear in
+ * their names without prior written permission of Caucho Technology. THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL CAUCHO TECHNOLOGY OR ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+ * BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+ * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * @author Scott Ferguson
  */
 
@@ -35,6 +33,7 @@ import org.slf4j.LoggerFactory;
 public class JavaDeserializer extends AbstractMapDeserializer {
 
 	private static final Logger					logger	= LoggerFactory.getLogger(JavaDeserializer.class);
+
 	private final Class<?>						type;
 	private final HashMap<?, FieldDeserializer>	fieldMap;
 	private final Method						readResolve;
@@ -303,7 +302,7 @@ public class JavaDeserializer extends AbstractMapDeserializer {
 	 * Creates a map of the classes fields.
 	 */
 	protected HashMap<String, FieldDeserializer> getFieldMap(Class<?> cl) {
-		HashMap<String, FieldDeserializer> fieldMap = new HashMap<String, FieldDeserializer>();
+		HashMap<String, FieldDeserializer> fieldMap = new HashMap<>();
 
 		for (; cl != null; cl = cl.getSuperclass()) {
 			Field[] fields = cl.getDeclaredFields();
@@ -319,7 +318,7 @@ public class JavaDeserializer extends AbstractMapDeserializer {
 				// XXX: could parameterize the handler to only deal with public
 				try {
 					field.setAccessible(true);
-				} catch (Throwable e) {
+				} catch (Exception e) {
 					JavaDeserializer.logger.error(null, e);
 				}
 
@@ -387,11 +386,13 @@ public class JavaDeserializer extends AbstractMapDeserializer {
 	}
 
 	abstract static class FieldDeserializer {
+
 		abstract void deserialize(AbstractHessianInput in, Object obj) throws IOException;
 	}
 
 	static class NullFieldDeserializer extends FieldDeserializer {
-		static NullFieldDeserializer	DESER	= new NullFieldDeserializer();
+
+		static NullFieldDeserializer DESER = new NullFieldDeserializer();
 
 		@Override
 		void deserialize(AbstractHessianInput in, Object obj) throws IOException {
@@ -400,7 +401,8 @@ public class JavaDeserializer extends AbstractMapDeserializer {
 	}
 
 	static class ObjectFieldDeserializer extends FieldDeserializer {
-		private final Field	_field;
+
+		private final Field _field;
 
 		ObjectFieldDeserializer(Field field) {
 			this._field = field;
@@ -421,7 +423,8 @@ public class JavaDeserializer extends AbstractMapDeserializer {
 	}
 
 	static class BooleanFieldDeserializer extends FieldDeserializer {
-		private final Field	_field;
+
+		private final Field _field;
 
 		BooleanFieldDeserializer(Field field) {
 			this._field = field;
@@ -442,7 +445,8 @@ public class JavaDeserializer extends AbstractMapDeserializer {
 	}
 
 	static class ByteFieldDeserializer extends FieldDeserializer {
-		private final Field	_field;
+
+		private final Field _field;
 
 		ByteFieldDeserializer(Field field) {
 			this._field = field;
@@ -463,7 +467,8 @@ public class JavaDeserializer extends AbstractMapDeserializer {
 	}
 
 	static class ShortFieldDeserializer extends FieldDeserializer {
-		private final Field	_field;
+
+		private final Field _field;
 
 		ShortFieldDeserializer(Field field) {
 			this._field = field;
@@ -484,7 +489,8 @@ public class JavaDeserializer extends AbstractMapDeserializer {
 	}
 
 	static class IntFieldDeserializer extends FieldDeserializer {
-		private final Field	_field;
+
+		private final Field _field;
 
 		IntFieldDeserializer(Field field) {
 			this._field = field;
@@ -505,7 +511,8 @@ public class JavaDeserializer extends AbstractMapDeserializer {
 	}
 
 	static class LongFieldDeserializer extends FieldDeserializer {
-		private final Field	_field;
+
+		private final Field _field;
 
 		LongFieldDeserializer(Field field) {
 			this._field = field;
@@ -526,7 +533,8 @@ public class JavaDeserializer extends AbstractMapDeserializer {
 	}
 
 	static class FloatFieldDeserializer extends FieldDeserializer {
-		private final Field	_field;
+
+		private final Field _field;
 
 		FloatFieldDeserializer(Field field) {
 			this._field = field;
@@ -547,7 +555,8 @@ public class JavaDeserializer extends AbstractMapDeserializer {
 	}
 
 	static class DoubleFieldDeserializer extends FieldDeserializer {
-		private final Field	_field;
+
+		private final Field _field;
 
 		DoubleFieldDeserializer(Field field) {
 			this._field = field;
@@ -568,7 +577,8 @@ public class JavaDeserializer extends AbstractMapDeserializer {
 	}
 
 	static class StringFieldDeserializer extends FieldDeserializer {
-		private final Field	_field;
+
+		private final Field _field;
 
 		StringFieldDeserializer(Field field) {
 			this._field = field;
@@ -589,7 +599,8 @@ public class JavaDeserializer extends AbstractMapDeserializer {
 	}
 
 	static class SqlDateFieldDeserializer extends FieldDeserializer {
-		private final Field	_field;
+
+		private final Field _field;
 
 		SqlDateFieldDeserializer(Field field) {
 			this._field = field;
@@ -616,7 +627,8 @@ public class JavaDeserializer extends AbstractMapDeserializer {
 	}
 
 	static class SqlTimestampFieldDeserializer extends FieldDeserializer {
-		private final Field	_field;
+
+		private final Field _field;
 
 		SqlTimestampFieldDeserializer(Field field) {
 			this._field = field;
@@ -643,7 +655,8 @@ public class JavaDeserializer extends AbstractMapDeserializer {
 	}
 
 	static class SqlTimeFieldDeserializer extends FieldDeserializer {
-		private final Field	_field;
+
+		private final Field _field;
 
 		SqlTimeFieldDeserializer(Field field) {
 			this._field = field;
@@ -670,7 +683,7 @@ public class JavaDeserializer extends AbstractMapDeserializer {
 	}
 
 	static void logDeserializeError(Field field, Object obj, Object value, Throwable e) throws IOException {
-		String fieldName = (field.getDeclaringClass().getName() + "." + field.getName());
+		String fieldName = field.getDeclaringClass().getName() + "." + field.getName();
 
 		if (e instanceof HessianFieldException) {
 			throw (HessianFieldException) e;
@@ -679,8 +692,7 @@ public class JavaDeserializer extends AbstractMapDeserializer {
 		}
 
 		if (value != null) {
-			throw new HessianFieldException(fieldName + ": " + value.getClass().getName() + " (" + value + ")" + " cannot be assigned to '" + field
-					.getType().getName() + "'", e);
+			throw new HessianFieldException(fieldName + ": " + value.getClass().getName() + " (" + value + ")" + " cannot be assigned to '" + field.getType().getName() + "'", e);
 		} else {
 			throw new HessianFieldException(fieldName + ": " + field.getType().getName() + " cannot be assigned from null", e);
 		}

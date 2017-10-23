@@ -22,37 +22,36 @@ import com.ontimize.jee.server.security.authorization.DefaultOntimizeAuthorizato
  */
 public class SecurityBeanDefinitionParser extends AbstractSingleBeanDefinitionParser {
 
-	private static final String AUTHORIZATION_PROPERTY = "authorizator";
-	private static final String DEFAULT_AUTHORIZATOR_PROPERTY = "default-authorizator";
+	private static final String	AUTHORIZATION_PROPERTY					= "authorizator";
+	private static final String	DEFAULT_AUTHORIZATOR_PROPERTY			= "default-authorizator";
 
-	private static final String AUTHORIZATION = "authorization";
-	private static final String USER_INFORMATION_SERVICE = "user-information-service";
-	private static final String USER_ROLE_INFORMATION_SERVICE = "user-role-information-service";
-	private static final String ROLE_INFORMATION_SERVICE = "role-information-service";
-	private static final String SCOPE = "scope";
+	private static final String	AUTHORIZATION							= "authorization";
+	private static final String	USER_INFORMATION_SERVICE				= "user-information-service";
+	private static final String	USER_ROLE_INFORMATION_SERVICE			= "user-role-information-service";
+	private static final String	ROLE_INFORMATION_SERVICE				= "role-information-service";
+	private static final String	SCOPE									= "scope";
 
-	private static final String DATABASE_USER_INFORMATION_SERVICE = "database-user-information-service";
-	private static final String DUIS_REF_USER_REPOSITORY = "ref-user-repository";
-	private static final String DUIS_QUERY_ID = "query-id";
-	private static final String DUIS_USER_LOGIN_COLUMN = "user-login-column";
-	private static final String DUIS_USER_PASSWORD_COLUMN = "user-password-column";
-	private static final String DUIS_USER_NEED_CHECK_PASS_COLUMN = "user-need-check-pass-column";
-	private static final String DUIS_OTHER_DATA = "other-data";
+	private static final String	DATABASE_USER_INFORMATION_SERVICE		= "database-user-information-service";
+	private static final String	DUIS_REF_USER_REPOSITORY				= "ref-user-repository";
+	private static final String	DUIS_QUERY_ID							= "query-id";
+	private static final String	DUIS_USER_LOGIN_COLUMN					= "user-login-column";
+	private static final String	DUIS_USER_PASSWORD_COLUMN				= "user-password-column";
+	private static final String	DUIS_USER_NEED_CHECK_PASS_COLUMN		= "user-need-check-pass-column";
+	private static final String	DUIS_OTHER_DATA							= "other-data";
 
-	private static final String DATABASE_USER_ROLE_INFORMATION_SERVICE = "database-user-role-information-service";
-	private static final String DURIS_REF_USER_ROLE_REPOSITORY = "ref-user-role-repository";
-	private static final String DURIS_QUERY_ID = "query-id";
-	private static final String DURIS_USER_LOGIN_COLUMN = "user-login-column";
-	private static final String DURIS_ROLE_NAME_COLUMN = "role-name-column";
+	private static final String	DATABASE_USER_ROLE_INFORMATION_SERVICE	= "database-user-role-information-service";
+	private static final String	DURIS_REF_USER_ROLE_REPOSITORY			= "ref-user-role-repository";
+	private static final String	DURIS_QUERY_ID							= "query-id";
+	private static final String	DURIS_USER_LOGIN_COLUMN					= "user-login-column";
+	private static final String	DURIS_ROLE_NAME_COLUMN					= "role-name-column";
 
-	private static final String DATABASE_ROLE_INFORMATION_SERVICE = "database-role-information-service";
-	private static final String DRIS_REF_ROLE_REPOSITORY = "ref-role-repository";
-	private static final String DRIS_ROLE_NAME_COLUMN = "role-name-column";
-	private static final String DRIS_SERVER_PERMISSION_QUERY_ID = "server-permission-query-id";
-	private static final String DRIS_SERVER_PERMISSION_NAME_COLUMN = "server-permission-name-column";
-	private static final String DRIS_CLIENT_PERMISSION_QUERY_ID = "client-permission-query-id";
-	private static final String DRIS_CLIENT_PERMISSION_COLUMN = "client-permission-column";
-
+	private static final String	DATABASE_ROLE_INFORMATION_SERVICE		= "database-role-information-service";
+	private static final String	DRIS_REF_ROLE_REPOSITORY				= "ref-role-repository";
+	private static final String	DRIS_ROLE_NAME_COLUMN					= "role-name-column";
+	private static final String	DRIS_SERVER_PERMISSION_QUERY_ID			= "server-permission-query-id";
+	private static final String	DRIS_SERVER_PERMISSION_NAME_COLUMN		= "server-permission-name-column";
+	private static final String	DRIS_CLIENT_PERMISSION_QUERY_ID			= "client-permission-query-id";
+	private static final String	DRIS_CLIENT_PERMISSION_COLUMN			= "client-permission-column";
 
 	/*
 	 * (non-Javadoc)
@@ -88,7 +87,7 @@ public class SecurityBeanDefinitionParser extends AbstractSingleBeanDefinitionPa
 					this.doParseUserRoleInformationService((Element) item, ctx, builder);
 				} else if (SecurityBeanDefinitionParser.ROLE_INFORMATION_SERVICE.equals(item.getLocalName())) {
 					this.doParseRoleInformationService((Element) item, ctx, builder);
-				} else if ((SecurityBeanDefinitionParser.AUTHORIZATION.equals(item.getLocalName()))) {
+				} else if (SecurityBeanDefinitionParser.AUTHORIZATION.equals(item.getLocalName())) {
 					this.doParseAuthorization((Element) item, ctx, builder);
 				}
 			}
@@ -286,7 +285,8 @@ public class SecurityBeanDefinitionParser extends AbstractSingleBeanDefinitionPa
 
 			builder.addPropertyValue("userLoginColumn", DefinitionParserUtil.nullIfEmpty(element.getAttribute(SecurityBeanDefinitionParser.DUIS_USER_LOGIN_COLUMN)));
 			builder.addPropertyValue("userPasswordColumn", DefinitionParserUtil.nullIfEmpty(element.getAttribute(SecurityBeanDefinitionParser.DUIS_USER_PASSWORD_COLUMN)));
-			builder.addPropertyValue("userNeedCheckPassColumn", DefinitionParserUtil.nullIfEmpty(element.getAttribute(SecurityBeanDefinitionParser.DUIS_USER_NEED_CHECK_PASS_COLUMN)));
+			builder.addPropertyValue("userNeedCheckPassColumn",
+			        DefinitionParserUtil.nullIfEmpty(element.getAttribute(SecurityBeanDefinitionParser.DUIS_USER_NEED_CHECK_PASS_COLUMN)));
 			builder.addPropertyValue("userOtherDataColumns", DefinitionParserUtil.nullIfEmpty(element.getAttribute(SecurityBeanDefinitionParser.DUIS_OTHER_DATA)));
 			builder.addPropertyValue("userQueryId", DefinitionParserUtil.nullIfEmpty(element.getAttribute(SecurityBeanDefinitionParser.DUIS_QUERY_ID)));
 
@@ -389,12 +389,12 @@ public class SecurityBeanDefinitionParser extends AbstractSingleBeanDefinitionPa
 			// en otro contexto //TODO check this (we need the same reference)
 			builder.addPropertyValue("roleNameColumn", DefinitionParserUtil.nullIfEmpty(element.getAttribute(SecurityBeanDefinitionParser.DRIS_ROLE_NAME_COLUMN)));
 			builder.addPropertyValue("serverPermissionKeyColumn",
-					DefinitionParserUtil.nullIfEmpty(element.getAttribute(SecurityBeanDefinitionParser.DRIS_SERVER_PERMISSION_NAME_COLUMN)));
+			        DefinitionParserUtil.nullIfEmpty(element.getAttribute(SecurityBeanDefinitionParser.DRIS_SERVER_PERMISSION_NAME_COLUMN)));
 			builder.addPropertyValue("clientPermissionColumn", DefinitionParserUtil.nullIfEmpty(element.getAttribute(SecurityBeanDefinitionParser.DRIS_CLIENT_PERMISSION_COLUMN)));
 			builder.addPropertyValue("serverPermissionQueryId",
-					DefinitionParserUtil.nullIfEmpty(element.getAttribute(SecurityBeanDefinitionParser.DRIS_SERVER_PERMISSION_QUERY_ID)));
+			        DefinitionParserUtil.nullIfEmpty(element.getAttribute(SecurityBeanDefinitionParser.DRIS_SERVER_PERMISSION_QUERY_ID)));
 			builder.addPropertyValue("clientPermissionQueryId",
-					DefinitionParserUtil.nullIfEmpty(element.getAttribute(SecurityBeanDefinitionParser.DRIS_CLIENT_PERMISSION_QUERY_ID)));
+			        DefinitionParserUtil.nullIfEmpty(element.getAttribute(SecurityBeanDefinitionParser.DRIS_CLIENT_PERMISSION_QUERY_ID)));
 
 			// Set the scope
 			builder.setScope(element.getAttribute(SecurityBeanDefinitionParser.SCOPE));

@@ -1,13 +1,12 @@
 package com.ontimize.jee.common.spring.parser;
 
-
 /**
  * The Class FixedPropertyResolver.
  */
 public class FixedPropertyResolver<T> extends AbstractPropertyResolver<T> {
 
 	/** The value. */
-	private T	value;
+	private T value;
 
 	/**
 	 * The Constructor.

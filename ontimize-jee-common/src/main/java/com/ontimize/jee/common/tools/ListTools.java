@@ -22,8 +22,8 @@ public class ListTools {
 	 * @return the list
 	 */
 	public static <T> List<T> removeDuplicates(List<T> in) {
-		HashSet<T> set = new HashSet<T>(in);
-		return new ArrayList<T>(set);
+		HashSet<T> set = new HashSet<>(in);
+		return new ArrayList<>(set);
 	}
 
 	/**
@@ -49,7 +49,7 @@ public class ListTools {
 
 	/**
 	 * Returns if the list contains this object
-	 * 
+	 *
 	 * @param value
 	 * @param objects
 	 * @return

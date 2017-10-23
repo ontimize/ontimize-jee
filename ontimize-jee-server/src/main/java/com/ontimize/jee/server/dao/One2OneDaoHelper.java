@@ -27,9 +27,8 @@ public class One2OneDaoHelper implements ApplicationContextAware {
 
 	// @formatter:off
 	/**
-	 * Will define how one to one will work.
-	 * <br>When <b>DIRECT</b> type means that both tables has the same primary key, the first insert in main dao, and the key will be passed to the secondary daos.
-	 * <br>When <b>INVERSE</b> type means that the main dao is really the main entity and have reference to all other daos with foreign key o them.
+	 * Will define how one to one will work. <br>When <b>DIRECT</b> type means that both tables has the same primary key, the first insert in main dao, and the key will be passed
+	 * to the secondary daos. <br>When <b>INVERSE</b> type means that the main dao is really the main entity and have reference to all other daos with foreign key o them.
 	 */
 	// @formatter:on
 	public enum One2OneType {
@@ -57,8 +56,8 @@ public class One2OneDaoHelper implements ApplicationContextAware {
 		return this.applicationContext;
 	}
 
-	public EntityResult insert(DefaultOntimizeDaoHelper daoHelper, IOntimizeDaoSupport mainDao, List<OneToOneSubDao> secondaryDaos,
-			Map<?, ?> attributesValues, One2OneType type) throws OntimizeJEERuntimeException {
+	public EntityResult insert(DefaultOntimizeDaoHelper daoHelper, IOntimizeDaoSupport mainDao, List<OneToOneSubDao> secondaryDaos, Map<?, ?> attributesValues, One2OneType type)
+	        throws OntimizeJEERuntimeException {
 		if (type == One2OneType.INVERSE) {
 			return this.insertInverse(daoHelper, mainDao, secondaryDaos, attributesValues);
 		} else {
@@ -67,7 +66,7 @@ public class One2OneDaoHelper implements ApplicationContextAware {
 	}
 
 	public EntityResult insert(DefaultOntimizeDaoHelper daoHelper, IOntimizeDaoSupport mainDao, List<OneToOneSubDao> inverseSecondaryDaos, List<OneToOneSubDao> directSecondaryDaos,
-			Map<?, ?> attributesValues) throws OntimizeJEERuntimeException {
+	        Map<?, ?> attributesValues) throws OntimizeJEERuntimeException {
 		try {
 			this.insertInverseSecondaryDaos(daoHelper, inverseSecondaryDaos, attributesValues);
 			EntityResult insertMainDao = this.insertMainDao(daoHelper, mainDao, attributesValues);
@@ -98,7 +97,7 @@ public class One2OneDaoHelper implements ApplicationContextAware {
 	}
 
 	protected void insertDirectSecondaryDaos(DefaultOntimizeDaoHelper daoHelper, List<OneToOneSubDao> secondaryDaos, Map<?, ?> attributesValues, EntityResult resInsertMain)
-			throws OntimizeJEEException {
+	        throws OntimizeJEEException {
 		if (secondaryDaos != null) {
 			for (OneToOneSubDao subDao : secondaryDaos) {
 				// Consider to add link Key (it can be primary key or another
@@ -137,7 +136,7 @@ public class One2OneDaoHelper implements ApplicationContextAware {
 			for (OneToOneSubDao subDao : secondaryDaos) {
 				// Check to insert in second dao + update main dao to reference
 				if (this.checkColumns(subDao.getDao(), attributesValues, subDao.getNotEnoughColumns())//
-						&& !ObjectTools.containsIgnoreCase(attributesValues, subDao.getKeySecondary())) {
+				        && !ObjectTools.containsIgnoreCase(attributesValues, subDao.getKeySecondary())) {
 					this.checkRequiredColumns(attributesValues, subDao.getRequiredColumns(), true);
 					EntityResult resInsertSecondary = this.insertSubDao(daoHelper, attributesValues, subDao);
 
@@ -149,8 +148,8 @@ public class One2OneDaoHelper implements ApplicationContextAware {
 		}
 	}
 
-	public EntityResult update(DefaultOntimizeDaoHelper daoHelper, IOntimizeDaoSupport mainDao, List<OneToOneSubDao> secondaryDaos,
-			Map<?, ?> attributesValues, Map<?, ?> keysValues, One2OneType type) throws OntimizeJEERuntimeException {
+	public EntityResult update(DefaultOntimizeDaoHelper daoHelper, IOntimizeDaoSupport mainDao, List<OneToOneSubDao> secondaryDaos, Map<?, ?> attributesValues,
+	        Map<?, ?> keysValues, One2OneType type) throws OntimizeJEERuntimeException {
 		try {
 			EntityResult result = null;
 			// Checks formodifications in main dao
@@ -183,7 +182,7 @@ public class One2OneDaoHelper implements ApplicationContextAware {
 							if ((type == One2OneType.INVERSE) && !joinKeyIsMain) {
 								// Update reference from main dao to secondary
 								EntityResult resUpdateMain = daoHelper.update(mainDao,
-										EntityResultTools.keysvalues(subDao.getKey(), resInsertSecondary.get(subDao.getKeySecondary())), keysValues);
+								        EntityResultTools.keysvalues(subDao.getKey(), resInsertSecondary.get(subDao.getKeySecondary())), keysValues);
 								CheckingTools.checkValidEntityResult(resUpdateMain, "E_UPDATING_MAIN_DAO");
 							}
 							result = resInsertSecondary;
@@ -202,8 +201,7 @@ public class One2OneDaoHelper implements ApplicationContextAware {
 		}
 	}
 
-	public EntityResult delete(DefaultOntimizeDaoHelper daoHelper, IOntimizeDaoSupport mainDao, List<OneToOneSubDao> secondaryDaos,
-			Map<?, ?> attributesValues) {
+	public EntityResult delete(DefaultOntimizeDaoHelper daoHelper, IOntimizeDaoSupport mainDao, List<OneToOneSubDao> secondaryDaos, Map<?, ?> attributesValues) {
 		try {
 			// Delete in secondary daos
 			if (secondaryDaos != null) {
@@ -234,8 +232,7 @@ public class One2OneDaoHelper implements ApplicationContextAware {
 		}
 	}
 
-	private EntityResult deleteSubDao(DefaultOntimizeDaoHelper daoHelper, Map<?, ?> attributesValues, OneToOneSubDao subDao)
-			throws OntimizeJEEException {
+	private EntityResult deleteSubDao(DefaultOntimizeDaoHelper daoHelper, Map<?, ?> attributesValues, OneToOneSubDao subDao) throws OntimizeJEEException {
 		if (subDao.getListener() != null) {
 			subDao.getListener().preDelete(subDao.getDao(), attributesValues);
 		}
@@ -249,8 +246,7 @@ public class One2OneDaoHelper implements ApplicationContextAware {
 		return resDeleteSecondary;
 	}
 
-	private EntityResult insertSubDao(DefaultOntimizeDaoHelper daoHelper, Map<?, ?> attributesValues, OneToOneSubDao subDao)
-			throws OntimizeJEEException {
+	private EntityResult insertSubDao(DefaultOntimizeDaoHelper daoHelper, Map<?, ?> attributesValues, OneToOneSubDao subDao) throws OntimizeJEEException {
 		if (subDao.getListener() != null) {
 			subDao.getListener().preInsert(subDao.getDao(), attributesValues);
 		}
@@ -278,8 +274,8 @@ public class One2OneDaoHelper implements ApplicationContextAware {
 		return resUpdateSecond;
 	}
 
-	protected Object checksIfExists(DefaultOntimizeDaoHelper daoHelper, IOntimizeDaoSupport mainDao, IOntimizeDaoSupport secondaryDao,
-			Map<?, ?> keysValues, String joinKeySecondary) throws Exception {
+	protected Object checksIfExists(DefaultOntimizeDaoHelper daoHelper, IOntimizeDaoSupport mainDao, IOntimizeDaoSupport secondaryDao, Map<?, ?> keysValues,
+	        String joinKeySecondary) throws Exception {
 		Object secondaryKey = null;
 		if (!keysValues.containsKey(joinKeySecondary)) {
 			EntityResult resQuery = daoHelper.query(mainDao, keysValues, EntityResultTools.attributes(joinKeySecondary));
@@ -291,10 +287,9 @@ public class One2OneDaoHelper implements ApplicationContextAware {
 		if (secondaryKey == null) {
 			return null;
 		}
-		EntityResult resQuery = daoHelper.query(secondaryDao, EntityResultTools.keysvalues(joinKeySecondary, secondaryKey),
-				EntityResultTools.attributes(joinKeySecondary));
+		EntityResult resQuery = daoHelper.query(secondaryDao, EntityResultTools.keysvalues(joinKeySecondary, secondaryKey), EntityResultTools.attributes(joinKeySecondary));
 		CheckingTools.checkValidEntityResult(resQuery, "E_QUERYING_IN_SECONDARY_DAO");
-		return (resQuery.calculateRecordNumber() == 1) ? secondaryKey : null;
+		return resQuery.calculateRecordNumber() == 1 ? secondaryKey : null;
 	}
 
 	protected boolean checkColumns(IOntimizeDaoSupport dao, Map<?, ?> valuesToChange, List<String> notEnoughColumns) {
@@ -303,7 +298,7 @@ public class One2OneDaoHelper implements ApplicationContextAware {
 			for (DaoProperty daoProp : cudProperties) {
 				String propertyName = daoProp.getPropertyName();
 				if (ObjectTools.containsIgnoreCase(valuesToChange, propertyName) //
-						&& ((notEnoughColumns == null) || !ObjectTools.containsIgnoreCase(notEnoughColumns, propertyName))) {
+				        && ((notEnoughColumns == null) || !ObjectTools.containsIgnoreCase(notEnoughColumns, propertyName))) {
 					return true;
 				}
 			}
@@ -315,9 +310,9 @@ public class One2OneDaoHelper implements ApplicationContextAware {
 		if (requiredColumns != null) {
 			for (String s : requiredColumns) {
 				if (//
-						(toInsert && (!valuesToChange.containsKey(s) || (valuesToChange.get(s) == null) || (valuesToChange.get(s) instanceof NullValue))) //
-						|| //
-						((valuesToChange.containsKey(s) && (valuesToChange.get(s) == null)) || (valuesToChange.get(s) instanceof NullValue))) {//
+				(toInsert && (!valuesToChange.containsKey(s) || (valuesToChange.get(s) == null) || (valuesToChange.get(s) instanceof NullValue)) //
+				) || //
+				        (valuesToChange.containsKey(s) && (valuesToChange.get(s) == null)) || (valuesToChange.get(s) instanceof NullValue)) {//
 					throw new OntimizeJEERuntimeException("E_REQUIRED_" + s);
 				}
 			}
@@ -358,8 +353,7 @@ public class One2OneDaoHelper implements ApplicationContextAware {
 			this(dao, key, keySecondary, notEnoughColumns, requiredColumns, null);
 		}
 
-		public OneToOneSubDao(IOntimizeDaoSupport dao, String key, String keySecondary, List<String> notEnoughColumns, List<String> requiredColumns,
-				IListenerSubDao listener) {
+		public OneToOneSubDao(IOntimizeDaoSupport dao, String key, String keySecondary, List<String> notEnoughColumns, List<String> requiredColumns, IListenerSubDao listener) {
 			this.dao = dao;
 			this.key = key;
 			this.keySecondary = keySecondary;

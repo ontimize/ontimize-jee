@@ -24,7 +24,7 @@ public class BasicAuthenticationMechanism implements IAuthenticationMechanism {
 
 	@Override
 	public AuthenticationResult authenticate(HttpServletRequest request, HttpServletResponse response, AuthenticationManager authenticationManager,
-			UserDetailsService userDetailsService) {
+	        UserDetailsService userDetailsService) {
 		String header = request.getHeader("Authorization");
 
 		if ((header == null) || !header.startsWith("Basic ")) {

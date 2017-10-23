@@ -33,7 +33,7 @@ public interface IMailService {
 	 *             the exception
 	 */
 	void sendMail(String from, List<String> to, List<String> cc, List<String> bcc, String subject, String body, Map<String, byte[]> attachments,
-			Map<String, byte[]> inlineResources) throws OntimizeJEEException;
+	        Map<String, byte[]> inlineResources) throws OntimizeJEEException;
 
 	/**
 	 * Send mail.

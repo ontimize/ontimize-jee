@@ -17,17 +17,17 @@ import com.ontimize.jee.server.services.preferences.RemotePreferencesConfigurati
 public class RemotePreferencesBeanDefinitionParser extends AbstractSingleBeanDefinitionParser {
 
 	/** The Constant SCOPE. */
-	private static final String	SCOPE	= "scope";
-	private static final String ENGINE = "engine";
-	private static final String PREFERENCES_FILE_RPE = "file-remote-preference-engine";
-	private static final String PREFERENCES_DATABASE_RPE = "database-remote-preference-engine";
-	private static final String PREFERENCES_PATH = "path";
-	private static final String PREFERENCES_FILEPATH = "filePath";
-	private static final String PREFERENCES_REF_REPOSITORY = "ref-repository";
-	private static final String PREFERENCES_USER_COLUMN_NAME = "user-column-name";
-	private static final String PREFERENCES_PREF_NAME_COLUMN_NAME = "preference-name-column-name";
-	private static final String PREFERENCES_PREF_VALUE_COLUMN_NAME = "preference-value-column-name";
-	private static final String PREFERENCES_QUERY_ID = "query-id";
+	private static final String	SCOPE								= "scope";
+	private static final String	ENGINE								= "engine";
+	private static final String	PREFERENCES_FILE_RPE				= "file-remote-preference-engine";
+	private static final String	PREFERENCES_DATABASE_RPE			= "database-remote-preference-engine";
+	private static final String	PREFERENCES_PATH					= "path";
+	private static final String	PREFERENCES_FILEPATH				= "filePath";
+	private static final String	PREFERENCES_REF_REPOSITORY			= "ref-repository";
+	private static final String	PREFERENCES_USER_COLUMN_NAME		= "user-column-name";
+	private static final String	PREFERENCES_PREF_NAME_COLUMN_NAME	= "preference-name-column-name";
+	private static final String	PREFERENCES_PREF_VALUE_COLUMN_NAME	= "preference-value-column-name";
+	private static final String	PREFERENCES_QUERY_ID				= "query-id";
 
 	/*
 	 * (non-Javadoc)
@@ -61,8 +61,7 @@ public class RemotePreferencesBeanDefinitionParser extends AbstractSingleBeanDef
 			engine = new DatabaseRemotePreferencesParser().parse(child, nestedCtx);
 		} else {
 			// construimos el bean que nos venga que deberia ser un IRemoteApplicationPreferencesEngine
-			engine = DefinitionParserUtil.parseNode(child, ctx, builder.getBeanDefinition(),
-					element.getAttribute(RemotePreferencesBeanDefinitionParser.SCOPE), false);
+			engine = DefinitionParserUtil.parseNode(child, ctx, builder.getBeanDefinition(), element.getAttribute(RemotePreferencesBeanDefinitionParser.SCOPE), false);
 		}
 		builder.addPropertyValue(RemotePreferencesBeanDefinitionParser.ENGINE, engine);
 		builder.setLazyInit(true);
@@ -100,7 +99,7 @@ public class RemotePreferencesBeanDefinitionParser extends AbstractSingleBeanDef
 			// DefinitionParserUtil.parsePropertyResolverProperty(ctx, builder, element, "path", "filePath");
 
 			builder.addPropertyValue(RemotePreferencesBeanDefinitionParser.PREFERENCES_PATH,
-					DefinitionParserUtil.nullIfEmpty(element.getAttribute(RemotePreferencesBeanDefinitionParser.PREFERENCES_FILEPATH)));
+			        DefinitionParserUtil.nullIfEmpty(element.getAttribute(RemotePreferencesBeanDefinitionParser.PREFERENCES_FILEPATH)));
 			builder.setLazyInit(true);
 		}
 	}
@@ -134,9 +133,9 @@ public class RemotePreferencesBeanDefinitionParser extends AbstractSingleBeanDef
 			builder.addPropertyReference("dao", DefinitionParserUtil.nullIfEmpty(element.getAttribute(RemotePreferencesBeanDefinitionParser.PREFERENCES_REF_REPOSITORY)));
 			builder.addPropertyValue("userColumnName", DefinitionParserUtil.nullIfEmpty(element.getAttribute(RemotePreferencesBeanDefinitionParser.PREFERENCES_USER_COLUMN_NAME)));
 			builder.addPropertyValue("preferenceNameColumnName",
-					DefinitionParserUtil.nullIfEmpty(element.getAttribute(RemotePreferencesBeanDefinitionParser.PREFERENCES_PREF_NAME_COLUMN_NAME)));
+			        DefinitionParserUtil.nullIfEmpty(element.getAttribute(RemotePreferencesBeanDefinitionParser.PREFERENCES_PREF_NAME_COLUMN_NAME)));
 			builder.addPropertyValue("preferenceValueColumnName",
-					DefinitionParserUtil.nullIfEmpty(element.getAttribute(RemotePreferencesBeanDefinitionParser.PREFERENCES_PREF_VALUE_COLUMN_NAME)));
+			        DefinitionParserUtil.nullIfEmpty(element.getAttribute(RemotePreferencesBeanDefinitionParser.PREFERENCES_PREF_VALUE_COLUMN_NAME)));
 			builder.addPropertyValue("queryId", DefinitionParserUtil.nullIfEmpty(element.getAttribute(RemotePreferencesBeanDefinitionParser.PREFERENCES_QUERY_ID)));
 			builder.setLazyInit(true);
 		}

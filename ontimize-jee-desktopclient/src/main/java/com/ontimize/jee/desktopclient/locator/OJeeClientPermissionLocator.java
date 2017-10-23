@@ -44,13 +44,13 @@ import com.ontimize.security.ClientSecurityManager;
  */
 public class OJeeClientPermissionLocator extends PermissionReferenceLocator {
 
-	private static final Logger	logger								= LoggerFactory.getLogger(OJeeClientPermissionLocator.class);
-	private static final String	REMOTE_LOCATOR_INVOCATION_HANDLER	= "remoteLocatorInvocationHandler";
+	private static final Logger			logger								= LoggerFactory.getLogger(OJeeClientPermissionLocator.class);
+	private static final String			REMOTE_LOCATOR_INVOCATION_HANDLER	= "remoteLocatorInvocationHandler";
 
 	protected List<ISessionListener>	sessionListeners;
 
 	// protected String authorizationToken;
-	protected UserInformation	userInformation;
+	protected UserInformation			userInformation;
 
 	public OJeeClientPermissionLocator(Hashtable params) {
 		super(params);
@@ -58,8 +58,7 @@ public class OJeeClientPermissionLocator extends PermissionReferenceLocator {
 
 		InvocationHandler handler = BeansFactory.getBean(OJeeClientPermissionLocator.REMOTE_LOCATOR_INVOCATION_HANDLER, InvocationHandler.class);
 		if (handler == null) {
-			handler = ReflectionTools.newInstance((String) params.get(OJeeClientPermissionLocator.REMOTE_LOCATOR_INVOCATION_HANDLER),
-					InvocationHandler.class);
+			handler = ReflectionTools.newInstance((String) params.get(OJeeClientPermissionLocator.REMOTE_LOCATOR_INVOCATION_HANDLER), InvocationHandler.class);
 		}
 		this.setRemoteLocatorInvocationHandler(handler);
 	}
@@ -126,7 +125,7 @@ public class OJeeClientPermissionLocator extends PermissionReferenceLocator {
 			throw new OntimizeJEERuntimeException(I18NNaming.E_REMOTE_LOCATOR_INVOCATIONHANDLER_MUST_BE_DEFINED);
 		}
 		this.referenceLocatorServer = Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
-				ReflectionTools.getInterfacesExtending(PermissionSecureReferenceLocator.class, Remote.class), remoteLocatorInvocationHandler);
+		        ReflectionTools.getInterfacesExtending(PermissionSecureReferenceLocator.class, Remote.class), remoteLocatorInvocationHandler);
 	}
 
 	@Override
@@ -156,11 +155,9 @@ public class OJeeClientPermissionLocator extends PermissionReferenceLocator {
 			this.updateHourServerThread = ReflectionTools.newInstance(TimeThread.class, this);
 			this.updateHourServerThread.start();
 		} else {
-			MessageDialog.showMessage((JDialog) null,
-					"Error retrieving client permissions from column : " + this.clientPermissionsColumn + ", : Returned NULL value",
-					JOptionPane.ERROR_MESSAGE, null);
-			OJeeClientPermissionLocator.logger.error("Error retrieving client permissions from column : {} . Returned NULL value",
-					this.clientPermissionsColumn);
+			MessageDialog.showMessage((JDialog) null, "Error retrieving client permissions from column : " + this.clientPermissionsColumn + ", : Returned NULL value",
+			        JOptionPane.ERROR_MESSAGE, null);
+			OJeeClientPermissionLocator.logger.error("Error retrieving client permissions from column : {} . Returned NULL value", this.clientPermissionsColumn);
 		}
 	}
 

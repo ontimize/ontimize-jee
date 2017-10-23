@@ -11,27 +11,28 @@ import com.ontimize.db.SQLStatementBuilder.Operator;
 import com.ontimize.jee.common.exceptions.OntimizeJEEException;
 
 public class BasicExpressionProcessor {
-	protected static BasicExpressionProcessor processor;
 
-	protected static final String OR = BasicOperator.OR.trim();
-	protected static final String AND = BasicOperator.AND.trim();
-	protected static final String OR_NOT = BasicOperator.OR_NOT.trim();
-	protected static final String AND_NOT = BasicOperator.AND_NOT.trim();
-	protected static final String LESS = BasicOperator.LESS.trim();
-	protected static final String LESS_EQUAL = BasicOperator.LESS_EQUAL.trim();
-	protected static final String EQUAL = BasicOperator.EQUAL.trim();
-	protected static final String MORE_EQUAL = BasicOperator.MORE_EQUAL.trim();
-	protected static final String MORE = BasicOperator.MORE.trim();
-	protected static final String NULL = BasicOperator.NULL.trim();
-	protected static final String NOT_EQUAL = BasicOperator.NOT_EQUAL.trim();
-	protected static final String NOT_NULL = BasicOperator.NOT_NULL.trim();
-	protected static final String LIKE = BasicOperator.LIKE.trim();
-	protected static final String NOT_LIKE = BasicOperator.NOT_LIKE.trim();
-	protected static final String IN = SQLStatementBuilder.IN.trim();
+	protected static BasicExpressionProcessor	processor;
 
-	public static final String LEFT_OPERAND = "lop";
-	public static final String RIGHT_OPERAND = "rop";
-	public static final String OPERATOR = "op";
+	protected static final String				OR				= BasicOperator.OR.trim();
+	protected static final String				AND				= BasicOperator.AND.trim();
+	protected static final String				OR_NOT			= BasicOperator.OR_NOT.trim();
+	protected static final String				AND_NOT			= BasicOperator.AND_NOT.trim();
+	protected static final String				LESS			= BasicOperator.LESS.trim();
+	protected static final String				LESS_EQUAL		= BasicOperator.LESS_EQUAL.trim();
+	protected static final String				EQUAL			= BasicOperator.EQUAL.trim();
+	protected static final String				MORE_EQUAL		= BasicOperator.MORE_EQUAL.trim();
+	protected static final String				MORE			= BasicOperator.MORE.trim();
+	protected static final String				NULL			= BasicOperator.NULL.trim();
+	protected static final String				NOT_EQUAL		= BasicOperator.NOT_EQUAL.trim();
+	protected static final String				NOT_NULL		= BasicOperator.NOT_NULL.trim();
+	protected static final String				LIKE			= BasicOperator.LIKE.trim();
+	protected static final String				NOT_LIKE		= BasicOperator.NOT_LIKE.trim();
+	protected static final String				IN				= SQLStatementBuilder.IN.trim();
+
+	public static final String					LEFT_OPERAND	= "lop";
+	public static final String					RIGHT_OPERAND	= "rop";
+	public static final String					OPERATOR		= "op";
 
 	public static BasicExpressionProcessor getInstance() {
 		if (BasicExpressionProcessor.processor == null) {
@@ -41,7 +42,7 @@ public class BasicExpressionProcessor {
 	}
 
 	public BasicExpression processBasicEspression(Object value) throws OntimizeJEEException {
-		return this.processBasicEspression(value, new HashMap<Object, Object>());
+		return this.processBasicEspression(value, new HashMap<>());
 	}
 
 	public BasicExpression processBasicEspression(Object value, Map<?, ?> hSqlTypes) throws OntimizeJEEException {
@@ -81,7 +82,7 @@ public class BasicExpressionProcessor {
 	}
 
 	protected Object processLeftOperand(Object lValue) throws OntimizeJEEException {
-		return this.processLeftOperand(lValue, new HashMap<Object, Object>());
+		return this.processLeftOperand(lValue, new HashMap<>());
 	}
 
 	protected Object processLeftOperand(Object lValue, Map<?, ?> hSqlTypes) throws OntimizeJEEException {
@@ -93,11 +94,10 @@ public class BasicExpressionProcessor {
 	}
 
 	protected Object processRightOperand(Object rValue) throws OntimizeJEEException {
-		return this.processRightOperand(rValue, null, new HashMap<Object, Object>());
+		return this.processRightOperand(rValue, null, new HashMap<>());
 	}
 
-	protected Object processRightOperand(Object rValue, BasicField bF, Map<?, ?> hSqlTypes)
-			throws OntimizeJEEException {
+	protected Object processRightOperand(Object rValue, BasicField bF, Map<?, ?> hSqlTypes) throws OntimizeJEEException {
 		if (rValue instanceof Map) {
 			return this.processBasicEspression(rValue, hSqlTypes);
 		} else {

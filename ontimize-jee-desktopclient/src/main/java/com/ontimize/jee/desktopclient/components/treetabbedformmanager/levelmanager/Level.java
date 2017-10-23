@@ -7,44 +7,43 @@ import java.util.ResourceBundle;
 import com.ontimize.util.FormatPattern;
 
 public interface Level {
-    String LEVEL_MANAGER = "levelmanager";
-    String DISPLAY_TEXT_DATE_FORMAT = "displaytextdateformat";
-    String DISPLAY_TEXT_FORMAT = "displaytextformat";
-    String SHOW_IN_MAIN_FORM_AVAILABLE = "showinmainformavailable";
-    String ID = "id";
-    String PREVIOUS_LEVEL = "previouslevel";
-    String NEXT_LEVEL = "nextlevel";
 
-    String getDisplayText();
+	String	LEVEL_MANAGER				= "levelmanager";
+	String	DISPLAY_TEXT_DATE_FORMAT	= "displaytextdateformat";
+	String	DISPLAY_TEXT_FORMAT			= "displaytextformat";
+	String	SHOW_IN_MAIN_FORM_AVAILABLE	= "showinmainformavailable";
+	String	ID							= "id";
+	String	PREVIOUS_LEVEL				= "previouslevel";
+	String	NEXT_LEVEL					= "nextlevel";
 
-    Map<String, List<?>> getSelectedData();
+	String getDisplayText();
 
-    void setNextLevelId(String nextLevelId);
+	Map<String, List<?>> getSelectedData();
 
-    String getNextLevelId();
+	void setNextLevelId(String nextLevelId);
 
-    void setPreviousLevelId(String previousLevelId);
+	String getNextLevelId();
 
-    String getPreviousLevelId();
+	void setPreviousLevelId(String previousLevelId);
 
-    void reload();
+	String getPreviousLevelId();
 
-    String getId();
+	void reload();
 
-    String getFormName();
+	String getId();
 
-    Map<?, ?> getKeysValues();
+	String getFormName();
 
-    List<?> getParentKeys();
+	Map<?, ?> getKeysValues();
 
-    String getEntityName();
+	List<?> getParentKeys();
 
-    FormatPattern getDetailFormatPattern();
+	String getEntityName();
 
-    ResourceBundle getResourceBundle();
+	FormatPattern getDetailFormatPattern();
 
-    LevelManager getLevelManager();
+	ResourceBundle getResourceBundle();
 
-
+	LevelManager getLevelManager();
 
 }

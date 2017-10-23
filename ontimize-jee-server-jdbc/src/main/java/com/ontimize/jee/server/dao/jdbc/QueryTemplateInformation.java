@@ -33,8 +33,7 @@ public class QueryTemplateInformation {
 	 * @param functionColumns
 	 *            the function columns
 	 */
-	public QueryTemplateInformation(String sql, List<AmbiguousColumnType> ambiguousColumns, List<FunctionColumnType> functionColumns,
-			List<String> validColumns) {
+	public QueryTemplateInformation(String sql, List<AmbiguousColumnType> ambiguousColumns, List<FunctionColumnType> functionColumns, List<String> validColumns) {
 		this();
 		this.sqlTemplate = sql;
 		this.ambiguousColumns = ambiguousColumns;

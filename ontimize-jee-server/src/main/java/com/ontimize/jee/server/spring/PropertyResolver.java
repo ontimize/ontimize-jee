@@ -76,7 +76,7 @@ public class PropertyResolver<T> extends AbstractPropertyResolver<T> implements 
 	@Override
 	public T getValue() throws DataAccessException {
 		Object object = this.resolveEnvVars(String.valueOf(this.properties.get(this.property)));
-		return (T) (object);
+		return (T) object;
 	}
 
 	protected String resolveEnvVars(String input) {

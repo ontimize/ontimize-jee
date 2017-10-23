@@ -15,7 +15,8 @@ import com.ontimize.db.EntityResult;
 
 public class PostgresSQLStatementHandler extends com.ontimize.db.handler.PostgresSQLStatementHandler {
 
-	private static final Logger	logger	= LoggerFactory.getLogger(PostgresSQLStatementHandler.class);
+	private static final Logger logger = LoggerFactory.getLogger(PostgresSQLStatementHandler.class);
+
 	public PostgresSQLStatementHandler() {
 		super();
 	}

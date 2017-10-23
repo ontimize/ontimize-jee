@@ -33,19 +33,20 @@ import com.ontimize.util.logging.LevelCellRenderer;
  * The Class IMLiveLogConsole.
  */
 public class IMSetupLogLevel extends BasicInteractionManager {
-	private static final Logger logger = LoggerFactory.getLogger(IMSetupLogLevel.class);
+
+	private static final Logger			logger	= LoggerFactory.getLogger(IMSetupLogLevel.class);
 
 	@FormComponent(attr = "B_REFRESH")
-	protected Button	bRefresh;
+	protected Button					bRefresh;
 	@FormComponent(attr = "RESULTS")
-	protected Row		rowTable;
+	protected Row						rowTable;
 
 	@FormComponent(attr = "DETAILS")
-	protected Table table;
+	protected Table						table;
 
-	protected IServerManagementService serverManagement;
+	protected IServerManagementService	serverManagement;
 
-	protected LoggerModel tableModel;
+	protected LoggerModel				tableModel;
 
 	public IMSetupLogLevel() {
 		super();
@@ -83,6 +84,7 @@ public class IMSetupLogLevel extends BasicInteractionManager {
 	}
 
 	class LoggerModel extends TableSorter {
+
 		public LoggerModel(IServerManagementService manager, Vector columns) {
 			super(new CustomLoggerExtendedTableModel(new Hashtable<>(), columns, new Hashtable<>(), true, manager));
 		}
@@ -93,11 +95,12 @@ public class IMSetupLogLevel extends BasicInteractionManager {
 	}
 
 	public class CustomLoggerExtendedTableModel extends ExtendedTableModel {
+
 		protected IServerManagementService		manager;
 		final protected List<OntimizeJEELogger>	list	= new ArrayList<>();
 
 		public CustomLoggerExtendedTableModel(Hashtable<Object, Object> hashtable, Vector columns, Hashtable<Object, Object> hashtable2, boolean b,
-				IServerManagementService manager) {
+		        IServerManagementService manager) {
 			super(hashtable, columns, hashtable2, b);
 			this.manager = manager;
 		}
@@ -214,6 +217,7 @@ public class IMSetupLogLevel extends BasicInteractionManager {
 	}
 
 	public class RefreshSetupLogLevelListener implements ActionListener {
+
 		private final LoggerModel tableModel;
 
 		public RefreshSetupLogLevelListener(LoggerModel tableModel) {
@@ -224,6 +228,7 @@ public class IMSetupLogLevel extends BasicInteractionManager {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			new Thread(new Runnable() {
+
 				@Override
 				public void run() {
 					List<OntimizeJEELogger> loggers = RefreshSetupLogLevelListener.this.getLoggerList();
@@ -240,7 +245,7 @@ public class IMSetupLogLevel extends BasicInteractionManager {
 					IMSetupLogLevel.logger.error("getLoggerList exception", e);
 				}
 			}
-			return new ArrayList<OntimizeJEELogger>();
+			return new ArrayList<>();
 		}
 	}
 }

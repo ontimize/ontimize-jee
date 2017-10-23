@@ -1,18 +1,16 @@
 /*
- * Copyright (c) 2001-2004 Caucho Technology, Inc. All rights reserved. The Apache Software License, Version 1.1 Redistribution and use in source and
- * binary forms, with or without modification, are permitted provided that the following conditions are met: 1. Redistributions of source code must
- * retain the above copyright notice, this list of conditions and the following disclaimer. 2. Redistributions in binary form must reproduce the above
- * copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
- * 3. The end-user documentation included with the redistribution, if any, must include the following acknowlegement: "This product includes software
- * developed by the Caucho Technology (http://www.caucho.com/)." Alternately, this acknowlegement may appear in the software itself, if and wherever
- * such third-party acknowlegements normally appear. 4. The names "Hessian", "Resin", and "Caucho" must not be used to endorse or promote products
- * derived from this software without prior written permission. For written permission, please contact info@caucho.com. 5. Products derived from this
- * software may not be called "Resin" nor may "Resin" appear in their names without prior written permission of Caucho Technology. THIS SOFTWARE IS
- * PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL CAUCHO TECHNOLOGY OR ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * Copyright (c) 2001-2004 Caucho Technology, Inc. All rights reserved. The Apache Software License, Version 1.1 Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met: 1. Redistributions of source code must retain the above copyright notice, this list of conditions and
+ * the following disclaimer. 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution. 3. The end-user documentation included with the redistribution, if any, must include the following acknowlegement: "This
+ * product includes software developed by the Caucho Technology (http://www.caucho.com/)." Alternately, this acknowlegement may appear in the software itself, if and wherever such
+ * third-party acknowlegements normally appear. 4. The names "Hessian", "Resin", and "Caucho" must not be used to endorse or promote products derived from this software without
+ * prior written permission. For written permission, please contact info@caucho.com. 5. Products derived from this software may not be called "Resin" nor may "Resin" appear in
+ * their names without prior written permission of Caucho Technology. THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL CAUCHO TECHNOLOGY OR ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+ * BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+ * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * @author Scott Ferguson
  */
 
@@ -27,16 +25,24 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Input stream for Hessian requests.
  *
  * <p>HessianInput is unbuffered, so any client needs to provide its own buffering.
  *
- * <pre> InputStream is = ...; // from http connection HessianInput in = new HessianInput(is); String value;
+ * <pre>
+ *  InputStream is = ...; // from http connection HessianInput in = new HessianInput(is); String value;
  *
- * in.startReply(); // read reply header value = in.readString(); // read string value in.completeReply(); // read reply footer </pre>
+ * in.startReply(); // read reply header value = in.readString(); // read string value in.completeReply(); // read reply footer
+ * </pre>
  */
 public class HessianInput extends AbstractHessianInput {
+
+	private static final Logger	logger		= LoggerFactory.getLogger(HessianInput.class);
+
 	private static int			END_OF_DATA	= -2;
 
 	private static Field		detailMessageField;
@@ -56,7 +62,7 @@ public class HessianInput extends AbstractHessianInput {
 
 	private Throwable			_replyFault;
 
-	private final StringBuffer	_sbuf		= new StringBuffer();
+	private final StringBuilder	_sbuf		= new StringBuilder();
 
 	// true if this is the last chunk
 	private boolean				_isLastChunk;
@@ -129,7 +135,9 @@ public class HessianInput extends AbstractHessianInput {
 	/**
 	 * Starts reading the call
 	 *
-	 * <pre> c major minor </pre>
+	 * <pre>
+	 *  c major minor
+	 * </pre>
 	 */
 	@Override
 	public int readCall() throws IOException {
@@ -165,7 +173,9 @@ public class HessianInput extends AbstractHessianInput {
 	 *
 	 * <p>A successful completion will have a single value:
 	 *
-	 * <pre> m b16 b8 method </pre>
+	 * <pre>
+	 *  m b16 b8 method
+	 * </pre>
 	 */
 	@Override
 	public String readMethod() throws IOException {
@@ -195,7 +205,9 @@ public class HessianInput extends AbstractHessianInput {
 	 *
 	 * <p>The call expects the following protocol data
 	 *
-	 * <pre> c major minor m b16 b8 method </pre>
+	 * <pre>
+	 *  c major minor m b16 b8 method
+	 * </pre>
 	 */
 	@Override
 	public void startCall() throws IOException {
@@ -213,7 +225,9 @@ public class HessianInput extends AbstractHessianInput {
 	 *
 	 * <p>A successful completion will have a single value:
 	 *
-	 * <pre> z </pre>
+	 * <pre>
+	 * z
+	 * </pre>
 	 */
 	@Override
 	public void completeCall() throws IOException {
@@ -221,8 +235,7 @@ public class HessianInput extends AbstractHessianInput {
 
 		if (tag == 'z') {
 		} else {
-			throw this
-					.error("expected end of call ('z') at " + this.codeName(tag) + ".  Check method arguments and ensure method overloading is enabled if necessary");
+			throw this.error("expected end of call ('z') at " + this.codeName(tag) + ".  Check method arguments and ensure method overloading is enabled if necessary");
 		}
 	}
 
@@ -259,7 +272,9 @@ public class HessianInput extends AbstractHessianInput {
 	 *
 	 * <p>A successful completion will have a single value:
 	 *
-	 * <pre> r </pre>
+	 * <pre>
+	 * r
+	 * </pre>
 	 */
 	@Override
 	public void startReply() throws Throwable {
@@ -301,7 +316,8 @@ public class HessianInput extends AbstractHessianInput {
 			if ((message != null) && (HessianInput.detailMessageField != null)) {
 				try {
 					HessianInput.detailMessageField.set(this._replyFault, message);
-				} catch (Throwable e) {
+				} catch (Exception e) {
+					HessianInput.logger.trace(null, e);
 				}
 			}
 
@@ -322,7 +338,9 @@ public class HessianInput extends AbstractHessianInput {
 	 *
 	 * <p>A successful completion will have a single value:
 	 *
-	 * <pre> z </pre>
+	 * <pre>
+	 * z
+	 * </pre>
 	 */
 	@Override
 	public void completeReply() throws IOException {
@@ -338,7 +356,9 @@ public class HessianInput extends AbstractHessianInput {
 	 *
 	 * <p>A successful completion will have a single value:
 	 *
-	 * <pre> z </pre>
+	 * <pre>
+	 * z
+	 * </pre>
 	 */
 	public void completeValueReply() throws IOException {
 		int tag = this.read();
@@ -351,7 +371,9 @@ public class HessianInput extends AbstractHessianInput {
 	/**
 	 * Reads a header, returning null if there are no headers.
 	 *
-	 * <pre> H b16 b8 value </pre>
+	 * <pre>
+	 *  H b16 b8 value
+	 * </pre>
 	 */
 	@Override
 	public String readHeader() throws IOException {
@@ -378,7 +400,9 @@ public class HessianInput extends AbstractHessianInput {
 	/**
 	 * Reads a null
 	 *
-	 * <pre> N </pre>
+	 * <pre>
+	 * N
+	 * </pre>
 	 */
 	@Override
 	public void readNull() throws IOException {
@@ -396,7 +420,9 @@ public class HessianInput extends AbstractHessianInput {
 	/**
 	 * Reads a boolean
 	 *
-	 * <pre> T F </pre>
+	 * <pre>
+	 *  T F
+	 * </pre>
 	 */
 	@Override
 	public boolean readBoolean() throws IOException {
@@ -424,7 +450,9 @@ public class HessianInput extends AbstractHessianInput {
 	/**
 	 * Reads a byte
 	 *
-	 * <pre> I b32 b24 b16 b8 </pre>
+	 * <pre>
+	 *  I b32 b24 b16 b8
+	 * </pre>
 	 */
 	/*
 	 * public byte readByte() throws IOException { return (byte) readInt(); }
@@ -433,7 +461,9 @@ public class HessianInput extends AbstractHessianInput {
 	/**
 	 * Reads a short
 	 *
-	 * <pre> I b32 b24 b16 b8 </pre>
+	 * <pre>
+	 *  I b32 b24 b16 b8
+	 * </pre>
 	 */
 	public short readShort() throws IOException {
 		return (short) this.readInt();
@@ -442,7 +472,9 @@ public class HessianInput extends AbstractHessianInput {
 	/**
 	 * Reads an integer
 	 *
-	 * <pre> I b32 b24 b16 b8 </pre>
+	 * <pre>
+	 *  I b32 b24 b16 b8
+	 * </pre>
 	 */
 	@Override
 	public int readInt() throws IOException {
@@ -468,7 +500,9 @@ public class HessianInput extends AbstractHessianInput {
 	/**
 	 * Reads a long
 	 *
-	 * <pre> L b64 b56 b48 b40 b32 b24 b16 b8 </pre>
+	 * <pre>
+	 *  L b64 b56 b48 b40 b32 b24 b16 b8
+	 * </pre>
 	 */
 	@Override
 	public long readLong() throws IOException {
@@ -494,7 +528,9 @@ public class HessianInput extends AbstractHessianInput {
 	/**
 	 * Reads a float
 	 *
-	 * <pre> D b64 b56 b48 b40 b32 b24 b16 b8 </pre>
+	 * <pre>
+	 *  D b64 b56 b48 b40 b32 b24 b16 b8
+	 * </pre>
 	 */
 	public float readFloat() throws IOException {
 		return (float) this.readDouble();
@@ -503,7 +539,9 @@ public class HessianInput extends AbstractHessianInput {
 	/**
 	 * Reads a double
 	 *
-	 * <pre> D b64 b56 b48 b40 b32 b24 b16 b8 </pre>
+	 * <pre>
+	 *  D b64 b56 b48 b40 b32 b24 b16 b8
+	 * </pre>
 	 */
 	@Override
 	public double readDouble() throws IOException {
@@ -529,7 +567,9 @@ public class HessianInput extends AbstractHessianInput {
 	/**
 	 * Reads a date.
 	 *
-	 * <pre> T b64 b56 b48 b40 b32 b24 b16 b8 </pre>
+	 * <pre>
+	 *  T b64 b56 b48 b40 b32 b24 b16 b8
+	 * </pre>
 	 */
 	@Override
 	public long readUTCDate() throws IOException {
@@ -548,7 +588,7 @@ public class HessianInput extends AbstractHessianInput {
 		long b16 = this.read();
 		long b8 = this.read();
 
-		return ((b64 << 56) + (b56 << 48) + (b48 << 40) + (b40 << 32) + (b32 << 24) + (b24 << 16) + (b16 << 8) + b8);
+		return (b64 << 56) + (b56 << 48) + (b48 << 40) + (b40 << 32) + (b32 << 24) + (b24 << 16) + (b16 << 8) + b8;
 	}
 
 	/**
@@ -670,7 +710,9 @@ public class HessianInput extends AbstractHessianInput {
 	/**
 	 * Reads a string
 	 *
-	 * <pre> S b16 b8 string value </pre>
+	 * <pre>
+	 *  S b16 b8 string value
+	 * </pre>
 	 */
 	@Override
 	public String readString() throws IOException {
@@ -711,7 +753,9 @@ public class HessianInput extends AbstractHessianInput {
 	/**
 	 * Reads an XML node.
 	 *
-	 * <pre> S b16 b8 string value </pre>
+	 * <pre>
+	 *  S b16 b8 string value
+	 * </pre>
 	 */
 	@Override
 	public org.w3c.dom.Node readNode() throws IOException {
@@ -738,7 +782,9 @@ public class HessianInput extends AbstractHessianInput {
 	/**
 	 * Reads a byte array
 	 *
-	 * <pre> B b16 b8 data value </pre>
+	 * <pre>
+	 *  B b16 b8 data value
+	 * </pre>
 	 */
 	@Override
 	public byte[] readBytes() throws IOException {
@@ -1116,7 +1162,7 @@ public class HessianInput extends AbstractHessianInput {
 
 		this.peek = code;
 
-		return ((code < 0) || (code == 'z'));
+		return (code < 0) || (code == 'z');
 	}
 
 	/**
@@ -1203,7 +1249,9 @@ public class HessianInput extends AbstractHessianInput {
 	/**
 	 * Parses a type from the stream.
 	 *
-	 * <pre> t b16 b8 </pre>
+	 * <pre>
+	 *  t b16 b8
+	 * </pre>
 	 */
 	@Override
 	public String readType() throws IOException {
@@ -1229,7 +1277,9 @@ public class HessianInput extends AbstractHessianInput {
 	/**
 	 * Parses the length for an array
 	 *
-	 * <pre> l b32 b24 b16 b8 </pre>
+	 * <pre>
+	 *  l b32 b24 b16 b8
+	 * </pre>
 	 */
 	@Override
 	public int readLength() throws IOException {
@@ -1246,7 +1296,9 @@ public class HessianInput extends AbstractHessianInput {
 	/**
 	 * Parses a 32-bit integer value from the stream.
 	 *
-	 * <pre> b32 b24 b16 b8 </pre>
+	 * <pre>
+	 *  b32 b24 b16 b8
+	 * </pre>
 	 */
 	private int parseInt() throws IOException {
 		int b32 = this.read();
@@ -1260,7 +1312,9 @@ public class HessianInput extends AbstractHessianInput {
 	/**
 	 * Parses a 64-bit long value from the stream.
 	 *
-	 * <pre> b64 b56 b48 b40 b32 b24 b16 b8 </pre>
+	 * <pre>
+	 *  b64 b56 b48 b40 b32 b24 b16 b8
+	 * </pre>
 	 */
 	private long parseLong() throws IOException {
 		long b64 = this.read();
@@ -1272,13 +1326,15 @@ public class HessianInput extends AbstractHessianInput {
 		long b16 = this.read();
 		long b8 = this.read();
 
-		return ((b64 << 56) + (b56 << 48) + (b48 << 40) + (b40 << 32) + (b32 << 24) + (b24 << 16) + (b16 << 8) + b8);
+		return (b64 << 56) + (b56 << 48) + (b48 << 40) + (b40 << 32) + (b32 << 24) + (b24 << 16) + (b16 << 8) + b8;
 	}
 
 	/**
 	 * Parses a 64-bit double value from the stream.
 	 *
-	 * <pre> b64 b56 b48 b40 b32 b24 b16 b8 </pre>
+	 * <pre>
+	 *  b64 b56 b48 b40 b32 b24 b16 b8
+	 * </pre>
 	 */
 	private double parseDouble() throws IOException {
 		long b64 = this.read();
@@ -1290,7 +1346,7 @@ public class HessianInput extends AbstractHessianInput {
 		long b16 = this.read();
 		long b8 = this.read();
 
-		long bits = ((b64 << 56) + (b56 << 48) + (b48 << 40) + (b40 << 32) + (b32 << 24) + (b24 << 16) + (b16 << 8) + b8);
+		long bits = (b64 << 56) + (b56 << 48) + (b48 << 40) + (b40 << 32) + (b32 << 24) + (b24 << 16) + (b16 << 8) + b8;
 
 		return Double.longBitsToDouble(bits);
 	}
@@ -1416,7 +1472,8 @@ public class HessianInput extends AbstractHessianInput {
 		}
 
 		return new InputStream() {
-			boolean	_isClosed	= false;
+
+			boolean _isClosed = false;
 
 			@Override
 			public int read() throws IOException {
@@ -1549,7 +1606,8 @@ public class HessianInput extends AbstractHessianInput {
 		try {
 			HessianInput.detailMessageField = Throwable.class.getDeclaredField("detailMessage");
 			HessianInput.detailMessageField.setAccessible(true);
-		} catch (Throwable e) {
+		} catch (Exception e) {
+			HessianInput.logger.trace(null, e);
 		}
 	}
 }

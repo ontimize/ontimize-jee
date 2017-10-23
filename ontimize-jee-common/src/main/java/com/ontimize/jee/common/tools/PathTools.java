@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
  * The Class PathTools.
  */
 public final class PathTools {
+
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(PathTools.class);
 
@@ -73,6 +74,7 @@ public final class PathTools {
 	 */
 	public static boolean deleteFolder(Path folder) throws IOException {
 		Files.walkFileTree(folder, new SimpleFileVisitor<Path>() {
+
 			@Override
 			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
 				Files.delete(file);
@@ -97,10 +99,11 @@ public final class PathTools {
 	 * @throws IOException
 	 */
 	public static boolean deleteFolderContent(Path folder) throws IOException {
-		if (PathTools.isFolderEmpty(folder)){
+		if (PathTools.isFolderEmpty(folder)) {
 			return true;
 		}
 		Files.walkFileTree(folder, new SimpleFileVisitor<Path>() {
+
 			@Override
 			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
 				Files.delete(file);

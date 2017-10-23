@@ -10,7 +10,7 @@ import com.ontimize.jee.desktopclient.test.AbstractIdentifiedOntimizeTest;
 
 public class SessionTest extends AbstractIdentifiedOntimizeTest {
 
-	private static final Logger	logger	= LoggerFactory.getLogger(SessionTest.class);
+	private static final Logger logger = LoggerFactory.getLogger(SessionTest.class);
 
 	public static void main(String[] args) {
 		try {

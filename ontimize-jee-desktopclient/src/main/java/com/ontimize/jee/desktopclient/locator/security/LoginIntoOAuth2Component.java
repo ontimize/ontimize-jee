@@ -12,6 +12,12 @@ import java.util.Hashtable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.ontimize.gui.container.Row;
+import com.ontimize.jee.common.tools.ObjectWrapper;
+
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -20,15 +26,10 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.web.WebView;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.ontimize.gui.container.Row;
-import com.ontimize.jee.common.tools.ObjectWrapper;
-
 public class LoginIntoOAuth2Component extends Row {
+
 	// private static final String CSS_FILE = "game-forms/components/expression/Expression.css";
-	private static final Logger	logger			= LoggerFactory.getLogger(LoginIntoOAuth2Component.class);
+	private static final Logger	logger	= LoggerFactory.getLogger(LoginIntoOAuth2Component.class);
 	private WebView				webView;
 	private JFXPanel			fxPanel;
 
@@ -54,6 +55,7 @@ public class LoginIntoOAuth2Component extends Row {
 		synchronized (this.fxPanel) {
 
 			Platform.runLater(new Runnable() {
+
 				@Override
 				public void run() {
 					LoginIntoOAuth2Component.this.fxPanel.setScene(LoginIntoOAuth2Component.this.createBasicScene());
@@ -91,7 +93,7 @@ public class LoginIntoOAuth2Component extends Row {
 	@Override
 	public void setEnabled(boolean enabled) {
 		super.setEnabled(enabled);
-		if ((this.webView != null)) {
+		if (this.webView != null) {
 			this.webView.setDisable(!enabled);
 		}
 	}
@@ -100,6 +102,7 @@ public class LoginIntoOAuth2Component extends Row {
 		try {
 			final String redirect = LoginIntoOAuth2Component.splitQuery(new URI(url)).get("redirect_uri");
 			Platform.runLater(new Runnable() {
+
 				@Override
 				public void run() {
 					LoginIntoOAuth2Component.this.webView.getEngine().load(url);
@@ -127,7 +130,7 @@ public class LoginIntoOAuth2Component extends Row {
 	}
 
 	public static Map<String, String> splitQuery(URI url) throws UnsupportedEncodingException {
-		Map<String, String> query_pairs = new LinkedHashMap<String, String>();
+		Map<String, String> query_pairs = new LinkedHashMap<>();
 		String query = url.getQuery();
 		String[] pairs = query.split("&");
 		for (String pair : pairs) {

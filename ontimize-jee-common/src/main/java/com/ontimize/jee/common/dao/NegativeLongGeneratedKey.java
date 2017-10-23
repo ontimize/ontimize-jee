@@ -1,13 +1,12 @@
 package com.ontimize.jee.common.dao;
 
-
 /**
  * The Class GeneratedKey. Generated Number Key Objects with negative values
  */
 public final class NegativeLongGeneratedKey extends AbstractGeneratedKey<Long> {
 
 	/** The generator. */
-	private static long	generator	= 0;
+	private static long generator = 0;
 
 	/**
 	 * Gets the next.

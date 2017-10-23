@@ -29,13 +29,13 @@ import com.ontimize.jee.common.tools.SafeCasting;
  *
  * @author <a href="user@email.com">Author</a>
  *
- * Use apache httpclient version
+ *         Use apache httpclient version
  */
 @Deprecated
 public class OntimizeHessianURLConnection extends AbstractHessianConnection {
 
 	/** The logger. */
-	private final static Logger	logger	= LoggerFactory.getLogger(OntimizeHessianURLConnection.class);
+	private static final Logger	logger	= LoggerFactory.getLogger(OntimizeHessianURLConnection.class);
 
 	/** The _url. */
 	private final URI			url;
@@ -118,7 +118,7 @@ public class OntimizeHessianURLConnection extends AbstractHessianConnection {
 					throw new InvalidCredentialsException(I18NNaming.E_AUTH_PASSWORD_NOT_MATCH);
 
 				default:
-					StringBuffer sb = new StringBuffer();
+					StringBuilder sb = new StringBuilder();
 					int ch;
 
 					try {

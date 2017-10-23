@@ -20,7 +20,7 @@ public class TaskTable extends JTable {
 	/** The Constant serialVersionUID. */
 	private static final long	serialVersionUID			= 1L;
 
-	private final static int	COLUMN_SYNC_STATUS_WIDTH	= 24;
+	private static final int	COLUMN_SYNC_STATUS_WIDTH	= 24;
 	private static final int	COLUMN_PROGRESS_WIDTH		= 100;
 
 	/**
@@ -42,7 +42,7 @@ public class TaskTable extends JTable {
 		this.getColumn(TaskTableModel.COLUMN_EXEC_DETAILS).setCellEditor(new TaskResultTableCellEditor());
 		try {
 			this.getColumn(TaskTableModel.COLUMN_DESCRIPTION).setCellRenderer(new DescriptionTableCellRenderer());
-		} catch (Throwable ex) {
+		} catch (Exception ex) {
 			TaskTable.logger.error(null, ex);
 		}
 		TableCellRenderer headerRenderer = this.getTableHeader().getDefaultRenderer();

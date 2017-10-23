@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
@@ -43,10 +44,10 @@ import ch.qos.logback.core.OutputStreamAppender;
 @Lazy(value = true)
 public class LoggerHelper {
 
-	private static final Logger logger = LoggerFactory.getLogger(LoggerHelper.class);
+	private static final Logger	logger			= LoggerFactory.getLogger(LoggerHelper.class);
 
 	/** The Constant LAYOUT_PATTERN. */
-	private static final String LAYOUT_PATTERN = "[%-5level] %d{dd/MM/yyyy HH:mm:ss.SSS} [%thread] %logger{5}: %msg%n";
+	private static final String	LAYOUT_PATTERN	= "[%-5level] %d{dd/MM/yyyy HH:mm:ss.SSS} [%thread] %logger{5}: %msg%n";
 
 	/**
 	 * Query log.
@@ -62,6 +63,7 @@ public class LoggerHelper {
 			final CustomOutputStreamAppender appender = this.registerAppender(in, out);
 
 			new Thread(new Runnable() {
+
 				@Override
 				public void run() {
 					synchronized (out) {
@@ -114,8 +116,9 @@ public class LoggerHelper {
 			ch.qos.logback.classic.Logger logbackLogger = (ch.qos.logback.classic.Logger) logger;
 			CustomOutputStreamAppender outputStreamAppender = new CustomOutputStreamAppender();
 			OutputStream wrapperOutputStream = new OutputStream() {
-				TimeLimiter limiter = new TimeLimiter();
-				boolean hasError = false;
+
+				TimeLimiter	limiter		= new TimeLimiter();
+				boolean		hasError	= false;
 
 				@Override
 				public void write(final int b) throws IOException {
@@ -159,8 +162,6 @@ public class LoggerHelper {
 			layout.setPattern(LoggerHelper.LAYOUT_PATTERN);
 			layout.setContext(logbackLogger.getLoggerContext());
 			layout.start();
-			// outputStreamAppender.getEncoder().init(wrapperOutputStream);
-			// outputStreamAppender.setLayout(layout);
 			outputStreamAppender.setContext(logbackLogger.getLoggerContext());
 			logbackLogger.addAppender(outputStreamAppender);
 			outputStreamAppender.start();
@@ -178,9 +179,10 @@ public class LoggerHelper {
 		final EntityResult res = new EntityResult();
 		this.initEntityResult(res, Arrays.asList(new String[] { "FILE_NAME", "FILE_SIZE" }), 0);
 		Files.walkFileTree(folder, new java.nio.file.SimpleFileVisitor<Path>() {
+
 			@Override
 			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-				res.addRecord(LoggerHelper.this.keysvalues("FILE_NAME", file.toString(), "FILE_SIZE", Files.size(file)));
+				res.addRecord((Hashtable) LoggerHelper.this.keysvalues("FILE_NAME", file.toString(), "FILE_SIZE", Files.size(file)));
 				return FileVisitResult.CONTINUE;
 			}
 		});
@@ -189,13 +191,13 @@ public class LoggerHelper {
 
 	private void initEntityResult(EntityResult res, List<?> columns, int length) {
 		for (Object col : columns) {
-			res.put(col, new Vector<Object>(length > 0 ? length : 10));
+			res.put(col, new Vector<>(length > 0 ? length : 10));
 		}
 	}
 
-	private Hashtable<Object, Object> keysvalues(Object... objects) {
+	private Map<Object, Object> keysvalues(Object... objects) {
 		if (objects == null) {
-			return new Hashtable<Object, Object>();
+			return new Hashtable<>();
 		}
 		if ((objects.length % 2) != 0) {
 			throw new RuntimeException("Review filters, it is mandatory to set dual <key><value>.");
@@ -206,7 +208,7 @@ public class LoggerHelper {
 			}
 		}
 
-		Hashtable<Object, Object> res = new Hashtable<Object, Object>();
+		Map<Object, Object> res = new Hashtable<>();
 		int i = 0;
 		while (i < objects.length) {
 			res.put(objects[i++], objects[i++]);
@@ -288,6 +290,7 @@ public class LoggerHelper {
 	}
 
 	protected static class CustomPipedInputStream extends PipedInputStream {
+
 		private static final long	DEAD_TIME	= 5000;
 		private long				lastRead	= System.currentTimeMillis();
 		private boolean				reading		= false;

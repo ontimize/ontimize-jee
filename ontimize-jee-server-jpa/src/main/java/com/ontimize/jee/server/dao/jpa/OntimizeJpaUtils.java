@@ -52,8 +52,7 @@ public final class OntimizeJpaUtils {
 	}
 
 	/**
-	 * Get an EntityResult with the information loading in "data". This method is called from
-	 * transformListToEntityResult(List<Object> data, List<Object> columnList)
+	 * Get an EntityResult with the information loading in "data". This method is called from transformListToEntityResult(List<Object> data, List<Object> columnList)
 	 *
 	 * @param data
 	 *            the data
@@ -69,7 +68,7 @@ public final class OntimizeJpaUtils {
 		}
 
 		if ((columnList == null) || (columnList.size() == 0)) {// Query all fields
-			columnList = new ArrayList<String>();
+			columnList = new ArrayList<>();
 			columnList.addAll(JPAUtils.getColumnNames(data.get(0).getClass()));
 		}
 
@@ -93,8 +92,7 @@ public final class OntimizeJpaUtils {
 	}
 
 	/**
-	 * Get an EntityResult with the information loading in "data". This method is called from
-	 * transformListToEntityResult(Object data, List<Object> columnList)
+	 * Get an EntityResult with the information loading in "data". This method is called from transformListToEntityResult(Object data, List<Object> columnList)
 	 *
 	 * @param data
 	 *            the data
@@ -105,12 +103,12 @@ public final class OntimizeJpaUtils {
 	 *             the exception
 	 */
 	public static EntityResult transformListToEntityResultBeans(final Object data, List<String> columnList) throws Exception {
-		if ((data == null)) {
+		if (data == null) {
 			return new EntityResult(EntityResult.OPERATION_SUCCESSFUL_SHOW_MESSAGE, EntityResult.NODATA_RESULT);
 		}
 
 		if ((columnList == null) || (columnList.size() == 0)) {// Query all fields
-			columnList = new ArrayList<String>();
+			columnList = new ArrayList<>();
 			columnList.addAll(JPAUtils.getColumnNames(data.getClass()));
 		}
 
@@ -155,8 +153,7 @@ public final class OntimizeJpaUtils {
 	}
 
 	/**
-	 * Get the value of 'attribute' field in 'aBean' instance. This method is called from getAttributeBean and
-	 * getAttributeMapBean.
+	 * Get the value of 'attribute' field in 'aBean' instance. This method is called from getAttributeBean and getAttributeMapBean.
 	 *
 	 * @param attribute
 	 *            the attribute
@@ -196,7 +193,8 @@ public final class OntimizeJpaUtils {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public static Hashtable<String, Integer> getSQLTypes(final Query selectQuery, final List<String> validAttributes, final Class<?> anEntityClass, final EntityManager em) throws Exception {
+	public static Hashtable<String, Integer> getSQLTypes(final Query selectQuery, final List<String> validAttributes, final Class<?> anEntityClass, final EntityManager em)
+	        throws Exception {
 
 		final EntityType<?> entity = em.getMetamodel().entity(anEntityClass);
 
@@ -264,7 +262,7 @@ public final class OntimizeJpaUtils {
 	 * @return the select column names
 	 */
 	public static List<String> getSelectColumnNames(final String selectQuery) {
-		final List<String> cols = new ArrayList<String>();
+		final List<String> cols = new ArrayList<>();
 
 		// find from
 		int fromIdx = selectQuery.indexOf("from");
@@ -302,7 +300,7 @@ public final class OntimizeJpaUtils {
 			// check cols doew not contains *
 			for (final String col : cols) {
 				if (col.contains("*")) {
-					return new ArrayList<String>();
+					return new ArrayList<>();
 				}
 			}
 		}
@@ -334,7 +332,7 @@ public final class OntimizeJpaUtils {
 	public static Object mergeEmbeddedBean(Object currentValue, Object value, Map<String, ?> validAttributes, String embeddedBeanAttName) {
 		Object result = value;
 		if ((currentValue != null) && (value != null)) {
-			Map<String, Object> tmp = new HashMap<String, Object>();
+			Map<String, Object> tmp = new HashMap<>();
 			Map<String, Map<String, Object>> organizedRelatedBeansAttributes = OntimizeJpaUtils.organizeDottedAttributesIntoHierarchy(validAttributes, tmp);
 			Map<String, Object> map = organizedRelatedBeansAttributes.get(embeddedBeanAttName);
 			if ((map != null) && (map.size() > 0)) {
@@ -348,7 +346,8 @@ public final class OntimizeJpaUtils {
 							Object valueToSet = meth.invoke(value);
 							Method meth2 = BeanUtils.findDeclaredMethodWithMinimalParameters(currentValue.getClass(), MappingInfoUtils.buildSetterMethodName(attToCopy, null));
 							if (meth2 == null) {
-								OntimizeJpaUtils.logger.error("Key '" + attToCopy + "' does not have a setter method for embedded attributed declared on bean " + currentValue.getClass());
+								OntimizeJpaUtils.logger
+								        .error("Key '" + attToCopy + "' does not have a setter method for embedded attributed declared on bean " + currentValue.getClass());
 							} else {
 								meth2.invoke(currentValue, valueToSet);
 							}
@@ -375,7 +374,7 @@ public final class OntimizeJpaUtils {
 	 * @return the map
 	 */
 	public static Map<String, ?> reorganizeAttributesInBeansIfNecessary(EntityManager entityManager, ManagedType<?> entity, Map<String, ?> attributesValues) {
-		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<>();
 		Map<String, Map<String, Object>> organizedRelatedBeansAttributes = OntimizeJpaUtils.organizeDottedAttributesIntoHierarchy(attributesValues, result);
 		result.putAll(OntimizeJpaUtils.loadEntityRelationsPresentInAttributes(entityManager, entity, organizedRelatedBeansAttributes));
 		return result;
@@ -392,8 +391,9 @@ public final class OntimizeJpaUtils {
 	 *            the organized related beans attributes
 	 * @return the map
 	 */
-	private static Map<String, Object> loadEntityRelationsPresentInAttributes(EntityManager entityManager, ManagedType<?> entity, Map<String, Map<String, Object>> organizedRelatedBeansAttributes) {
-		Map<String, Object> result = new HashMap<String, Object>();
+	private static Map<String, Object> loadEntityRelationsPresentInAttributes(EntityManager entityManager, ManagedType<?> entity,
+	        Map<String, Map<String, Object>> organizedRelatedBeansAttributes) {
+		Map<String, Object> result = new HashMap<>();
 		for (Entry<String, Map<String, Object>> entry : organizedRelatedBeansAttributes.entrySet()) {
 			Object beanValue = OntimizeJpaUtils.toBeanEntityRelation(entityManager, entity, entry.getKey(), entry.getValue());
 			if (beanValue != null) { // it means attribute relation exists in entity
@@ -430,8 +430,8 @@ public final class OntimizeJpaUtils {
 			Object beanValue = new NullValue();
 			if (declaredAttribute.getPersistentAttributeType().equals(PersistentAttributeType.BASIC)) {
 				// TODO que hacer en este caso?
-			} else if (declaredAttribute.getPersistentAttributeType().equals(PersistentAttributeType.MANY_TO_ONE)
-					|| declaredAttribute.getPersistentAttributeType().equals(PersistentAttributeType.ONE_TO_ONE)) {
+			} else if (declaredAttribute.getPersistentAttributeType().equals(PersistentAttributeType.MANY_TO_ONE) || declaredAttribute.getPersistentAttributeType()
+			        .equals(PersistentAttributeType.ONE_TO_ONE)) {
 				Object beanLoaded = OntimizeJpaUtils.loadEntityBean(entityManager, declaredAttribute.getJavaType(), relationAttValues);
 				if (beanLoaded != null) {
 					beanValue = beanLoaded;
@@ -440,17 +440,19 @@ public final class OntimizeJpaUtils {
 				Object embeddedBean = BeanUtils.instantiate(declaredAttribute.getJavaType());
 				Set<SingularAttribute<? super Object, ?>> singularAttributes = ((ManagedType<Object>) declaredAttribute.getDeclaringType()).getSingularAttributes();
 				// Here a little BIG RECURSION!! WARNING, Be careful!!
-				Map<String, Object> reorganizedAttributes = (Map<String, Object>) OntimizeJpaUtils.reorganizeAttributesInBeansIfNecessary(entityManager, entityManager.getMetamodel().managedType(declaredAttribute.getJavaType()), relationAttValues);
+				Map<String, Object> reorganizedAttributes = (Map<String, Object>) OntimizeJpaUtils.reorganizeAttributesInBeansIfNecessary(entityManager,
+				        entityManager.getMetamodel().managedType(declaredAttribute.getJavaType()), relationAttValues);
 
 				for (SingularAttribute<? super Object, ?> sattr : singularAttributes) {
-					if (sattr.getPersistentAttributeType().equals(PersistentAttributeType.BASIC)
-							|| sattr.getPersistentAttributeType().equals(PersistentAttributeType.MANY_TO_ONE)
-							|| sattr.getPersistentAttributeType().equals(PersistentAttributeType.ONE_TO_ONE)
-							|| sattr.getPersistentAttributeType().equals(PersistentAttributeType.EMBEDDED)) {
+					if (sattr.getPersistentAttributeType().equals(PersistentAttributeType.BASIC) || sattr.getPersistentAttributeType()
+					        .equals(PersistentAttributeType.MANY_TO_ONE) || sattr.getPersistentAttributeType()
+					                .equals(PersistentAttributeType.ONE_TO_ONE) || sattr.getPersistentAttributeType().equals(PersistentAttributeType.EMBEDDED)) {
 						// if basic then just set its value
-						final Method meth = BeanUtils.findDeclaredMethodWithMinimalParameters(declaredAttribute.getJavaType(), MappingInfoUtils.buildSetterMethodName(sattr.getName(), null));
+						final Method meth = BeanUtils.findDeclaredMethodWithMinimalParameters(declaredAttribute.getJavaType(),
+						        MappingInfoUtils.buildSetterMethodName(sattr.getName(), null));
 						if (meth == null) {
-							throw new RuntimeException("Embedded class '" + declaredAttribute.getJavaType().getCanonicalName() + "' does not have a setter method declared on bean for attribute " + sattr.getName());
+							throw new RuntimeException("Embedded class '" + declaredAttribute.getJavaType()
+							        .getCanonicalName() + "' does not have a setter method declared on bean for attribute " + sattr.getName());
 						}
 						try {
 							final Class<?>[] parameterTypes = meth.getParameterTypes();
@@ -502,13 +504,13 @@ public final class OntimizeJpaUtils {
 	private static Object buildPKey(EntityType<Object> entity, Map<String, Object> relationAttValues) {
 		Set<SingularAttribute<? super Object, ?>> singularAttributes = entity.getSingularAttributes();
 
-		List<String> keys = new ArrayList<String>();
+		List<String> keys = new ArrayList<>();
 		for (Object o : relationAttValues.keySet()) {
 			keys.add(o.toString());
 		}
 
 		boolean allInkeys = true;
-		Map<String, Object> realKeys = new HashMap<String, Object>();
+		Map<String, Object> realKeys = new HashMap<>();
 		for (SingularAttribute<? super Object, ?> sattr : singularAttributes) {
 			if (sattr.isId()) {
 				if (!keys.contains(sattr.getName())) {
@@ -524,9 +526,9 @@ public final class OntimizeJpaUtils {
 			if (idType.getPersistenceType().equals(PersistenceType.BASIC)) {
 				// then it should be one and just one id attribute
 				final SingularAttribute<?, ?> idClassAttribute = entity.getId(idType.getJavaType());
-				//TODO convertir tipos primitivos
+				// TODO convertir tipos primitivos
 				return DataConversorsUtil.convert(realKeys.get(idClassAttribute.getName()), idType.getJavaType());
-				//                return realKeys.get(idClassAttribute.getName());
+				// return realKeys.get(idClassAttribute.getName());
 			} else {
 				Class<?> idTypeClass = idType.getJavaType();
 				Object entityBean = BeanUtils.instantiate(idTypeClass);
@@ -537,7 +539,8 @@ public final class OntimizeJpaUtils {
 
 					final Method meth = BeanUtils.findDeclaredMethodWithMinimalParameters(idTypeClass, MappingInfoUtils.buildSetterMethodName(sattr.getName(), null));
 					if (meth == null) {
-						throw new RuntimeException("Id class '" + idTypeClass.getCanonicalName() + "' does not have a setter method declared on bean for attribute " + sattr.getName());
+						throw new RuntimeException(
+						        "Id class '" + idTypeClass.getCanonicalName() + "' does not have a setter method declared on bean for attribute " + sattr.getName());
 					}
 					try {
 						final Class<?>[] parameterTypes = meth.getParameterTypes();
@@ -567,7 +570,7 @@ public final class OntimizeJpaUtils {
 	 * @return the map
 	 */
 	private static Map<String, Map<String, Object>> organizeDottedAttributesIntoHierarchy(Map<String, ?> attributesValues, Map<String, Object> remaining) {
-		Map<String, Map<String, Object>> result = new HashMap<String, Map<String, Object>>();
+		Map<String, Map<String, Object>> result = new HashMap<>();
 		for (Entry<String, ?> entry : attributesValues.entrySet()) {
 			String key = entry.getKey();
 			int dotIdx = key.indexOf('.');
@@ -575,7 +578,7 @@ public final class OntimizeJpaUtils {
 				String keyPart1 = key.substring(0, dotIdx);
 				Map<String, Object> innerAttributes = result.get(keyPart1);
 				if (innerAttributes == null) {
-					innerAttributes = new HashMap<String, Object>();
+					innerAttributes = new HashMap<>();
 					result.put(keyPart1, innerAttributes);
 				}
 

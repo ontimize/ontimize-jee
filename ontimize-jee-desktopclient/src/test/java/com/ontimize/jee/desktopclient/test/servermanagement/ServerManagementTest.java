@@ -11,7 +11,7 @@ import com.ontimize.jee.desktopclient.test.AbstractIdentifiedOntimizeTest;
 
 public class ServerManagementTest extends AbstractIdentifiedOntimizeTest {
 
-	private static final Logger	logger	= LoggerFactory.getLogger(ServerManagementTest.class);
+	private static final Logger logger = LoggerFactory.getLogger(ServerManagementTest.class);
 
 	public static void main(String[] args) {
 		try {

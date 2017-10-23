@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
  */
 public class FontTools {
 
-	private static final Logger	logger	= LoggerFactory.getLogger(FontTools.class);
+	private static final Logger logger = LoggerFactory.getLogger(FontTools.class);
 
 	/**
 	 * Instantiates a new font utils.

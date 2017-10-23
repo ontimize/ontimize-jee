@@ -20,14 +20,14 @@ import org.springframework.util.Assert;
 
 public class OAuth2ClientEntryPoint implements AuthenticationEntryPoint, InitializingBean {
 
-	private static final Logger log = LoggerFactory.getLogger(OAuth2ClientEntryPoint.class);
-	private static final int STATE_RANDOM_STRING_LENGTH = 10;
+	private static final Logger		log							= LoggerFactory.getLogger(OAuth2ClientEntryPoint.class);
+	private static final int		STATE_RANDOM_STRING_LENGTH	= 10;
 
 	private String					typeName					= "Bearer";
 
 	private String					realmName					= "oauth";
 
-	private OAuth2ClientProperties oAuth2ClientProperties = null;
+	private OAuth2ClientProperties	oAuth2ClientProperties		= null;
 
 	public void setRealmName(String realmName) {
 		this.realmName = realmName;
@@ -38,8 +38,7 @@ public class OAuth2ClientEntryPoint implements AuthenticationEntryPoint, Initial
 	}
 
 	@Override
-	public void commence(HttpServletRequest request, HttpServletResponse response,
-			AuthenticationException authException) throws IOException, ServletException {
+	public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
 
 		String state = RandomStringUtils.randomAlphanumeric(OAuth2ClientEntryPoint.STATE_RANDOM_STRING_LENGTH);
 		HttpSession session = request.getSession(false);
@@ -47,14 +46,11 @@ public class OAuth2ClientEntryPoint implements AuthenticationEntryPoint, Initial
 			session.setAttribute(this.oAuth2ClientProperties.getStateParamName(), state);
 		}
 
-		StringBuilder authorizationUri = new StringBuilder().append(this.oAuth2ClientProperties.getUserAuthorizationUri())
-				.append("?").append(this.oAuth2ClientProperties.getClientIdParamName()).append("=")
-				.append(this.oAuth2ClientProperties.getClientId()).append("&")
-				.append(this.oAuth2ClientProperties.getRedirectUriParamName()).append("=")
-				.append(this.redirectUriUsing(request).toString()).append("&")
-				.append(this.oAuth2ClientProperties.getResponseTypeParamName()).append("=")
-				.append(this.oAuth2ClientProperties.getResponseType()).append("&")
-				.append(this.oAuth2ClientProperties.getStateParamName()).append("=").append(state);
+		StringBuilder authorizationUri = new StringBuilder().append(this.oAuth2ClientProperties.getUserAuthorizationUri()).append("?")
+		        .append(this.oAuth2ClientProperties.getClientIdParamName()).append("=").append(this.oAuth2ClientProperties.getClientId()).append("&")
+		        .append(this.oAuth2ClientProperties.getRedirectUriParamName()).append("=").append(this.redirectUriUsing(request).toString()).append("&")
+		        .append(this.oAuth2ClientProperties.getResponseTypeParamName()).append("=").append(this.oAuth2ClientProperties.getResponseType()).append("&")
+		        .append(this.oAuth2ClientProperties.getStateParamName()).append("=").append(state);
 
 		authorizationUri.append(this.constructAdditionalAuthParameters(this.oAuth2ClientProperties.getAdditionalAuthParams()));
 
@@ -87,8 +83,8 @@ public class OAuth2ClientEntryPoint implements AuthenticationEntryPoint, Initial
 
 		URI redirectUri = this.oAuth2ClientProperties.getRedirectUri();
 		if (!redirectUri.isAbsolute()) {
-			redirect = UriBuilder.fromPath(request.getContextPath()).path(redirectUri.toString())
-					.scheme(request.getScheme()).host(request.getServerName()).port(request.getServerPort()).build();
+			redirect = UriBuilder.fromPath(request.getContextPath()).path(redirectUri.toString()).scheme(request.getScheme()).host(request.getServerName())
+			        .port(request.getServerPort()).build();
 		} else {
 			redirect = redirectUri;
 		}

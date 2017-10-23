@@ -7,7 +7,7 @@ public final class ConcatTools {
 
 	/**
 	 * Concat.
-	 * 
+	 *
 	 * @param objects
 	 *            objects
 	 * @return the string
@@ -18,7 +18,7 @@ public final class ConcatTools {
 
 	/**
 	 * Concat with null value.
-	 * 
+	 *
 	 * @param nullValue
 	 *            the null value
 	 * @param objects
@@ -37,7 +37,7 @@ public final class ConcatTools {
 
 	/**
 	 * Normalize object.
-	 * 
+	 *
 	 * @param nullValue
 	 *            the null value
 	 * @param o

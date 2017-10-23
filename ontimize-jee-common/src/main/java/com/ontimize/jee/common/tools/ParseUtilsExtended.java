@@ -42,7 +42,7 @@ public class ParseUtilsExtended extends ParseUtils {
 	}
 
 	public static Boolean getBooleanOrNull(Object s) {
-		if ((s != null)) {
+		if (s != null) {
 			String value = s.toString();
 			if (value.equalsIgnoreCase("yes") || value.equalsIgnoreCase("true") || value.equalsIgnoreCase("1") || value.equalsIgnoreCase("y") || value.equalsIgnoreCase("s")) {
 				return true;
@@ -63,7 +63,7 @@ public class ParseUtilsExtended extends ParseUtils {
 	 * @return the boolean
 	 */
 	public static boolean getBoolean(Object s, boolean defaultValue) {
-		if ((s != null)) {
+		if (s != null) {
 			String value = s.toString();
 			if (value.equalsIgnoreCase("yes") || value.equalsIgnoreCase("true") || value.equalsIgnoreCase("1") || value.equalsIgnoreCase("y") || value.equalsIgnoreCase("s")) {
 				return true;
@@ -286,7 +286,7 @@ public class ParseUtilsExtended extends ParseUtils {
 			return defaultValue;
 		}
 		s = s.trim();
-		List<String> res = new ArrayList<String>();
+		List<String> res = new ArrayList<>();
 		if (separator == null) {
 			res.add(s);
 			return res;
@@ -299,7 +299,7 @@ public class ParseUtilsExtended extends ParseUtils {
 	}
 
 	public static boolean getBoolean(String s, boolean defaultValue) {
-		if ((s != null)) {
+		if (s != null) {
 			if (s.equalsIgnoreCase("yes") || s.equalsIgnoreCase("true") || s.equalsIgnoreCase("Y") || s.equalsIgnoreCase("S") || s.equalsIgnoreCase("1")) {
 				return true;
 			} else if (s.equalsIgnoreCase("no") || s.equalsIgnoreCase("false") || s.equalsIgnoreCase("N") || s.equalsIgnoreCase("0")) {

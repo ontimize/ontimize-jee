@@ -64,7 +64,7 @@ public class MailServiceImpl implements IMailServiceServer, ApplicationContextAw
 	@Transactional(rollbackFor = Exception.class)
 	@Override
 	public void sendMail(String from, List<String> to, List<String> cc, List<String> bcc, String subject, String body, Map<String, byte[]> attachments,
-			Map<String, byte[]> inlineResources) throws OntimizeJEEException {
+	        Map<String, byte[]> inlineResources) throws OntimizeJEEException {
 		try {
 			this.getImplementation().sendMail(from, to, cc, bcc, subject, body, attachments, inlineResources);
 		} catch (Exception error) {
@@ -81,7 +81,7 @@ public class MailServiceImpl implements IMailServiceServer, ApplicationContextAw
 
 	@Override
 	public void sendMailFromInputSteams(String from, List<String> to, List<String> cc, List<String> bcc, String subject, String body, Map<String, Path> attachments,
-			Map<String, Path> inlineResources) throws OntimizeJEEException {
+	        Map<String, Path> inlineResources) throws OntimizeJEEException {
 		try {
 			this.getImplementation().sendMailFromInputSteams(from, to, cc, bcc, subject, body, attachments, inlineResources);
 		} catch (Exception error) {

@@ -41,7 +41,7 @@ import com.ontimize.jee.common.tools.SafeCasting;
 public class OntimizeHessianHttpClientConnection extends AbstractHessianConnection {
 
 	/** The logger. */
-	private final static Logger			logger	= LoggerFactory.getLogger(OntimizeHessianHttpClientConnection.class);
+	private static final Logger			logger	= LoggerFactory.getLogger(OntimizeHessianHttpClientConnection.class);
 
 	static ThreadPoolExecutor			POOL	= new ThreadPoolExecutor(50, 50, 5, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(100));
 
@@ -97,6 +97,7 @@ public class OntimizeHessianHttpClientConnection extends AbstractHessianConnecti
 		PipedOutputStream os = new PipedOutputStream(snk);
 		this.request.setEntity(new InputStreamEntity(snk, ContentType.create("x-application/hessian")));
 		this.futureResponse = OntimizeHessianHttpClientConnection.POOL.submit(new Callable<HttpResponse>() {
+
 			@Override
 			public HttpResponse call() throws Exception {
 				return OntimizeHessianHttpClientConnection.this.client.execute(OntimizeHessianHttpClientConnection.this.request);
@@ -148,7 +149,7 @@ public class OntimizeHessianHttpClientConnection extends AbstractHessianConnecti
 			case FOUND:// oauth2 authentication
 				throw new InvalidCredentialsException(I18NNaming.E_AUTH_PASSWORD_NOT_MATCH);
 			default:
-				StringBuffer sb = new StringBuffer();
+				StringBuilder sb = new StringBuilder();
 				int ch;
 
 				try {
@@ -180,7 +181,6 @@ public class OntimizeHessianHttpClientConnection extends AbstractHessianConnecti
 		}
 
 	}
-
 
 	/**
 	 * Returns the status code.

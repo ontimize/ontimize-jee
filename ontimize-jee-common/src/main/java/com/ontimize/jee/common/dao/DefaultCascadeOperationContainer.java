@@ -40,8 +40,7 @@ public class DefaultCascadeOperationContainer implements ICascadeOperationContai
 	 * @param deleteOperations
 	 *            the delete operations
 	 */
-	public DefaultCascadeOperationContainer(List<InsertOperation> insertOperations, List<UpdateOperation> updateOperations,
-			List<DeleteOperation> deleteOperations) {
+	public DefaultCascadeOperationContainer(List<InsertOperation> insertOperations, List<UpdateOperation> updateOperations, List<DeleteOperation> deleteOperations) {
 		super();
 		this.insertOperations = insertOperations;
 		this.updateOperations = updateOperations;

@@ -174,9 +174,8 @@ public abstract class AbstractOntimizeTest {
 				SocketConfig config = socketConfigBuilder.build();
 				CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
 
-				try (CloseableHttpClient httpClient = HttpClients.custom().disableAutomaticRetries().disableAuthCaching()
-						.setDefaultCredentialsProvider(credentialsProvider).setDefaultSocketConfig(config)
-						.setHttpProcessor(OntimizeHessianHttpClientSessionProcessorFactory.getHttpProcessor()).build()) {
+				try (CloseableHttpClient httpClient = HttpClients.custom().disableAutomaticRetries().disableAuthCaching().setDefaultCredentialsProvider(credentialsProvider)
+				        .setDefaultSocketConfig(config).setHttpProcessor(OntimizeHessianHttpClientSessionProcessorFactory.getHttpProcessor()).build()) {
 					HttpGet request = new HttpGet(serviceUrl);
 					CloseableHttpResponse response = httpClient.execute(request);
 					if (response.getStatusLine().getStatusCode() == 401) {

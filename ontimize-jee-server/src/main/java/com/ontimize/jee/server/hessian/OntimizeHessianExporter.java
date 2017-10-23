@@ -8,7 +8,7 @@ import com.ontimize.jee.common.tools.ReflectionTools;
 
 public class OntimizeHessianExporter extends HessianServiceExporter {
 
-	private IExceptionTranslator	exceptionTranslator;
+	private IExceptionTranslator exceptionTranslator;
 
 	public OntimizeHessianExporter() {
 		super();

@@ -12,8 +12,9 @@ import com.caucho.hessian.io.HessianProtocolException;
 import com.caucho.hessian.io.Serializer;
 
 public class BigDecimalSerializerFactory extends AbstractSerializerFactory {
-	private final BigDecimalSerializer   bigDecimalSerializer   = new BigDecimalSerializer();
-	private final BigDecimalDeserializer bigDecimalDeserializer = new BigDecimalDeserializer();
+
+	private final BigDecimalSerializer		bigDecimalSerializer	= new BigDecimalSerializer();
+	private final BigDecimalDeserializer	bigDecimalDeserializer	= new BigDecimalDeserializer();
 
 	@Override
 	public Serializer getSerializer(final Class cl) throws HessianProtocolException {
@@ -32,6 +33,7 @@ public class BigDecimalSerializerFactory extends AbstractSerializerFactory {
 	}
 
 	public static class BigDecimalSerializer extends AbstractSerializer {
+
 		@Override
 		public void writeObject(final Object obj, final AbstractHessianOutput out) throws IOException {
 

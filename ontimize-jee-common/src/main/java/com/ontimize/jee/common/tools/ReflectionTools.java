@@ -25,7 +25,7 @@ public final class ReflectionTools {
 	/**
 	 * Maps primitive <code>Class</code>es to their corresponding wrapper <code>Class</code>.
 	 */
-	private static final Map<Class<?>, Class<?>> primitiveWrapperMap = new HashMap<Class<?>, Class<?>>();
+	private static final Map<Class<?>, Class<?>> primitiveWrapperMap = new HashMap<>();
 	static {
 		ReflectionTools.primitiveWrapperMap.put(Boolean.TYPE, Boolean.class);
 		ReflectionTools.primitiveWrapperMap.put(Byte.TYPE, Byte.class);
@@ -40,7 +40,7 @@ public final class ReflectionTools {
 	/**
 	 * Maps wrapper <code>Class</code>es to their corresponding primitive types.
 	 */
-	private static final Map<Class<?>, Class<?>> wrapperPrimitiveMap = new HashMap<Class<?>, Class<?>>();
+	private static final Map<Class<?>, Class<?>> wrapperPrimitiveMap = new HashMap<>();
 	static {
 		for (Iterator<Class<?>> it = ReflectionTools.primitiveWrapperMap.keySet().iterator(); it.hasNext();) {
 			Class<?> primitiveClass = it.next();
@@ -73,7 +73,7 @@ public final class ReflectionTools {
 		if (theInterface == null) {
 			return interfaces.toArray(new Class<?>[0]);
 		}
-		List<Class<?>> res = new ArrayList<Class<?>>();
+		List<Class<?>> res = new ArrayList<>();
 		for (Class<?> interfaceToCheck : interfaces) {
 			if (theInterface.isAssignableFrom(interfaceToCheck)) {
 				res.add(interfaceToCheck);
@@ -231,7 +231,7 @@ public final class ReflectionTools {
 		}
 
 		throw new OntimizeJEERuntimeException(
-				String.format("No method %s found in class %s", name, Proxy.class.isAssignableFrom(theClass) ? Arrays.toString(theClass.getInterfaces()) : theClass));
+		        String.format("No method %s found in class %s", name, Proxy.class.isAssignableFrom(theClass) ? Arrays.toString(theClass.getInterfaces()) : theClass));
 	}
 
 	/**
@@ -331,10 +331,10 @@ public final class ReflectionTools {
 		// ReflectionTools.getMethodByNameAndParatemerNumber((toInvoke
 		// instanceof Class) ? (Class<?>) toInvoke : toInvoke.getClass(),
 		// methodName, parameters == null ? 0 : parameters.length);
-		Method method = ReflectionTools.getMethodByNameAndParatemers((toInvoke instanceof Class) ? (Class<?>) toInvoke : toInvoke.getClass(), methodName, parameters);
+		Method method = ReflectionTools.getMethodByNameAndParatemers(toInvoke instanceof Class ? (Class<?>) toInvoke : toInvoke.getClass(), methodName, parameters);
 		try {
 			method.setAccessible(true);
-			return method.invoke((toInvoke instanceof Class) ? null : toInvoke, parameters);
+			return method.invoke(toInvoke instanceof Class ? null : toInvoke, parameters);
 		} catch (Exception e) {
 			throw new OntimizeJEERuntimeException(e);
 		}
@@ -381,9 +381,9 @@ public final class ReflectionTools {
 	 */
 	public static void setFieldValue(Object toInvoke, String fieldName, Object valueToSet) {
 		try {
-			Field field = ReflectionTools.getField((toInvoke instanceof Class) ? (Class<?>) toInvoke : toInvoke.getClass(), fieldName);
+			Field field = ReflectionTools.getField(toInvoke instanceof Class ? (Class<?>) toInvoke : toInvoke.getClass(), fieldName);
 			field.setAccessible(true);
-			field.set((toInvoke instanceof Class) ? null : toInvoke, valueToSet);
+			field.set(toInvoke instanceof Class ? null : toInvoke, valueToSet);
 		} catch (Exception e) {
 			throw new OntimizeJEERuntimeException(e);
 		}
@@ -400,9 +400,9 @@ public final class ReflectionTools {
 	 */
 	public static Object getFieldValue(Object toInvoke, String fieldName) {
 		try {
-			Field field = ReflectionTools.getField((toInvoke instanceof Class) ? (Class<?>) toInvoke : toInvoke.getClass(), fieldName);
+			Field field = ReflectionTools.getField(toInvoke instanceof Class ? (Class<?>) toInvoke : toInvoke.getClass(), fieldName);
 			field.setAccessible(true);
-			return field.get((toInvoke instanceof Class) ? null : toInvoke);
+			return field.get(toInvoke instanceof Class ? null : toInvoke);
 		} catch (Exception error) {
 			throw new OntimizeJEERuntimeException(error);
 		}
@@ -423,7 +423,7 @@ public final class ReflectionTools {
 			return null;
 		}
 
-		List<Class<?>> interfacesFound = new ArrayList<Class<?>>();
+		List<Class<?>> interfacesFound = new ArrayList<>();
 		ReflectionTools.getAllInterfaces(cls, interfacesFound);
 
 		return interfacesFound;
@@ -510,7 +510,6 @@ public final class ReflectionTools {
 		throw new OntimizeJEERuntimeException("Enum constant " + enumConstantName + " not found in" + enumClass);
 	}
 
-
 	/**
 	 * <p> Checks if one <code>Class</code> can be assigned to a variable of another <code>Class</code>. </p>
 	 *
@@ -539,7 +538,7 @@ public final class ReflectionTools {
 		}
 		// have to check for null, as isAssignableFrom doesn't
 		if (cls == null) {
-			return !(toClass.isPrimitive());
+			return !toClass.isPrimitive();
 		}
 		// autoboxing:
 		if (autoboxing) {
@@ -560,7 +559,7 @@ public final class ReflectionTools {
 			return true;
 		}
 		if (cls.isPrimitive()) {
-			if (toClass.isPrimitive() == false) {
+			if (!toClass.isPrimitive()) {
 				return false;
 			}
 			if (Integer.TYPE.equals(cls)) {
@@ -638,7 +637,7 @@ public final class ReflectionTools {
 	 * @param obj
 	 */
 	public static List<Field> getAllFields(Class initialClass) {
-		List<Field> fieldList = new ArrayList<Field>();
+		List<Field> fieldList = new ArrayList<>();
 		Class tmpClass = initialClass;
 		while (tmpClass != null) {
 			fieldList.addAll(Arrays.asList(tmpClass.getDeclaredFields()));

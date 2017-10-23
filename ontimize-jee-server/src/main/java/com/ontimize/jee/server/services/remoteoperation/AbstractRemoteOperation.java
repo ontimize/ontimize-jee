@@ -6,7 +6,7 @@ package com.ontimize.jee.server.services.remoteoperation;
 public abstract class AbstractRemoteOperation implements IRemoteOperation {
 
 	/** The listener. */
-	private IRemoteOperationListener	listener;
+	private IRemoteOperationListener listener;
 
 	/**
 	 * Instantiates a new abstract remote operation.
@@ -17,7 +17,7 @@ public abstract class AbstractRemoteOperation implements IRemoteOperation {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Runnable#run()
 	 */
 	@Override
@@ -25,14 +25,14 @@ public abstract class AbstractRemoteOperation implements IRemoteOperation {
 		try {
 			Object res = this.execute();
 			this.listener.onOperationFinished(res);
-		} catch (Throwable t) {
-			this.listener.onOperationError(t);
+		} catch (Exception ex) {
+			this.listener.onOperationError(ex);
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.ontimize.jee.server.services.remoteoperation.IRemoteOperation#setListener
 	 * (com.ontimize.jee.server.services.remoteoperation.IRemoteOperationListener)
@@ -44,7 +44,7 @@ public abstract class AbstractRemoteOperation implements IRemoteOperation {
 
 	/**
 	 * Operation step.
-	 * 
+	 *
 	 * @param currentStep
 	 *            the current step
 	 * @param maxSteps

@@ -10,11 +10,11 @@ import com.ontimize.jee.server.configuration.OntimizeConfiguration;
 
 public class OntimizeConfigurationBeanDefinitionParser extends AbstractSingleBeanDefinitionParser {
 
-	private static final String REMOTE_I18N = "remote-i18n";
-	private static final String REMOTE_MAIL = "mail";
-	private static final String REMOTE_OPERATION_ATTR = "remote-operation";
-	private static final String REMOTE_PREFERENCES_ATTR = "remote-preferences";
-	private static final String SECURITY_ATTR = "security";
+	private static final String	REMOTE_I18N				= "remote-i18n";
+	private static final String	REMOTE_MAIL				= "mail";
+	private static final String	REMOTE_OPERATION_ATTR	= "remote-operation";
+	private static final String	REMOTE_PREFERENCES_ATTR	= "remote-preferences";
+	private static final String	SECURITY_ATTR			= "security";
 
 	/**
 	 * The bean that is created for this tag element

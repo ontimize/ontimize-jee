@@ -10,7 +10,6 @@ import com.ontimize.jee.desktopclient.locator.handlers.AbstractSessionLocatorInv
  */
 public class HessianSessionLocatorInvocationDelegate extends AbstractSessionLocatorInvocationDelegate {
 
-
 	/*
 	 * (non-Javadoc)
 	 * @see com.ontimize.locator.SecureEntityReferenceLocator#getEntityReference(java.lang.String, java.lang.String, int)
@@ -26,8 +25,7 @@ public class HessianSessionLocatorInvocationDelegate extends AbstractSessionLoca
 	 */
 	@Override
 	public Entity getEntityReference(String entityName) throws Exception {
-		return (Entity) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), this.getOntimizeEntityInterfaces(),
-				new HessianEntityInvocationHandler(entityName));
+		return (Entity) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), this.getOntimizeEntityInterfaces(), new HessianEntityInvocationHandler(entityName));
 	}
 
 }

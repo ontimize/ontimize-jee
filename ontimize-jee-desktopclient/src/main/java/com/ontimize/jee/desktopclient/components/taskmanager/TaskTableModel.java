@@ -55,7 +55,7 @@ public class TaskTableModel extends AbstractTableModel implements Observer {
 	 * Clean all.
 	 */
 	public void cleanFinishedTasks() {
-		for (int i = 0; i< this.taskList.size(); i++) {
+		for (int i = 0; i < this.taskList.size(); i++) {
 			ITask task = this.taskList.get(i);
 			if (task.isFinished()) {
 				this.taskList.remove(i);

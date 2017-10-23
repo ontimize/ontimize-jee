@@ -16,17 +16,17 @@ import org.springframework.jdbc.core.RowMapper;
  */
 public interface IRowMapper<S> extends RowMapper<S> {
 
-    /**
-     * Map object array.
-     *
-     * @param data
-     *            the data
-     * @param columnNames
-     *            the column names
-     * @return the s
-     * @throws SQLException
-     *             the SQL exception
-     */
-    S mapObjectArray(Object[] data, List<String> columnNames) throws SQLException;
+	/**
+	 * Map object array.
+	 *
+	 * @param data
+	 *            the data
+	 * @param columnNames
+	 *            the column names
+	 * @return the s
+	 * @throws SQLException
+	 *             the SQL exception
+	 */
+	S mapObjectArray(Object[] data, List<String> columnNames) throws SQLException;
 
 }

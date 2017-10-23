@@ -13,7 +13,7 @@ public class ExceptionTools {
 		Throwable th = original;
 		while (th != null) {
 			if (classToLookFor.isAssignableFrom(th.getClass())) {
-				return (T)th;
+				return (T) th;
 			}
 			th = th.getCause();
 		}

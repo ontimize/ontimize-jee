@@ -64,10 +64,10 @@ import com.ontimize.util.extend.ExtendedXmlParser;
 public class XMLMultiModuleApplicationBuilder extends XMLApplicationBuilder {
 	// TODO cambiar a un parser SAX
 
-	private static final String ONTIMIZE_MODULE = "OntimizeModule";
+	private static final String	ONTIMIZE_MODULE	= "OntimizeModule";
 	/** The logger. */
-	private static final Logger logger = LoggerFactory.getLogger(XMLMultiModuleApplicationBuilder.class);
-	private static final String MODULE = "Module";
+	private static final Logger	logger			= LoggerFactory.getLogger(XMLMultiModuleApplicationBuilder.class);
+	private static final String	MODULE			= "Module";
 
 	/**
 	 * Instantiates a new xML multi module application builder.
@@ -131,14 +131,14 @@ public class XMLMultiModuleApplicationBuilder extends XMLApplicationBuilder {
 			byte[] res = this.documentToBytes(mainDocument);
 			XMLMultiModuleApplicationBuilder.logger.debug(new String(res, Charset.defaultCharset()));
 
-			return new Pair<InputStream, List<String>>(new ByteArrayInputStream(res), bundles);
+			return new Pair<>(new ByteArrayInputStream(res), bundles);
 		} catch (Exception ex) {
 			throw new OntimizeJEERuntimeException("Error joining module descriptions", ex);
 		}
 	}
 
 	private List<Document> toDocs(Enumeration<URL> resources) throws ParserConfigurationException, SAXException, IOException {
-		List<Document> docs = new ArrayList<Document>();
+		List<Document> docs = new ArrayList<>();
 		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -272,8 +272,7 @@ public class XMLMultiModuleApplicationBuilder extends XMLApplicationBuilder {
 								if ((ob != null) && (ob instanceof IFormManager)) {
 									Object id = ((IFormManager) ob).getId();
 									if (id == null) {
-										XMLMultiModuleApplicationBuilder.logger
-										.warn("'id' attribute is missing in FormManager tag " + ((IFormManager) ob).getId());
+										XMLMultiModuleApplicationBuilder.logger.warn("'id' attribute is missing in FormManager tag " + ((IFormManager) ob).getId());
 									} else {
 										((Application) application).registerFormManager((String) id, (IFormManager) ob);
 									}
@@ -306,8 +305,7 @@ public class XMLMultiModuleApplicationBuilder extends XMLApplicationBuilder {
 					toolbarListener.setInitialState();
 				}
 
-				XMLMultiModuleApplicationBuilder.logger.trace("Time elapsed while creating application: {} seconds.",
-						chr.stopSeconds());
+				XMLMultiModuleApplicationBuilder.logger.trace("Time elapsed while creating application: {} seconds.", chr.stopSeconds());
 				return (Application) application;
 			} else {
 				throw new OntimizeJEERuntimeException("Error: Root is not a com.ontimize.gui.Application instance");
@@ -346,7 +344,7 @@ public class XMLMultiModuleApplicationBuilder extends XMLApplicationBuilder {
 	 *             the exception
 	 */
 	private Object buildObject(CustomNode node, EntityReferenceLocator locator, Object application) throws Exception {
-		Map<Object, Object> param = new Hashtable<Object, Object>(node.hashtableAttribute());
+		Map<Object, Object> param = new Hashtable<>(node.hashtableAttribute());
 		// Now additional values
 		param.put(IFormManager.FORM_BUILDER, new XMLFormBuilder(this.equivalentLabelsList, this.packageA));
 		param.put(ITreeFormManager.TREE_BUILDER, new XMLTreeBuilder(this.equivalentLabelsList, this.packageA));
@@ -439,8 +437,7 @@ public class XMLMultiModuleApplicationBuilder extends XMLApplicationBuilder {
 					if (ml instanceof ToolBarListener) {
 						toolbarListener = (ToolBarListener) ml;
 					} else {
-						XMLMultiModuleApplicationBuilder.logger.error("The specified ToolBar Listener is not an instance of ToolBarListener in {}",
-								node);
+						XMLMultiModuleApplicationBuilder.logger.error("The specified ToolBar Listener is not an instance of ToolBarListener in {}", node);
 					}
 				} catch (Exception e) {
 					XMLMultiModuleApplicationBuilder.logger.error("Error creating  ToolBar Listener {}", classTListener, e);
@@ -513,15 +510,15 @@ public class XMLMultiModuleApplicationBuilder extends XMLApplicationBuilder {
 	 * @return the string buffer
 	 */
 	private StringBuffer composeMenuBarOrToolBarFile(List<String> definitions) {
-		if (definitions.size() == 0) {
+		if (definitions.isEmpty()) {
 			return null;
 		}
 		try {
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 			// list to save nodes temporarily before ordering them
-			List<IndexableNode> tempNodes = new ArrayList<IndexableNode>();
-			Map<Integer, Integer> idxToPosition = new HashMap<Integer, Integer>();
+			List<IndexableNode> tempNodes = new ArrayList<>();
+			Map<Integer, Integer> idxToPosition = new HashMap<>();
 			Document mainDocument = null;
 			for (int i = 0; i < definitions.size(); i++) {
 				Document currentDocument = dBuilder.parse(Thread.currentThread().getContextClassLoader().getResourceAsStream(definitions.get(i)));
@@ -749,9 +746,9 @@ public class XMLMultiModuleApplicationBuilder extends XMLApplicationBuilder {
 
 	private class IndexableNode implements Comparable<IndexableNode> {
 
-		private final int index;
-		private final int position;
-		private final Node node;
+		private final int	index;
+		private final int	position;
+		private final Node	node;
 
 		private IndexableNode(int index, int position, Node node) {
 			this.index = index;
@@ -769,6 +766,16 @@ public class XMLMultiModuleApplicationBuilder extends XMLApplicationBuilder {
 				return result;
 			}
 			return 0;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			return super.equals(obj);
+		}
+
+		@Override
+		public int hashCode() {
+			return super.hashCode();
 		}
 
 		private Node getNode() {

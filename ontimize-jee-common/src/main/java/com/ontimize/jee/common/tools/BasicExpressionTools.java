@@ -142,10 +142,10 @@ public final class BasicExpressionTools {
 				return new BasicExpression(basicField, BasicOperator.IN_OP, searchValue.getValue());
 			case SearchValue.BETWEEN:
 				return new BasicExpression(new BasicExpression(basicField, BasicOperator.MORE_EQUAL_OP, ((List) searchValue.getValue()).get(0)), BasicOperator.AND_OP,
-						new BasicExpression(basicField, BasicOperator.LESS_EQUAL_OP, ((List) searchValue.getValue()).get(1)));
+				        new BasicExpression(basicField, BasicOperator.LESS_EQUAL_OP, ((List) searchValue.getValue()).get(1)));
 			case SearchValue.NOT_BETWEEN:
 				return new BasicExpression(new BasicExpression(basicField, BasicOperator.LESS_OP, ((List) searchValue.getValue()).get(0)), BasicOperator.OR_OP,
-						new BasicExpression(basicField, BasicOperator.MORE_OP, ((List) searchValue.getValue()).get(1)));
+				        new BasicExpression(basicField, BasicOperator.MORE_OP, ((List) searchValue.getValue()).get(1)));
 			case SearchValue.EXISTS:
 				throw new OntimizeJEERuntimeException("NOT_IMPLEMENTED");
 			default:
@@ -225,7 +225,7 @@ public final class BasicExpressionTools {
 				BasicField basicField = new BasicField(((BetweenDateFilter) obj).getDbAttr());
 				if ((fromDate != null) && (toDate != null)) {
 					fieldExpr = BasicExpressionTools.convertSearchValue(basicField,
-							new SearchValue(SearchValue.BETWEEN, new Vector<>(Arrays.asList(new Object[] { fromDate, toDate }))));
+					        new SearchValue(SearchValue.BETWEEN, new Vector<>(Arrays.asList(new Object[] { fromDate, toDate }))));
 				} else if (fromDate != null) {
 					fieldExpr = BasicExpressionTools.convertSearchValue(basicField, new SearchValue(SearchValue.MORE_EQUAL, fromDate));
 				} else if (toDate != null) {
@@ -245,10 +245,10 @@ public final class BasicExpressionTools {
 						}
 						if (checked) {
 							sourceExpr = BasicExpressionTools.combineExpression(sourceExpr,
-									BasicExpressionTools.convertSearchValue(basicField, new SearchValue(SearchValue.NOT_NULL, null)));
+							        BasicExpressionTools.convertSearchValue(basicField, new SearchValue(SearchValue.NOT_NULL, null)));
 						} else {
 							sourceExpr = BasicExpressionTools.combineExpression(sourceExpr,
-									BasicExpressionTools.convertSearchValue(basicField, new SearchValue(SearchValue.NULL, null)));
+							        BasicExpressionTools.convertSearchValue(basicField, new SearchValue(SearchValue.NULL, null)));
 						}
 					}
 				}
@@ -294,7 +294,7 @@ public final class BasicExpressionTools {
 			return null;
 		}
 		List<BasicExpression> validExpr = new ArrayList<>();
-		Set<String> fields = new HashSet<String>(Arrays.asList(fieldNames));
+		Set<String> fields = new HashSet<>(Arrays.asList(fieldNames));
 		BasicExpressionTools.findConditionForFields(expr, validExpr, fields);
 		return BasicExpressionTools.combineExpression(validExpr.toArray(new BasicExpression[] {}));
 	}
@@ -341,7 +341,7 @@ public final class BasicExpressionTools {
 		Object newLeft = null;
 		Object newRight = null;
 
-		Set<String> fields = new HashSet<String>(Arrays.asList(fieldNames));
+		Set<String> fields = new HashSet<>(Arrays.asList(fieldNames));
 
 		Object leftOperand = expr.getLeftOperand();
 		if (leftOperand instanceof BasicExpression) {

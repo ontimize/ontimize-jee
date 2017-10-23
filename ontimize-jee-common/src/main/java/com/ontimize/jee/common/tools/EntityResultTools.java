@@ -228,7 +228,7 @@ public final class EntityResultTools {
 	 * @return the entity result
 	 */
 	private static EntityResult doFastJoin(EntityResult a, EntityResult b, String keyNameA, String keyNameB, JoinType joinType, EntityResult res, Vector<Object> resColumnsA,
-			Vector<Object> resColumnsB, Vector<Object> resColumns, Vector<Object> resColumnsCommon) {
+	        Vector<Object> resColumnsB, Vector<Object> resColumns, Vector<Object> resColumnsCommon) {
 
 		Object[] keysSortedA = null;
 		int[] indexesA = null;
@@ -285,7 +285,7 @@ public final class EntityResultTools {
 							}
 							resIndex++;
 						} else if (compareResult < 0) {
-							if ((found > 0) && (i < (indexesA.length - 1)) && (keysSortedA[i].equals(keysSortedA[i + 1]))) {
+							if ((found > 0) && (i < (indexesA.length - 1)) && keysSortedA[i].equals(keysSortedA[i + 1])) {
 								searchIndexB -= found;
 							}
 							break;
@@ -305,7 +305,7 @@ public final class EntityResultTools {
 					((Vector) res.get(col)).add(resIndex, null);
 				}
 				resIndex++;
-			} else if ((found > 0) && (searchIndexB == keysSortedB.length) && (i < (indexesA.length - 1)) && (keysSortedA[i].equals(keysSortedA[i + 1]))) {
+			} else if ((found > 0) && (searchIndexB == keysSortedB.length) && (i < (indexesA.length - 1)) && keysSortedA[i].equals(keysSortedA[i + 1])) {
 				searchIndexB -= found;
 			}
 		}
@@ -337,7 +337,7 @@ public final class EntityResultTools {
 	 *            the only inner join
 	 */
 	private static void doJoinForTable(EntityResult res, Vector<Object> resColumns, Vector<Object> resColumnsA, Vector<Object> resColumnsB, Vector<Object> resColumnsCommon,
-			Hashtable<Object, Object> rowA, EntityResult b, String[] columnKeysA, String[] columnKeysB, boolean onlyInnerJoin) {
+	        Hashtable<Object, Object> rowA, EntityResult b, String[] columnKeysA, String[] columnKeysB, boolean onlyInnerJoin) {
 		int rcount = b.calculateRecordNumber();
 		boolean match = false;
 		int index = res.calculateRecordNumber();
@@ -361,7 +361,7 @@ public final class EntityResultTools {
 				index++;
 			}
 		}
-		if ((!match) && (!onlyInnerJoin)) {
+		if (!match && !onlyInnerJoin) {
 			for (Object col : resColumnsA) {
 				((Vector) res.get(col)).add(index, rowA.get(col));
 			}
@@ -393,7 +393,7 @@ public final class EntityResultTools {
 			Object ob = hb.get(columnKeysB[i]);
 			if ((oa == null) && (ob != null)) {
 				return false;
-			} else if ((oa != null) && (!oa.equals(ob))) {
+			} else if ((oa != null) && !oa.equals(ob)) {
 				return false;
 			}
 		}
@@ -563,7 +563,7 @@ public final class EntityResultTools {
 	 * @return the entity result
 	 */
 	private static EntityResult doFastGroup(EntityResult er, String groupColumn, GroupType groupType, String opColumn, boolean count) {
-		boolean hasOp = (er.get(opColumn) != null);
+		boolean hasOp = er.get(opColumn) != null;
 		EntityResult res = new EntityResult();
 		if (count) {
 			EntityResultTools.initEntityResult(res, groupColumn, opColumn, "COUNT");
@@ -600,17 +600,17 @@ public final class EntityResultTools {
 						currentOp = null;
 						break;
 					case MAX:
-						Number converted = ((newOp instanceof Number) || (newOp == null)) ? (Number) newOp : new Double((String) newOp);
+						Number converted = (newOp instanceof Number) || (newOp == null) ? (Number) newOp : new Double((String) newOp);
 						if (currentOp == null) {
 							currentOp = converted;
 						} else if (converted != null) {
 							double c = ((Number) currentOp).doubleValue();
 							double n = converted.doubleValue();
-							currentOp = (n > c) ? converted : currentOp;
+							currentOp = n > c ? converted : currentOp;
 						}
 						break;
 					case SUM:
-						converted = ((newOp instanceof Number) || (newOp == null)) ? (Number) newOp : new Double((String) newOp);
+						converted = (newOp instanceof Number) || (newOp == null) ? (Number) newOp : new Double((String) newOp);
 						if (currentOp == null) {
 							currentOp = converted;
 						} else if (converted != null) {
@@ -858,7 +858,7 @@ public final class EntityResultTools {
 								counter = 0;
 								break;
 							case AVG:
-								Number converted = ((newOp instanceof Number) || (newOp == null)) ? (Number) newOp : new Double((String) newOp);
+								Number converted = (newOp instanceof Number) || (newOp == null) ? (Number) newOp : new Double((String) newOp);
 								if (groupOperation.currentValue == null) {
 									groupOperation.currentValue = converted;
 								} else if (converted != null) {
@@ -868,27 +868,27 @@ public final class EntityResultTools {
 								}
 								break;
 							case MAX:
-								converted = ((newOp instanceof Number) || (newOp == null)) ? (Number) newOp : new Double((String) newOp);
+								converted = (newOp instanceof Number) || (newOp == null) ? (Number) newOp : new Double((String) newOp);
 								if (groupOperation.currentValue == null) {
 									groupOperation.currentValue = converted;
 								} else if (converted != null) {
 									double c = groupOperation.currentValue.doubleValue();
 									double n = converted.doubleValue();
-									groupOperation.currentValue = (n > c) ? converted : groupOperation.currentValue;
+									groupOperation.currentValue = n > c ? converted : groupOperation.currentValue;
 								}
 								break;
 							case MIN:
-								converted = ((newOp instanceof Number) || (newOp == null)) ? (Number) newOp : new Double((String) newOp);
+								converted = (newOp instanceof Number) || (newOp == null) ? (Number) newOp : new Double((String) newOp);
 								if (groupOperation.currentValue == null) {
 									groupOperation.currentValue = converted;
 								} else if (converted != null) {
 									double c = groupOperation.currentValue.doubleValue();
 									double n = converted.doubleValue();
-									groupOperation.currentValue = (n < c) ? converted : groupOperation.currentValue;
+									groupOperation.currentValue = n < c ? converted : groupOperation.currentValue;
 								}
 								break;
 							case SUM:
-								converted = ((newOp instanceof Number) || (newOp == null)) ? (Number) newOp : new Double((String) newOp);
+								converted = (newOp instanceof Number) || (newOp == null) ? (Number) newOp : new Double((String) newOp);
 								if (groupOperation.currentValue == null) {
 									groupOperation.currentValue = converted;
 								} else if (converted != null) {
@@ -922,7 +922,7 @@ public final class EntityResultTools {
 	}
 
 	private static int refactor(String groupColumn, EntityResult res, Object currentKey, int resIndex, int counter, Vector vectorGroupColumn,
-			GroupOperationWrap... groupOperations) {
+	        GroupOperationWrap... groupOperations) {
 		vectorGroupColumn.add(resIndex, currentKey);
 
 		for (GroupOperationWrap groupOperation : groupOperations) {
@@ -960,7 +960,7 @@ public final class EntityResultTools {
 					if (!(o instanceof Number)) {
 						throw new OntimizeJEEException("Not a number in sum operation");
 					}
-					finalValue = finalValue.add(o instanceof BigDecimal ? ((BigDecimal) o) : new BigDecimal(o.toString()));
+					finalValue = finalValue.add(o instanceof BigDecimal ? (BigDecimal) o : new BigDecimal(o.toString()));
 					someValue = true;
 				}
 			}
@@ -1012,7 +1012,7 @@ public final class EntityResultTools {
 					if (!(o instanceof Number)) {
 						throw new OntimizeJEEException("Not a number in sum operation");
 					}
-					finalValue = finalValue.add(o instanceof BigDecimal ? ((BigDecimal) o) : new BigDecimal(o.toString()));
+					finalValue = finalValue.add(o instanceof BigDecimal ? (BigDecimal) o : new BigDecimal(o.toString()));
 					someValue = true;
 				}
 			}
@@ -1932,9 +1932,9 @@ public final class EntityResultTools {
 	public static boolean compare(EntityResult erBackup, EntityResult er) {
 		if ((erBackup == null) && (er == null)) {
 			return true;
-		} else if (((erBackup == null) || erBackup.isEmpty()) && ((er != null) && !er.isEmpty())) {
+		} else if (((erBackup == null) || erBackup.isEmpty()) && (er != null) && !er.isEmpty()) {
 			return false;
-		} else if (((er == null) || er.isEmpty()) && ((erBackup != null) && !erBackup.isEmpty())) {
+		} else if (((er == null) || er.isEmpty()) && (erBackup != null) && !erBackup.isEmpty()) {
 			return false;
 		} else if (er.calculateRecordNumber() != erBackup.calculateRecordNumber()) {
 			return false;

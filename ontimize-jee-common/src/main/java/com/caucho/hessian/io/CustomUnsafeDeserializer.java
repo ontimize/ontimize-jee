@@ -38,7 +38,7 @@ public class CustomUnsafeDeserializer extends UnsafeDeserializer {
 	 */
 	@Override
 	protected HashMap<String, FieldDeserializer> getFieldMap(Class<?> cl) {
-		HashMap<String, FieldDeserializer> fieldMap = new HashMap<String, FieldDeserializer>();
+		HashMap<String, FieldDeserializer> fieldMap = new HashMap<>();
 
 		for (; cl != null; cl = cl.getSuperclass()) {
 			Field[] fields = cl.getDeclaredFields();
@@ -54,7 +54,7 @@ public class CustomUnsafeDeserializer extends UnsafeDeserializer {
 				// XXX: could parameterize the handler to only deal with public
 				try {
 					field.setAccessible(true);
-				} catch (Throwable e) {
+				} catch (Exception e) {
 					// do nothing
 				}
 
@@ -148,6 +148,7 @@ public class CustomUnsafeDeserializer extends UnsafeDeserializer {
 	 *
 	 */
 	private static class CustomSqlDateFieldDeserializer extends FieldDeserializer {
+
 		/** el campo */
 		private final Field	field;
 		/** el offset */
@@ -192,6 +193,7 @@ public class CustomUnsafeDeserializer extends UnsafeDeserializer {
 	 *
 	 */
 	private static class CustomSqlTimestampFieldDeserializer extends FieldDeserializer {
+
 		/** el campo */
 		private final Field	field;
 		/** el offset */
@@ -237,6 +239,7 @@ public class CustomUnsafeDeserializer extends UnsafeDeserializer {
 	 *
 	 */
 	private static class CustomSqlTimeFieldDeserializer extends FieldDeserializer {
+
 		/** el campo */
 		private final Field	field;
 		/** el offset */

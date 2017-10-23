@@ -36,6 +36,7 @@ public class RemoteApplicationPreferencesInvocationHandler extends AbstractInvoc
 		super();
 		this.queue = new LinkedBlockingQueue<>();
 		this.consummerThread = new Thread("RemoteApplicationPreferences-Thread") {
+
 			@Override
 			public void run() {
 
@@ -96,6 +97,7 @@ public class RemoteApplicationPreferencesInvocationHandler extends AbstractInvoc
 	private boolean isLogged() {
 		return ((OJeeClientPermissionLocator) ApplicationManager.getApplication().getReferenceLocator()).getUserInformation() != null;
 	}
+
 	/*
 	 * (non-Javadoc)
 	 * @see com.ontimize.gui.preferences.RemoteApplicationPreferences#loadRemotePreferences(int)
@@ -124,6 +126,7 @@ public class RemoteApplicationPreferencesInvocationHandler extends AbstractInvoc
 	}
 
 	private static class Operation {
+
 		private final String	method;
 		private final Object[]	parameters;
 

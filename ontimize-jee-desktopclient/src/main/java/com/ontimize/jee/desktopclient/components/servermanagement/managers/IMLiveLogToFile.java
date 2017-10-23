@@ -33,10 +33,11 @@ import com.ontimize.jee.desktopclient.components.servermanagement.window.filecho
  * The Class IMLiveLogConsole.
  */
 public class IMLiveLogToFile extends BasicInteractionManager {
-	private static final Logger logger = LoggerFactory.getLogger(IMLiveLogToFile.class);
+
+	private static final Logger		logger	= LoggerFactory.getLogger(IMLiveLogToFile.class);
 
 	@FormComponent(attr = "FILECHOOSER")
-	protected Row rowFileChooser;
+	protected Row					rowFileChooser;
 
 	protected EmbeddedJFileChooser	fileChooser;
 	protected final Form			liveLogConsole;
@@ -54,7 +55,7 @@ public class IMLiveLogToFile extends BasicInteractionManager {
 		this.fileChooser = new EmbeddedJFileChooser(EmbeddedJFileChooser.MODE.BOTH, new LiveLogToFileListener());
 		this.fileChooser.setFileFilter(new FileNameExtensionFilter("LOG FILES", "log"));
 		this.rowFileChooser.add(new JScrollPane(this.fileChooser),
-				new GridBagConstraints(0, 1, 3, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(2, 2, 2, 2), 0, 0));
+		        new GridBagConstraints(0, 1, 3, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(2, 2, 2, 2), 0, 0));
 	}
 
 	public class LiveLogToFileListener implements IEmbeddedJFileChooser {
@@ -62,6 +63,7 @@ public class IMLiveLogToFile extends BasicInteractionManager {
 		@Override
 		public void setPathFileChooser(final String path) {
 			new Thread(new Runnable() {
+
 				String finalPath;
 
 				@Override
@@ -88,8 +90,7 @@ public class IMLiveLogToFile extends BasicInteractionManager {
 								try {
 									stream.close();
 								} catch (IOException e) {
-									MessageDialog.showErrorMessage(SwingUtilities.getWindowAncestor(IMLiveLogToFile.this.managedForm),
-											e.getMessage());
+									MessageDialog.showErrorMessage(SwingUtilities.getWindowAncestor(IMLiveLogToFile.this.managedForm), e.getMessage());
 								}
 							}
 						}

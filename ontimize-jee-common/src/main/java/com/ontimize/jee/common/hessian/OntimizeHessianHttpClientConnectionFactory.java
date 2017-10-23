@@ -30,7 +30,7 @@ import com.ontimize.jee.common.session.HeaderAttribute;
 public class OntimizeHessianHttpClientConnectionFactory extends AbstractHessianConnectionFactory {
 
 	/** The Constant logger. */
-	private static final Logger	logger	= LoggerFactory.getLogger(OntimizeHessianHttpClientConnectionFactory.class.getName());
+	private static final Logger logger = LoggerFactory.getLogger(OntimizeHessianHttpClientConnectionFactory.class.getName());
 
 	/**
 	 * Instantiates a new ontimize hessian http client connection factory.
@@ -53,7 +53,6 @@ public class OntimizeHessianHttpClientConnectionFactory extends AbstractHessianC
 		// Prepare authentication
 
 		OntimizeHessianHttpClientConnectionFactory.logger.trace(this + " open(" + url + ")");
-
 
 		long connectTimeout = this.getHessianProxyFactory().getConnectTimeout();
 
@@ -83,7 +82,7 @@ public class OntimizeHessianHttpClientConnectionFactory extends AbstractHessianC
 		HeaderAttribute hb = new HeaderAttribute();
 		hb.setName("locale-language");
 		hb.setValue(locale.getLanguage());
-		List<HeaderAttribute> has = new ArrayList<HeaderAttribute>();
+		List<HeaderAttribute> has = new ArrayList<>();
 		has.add(ha);
 		has.add(hb);
 		Collection<HeaderAttribute> headerAttributes;

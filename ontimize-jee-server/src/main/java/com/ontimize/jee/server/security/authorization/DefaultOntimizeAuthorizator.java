@@ -62,7 +62,7 @@ public class DefaultOntimizeAuthorizator implements ISecurityAuthorizator, Appli
 
 		for (final String roleName : userRoles) {
 			final Role role = this.getRole(roleName);
-			if ((role != null) && (role.hasServerPermission(permissionName))) {
+			if ((role != null) && role.hasServerPermission(permissionName)) {
 				return true;
 			}
 		}

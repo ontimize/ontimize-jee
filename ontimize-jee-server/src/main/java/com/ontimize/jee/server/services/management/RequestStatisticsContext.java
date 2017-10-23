@@ -15,12 +15,12 @@ import com.ontimize.jee.common.tools.EntityResultTools.GroupTypeOperation;
 public class RequestStatisticsContext {
 
 	/** The logger. */
-	private final static Logger logger = LoggerFactory.getLogger(RequestStatisticsContext.class);
+	private static final Logger				logger	= LoggerFactory.getLogger(RequestStatisticsContext.class);
 
-	private static RequestStatisticsContext instance;
+	private static RequestStatisticsContext	instance;
 
-	private EntityResult rs = new EntityResult(
-			Arrays.asList("SERVICE_NAME", "METHOD_NAME", "USER_NAME", "METHOD_PARAMS", "EXECUTION_DATE", "EXECUTION_TIME", "SERVICE_EXCEPTION"));
+	private EntityResult					rs		= new EntityResult(
+	        Arrays.asList("SERVICE_NAME", "METHOD_NAME", "USER_NAME", "METHOD_PARAMS", "EXECUTION_DATE", "EXECUTION_TIME", "SERVICE_EXCEPTION"));
 
 	public EntityResult getContext() {
 		return this.rs;

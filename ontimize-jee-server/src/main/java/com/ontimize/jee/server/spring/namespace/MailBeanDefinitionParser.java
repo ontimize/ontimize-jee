@@ -22,7 +22,7 @@ import com.ontimize.jee.server.spring.DatabasePropertyResolver;
 public class MailBeanDefinitionParser extends AbstractSingleBeanDefinitionParser {
 
 	/** The Constant SCOPE. */
-	private static final String	SCOPE	= "scope";
+	private static final String SCOPE = "scope";
 
 	/*
 	 * (non-Javadoc)
@@ -52,8 +52,7 @@ public class MailBeanDefinitionParser extends AbstractSingleBeanDefinitionParser
 			engine = new SpringMailEngineParser().parse(child, nestedCtx);
 		} else {
 			// construimos el bean que nos venga que deberia ser un IMailEngine
-			engine = DefinitionParserUtil.parseNode(child, ctx, builder.getBeanDefinition(), element.getAttribute(MailBeanDefinitionParser.SCOPE),
-					false);
+			engine = DefinitionParserUtil.parseNode(child, ctx, builder.getBeanDefinition(), element.getAttribute(MailBeanDefinitionParser.SCOPE), false);
 		}
 		builder.addPropertyValue("engine", engine);
 		builder.setLazyInit(true);
@@ -92,8 +91,7 @@ public class MailBeanDefinitionParser extends AbstractSingleBeanDefinitionParser
 				configurator = new SpringMailEngineConfiguratorParser().parse(child, nestedCtx);
 			} else {
 				// construimos el bean que nos venga que deberia ser un IRemoteApplicationPreferencesEngine
-				configurator = DefinitionParserUtil.parseNode(child, ctx, builder.getBeanDefinition(),
-						element.getAttribute(MailBeanDefinitionParser.SCOPE), false);
+				configurator = DefinitionParserUtil.parseNode(child, ctx, builder.getBeanDefinition(), element.getAttribute(MailBeanDefinitionParser.SCOPE), false);
 			}
 			builder.addPropertyValue("configurator", configurator);
 			builder.setLazyInit(true);
@@ -136,8 +134,7 @@ public class MailBeanDefinitionParser extends AbstractSingleBeanDefinitionParser
 			String filterColumnValueProtocol = DefinitionParserUtil.nullIfEmpty(element.getAttribute("filter-column-value-protocol"));
 			String filterColumnValueUser = DefinitionParserUtil.nullIfEmpty(element.getAttribute("filter-column-value-user"));
 			String filterColumnValuePassword = DefinitionParserUtil.nullIfEmpty(element.getAttribute("filter-column-value-password"));
-			String filterColumnValueJavaMailProperties = DefinitionParserUtil
-					.nullIfEmpty(element.getAttribute("filter-column-value-javamail-properties"));
+			String filterColumnValueJavaMailProperties = DefinitionParserUtil.nullIfEmpty(element.getAttribute("filter-column-value-javamail-properties"));
 
 			Map<String, String> propertiesToSet = new HashMap<>();
 			propertiesToSet.put("encodingResolver", filterColumnValueEncoding);
@@ -150,8 +147,8 @@ public class MailBeanDefinitionParser extends AbstractSingleBeanDefinitionParser
 			final ParserContext nestedCtx = new ParserContext(ctx.getReaderContext(), ctx.getDelegate(), builder.getBeanDefinition());
 			for (Entry<String, String> entry : propertiesToSet.entrySet()) {
 				if ((entry.getKey() != null) && (entry.getValue() != null)) {
-					builder.addPropertyValue(entry.getKey(), new DatabasePropertyResolverParser(filterColumnName, valueColumnName, refRepository,
-							queryId, entry.getValue()).parse(element, nestedCtx));
+					builder.addPropertyValue(entry.getKey(),
+					        new DatabasePropertyResolverParser(filterColumnName, valueColumnName, refRepository, queryId, entry.getValue()).parse(element, nestedCtx));
 				}
 			}
 			builder.setLazyInit(true);
@@ -166,8 +163,7 @@ public class MailBeanDefinitionParser extends AbstractSingleBeanDefinitionParser
 		private final String	queryId;
 		private final String	filterColumnValue;
 
-		public DatabasePropertyResolverParser(String filterColumnName, String valueColumnName, String refRepository, String queryId,
-				String filterColumnValue) {
+		public DatabasePropertyResolverParser(String filterColumnName, String valueColumnName, String refRepository, String queryId, String filterColumnValue) {
 			super();
 			this.filterColumnName = filterColumnName;
 			this.valueColumnName = valueColumnName;

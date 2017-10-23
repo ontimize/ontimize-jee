@@ -8,13 +8,9 @@ import com.ontimize.jee.common.tools.Pair;
 
 // TODO: Auto-generated Javadoc
 /**
- * The listener interface for receiving IRemoteOperation events. The class that
- * is interested in processing a IRemoteOperation event implements this
- * interface, and the object created with that class is registered with a
- * component using the component's
- * <code>addIRemoteOperationListener<code> method. When
- * the IRemoteOperation event occurs, that object's appropriate
- * method is invoked.
+ * The listener interface for receiving IRemoteOperation events. The class that is interested in processing a IRemoteOperation event implements this interface, and the object
+ * created with that class is registered with a component using the component's <code>addIRemoteOperationListener<code> method. When the IRemoteOperation event occurs, that
+ * object's appropriate method is invoked.
  *
  * @param <T>
  *            the result type
@@ -56,8 +52,7 @@ public interface IRemoteOperationListener<T> {
 	void onFinish(RemoteOperationFinishMessage status);
 
 	/**
-	 * Debe devolver el resultado de la operación o lanzar una excepción en caso
-	 * de error.
+	 * Debe devolver el resultado de la operación o lanzar una excepción en caso de error.
 	 *
 	 * @return the result
 	 * @throws OntimizeJEERuntimeException

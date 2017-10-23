@@ -13,7 +13,7 @@ import com.ontimize.gui.ApplicationManager;
 public class TranslatedTableCellRenderer implements TableCellRenderer {
 
 	/** The original renderer. */
-	private final TableCellRenderer	originalRenderer;
+	private final TableCellRenderer originalRenderer;
 
 	/**
 	 * Instantiates a new translated table cell renderer.

@@ -15,7 +15,7 @@ import com.ontimize.jee.common.exceptions.InvalidCredentialsException;
 
 public class DefaultOAuth2ClientUserInfoProviderImpl implements IOAuth2ClientUserInfoProvider {
 
-	private final Logger			log	= LoggerFactory.getLogger(DefaultOAuth2ClientUserInfoProviderImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(DefaultOAuth2ClientUserInfoProviderImpl.class);
 
 	@Override
 	public Map<String, Object> getUserInfoFromProvider(String token, OAuth2ClientProperties oAuth2ClientProperties) {
@@ -27,7 +27,7 @@ public class DefaultOAuth2ClientUserInfoProviderImpl implements IOAuth2ClientUse
 		if (userInfoMapEntity.getStatusCode() == HttpStatus.OK) {
 			return userInfoMapEntity.getBody();
 		} else {
-			this.log.error("cannot get user info");
+			DefaultOAuth2ClientUserInfoProviderImpl.logger.error("cannot get user info");
 			throw new InvalidCredentialsException(userInfoMapEntity.getStatusCode().getReasonPhrase());
 		}
 	}

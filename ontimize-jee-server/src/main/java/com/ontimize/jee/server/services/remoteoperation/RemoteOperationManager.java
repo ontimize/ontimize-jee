@@ -10,8 +10,9 @@ import com.ontimize.jee.server.configuration.OntimizeConfiguration;
 @Component("remoteOperationManager")
 @Lazy(value = true)
 public class RemoteOperationManager implements InitializingBean {
+
 	@Autowired
-	private OntimizeConfiguration	ontimizeConfiguration;
+	private OntimizeConfiguration ontimizeConfiguration;
 
 	public RemoteOperationManager() {
 		super();

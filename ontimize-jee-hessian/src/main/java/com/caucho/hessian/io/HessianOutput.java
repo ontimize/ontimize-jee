@@ -1,18 +1,16 @@
 /*
- * Copyright (c) 2001-2008 Caucho Technology, Inc. All rights reserved. The Apache Software License, Version 1.1 Redistribution and use in source and
- * binary forms, with or without modification, are permitted provided that the following conditions are met: 1. Redistributions of source code must
- * retain the above copyright notice, this list of conditions and the following disclaimer. 2. Redistributions in binary form must reproduce the above
- * copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
- * 3. The end-user documentation included with the redistribution, if any, must include the following acknowlegement: "This product includes software
- * developed by the Caucho Technology (http://www.caucho.com/)." Alternately, this acknowlegement may appear in the software itself, if and wherever
- * such third-party acknowlegements normally appear. 4. The names "Burlap", "Resin", and "Caucho" must not be used to endorse or promote products
- * derived from this software without prior written permission. For written permission, please contact info@caucho.com. 5. Products derived from this
- * software may not be called "Resin" nor may "Resin" appear in their names without prior written permission of Caucho Technology. THIS SOFTWARE IS
- * PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL CAUCHO TECHNOLOGY OR ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * Copyright (c) 2001-2008 Caucho Technology, Inc. All rights reserved. The Apache Software License, Version 1.1 Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met: 1. Redistributions of source code must retain the above copyright notice, this list of conditions and
+ * the following disclaimer. 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution. 3. The end-user documentation included with the redistribution, if any, must include the following acknowlegement: "This
+ * product includes software developed by the Caucho Technology (http://www.caucho.com/)." Alternately, this acknowlegement may appear in the software itself, if and wherever such
+ * third-party acknowlegements normally appear. 4. The names "Burlap", "Resin", and "Caucho" must not be used to endorse or promote products derived from this software without
+ * prior written permission. For written permission, please contact info@caucho.com. 5. Products derived from this software may not be called "Resin" nor may "Resin" appear in
+ * their names without prior written permission of Caucho Technology. THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL CAUCHO TECHNOLOGY OR ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+ * BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+ * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * @author Scott Ferguson
  */
 
@@ -29,11 +27,14 @@ import java.util.IdentityHashMap;
  *
  * <p>HessianOutput is unbuffered, so any client needs to provide its own buffering.
  *
- * <pre> OutputStream os = ...; // from http connection HessianOutput out = new HessianOutput(os); String value;
+ * <pre>
+ *  OutputStream os = ...; // from http connection HessianOutput out = new HessianOutput(os); String value;
  *
- * out.startCall("hello"); // start hello call out.writeString("arg1"); // write a string argument out.completeCall(); // complete the call </pre>
+ * out.startCall("hello"); // start hello call out.writeString("arg1"); // write a string argument out.completeCall(); // complete the call
+ * </pre>
  */
 public class HessianOutput extends AbstractHessianOutput {
+
 	// the output stream/
 	protected OutputStream						os;
 	// map of references
@@ -93,10 +94,12 @@ public class HessianOutput extends AbstractHessianOutput {
 	}
 
 	/**
-	 * Starts the method call. Clients would use <code>startCall</code> instead of <code>call</code> if they wanted finer control over writing the
-	 * arguments, or needed to write headers.
+	 * Starts the method call. Clients would use <code>startCall</code> instead of <code>call</code> if they wanted finer control over writing the arguments, or needed to write
+	 * headers.
 	 *
-	 * <pre><code> c major minor m b16 b8 method-name </code></pre>
+	 * <pre>
+	 * <code> c major minor m b16 b8 method-name </code>
+	 * </pre>
 	 *
 	 * @param method
 	 *            the method name to call.
@@ -117,7 +120,9 @@ public class HessianOutput extends AbstractHessianOutput {
 	/**
 	 * Writes the call tag. This would be followed by the headers and the method tag.
 	 *
-	 * <pre><code> c major minor </code></pre>
+	 * <pre>
+	 * <code> c major minor </code>
+	 * </pre>
 	 *
 	 * @param method
 	 *            the method name to call.
@@ -132,7 +137,9 @@ public class HessianOutput extends AbstractHessianOutput {
 	/**
 	 * Writes the method tag.
 	 *
-	 * <pre><code> m b16 b8 method-name </code></pre>
+	 * <pre>
+	 * <code> m b16 b8 method-name </code>
+	 * </pre>
 	 *
 	 * @param method
 	 *            the method name to call.
@@ -149,7 +156,9 @@ public class HessianOutput extends AbstractHessianOutput {
 	/**
 	 * Completes.
 	 *
-	 * <pre><code> z </code></pre>
+	 * <pre>
+	 * <code> z </code>
+	 * </pre>
 	 */
 	@Override
 	public void completeCall() throws IOException {
@@ -161,7 +170,9 @@ public class HessianOutput extends AbstractHessianOutput {
 	 *
 	 * <p>A successful completion will have a single value:
 	 *
-	 * <pre> r </pre>
+	 * <pre>
+	 * r
+	 * </pre>
 	 */
 	@Override
 	public void startReply() throws IOException {
@@ -175,7 +186,9 @@ public class HessianOutput extends AbstractHessianOutput {
 	 *
 	 * <p>A successful completion will have a single value:
 	 *
-	 * <pre> z </pre>
+	 * <pre>
+	 * z
+	 * </pre>
 	 */
 	@Override
 	public void completeReply() throws IOException {
@@ -185,7 +198,9 @@ public class HessianOutput extends AbstractHessianOutput {
 	/**
 	 * Writes a header name. The header value must immediately follow.
 	 *
-	 * <pre><code> H b16 b8 foo <em>value</em> </code></pre>
+	 * <pre>
+	 * <code> H b16 b8 foo <em>value</em> </code>
+	 * </pre>
 	 */
 	@Override
 	public void writeHeader(String name) throws IOException {
@@ -201,11 +216,13 @@ public class HessianOutput extends AbstractHessianOutput {
 	/**
 	 * Writes a fault. The fault will be written as a descriptive string followed by an object:
 	 *
-	 * <pre><code> f &lt;string>code &lt;string>the fault code
+	 * <pre>
+	 * <code> f &lt;string>code &lt;string>the fault code
 	 *
 	 * &lt;string>message &lt;string>the fault mesage
 	 *
-	 * &lt;string>detail mt\x00\xnnjavax.ejb.FinderException ... z z </code></pre>
+	 * &lt;string>detail mt\x00\xnnjavax.ejb.FinderException ... z z </code>
+	 * </pre>
 	 *
 	 * @param code
 	 *            the fault code, a three digit
@@ -251,10 +268,11 @@ public class HessianOutput extends AbstractHessianOutput {
 	}
 
 	/**
-	 * Writes the list header to the stream. List writers will call <code>writeListBegin</code> followed by the list contents and then call
-	 * <code>writeListEnd</code>.
+	 * Writes the list header to the stream. List writers will call <code>writeListBegin</code> followed by the list contents and then call <code>writeListEnd</code>.
 	 *
-	 * <pre><code> V t b16 b8 type l b32 b24 b16 b8 </code></pre>
+	 * <pre>
+	 * <code> V t b16 b8 type l b32 b24 b16 b8 </code>
+	 * </pre>
 	 */
 	@Override
 	public boolean writeListBegin(int length, String type) throws IOException {
@@ -285,10 +303,11 @@ public class HessianOutput extends AbstractHessianOutput {
 	}
 
 	/**
-	 * Writes the map header to the stream. Map writers will call <code>writeMapBegin</code> followed by the map contents and then call
-	 * <code>writeMapEnd</code>.
+	 * Writes the map header to the stream. Map writers will call <code>writeMapBegin</code> followed by the map contents and then call <code>writeMapEnd</code>.
 	 *
-	 * <pre><code> Mt b16 b8 (<key> <value>)z </code></pre>
+	 * <pre>
+	 * <code> Mt b16 b8 (<key> <value>)z </code>
+	 * </pre>
 	 */
 	@Override
 	public void writeMapBegin(String type) throws IOException {
@@ -308,7 +327,9 @@ public class HessianOutput extends AbstractHessianOutput {
 	/**
 	 * Writes a remote object reference to the stream. The type is the type of the remote interface.
 	 *
-	 * <pre><code> 'r' 't' b16 b8 type url </code></pre>
+	 * <pre>
+	 * <code> 'r' 't' b16 b8 type url </code>
+	 * </pre>
 	 */
 	public void writeRemote(String type, String url) throws IOException {
 		this.os.write('r');
@@ -321,7 +342,9 @@ public class HessianOutput extends AbstractHessianOutput {
 	/**
 	 * Writes a boolean value to the stream. The boolean will be written with the following syntax:
 	 *
-	 * <pre><code> T F </code></pre>
+	 * <pre>
+	 * <code> T F </code>
+	 * </pre>
 	 *
 	 * @param value
 	 *            the boolean value to write.
@@ -338,7 +361,9 @@ public class HessianOutput extends AbstractHessianOutput {
 	/**
 	 * Writes an integer value to the stream. The integer will be written with the following syntax:
 	 *
-	 * <pre><code> I b32 b24 b16 b8 </code></pre>
+	 * <pre>
+	 * <code> I b32 b24 b16 b8 </code>
+	 * </pre>
 	 *
 	 * @param value
 	 *            the integer value to write.
@@ -355,7 +380,9 @@ public class HessianOutput extends AbstractHessianOutput {
 	/**
 	 * Writes a long value to the stream. The long will be written with the following syntax:
 	 *
-	 * <pre><code> L b64 b56 b48 b40 b32 b24 b16 b8 </code></pre>
+	 * <pre>
+	 * <code> L b64 b56 b48 b40 b32 b24 b16 b8 </code>
+	 * </pre>
 	 *
 	 * @param value
 	 *            the long value to write.
@@ -370,13 +397,15 @@ public class HessianOutput extends AbstractHessianOutput {
 		this.os.write((byte) (value >> 24));
 		this.os.write((byte) (value >> 16));
 		this.os.write((byte) (value >> 8));
-		this.os.write((byte) (value));
+		this.os.write((byte) value);
 	}
 
 	/**
 	 * Writes a double value to the stream. The double will be written with the following syntax:
 	 *
-	 * <pre><code> D b64 b56 b48 b40 b32 b24 b16 b8 </code></pre>
+	 * <pre>
+	 * <code> D b64 b56 b48 b40 b32 b24 b16 b8 </code>
+	 * </pre>
 	 *
 	 * @param value
 	 *            the double value to write.
@@ -393,13 +422,15 @@ public class HessianOutput extends AbstractHessianOutput {
 		this.os.write((byte) (bits >> 24));
 		this.os.write((byte) (bits >> 16));
 		this.os.write((byte) (bits >> 8));
-		this.os.write((byte) (bits));
+		this.os.write((byte) bits);
 	}
 
 	/**
 	 * Writes a date to the stream.
 	 *
-	 * <pre><code> T b64 b56 b48 b40 b32 b24 b16 b8 </code></pre>
+	 * <pre>
+	 * <code> T b64 b56 b48 b40 b32 b24 b16 b8 </code>
+	 * </pre>
 	 *
 	 * @param time
 	 *            the date in milliseconds from the epoch in UTC
@@ -414,13 +445,15 @@ public class HessianOutput extends AbstractHessianOutput {
 		this.os.write((byte) (time >> 24));
 		this.os.write((byte) (time >> 16));
 		this.os.write((byte) (time >> 8));
-		this.os.write((byte) (time));
+		this.os.write((byte) time);
 	}
 
 	/**
 	 * Writes a null value to the stream. The null will be written with the following syntax
 	 *
-	 * <pre><code> N </code></pre>
+	 * <pre>
+	 * <code> N </code>
+	 * </pre>
 	 *
 	 * @param value
 	 *            the string value to write.
@@ -433,11 +466,15 @@ public class HessianOutput extends AbstractHessianOutput {
 	/**
 	 * Writes a string value to the stream using UTF-8 encoding. The string will be written with the following syntax:
 	 *
-	 * <pre><code> S b16 b8 string-value </code></pre>
+	 * <pre>
+	 * <code> S b16 b8 string-value </code>
+	 * </pre>
 	 *
 	 * If the value is null, it will be written as
 	 *
-	 * <pre><code> N </code></pre>
+	 * <pre>
+	 * <code> N </code>
+	 * </pre>
 	 *
 	 * @param value
 	 *            the string value to write.
@@ -481,11 +518,15 @@ public class HessianOutput extends AbstractHessianOutput {
 	/**
 	 * Writes a string value to the stream using UTF-8 encoding. The string will be written with the following syntax:
 	 *
-	 * <pre><code> S b16 b8 string-value </code></pre>
+	 * <pre>
+	 * <code> S b16 b8 string-value </code>
+	 * </pre>
 	 *
 	 * If the value is null, it will be written as
 	 *
-	 * <pre><code> N </code></pre>
+	 * <pre>
+	 * <code> N </code>
+	 * </pre>
 	 *
 	 * @param value
 	 *            the string value to write.
@@ -526,11 +567,15 @@ public class HessianOutput extends AbstractHessianOutput {
 	/**
 	 * Writes a byte array to the stream. The array will be written with the following syntax:
 	 *
-	 * <pre><code> B b16 b18 bytes </code></pre>
+	 * <pre>
+	 * <code> B b16 b18 bytes </code>
+	 * </pre>
 	 *
 	 * If the value is null, it will be written as
 	 *
-	 * <pre><code> N </code></pre>
+	 * <pre>
+	 * <code> N </code>
+	 * </pre>
 	 *
 	 * @param value
 	 *            the string value to write.
@@ -547,11 +592,15 @@ public class HessianOutput extends AbstractHessianOutput {
 	/**
 	 * Writes a byte array to the stream. The array will be written with the following syntax:
 	 *
-	 * <pre><code> B b16 b18 bytes </code></pre>
+	 * <pre>
+	 * <code> B b16 b18 bytes </code>
+	 * </pre>
 	 *
 	 * If the value is null, it will be written as
 	 *
-	 * <pre><code> N </code></pre>
+	 * <pre>
+	 * <code> N </code>
+	 * </pre>
 	 *
 	 * @param value
 	 *            the string value to write.
@@ -584,7 +633,9 @@ public class HessianOutput extends AbstractHessianOutput {
 	/**
 	 * Writes a byte buffer to the stream.
 	 *
-	 * <pre><code> </code></pre>
+	 * <pre>
+	 * <code> </code>
+	 * </pre>
 	 */
 	@Override
 	public void writeByteBufferStart() throws IOException {}
@@ -592,7 +643,9 @@ public class HessianOutput extends AbstractHessianOutput {
 	/**
 	 * Writes a byte buffer to the stream.
 	 *
-	 * <pre><code> b b16 b18 bytes </code></pre>
+	 * <pre>
+	 * <code> b b16 b18 bytes </code>
+	 * </pre>
 	 */
 	@Override
 	public void writeByteBufferPart(byte[] buffer, int offset, int length) throws IOException {
@@ -617,7 +670,9 @@ public class HessianOutput extends AbstractHessianOutput {
 	/**
 	 * Writes a byte buffer to the stream.
 	 *
-	 * <pre><code> b b16 b18 bytes </code></pre>
+	 * <pre>
+	 * <code> b b16 b18 bytes </code>
+	 * </pre>
 	 */
 	@Override
 	public void writeByteBufferEnd(byte[] buffer, int offset, int length) throws IOException {
@@ -627,7 +682,9 @@ public class HessianOutput extends AbstractHessianOutput {
 	/**
 	 * Writes a reference.
 	 *
-	 * <pre><code> R b32 b24 b16 b8 </code></pre>
+	 * <pre>
+	 * <code> R b32 b24 b16 b8 </code>
+	 * </pre>
 	 *
 	 * @param value
 	 *            the integer value to write.
@@ -644,7 +701,9 @@ public class HessianOutput extends AbstractHessianOutput {
 	/**
 	 * Writes a placeholder.
 	 *
-	 * <pre><code> P </code></pre>
+	 * <pre>
+	 * <code> P </code>
+	 * </pre>
 	 */
 	public void writePlaceholder() throws IOException {
 		this.os.write('P');

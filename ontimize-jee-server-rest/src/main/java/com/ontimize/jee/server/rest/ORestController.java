@@ -46,7 +46,7 @@ public abstract class ORestController<S> {
 
 	@RequestMapping(value = "/{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<EntityResult> query(@PathVariable("name") String name, @RequestParam(name = "filter", required = false) String filter,
-			@RequestParam(name = "columns", required = false) String columns) {
+	        @RequestParam(name = "columns", required = false) String columns) {
 		CheckingTools.failIf(this.getService() == null, NullPointerException.class, "Service is null");
 		StringBuffer buffer = new StringBuffer();
 		buffer.append(name).append(ORestController.QUERY);
@@ -54,12 +54,12 @@ public abstract class ORestController<S> {
 			Map<Object, Object> keysValues = this.createKeysValues(filter);
 			List<Object> attributes = this.createAttributesValues(columns);
 			EntityResult eR = (EntityResult) ReflectionTools.invoke(this.getService(), buffer.toString(), keysValues, attributes);
-			return new ResponseEntity<EntityResult>(eR, HttpStatus.OK);
+			return new ResponseEntity<>(eR, HttpStatus.OK);
 		} catch (Exception error) {
 			ORestController.logger.error(null, error);
 			EntityResult entityResult = new EntityResult(EntityResult.OPERATION_WRONG, EntityResult.BEST_COMPRESSION);
 			entityResult.setMessage(error.getMessage());
-			return new ResponseEntity<EntityResult>(entityResult, HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(entityResult, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
@@ -80,12 +80,12 @@ public abstract class ORestController<S> {
 			List<Object> attributesValues = this.createAttributesValues(avQueryParameter, hSqlTypes);
 
 			EntityResult eR = (EntityResult) ReflectionTools.invoke(this.getService(), buffer.toString(), keysValues, attributesValues);
-			return new ResponseEntity<EntityResult>(eR, HttpStatus.OK);
+			return new ResponseEntity<>(eR, HttpStatus.OK);
 		} catch (Exception e) {
 			ORestController.logger.error("{}", e.getMessage(), e);
 			EntityResult entityResult = new EntityResult(EntityResult.OPERATION_WRONG, EntityResult.BEST_COMPRESSION);
 			entityResult.setMessage(e.getMessage());
-			return new ResponseEntity<EntityResult>(entityResult, HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(entityResult, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
@@ -99,12 +99,12 @@ public abstract class ORestController<S> {
 			Map<?, ?> hSqlTypes = insertParameter.getSqltypes();
 			Map<?, ?> attributes = this.createKeysValues(avInsertParameter, hSqlTypes);
 			EntityResult eR = (EntityResult) ReflectionTools.invoke(this.getService(), buffer.toString(), attributes);
-			return new ResponseEntity<EntityResult>(eR, HttpStatus.OK);
+			return new ResponseEntity<>(eR, HttpStatus.OK);
 		} catch (Exception e) {
 			ORestController.logger.error("{}", e.getMessage(), e);
 			EntityResult entityResult = new EntityResult(EntityResult.OPERATION_WRONG, EntityResult.BEST_COMPRESSION);
 			entityResult.setMessage(e.getMessage());
-			return new ResponseEntity<EntityResult>(entityResult, HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(entityResult, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
@@ -119,12 +119,12 @@ public abstract class ORestController<S> {
 			Map<?, ?> hSqlTypes = deleteParameter.getSqltypes();
 			Map<?, ?> attributes = this.createKeysValues(kvDeleteParameter, hSqlTypes);
 			EntityResult eR = (EntityResult) ReflectionTools.invoke(this.getService(), buffer.toString(), attributes);
-			return new ResponseEntity<EntityResult>(eR, HttpStatus.OK);
+			return new ResponseEntity<>(eR, HttpStatus.OK);
 		} catch (Exception e) {
 			ORestController.logger.error("{}", e.getMessage(), e);
 			EntityResult entityResult = new EntityResult(EntityResult.OPERATION_WRONG, EntityResult.BEST_COMPRESSION);
 			entityResult.setMessage(e.getMessage());
-			return new ResponseEntity<EntityResult>(entityResult, HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(entityResult, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
@@ -140,12 +140,12 @@ public abstract class ORestController<S> {
 			Map<?, ?> kv = this.createKeysValues(filter, hSqlTypes);
 			Map<?, ?> av = this.createKeysValues(data, hSqlTypes);
 			EntityResult eR = (EntityResult) ReflectionTools.invoke(this.getService(), buffer.toString(), av, kv);
-			return new ResponseEntity<EntityResult>(eR, HttpStatus.OK);
+			return new ResponseEntity<>(eR, HttpStatus.OK);
 		} catch (Exception e) {
 			ORestController.logger.error("{}", e.getMessage(), e);
 			EntityResult entityResult = new EntityResult(EntityResult.OPERATION_WRONG, EntityResult.BEST_COMPRESSION);
 			entityResult.setMessage(e.getMessage());
-			return new ResponseEntity<EntityResult>(entityResult, HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(entityResult, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
@@ -183,7 +183,7 @@ public abstract class ORestController<S> {
 	}
 
 	protected Map<Object, Object> createKeysValues(Map<?, ?> kvQueryParam, Map<?, ?> hSqlTypes) {
-		Map<Object, Object> kv = new HashMap<Object, Object>();
+		Map<Object, Object> kv = new HashMap<>();
 		if ((kvQueryParam == null) || kvQueryParam.isEmpty()) {
 			return kv;
 		}
@@ -211,7 +211,7 @@ public abstract class ORestController<S> {
 	}
 
 	protected List<Object> createAttributesValues(List<?> avQueryParam, Map<?, ?> hSqlTypes) {
-		List<Object> av = new ArrayList<Object>();
+		List<Object> av = new ArrayList<>();
 		if ((avQueryParam == null) || avQueryParam.isEmpty()) {
 			av.add("*");
 			return av;
@@ -233,7 +233,7 @@ public abstract class ORestController<S> {
 	}
 
 	protected void processBasicExpression(Map<Object, Object> keysValues, Object basicExpression) {
-		this.processBasicExpression(keysValues, basicExpression, new HashMap<Object, Object>());
+		this.processBasicExpression(keysValues, basicExpression, new HashMap<>());
 	}
 
 }

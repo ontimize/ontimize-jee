@@ -3,8 +3,8 @@ package com.ontimize.jee.common.services;
 public class ServiceTools {
 
 	/**
-	 * Extrae el nombre del servicio al que se quiere invocar a partir del nombre de la entidad configurado. El nombre de la enteidad debería tener la
-	 * forma <servicename>.<servicemethodprefix>.
+	 * Extrae el nombre del servicio al que se quiere invocar a partir del nombre de la entidad configurado. El nombre de la enteidad debería tener la forma
+	 * <servicename>.<servicemethodprefix>.
 	 *
 	 * @param entityName
 	 * @return
@@ -19,8 +19,8 @@ public class ServiceTools {
 	}
 
 	/**
-	 * Extrae el prefijo del método del servicio al que se quiere invocar a partir del nombre de la entidad configurado. El nombre de la enteidad
-	 * debería tener la forma <servicename>.<servicemethodprefix>.
+	 * Extrae el prefijo del método del servicio al que se quiere invocar a partir del nombre de la entidad configurado. El nombre de la enteidad debería tener la forma
+	 * <servicename>.<servicemethodprefix>.
 	 *
 	 * @param entityName
 	 * @return

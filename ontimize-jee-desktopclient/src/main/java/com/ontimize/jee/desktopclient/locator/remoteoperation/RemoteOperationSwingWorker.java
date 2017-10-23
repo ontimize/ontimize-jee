@@ -26,7 +26,7 @@ import com.ontimize.locator.ReferenceLocator;
 public class RemoteOperationSwingWorker<T, V> extends OSwingWorker<T, V> {
 
 	/** The logger. */
-	private final static Logger		logger	= LoggerFactory.getLogger(RemoteOperationSwingWorker.class);
+	private static final Logger		logger	= LoggerFactory.getLogger(RemoteOperationSwingWorker.class);
 
 	/** The delegate. */
 	private RemoteOperationDelegate	delegate;
@@ -78,7 +78,7 @@ public class RemoteOperationSwingWorker<T, V> extends OSwingWorker<T, V> {
 	 */
 	public void updateStatus(RemoteOperationStatusMessage status) {
 		RemoteOperationSwingWorker.this.fireStatusUpdate(new WorkerStatusInfo(status.getMessage(), status.getEstimatedTime(),
-				status.getCurrentStep() < 0 ? 0 : ((Double) ((status.getCurrentStep() / (double) status.getMaxSteps()) * 100)).intValue()));
+		        status.getCurrentStep() < 0 ? 0 : ((Double) ((status.getCurrentStep() / (double) status.getMaxSteps()) * 100)).intValue()));
 	}
 
 	/**
@@ -111,9 +111,9 @@ public class RemoteOperationSwingWorker<T, V> extends OSwingWorker<T, V> {
 	}
 
 	/**
-	 * The listener interface for receiving remoteOperation events. The class that is interested in processing a remoteOperation event implements this
-	 * interface, and the object created with that class is registered with a component using the component's <code>addRemoteOperationListener<code>
-	 * method. When the remoteOperation event occurs, that object's appropriate method is invoked.
+	 * The listener interface for receiving remoteOperation events. The class that is interested in processing a remoteOperation event implements this interface, and the object
+	 * created with that class is registered with a component using the component's <code>addRemoteOperationListener<code> method. When the remoteOperation event occurs, that
+	 * object's appropriate method is invoked.
 	 *
 	 * @param <T>
 	 *            the generic type

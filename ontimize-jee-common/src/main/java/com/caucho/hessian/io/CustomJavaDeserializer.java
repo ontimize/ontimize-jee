@@ -37,7 +37,7 @@ public class CustomJavaDeserializer extends JavaDeserializer {
 	 */
 	@Override
 	protected HashMap<String, FieldDeserializer> getFieldMap(Class cl) {
-		HashMap<String, FieldDeserializer> fieldMap = new HashMap<String, FieldDeserializer>();
+		HashMap<String, FieldDeserializer> fieldMap = new HashMap<>();
 
 		for (; cl != null; cl = cl.getSuperclass()) {
 			Field[] fields = cl.getDeclaredFields();
@@ -53,7 +53,7 @@ public class CustomJavaDeserializer extends JavaDeserializer {
 				// XXX: could parameterize the handler to only deal with public
 				try {
 					field.setAccessible(true);
-				} catch (Throwable e) {
+				} catch (Exception e) {
 					// do nothing
 				}
 
@@ -100,8 +100,9 @@ public class CustomJavaDeserializer extends JavaDeserializer {
 	 *
 	 */
 	private static class CustomSqlDateFieldDeserializer extends FieldDeserializer {
+
 		/** el campo */
-		private final Field	field;
+		private final Field field;
 
 		/**
 		 * Constructor
@@ -144,7 +145,8 @@ public class CustomJavaDeserializer extends JavaDeserializer {
 	 *
 	 */
 	private static class CustomSqlTimestampFieldDeserializer extends FieldDeserializer {
-		private final Field	field;
+
+		private final Field field;
 
 		/**
 		 * Constructor
@@ -187,8 +189,9 @@ public class CustomJavaDeserializer extends JavaDeserializer {
 	 *
 	 */
 	private static class CustomSqlTimeFieldDeserializer extends FieldDeserializer {
+
 		/** el campo */
-		private final Field	field;
+		private final Field field;
 
 		/**
 		 * Constructor

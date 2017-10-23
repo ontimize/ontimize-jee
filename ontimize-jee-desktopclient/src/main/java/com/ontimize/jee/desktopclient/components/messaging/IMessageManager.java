@@ -10,6 +10,7 @@ import com.ontimize.jee.common.tools.MessageType;
  * The Class UMessageManager.
  */
 public interface IMessageManager {
+
 	void showExceptionMessage(final Throwable error, final Logger logger);
 
 	void showExceptionMessage(final Throwable error, final Logger logger, String messageIfNullMessage);

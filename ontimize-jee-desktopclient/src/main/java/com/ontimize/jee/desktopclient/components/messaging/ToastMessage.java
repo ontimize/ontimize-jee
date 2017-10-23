@@ -21,13 +21,13 @@ import com.ontimize.jee.desktopclient.components.WindowTools;
 public class ToastMessage {
 
 	/** The icon warning. */
-	public static ImageIcon ICON_WARNING = ParseUtilsExtended.getImageIcon("com/ontimize/gui/images/warning.png", null);
+	public static ImageIcon				ICON_WARNING		= ParseUtilsExtended.getImageIcon("com/ontimize/gui/images/warning.png", null);
 
 	/** The icon error. */
-	public static ImageIcon ICON_ERROR = ParseUtilsExtended.getImageIcon("com/ontimize/gui/images/error.png", null);
+	public static ImageIcon				ICON_ERROR			= ParseUtilsExtended.getImageIcon("com/ontimize/gui/images/error.png", null);
 
 	/** The icon information. */
-	public static ImageIcon ICON_INFORMATION = ParseUtilsExtended.getImageIcon("com/ontimize/gui/images/info_16.png", null);
+	public static ImageIcon				ICON_INFORMATION	= ParseUtilsExtended.getImageIcon("com/ontimize/gui/images/info_16.png", null);
 
 	/** The message time short. */
 	public static int					MESSAGE_TIME_SHORT	= 1200;
@@ -95,9 +95,9 @@ public class ToastMessage {
 	 *            the bundle description params
 	 */
 	public ToastMessage(Component parent, boolean blocking, String message, String description, ImageIcon icon, int animationTime, Rectangle windowBounds,
-			Class<? extends JPanel> panelClass, Hashtable<?, ?> otherData, Object[] bundleMessageParams, Object[] bundleDescriptionParams) {
+	        Class<? extends JPanel> panelClass, Hashtable<?, ?> otherData, Object[] bundleMessageParams, Object[] bundleDescriptionParams) {
 		super();
-		this.parentWindow = (Window) (parent == null ? null : ((parent instanceof Window) ? parent : WindowTools.getWindowAncestor(parent)));
+		this.parentWindow = (Window) (parent == null ? null : parent instanceof Window ? parent : WindowTools.getWindowAncestor(parent));
 		this.blocking = blocking;
 		this.message = message;
 		this.description = description;
@@ -182,18 +182,18 @@ public class ToastMessage {
 	protected void setIconByType(MessageType msgType) {
 		if (msgType != null) {
 			switch (msgType) {
-			case INFORMATION:
-				this.icon = ToastMessage.ICON_INFORMATION;
-				break;
-			case WARNING:
-				this.icon = ToastMessage.ICON_WARNING;
-				break;
-			case ERROR:
-				this.icon = ToastMessage.ICON_ERROR;
-				break;
+				case INFORMATION:
+					this.icon = ToastMessage.ICON_INFORMATION;
+					break;
+				case WARNING:
+					this.icon = ToastMessage.ICON_WARNING;
+					break;
+				case ERROR:
+					this.icon = ToastMessage.ICON_ERROR;
+					break;
 
-			default:
-				break;
+				default:
+					break;
 			}
 		}
 	}

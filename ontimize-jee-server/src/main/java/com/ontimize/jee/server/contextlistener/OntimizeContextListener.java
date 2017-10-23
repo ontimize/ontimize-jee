@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
  */
 public class OntimizeContextListener implements ServletContextListener {
 
-	private static final Logger	logger	= LoggerFactory.getLogger(OntimizeContextListener.class);
+	private static final Logger logger = LoggerFactory.getLogger(OntimizeContextListener.class);
 
 	/**
 	 * Initialize the root web application context.

@@ -9,7 +9,7 @@ import java.util.Map;
 public class RolePermissions {
 
 	/** The roles. */
-	protected Map<String, Role>	roles;
+	protected Map<String, Role> roles;
 
 	/**
 	 * Instantiates a new role permissions.
@@ -21,7 +21,7 @@ public class RolePermissions {
 		super();
 		this.roles = roles;
 		if (this.roles == null) {
-			this.roles = new HashMap<String, Role>();
+			this.roles = new HashMap<>();
 		}
 	}
 

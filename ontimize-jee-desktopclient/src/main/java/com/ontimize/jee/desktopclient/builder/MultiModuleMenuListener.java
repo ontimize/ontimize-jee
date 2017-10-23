@@ -14,7 +14,7 @@ import com.ontimize.gui.DefaultActionMenuListener;
 public class MultiModuleMenuListener extends DefaultActionMenuListener {
 
 	/** The listener list. */
-	protected List<IModuleActionMenuListener>	listenerList;
+	protected List<IModuleActionMenuListener> listenerList;
 
 	/**
 	 * Instantiates a new multi module menu listener.

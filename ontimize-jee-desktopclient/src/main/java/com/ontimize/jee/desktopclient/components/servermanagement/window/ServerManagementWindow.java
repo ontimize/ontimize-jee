@@ -44,23 +44,23 @@ import com.ontimize.jee.desktopclient.components.sliderbar.SliderBar;
 import com.ontimize.jee.desktopclient.components.sliderbar.SliderBar.SlideBarMode;
 
 public class ServerManagementWindow extends JFrame {
-	private static final Logger	logger	= LoggerFactory.getLogger(ServerManagementWindow.class);
-	protected JPanel			cards;
-	protected SliderBar			sliderPanel;
 
-	protected static final ArrayList<String>	logList			= new ArrayList<String>(
-			Arrays.asList("Live log console", "Live log to file", "Download log files", "Setup log level"));
-	protected static final ArrayList<String>	dumpList		= new ArrayList<String>(Arrays.asList("Memory", "Threads"));
-	protected static final ArrayList<String>	statisticsList	= new ArrayList<String>(Arrays.asList("Request", "Session"));
-	protected static final ArrayList<String>	dataBaseList	= new ArrayList<String>(Arrays.asList("Sql manager"));
-	protected static final ArrayList<String>	serverList		= new ArrayList<String>(Arrays.asList("Daos"));
+	private static final Logger					logger			= LoggerFactory.getLogger(ServerManagementWindow.class);
+	protected JPanel							cards;
+	protected SliderBar							sliderPanel;
 
-	protected JList<String>			logJList;
-	protected JList<String>			dumpJList;
-	protected JList<String>			statisticsJList;
-	protected JList<String>			dataBaseJList;
+	protected static final ArrayList<String>	logList			= new ArrayList<>(Arrays.asList("Live log console", "Live log to file", "Download log files", "Setup log level"));
+	protected static final ArrayList<String>	dumpList		= new ArrayList<>(Arrays.asList("Memory", "Threads"));
+	protected static final ArrayList<String>	statisticsList	= new ArrayList<>(Arrays.asList("Request", "Session"));
+	protected static final ArrayList<String>	dataBaseList	= new ArrayList<>(Arrays.asList("Sql manager"));
+	protected static final ArrayList<String>	serverList		= new ArrayList<>(Arrays.asList("Daos"));
+
+	protected JList<String>						logJList;
+	protected JList<String>						dumpJList;
+	protected JList<String>						statisticsJList;
+	protected JList<String>						dataBaseJList;
 	protected JList<String>						serverJList;
-	private final ResourceBundle	bundle;
+	private final ResourceBundle				bundle;
 
 	public ServerManagementWindow() {
 		super();
@@ -90,8 +90,7 @@ public class ServerManagementWindow extends JFrame {
 		// Create the "Live log console".
 		JPanel liveLogConsolePanel = this.createPanel("ontimize-jee-forms/servermanagement/formLiveLogConsole.form", new IMLiveLogConsole());
 		// Create the "Live log to file".
-		JPanel liveLogToFilePanel = this.createPanel("ontimize-jee-forms/servermanagement/formToFile.form",
-				new IMLiveLogToFile((Form) liveLogConsolePanel));
+		JPanel liveLogToFilePanel = this.createPanel("ontimize-jee-forms/servermanagement/formToFile.form", new IMLiveLogToFile((Form) liveLogConsolePanel));
 		// Create the "Live log console".
 		JPanel downloadLogFilesPanel = this.createPanel("ontimize-jee-forms/servermanagement/formDownloadLogFiles.form", new IMDownloadLogFiles());
 		// Create the "Live log console".
@@ -145,8 +144,7 @@ public class ServerManagementWindow extends JFrame {
 	private Form createPanel(String formName, InteractionManager iManager) {
 		try {
 			Application application = ApplicationManager.getApplication();
-			IFormManager formManager = (IFormManager) ((Entry) ((Map) ReflectionTools.getFieldValue(application, "formsManagers")).entrySet()
-					.iterator().next()).getValue();
+			IFormManager formManager = (IFormManager) ((Entry) ((Map) ReflectionTools.getFieldValue(application, "formsManagers")).entrySet().iterator().next()).getValue();
 
 			JPanel container = new JPanel();
 			URL url = Thread.currentThread().getContextClassLoader().getResource(formName);
@@ -161,6 +159,7 @@ public class ServerManagementWindow extends JFrame {
 				ServerManagementWindow.logger.warn("Ingores app bundle");
 			}
 			iManager.registerInteractionManager(form, new FormManager(null, new JPanel(), null, "none", null) {
+
 				@Override
 				protected void loadFormInEDTh(String arg0) {
 					// do nothing
@@ -191,11 +190,11 @@ public class ServerManagementWindow extends JFrame {
 	}
 
 	private JList<String> createSlideBarSection(SliderBar sliderBar, String name, List<String> elements, UniqueSlideBarSelectionListener listener) {
-		DefaultListModel<String> model = new DefaultListModel<String>();
+		DefaultListModel<String> model = new DefaultListModel<>();
 		for (String element : elements) {
 			model.add(elements.indexOf(element), element);
 		}
-		JList<String> list = new JList<String>();
+		JList<String> list = new JList<>();
 		list.setModel(model);
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list.addListSelectionListener(listener);

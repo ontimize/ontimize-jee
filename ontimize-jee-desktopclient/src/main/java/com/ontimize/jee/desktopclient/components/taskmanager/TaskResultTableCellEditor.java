@@ -192,7 +192,7 @@ public class TaskResultTableCellEditor extends AbstractCellEditor implements Tab
 			tooltip = "task.seeDetails";
 			icon = TaskResultTableCellRenderer.iconResult;
 		} else {
-			tooltip="";
+			tooltip = "";
 			icon = null;
 		}
 		this.editorComponent.setIcon(icon);

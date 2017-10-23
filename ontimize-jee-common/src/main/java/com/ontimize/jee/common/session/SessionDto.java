@@ -17,8 +17,9 @@ import com.ontimize.jee.common.services.user.UserInformation;
 import com.ontimize.jee.common.tools.MapTools;
 
 public class SessionDto implements Serializable {
+
 	private String				id;
-	private Map<String, Object>	sessionAttrs	= new HashMap<String, Object>();
+	private Map<String, Object>	sessionAttrs	= new HashMap<>();
 	private long				creationTime;
 	private long				lastAccessedTime;
 
@@ -30,8 +31,7 @@ public class SessionDto implements Serializable {
 	/**
 	 * Creates a new instance
 	 */
-	public SessionDto() {
-	}
+	public SessionDto() {}
 
 	/**
 	 * Creates a new instance from the provided {@link Session}
@@ -103,8 +103,7 @@ public class SessionDto implements Serializable {
 	}
 
 	/**
-	 * Sets the time that this {@link Session} was created in milliseconds since midnight of 1/1/1970 GMT. The default is when the {@link Session} was
-	 * instantiated.
+	 * Sets the time that this {@link Session} was created in milliseconds since midnight of 1/1/1970 GMT. The default is when the {@link Session} was instantiated.
 	 *
 	 * @param creationTime
 	 *            the time that this {@link Session} was created in milliseconds since midnight of 1/1/1970 GMT.
@@ -114,8 +113,8 @@ public class SessionDto implements Serializable {
 	}
 
 	/**
-	 * Sets the identifier for this {@link Session}. The id should be a secure random generated value to prevent malicious users from guessing this
-	 * value. The default is a secure random generated identifier.
+	 * Sets the identifier for this {@link Session}. The id should be a secure random generated value to prevent malicious users from guessing this value. The default is a secure
+	 * random generated identifier.
 	 *
 	 * @param id
 	 *            the identifier for this session.
@@ -137,8 +136,8 @@ public class SessionDto implements Serializable {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append(String.format("ID: %s\tcreationTime: %d\tlastAccessTime: %d\tmaxInactiveIntervalInSeconds\n", this.id, this.creationTime,
-				this.lastAccessedTime, this.getMaxInactiveIntervalInSeconds()));
+		sb.append(String.format("ID: %s\tcreationTime: %d\tlastAccessTime: %d\tmaxInactiveIntervalInSeconds\n", this.id, this.creationTime, this.lastAccessedTime,
+		        this.getMaxInactiveIntervalInSeconds()));
 		List<String> keySet = new ArrayList<>(this.sessionAttrs.keySet());
 		if (keySet.remove("SPRING_SECURITY_CONTEXT")) {
 			SecurityContextImpl context = (SecurityContextImpl) this.sessionAttrs.get("SPRING_SECURITY_CONTEXT");
@@ -151,7 +150,7 @@ public class SessionDto implements Serializable {
 			MapTools.toString((Map<?, ?>) authentication.getDetails(), "\t");
 
 		}
-		for (String key: keySet) {
+		for (String key : keySet) {
 			Object value = this.sessionAttrs.get(key);
 			if (value instanceof Map) {
 				sb.append("\t").append(key).append(":\n");
@@ -164,5 +163,5 @@ public class SessionDto implements Serializable {
 		return sb.toString();
 	}
 
-	private static final long	serialVersionUID	= 7160779239673823561L;
+	private static final long serialVersionUID = 7160779239673823561L;
 }

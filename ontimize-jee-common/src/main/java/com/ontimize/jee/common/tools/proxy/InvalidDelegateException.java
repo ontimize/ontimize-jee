@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.ontimize.jee.common.tools.proxy;
 
@@ -14,13 +14,13 @@ public class InvalidDelegateException extends Exception {
 	/**
 	 * Instantiates a new invalid delegate exception.
 	 */
-	public InvalidDelegateException() {
-	}
+	public InvalidDelegateException() {}
 
 	/**
 	 * Instantiates a new invalid delegate exception.
 	 *
-	 * @param message the message
+	 * @param message
+	 *            the message
 	 */
 	public InvalidDelegateException(String message) {
 		super(message);
@@ -29,7 +29,8 @@ public class InvalidDelegateException extends Exception {
 	/**
 	 * Instantiates a new invalid delegate exception.
 	 *
-	 * @param cause the cause
+	 * @param cause
+	 *            the cause
 	 */
 	public InvalidDelegateException(Throwable cause) {
 		super(cause);
@@ -38,8 +39,10 @@ public class InvalidDelegateException extends Exception {
 	/**
 	 * Instantiates a new invalid delegate exception.
 	 *
-	 * @param message the message
-	 * @param cause the cause
+	 * @param message
+	 *            the message
+	 * @param cause
+	 *            the cause
 	 */
 	public InvalidDelegateException(String message, Throwable cause) {
 		super(message, cause);
@@ -48,13 +51,16 @@ public class InvalidDelegateException extends Exception {
 	/**
 	 * Instantiates a new invalid delegate exception.
 	 *
-	 * @param message the message
-	 * @param cause the cause
-	 * @param enableSuppression the enable suppression
-	 * @param writableStackTrace the writable stack trace
+	 * @param message
+	 *            the message
+	 * @param cause
+	 *            the cause
+	 * @param enableSuppression
+	 *            the enable suppression
+	 * @param writableStackTrace
+	 *            the writable stack trace
 	 */
-	public InvalidDelegateException(String message, Throwable cause,
-			boolean enableSuppression, boolean writableStackTrace) {
+	public InvalidDelegateException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
 	}
 

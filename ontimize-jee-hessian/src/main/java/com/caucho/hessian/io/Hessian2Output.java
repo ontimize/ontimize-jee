@@ -1,18 +1,16 @@
 /*
- * Copyright (c) 2001-2008 Caucho Technology, Inc. All rights reserved. The Apache Software License, Version 1.1 Redistribution and use in source and
- * binary forms, with or without modification, are permitted provided that the following conditions are met: 1. Redistributions of source code must
- * retain the above copyright notice, this list of conditions and the following disclaimer. 2. Redistributions in binary form must reproduce the above
- * copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
- * 3. The end-user documentation included with the redistribution, if any, must include the following acknowlegement: "This product includes software
- * developed by the Caucho Technology (http://www.caucho.com/)." Alternately, this acknowlegement may appear in the software itself, if and wherever
- * such third-party acknowlegements normally appear. 4. The names "Burlap", "Resin", and "Caucho" must not be used to endorse or promote products
- * derived from this software without prior written permission. For written permission, please contact info@caucho.com. 5. Products derived from this
- * software may not be called "Resin" nor may "Resin" appear in their names without prior written permission of Caucho Technology. THIS SOFTWARE IS
- * PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL CAUCHO TECHNOLOGY OR ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * Copyright (c) 2001-2008 Caucho Technology, Inc. All rights reserved. The Apache Software License, Version 1.1 Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met: 1. Redistributions of source code must retain the above copyright notice, this list of conditions and
+ * the following disclaimer. 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution. 3. The end-user documentation included with the redistribution, if any, must include the following acknowlegement: "This
+ * product includes software developed by the Caucho Technology (http://www.caucho.com/)." Alternately, this acknowlegement may appear in the software itself, if and wherever such
+ * third-party acknowlegements normally appear. 4. The names "Burlap", "Resin", and "Caucho" must not be used to endorse or promote products derived from this software without
+ * prior written permission. For written permission, please contact info@caucho.com. 5. Products derived from this software may not be called "Resin" nor may "Resin" appear in
+ * their names without prior written permission of Caucho Technology. THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL CAUCHO TECHNOLOGY OR ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+ * BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+ * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * @author Scott Ferguson
  */
 
@@ -32,11 +30,14 @@ import com.caucho.hessian.util.IdentityIntMap;
  *
  * <p>HessianOutput is unbuffered, so any client needs to provide its own buffering.
  *
- * <pre> OutputStream os = ...; // from http connection Hessian2Output out = new Hessian2Output(os); String value;
+ * <pre>
+ *  OutputStream os = ...; // from http connection Hessian2Output out = new Hessian2Output(os); String value;
  *
- * out.startCall("hello", 1); // start hello call out.writeString("arg1"); // write a string argument out.completeCall(); // complete the call </pre>
+ * out.startCall("hello", 1); // start hello call out.writeString("arg1"); // write a string argument out.completeCall(); // complete the call
+ * </pre>
  */
 public class Hessian2Output extends AbstractHessianOutput implements Hessian2Constants {
+
 	// should match Resin buffer size for perf
 	public static final int				SIZE		= 8 * 1024;
 
@@ -133,10 +134,12 @@ public class Hessian2Output extends AbstractHessianOutput implements Hessian2Con
 	}
 
 	/**
-	 * Starts the method call. Clients would use <code>startCall</code> instead of <code>call</code> if they wanted finer control over writing the
-	 * arguments, or needed to write headers.
+	 * Starts the method call. Clients would use <code>startCall</code> instead of <code>call</code> if they wanted finer control over writing the arguments, or needed to write
+	 * headers.
 	 *
-	 * <pre><code> C string # method name int # arg count </code></pre>
+	 * <pre>
+	 * <code> C string # method name int # arg count </code>
+	 * </pre>
 	 *
 	 * @param method
 	 *            the method name to call.
@@ -161,7 +164,9 @@ public class Hessian2Output extends AbstractHessianOutput implements Hessian2Con
 	/**
 	 * Writes the call tag. This would be followed by the method and the arguments
 	 *
-	 * <pre><code> C </code></pre>
+	 * <pre>
+	 * <code> C </code>
+	 * </pre>
 	 *
 	 * @param method
 	 *            the method name to call.
@@ -176,7 +181,9 @@ public class Hessian2Output extends AbstractHessianOutput implements Hessian2Con
 	/**
 	 * Starts an envelope.
 	 *
-	 * <pre><code> E major minor m b16 b8 method-name </code></pre>
+	 * <pre>
+	 * <code> E major minor m b16 b8 method-name </code>
+	 * </pre>
 	 *
 	 * @param method
 	 *            the method name to call.
@@ -199,7 +206,9 @@ public class Hessian2Output extends AbstractHessianOutput implements Hessian2Con
 	 *
 	 * <p>A successful completion will have a single value:
 	 *
-	 * <pre> Z </pre>
+	 * <pre>
+	 * Z
+	 * </pre>
 	 */
 	public void completeEnvelope() throws IOException {
 		this.flushIfFull();
@@ -210,7 +219,9 @@ public class Hessian2Output extends AbstractHessianOutput implements Hessian2Con
 	/**
 	 * Writes the method tag.
 	 *
-	 * <pre><code> string </code></pre>
+	 * <pre>
+	 * <code> string </code>
+	 * </pre>
 	 *
 	 * @param method
 	 *            the method name to call.
@@ -223,7 +234,9 @@ public class Hessian2Output extends AbstractHessianOutput implements Hessian2Con
 	/**
 	 * Completes.
 	 *
-	 * <pre><code> z </code></pre>
+	 * <pre>
+	 * <code> z </code>
+	 * </pre>
 	 */
 	@Override
 	public void completeCall() throws IOException {
@@ -237,7 +250,9 @@ public class Hessian2Output extends AbstractHessianOutput implements Hessian2Con
 	 *
 	 * <p>A successful completion will have a single value:
 	 *
-	 * <pre> R </pre>
+	 * <pre>
+	 * R
+	 * </pre>
 	 */
 	@Override
 	public void startReply() throws IOException {
@@ -261,7 +276,9 @@ public class Hessian2Output extends AbstractHessianOutput implements Hessian2Con
 	 *
 	 * <p>A successful completion will have a single value:
 	 *
-	 * <pre> z </pre>
+	 * <pre>
+	 * z
+	 * </pre>
 	 */
 	@Override
 	public void completeReply() throws IOException {}
@@ -271,7 +288,9 @@ public class Hessian2Output extends AbstractHessianOutput implements Hessian2Con
 	 *
 	 * <p>A message contains several objects encapsulated by a length</p>
 	 *
-	 * <pre> p x02 x00 </pre>
+	 * <pre>
+	 *  p x02 x00
+	 * </pre>
 	 */
 	public void startMessage() throws IOException {
 		this.flushIfFull();
@@ -286,7 +305,9 @@ public class Hessian2Output extends AbstractHessianOutput implements Hessian2Con
 	 *
 	 * <p>A successful completion will have a single value:
 	 *
-	 * <pre> z </pre>
+	 * <pre>
+	 * z
+	 * </pre>
 	 */
 	public void completeMessage() throws IOException {
 		this.flushIfFull();
@@ -297,13 +318,17 @@ public class Hessian2Output extends AbstractHessianOutput implements Hessian2Con
 	/**
 	 * Writes a fault. The fault will be written as a descriptive string followed by an object:
 	 *
-	 * <pre><code> F map </code></pre>
+	 * <pre>
+	 * <code> F map </code>
+	 * </pre>
 	 *
-	 * <pre><code> F H \x04code \x10the fault code
+	 * <pre>
+	 * <code> F H \x04code \x10the fault code
 	 *
 	 * \x07message \x11the fault message
 	 *
-	 * \x06detail M\xnnjavax.ejb.FinderException ... Z Z </code></pre>
+	 * \x06detail M\xnnjavax.ejb.FinderException ... Z Z </code>
+	 * </pre>
 	 *
 	 * @param code
 	 *            the fault code, a three digit
@@ -350,10 +375,11 @@ public class Hessian2Output extends AbstractHessianOutput implements Hessian2Con
 	}
 
 	/**
-	 * Writes the list header to the stream. List writers will call <code>writeListBegin</code> followed by the list contents and then call
-	 * <code>writeListEnd</code>.
+	 * Writes the list header to the stream. List writers will call <code>writeListBegin</code> followed by the list contents and then call <code>writeListEnd</code>.
 	 *
-	 * <pre><code> list ::= V type value* Z ::= v type int value* </code></pre>
+	 * <pre>
+	 * <code> list ::= V type value* Z ::= v type int value* </code>
+	 * </pre>
 	 *
 	 * @return true for variable lists, false for fixed lists
 	 */
@@ -404,10 +430,11 @@ public class Hessian2Output extends AbstractHessianOutput implements Hessian2Con
 	}
 
 	/**
-	 * Writes the map header to the stream. Map writers will call <code>writeMapBegin</code> followed by the map contents and then call
-	 * <code>writeMapEnd</code>.
+	 * Writes the map header to the stream. Map writers will call <code>writeMapBegin</code> followed by the map contents and then call <code>writeMapEnd</code>.
 	 *
-	 * <pre><code> map ::= M type (<value> <value>)* Z ::= H (<value> <value>)* Z </code></pre>
+	 * <pre>
+	 * <code> map ::= M type (<value> <value>)* Z ::= H (<value> <value>)* Z </code>
+	 * </pre>
 	 */
 	@Override
 	public void writeMapBegin(String type) throws IOException {
@@ -439,7 +466,9 @@ public class Hessian2Output extends AbstractHessianOutput implements Hessian2Con
 	/**
 	 * Writes the object definition
 	 *
-	 * <pre><code> C &lt;string> &lt;int> &lt;string>* </code></pre>
+	 * <pre>
+	 * <code> C &lt;string> &lt;int> &lt;string>* </code>
+	 * </pre>
 	 */
 	@Override
 	public int writeObjectBegin(String type) throws IOException {
@@ -487,7 +516,9 @@ public class Hessian2Output extends AbstractHessianOutput implements Hessian2Con
 	public void writeObjectEnd() throws IOException {}
 
 	/**
-	 * <pre><code> type ::= string ::= int </code></pre>
+	 * <pre>
+	 * <code> type ::= string ::= int </code>
+	 * </pre>
 	 */
 	private void writeType(String type) throws IOException {
 		this.flushIfFull();
@@ -498,7 +529,7 @@ public class Hessian2Output extends AbstractHessianOutput implements Hessian2Con
 		}
 
 		if (this.typeRefs == null) {
-			this.typeRefs = new HashMap<String, Integer>();
+			this.typeRefs = new HashMap<>();
 		}
 
 		Integer typeRefV = this.typeRefs.get(type);
@@ -517,7 +548,9 @@ public class Hessian2Output extends AbstractHessianOutput implements Hessian2Con
 	/**
 	 * Writes a boolean value to the stream. The boolean will be written with the following syntax:
 	 *
-	 * <pre><code> T F </code></pre>
+	 * <pre>
+	 * <code> T F </code>
+	 * </pre>
 	 *
 	 * @param value
 	 *            the boolean value to write.
@@ -538,7 +571,9 @@ public class Hessian2Output extends AbstractHessianOutput implements Hessian2Con
 	/**
 	 * Writes an integer value to the stream. The integer will be written with the following syntax:
 	 *
-	 * <pre><code> I b32 b24 b16 b8 </code></pre>
+	 * <pre>
+	 * <code> I b32 b24 b16 b8 </code>
+	 * </pre>
 	 *
 	 * @param value
 	 *            the integer value to write.
@@ -557,17 +592,17 @@ public class Hessian2Output extends AbstractHessianOutput implements Hessian2Con
 			buffer[offset++] = (byte) (value + Hessian2Constants.BC_INT_ZERO);
 		} else if ((Hessian2Constants.INT_BYTE_MIN <= value) && (value <= Hessian2Constants.INT_BYTE_MAX)) {
 			buffer[offset++] = (byte) (Hessian2Constants.BC_INT_BYTE_ZERO + (value >> 8));
-			buffer[offset++] = (byte) (value);
+			buffer[offset++] = (byte) value;
 		} else if ((Hessian2Constants.INT_SHORT_MIN <= value) && (value <= Hessian2Constants.INT_SHORT_MAX)) {
 			buffer[offset++] = (byte) (Hessian2Constants.BC_INT_SHORT_ZERO + (value >> 16));
 			buffer[offset++] = (byte) (value >> 8);
-			buffer[offset++] = (byte) (value);
+			buffer[offset++] = (byte) value;
 		} else {
-			buffer[offset++] = (byte) ('I');
+			buffer[offset++] = (byte) 'I';
 			buffer[offset++] = (byte) (value >> 24);
 			buffer[offset++] = (byte) (value >> 16);
 			buffer[offset++] = (byte) (value >> 8);
-			buffer[offset++] = (byte) (value);
+			buffer[offset++] = (byte) value;
 		}
 
 		this.offset = offset;
@@ -576,7 +611,9 @@ public class Hessian2Output extends AbstractHessianOutput implements Hessian2Con
 	/**
 	 * Writes a long value to the stream. The long will be written with the following syntax:
 	 *
-	 * <pre><code> L b64 b56 b48 b40 b32 b24 b16 b8 </code></pre>
+	 * <pre>
+	 * <code> L b64 b56 b48 b40 b32 b24 b16 b8 </code>
+	 * </pre>
 	 *
 	 * @param value
 	 *            the long value to write.
@@ -595,17 +632,17 @@ public class Hessian2Output extends AbstractHessianOutput implements Hessian2Con
 			buffer[offset++] = (byte) (value + Hessian2Constants.BC_LONG_ZERO);
 		} else if ((Hessian2Constants.LONG_BYTE_MIN <= value) && (value <= Hessian2Constants.LONG_BYTE_MAX)) {
 			buffer[offset++] = (byte) (Hessian2Constants.BC_LONG_BYTE_ZERO + (value >> 8));
-			buffer[offset++] = (byte) (value);
+			buffer[offset++] = (byte) value;
 		} else if ((Hessian2Constants.LONG_SHORT_MIN <= value) && (value <= Hessian2Constants.LONG_SHORT_MAX)) {
 			buffer[offset++] = (byte) (Hessian2Constants.BC_LONG_SHORT_ZERO + (value >> 16));
 			buffer[offset++] = (byte) (value >> 8);
-			buffer[offset++] = (byte) (value);
+			buffer[offset++] = (byte) value;
 		} else if ((-0x80000000L <= value) && (value <= 0x7fffffffL)) {
 			buffer[offset + 0] = (byte) Hessian2Constants.BC_LONG_INT;
 			buffer[offset + 1] = (byte) (value >> 24);
 			buffer[offset + 2] = (byte) (value >> 16);
 			buffer[offset + 3] = (byte) (value >> 8);
-			buffer[offset + 4] = (byte) (value);
+			buffer[offset + 4] = (byte) value;
 
 			offset += 5;
 		} else {
@@ -617,7 +654,7 @@ public class Hessian2Output extends AbstractHessianOutput implements Hessian2Con
 			buffer[offset + 5] = (byte) (value >> 24);
 			buffer[offset + 6] = (byte) (value >> 16);
 			buffer[offset + 7] = (byte) (value >> 8);
-			buffer[offset + 8] = (byte) (value);
+			buffer[offset + 8] = (byte) value;
 
 			offset += 9;
 		}
@@ -628,7 +665,9 @@ public class Hessian2Output extends AbstractHessianOutput implements Hessian2Con
 	/**
 	 * Writes a double value to the stream. The double will be written with the following syntax:
 	 *
-	 * <pre><code> D b64 b56 b48 b40 b32 b24 b16 b8 </code></pre>
+	 * <pre>
+	 * <code> D b64 b56 b48 b40 b32 b24 b16 b8 </code>
+	 * </pre>
 	 *
 	 * @param value
 	 *            the double value to write.
@@ -679,11 +718,11 @@ public class Hessian2Output extends AbstractHessianOutput implements Hessian2Con
 		int mills = (int) (value * 1000);
 
 		if ((0.001 * mills) == value) {
-			buffer[offset + 0] = (byte) (Hessian2Constants.BC_DOUBLE_MILL);
+			buffer[offset + 0] = (byte) Hessian2Constants.BC_DOUBLE_MILL;
 			buffer[offset + 1] = (byte) (mills >> 24);
 			buffer[offset + 2] = (byte) (mills >> 16);
 			buffer[offset + 3] = (byte) (mills >> 8);
-			buffer[offset + 4] = (byte) (mills);
+			buffer[offset + 4] = (byte) mills;
 
 			this.offset = offset + 5;
 
@@ -700,7 +739,7 @@ public class Hessian2Output extends AbstractHessianOutput implements Hessian2Con
 		buffer[offset + 5] = (byte) (bits >> 24);
 		buffer[offset + 6] = (byte) (bits >> 16);
 		buffer[offset + 7] = (byte) (bits >> 8);
-		buffer[offset + 8] = (byte) (bits);
+		buffer[offset + 8] = (byte) bits;
 
 		this.offset = offset + 9;
 	}
@@ -708,7 +747,9 @@ public class Hessian2Output extends AbstractHessianOutput implements Hessian2Con
 	/**
 	 * Writes a date to the stream.
 	 *
-	 * <pre><code> date ::= d b7 b6 b5 b4 b3 b2 b1 b0 ::= x65 b3 b2 b1 b0 </code></pre>
+	 * <pre>
+	 * <code> date ::= d b7 b6 b5 b4 b3 b2 b1 b0 ::= x65 b3 b2 b1 b0 </code>
+	 * </pre>
 	 *
 	 * @param time
 	 *            the date in milliseconds from the epoch in UTC
@@ -729,10 +770,10 @@ public class Hessian2Output extends AbstractHessianOutput implements Hessian2Con
 
 			if (((minutes >> 31) == 0) || ((minutes >> 31) == -1)) {
 				buffer[offset++] = (byte) Hessian2Constants.BC_DATE_MINUTE;
-				buffer[offset++] = ((byte) (minutes >> 24));
-				buffer[offset++] = ((byte) (minutes >> 16));
-				buffer[offset++] = ((byte) (minutes >> 8));
-				buffer[offset++] = ((byte) (minutes >> 0));
+				buffer[offset++] = (byte) (minutes >> 24);
+				buffer[offset++] = (byte) (minutes >> 16);
+				buffer[offset++] = (byte) (minutes >> 8);
+				buffer[offset++] = (byte) (minutes >> 0);
 
 				this.offset = offset;
 				return;
@@ -740,14 +781,14 @@ public class Hessian2Output extends AbstractHessianOutput implements Hessian2Con
 		}
 
 		buffer[offset++] = (byte) Hessian2Constants.BC_DATE;
-		buffer[offset++] = ((byte) (time >> 56));
-		buffer[offset++] = ((byte) (time >> 48));
-		buffer[offset++] = ((byte) (time >> 40));
-		buffer[offset++] = ((byte) (time >> 32));
-		buffer[offset++] = ((byte) (time >> 24));
-		buffer[offset++] = ((byte) (time >> 16));
-		buffer[offset++] = ((byte) (time >> 8));
-		buffer[offset++] = ((byte) (time));
+		buffer[offset++] = (byte) (time >> 56);
+		buffer[offset++] = (byte) (time >> 48);
+		buffer[offset++] = (byte) (time >> 40);
+		buffer[offset++] = (byte) (time >> 32);
+		buffer[offset++] = (byte) (time >> 24);
+		buffer[offset++] = (byte) (time >> 16);
+		buffer[offset++] = (byte) (time >> 8);
+		buffer[offset++] = (byte) time;
 
 		this.offset = offset;
 	}
@@ -755,7 +796,9 @@ public class Hessian2Output extends AbstractHessianOutput implements Hessian2Con
 	/**
 	 * Writes a null value to the stream. The null will be written with the following syntax
 	 *
-	 * <pre><code> N </code></pre>
+	 * <pre>
+	 * <code> N </code>
+	 * </pre>
 	 *
 	 * @param value
 	 *            the string value to write.
@@ -778,11 +821,15 @@ public class Hessian2Output extends AbstractHessianOutput implements Hessian2Con
 	/**
 	 * Writes a string value to the stream using UTF-8 encoding. The string will be written with the following syntax:
 	 *
-	 * <pre><code> S b16 b8 string-value </code></pre>
+	 * <pre>
+	 * <code> S b16 b8 string-value </code>
+	 * </pre>
 	 *
 	 * If the value is null, it will be written as
 	 *
-	 * <pre><code> N </code></pre>
+	 * <pre>
+	 * <code> N </code>
+	 * </pre>
 	 *
 	 * @param value
 	 *            the string value to write.
@@ -824,7 +871,7 @@ public class Hessian2Output extends AbstractHessianOutput implements Hessian2Con
 
 				buffer[offset + 0] = (byte) Hessian2Constants.BC_STRING_CHUNK;
 				buffer[offset + 1] = (byte) (sublen >> 8);
-				buffer[offset + 2] = (byte) (sublen);
+				buffer[offset + 2] = (byte) sublen;
 
 				this.offset = offset + 3;
 
@@ -845,11 +892,11 @@ public class Hessian2Output extends AbstractHessianOutput implements Hessian2Con
 				buffer[offset++] = (byte) (Hessian2Constants.BC_STRING_DIRECT + length);
 			} else if (length <= Hessian2Constants.STRING_SHORT_MAX) {
 				buffer[offset++] = (byte) (Hessian2Constants.BC_STRING_SHORT + (length >> 8));
-				buffer[offset++] = (byte) (length);
+				buffer[offset++] = (byte) length;
 			} else {
-				buffer[offset++] = (byte) ('S');
+				buffer[offset++] = (byte) 'S';
 				buffer[offset++] = (byte) (length >> 8);
-				buffer[offset++] = (byte) (length);
+				buffer[offset++] = (byte) length;
 			}
 
 			this.offset = offset;
@@ -861,11 +908,15 @@ public class Hessian2Output extends AbstractHessianOutput implements Hessian2Con
 	/**
 	 * Writes a string value to the stream using UTF-8 encoding. The string will be written with the following syntax:
 	 *
-	 * <pre><code> S b16 b8 string-value </code></pre>
+	 * <pre>
+	 * <code> S b16 b8 string-value </code>
+	 * </pre>
 	 *
 	 * If the value is null, it will be written as
 	 *
-	 * <pre><code> N </code></pre>
+	 * <pre>
+	 * <code> N </code>
+	 * </pre>
 	 *
 	 * @param value
 	 *            the string value to write.
@@ -877,7 +928,7 @@ public class Hessian2Output extends AbstractHessianOutput implements Hessian2Con
 				this.flushBuffer();
 			}
 
-			this.buffer[this.offset++] = (byte) ('N');
+			this.buffer[this.offset++] = (byte) 'N';
 		} else {
 			while (length > 0x8000) {
 				int sublen = 0x8000;
@@ -895,7 +946,7 @@ public class Hessian2Output extends AbstractHessianOutput implements Hessian2Con
 
 				this.buffer[this.offset++] = (byte) Hessian2Constants.BC_STRING_CHUNK;
 				this.buffer[this.offset++] = (byte) (sublen >> 8);
-				this.buffer[this.offset++] = (byte) (sublen);
+				this.buffer[this.offset++] = (byte) sublen;
 
 				this.printString(buffer, offset, sublen);
 
@@ -913,9 +964,9 @@ public class Hessian2Output extends AbstractHessianOutput implements Hessian2Con
 				this.buffer[this.offset++] = (byte) (Hessian2Constants.BC_STRING_SHORT + (length >> 8));
 				this.buffer[this.offset++] = (byte) length;
 			} else {
-				this.buffer[this.offset++] = (byte) ('S');
+				this.buffer[this.offset++] = (byte) 'S';
 				this.buffer[this.offset++] = (byte) (length >> 8);
-				this.buffer[this.offset++] = (byte) (length);
+				this.buffer[this.offset++] = (byte) length;
 			}
 
 			this.printString(buffer, offset, length);
@@ -925,11 +976,15 @@ public class Hessian2Output extends AbstractHessianOutput implements Hessian2Con
 	/**
 	 * Writes a byte array to the stream. The array will be written with the following syntax:
 	 *
-	 * <pre><code> B b16 b18 bytes </code></pre>
+	 * <pre>
+	 * <code> B b16 b18 bytes </code>
+	 * </pre>
 	 *
 	 * If the value is null, it will be written as
 	 *
-	 * <pre><code> N </code></pre>
+	 * <pre>
+	 * <code> N </code>
+	 * </pre>
 	 *
 	 * @param value
 	 *            the string value to write.
@@ -950,11 +1005,15 @@ public class Hessian2Output extends AbstractHessianOutput implements Hessian2Con
 	/**
 	 * Writes a byte array to the stream. The array will be written with the following syntax:
 	 *
-	 * <pre><code> B b16 b18 bytes </code></pre>
+	 * <pre>
+	 * <code> B b16 b18 bytes </code>
+	 * </pre>
 	 *
 	 * If the value is null, it will be written as
 	 *
-	 * <pre><code> N </code></pre>
+	 * <pre>
+	 * <code> N </code>
+	 * </pre>
 	 *
 	 * @param value
 	 *            the string value to write.
@@ -1002,11 +1061,11 @@ public class Hessian2Output extends AbstractHessianOutput implements Hessian2Con
 				this.buffer[this.offset++] = (byte) (Hessian2Constants.BC_BINARY_DIRECT + length);
 			} else if (length <= Hessian2Constants.BINARY_SHORT_MAX) {
 				this.buffer[this.offset++] = (byte) (Hessian2Constants.BC_BINARY_SHORT + (length >> 8));
-				this.buffer[this.offset++] = (byte) (length);
+				this.buffer[this.offset++] = (byte) length;
 			} else {
 				this.buffer[this.offset++] = (byte) 'B';
 				this.buffer[this.offset++] = (byte) (length >> 8);
-				this.buffer[this.offset++] = (byte) (length);
+				this.buffer[this.offset++] = (byte) length;
 			}
 
 			System.arraycopy(buffer, offset, this.buffer, this.offset, length);
@@ -1018,7 +1077,9 @@ public class Hessian2Output extends AbstractHessianOutput implements Hessian2Con
 	/**
 	 * Writes a byte buffer to the stream.
 	 *
-	 * <pre><code> </code></pre>
+	 * <pre>
+	 * <code> </code>
+	 * </pre>
 	 */
 	@Override
 	public void writeByteBufferStart() throws IOException {}
@@ -1026,7 +1087,9 @@ public class Hessian2Output extends AbstractHessianOutput implements Hessian2Con
 	/**
 	 * Writes a byte buffer to the stream.
 	 *
-	 * <pre><code> b b16 b18 bytes </code></pre>
+	 * <pre>
+	 * <code> b b16 b18 bytes </code>
+	 * </pre>
 	 */
 	@Override
 	public void writeByteBufferPart(byte[] buffer, int offset, int length) throws IOException {
@@ -1054,7 +1117,9 @@ public class Hessian2Output extends AbstractHessianOutput implements Hessian2Con
 	/**
 	 * Writes a byte buffer to the stream.
 	 *
-	 * <pre><code> b b16 b18 bytes </code></pre>
+	 * <pre>
+	 * <code> b b16 b18 bytes </code>
+	 * </pre>
 	 */
 	@Override
 	public void writeByteBufferEnd(byte[] buffer, int offset, int length) throws IOException {
@@ -1091,7 +1156,7 @@ public class Hessian2Output extends AbstractHessianOutput implements Hessian2Con
 
 				this.buffer[this.offset + 0] = (byte) Hessian2Constants.BC_BINARY_CHUNK;
 				this.buffer[this.offset + 1] = (byte) (len >> 8);
-				this.buffer[this.offset + 2] = (byte) (len);
+				this.buffer[this.offset + 2] = (byte) len;
 
 				this.offset += len + 3;
 			}
@@ -1103,7 +1168,9 @@ public class Hessian2Output extends AbstractHessianOutput implements Hessian2Con
 	/**
 	 * Writes a reference.
 	 *
-	 * <pre><code> x51 &lt;int> </code></pre>
+	 * <pre>
+	 * <code> x51 &lt;int> </code>
+	 * </pre>
 	 *
 	 * @param value
 	 *            the integer value to write.
@@ -1204,7 +1271,9 @@ public class Hessian2Output extends AbstractHessianOutput implements Hessian2Con
 	 *
 	 * <p>A streaming message starts with 'P'</p>
 	 *
-	 * <pre> P x02 x00 </pre>
+	 * <pre>
+	 *  P x02 x00
+	 * </pre>
 	 */
 	public void writeStreamingObject(Object obj) throws IOException {
 		this.startPacket();
@@ -1217,8 +1286,7 @@ public class Hessian2Output extends AbstractHessianOutput implements Hessian2Con
 	/**
 	 * Starts a streaming packet
 	 *
-	 * <p>A streaming contains a set of chunks, ending with a zero chunk. Each chunk is a length followed by data where the length is encoded by
-	 * (b1xxxxxxxx)* b0xxxxxxxx</p>
+	 * <p>A streaming contains a set of chunks, ending with a zero chunk. Each chunk is a length followed by data where the length is encoded by (b1xxxxxxxx)* b0xxxxxxxx</p>
 	 */
 	public void startPacket() throws IOException {
 		if (this.refs != null) {
@@ -1248,11 +1316,11 @@ public class Hessian2Output extends AbstractHessianOutput implements Hessian2Con
 
 		if (len < 0x7e) {
 			this.buffer[2] = this.buffer[0];
-			this.buffer[3] = (byte) (len);
+			this.buffer[3] = (byte) len;
 		} else {
-			this.buffer[1] = (byte) (0x7e);
+			this.buffer[1] = (byte) 0x7e;
 			this.buffer[2] = (byte) (len >> 8);
-			this.buffer[3] = (byte) (len);
+			this.buffer[3] = (byte) len;
 		}
 
 		this.isPacket = false;
@@ -1277,12 +1345,12 @@ public class Hessian2Output extends AbstractHessianOutput implements Hessian2Con
 		}
 
 		if (v == null) {
-			this.buffer[this.offset++] = (byte) (0);
-			this.buffer[this.offset++] = (byte) (0);
+			this.buffer[this.offset++] = (byte) 0;
+			this.buffer[this.offset++] = (byte) 0;
 		} else {
 			int len = v.length();
 			this.buffer[this.offset++] = (byte) (len >> 8);
-			this.buffer[this.offset++] = (byte) (len);
+			this.buffer[this.offset++] = (byte) len;
 
 			this.printString(v, 0, len);
 		}
@@ -1318,7 +1386,7 @@ public class Hessian2Output extends AbstractHessianOutput implements Hessian2Con
 			char ch = v.charAt(i + strOffset);
 
 			if (ch < 0x80) {
-				buffer[offset++] = (byte) (ch);
+				buffer[offset++] = (byte) ch;
 			} else if (ch < 0x800) {
 				buffer[offset++] = (byte) (0xc0 + ((ch >> 6) & 0x1f));
 				buffer[offset++] = (byte) (0x80 + (ch & 0x3f));
@@ -1352,7 +1420,7 @@ public class Hessian2Output extends AbstractHessianOutput implements Hessian2Con
 			char ch = v[i + strOffset];
 
 			if (ch < 0x80) {
-				buffer[offset++] = (byte) (ch);
+				buffer[offset++] = (byte) ch;
 			} else if (ch < 0x800) {
 				buffer[offset++] = (byte) (0xc0 + ((ch >> 6) & 0x1f));
 				buffer[offset++] = (byte) (0x80 + (ch & 0x3f));
@@ -1397,9 +1465,9 @@ public class Hessian2Output extends AbstractHessianOutput implements Hessian2Con
 			int len = offset - 4;
 
 			this.buffer[0] |= (byte) 0x80;
-			this.buffer[1] = (byte) (0x7e);
+			this.buffer[1] = (byte) 0x7e;
 			this.buffer[2] = (byte) (len >> 8);
-			this.buffer[3] = (byte) (len);
+			this.buffer[3] = (byte) len;
 			this.offset = 4;
 
 			if (os != null) {
@@ -1463,7 +1531,8 @@ public class Hessian2Output extends AbstractHessianOutput implements Hessian2Con
 	}
 
 	class BytesOutputStream extends OutputStream {
-		private int	_startOffset;
+
+		private int _startOffset;
 
 		BytesOutputStream() throws IOException {
 			if (Hessian2Output.SIZE < (Hessian2Output.this.offset + 16)) {
@@ -1477,11 +1546,11 @@ public class Hessian2Output extends AbstractHessianOutput implements Hessian2Con
 		@Override
 		public void write(int ch) throws IOException {
 			if (Hessian2Output.SIZE <= Hessian2Output.this.offset) {
-				int length = (Hessian2Output.this.offset - this._startOffset) - 3;
+				int length = Hessian2Output.this.offset - this._startOffset - 3;
 
 				Hessian2Output.this.buffer[this._startOffset] = (byte) Hessian2Constants.BC_BINARY_CHUNK;
 				Hessian2Output.this.buffer[this._startOffset + 1] = (byte) (length >> 8);
-				Hessian2Output.this.buffer[this._startOffset + 2] = (byte) (length);
+				Hessian2Output.this.buffer[this._startOffset + 2] = (byte) length;
 
 				Hessian2Output.this.flushBuffer();
 
@@ -1510,11 +1579,11 @@ public class Hessian2Output extends AbstractHessianOutput implements Hessian2Con
 				offset += sublen;
 
 				if (Hessian2Output.SIZE <= Hessian2Output.this.offset) {
-					int chunkLength = (Hessian2Output.this.offset - this._startOffset) - 3;
+					int chunkLength = Hessian2Output.this.offset - this._startOffset - 3;
 
 					Hessian2Output.this.buffer[this._startOffset] = (byte) Hessian2Constants.BC_BINARY_CHUNK;
 					Hessian2Output.this.buffer[this._startOffset + 1] = (byte) (chunkLength >> 8);
-					Hessian2Output.this.buffer[this._startOffset + 2] = (byte) (chunkLength);
+					Hessian2Output.this.buffer[this._startOffset + 2] = (byte) chunkLength;
 
 					Hessian2Output.this.flushBuffer();
 
@@ -1533,11 +1602,11 @@ public class Hessian2Output extends AbstractHessianOutput implements Hessian2Con
 				return;
 			}
 
-			int length = (Hessian2Output.this.offset - startOffset) - 3;
+			int length = Hessian2Output.this.offset - startOffset - 3;
 
 			Hessian2Output.this.buffer[startOffset] = (byte) 'B';
 			Hessian2Output.this.buffer[startOffset + 1] = (byte) (length >> 8);
-			Hessian2Output.this.buffer[startOffset + 2] = (byte) (length);
+			Hessian2Output.this.buffer[startOffset + 2] = (byte) length;
 
 			Hessian2Output.this.flushBuffer();
 		}

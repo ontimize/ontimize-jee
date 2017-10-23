@@ -28,7 +28,7 @@ import com.ontimize.jee.common.security.ILoginProvider;
  */
 public class OntimizeHessianProxy extends HessianProxy {
 
-	private static final Logger	logger	= LoggerFactory.getLogger(OntimizeHessianProxy.class);
+	private static final Logger logger = LoggerFactory.getLogger(OntimizeHessianProxy.class);
 
 	/**
 	 * Protected constructor for subclassing
@@ -225,7 +225,7 @@ public class OntimizeHessianProxy extends HessianProxy {
 
 		conn = this.getFactory().getConnectionFactory().open(this.getURL());
 		if ((args != null) && (args.length > 0) && (args[args.length - 1] instanceof InputStream) && (conn instanceof OntimizeHessianURLConnection) && (((OntimizeHessianURLConnection) conn)
-				.getUnderlinedConnection() instanceof HttpURLConnection)) {
+		        .getUnderlinedConnection() instanceof HttpURLConnection)) {
 			((HttpURLConnection) ((OntimizeHessianURLConnection) conn).getUnderlinedConnection()).setChunkedStreamingMode(0);
 		}
 		boolean isValid = false;

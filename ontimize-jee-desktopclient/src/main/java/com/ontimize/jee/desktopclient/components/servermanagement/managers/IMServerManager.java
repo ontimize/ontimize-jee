@@ -20,6 +20,7 @@ import com.ontimize.jee.desktopclient.spring.BeansFactory;
  * The Class IMMemory.
  */
 public class IMServerManager extends BasicInteractionManager {
+
 	private static final Logger			logger	= LoggerFactory.getLogger(IMServerManager.class);
 
 	@FormComponent(attr = "reloadDaos")
@@ -44,11 +45,13 @@ public class IMServerManager extends BasicInteractionManager {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			new OSwingWorker<Void, Void>() {
+
 				@Override
 				protected Void doInBackground() throws Exception {
 					IMServerManager.this.serverManagement.reloadDaos();
 					return null;
 				}
+
 				@Override
 				protected void done() {
 					try {

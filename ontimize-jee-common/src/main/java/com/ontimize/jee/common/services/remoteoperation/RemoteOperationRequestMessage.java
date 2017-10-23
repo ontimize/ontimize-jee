@@ -13,10 +13,10 @@ public class RemoteOperationRequestMessage implements Serializable {
 	/**
 	 *
 	 */
-	private static final long		serialVersionUID	= 1L;
+	private static final long	serialVersionUID	= 1L;
 
 	/** The operation class name. */
-	private String					operationClassName;
+	private String				operationClassName;
 
 	/** The parameters. */
 	private Map<String, Object>	parameters;

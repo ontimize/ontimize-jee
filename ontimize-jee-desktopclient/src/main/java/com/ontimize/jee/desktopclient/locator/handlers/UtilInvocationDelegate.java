@@ -218,7 +218,7 @@ public class UtilInvocationDelegate extends AbstractInvocationDelegate implement
 		}
 
 		this.databaseBundleManager = (IDatabaseBundleManager) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
-				new Class<?>[] { IDatabaseBundleManager.class }, new DatabaseBundleManagerInvocationDelegate());
+		        new Class<?>[] { IDatabaseBundleManager.class }, new DatabaseBundleManagerInvocationDelegate());
 		return this.databaseBundleManager;
 	}
 

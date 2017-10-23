@@ -88,12 +88,14 @@ public class TaskManagerGUI extends javax.swing.JFrame {
 		// Set up table
 
 		this.taskTable.getModel().addTableModelListener(new TableModelListener() {
+
 			@Override
 			public void tableChanged(TableModelEvent e) {
 				TaskManagerGUI.this.updateButtons();
 			}
 		});
 		this.taskTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
 				TaskManagerGUI.this.updateButtons();
@@ -138,39 +140,37 @@ public class TaskManagerGUI extends javax.swing.JFrame {
 		javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this.getContentPane());
 		this.getContentPane().setLayout(layout);
 		layout.setHorizontalGroup(//
-				layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup( //
-						layout.createSequentialGroup()/* .addContainerGap() */.addGroup(//
-								layout.createParallelGroup(//
-										javax.swing.GroupLayout.Alignment.LEADING)
-										.addGroup(//
-												layout.createSequentialGroup().addGap(TaskManagerGUI.GAP_SIZE, TaskManagerGUI.GAP_SIZE, TaskManagerGUI.GAP_SIZE)//
-														.addComponent(this.jbnPause)
-														//
-														.addComponent(this.jbnResume)//
-														.addComponent(this.jbnCancel)//
-														.addComponent(this.cleanSelected)
-														.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)//
-														.addComponent(this.cleanFinished).addComponent(this.jbnHide)
-														.addGap(TaskManagerGUI.GAP_SIZE, TaskManagerGUI.GAP_SIZE, TaskManagerGUI.GAP_SIZE))//
-										.addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup())//
-										.addComponent(this.jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 550, Short.MAX_VALUE))/* .addContainerGap() */
+		        layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup( //
+		                layout.createSequentialGroup()/* .addContainerGap() */.addGroup(//
+		                        layout.createParallelGroup(//
+		                                javax.swing.GroupLayout.Alignment.LEADING).addGroup(//
+		                                        layout.createSequentialGroup().addGap(TaskManagerGUI.GAP_SIZE, TaskManagerGUI.GAP_SIZE, TaskManagerGUI.GAP_SIZE)//
+		                                                .addComponent(this.jbnPause)
+		                                                //
+		                                                .addComponent(this.jbnResume)//
+		                                                .addComponent(this.jbnCancel)//
+		                                                .addComponent(this.cleanSelected).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)//
+		                                                .addComponent(this.cleanFinished).addComponent(this.jbnHide)
+		                                                .addGap(TaskManagerGUI.GAP_SIZE, TaskManagerGUI.GAP_SIZE, TaskManagerGUI.GAP_SIZE))//
+		                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup())//
+		                                .addComponent(this.jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 550, Short.MAX_VALUE))/* .addContainerGap() */
 				));
 
 		layout.linkSize(javax.swing.SwingConstants.HORIZONTAL,
-				new java.awt.Component[] { this.jbnPause, this.jbnResume, this.jbnCancel, this.cleanSelected, this.cleanFinished, this.jbnHide });
+		        new java.awt.Component[] { this.jbnPause, this.jbnResume, this.jbnCancel, this.cleanSelected, this.cleanFinished, this.jbnHide });
 
 		layout.setVerticalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-				.addGroup(layout.createSequentialGroup()/* .addContainerGap() */.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED) //
-						.addComponent(this.jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
-						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED) //
-						.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)//
-								.addComponent(this.jbnPause)//
-								.addComponent(this.jbnResume)//
-								.addComponent(this.jbnCancel)//
-								.addComponent(this.cleanSelected)//
-								.addComponent(this.cleanFinished)//
-								.addComponent(this.jbnHide))//
-						.addContainerGap()));
+		        .addGroup(layout.createSequentialGroup()/* .addContainerGap() */.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED) //
+		                .addComponent(this.jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
+		                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED) //
+		                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)//
+		                        .addComponent(this.jbnPause)//
+		                        .addComponent(this.jbnResume)//
+		                        .addComponent(this.jbnCancel)//
+		                        .addComponent(this.cleanSelected)//
+		                        .addComponent(this.cleanFinished)//
+		                        .addComponent(this.jbnHide))//
+		                .addContainerGap()));
 		this.pack();
 	}
 
@@ -370,7 +370,7 @@ public class TaskManagerGUI extends javax.swing.JFrame {
 		if (!this.isVisible()) {
 			Rectangle screenBounds = WindowTools.getScreenBounds(WindowTools.getActiveWindow());
 			Dimension size = TaskManagerGUI.getInstance().getSize();
-			TaskManagerGUI.getInstance().setLocation(screenBounds.x + (screenBounds.width - size.width), (screenBounds.height - size.height) + screenBounds.y);
+			TaskManagerGUI.getInstance().setLocation((screenBounds.x + screenBounds.width) - size.width, (screenBounds.height - size.height) + screenBounds.y);
 			this.setVisible(true);
 			this.setAlwaysOnTop(true);
 		}

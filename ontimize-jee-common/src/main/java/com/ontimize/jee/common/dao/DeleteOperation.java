@@ -8,7 +8,7 @@ import java.util.Map;
 public class DeleteOperation implements IOperation {
 
 	/** The filter. */
-	private Map<?, ?>	filter;
+	private Map<?, ?> filter;
 
 	/**
 	 * Instantiates a new delete operation.

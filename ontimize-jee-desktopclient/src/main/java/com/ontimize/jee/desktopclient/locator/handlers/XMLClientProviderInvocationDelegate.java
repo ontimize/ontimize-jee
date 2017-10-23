@@ -11,7 +11,6 @@ import com.ontimize.xml.XMLClientProvider;
  */
 public class XMLClientProviderInvocationDelegate extends AbstractInvocationDelegate implements XMLClientProvider {
 
-
 	@Override
 	public String getXMLForm(String form, int userid) throws Exception {
 		return null;

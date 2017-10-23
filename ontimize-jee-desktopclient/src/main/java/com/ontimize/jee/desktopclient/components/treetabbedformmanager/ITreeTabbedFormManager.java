@@ -13,61 +13,61 @@ import com.ontimize.gui.manager.IFormManager;
  */
 public interface ITreeTabbedFormManager extends IFormManager {
 
-    /** The tree table builder. */
-    String TREE_TABLE_BUILDER = "treetablebuilder";
+	/** The tree table builder. */
+	String	TREE_TABLE_BUILDER	= "treetablebuilder";
 
-    /**  XML Attribute. */
-    String TREE = "tree";
+	/** XML Attribute. */
+	String	TREE				= "tree";
 
-    /**
-     * Index of.
-     *
-     * @param searchedForm the searched form
-     * @return the int
-     */
-    int indexOf(TreeTabbedDetailForm searchedForm);
+	/**
+	 * Index of.
+	 *
+	 * @param searchedForm
+	 *            the searched form
+	 * @return the int
+	 */
+	int indexOf(TreeTabbedDetailForm searchedForm);
 
-    /**
-     * Index of component.
-     * 
-     * @param component
-     *            the component
-     * @return the int
-     */
-    int indexOfComponent(Component component);
+	/**
+	 * Index of component.
+	 *
+	 * @param component
+	 *            the component
+	 * @return the int
+	 */
+	int indexOfComponent(Component component);
 
-    /**
-     * Removes the tab.
-     *
-     * @param index
-     *            the index
-     */
-    void removeTab(int index);
+	/**
+	 * Removes the tab.
+	 *
+	 * @param index
+	 *            the index
+	 */
+	void removeTab(int index);
 
-    /**
-     * Show tab.
-     *
-     * @param index
-     *            the index
-     */
-    void showTab(int index);
+	/**
+	 * Show tab.
+	 *
+	 * @param index
+	 *            the index
+	 */
+	void showTab(int index);
 
-    /**
-     * Sets the title at.
-     *
-     * @param index
-     *            the index
-     * @param text
-     *            the text
-     */
-    void setTitleAt(int index, String text);
+	/**
+	 * Sets the title at.
+	 *
+	 * @param index
+	 *            the index
+	 * @param text
+	 *            the text
+	 */
+	void setTitleAt(int index, String text);
 
-    /**
-     * Gets the main form.
-     *
-     * @return the main form
-     */
-    Form getMainForm();
-
+	/**
+	 * Gets the main form.
+	 *
+	 * @return the main form
+	 */
+	Form getMainForm();
 
 }

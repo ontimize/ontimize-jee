@@ -156,8 +156,7 @@ public class DatabasePropertyResolver<T> extends AbstractPropertyResolver<T> imp
 		keysValues.put(this.filterColumnName, this.filterColumnValue);
 		List<String> attributes = Arrays.asList(new String[] { this.valueColumnName });
 		EntityResult query = this.dao.query(keysValues, attributes, null, this.queryId);
-		CheckingTools.failIf(query.calculateRecordNumber() != 1, "Invalid result number querying property %s with value %s", this.filterColumnName,
-				this.filterColumnValue);
+		CheckingTools.failIf(query.calculateRecordNumber() != 1, "Invalid result number querying property %s with value %s", this.filterColumnName, this.filterColumnValue);
 		return (T) ((List<Object>) query.get(this.valueColumnName)).get(0);
 	}
 }

@@ -99,9 +99,9 @@ public class DatabaseUserInformationService implements ISecurityUserInformationS
 	 * @return the map
 	 */
 	protected Map<?, ?> queryUserInformation(String userLogin) {
-		Map<String, Object> filter = new HashMap<String, Object>();
+		Map<String, Object> filter = new HashMap<>();
 		filter.put(this.userLoginColumn, userLogin);
-		List<String> columnsToQuery = new ArrayList<String>();
+		List<String> columnsToQuery = new ArrayList<>();
 		columnsToQuery.add(this.userLoginColumn);
 		columnsToQuery.add(this.userPasswordColumn);
 		if (this.userNeedCheckPassColumn != null) {
@@ -131,7 +131,7 @@ public class DatabaseUserInformationService implements ISecurityUserInformationS
 		OntimizeConfiguration ontimizeConfiguration = this.applicationContext.getBean(OntimizeConfiguration.class);
 		ISecurityAuthorizator authorizator = ontimizeConfiguration.getSecurityConfiguration().getAuthorizator();
 
-		List<Map<String, ?>> clientPermissions = new ArrayList<Map<String, ?>>();
+		List<Map<String, ?>> clientPermissions = new ArrayList<>();
 		for (GrantedAuthority authority : authorities) {
 			Map<String, ?> roleClientPermission = authorizator.getRole(authority.getAuthority()).getClientPermissions();
 			if (roleClientPermission != null) {

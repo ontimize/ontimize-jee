@@ -16,12 +16,12 @@ package com.ontimize.jee.common.integration;
  */
 public interface EntityEnumTranslator<S extends EntityEnum, T extends EntityEnum> {
 
-    /**
-     * Translate.
-     *
-     * @param s
-     *            the s
-     * @return the t
-     */
-    T translate(S s);
+	/**
+	 * Translate.
+	 *
+	 * @param s
+	 *            the s
+	 * @return the t
+	 */
+	T translate(S s);
 }

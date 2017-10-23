@@ -8,41 +8,40 @@ import com.ontimize.util.remote.BytesBlock;
 
 public class ByteArrayImageDataField extends ImageDataField {
 
-    public ByteArrayImageDataField(Hashtable param) {
-        super(param);
-    }
+	public ByteArrayImageDataField(Hashtable param) {
+		super(param);
+	}
 
-    @Override
-    public void setValue(Object value) {
-        if (value instanceof byte[]) {
-            // Cache:
-            Object oCurrentValue = this.getValue();
-            if (this.isEmpty() == false) {
-                if (oCurrentValue.equals(value)) {
-                    this.valueSave = this.getValue();
-                    return;
-                }
-            }
-            this.bytesImage = null;
-            this.bytesImage = (byte[]) value;
-            // Update the label
-            this.update();
-            this.valueSave = this.getValue();
-            this.fireValueChanged(this.valueSave, oCurrentValue, ValueEvent.PROGRAMMATIC_CHANGE);
-        }
-        else if (value instanceof BytesBlock) {
-            super.setValue(value);
-        } else {
-            this.deleteData();
-        }
-    }
+	@Override
+	public void setValue(Object value) {
+		if (value instanceof byte[]) {
+			// Cache:
+			Object oCurrentValue = this.getValue();
+			if (!this.isEmpty()) {
+				if (oCurrentValue.equals(value)) {
+					this.valueSave = this.getValue();
+					return;
+				}
+			}
+			this.bytesImage = null;
+			this.bytesImage = (byte[]) value;
+			// Update the label
+			this.update();
+			this.valueSave = this.getValue();
+			this.fireValueChanged(this.valueSave, oCurrentValue, ValueEvent.PROGRAMMATIC_CHANGE);
+		} else if (value instanceof BytesBlock) {
+			super.setValue(value);
+		} else {
+			this.deleteData();
+		}
+	}
 
-    @Override
-    public Object getValue() {
-        if (this.isEmpty()) {
-            return null;
-        }
-        return this.bytesImage;
-    }
+	@Override
+	public Object getValue() {
+		if (this.isEmpty()) {
+			return null;
+		}
+		return this.bytesImage;
+	}
 
 }

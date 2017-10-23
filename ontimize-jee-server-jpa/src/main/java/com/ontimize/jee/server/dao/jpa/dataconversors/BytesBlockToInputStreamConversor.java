@@ -11,27 +11,29 @@ import com.ontimize.util.remote.BytesBlock;
 /**
  * The Class BytesBlockToInputStreamConversor.
  */
-public class BytesBlockToInputStreamConversor implements
-		DataConversor<BytesBlock, InputStream > {
+public class BytesBlockToInputStreamConversor implements DataConversor<BytesBlock, InputStream> {
 
-	/** (non-Javadoc)
+	/**
+	 * (non-Javadoc)
+	 *
 	 * @see com.ontimize.jee.server.dao.jpa.dataconversors.DataConversor#convert(java.lang.Object, java.lang.Class)
 	 */
 	@Override
-	public InputStream  convert(BytesBlock input, Class<InputStream> toType) {
-		if ((input!=null) && (input.getBytes()!=null)){
+	public InputStream convert(BytesBlock input, Class<InputStream> toType) {
+		if ((input != null) && (input.getBytes() != null)) {
 			return new ByteArrayInputStream(input.getBytes());
 		}
 		return null;
 	}
 
-	/** (non-Javadoc)
+	/**
+	 * (non-Javadoc)
+	 *
 	 * @see com.ontimize.jee.server.dao.jpa.dataconversors.DataConversor#canHandleConversion(java.lang.Object, java.lang.Class)
 	 */
 	@Override
-	public boolean canHandleConversion(Object object,
-			Class<InputStream> toType) {
-        return ((object instanceof BytesBlock) && InputStream.class.isAssignableFrom(toType));
+	public boolean canHandleConversion(Object object, Class<InputStream> toType) {
+		return (object instanceof BytesBlock) && InputStream.class.isAssignableFrom(toType);
 	}
 
 }

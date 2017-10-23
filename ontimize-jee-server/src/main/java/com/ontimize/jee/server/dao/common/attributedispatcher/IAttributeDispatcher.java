@@ -39,7 +39,7 @@ public interface IAttributeDispatcher<T> {
 	 * @param apContext
 	 *            the ap context
 	 */
-	void processQueryAttribute(T attribute,EntityResult result,ApplicationContext apContext);
+	void processQueryAttribute(T attribute, EntityResult result, ApplicationContext apContext);
 
 	/**
 	 * Process insert attribute.
@@ -54,8 +54,8 @@ public interface IAttributeDispatcher<T> {
 	 *            the application context
 	 * @return the entity result with generated keys
 	 */
-	EntityResult processInsertAttribute(T attribute, InsertOperation insertOperation, Map<?, ?> generatedKeysInParentEntity,
-			Map<?, ?> attributesValuesInsertedInParentEntity, ApplicationContext applicationContext);
+	EntityResult processInsertAttribute(T attribute, InsertOperation insertOperation, Map<?, ?> generatedKeysInParentEntity, Map<?, ?> attributesValuesInsertedInParentEntity,
+	        ApplicationContext applicationContext);
 
 	/**
 	 * Process update attribute.
@@ -67,8 +67,8 @@ public interface IAttributeDispatcher<T> {
 	 * @param applicationContext
 	 *            the application context
 	 */
-	EntityResult processUpdateAttribute(T attribute, UpdateOperation updateOperation, Map<?, ?> generatedValuesInParentEntity,
-			Map<?, ?> filterInParentEntity, ApplicationContext applicationContext);
+	EntityResult processUpdateAttribute(T attribute, UpdateOperation updateOperation, Map<?, ?> generatedValuesInParentEntity, Map<?, ?> filterInParentEntity,
+	        ApplicationContext applicationContext);
 
 	/**
 	 * Process update attribute.
@@ -80,6 +80,6 @@ public interface IAttributeDispatcher<T> {
 	 * @param applicationContext
 	 *            the application context
 	 */
-	EntityResult processDeleteAttribute(T attribute, DeleteOperation deleteOperation, Map<?, ?> generatedValuesInParentEntity,
-			Map<?, ?> filterInParentEntity, ApplicationContext applicationContext);
+	EntityResult processDeleteAttribute(T attribute, DeleteOperation deleteOperation, Map<?, ?> generatedValuesInParentEntity, Map<?, ?> filterInParentEntity,
+	        ApplicationContext applicationContext);
 }

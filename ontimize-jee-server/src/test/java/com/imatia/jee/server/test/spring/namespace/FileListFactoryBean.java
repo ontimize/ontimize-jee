@@ -19,8 +19,8 @@ public class FileListFactoryBean implements FactoryBean<Collection<File>> {
 	public Collection<File> getObject() throws Exception {
 		// These can be an array list because the directory will have unique's
 		// and the nested is already only unique's
-		Collection<File> files = new ArrayList<File>();
-		Collection<File> results = new ArrayList<File>(0);
+		Collection<File> files = new ArrayList<>();
+		Collection<File> results = new ArrayList<>(0);
 
 		if (this.directory != null) {
 			// get all the files in the directory
@@ -80,12 +80,10 @@ public class FileListFactoryBean implements FactoryBean<Collection<File>> {
 	}
 
 	/**
-	 * What we actually get from the processing of the nested tags is a
-	 * collection of files within a collection so we flatten it and only keep
-	 * the uniques
+	 * What we actually get from the processing of the nested tags is a collection of files within a collection so we flatten it and only keep the uniques
 	 */
 	public void setNestedFiles(Collection<Collection<File>> nestedFiles) {
-		this.nestedFiles = new HashSet<File>(); // keep the list unique
+		this.nestedFiles = new HashSet<>(); // keep the list unique
 		for (Collection<File> nested : nestedFiles) {
 			this.nestedFiles.addAll(nested);
 		}

@@ -9,7 +9,7 @@ import com.ontimize.jee.common.tools.CheckingTools;
 public class I18nConfiguration {
 
 	/** The engine. */
-	private II18nService	engine;
+	private II18nService engine;
 
 	/**
 	 * Gets the engine.

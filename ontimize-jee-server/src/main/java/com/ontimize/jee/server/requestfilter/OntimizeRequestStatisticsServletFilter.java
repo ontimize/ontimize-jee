@@ -65,7 +65,7 @@ public class OntimizeRequestStatisticsServletFilter implements Filter {
 			try {
 				filterChain.doFilter(request, response);
 				success = true;
-			} catch (Throwable e) {
+			} catch (Exception e) {
 				OntimizeRequestStatisticsServletFilter.logger.error(null, e);
 				throw e;
 			} finally {

@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 public class OracleSQLStatementHandler extends com.ontimize.db.handler.OracleSQLStatementHandler {
 
 	/** The logger. */
-	private final static Logger logger = LoggerFactory.getLogger(OracleSQLStatementHandler.class);
+	private static final Logger logger = LoggerFactory.getLogger(OracleSQLStatementHandler.class);
 
 	public OracleSQLStatementHandler() {
 		super();

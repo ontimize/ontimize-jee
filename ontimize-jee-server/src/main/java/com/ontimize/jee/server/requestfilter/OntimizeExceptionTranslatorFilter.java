@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
  */
 public class OntimizeExceptionTranslatorFilter implements Filter {
 
-	static Logger	logger	= LoggerFactory.getLogger(OntimizeExceptionTranslatorFilter.class);
+	private static final Logger logger = LoggerFactory.getLogger(OntimizeExceptionTranslatorFilter.class);
 
 	/**
 	 * {@inheritDoc}
@@ -44,7 +44,7 @@ public class OntimizeExceptionTranslatorFilter implements Filter {
 		if (request instanceof HttpServletRequest) {
 			try {
 				filterChain.doFilter(request, response);
-			} catch (Throwable e) {
+			} catch (Exception e) {
 				OntimizeExceptionTranslatorFilter.logger.error(null, e);
 				throw new ServletException("esto es un error");
 			}

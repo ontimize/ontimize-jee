@@ -24,14 +24,14 @@ import com.ontimize.jee.desktopclient.components.WindowTools;
 public abstract class OSwingWorker<T, V> extends SwingWorker<T, V> {
 
 	/** The v worker status update listener. */
-	protected List<WorkerStatusUpdateListener>	vWorkerStatusUpdateListener;
+	protected List<WorkerStatusUpdateListener> vWorkerStatusUpdateListener;
 
 	/**
 	 * Constructor.
 	 */
 	public OSwingWorker() {
 		super();
-		this.vWorkerStatusUpdateListener = new ArrayList<WorkerStatusUpdateListener>(1);
+		this.vWorkerStatusUpdateListener = new ArrayList<>(1);
 	}
 
 	/**

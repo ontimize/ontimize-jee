@@ -8,7 +8,7 @@ import com.ontimize.jee.common.tools.CheckingTools;
 public class MailConfiguration {
 
 	/** The engine. */
-	private IMailEngine	engine;
+	private IMailEngine engine;
 
 	/**
 	 * Gets the engine.

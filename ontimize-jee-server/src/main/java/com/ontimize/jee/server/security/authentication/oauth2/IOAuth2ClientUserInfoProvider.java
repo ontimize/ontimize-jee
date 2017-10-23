@@ -1,4 +1,5 @@
 package com.ontimize.jee.server.security.authentication.oauth2;
+
 import java.util.Map;
 
 /**

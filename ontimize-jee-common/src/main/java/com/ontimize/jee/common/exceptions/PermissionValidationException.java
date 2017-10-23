@@ -1,7 +1,5 @@
 package com.ontimize.jee.common.exceptions;
 
-
-
 /**
  * The Class PermissionValidationException.
  *
@@ -9,7 +7,7 @@ package com.ontimize.jee.common.exceptions;
  */
 public class PermissionValidationException extends OntimizeJEERuntimeException {
 
-    private static final long serialVersionUID = 398376578824219383L;
+	private static final long serialVersionUID = 398376578824219383L;
 
 	public PermissionValidationException() {
 		super();
@@ -26,7 +24,5 @@ public class PermissionValidationException extends OntimizeJEERuntimeException {
 	public PermissionValidationException(Throwable cause) {
 		super(cause);
 	}
-
-
 
 }

@@ -213,7 +213,7 @@ public final class BigDecimalTools {
 	 * @return the big decimal
 	 */
 	public static BigDecimal sinh(BigDecimal x, MathContext mc) {
-		return (BigDecimalTools.exp(x, mc).subtract(x.negate())).divide(BigDecimalTools.TWO, mc);
+		return BigDecimalTools.exp(x, mc).subtract(x.negate()).divide(BigDecimalTools.TWO, mc);
 	}
 
 	// hyperbolic cos
@@ -225,7 +225,7 @@ public final class BigDecimalTools {
 	 * @return the big decimal
 	 */
 	public static BigDecimal cosh(BigDecimal x, MathContext mc) {
-		return (BigDecimalTools.exp(x, mc).add(x.negate())).divide(BigDecimalTools.TWO, mc);
+		return BigDecimalTools.exp(x, mc).add(x.negate()).divide(BigDecimalTools.TWO, mc);
 	}
 
 	// hyperbolic tan

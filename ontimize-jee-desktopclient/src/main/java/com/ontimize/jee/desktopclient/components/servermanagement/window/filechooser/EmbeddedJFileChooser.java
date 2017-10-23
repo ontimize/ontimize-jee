@@ -30,11 +30,12 @@ import com.ontimize.gui.container.Row;
 import com.ontimize.gui.field.TextDataField;
 
 public class EmbeddedJFileChooser extends JPanel {
-	private static final Logger logger = LoggerFactory.getLogger(EmbeddedJFileChooser.class);
 
-	protected final TextDataField		fileName;
-	protected final Button				bSave, bOpen;
-	protected final CustomJFileChooser	fileChooser;
+	private static final Logger				logger	= LoggerFactory.getLogger(EmbeddedJFileChooser.class);
+
+	protected final TextDataField			fileName;
+	protected final Button					bSave, bOpen;
+	protected final CustomJFileChooser		fileChooser;
 
 	protected final MODE					mode;
 	protected final IEmbeddedJFileChooser	listener;
@@ -53,28 +54,24 @@ public class EmbeddedJFileChooser extends JPanel {
 		this.bOpen = (Button) this.createOpenButtonComp();
 		this.fileChooser = new CustomJFileChooser();
 
-		this.add(this.fileChooser,
-				new GridBagConstraints(0, 0, 3, 1, 10, 10, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(2, 2, 2, 2), 0, 0));
+		this.add(this.fileChooser, new GridBagConstraints(0, 0, 3, 1, 10, 10, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(2, 2, 2, 2), 0, 0));
 
 		switch (this.mode) {
 			case OPEN:
-				this.add(this.bOpen,
-						new GridBagConstraints(2, 2, 1, 1, 0, 0, GridBagConstraints.EAST, GridBagConstraints.LINE_END, new Insets(2, 2, 2, 2), 0, 0));
+				this.add(this.bOpen, new GridBagConstraints(2, 2, 1, 1, 0, 0, GridBagConstraints.EAST, GridBagConstraints.LINE_END, new Insets(2, 2, 2, 2), 0, 0));
 				break;
 			case SAVE:
-				this.add(this.fileName,
-						new GridBagConstraints(0, 1, 3, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(2, 2, 2, 2), 0, 0));
-				this.add(this.bSave,
-						new GridBagConstraints(2, 2, 1, 1, 0, 0, GridBagConstraints.EAST, GridBagConstraints.LINE_END, new Insets(2, 2, 2, 2), 0, 0));
+				this.add(this.fileName, new GridBagConstraints(0, 1, 3, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(2, 2, 2, 2), 0, 0));
+				this.add(this.bSave, new GridBagConstraints(2, 2, 1, 1, 0, 0, GridBagConstraints.EAST, GridBagConstraints.LINE_END, new Insets(2, 2, 2, 2), 0, 0));
 				break;
 			default:
-				this.add(this.fileName,
-						new GridBagConstraints(0, 1, 3, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(2, 2, 2, 2), 0, 0));
+				this.add(this.fileName, new GridBagConstraints(0, 1, 3, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(2, 2, 2, 2), 0, 0));
 				this.add(this.createRowButtonsComp(this.bOpen, this.bSave),
-						new GridBagConstraints(2, 2, 1, 1, 0, 0, GridBagConstraints.EAST, GridBagConstraints.LINE_END, new Insets(2, 2, 2, 2), 0, 0));
+				        new GridBagConstraints(2, 2, 1, 1, 0, 0, GridBagConstraints.EAST, GridBagConstraints.LINE_END, new Insets(2, 2, 2, 2), 0, 0));
 				break;
 		}
 		this.addPropertyChangeListener(new PropertyChangeListener() {
+
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
 				// file selected listener to update fileName TextDataField
@@ -204,8 +201,7 @@ public class EmbeddedJFileChooser extends JPanel {
 						// Check Overwrite
 						if (selectedFile != null) {
 							if (selectedFile.getName().equals(fileName)) {
-								boolean showQuestionMessage = MessageDialog.showQuestionMessage(EmbeddedJFileChooser.this.fileChooser,
-										"Q_OVERWRITE_FILE");
+								boolean showQuestionMessage = MessageDialog.showQuestionMessage(EmbeddedJFileChooser.this.fileChooser, "Q_OVERWRITE_FILE");
 								if (!showQuestionMessage) {
 									return;
 								}
@@ -222,6 +218,7 @@ public class EmbeddedJFileChooser extends JPanel {
 	}
 
 	public class CustomJFileChooser extends JFileChooser {
+
 		public CustomJFileChooser() {
 			super();
 			this.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -229,6 +226,7 @@ public class EmbeddedJFileChooser extends JPanel {
 			this.setFileHidingEnabled(false);
 			this.disableTextComponents(this);
 			this.addPropertyChangeListener(new PropertyChangeListener() {
+
 				@Override
 				public void propertyChange(PropertyChangeEvent evt) {
 					// file selected listener to update fileName TextDataField

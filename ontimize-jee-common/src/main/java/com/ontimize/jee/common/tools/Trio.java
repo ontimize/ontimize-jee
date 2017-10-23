@@ -110,9 +110,9 @@ public class Trio<K, L, M> implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = (prime * result) + ((this.first == null) ? 0 : this.first.hashCode());
-		result = (prime * result) + ((this.second == null) ? 0 : this.second.hashCode());
-		result = (prime * result) + ((this.third == null) ? 0 : this.third.hashCode());
+		result = (prime * result) + (this.first == null ? 0 : this.first.hashCode());
+		result = (prime * result) + (this.second == null ? 0 : this.second.hashCode());
+		result = (prime * result) + (this.third == null ? 0 : this.third.hashCode());
 		return result;
 	}
 

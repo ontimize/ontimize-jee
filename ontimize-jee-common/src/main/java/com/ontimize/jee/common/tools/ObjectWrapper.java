@@ -4,7 +4,8 @@ import com.ontimize.gui.ValueChangeListener;
 import com.ontimize.gui.ValueEvent;
 
 public class ObjectWrapper<T> {
-	private T	wrapped;
+
+	private T					wrapped;
 
 	private ValueChangeListener	listener;
 

@@ -11,24 +11,24 @@ import org.slf4j.LoggerFactory;
 
 public class SlideBarAnimation implements ActionListener {
 
-	private static final Logger logger = LoggerFactory.getLogger(SlideBarAnimation.class);
+	private static final Logger	logger			= LoggerFactory.getLogger(SlideBarAnimation.class);
 
 	// start value (typically in pixels)
-	protected int	startValue		= 0;
+	protected int				startValue		= 0;
 	// end value (typically in pixels)
-	protected int	endValue		= 0;
+	protected int				endValue		= 0;
 	// duration over which the animation takes place
-	protected long	durationMillis	= 0;
+	protected long				durationMillis	= 0;
 
 	// a value (difference of start and end values) that corresponds to value per millisecond
-	protected double valuePerMilli = 0.0;
+	protected double			valuePerMilli	= 0.0;
 
 	// The ctm of the last performed animation operation
-	protected long		startMillis;
-	protected Timer		timer;
-	protected double	value	= 0;
+	protected long				startMillis;
+	protected Timer				timer;
+	protected double			value			= 0;
 
-	private SlideBarSection sliderBarSection;
+	private SlideBarSection		sliderBarSection;
 
 	/**
 	 * Constructor where you specify <i>time</i> between the two pixel values.
@@ -43,7 +43,7 @@ public class SlideBarAnimation implements ActionListener {
 		this.durationMillis = durationMillis;
 
 		// create the value per millis.
-		this.valuePerMilli = ((double) (endValue - startValue)) / ((double) durationMillis);
+		this.valuePerMilli = (double) (endValue - startValue) / (double) durationMillis;
 	}
 
 	/**
@@ -123,7 +123,7 @@ public class SlideBarAnimation implements ActionListener {
 	public void setEndValue(int endValue) {
 		this.endValue = endValue;
 		if (this.durationMillis > 0) {
-			this.valuePerMilli = ((double) (endValue - this.startValue)) / ((double) this.durationMillis);
+			this.valuePerMilli = (double) (endValue - this.startValue) / (double) this.durationMillis;
 		}
 	}
 
@@ -134,7 +134,7 @@ public class SlideBarAnimation implements ActionListener {
 	public void setStartValue(int startValue) {
 		this.startValue = startValue;
 		if (this.durationMillis > 0) {
-			this.valuePerMilli = ((double) (this.endValue - startValue)) / ((double) this.durationMillis);
+			this.valuePerMilli = (double) (this.endValue - startValue) / (double) this.durationMillis;
 		}
 	}
 

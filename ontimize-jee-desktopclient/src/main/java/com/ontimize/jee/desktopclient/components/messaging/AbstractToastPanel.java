@@ -12,7 +12,7 @@ import javax.swing.JPanel;
 public abstract class AbstractToastPanel extends JPanel {
 
 	/** The alpha. */
-	protected float	alpha;
+	protected float alpha;
 
 	/**
 	 * Instantiates a new abstract toast panel.

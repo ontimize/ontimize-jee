@@ -38,11 +38,11 @@ import com.ontimize.jee.server.security.authentication.OntimizeWebAuthentication
  */
 public class OAuth2ClientAuthenticationMechanism implements IAuthenticationMechanism, InitializingBean {
 
-	private static final Logger									log	= LoggerFactory.getLogger(OAuth2ClientAuthenticationMechanism.class);
+	private static final Logger				log	= LoggerFactory.getLogger(OAuth2ClientAuthenticationMechanism.class);
 
-	private OAuth2ClientProperties								oAuth2ClientProperties;
-	protected IOAuth2ClientLoginListener						oAuth2ClientLoginListener;
-	protected IOAuth2ClientUserInfoProvider						oAuth2ClientUserInfoProvider;
+	private OAuth2ClientProperties			oAuth2ClientProperties;
+	protected IOAuth2ClientLoginListener	oAuth2ClientLoginListener;
+	protected IOAuth2ClientUserInfoProvider	oAuth2ClientUserInfoProvider;
 
 	@Override
 	public void afterPropertiesSet() {
@@ -60,7 +60,7 @@ public class OAuth2ClientAuthenticationMechanism implements IAuthenticationMecha
 	 */
 	@Override
 	public AuthenticationResult authenticate(HttpServletRequest request, HttpServletResponse response, AuthenticationManager authenticationManager,
-			UserDetailsService userDetailsService) {
+	        UserDetailsService userDetailsService) {
 
 		if (OAuth2ClientAuthenticationMechanism.log.isDebugEnabled()) {
 			String url = request.getRequestURI();
@@ -118,10 +118,9 @@ public class OAuth2ClientAuthenticationMechanism implements IAuthenticationMecha
 			final String errorReason = (errorReasonValues != null) && (errorReasonValues.length > 0) ? errorReasonValues[0] : null;
 			final String errorDescription = (errorDescriptionValues != null) && (errorDescriptionValues.length > 0) ? errorDescriptionValues[0] : null;
 			OAuth2ClientAuthenticationMechanism.log.info("An error was returned by the OAuth Provider: error: %s error_reason: %s, error_description: %s", error, errorReason,
-					errorDescription);
+			        errorDescription);
 			throw new AuthenticationServiceException(
-					MessageFormat.format("An error was returned by the OAuth Provider: error: %s error_reason: %s, error_description: %s", error,
-					errorReason, errorDescription));
+			        MessageFormat.format("An error was returned by the OAuth Provider: error: %s error_reason: %s, error_description: %s", error, errorReason, errorDescription));
 		}
 	}
 
@@ -155,7 +154,6 @@ public class OAuth2ClientAuthenticationMechanism implements IAuthenticationMecha
 	public void setoAuth2ClientUserInfoProvider(IOAuth2ClientUserInfoProvider oAuth2ClientUserInfoProvider) {
 		this.oAuth2ClientUserInfoProvider = oAuth2ClientUserInfoProvider;
 	}
-
 
 	/**
 	 * @param authenticationDetails
@@ -219,8 +217,8 @@ public class OAuth2ClientAuthenticationMechanism implements IAuthenticationMecha
 		if ((details != null) && !this.oAuth2ClientProperties.getRedirectUri().isAbsolute()) {
 			OntimizeWebAuthenticationDetails oAuth2ClientWebAuthenticationDetails = details;
 			redirectUri = UriComponentsBuilder.fromPath(oAuth2ClientWebAuthenticationDetails.getContextPath()).path(this.oAuth2ClientProperties.getRedirectUri().toString())
-					.scheme(oAuth2ClientWebAuthenticationDetails.getScheme()).host(oAuth2ClientWebAuthenticationDetails.getHost())
-					.port(oAuth2ClientWebAuthenticationDetails.getPort()).build().toUri();
+			        .scheme(oAuth2ClientWebAuthenticationDetails.getScheme()).host(oAuth2ClientWebAuthenticationDetails.getHost())
+			        .port(oAuth2ClientWebAuthenticationDetails.getPort()).build().toUri();
 		} else {
 			redirectUri = this.oAuth2ClientProperties.getRedirectUri();
 		}

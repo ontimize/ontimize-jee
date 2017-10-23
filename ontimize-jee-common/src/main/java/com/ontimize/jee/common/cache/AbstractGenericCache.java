@@ -25,6 +25,7 @@ import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
  * @author <a href="user@email.com">Author</a>
  */
 public abstract class AbstractGenericCache<K, V> {
+
 	private static final long		DEFAULT_TTL	= 30l * 60l * 1000l;									// 30 minutes
 	private static final Logger		logger		= LoggerFactory.getLogger(AbstractGenericCache.class);
 
@@ -46,7 +47,7 @@ public abstract class AbstractGenericCache<K, V> {
 	 */
 	public AbstractGenericCache(final long ttl) {
 		this.ttl = ttl;
-		this.cache = new Hashtable<K, CachedItem<V>>();
+		this.cache = new Hashtable<>();
 	}
 
 	/**
@@ -70,7 +71,7 @@ public abstract class AbstractGenericCache<K, V> {
 				// synchronized (this) {
 				// cachedItem = this.cache.get(key);
 				// if (cachedItem == null) {
-				cachedItem = new CachedItem<V>();
+				cachedItem = new CachedItem<>();
 				final V result = this.requestData(key);
 				if (result != null) {
 					cachedItem.setValue(result);
@@ -136,7 +137,7 @@ public abstract class AbstractGenericCache<K, V> {
 	 *            the value
 	 */
 	public void put(final K key, final V value) {
-		final CachedItem<V> item = new CachedItem<V>();
+		final CachedItem<V> item = new CachedItem<>();
 		item.setTimestamp(System.currentTimeMillis());
 		item.setValue(value);
 		this.cache.put(key, item);

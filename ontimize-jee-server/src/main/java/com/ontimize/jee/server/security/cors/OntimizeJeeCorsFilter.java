@@ -14,7 +14,6 @@ import com.ontimize.jee.server.spring.namespace.CorsBeanDefinitionParser;
 
 public class OntimizeJeeCorsFilter extends CorsFilter implements ApplicationContextAware {
 
-
 	public OntimizeJeeCorsFilter() {
 		super(new UrlBasedCorsConfigurationSource());
 	}
@@ -26,6 +25,5 @@ public class OntimizeJeeCorsFilter extends CorsFilter implements ApplicationCont
 		configSource.setAlwaysUseFullPath(true);
 		configSource.setCorsConfigurations(bean);
 	}
-
 
 }

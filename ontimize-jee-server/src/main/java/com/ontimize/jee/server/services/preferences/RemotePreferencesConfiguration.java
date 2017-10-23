@@ -8,7 +8,7 @@ import com.ontimize.jee.common.tools.CheckingTools;
 public class RemotePreferencesConfiguration {
 
 	/** The engine. */
-	private IRemoteApplicationPreferencesEngine	engine;
+	private IRemoteApplicationPreferencesEngine engine;
 
 	/**
 	 * Gets the engine.

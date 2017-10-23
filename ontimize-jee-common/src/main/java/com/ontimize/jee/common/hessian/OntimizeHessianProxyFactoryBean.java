@@ -29,7 +29,11 @@ import com.caucho.hessian.io.SerializerFactory;
 
 /**
  * Se encarga de anteponer el host del servidor donde se va a desplegar el servidor en función de una propiedad del sistema. La propiedad será: com.ontimize.services.baseUrl Es
- * decir, la url del servicio será: <pre> serviceUrl = System.getProperty("com.ontimize.services.baseUrl")+serviceRelativeUrl </pre>
+ * decir, la url del servicio será:
+ *
+ * <pre>
+ * serviceUrl = System.getProperty("com.ontimize.services.baseUrl") + serviceRelativeUrl
+ * </pre>
  *
  * @author joaquin.romero
  *
@@ -138,7 +142,7 @@ public class OntimizeHessianProxyFactoryBean extends RemoteAccessor implements M
 			} else {
 				throw targetEx;
 			}
-		} catch (Throwable ex) {
+		} catch (Exception ex) {
 			throw new RemoteProxyFailureException("Failed to invoke Hessian proxy for remote service [" + this.getServiceUrl() + "]", ex);
 		} finally {
 			this.resetThreadContextClassLoader(originalClassLoader);
@@ -181,7 +185,7 @@ public class OntimizeHessianProxyFactoryBean extends RemoteAccessor implements M
 	 * particular a custom HessianProxyFactory subclass.
 	 */
 	public void setProxyFactory(HessianProxyFactory proxyFactory) {
-		this.proxyFactory = (proxyFactory != null ? proxyFactory : new HessianProxyFactory());
+		this.proxyFactory = proxyFactory != null ? proxyFactory : new HessianProxyFactory();
 	}
 
 	/**

@@ -9,9 +9,10 @@ import com.ontimize.jee.desktopclient.components.servermanagement.window.ServerM
 import com.ontimize.jee.desktopclient.spring.BeansFactory;
 
 public class ServerManagementAction extends AbstractAction {
-	private static ServerManagementWindow managementWindow = null;
 
-	IServerManagementService serverManagement = BeansFactory.getBean(IServerManagementService.class);
+	private static ServerManagementWindow	managementWindow	= null;
+
+	IServerManagementService				serverManagement	= BeansFactory.getBean(IServerManagementService.class);
 
 	@Override
 	public void actionPerformed(ActionEvent e) {

@@ -30,27 +30,27 @@ import com.ontimize.util.AWTUtilities;
  */
 public class Toast implements Runnable, ActionListener {
 
-	/** The logger.*/
-	private static final Logger					logger					= LoggerFactory.getLogger(Toast.class);
+	/** The logger. */
+	private static final Logger			logger	= LoggerFactory.getLogger(Toast.class);
 
 	/** Mantiene la lista de mensajes que se van encolando para presentar. */
-	protected ArrayList<ToastMessage>			messageList;
+	protected ArrayList<ToastMessage>	messageList;
 
 	/** Hilo que se encarga de consultar la cola de mensajes y mostrar la ventana. */
-	protected Thread							toastThread;
+	protected Thread					toastThread;
 
 	/** Temporizador para cerrar automáticamente la ventana. */
-	protected Timer								hideToastTimer;
+	protected Timer						hideToastTimer;
 
 	/** The current dialog. */
-	protected JDialog							currentDialog;
+	protected JDialog					currentDialog;
 
 	/**
 	 * Instantiates a new u toast.
 	 */
 	public Toast() {
 		super();
-		this.messageList = new ArrayList<ToastMessage>();
+		this.messageList = new ArrayList<>();
 		this.hideToastTimer = new Timer(0, this);
 		this.start();
 	}
@@ -76,7 +76,7 @@ public class Toast implements Runnable, ActionListener {
 				final ToastMessage msg = this.getNextMessage();
 				final AbstractToastPanel panel = this.getPanel(msg);
 				final JDialog currentDialog = this.createCurrentDialog(panel, msg.isBlocking() ? ModalityType.APPLICATION_MODAL : ModalityType.MODELESS, msg.getWindowBounds(),
-						msg.getParentWindow());
+				        msg.getParentWindow());
 
 				// Set text content and bundle it
 				panel.setMessage(msg);
@@ -87,6 +87,7 @@ public class Toast implements Runnable, ActionListener {
 				// Show Dialog
 				if (msg.isBlocking()) {
 					SwingUtilities.invokeAndWait(new Runnable() {
+
 						@Override
 						public void run() {
 							Toast.this.establishCurrentDialogSize(currentDialog, panel, msg);
@@ -95,6 +96,7 @@ public class Toast implements Runnable, ActionListener {
 					});
 				} else {
 					SwingUtilities.invokeLater(new Runnable() {
+
 						@Override
 						public void run() {
 							Toast.this.establishCurrentDialogSize(currentDialog, panel, msg);
@@ -130,7 +132,7 @@ public class Toast implements Runnable, ActionListener {
 	protected JDialog createCurrentDialog(JComponent content, ModalityType modalityType, Rectangle bounds, Window parent) {
 		Window parentWindow = parent == null ? WindowTools.getActiveWindow() : parent;
 
-		JDialog dialog = new JDialog((modalityType != ModalityType.MODELESS) ? parentWindow : null);
+		JDialog dialog = new JDialog(modalityType != ModalityType.MODELESS ? parentWindow : null);
 		((JComponent) dialog.getContentPane()).setOpaque(true);
 		((JComponent) dialog.getContentPane()).setBackground(Color.black);
 		dialog.setUndecorated(true);
@@ -185,7 +187,7 @@ public class Toast implements Runnable, ActionListener {
 	 *             the no such method exception
 	 */
 	protected AbstractToastPanel getPanel(ToastMessage msg)
-			throws IllegalArgumentException, SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+	        throws IllegalArgumentException, SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
 		return (AbstractToastPanel) msg.getPanelClass().getConstructor().newInstance();
 	}
 
@@ -212,6 +214,7 @@ public class Toast implements Runnable, ActionListener {
 		// Vamos a hacer que se desvanezca
 		final Timer t = new Timer(0, null);
 		final ActionListener ac = new ActionListener() {
+
 			float initialAlfpha = visible ? 0.2f : 0.8f;
 
 			@Override
@@ -234,6 +237,7 @@ public class Toast implements Runnable, ActionListener {
 		t.setDelay(80);
 
 		new Thread(new Runnable() {
+
 			@Override
 			public void run() {
 				synchronized (t) {

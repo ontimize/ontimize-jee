@@ -1,8 +1,7 @@
 /**
  * DB2DbObjectToJavaObjectConverter.java 17/03/2014
  *
- * Copyright 2014 IMATIA.
- * Departamento de Sistemas
+ * Copyright 2014 IMATIA. Departamento de Sistemas
  */
 package com.ontimize.jee.server.dao.jpa.common.rowmapper.base;
 
@@ -15,22 +14,22 @@ import com.ontimize.jee.server.dao.jpa.common.rowmapper.IJavaObjectToDbObjectCon
 
 /**
  * The Class DB2DbObjectToJavaObjectConverter.
- * 
+ *
  * @author <a href="">Sergio Padin</a>
  */
 public class BaseJavaObjectToDbObjectConverter implements IJavaObjectToDbObjectConverter {
 
-    private static String CLOB_TYPE = "CLOB";
+	private static String CLOB_TYPE = "CLOB";
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Object convert(final Object input, final String toDbType) {
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Object convert(final Object input, final String toDbType) {
 
-        if ((input instanceof String) && toDbType.equalsIgnoreCase(BaseJavaObjectToDbObjectConverter.CLOB_TYPE)) {
-            return new SqlParameterValue(Types.CLOB, new SqlLobValue((String) input));
-        }
-        return input;
-    }
+		if ((input instanceof String) && toDbType.equalsIgnoreCase(BaseJavaObjectToDbObjectConverter.CLOB_TYPE)) {
+			return new SqlParameterValue(Types.CLOB, new SqlLobValue((String) input));
+		}
+		return input;
+	}
 }

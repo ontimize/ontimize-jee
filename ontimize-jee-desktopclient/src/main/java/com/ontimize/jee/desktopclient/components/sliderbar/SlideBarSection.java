@@ -54,6 +54,7 @@ public class SlideBarSection extends JPanel {
 		this.contentPane = component;
 		this.sliderBarOwner = owner;
 		this.titlePanel.addMouseListener(new MouseAdapter() {
+
 			@Override
 			public void mouseReleased(MouseEvent e) {
 
@@ -172,6 +173,7 @@ public class SlideBarSection extends JPanel {
 	}
 
 	public class ArrowPanel extends JPanel implements SwingConstants {
+
 		protected int		direction;
 
 		private final Color	shadow;
@@ -179,8 +181,7 @@ public class SlideBarSection extends JPanel {
 		private final Color	highlight;
 
 		public ArrowPanel(int direction) {
-			this(direction, UIManager.getColor("control"), UIManager.getColor("controlShadow"), UIManager.getColor("controlDkShadow"), UIManager
-					.getColor("controlLtHighlight"));
+			this(direction, UIManager.getColor("control"), UIManager.getColor("controlShadow"), UIManager.getColor("controlDkShadow"), UIManager.getColor("controlLtHighlight"));
 		}
 
 		public ArrowPanel(int direction, Color background, Color shadow, Color darkShadow, Color highlight) {
@@ -197,8 +198,7 @@ public class SlideBarSection extends JPanel {
 		 * Returns the direction of the arrow.
 		 *
 		 * @param direction
-		 *            the direction of the arrow; one of {@code SwingConstants.NORTH}, {@code SwingConstants.SOUTH}, {@code SwingConstants.EAST} or
-		 *            {@code SwingConstants.WEST}
+		 *            the direction of the arrow; one of {@code SwingConstants.NORTH}, {@code SwingConstants.SOUTH}, {@code SwingConstants.EAST} or {@code SwingConstants.WEST}
 		 */
 		public int getDirection() {
 			return this.direction;
@@ -208,8 +208,7 @@ public class SlideBarSection extends JPanel {
 		 * Sets the direction of the arrow.
 		 *
 		 * @param direction
-		 *            the direction of the arrow; one of of {@code SwingConstants.NORTH}, {@code SwingConstants.SOUTH}, {@code SwingConstants.EAST} or
-		 *            {@code SwingConstants.WEST}
+		 *            the direction of the arrow; one of of {@code SwingConstants.NORTH}, {@code SwingConstants.SOUTH}, {@code SwingConstants.EAST} or {@code SwingConstants.WEST}
 		 */
 		public void setDirection(int dir) {
 			this.direction = dir;

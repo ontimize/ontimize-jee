@@ -19,8 +19,8 @@ import org.springframework.context.support.GenericXmlApplicationContext;
 public final class BeansFactory {
 
 	/** Fichero de configuración por defecto de spring */
-	public static final String			DEFAULT_SPRING_CONFIG_FILE	= "classpath*:spring-config.xml";
-	public static final Logger			logger						= LoggerFactory.getLogger(BeansFactory.class);
+	public static final String					DEFAULT_SPRING_CONFIG_FILE	= "classpath*:spring-config.xml";
+	public static final Logger					logger						= LoggerFactory.getLogger(BeansFactory.class);
 
 	/** referencia al {@link ApplicationContext} */
 	private static GenericXmlApplicationContext	applicationContext			= null;
@@ -40,8 +40,8 @@ public final class BeansFactory {
 	 */
 	public static void init(String[] springConfigurationFile) {
 		if (BeansFactory.applicationContext == null) {
-			List<String> contextFiles = ((springConfigurationFile == null) || (springConfigurationFile.length == 0)) ? new ArrayList<String>() : new ArrayList<String>(
-					Arrays.asList(springConfigurationFile));
+			List<String> contextFiles = (springConfigurationFile == null) || (springConfigurationFile.length == 0) ? new ArrayList<>() : new ArrayList<>(
+			        Arrays.asList(springConfigurationFile));
 			if (contextFiles.size() == 0) {
 				contextFiles.add(BeansFactory.DEFAULT_SPRING_CONFIG_FILE);
 			}

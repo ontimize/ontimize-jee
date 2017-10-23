@@ -53,9 +53,8 @@ public class DatabaseI18nEngine implements II18nService, InitializingBean {
 	private IOntimizeDaoSupport	daoBundles;
 
 	/**
-	 * Boolean to know the names of the columns in the table<br> Default value is null, to use directly the names in the configuration file or the
-	 * default ones.<br> If it is true then use the values but in lower case. If it is false then use the configuration or default values but in upper
-	 * case
+	 * Boolean to know the names of the columns in the table<br> Default value is null, to use directly the names in the configuration file or the default ones.<br> If it is true
+	 * then use the values but in lower case. If it is false then use the configuration or default values but in upper case
 	 */
 	public Boolean				toLowerCase					= null;
 
@@ -78,8 +77,7 @@ public class DatabaseI18nEngine implements II18nService, InitializingBean {
 	protected void autoconfigureLocaleColumns() {
 		List<DaoProperty> cudProperties = this.daoBundleValues.getCudProperties();
 
-		List<String> noLocaleColumns = Arrays
-				.asList(new String[] { this.bundleKeyColumn, this.bundleValuesKeyColumn, this.bundleValuesTextKeyColumn });
+		List<String> noLocaleColumns = Arrays.asList(new String[] { this.bundleKeyColumn, this.bundleValuesKeyColumn, this.bundleValuesTextKeyColumn });
 
 		if (this.localeColumnNames == null) {
 			this.localeColumnNames = new HashMap<>();
@@ -145,9 +143,9 @@ public class DatabaseI18nEngine implements II18nService, InitializingBean {
 	}
 
 	/**
-	 * Get all the available bundles in the database.<br> If (DatabaseBundleManager.{@link #bundleValuesEntityName} is not null and a entity with this
-	 * name exists then use this entity to query the available bundles.<br> If (DatabaseBundleManager.{@link #bundleValuesEntityName} is null and
-	 * {@link #bundleTableName} is not null then query the table directly. In other case return null
+	 * Get all the available bundles in the database.<br> If (DatabaseBundleManager.{@link #bundleValuesEntityName} is not null and a entity with this name exists then use this
+	 * entity to query the available bundles.<br> If (DatabaseBundleManager.{@link #bundleValuesEntityName} is null and {@link #bundleTableName} is not null then query the table
+	 * directly. In other case return null
 	 *
 	 * @return the available bundles
 	 * @throws OntimizeJEERuntimeException
@@ -157,8 +155,7 @@ public class DatabaseI18nEngine implements II18nService, InitializingBean {
 	public DatabaseBundleDescriptor[] getAvailableBundles() throws OntimizeJEERuntimeException {
 
 		EntityResult queryResult = this.daoBundles.query(new HashMap<>(),
-				Arrays.asList(new String[] { this.bundleClassNameColumn, this.bundleDescriptionColumn, this.bundleKeyColumn }), (List<String>) null,
-				(String) null);
+		        Arrays.asList(new String[] { this.bundleClassNameColumn, this.bundleDescriptionColumn, this.bundleKeyColumn }), (List<String>) null, (String) null);
 
 		int queryCount = queryResult.calculateRecordNumber();
 		DatabaseBundleDescriptor[] bundles = new DatabaseBundleDescriptor[queryCount];
@@ -198,9 +195,9 @@ public class DatabaseI18nEngine implements II18nService, InitializingBean {
 	public void updateBundleValues(DatabaseBundleValues dbvalues) throws OntimizeJEERuntimeException {
 		List<BundleValue> bundleValues = dbvalues.getBundleValues();
 		DatabaseBundleDescriptor[] availableBundlesArray = this.getAvailableBundles();
-		List<DatabaseBundleDescriptor> availableBundles = new ArrayList<DatabaseBundleDescriptor>(Arrays.asList(availableBundlesArray));
+		List<DatabaseBundleDescriptor> availableBundles = new ArrayList<>(Arrays.asList(availableBundlesArray));
 
-		Map<String, Object> filter = new HashMap<String, Object>();
+		Map<String, Object> filter = new HashMap<>();
 		for (int i = 0; i < bundleValues.size(); i++) {
 			BundleValue bv = bundleValues.get(i);
 			Object bundleId = this.getBundleId(bv.getBundleClassName(), availableBundles);
@@ -248,7 +245,7 @@ public class DatabaseI18nEngine implements II18nService, InitializingBean {
 	public void deleteBundleValues(DatabaseBundleValues dbvalues) throws OntimizeJEERuntimeException {
 		List<BundleValue> bundleValues = dbvalues.getBundleValues();
 		DatabaseBundleDescriptor[] availableBundlesArray = this.getAvailableBundles();
-		List<DatabaseBundleDescriptor> availableBundles = new ArrayList<DatabaseBundleDescriptor>(Arrays.asList(availableBundlesArray));
+		List<DatabaseBundleDescriptor> availableBundles = new ArrayList<>(Arrays.asList(availableBundlesArray));
 
 		Hashtable filter = new Hashtable();
 		for (int i = 0; i < bundleValues.size(); i++) {
@@ -315,8 +312,7 @@ public class DatabaseI18nEngine implements II18nService, InitializingBean {
 		} else {
 			filter.put(this.bundleKeyColumn, new SearchValue(SearchValue.NULL, null));
 		}
-		return this.daoBundleValues.query(filter, Arrays.asList(new String[] { this.bundleValuesTextKeyColumn, languageColumn }),
-				(List<String>) null, (String) null);
+		return this.daoBundleValues.query(filter, Arrays.asList(new String[] { this.bundleValuesTextKeyColumn, languageColumn }), (List<String>) null, (String) null);
 	}
 
 	/**
@@ -400,8 +396,7 @@ public class DatabaseI18nEngine implements II18nService, InitializingBean {
 	 * @return the bundle value key
 	 */
 	protected Object getBundleValueKey(Map<String, Object> filter) {
-		EntityResult queryResult = this.daoBundleValues.query(filter, Arrays.asList(new String[] { this.bundleValuesKeyColumn }),
-				(List<String>) null, (String) null);
+		EntityResult queryResult = this.daoBundleValues.query(filter, Arrays.asList(new String[] { this.bundleValuesKeyColumn }), (List<String>) null, (String) null);
 		CheckingTools.failIf(queryResult.calculateRecordNumber() > 1, "Too many bundle values found in database");
 		if (queryResult.calculateRecordNumber() > 0) {
 			return queryResult.getRecordValues(0).get(this.bundleValuesKeyColumn);

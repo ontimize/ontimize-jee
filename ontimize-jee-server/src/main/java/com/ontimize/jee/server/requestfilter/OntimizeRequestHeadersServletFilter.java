@@ -28,7 +28,7 @@ import com.ontimize.jee.server.spring.SpringApplicationContext;
 public class OntimizeRequestHeadersServletFilter implements Filter {
 
 	/** The logger. */
-	private static final Logger	logger	= LoggerFactory.getLogger(OntimizeRequestHeadersServletFilter.class);
+	private static final Logger logger = LoggerFactory.getLogger(OntimizeRequestHeadersServletFilter.class);
 
 	/**
 	 * {@inheritDoc}
@@ -42,16 +42,14 @@ public class OntimizeRequestHeadersServletFilter implements Filter {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain filterChain) throws IOException,
-			ServletException {
+	public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain filterChain) throws IOException, ServletException {
 		if (request instanceof HttpServletRequest) {
 			final RequestHeaderProvider requestHeaderProvider = new RequestHeaderProvider((HttpServletRequest) request);
 
 			ServiceContext serviceContext = ServiceContextHolder.getInstance().getServiceContext();
 			serviceContext.reset();
 
-			final OntimizeRequestHeaderProcessorFilters filters = SpringApplicationContext.getContext().getBean(
-					OntimizeRequestHeaderProcessorFilters.class);
+			final OntimizeRequestHeaderProcessorFilters filters = SpringApplicationContext.getContext().getBean(OntimizeRequestHeaderProcessorFilters.class);
 
 			if ((filters != null) && (filters.getHeaderProcessors() != null)) {
 				for (IOntimizeRequestHeaderProcessor headerProcessor : filters.getHeaderProcessors()) {
@@ -62,7 +60,7 @@ public class OntimizeRequestHeadersServletFilter implements Filter {
 			long time = System.currentTimeMillis();
 			try {
 				filterChain.doFilter(request, response);
-			} catch (Throwable e) {
+			} catch (Exception e) {
 				OntimizeRequestHeadersServletFilter.logger.error(null, e);
 			} finally {
 				time = System.currentTimeMillis() - time;

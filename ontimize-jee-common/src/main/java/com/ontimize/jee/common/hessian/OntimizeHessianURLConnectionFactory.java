@@ -72,7 +72,7 @@ public class OntimizeHessianURLConnectionFactory extends AbstractHessianConnecti
 		if (readTimeout > 0) {
 			try {
 				conn.setReadTimeout(SafeCasting.longToInt(readTimeout));
-			} catch (Throwable e) {
+			} catch (Exception e) {
 				// do nothing
 			}
 		}
@@ -97,7 +97,7 @@ public class OntimizeHessianURLConnectionFactory extends AbstractHessianConnecti
 		HeaderAttribute hb = new HeaderAttribute();
 		hb.setName("locale-language");
 		hb.setValue(locale.getLanguage());
-		List<HeaderAttribute> has = new ArrayList<HeaderAttribute>();
+		List<HeaderAttribute> has = new ArrayList<>();
 		has.add(ha);
 		has.add(hb);
 		Collection<HeaderAttribute> headerAttributes;

@@ -25,6 +25,7 @@ public class LicenseLocatorInvocationDelegate extends AbstractInvocationDelegate
 	@Override
 	public Object getLInfoObject(int sessionId) throws Exception {
 		return new LObjectInfo("ALL") {
+
 			@Override
 			public boolean ok(String number) {
 				return true;

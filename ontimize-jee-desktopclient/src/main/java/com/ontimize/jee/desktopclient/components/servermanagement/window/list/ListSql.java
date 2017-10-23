@@ -36,11 +36,10 @@ import com.ontimize.gui.ValueChangeDataComponent;
 import com.ontimize.gui.ValueChangeListener;
 import com.ontimize.gui.field.AccessForm;
 import com.ontimize.gui.field.DataComponent;
-import com.ontimize.plaf.utils.ReflectionUtils;
+import com.ontimize.jee.common.tools.ReflectionTools;
 
 /**
- * TODO Este componente esta muy picado add-hoc para las consulas SQL, pero se podria mejorar de cara a poder utilizar listas en las aplicaciones.
- * TODO Copiado de UList de utilmize
+ * TODO Este componente esta muy picado add-hoc para las consulas SQL, pero se podria mejorar de cara a poder utilizar listas en las aplicaciones. TODO Copiado de UList de utilmize
  */
 public class ListSql extends JScrollPane implements DataComponent, AccessForm, ValueChangeDataComponent {
 
@@ -49,7 +48,7 @@ public class ListSql extends JScrollPane implements DataComponent, AccessForm, V
 	protected JList				list;
 
 	/** The attr. */
-	protected String attr;
+	protected String			attr;
 
 	/**
 	 * Instantiates a new u list.
@@ -180,7 +179,7 @@ public class ListSql extends JScrollPane implements DataComponent, AccessForm, V
 			this.deleteData();
 		} else if (obj instanceof List) {
 			this.deleteData();
-			for (Object o : ((List) obj)) {
+			for (Object o : (List) obj) {
 				this.addEntry(o);
 			}
 		} else {
@@ -213,10 +212,11 @@ public class ListSql extends JScrollPane implements DataComponent, AccessForm, V
 		}
 
 		if (hashtable.containsKey("renderer")) {
-			ListCellRenderer cellRenderer = ReflectionUtils.newInstance((String) hashtable.get("renderer"), ListCellRenderer.class, this);
+			ListCellRenderer cellRenderer = ReflectionTools.newInstance((String) hashtable.get("renderer"), ListCellRenderer.class, this);
 			this.list.setCellRenderer(cellRenderer);
 		} else {
 			this.list.setCellRenderer(new DefaultListCellRenderer() {
+
 				@Override
 				public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 					Component listCellRendererComponent = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
@@ -234,6 +234,7 @@ public class ListSql extends JScrollPane implements DataComponent, AccessForm, V
 		if (selection != null) {
 			if ("no".equals(selection)) {
 				this.list.setSelectionModel(new DefaultListSelectionModel() {
+
 					@Override
 					public void setSelectionInterval(int index0, int index1) {
 						super.setSelectionInterval(-1, -1);

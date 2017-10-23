@@ -74,7 +74,7 @@ public class Chronometer {
 	 * @return the long
 	 */
 	public long timeFromlastElapsedMs() {
-		return System.currentTimeMillis() - ((this.lastElapsed == 0) ? this.start : this.lastElapsed);
+		return System.currentTimeMillis() - (this.lastElapsed == 0 ? this.start : this.lastElapsed);
 	}
 
 	public double timeFromLastElapsedSeconds() {

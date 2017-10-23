@@ -23,7 +23,7 @@ import com.ontimize.jee.common.tools.ReflectionTools;
  */
 public class OntimizeTableMetaDataContext extends TableMetaDataContext {
 
-	private TableMetaDataProvider metaDataProviderCopy;
+	private TableMetaDataProvider	metaDataProviderCopy;
 	private boolean					processed;
 
 	/**

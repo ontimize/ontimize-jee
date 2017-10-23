@@ -24,7 +24,7 @@ import com.ontimize.jee.desktopclient.spring.BeansFactory;
 public class RemoteOperationDelegate implements ICallbackEventListener {
 
 	/** The logger. */
-	private final static Logger					logger	= LoggerFactory.getLogger(RemoteOperationDelegate.class);
+	private static final Logger					logger	= LoggerFactory.getLogger(RemoteOperationDelegate.class);
 	/** The class name. */
 	private final String						className;
 	/** The parameters. */
@@ -57,8 +57,8 @@ public class RemoteOperationDelegate implements ICallbackEventListener {
 	public void run() {
 		this.webSocketClientHandler.addCallbackEventListener(this);
 		try {
-			this.webSocketClientHandler.sendMessage(RemoteOperationStatuses.WEBSOCKET_MESSAGE_TYPE_REQUEST, this.operationId, new RemoteOperationRequestMessage(this.className,
-					this.parameters));
+			this.webSocketClientHandler.sendMessage(RemoteOperationStatuses.WEBSOCKET_MESSAGE_TYPE_REQUEST, this.operationId,
+			        new RemoteOperationRequestMessage(this.className, this.parameters));
 		} catch (Exception error) {
 			this.close();
 			RemoteOperationDelegate.logger.error(null, error);

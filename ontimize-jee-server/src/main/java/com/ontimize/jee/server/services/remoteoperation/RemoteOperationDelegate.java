@@ -21,7 +21,7 @@ import com.ontimize.jee.server.callback.ICallbackHandler;
 public class RemoteOperationDelegate implements IRemoteOperationListener {
 
 	/** The logger. */
-	private final static Logger		logger	= LoggerFactory.getLogger(RemoteOperationDelegate.class);
+	private static final Logger		logger	= LoggerFactory.getLogger(RemoteOperationDelegate.class);
 
 	/** The operation. */
 	private IRemoteOperation		operation;

@@ -9,18 +9,18 @@ import javax.swing.JPanel;
 public class SliderBar extends JPanel {
 
 	// The preferred initial width of the slider bar
-	private static int PREFERRED_WIDTH = 300;
+	private static int		PREFERRED_WIDTH	= 300;
 
 	// box layout to contain slider bar sections arranged vertically
-	private final BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
+	private final BoxLayout	boxLayout		= new BoxLayout(this, BoxLayout.Y_AXIS);
 
 	// the currently expanded section
-	private SlideBarSection currentSection = null;
+	private SlideBarSection	currentSection	= null;
 
-	SlideBarMode thisMode;
+	SlideBarMode			thisMode;
 
-	boolean	showArrow;
-	boolean	animate	= false;
+	boolean					showArrow;
+	boolean					animate			= false;
 
 	public SliderBar(SlideBarMode mode, boolean showArrow, int preferredWidth, boolean animate) {
 		this.showArrow = showArrow;

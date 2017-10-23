@@ -12,7 +12,8 @@ import com.ontimize.gui.table.CellRenderer;
  * This class renders a JProgressBar in a table cell.
  */
 public class ProgressRenderer extends CellRenderer implements TableCellRenderer {
-	private static final long	serialVersionUID	= -4716351834035301680L;
+
+	private static final long serialVersionUID = -4716351834035301680L;
 
 	/**
 	 * Constructor for ProgressRenderer.

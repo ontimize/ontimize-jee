@@ -9,7 +9,7 @@ import java.util.BitSet;
 public final class ByteTools {
 
 	/** The Constant BITS_PER_BYE. */
-	public static final int	BITS_PER_BYTE	= 8;
+	public static final int BITS_PER_BYTE = 8;
 
 	/**
 	 * Instantiates a new byte utils.
@@ -26,7 +26,7 @@ public final class ByteTools {
 	 * @return La representacion hexadecimal
 	 */
 	public static String toHexString(byte impr) {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		int bajo = impr & 0x0F;
 		int alto = impr & 0xF0;
 		alto = alto >> 4;
@@ -49,7 +49,7 @@ public final class ByteTools {
 	 * @return the string
 	 */
 	public static String toHexString(byte[] bytes, int offset, int size, String spliter) {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		for (int i = offset, tam = size; i < tam; i++) {
 			sb.append(ByteTools.toHexString(bytes[i]));
 			sb.append(spliter);
@@ -76,7 +76,7 @@ public final class ByteTools {
 	 * @return the string
 	 */
 	private static String toBinaryString(byte b) {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		for (int sh = 7; sh >= 0; sh--) {
 			sb.append((b >> sh) & 1);
 		}
@@ -109,7 +109,7 @@ public final class ByteTools {
 	 * @return String
 	 */
 	private static String toBinaryString(byte[] bytes, int offset, int tam, String spliter) {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		for (int i = offset; i < tam; i++) {
 			sb.append(ByteTools.toBinaryString(bytes[i]));
 			sb.append(spliter);
@@ -233,7 +233,7 @@ public final class ByteTools {
 		int res = 0;
 		int[] aux = new int[tam];
 		for (int i = tam - 1; i >= 0; i--) {
-			aux[i] = (p[i] < 0) ? 256 + p[i] : p[i];
+			aux[i] = p[i] < 0 ? 256 + p[i] : p[i];
 		}
 		for (int i = tam - 1; i >= 0; i--) {
 			res = (res * 256) + aux[i];
@@ -269,7 +269,7 @@ public final class ByteTools {
 		int[] uno = new int[1];
 
 		for (int i = 0; i < tam; i++) {
-			aux[i] = (p[i] < 0) ? 256 + p[i] : p[i];
+			aux[i] = p[i] < 0 ? 256 + p[i] : p[i];
 		}
 
 		for (int i = 0; i < tam; i++) {

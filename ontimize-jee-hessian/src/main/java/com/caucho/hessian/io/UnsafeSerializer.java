@@ -1,18 +1,16 @@
 /*
- * Copyright (c) 2001-2008 Caucho Technology, Inc. All rights reserved. The Apache Software License, Version 1.1 Redistribution and use in source and
- * binary forms, with or without modification, are permitted provided that the following conditions are met: 1. Redistributions of source code must
- * retain the above copyright notice, this list of conditions and the following disclaimer. 2. Redistributions in binary form must reproduce the above
- * copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
- * 3. The end-user documentation included with the redistribution, if any, must include the following acknowlegement: "This product includes software
- * developed by the Caucho Technology (http://www.caucho.com/)." Alternately, this acknowlegement may appear in the software itself, if and wherever
- * such third-party acknowlegements normally appear. 4. The names "Burlap", "Resin", and "Caucho" must not be used to endorse or promote products
- * derived from this software without prior written permission. For written permission, please contact info@caucho.com. 5. Products derived from this
- * software may not be called "Resin" nor may "Resin" appear in their names without prior written permission of Caucho Technology. THIS SOFTWARE IS
- * PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL CAUCHO TECHNOLOGY OR ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * Copyright (c) 2001-2008 Caucho Technology, Inc. All rights reserved. The Apache Software License, Version 1.1 Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met: 1. Redistributions of source code must retain the above copyright notice, this list of conditions and
+ * the following disclaimer. 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution. 3. The end-user documentation included with the redistribution, if any, must include the following acknowlegement: "This
+ * product includes software developed by the Caucho Technology (http://www.caucho.com/)." Alternately, this acknowlegement may appear in the software itself, if and wherever such
+ * third-party acknowlegements normally appear. 4. The names "Burlap", "Resin", and "Caucho" must not be used to endorse or promote products derived from this software without
+ * prior written permission. For written permission, please contact info@caucho.com. 5. Products derived from this software may not be called "Resin" nor may "Resin" appear in
+ * their names without prior written permission of Caucho Technology. THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL CAUCHO TECHNOLOGY OR ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+ * BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+ * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * @author Scott Ferguson
  */
 
@@ -28,16 +26,16 @@ import java.util.WeakHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sun.misc.Unsafe;
-
 import com.caucho.hessian.HessianUnshared;
+
+import sun.misc.Unsafe;
 
 /**
  * Serializing an object for known object types.
  */
 public class UnsafeSerializer extends AbstractSerializer {
 
-	private static final Logger													log				= LoggerFactory.getLogger(UnsafeSerializer.class);
+	private static final Logger													logger			= LoggerFactory.getLogger(UnsafeSerializer.class);
 	private static final Unsafe													UNSAFE;
 	private static final WeakHashMap<Class<?>, SoftReference<UnsafeSerializer>>	SERIALIZER_MAP	= new WeakHashMap<>();
 	private static boolean														isEnabled;
@@ -66,7 +64,7 @@ public class UnsafeSerializer extends AbstractSerializer {
 					base = new UnsafeSerializer(cl);
 				}
 
-				baseRef = new SoftReference<UnsafeSerializer>(base);
+				baseRef = new SoftReference<>(base);
 				UnsafeSerializer.SERIALIZER_MAP.put(cl, baseRef);
 			}
 
@@ -75,8 +73,8 @@ public class UnsafeSerializer extends AbstractSerializer {
 	}
 
 	protected void introspect(Class<?> cl) {
-		ArrayList<Field> primitiveFields = new ArrayList<Field>();
-		ArrayList<Field> compoundFields = new ArrayList<Field>();
+		ArrayList<Field> primitiveFields = new ArrayList<>();
+		ArrayList<Field> compoundFields = new ArrayList<>();
 
 		for (; cl != null; cl = cl.getSuperclass()) {
 			Field[] fields = cl.getDeclaredFields();
@@ -99,7 +97,7 @@ public class UnsafeSerializer extends AbstractSerializer {
 			}
 		}
 
-		ArrayList<Field> fields = new ArrayList<Field>();
+		ArrayList<Field> fields = new ArrayList<>();
 		fields.addAll(primitiveFields);
 		fields.addAll(compoundFields);
 
@@ -194,8 +192,7 @@ public class UnsafeSerializer extends AbstractSerializer {
 			return new FloatFieldSerializer(field);
 		} else if (String.class.equals(type)) {
 			return new StringFieldSerializer(field);
-		} else if (java.util.Date.class.equals(type) || java.sql.Date.class.equals(type) || java.sql.Timestamp.class.equals(type) || java.sql.Time.class
-				.equals(type)) {
+		} else if (java.util.Date.class.equals(type) || java.sql.Date.class.equals(type) || java.sql.Timestamp.class.equals(type) || java.sql.Time.class.equals(type)) {
 			return new DateFieldSerializer(field);
 		} else {
 			return new ObjectFieldSerializer(field);
@@ -203,10 +200,12 @@ public class UnsafeSerializer extends AbstractSerializer {
 	}
 
 	abstract static class FieldSerializer {
+
 		abstract void serialize(AbstractHessianOutput out, Object obj) throws IOException;
 	}
 
 	final static class ObjectFieldSerializer extends FieldSerializer {
+
 		private final Field	_field;
 		private final long	_offset;
 
@@ -228,13 +227,13 @@ public class UnsafeSerializer extends AbstractSerializer {
 			} catch (RuntimeException e) {
 				throw new RuntimeException(e.getMessage() + "\n field: " + this._field.getDeclaringClass().getName() + '.' + this._field.getName(), e);
 			} catch (IOException e) {
-				throw new IOExceptionWrapper(e.getMessage() + "\n field: " + this._field.getDeclaringClass().getName() + '.' + this._field.getName(),
-						e);
+				throw new IOExceptionWrapper(e.getMessage() + "\n field: " + this._field.getDeclaringClass().getName() + '.' + this._field.getName(), e);
 			}
 		}
 	}
 
 	final static class BooleanFieldSerializer extends FieldSerializer {
+
 		private final Field	field;
 		private final long	offset;
 
@@ -256,6 +255,7 @@ public class UnsafeSerializer extends AbstractSerializer {
 	}
 
 	final static class ByteFieldSerializer extends FieldSerializer {
+
 		private final Field	field;
 		private final long	offset;
 
@@ -277,6 +277,7 @@ public class UnsafeSerializer extends AbstractSerializer {
 	}
 
 	final static class CharFieldSerializer extends FieldSerializer {
+
 		private final Field	field;
 		private final long	offset;
 
@@ -298,6 +299,7 @@ public class UnsafeSerializer extends AbstractSerializer {
 	}
 
 	final static class ShortFieldSerializer extends FieldSerializer {
+
 		private final Field	field;
 		private final long	offset;
 
@@ -319,6 +321,7 @@ public class UnsafeSerializer extends AbstractSerializer {
 	}
 
 	final static class IntFieldSerializer extends FieldSerializer {
+
 		private final Field	field;
 		private final long	offset;
 
@@ -340,6 +343,7 @@ public class UnsafeSerializer extends AbstractSerializer {
 	}
 
 	final static class LongFieldSerializer extends FieldSerializer {
+
 		private final Field	field;
 		private final long	offset;
 
@@ -361,6 +365,7 @@ public class UnsafeSerializer extends AbstractSerializer {
 	}
 
 	final static class FloatFieldSerializer extends FieldSerializer {
+
 		private final Field	field;
 		private final long	offset;
 
@@ -382,6 +387,7 @@ public class UnsafeSerializer extends AbstractSerializer {
 	}
 
 	final static class DoubleFieldSerializer extends FieldSerializer {
+
 		private final Field	field;
 		private final long	offset;
 
@@ -403,6 +409,7 @@ public class UnsafeSerializer extends AbstractSerializer {
 	}
 
 	final static class StringFieldSerializer extends FieldSerializer {
+
 		private final Field	field;
 		private final long	offset;
 
@@ -424,6 +431,7 @@ public class UnsafeSerializer extends AbstractSerializer {
 	}
 
 	final static class DateFieldSerializer extends FieldSerializer {
+
 		private final Field	field;
 		private final long	offset;
 
@@ -473,8 +481,8 @@ public class UnsafeSerializer extends AbstractSerializer {
 			if ("false".equals(unsafeProp)) {
 				isEnabled = false;
 			}
-		} catch (Throwable e) {
-			UnsafeSerializer.log.trace(e.toString(), e);
+		} catch (Exception e) {
+			UnsafeSerializer.logger.trace(e.toString(), e);
 		}
 
 		UNSAFE = unsafe;

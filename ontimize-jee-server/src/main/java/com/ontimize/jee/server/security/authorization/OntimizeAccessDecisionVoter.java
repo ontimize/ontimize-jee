@@ -46,39 +46,39 @@ public class OntimizeAccessDecisionVoter implements AccessDecisionVoter<Object>,
 	 * {@inheritDoc}
 	 */
 	@Override
-    public boolean supports(final ConfigAttribute configattribute) {
+	public boolean supports(final ConfigAttribute configattribute) {
 		return true;// & ((this.defaultVoter == null) || ((this.defaultVoter != null) && this.defaultVoter.supports(configattribute)));
-    }
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean supports(final Class<?> arg0) {
-		if (((this.defaultVoter == null) || (!this.defaultVoter.supports(arg0)))) {
-            return arg0.equals(ReflectiveMethodInvocation.class);
-        }
-        return true;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean supports(final Class<?> arg0) {
+		if ((this.defaultVoter == null) || !this.defaultVoter.supports(arg0)) {
+			return arg0.equals(ReflectiveMethodInvocation.class);
+		}
+		return true;
+	}
 
-    /**
-     * Vote default.
-     *
-     * @param arg0
-     *            arg0
-     * @param arg1
-     *            arg1
-     * @param arg2
-     *            arg2
-     * @return the int
-     */
-    private int voteDefault(final Authentication arg0, final Object arg1, final Collection<ConfigAttribute> arg2) {
-        if (this.defaultVoter == null) {
-            return AccessDecisionVoter.ACCESS_ABSTAIN;
-        } else {
-            return this.defaultVoter.vote(arg0, arg1, arg2);
-        }
-    }
+	/**
+	 * Vote default.
+	 *
+	 * @param arg0
+	 *            arg0
+	 * @param arg1
+	 *            arg1
+	 * @param arg2
+	 *            arg2
+	 * @return the int
+	 */
+	private int voteDefault(final Authentication arg0, final Object arg1, final Collection<ConfigAttribute> arg2) {
+		if (this.defaultVoter == null) {
+			return AccessDecisionVoter.ACCESS_ABSTAIN;
+		} else {
+			return this.defaultVoter.vote(arg0, arg1, arg2);
+		}
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -88,33 +88,33 @@ public class OntimizeAccessDecisionVoter implements AccessDecisionVoter<Object>,
 		if (object instanceof ReflectiveMethodInvocation) {
 			final ReflectiveMethodInvocation rmi = (ReflectiveMethodInvocation) object;
 			final Class<?> apiClass = rmi.getMethod().getDeclaringClass();
-            Secured findAnnotation = AnnotationUtils.findAnnotation(rmi.getMethod(), Secured.class);
-            boolean containsCustomRole = false;
-            if (findAnnotation != null) {
-                List<String> rolesToFilter = Arrays.asList(findAnnotation.value());
-                containsCustomRole = rolesToFilter.contains(PermissionsProviderSecured.SECURED);
-            }
-            if ((findAnnotation == null) || containsCustomRole) {
-			final String methodName = rmi.getMethod().getName();
-			final String property = apiClass.getCanonicalName() + "/" + methodName;
-			final List<String> roles = new ArrayList<String>();
-			for (final GrantedAuthority ga : authentication.getAuthorities()) {
-				roles.add(ga.getAuthority());
+			Secured findAnnotation = AnnotationUtils.findAnnotation(rmi.getMethod(), Secured.class);
+			boolean containsCustomRole = false;
+			if (findAnnotation != null) {
+				List<String> rolesToFilter = Arrays.asList(findAnnotation.value());
+				containsCustomRole = rolesToFilter.contains(PermissionsProviderSecured.SECURED);
 			}
-			try {
-				if (this.authorizator.hasPermission(property, roles)) {
-					return AccessDecisionVoter.ACCESS_GRANTED;
+			if ((findAnnotation == null) || containsCustomRole) {
+				final String methodName = rmi.getMethod().getName();
+				final String property = apiClass.getCanonicalName() + "/" + methodName;
+				final List<String> roles = new ArrayList<>();
+				for (final GrantedAuthority ga : authentication.getAuthorities()) {
+					roles.add(ga.getAuthority());
 				}
-			} catch (final PermissionValidationException e) {
-				// ups it doesn't validate the 0 checkers I passed to it
+				try {
+					if (this.authorizator.hasPermission(property, roles)) {
+						return AccessDecisionVoter.ACCESS_GRANTED;
+					}
+				} catch (final PermissionValidationException e) {
+					// ups it doesn't validate the 0 checkers I passed to it
+				}
+				OntimizeAccessDecisionVoter.logger.error("This roles:" + roles.toString() + " have not access to:" + property);
 			}
-			OntimizeAccessDecisionVoter.logger.error("This roles:" + roles.toString() + " have not access to:" + property);
-            }
-            return this.voteDefault(authentication, object, attributes);
+			return this.voteDefault(authentication, object, attributes);
 		} else if (object instanceof FilterInvocation) {
 			return AccessDecisionVoter.ACCESS_GRANTED;
 		}
-        return this.voteDefault(authentication, object, attributes);
+		return this.voteDefault(authentication, object, attributes);
 	}
 
 	/**

@@ -20,8 +20,8 @@ public class ClientAuthentication {
 
 		SocketConfig config = SocketConfig.custom().setSoKeepAlive(true).setSoTimeout(5000).build();
 		CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-		CloseableHttpClient httpclient = HttpClients.custom().disableAutomaticRetries().disableAuthCaching()
-				.setDefaultCredentialsProvider(credentialsProvider).setDefaultSocketConfig(config).build();
+		CloseableHttpClient httpclient = HttpClients.custom().disableAutomaticRetries().disableAuthCaching().setDefaultCredentialsProvider(credentialsProvider)
+		        .setDefaultSocketConfig(config).build();
 
 		credentialsProvider.setCredentials(new AuthScope("localhost", 9999), new UsernamePasswordCredentials("username", "password"));
 

@@ -24,6 +24,7 @@ import com.ontimize.jee.server.security.encrypt.IPasswordEncryptHelper;
  * @author joaquin.romero
  */
 public class OntimizeAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider implements ApplicationContextAware {
+
 	public final static Object				NO_AUTHENTICATION_TOKEN	= new Object();
 
 	private ISecurityUserInformationService	userInformationService;

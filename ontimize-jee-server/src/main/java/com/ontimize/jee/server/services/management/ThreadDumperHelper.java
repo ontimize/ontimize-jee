@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 @Lazy(value = true)
 public class ThreadDumperHelper {
 
-
 	/**
 	 * Call this method from your application whenever you want to dump the heap snapshot into a file.
 	 *

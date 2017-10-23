@@ -1,18 +1,16 @@
 /*
- * Copyright (c) 2001-2008 Caucho Technology, Inc. All rights reserved. The Apache Software License, Version 1.1 Redistribution and use in source and
- * binary forms, with or without modification, are permitted provided that the following conditions are met: 1. Redistributions of source code must
- * retain the above copyright notice, this list of conditions and the following disclaimer. 2. Redistributions in binary form must reproduce the above
- * copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
- * 3. The end-user documentation included with the redistribution, if any, must include the following acknowlegement: "This product includes software
- * developed by the Caucho Technology (http://www.caucho.com/)." Alternately, this acknowlegement may appear in the software itself, if and wherever
- * such third-party acknowlegements normally appear. 4. The names "Burlap", "Resin", and "Caucho" must not be used to endorse or promote products
- * derived from this software without prior written permission. For written permission, please contact info@caucho.com. 5. Products derived from this
- * software may not be called "Resin" nor may "Resin" appear in their names without prior written permission of Caucho Technology. THIS SOFTWARE IS
- * PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL CAUCHO TECHNOLOGY OR ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * Copyright (c) 2001-2008 Caucho Technology, Inc. All rights reserved. The Apache Software License, Version 1.1 Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met: 1. Redistributions of source code must retain the above copyright notice, this list of conditions and
+ * the following disclaimer. 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution. 3. The end-user documentation included with the redistribution, if any, must include the following acknowlegement: "This
+ * product includes software developed by the Caucho Technology (http://www.caucho.com/)." Alternately, this acknowlegement may appear in the software itself, if and wherever such
+ * third-party acknowlegements normally appear. 4. The names "Burlap", "Resin", and "Caucho" must not be used to endorse or promote products derived from this software without
+ * prior written permission. For written permission, please contact info@caucho.com. 5. Products derived from this software may not be called "Resin" nor may "Resin" appear in
+ * their names without prior written permission of Caucho Technology. THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL CAUCHO TECHNOLOGY OR ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+ * BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+ * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * @author Scott Ferguson
  */
 
@@ -41,10 +39,9 @@ import com.caucho.hessian.HessianException;
  */
 public class ContextSerializerFactory {
 
-	private static final Logger																log							= LoggerFactory
-																																.getLogger(ContextSerializerFactory.class);
+	private static final Logger																log							= LoggerFactory.getLogger(ContextSerializerFactory.class);
 
-	private static final WeakHashMap<ClassLoader, SoftReference<ContextSerializerFactory>>	CONTEXT_REF_MAP				= new WeakHashMap<ClassLoader, SoftReference<ContextSerializerFactory>>();
+	private static final WeakHashMap<ClassLoader, SoftReference<ContextSerializerFactory>>	CONTEXT_REF_MAP				= new WeakHashMap<>();
 
 	private static final ClassLoader														SYSTEM_CLASS_LOADER;
 
@@ -55,29 +52,29 @@ public class ContextSerializerFactory {
 	private ContextSerializerFactory														parent;
 	private final WeakReference<ClassLoader>												loaderRef;
 
-	private final HashSet<String>															serializerFiles				= new HashSet<String>();
-	private final HashSet<String>															deserializerFiles			= new HashSet<String>();
+	private final HashSet<String>															serializerFiles				= new HashSet<>();
+	private final HashSet<String>															deserializerFiles			= new HashSet<>();
 
-	private final HashMap<String, Serializer>												serializerClassMap			= new HashMap<String, Serializer>();
+	private final HashMap<String, Serializer>												serializerClassMap			= new HashMap<>();
 
-	private final ConcurrentHashMap<String, Serializer>										customSerializerMap			= new ConcurrentHashMap<String, Serializer>();
+	private final ConcurrentHashMap<String, Serializer>										customSerializerMap			= new ConcurrentHashMap<>();
 
-	private final HashMap<Class<?>, Serializer>												serializerInterfaceMap		= new HashMap<Class<?>, Serializer>();
+	private final HashMap<Class<?>, Serializer>												serializerInterfaceMap		= new HashMap<>();
 
-	private final HashMap<String, Deserializer>												deserializerClassMap		= new HashMap<String, Deserializer>();
+	private final HashMap<String, Deserializer>												deserializerClassMap		= new HashMap<>();
 
-	private final HashMap<String, Deserializer>												deserializerClassNameMap	= new HashMap<String, Deserializer>();
+	private final HashMap<String, Deserializer>												deserializerClassNameMap	= new HashMap<>();
 
-	private final ConcurrentHashMap<String, Deserializer>									customDeserializerMap		= new ConcurrentHashMap<String, Deserializer>();
+	private final ConcurrentHashMap<String, Deserializer>									customDeserializerMap		= new ConcurrentHashMap<>();
 
-	private final HashMap<Class<?>, Deserializer>											deserializerInterfaceMap	= new HashMap<Class<?>, Deserializer>();
+	private final HashMap<Class<?>, Deserializer>											deserializerInterfaceMap	= new HashMap<>();
 
 	public ContextSerializerFactory(ContextSerializerFactory parent, ClassLoader loader) {
 		if (loader == null) {
 			loader = ContextSerializerFactory.SYSTEM_CLASS_LOADER;
 		}
 
-		this.loaderRef = new WeakReference<ClassLoader>(loader);
+		this.loaderRef = new WeakReference<>(loader);
 
 		this.init();
 	}
@@ -104,7 +101,7 @@ public class ContextSerializerFactory {
 				}
 
 				factory = new ContextSerializerFactory(parent, loader);
-				factoryRef = new SoftReference<ContextSerializerFactory>(factory);
+				factoryRef = new SoftReference<>(factory);
 
 				ContextSerializerFactory.CONTEXT_REF_MAP.put(loader, factoryRef);
 			}
@@ -320,14 +317,12 @@ public class ContextSerializerFactory {
 						try {
 							serializerClass = Class.forName(serializerName, false, classLoader);
 						} catch (ClassNotFoundException e) {
-							ContextSerializerFactory.log.info("{}: {} is not available in this context: {}", url, serializerName,
-									this.getClassLoader());
+							ContextSerializerFactory.log.info("{}: {} is not available in this context: {}", url, serializerName, this.getClassLoader());
 							continue;
 						}
 
 						if (!type.isAssignableFrom(serializerClass)) {
-							throw new HessianException(
-									url + ": " + serializerClass.getName() + " is invalid because it does not implement " + type.getName());
+							throw new HessianException(url + ": " + serializerClass.getName() + " is invalid because it does not implement " + type.getName());
 						}
 
 						classMap.put(apiClass, serializerClass);

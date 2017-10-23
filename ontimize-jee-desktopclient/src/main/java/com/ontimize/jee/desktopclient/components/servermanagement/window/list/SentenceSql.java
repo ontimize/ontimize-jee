@@ -16,13 +16,13 @@ import com.ontimize.gui.MainApplication;
 public class SentenceSql {
 
 	/** The next code. */
-	protected static int nextCode = -1;
+	protected static int	nextCode	= -1;
 
 	/** The code. */
-	protected int code;
+	protected int			code;
 
 	/** The sql sentence. */
-	protected String sqlSentence;
+	protected String		sqlSentence;
 
 	/**
 	 * Instantiates a new sentence.

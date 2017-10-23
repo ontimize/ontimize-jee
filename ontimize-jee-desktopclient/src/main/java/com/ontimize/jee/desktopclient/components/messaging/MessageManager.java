@@ -19,6 +19,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.ontimize.gui.ApplicationManager;
 import com.ontimize.gui.Form;
@@ -33,6 +34,9 @@ import com.ontimize.jee.desktopclient.components.WindowTools;
  * The Class UMessageManager.
  */
 public class MessageManager implements IMessageManager {
+
+	private static final Logger			logger					= LoggerFactory.getLogger(MessageManager.class);
+
 	/** The use advanced messaging. */
 	public static boolean				USE_ADVANCED_MESSAGING	= false;
 
@@ -117,7 +121,7 @@ public class MessageManager implements IMessageManager {
 	@Override
 	public void showExceptionMessage(Throwable error, Component parent, final Logger logger, String messageIfNullMessage) {
 		if (logger != null) {
-			logger.error(null, error);
+			MessageManager.logger.error(null, error);
 		}
 
 		if (this.isSilent(error)) {
@@ -325,7 +329,7 @@ public class MessageManager implements IMessageManager {
 			}
 			ImageIcon ico = this.getMessageIcon(messageType);
 			ToastMessage toastMessage = new ToastMessage(parent, blocking, translatedMessage, translatedDetail, ico, ToastMessage.MESSAGE_TIME_SHORT, null,
-					blocking ? ToastBlockingPanel.class : ToastNoblockingPanel.class, null, null, null);
+			        blocking ? ToastBlockingPanel.class : ToastNoblockingPanel.class, null, null, null);
 			Toast.showMessage(toastMessage);
 			return 0;
 		} finally {
@@ -352,8 +356,9 @@ public class MessageManager implements IMessageManager {
 	 * @see MessageDialog
 	 */
 	protected int oldMessageStyle(final Window w, final String translatedMessage, final MessageType messageType, final String detail, final ResourceBundle bundle) {
-		final ObjectWrapper<Integer> wrapper = new ObjectWrapper<Integer>();
+		final ObjectWrapper<Integer> wrapper = new ObjectWrapper<>();
 		SwingTools.invokeInEDTh(new Runnable() {
+
 			@Override
 			public void run() {
 				int res = MessageManager.this.oldMessageStyleInEDTh(w, translatedMessage, messageType, detail, bundle);
@@ -480,7 +485,7 @@ public class MessageManager implements IMessageManager {
 	 * @return true, if is silent
 	 */
 	protected boolean isSilent(Throwable t) {
-		return this.isParametrizedException(t) && (((IParametrizedException) t).isSilent());
+		return this.isParametrizedException(t) && ((IParametrizedException) t).isSilent();
 	}
 
 	/**
@@ -518,7 +523,7 @@ public class MessageManager implements IMessageManager {
 	@Override
 	public void registerMessageListener(IMessageListener listener) {
 		if (this.messageListeners == null) {
-			this.messageListeners = new ArrayList<IMessageListener>();
+			this.messageListeners = new ArrayList<>();
 		}
 		this.messageListeners.add(listener);
 	}

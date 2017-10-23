@@ -6,13 +6,12 @@ import java.util.Locale;
 import com.ontimize.gui.i18n.DatabaseResourceBundle;
 
 /**
- * The Class TmpDatabaseResourceBundle. Ontimize llama a la variable del Locale "locale" igual que se llama en la clase ResourceBundle, y eso no le
- * gusta nada a Hessian.
+ * The Class TmpDatabaseResourceBundle. Ontimize llama a la variable del Locale "locale" igual que se llama en la clase ResourceBundle, y eso no le gusta nada a Hessian.
  */
 public class TmpDatabaseResourceBundle extends DatabaseResourceBundle {
 
 	/** The mylocale. */
-	protected Locale	mylocale;
+	protected Locale mylocale;
 
 	/**
 	 * The Constructor.

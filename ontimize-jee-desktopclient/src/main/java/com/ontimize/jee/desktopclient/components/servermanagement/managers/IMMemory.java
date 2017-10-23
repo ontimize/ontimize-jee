@@ -32,14 +32,15 @@ import com.ontimize.jee.desktopclient.spring.BeansFactory;
  * The Class IMMemory.
  */
 public class IMMemory extends BasicInteractionManager {
-	private static final Logger logger = LoggerFactory.getLogger(IMMemory.class);
+
+	private static final Logger			logger	= LoggerFactory.getLogger(IMMemory.class);
 
 	@FormComponent(attr = "FILECHOOSER")
-	protected Row rowFileChooser;
+	protected Row						rowFileChooser;
 
-	protected EmbeddedJFileChooser fileChooser;
+	protected EmbeddedJFileChooser		fileChooser;
 
-	protected IServerManagementService serverManagement;
+	protected IServerManagementService	serverManagement;
 
 	public IMMemory() {
 		super();
@@ -53,7 +54,7 @@ public class IMMemory extends BasicInteractionManager {
 		this.fileChooser = new EmbeddedJFileChooser(EmbeddedJFileChooser.MODE.BOTH, new MemoryToFileListener());
 		this.fileChooser.setFileFilter(new FileNameExtensionFilter("BIN FILES", "bin"));
 		this.rowFileChooser.add(new JScrollPane(this.fileChooser),
-				new GridBagConstraints(0, 1, 3, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(2, 2, 2, 2), 0, 0));
+		        new GridBagConstraints(0, 1, 3, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(2, 2, 2, 2), 0, 0));
 
 		this.serverManagement = BeansFactory.getBean(IServerManagementService.class);
 	}

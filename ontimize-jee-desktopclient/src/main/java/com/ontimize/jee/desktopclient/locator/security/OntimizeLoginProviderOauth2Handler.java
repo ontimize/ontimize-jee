@@ -13,10 +13,10 @@ import com.ontimize.jee.common.tools.ObjectWrapper;
 
 public class OntimizeLoginProviderOauth2Handler {
 
-	private static final Logger	logger	= LoggerFactory.getLogger(OntimizeLoginProviderOauth2Handler.class);
+	private static final Logger logger = LoggerFactory.getLogger(OntimizeLoginProviderOauth2Handler.class);
 
 	public void doOauth2Authentication(final OntimizeLoginProvider provider, CloseableHttpResponse response)
-			throws InterruptedException, ConnectException, InvalidCredentialsException {
+	        throws InterruptedException, ConnectException, InvalidCredentialsException {
 		String location = response.getHeaders("Location")[0].getValue();
 		final LoginIntoOAuth2Dialog redirectDialog = new LoginIntoOAuth2Dialog();
 		final ObjectWrapper<String> redirectUrl = new ObjectWrapper<>();

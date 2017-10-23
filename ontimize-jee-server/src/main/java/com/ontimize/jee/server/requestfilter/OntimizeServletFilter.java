@@ -31,6 +31,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
  *
  */
 public class OntimizeServletFilter implements Filter {
+
 	public static final String	LOCALE_COUNTRY	= "locale-country";
 	public static final String	LOCALE_LANGUAGE	= "locale-language";
 	public static final String	LOCALE			= "locale";
@@ -53,8 +54,8 @@ public class OntimizeServletFilter implements Filter {
 			HttpServletRequest httpRequest = (HttpServletRequest) request;
 			String localeLanguage = httpRequest.getHeader(OntimizeServletFilter.LOCALE_LANGUAGE);
 			String localeCountry = httpRequest.getHeader(OntimizeServletFilter.LOCALE_COUNTRY);
-			localeLanguage = ((localeLanguage == null) || "".equals(localeLanguage)) ? "EN" : localeLanguage.toUpperCase();
-			localeCountry = ((localeCountry == null) || "".equals(localeCountry)) ? "GB" : localeCountry.toUpperCase();
+			localeLanguage = (localeLanguage == null) || "".equals(localeLanguage) ? "EN" : localeLanguage.toUpperCase();
+			localeCountry = (localeCountry == null) || "".equals(localeCountry) ? "GB" : localeCountry.toUpperCase();
 			request.setAttribute(OntimizeServletFilter.LOCALE_LANGUAGE, localeLanguage);
 			request.setAttribute(OntimizeServletFilter.LOCALE_COUNTRY, localeCountry);
 			request.setAttribute(OntimizeServletFilter.LOCALE, new Locale(localeLanguage, localeCountry));
@@ -64,14 +65,14 @@ public class OntimizeServletFilter implements Filter {
 			try {
 				filterChain.doFilter(request, response);
 				RequestContextHolder.getRequestAttributes().getAttribute("REQUEST_STATISTICS", RequestAttributes.SCOPE_REQUEST);
-			} catch (Throwable e) {
+			} catch (Exception e) {
 				OntimizeServletFilter.logger.error(null, e);
 			} finally {
 				time = System.currentTimeMillis() - time;
 				HttpSession session = httpRequest.getSession(false);
 				try {
-					OntimizeServletFilter.logger.debug("[APP TIME] Processing session request {} time: {} ms", session == null ? SecurityContextHolder.getContext()
-							.getAuthentication().getPrincipal() : session.getId(), time);
+					OntimizeServletFilter.logger.debug("[APP TIME] Processing session request {} time: {} ms",
+					        session == null ? SecurityContextHolder.getContext().getAuthentication().getPrincipal() : session.getId(), time);
 				} catch (Exception ex) {
 					OntimizeServletFilter.logger.debug("[APP TIME] Processing request time: {} ms", time);
 				}

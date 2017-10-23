@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
  */
 public class SwingTools {
 
-	private static final Logger	logger	= LoggerFactory.getLogger(SwingTools.class);
+	private static final Logger logger = LoggerFactory.getLogger(SwingTools.class);
 
 	/**
 	 * Invoke in ed th.

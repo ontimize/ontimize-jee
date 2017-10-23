@@ -90,7 +90,7 @@ public final class DefinitionParserUtil {
 				String val = node.getTextContent();
 				// to get around an issue with Spring Batch not parsing Spring EL
 				// we will do it for them
-				if (scope.equals("step") && (val.startsWith("#{") && val.endsWith("}")) && (!val.startsWith("#{jobParameters"))) {
+				if (scope.equals("step") && val.startsWith("#{") && val.endsWith("}") && !val.startsWith("#{jobParameters")) {
 					// Set up a new EL parser
 					ExpressionParser parser = new SpelExpressionParser();
 					// Parse the value

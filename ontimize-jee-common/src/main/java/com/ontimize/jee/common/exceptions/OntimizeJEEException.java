@@ -19,7 +19,7 @@ public class OntimizeJEEException extends Exception implements IParametrizedExce
 
 	/** The msg blocking. */
 	private final boolean		msgBlocking;
-	
+
 	/** The msg parameters. */
 	private final Object[]		msgParameters;
 
@@ -155,7 +155,7 @@ public class OntimizeJEEException extends Exception implements IParametrizedExce
 	 *            the writable stack trace
 	 */
 	public OntimizeJEEException(String message, Throwable cause, Object[] msgParameters, MessageType msgType, boolean msgBlocking, boolean silent, boolean enableSuppression,
-			boolean writableStackTrace) {
+	        boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
 		this.msgType = msgType == null ? MessageType.ERROR : msgType;
 		this.msgBlocking = msgBlocking;

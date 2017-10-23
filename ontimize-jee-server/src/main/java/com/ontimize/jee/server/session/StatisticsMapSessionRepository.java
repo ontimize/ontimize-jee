@@ -10,7 +10,6 @@ import com.ontimize.jee.common.tools.ReflectionTools;
 
 public class StatisticsMapSessionRepository extends MapSessionRepository {
 
-
 	public StatisticsMapSessionRepository() {
 		super();
 	}

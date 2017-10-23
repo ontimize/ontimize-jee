@@ -28,15 +28,16 @@ import com.ontimize.jee.desktopclient.spring.BeansFactory;
  * The Class IMLiveLogConsole.
  */
 public class IMSession extends BasicInteractionManager {
-	private static final Logger logger = LoggerFactory.getLogger(IMSession.class);
+
+	private static final Logger			logger	= LoggerFactory.getLogger(IMSession.class);
 
 	@FormComponent(attr = "RESULTS")
-	protected Table tResults;
+	protected Table						tResults;
 
 	@FormComponent(attr = "B_REQUEST")
-	protected Button bRequest;
+	protected Button					bRequest;
 
-	private IServerManagementService serverManagement;
+	private IServerManagementService	serverManagement;
 
 	public IMSession() {
 		super();
@@ -62,6 +63,7 @@ public class IMSession extends BasicInteractionManager {
 	}
 
 	public class RefreshSessionStatisticsListener implements ActionListener {
+
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			new Thread(new Runnable() {
@@ -90,8 +92,8 @@ public class IMSession extends BasicInteractionManager {
 								// }
 
 								Object attribute = nextSession.getAttribute("SPRING_SECURITY_SAVED_REQUEST");
-								res.addRecord(EntityResultTools.keysvalues("USER", id, "IP", attribute != null ? attribute : "", "BEGINDATE",
-										new Date(beginDate), "ENDDATE", new Date(lastAccessedTime), "EXPIRATIONTIME", maxInactiveIntervalInSeconds));
+								res.addRecord(EntityResultTools.keysvalues("USER", id, "IP", attribute != null ? attribute : "", "BEGINDATE", new Date(beginDate), "ENDDATE",
+								        new Date(lastAccessedTime), "EXPIRATIONTIME", maxInactiveIntervalInSeconds));
 							}
 							IMSession.this.tResults.setValue(res);
 						}

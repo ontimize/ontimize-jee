@@ -62,7 +62,7 @@ public class IMRequest extends BasicInteractionManager {
 						String serviceName = ((Vector<String>) selectedRowData.get("SERVICE_NAME")).get(0);
 						String methodName = ((Vector<String>) selectedRowData.get("METHOD_NAME")).get(0);
 						IMRequest.this.tDetails.setValue(IMRequest.this.serverManagement.getServiceStatistics(serviceName, methodName,
-			                    (Date) IMRequest.this.beforeDate.getDateValue(), (Date) IMRequest.this.afterDate.getValue()));
+						        (Date) IMRequest.this.beforeDate.getDateValue(), (Date) IMRequest.this.afterDate.getValue()));
 					} else {
 						MessageDialog.showErrorMessage(IMRequest.this.managedForm.getJDialog(), "E_SELECTED_METHOD");
 					}

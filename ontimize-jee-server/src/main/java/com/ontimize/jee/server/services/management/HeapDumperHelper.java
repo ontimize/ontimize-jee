@@ -15,9 +15,9 @@ import com.ontimize.jee.common.tools.ReflectionTools;
 @Component
 @Lazy(value = true)
 public class HeapDumperHelper {
-	// This is the name of the HotSpot Diagnostic MBean
-	private static final String						HOTSPOT_BEAN_NAME	= "com.sun.management:type=HotSpotDiagnostic";
 
+	// This is the name of the HotSpot Diagnostic MBean
+	private static final String	HOTSPOT_BEAN_NAME	= "com.sun.management:type=HotSpotDiagnostic";
 
 	// field to store the hotspot diagnostic MBean
 	private volatile Object		hotspotMBean;

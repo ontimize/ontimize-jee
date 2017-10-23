@@ -19,6 +19,7 @@ import com.ontimize.gui.images.ImageManager;
  * This class renders a JProgressBar in a table cell.
  */
 public class TaskStatusTableCellRenderer extends JLabel implements TableCellRenderer {
+
 	private static final long		serialVersionUID	= -4716351834035301680L;
 
 	private static final ImageIcon	iconRunning			= ImageManager.getIcon("ontimize-jee-images/loading_16x16.gif");
@@ -27,7 +28,7 @@ public class TaskStatusTableCellRenderer extends JLabel implements TableCellRend
 	private static final ImageIcon	iconError			= ImageManager.getIcon("ontimize-jee-images/error_16x16.png");
 	private static final ImageIcon	iconSucceed			= ImageManager.getIcon("ontimize-jee-images/succeed_16x16.png");
 
-	private static HashSet<JTable>	registeredTables	= new HashSet<JTable>();
+	private static HashSet<JTable>	registeredTables	= new HashSet<>();
 
 	/**
 	 * Constructor for ProgressRenderer.
@@ -87,8 +88,9 @@ public class TaskStatusTableCellRenderer extends JLabel implements TableCellRend
 	}
 
 	public static class CellImageObserver implements ImageObserver {
+
 		protected TaskTable	table;
-		protected int			columnIndex;
+		protected int		columnIndex;
 
 		public CellImageObserver(TaskTable table) {
 			super();

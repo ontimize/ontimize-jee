@@ -124,8 +124,8 @@ public class BeanPropertyRowMapper<T> implements RowMapper<T> {
 					bw.setPropertyValue(pd.getName(), value);
 				} catch (TypeMismatchException e) {
 					BeanPropertyRowMapper.logger
-					.error("Intercepted TypeMismatchException for row " + rowNumber + " and column '" + column + "' with value " + value + " when setting property '" + pd
-							.getName() + "' of type " + pd.getPropertyType() + " on object: " + mappedObject);
+					        .error("Intercepted TypeMismatchException for row " + rowNumber + " and column '" + column + "' with value " + value + " when setting property '" + pd
+					                .getName() + "' of type " + pd.getPropertyType() + " on object: " + mappedObject);
 					throw e;
 				}
 			}

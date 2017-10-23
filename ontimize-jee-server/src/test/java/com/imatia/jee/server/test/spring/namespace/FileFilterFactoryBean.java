@@ -10,7 +10,7 @@ import org.springframework.beans.factory.FactoryBean;
 
 public class FileFilterFactoryBean implements FactoryBean<Collection<FileFilter>> {
 
-	private final List<FileFilter>	filters	= new ArrayList<FileFilter>();
+	private final List<FileFilter> filters = new ArrayList<>();
 
 	@Override
 	public Collection<FileFilter> getObject() throws Exception {

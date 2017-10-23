@@ -20,7 +20,7 @@ import com.ontimize.jee.common.tools.ReflectionTools;
  */
 public class OntimizeSerializerFactory extends AbstractSerializerFactory {
 
-	private static final String	INNER_ONTIMIZE_MAP	= "innerontimizemap";
+	private static final String INNER_ONTIMIZE_MAP = "innerontimizemap";
 
 	/**
 	 * Instantiates a new ontimize serializer factory.
@@ -76,8 +76,8 @@ public class OntimizeSerializerFactory extends AbstractSerializerFactory {
 	}
 
 	/**
-	 * Serializer for classes extending {@link HashMap} or {@link Hashtable}. Lo que hacemos es no permitir explorar las propiedades de la parte del
-	 * Map (igual que hace el map serializer) y crear una variable ficticia para meter el contenido del map.
+	 * Serializer for classes extending {@link HashMap} or {@link Hashtable}. Lo que hacemos es no permitir explorar las propiedades de la parte del Map (igual que hace el map
+	 * serializer) y crear una variable ficticia para meter el contenido del map.
 	 *
 	 */
 	public static class MapExtendedClassSerializer extends JavaSerializer {
@@ -88,11 +88,11 @@ public class OntimizeSerializerFactory extends AbstractSerializerFactory {
 
 		@Override
 		protected void introspect(final Class<?> cl) {
-			ArrayList<Field> primitiveFields = new ArrayList<Field>();
-			ArrayList<Field> compoundFields = new ArrayList<Field>();
+			ArrayList<Field> primitiveFields = new ArrayList<>();
+			ArrayList<Field> compoundFields = new ArrayList<>();
 
 			for (Class<?> theClass = cl; theClass != null; theClass = theClass.getSuperclass()) {
-				if (theClass.equals(Hashtable.class) || (theClass.equals(HashMap.class))) {
+				if (theClass.equals(Hashtable.class) || theClass.equals(HashMap.class)) {
 					break;
 				}
 				Field[] fields = theClass.getDeclaredFields();
@@ -116,8 +116,7 @@ public class OntimizeSerializerFactory extends AbstractSerializerFactory {
 			}
 
 			Object ob = ReflectionTools.newInstance("java.lang.reflect.ReflectAccess");
-			Field field = (Field) ReflectionTools.invoke(ob, "newField", cl, OntimizeSerializerFactory.INNER_ONTIMIZE_MAP, Hashtable.class,
-					Member.PUBLIC, 0, "", null);
+			Field field = (Field) ReflectionTools.invoke(ob, "newField", cl, OntimizeSerializerFactory.INNER_ONTIMIZE_MAP, Hashtable.class, Member.PUBLIC, 0, "", null);
 			compoundFields.add(field);
 
 			ArrayList<Field> fields = new ArrayList<>();
@@ -136,6 +135,7 @@ public class OntimizeSerializerFactory extends AbstractSerializerFactory {
 			}
 
 			theFieldSerializers[theFieldSerializers.length - 1] = new FieldSerializer() {
+
 				@Override
 				void serialize(AbstractHessianOutput out, Object obj, Field field) throws IOException {
 					// write the map values

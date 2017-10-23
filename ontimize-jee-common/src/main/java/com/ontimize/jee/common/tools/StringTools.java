@@ -71,7 +71,7 @@ public final class StringTools {
 
 	public static String concatWithSeparator(String separator, boolean avoidEmpty, List<String> strings) {
 		StringBuilder sb = new StringBuilder();
-		if ((strings == null) || (strings.isEmpty())) {
+		if ((strings == null) || strings.isEmpty()) {
 			return "";
 		}
 		boolean someRecord = false;

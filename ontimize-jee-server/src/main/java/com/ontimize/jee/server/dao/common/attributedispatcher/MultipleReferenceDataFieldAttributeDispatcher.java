@@ -32,7 +32,7 @@ public class MultipleReferenceDataFieldAttributeDispatcher extends AbstractAttri
 			Hashtable<?, ?> hPrevious = result.getRecordValues(j);
 			// Keys and request columns must be selected
 
-			Hashtable<Object, Object> hKeysValues = new Hashtable<Object, Object>();
+			Hashtable<Object, Object> hKeysValues = new Hashtable<>();
 			List<Object> v = new ArrayList<>(multipleAttr.getCols());
 			v.addAll(lK);
 
@@ -67,20 +67,20 @@ public class MultipleReferenceDataFieldAttributeDispatcher extends AbstractAttri
 	}
 
 	@Override
-	public EntityResult processInsertAttribute(MultipleReferenceDataFieldAttribute attribute, InsertOperation insertOperation,
-			Map<?, ?> generatedKeysInParentEntity, Map<?, ?> attributesValuesInsertedInParentEntity, ApplicationContext applicationContext) {
+	public EntityResult processInsertAttribute(MultipleReferenceDataFieldAttribute attribute, InsertOperation insertOperation, Map<?, ?> generatedKeysInParentEntity,
+	        Map<?, ?> attributesValuesInsertedInParentEntity, ApplicationContext applicationContext) {
 		return null;
 	}
 
 	@Override
-	public EntityResult processUpdateAttribute(MultipleReferenceDataFieldAttribute attribute, UpdateOperation updateOperation,
-			Map<?, ?> generatedValuesInParentEntity, Map<?, ?> filterInParentEntity, ApplicationContext applicationContext) {
+	public EntityResult processUpdateAttribute(MultipleReferenceDataFieldAttribute attribute, UpdateOperation updateOperation, Map<?, ?> generatedValuesInParentEntity,
+	        Map<?, ?> filterInParentEntity, ApplicationContext applicationContext) {
 		return null;
 	}
 
 	@Override
-	public EntityResult processDeleteAttribute(MultipleReferenceDataFieldAttribute attribute, DeleteOperation deleteOperation,
-			Map<?, ?> generatedValuesInParentEntity, Map<?, ?> filterInParentEntity, ApplicationContext applicationContext) {
+	public EntityResult processDeleteAttribute(MultipleReferenceDataFieldAttribute attribute, DeleteOperation deleteOperation, Map<?, ?> generatedValuesInParentEntity,
+	        Map<?, ?> filterInParentEntity, ApplicationContext applicationContext) {
 		return null;
 	}
 

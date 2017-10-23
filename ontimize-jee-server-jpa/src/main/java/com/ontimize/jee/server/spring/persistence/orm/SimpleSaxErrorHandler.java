@@ -6,26 +6,21 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 /**
- * Simple {@code org.xml.sax.ErrorHandler} implementation:
- * logs warnings using the given Commons Logging logger instance,
- * and rethrows errors to discontinue the XML transformation.
+ * Simple {@code org.xml.sax.ErrorHandler} implementation: logs warnings using the given Commons Logging logger instance, and rethrows errors to discontinue the XML transformation.
  *
  * @author Juergen Hoeller
  * @since 1.2
  */
 public class SimpleSaxErrorHandler implements ErrorHandler {
 
-
-	private final Logger	logger;
+	private final Logger logger;
 
 	/**
-	 * Create a new SimpleSaxErrorHandler for the given
-	 * Commons Logging logger instance.
+	 * Create a new SimpleSaxErrorHandler for the given Commons Logging logger instance.
 	 */
 	public SimpleSaxErrorHandler(Logger logger) {
 		this.logger = logger;
 	}
-
 
 	@Override
 	public void warning(SAXParseException ex) throws SAXException {

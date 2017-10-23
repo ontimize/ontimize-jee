@@ -8,7 +8,7 @@ import java.util.Map;
 public class InsertOperation implements IOperation {
 
 	/** The values to insert. */
-	private Map<?, ?>	valuesToInsert;
+	private Map<?, ?> valuesToInsert;
 
 	/**
 	 * Instantiates a new insert operation.

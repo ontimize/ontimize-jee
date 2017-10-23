@@ -12,7 +12,8 @@ import java.util.concurrent.TimeoutException;
  * Invoke a callable aborting after a certain timout.
  */
 public final class TimeLimiter {
-	private final ExecutorService	executor;
+
+	private final ExecutorService executor;
 
 	/**
 	 * Create a new TimeLimiter that will use the provided executor to invoke the Callable.
@@ -26,9 +27,8 @@ public final class TimeLimiter {
 	}
 
 	/**
-	 * Invokes a specified Callable, timing out after the specified time limit. If the target method call finished before the limit is reached, the
-	 * return value or exception is propagated to the caller exactly as-is. If, on the other hand, the time limit is reached, we attempt to abort the
-	 * call to the Callable and throw an exception.
+	 * Invokes a specified Callable, timing out after the specified time limit. If the target method call finished before the limit is reached, the return value or exception is
+	 * propagated to the caller exactly as-is. If, on the other hand, the time limit is reached, we attempt to abort the call to the Callable and throw an exception.
 	 */
 	public <T> T callWithTimeout(Callable<T> callable, long duration, TimeUnit unit) throws Exception {
 		Future<T> future = this.executor.submit(callable);
@@ -63,6 +63,7 @@ public final class TimeLimiter {
 	 * Unchecked version of {@link java.util.concurrent.TimeoutException}.
 	 */
 	public static class UncheckedTimeoutException extends RuntimeException {
+
 		/**
 		 * Create a new instance with a given cause.
 		 */

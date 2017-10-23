@@ -34,7 +34,7 @@ public class DefaultValueToQLLiteralProcessor extends AbstractValueToQLLiteralPr
 			literal = "to_date('" + new SimpleDateFormat("yyyy-MM-dd").format((Date) value) + "', 'yyyy-mm-dd')";
 		} else if (value instanceof Collection<?>) {
 			literal = "";
-			for (Object o : ((Collection) value)) {
+			for (Object o : (Collection) value) {
 				literal += this.valueToLiteral(o) + ", ";
 			}
 			if (literal.length() > 0) {

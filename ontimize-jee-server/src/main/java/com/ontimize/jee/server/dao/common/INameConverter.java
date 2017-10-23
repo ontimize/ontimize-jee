@@ -3,8 +3,7 @@ package com.ontimize.jee.server.dao.common;
 import javax.sql.DataSource;
 
 /**
- * The Interface IBeanPropertyToDBConverter. Encargada de convertir los nombres de las propiedades de los beans a nombres de base de datos y
- * viceversa.
+ * The Interface IBeanPropertyToDBConverter. Encargada de convertir los nombres de las propiedades de los beans a nombres de base de datos y viceversa.
  */
 public interface INameConverter {
 

@@ -24,7 +24,7 @@ import com.ontimize.jee.server.configuration.OntimizeConfiguration;
 public class RemoteApplicationPreferencesServiceImpl implements IRemoteApplicationPreferencesService, ApplicationContextAware {
 
 	/** The implementation. */
-	private IRemoteApplicationPreferencesEngine	implementation;
+	private IRemoteApplicationPreferencesEngine implementation;
 
 	/**
 	 * (non-Javadoc)

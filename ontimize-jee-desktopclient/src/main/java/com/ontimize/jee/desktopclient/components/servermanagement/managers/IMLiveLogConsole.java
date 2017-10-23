@@ -19,15 +19,16 @@ import com.ontimize.jee.desktopclient.spring.BeansFactory;
  * The Class IMLiveLogConsole.
  */
 public class IMLiveLogConsole extends BasicInteractionManager {
-	private static final Logger logger = LoggerFactory.getLogger(IMLiveLogConsole.class);
+
+	private static final Logger	logger	= LoggerFactory.getLogger(IMLiveLogConsole.class);
 
 	@FormComponent(attr = "CONSOLE")
-	protected MemoDataField console;
+	protected MemoDataField		console;
 
 	@FormComponent(attr = "B_START")
-	protected Button	bStart;
+	protected Button			bStart;
 	@FormComponent(attr = "B_STOP")
-	protected Button	bStop;
+	protected Button			bStop;
 
 	public IMLiveLogConsole() {
 		super();

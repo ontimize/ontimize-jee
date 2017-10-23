@@ -21,12 +21,12 @@ public class AbstractInvocationDelegate implements IInvocationDelegate {
 	 * java.lang.Object[])
 	 */
 	@Override
-    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 		try {
 			return method.invoke(this, args);
-        } catch (InvocationTargetException e) {
-            throw e.getCause();
-        } catch (IllegalAccessException | IllegalArgumentException e) {
+		} catch (InvocationTargetException e) {
+			throw e.getCause();
+		} catch (IllegalAccessException | IllegalArgumentException e) {
 			throw new InvalidDelegateException(e);
 		}
 	}

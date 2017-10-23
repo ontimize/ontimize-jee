@@ -16,6 +16,7 @@ import com.ontimize.gui.images.ImageManager;
  * This class renders a JProgressBar in a table cell.
  */
 public class TaskResultTableCellRenderer extends JButton implements TableCellRenderer {
+
 	private static final long		serialVersionUID	= -4716351834035301680L;
 
 	public static final ImageIcon	iconResult			= ImageManager.getIcon("ontimize-jee-images/details_16x16.png");

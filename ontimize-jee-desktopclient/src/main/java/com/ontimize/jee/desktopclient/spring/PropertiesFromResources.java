@@ -1,8 +1,8 @@
 /**
  * PropertiesFromResources.java 18-abr-2013
  *
- * 
- * 
+ *
+ *
  */
 package com.ontimize.jee.desktopclient.spring;
 
@@ -19,25 +19,29 @@ import org.springframework.core.io.Resource;
 public class PropertiesFromResources {
 
 	/** The properties. */
-	protected Properties	properties;
+	protected Properties properties;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param resources el array de recursos
-	 * @throws IOException Si hay algún problema accediendo a los ficheros de propiedades.
+	 * @param resources
+	 *            el array de recursos
+	 * @throws IOException
+	 *             Si hay algún problema accediendo a los ficheros de propiedades.
 	 */
 	public PropertiesFromResources(final Resource[] resources) throws IOException {
 		super();
-		this.properties = joinResources(resources);
+		this.properties = this.joinResources(resources);
 	}
 
 	/**
 	 * Une las propiedades de varios ficheros de propiedades en un único Properties.
 	 *
-	 * @param resources el array de ficheros de recursos
+	 * @param resources
+	 *            el array de ficheros de recursos
 	 * @return the properties
-	 * @throws IOException Si hay algún problema accediendo a los ficheros de propiedades.
+	 * @throws IOException
+	 *             Si hay algún problema accediendo a los ficheros de propiedades.
 	 */
 	protected Properties joinResources(final Resource[] resources) throws IOException {
 		final Properties prop = new Properties();
@@ -50,39 +54,42 @@ public class PropertiesFromResources {
 	/**
 	 * Wrapper del containsValue del Properties interno.
 	 *
-	 * @param value the value
+	 * @param value
+	 *            the value
 	 * @return true, if successful
 	 */
 	public boolean containsValue(Object value) {
-		return properties.containsValue(value);
+		return this.properties.containsValue(value);
 	}
 
 	/**
 	 * Wrapper del containsKey del Properties interno.
 	 *
-	 * @param key the key
+	 * @param key
+	 *            the key
 	 * @return true, if successful
 	 */
 	public boolean containsKey(Object key) {
-		return properties.containsKey(key);
+		return this.properties.containsKey(key);
 	}
 
 	/**
 	 * Wrapper del getProperty del Properties interno.
 	 *
-	 * @param key the key
+	 * @param key
+	 *            the key
 	 * @return the property
 	 */
 	public String getProperty(String key) {
-		return properties.getProperty(key);
+		return this.properties.getProperty(key);
 	}
-	
+
 	/**
 	 * Obtiene el properties interno.
 	 *
 	 * @return the properties
 	 */
 	public Properties getProperties() {
-		return properties;
+		return this.properties;
 	}
 }

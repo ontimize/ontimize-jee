@@ -1,18 +1,16 @@
 /*
- * Copyright (c) 2001-2004 Caucho Technology, Inc. All rights reserved. The Apache Software License, Version 1.1 Redistribution and use in source and
- * binary forms, with or without modification, are permitted provided that the following conditions are met: 1. Redistributions of source code must
- * retain the above copyright notice, this list of conditions and the following disclaimer. 2. Redistributions in binary form must reproduce the above
- * copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
- * 3. The end-user documentation included with the redistribution, if any, must include the following acknowlegement: "This product includes software
- * developed by the Caucho Technology (http://www.caucho.com/)." Alternately, this acknowlegement may appear in the software itself, if and wherever
- * such third-party acknowlegements normally appear. 4. The names "Hessian", "Resin", and "Caucho" must not be used to endorse or promote products
- * derived from this software without prior written permission. For written permission, please contact info@caucho.com. 5. Products derived from this
- * software may not be called "Resin" nor may "Resin" appear in their names without prior written permission of Caucho Technology. THIS SOFTWARE IS
- * PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL CAUCHO TECHNOLOGY OR ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * Copyright (c) 2001-2004 Caucho Technology, Inc. All rights reserved. The Apache Software License, Version 1.1 Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met: 1. Redistributions of source code must retain the above copyright notice, this list of conditions and
+ * the following disclaimer. 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution. 3. The end-user documentation included with the redistribution, if any, must include the following acknowlegement: "This
+ * product includes software developed by the Caucho Technology (http://www.caucho.com/)." Alternately, this acknowlegement may appear in the software itself, if and wherever such
+ * third-party acknowlegements normally appear. 4. The names "Hessian", "Resin", and "Caucho" must not be used to endorse or promote products derived from this software without
+ * prior written permission. For written permission, please contact info@caucho.com. 5. Products derived from this software may not be called "Resin" nor may "Resin" appear in
+ * their names without prior written permission of Caucho Technology. THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL CAUCHO TECHNOLOGY OR ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+ * BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+ * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * @author Scott Ferguson
  */
 
@@ -34,11 +32,11 @@ public class HessianDebugState implements Hessian2Constants {
 	private final PrintWriter			dbg;
 
 	private State						state;
-	private final ArrayList<State>		stateStack		= new ArrayList<State>();
+	private final ArrayList<State>		stateStack		= new ArrayList<>();
 
-	private final ArrayList<ObjectDef>	objectDefList	= new ArrayList<ObjectDef>();
+	private final ArrayList<ObjectDef>	objectDefList	= new ArrayList<>();
 
-	private final ArrayList<String>		typeDefList		= new ArrayList<String>();
+	private final ArrayList<String>		typeDefList		= new ArrayList<>();
 
 	private int							refId;
 	private boolean						isNewline		= true;
@@ -256,7 +254,8 @@ public class HessianDebugState implements Hessian2Constants {
 	}
 
 	abstract class State {
-		State	_next;
+
+		State _next;
 
 		State() {}
 
@@ -756,6 +755,7 @@ public class HessianDebugState implements Hessian2Constants {
 	}
 
 	abstract class State1 extends State {
+
 		State1() {}
 
 		State1(State next) {
@@ -838,6 +838,7 @@ public class HessianDebugState implements Hessian2Constants {
 	}
 
 	class InitialState extends State {
+
 		@Override
 		State next(int ch) {
 			return this.nextObject(ch);
@@ -845,6 +846,7 @@ public class HessianDebugState implements Hessian2Constants {
 	}
 
 	class InitialState1 extends State1 {
+
 		@Override
 		State next(int ch) {
 			return this.nextObject(ch);
@@ -852,6 +854,7 @@ public class HessianDebugState implements Hessian2Constants {
 	}
 
 	class Top1State extends State1 {
+
 		@Override
 		State next(int ch) {
 			this.println();
@@ -867,6 +870,7 @@ public class HessianDebugState implements Hessian2Constants {
 	}
 
 	class Top2State extends State {
+
 		@Override
 		State next(int ch) {
 			this.println();
@@ -890,6 +894,7 @@ public class HessianDebugState implements Hessian2Constants {
 	}
 
 	class IntegerState extends State {
+
 		String	_typeCode;
 
 		int		_length;
@@ -931,6 +936,7 @@ public class HessianDebugState implements Hessian2Constants {
 	}
 
 	class LongState extends State {
+
 		String	_typeCode;
 
 		int		_length;
@@ -972,6 +978,7 @@ public class HessianDebugState implements Hessian2Constants {
 	}
 
 	class DoubleIntegerState extends State {
+
 		int		_length;
 		int		_value;
 		boolean	_isFirst	= true;
@@ -1009,6 +1016,7 @@ public class HessianDebugState implements Hessian2Constants {
 	}
 
 	class RefState extends State {
+
 		String	_typeCode;
 
 		int		_length;
@@ -1052,7 +1060,8 @@ public class HessianDebugState implements Hessian2Constants {
 	}
 
 	class RefState1 extends State {
-		String	_typeCode;
+
+		String _typeCode;
 
 		RefState1(State next) {
 			super(next);
@@ -1077,6 +1086,7 @@ public class HessianDebugState implements Hessian2Constants {
 	}
 
 	class DateState extends State {
+
 		int		_length;
 		long	_value;
 		boolean	_isMinute;
@@ -1119,6 +1129,7 @@ public class HessianDebugState implements Hessian2Constants {
 	}
 
 	class DoubleState extends State {
+
 		int		_length;
 		long	_value;
 
@@ -1147,6 +1158,7 @@ public class HessianDebugState implements Hessian2Constants {
 	}
 
 	class MillsState extends State {
+
 		int	_length;
 		int	_value;
 
@@ -1175,6 +1187,7 @@ public class HessianDebugState implements Hessian2Constants {
 	}
 
 	class StringState extends State {
+
 		private static final int	TOP		= 0;
 		private static final int	UTF_2_1	= 1;
 		private static final int	UTF_3_1	= 2;
@@ -1254,7 +1267,7 @@ public class HessianDebugState implements Hessian2Constants {
 				} else if ((0x30 <= ch) && (ch < 0x34)) {
 					this._isLastChunk = true;
 					this._lengthIndex = 1;
-					this._length = (ch - 0x30);
+					this._length = ch - 0x30;
 					return this;
 				} else {
 					this.println(this + " " + String.valueOf((char) ch) + ": unexpected character");
@@ -1306,6 +1319,7 @@ public class HessianDebugState implements Hessian2Constants {
 	}
 
 	class BinaryState extends State {
+
 		char	_typeCode;
 
 		int		_totalLength;
@@ -1405,6 +1419,7 @@ public class HessianDebugState implements Hessian2Constants {
 	}
 
 	class MapState extends State {
+
 		private static final int	TYPE	= 0;
 		private static final int	KEY		= 1;
 		private static final int	VALUE	= 2;
@@ -1516,6 +1531,7 @@ public class HessianDebugState implements Hessian2Constants {
 	}
 
 	class MapState1 extends State1 {
+
 		private static final int	TYPE	= 0;
 		private static final int	KEY		= 1;
 		private static final int	VALUE	= 2;
@@ -1635,6 +1651,7 @@ public class HessianDebugState implements Hessian2Constants {
 	}
 
 	class ObjectDefState extends State {
+
 		private static final int		TYPE		= 1;
 		private static final int		COUNT		= 2;
 		private static final int		FIELD		= 3;
@@ -1644,7 +1661,7 @@ public class HessianDebugState implements Hessian2Constants {
 		private int						_count;
 
 		private String					_type;
-		private final ArrayList<String>	_fields		= new ArrayList<String>();
+		private final ArrayList<String>	_fields		= new ArrayList<>();
 
 		ObjectDefState(State next) {
 			super(next);
@@ -1725,6 +1742,7 @@ public class HessianDebugState implements Hessian2Constants {
 	}
 
 	class ObjectState extends State {
+
 		private static final int	TYPE	= 0;
 		private static final int	FIELD	= 1;
 
@@ -1827,6 +1845,7 @@ public class HessianDebugState implements Hessian2Constants {
 	}
 
 	class ListState1 extends State1 {
+
 		private static final int	TYPE	= 0;
 		private static final int	LENGTH	= 1;
 		private static final int	VALUE	= 2;
@@ -1936,6 +1955,7 @@ public class HessianDebugState implements Hessian2Constants {
 	}
 
 	class ListState extends State {
+
 		private static final int	TYPE	= 0;
 		private static final int	LENGTH	= 1;
 		private static final int	VALUE	= 2;
@@ -2036,6 +2056,7 @@ public class HessianDebugState implements Hessian2Constants {
 	}
 
 	class CompactListState extends State {
+
 		private static final int	TYPE	= 0;
 		private static final int	LENGTH	= 1;
 		private static final int	VALUE	= 2;
@@ -2175,6 +2196,7 @@ public class HessianDebugState implements Hessian2Constants {
 	}
 
 	class Hessian2State extends State {
+
 		private static final int	MAJOR	= 0;
 		private static final int	MINOR	= 1;
 
@@ -2211,6 +2233,7 @@ public class HessianDebugState implements Hessian2Constants {
 	}
 
 	class CallState1 extends State1 {
+
 		private static final int	MAJOR	= 0;
 		private static final int	MINOR	= 1;
 		private static final int	HEADER	= 2;
@@ -2284,6 +2307,7 @@ public class HessianDebugState implements Hessian2Constants {
 	}
 
 	class Call2State extends State {
+
 		private static final int	METHOD	= 0;
 		private static final int	COUNT	= 1;
 		private static final int	ARG		= 2;
@@ -2357,6 +2381,7 @@ public class HessianDebugState implements Hessian2Constants {
 	}
 
 	class ReplyState1 extends State1 {
+
 		private static final int	MAJOR	= 0;
 		private static final int	MINOR	= 1;
 		private static final int	HEADER	= 2;
@@ -2427,6 +2452,7 @@ public class HessianDebugState implements Hessian2Constants {
 	}
 
 	class Reply2State extends State {
+
 		Reply2State(State next) {
 			super(next);
 
@@ -2450,6 +2476,7 @@ public class HessianDebugState implements Hessian2Constants {
 	}
 
 	class Fault2State extends State {
+
 		Fault2State(State next) {
 			super(next);
 
@@ -2468,6 +2495,7 @@ public class HessianDebugState implements Hessian2Constants {
 	}
 
 	class IndirectState extends State {
+
 		IndirectState(State next) {
 			super(next);
 		}
@@ -2489,6 +2517,7 @@ public class HessianDebugState implements Hessian2Constants {
 	}
 
 	class RemoteState extends State {
+
 		private static final int	TYPE	= 0;
 		private static final int	VALUE	= 1;
 		private static final int	END		= 2;
@@ -2528,6 +2557,7 @@ public class HessianDebugState implements Hessian2Constants {
 	}
 
 	class StreamingState extends State {
+
 		private long	_length;
 		private int		_metaLength;
 		private boolean	_isLast;
@@ -2584,7 +2614,7 @@ public class HessianDebugState implements Hessian2Constants {
 				this._isLengthState = true;
 			} else {
 				this._isLengthState = false;
-				this._length = (ch & 0x7f);
+				this._length = ch & 0x7f;
 
 				if (this._length == 0x7e) {
 					this._length = 0;
@@ -2609,6 +2639,7 @@ public class HessianDebugState implements Hessian2Constants {
 	}
 
 	static class ObjectDef {
+
 		private final String			_type;
 		private final ArrayList<String>	_fields;
 

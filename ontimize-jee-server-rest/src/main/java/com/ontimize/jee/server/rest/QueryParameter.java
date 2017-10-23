@@ -10,38 +10,39 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class QueryParameter implements Serializable {
-    private static final long serialVersionUID = 1L;
 
-    @XmlElement
+	private static final long			serialVersionUID	= 1L;
+
+	@XmlElement
 	protected List<Object>				columns;
 
-    @XmlElement
+	@XmlElement
 	protected Map<Object, Object>		filter;
 
-    @XmlElement
+	@XmlElement
 	protected HashMap<Object, Object>	sqltypes;
 
 	public Map<Object, Object> getFilter() {
-        return this.filter;
-    }
+		return this.filter;
+	}
 
 	public void setKv(Map<Object, Object> filter) {
-        this.filter = filter;
-    }
+		this.filter = filter;
+	}
 
 	public List<Object> getColumns() {
 		return this.columns;
-    }
+	}
 
 	public void setColumns(List<Object> columns) {
-        this.columns = columns;
-    }
+		this.columns = columns;
+	}
 
 	public HashMap<Object, Object> getSqltypes() {
 		return this.sqltypes;
-    }
+	}
 
 	public void setSqltypes(HashMap<Object, Object> sqltypes) {
-        this.sqltypes = sqltypes;
-    }
+		this.sqltypes = sqltypes;
+	}
 }

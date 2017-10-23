@@ -26,7 +26,7 @@ public class FormLoginAuthenticationMechanism implements IAuthenticationMechanis
 
 	@Override
 	public AuthenticationResult authenticate(HttpServletRequest request, HttpServletResponse response, AuthenticationManager authenticationManager,
-			UserDetailsService userDetailsService) {
+	        UserDetailsService userDetailsService) {
 		if (!this.loginRequestMatcher.matches(request)) {
 			return null;
 		}

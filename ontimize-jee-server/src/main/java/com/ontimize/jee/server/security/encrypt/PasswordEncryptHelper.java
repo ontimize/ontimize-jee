@@ -18,7 +18,7 @@ import com.ontimize.util.Base64Utils;
 public class PasswordEncryptHelper implements IPasswordEncryptHelper {
 
 	/** The Constant logger. */
-	private static final Logger	logger	= LoggerFactory.getLogger(PasswordEncryptHelper.class);
+	private static final Logger logger = LoggerFactory.getLogger(PasswordEncryptHelper.class);
 
 	/*
 	 * (non-Javadoc)
@@ -55,4 +55,3 @@ public class PasswordEncryptHelper implements IPasswordEncryptHelper {
 		}
 	}
 }
-

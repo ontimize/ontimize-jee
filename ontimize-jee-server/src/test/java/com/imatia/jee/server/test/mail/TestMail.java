@@ -15,8 +15,8 @@ public class TestMail {
 		configurator.setHostResolver(new FixedPropertyResolver<>("smtp.server.com"));
 		configurator.setPortResolver(new FixedPropertyResolver<>("25"));
 		configurator.setProtocolResolver(new FixedPropertyResolver<>("smtp"));
-		configurator.setPasswordResolver(new FixedPropertyResolver<String>("password"));
-		configurator.setUserResolver(new FixedPropertyResolver<String>("user"));
+		configurator.setPasswordResolver(new FixedPropertyResolver<>("password"));
+		configurator.setUserResolver(new FixedPropertyResolver<>("user"));
 		configurator.setJavaMailProperties(new FixedPropertyResolver<String>());
 		engine.setConfigurator(configurator);
 

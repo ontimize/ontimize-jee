@@ -136,10 +136,10 @@ public class Tetra<K, L, M, N> implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = (prime * result) + ((this.first == null) ? 0 : this.first.hashCode());
-		result = (prime * result) + ((this.second == null) ? 0 : this.second.hashCode());
-		result = (prime * result) + ((this.third == null) ? 0 : this.third.hashCode());
-		result = (prime * result) + ((this.fourth == null) ? 0 : this.fourth.hashCode());
+		result = (prime * result) + (this.first == null ? 0 : this.first.hashCode());
+		result = (prime * result) + (this.second == null ? 0 : this.second.hashCode());
+		result = (prime * result) + (this.third == null ? 0 : this.third.hashCode());
+		result = (prime * result) + (this.fourth == null ? 0 : this.fourth.hashCode());
 		return result;
 	}
 

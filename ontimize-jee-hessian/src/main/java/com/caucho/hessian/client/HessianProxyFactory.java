@@ -40,32 +40,43 @@ import com.caucho.hessian.io.HessianRemoteResolver;
 import com.caucho.hessian.io.SerializerFactory;
 import com.caucho.services.client.ServiceProxyFactory;
 
-//@formatter:off
+// @formatter:off
 /**
  * Factory for creating Hessian client stubs. The returned stub will call the remote object for all methods.
  *
- * <pre> String url = "http://localhost:8080/ejb/hello"; HelloHome hello = (HelloHome) factory.create(HelloHome.class, url); </pre>
+ * <pre>
  *
- * After creation, the stub can be like a regular Java class. Because it makes remote calls, it can throw more exceptions than a Java class. In
- * particular, it may throw protocol exceptions.
+ * String url = "http://localhost:8080/ejb/hello";
+ * HelloHome hello = (HelloHome) factory.create(HelloHome.class, url);
+ * </pre>
  *
- * The factory can also be configured as a JNDI resource. The factory expects to parameters: "type" and "url", corresponding to the two arguments to
- * <code>create</code>
+ * After creation, the stub can be like a regular Java class. Because it makes remote calls, it can throw more exceptions than a Java class. In particular, it may throw protocol
+ * exceptions.
  *
- * In Resin 3.0, the above example would be configured as: <pre> &lt;reference> &lt;jndi-name>hessian/hello&lt;/jndi-name>
+ * The factory can also be configured as a JNDI resource. The factory expects to parameters: "type" and "url", corresponding to the two arguments to <code>create</code>
+ *
+ * In Resin 3.0, the above example would be configured as:
+ *
+ * <pre>
+ *  &lt;reference> &lt;jndi-name>hessian/hello&lt;/jndi-name>
  * &lt;factory>com.caucho.hessian.client.HessianProxyFactory&lt;/factory> &lt;init-param url="http://localhost:8080/ejb/hello"/> &lt;init-param
- * type="test.HelloHome"/> &lt;/reference> </pre>
+ * type="test.HelloHome"/> &lt;/reference>
+ * </pre>
  *
- * To get the above resource, use JNDI as follows: <pre> Context ic = new InitialContext(); HelloHome hello = (HelloHome)
- * ic.lookup("java:comp/env/hessian/hello");
+ * To get the above resource, use JNDI as follows:
  *
- * System.out.println("Hello: " + hello.helloWorld()); </pre>
+ * <pre>
+ * Context ic = new InitialContext();
+ * HelloHome hello = (HelloHome) ic.lookup("java:comp/env/hessian/hello");
+ *
+ * System.out.println("Hello: " + hello.helloWorld());
+ * </pre>
  *
  * <h3>Authentication</h3>
  *
  * <p>The proxy can use HTTP basic authentication if the user and the password are set.
  */
-//@formatter:on
+// @formatter:on
 public class HessianProxyFactory implements ServiceProxyFactory, ObjectFactory {
 
 	private final ClassLoader			loader;
@@ -221,14 +232,12 @@ public class HessianProxyFactory implements ServiceProxyFactory, ObjectFactory {
 	/**
 	 * True if the proxy can read Hessian 2 responses.
 	 */
-	public void setHessian2Reply(boolean isHessian2) {
-	}
+	public void setHessian2Reply(boolean isHessian2) {}
 
 	/**
 	 * True if the proxy should send Hessian 2 requests.
 	 */
-	public void setHessian2Request(boolean isHessian2) {
-	}
+	public void setHessian2Request(boolean isHessian2) {}
 
 	/**
 	 * Returns the remote resolver.
@@ -304,7 +313,9 @@ public class HessianProxyFactory implements ServiceProxyFactory, ObjectFactory {
 	/**
 	 * Creates a new proxy with the specified URL. The returned object is a proxy with the interface specified by api.
 	 *
-	 * <pre> String url = "http://localhost:8080/ejb/hello"); HelloHome hello = (HelloHome) factory.create(HelloHome.class, url); </pre>
+	 * <pre>
+	 *  String url = "http://localhost:8080/ejb/hello"); HelloHome hello = (HelloHome) factory.create(HelloHome.class, url);
+	 * </pre>
 	 *
 	 * @param api
 	 *            the interface the proxy class needs to implement
@@ -321,7 +332,9 @@ public class HessianProxyFactory implements ServiceProxyFactory, ObjectFactory {
 	/**
 	 * Creates a new proxy with the specified URL. The returned object is a proxy with the interface specified by api.
 	 *
-	 * <pre> String url = "http://localhost:8080/ejb/hello"); HelloHome hello = (HelloHome) factory.create(HelloHome.class, url); </pre>
+	 * <pre>
+	 *  String url = "http://localhost:8080/ejb/hello"); HelloHome hello = (HelloHome) factory.create(HelloHome.class, url);
+	 * </pre>
 	 *
 	 * @param api
 	 *            the interface the proxy class needs to implement
@@ -340,7 +353,9 @@ public class HessianProxyFactory implements ServiceProxyFactory, ObjectFactory {
 	/**
 	 * Creates a new proxy with the specified URL. The returned object is a proxy with the interface specified by api.
 	 *
-	 * <pre> String url = "http://localhost:8080/ejb/hello"); HelloHome hello = (HelloHome) factory.create(HelloHome.class, url); </pre>
+	 * <pre>
+	 *  String url = "http://localhost:8080/ejb/hello"); HelloHome hello = (HelloHome) factory.create(HelloHome.class, url);
+	 * </pre>
 	 *
 	 * @param api
 	 *            the interface the proxy class needs to implement
@@ -426,7 +441,7 @@ public class HessianProxyFactory implements ServiceProxyFactory, ObjectFactory {
 	 * Creates the Base64 value.
 	 */
 	private String base64(String value) {
-		StringBuffer cb = new StringBuffer();
+		StringBuilder cb = new StringBuilder();
 
 		int i = 0;
 		for (i = 0; (i + 2) < value.length(); i += 3) {

@@ -20,7 +20,7 @@ public class OntimizeExceptionTranslator implements IExceptionTranslator, com.on
 
 	private static final Logger			logger	= LoggerFactory.getLogger(OntimizeExceptionTranslator.class);
 
-	private DBErrorMessagesTranslator dbErrorMessagesTranslator;
+	private DBErrorMessagesTranslator	dbErrorMessagesTranslator;
 
 	@Override
 	public Throwable translateException(Throwable original) {
@@ -56,7 +56,6 @@ public class OntimizeExceptionTranslator implements IExceptionTranslator, com.on
 		}
 		return error;
 	}
-
 
 	public void setDbErrorMessagesTranslator(DBErrorMessagesTranslator dbErrorMessagesTranslator) {
 		this.dbErrorMessagesTranslator = dbErrorMessagesTranslator;

@@ -8,7 +8,7 @@ package com.ontimize.jee.common.tools;
  */
 public final class MathTools {
 
-	public final static float	ONE_FLOAT	= 1.0f;
+	public final static float ONE_FLOAT = 1.0f;
 
 	/**
 	 * Instantiates a new math utils.

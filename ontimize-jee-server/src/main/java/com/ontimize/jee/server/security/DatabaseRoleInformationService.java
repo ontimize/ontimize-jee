@@ -31,7 +31,7 @@ public class DatabaseRoleInformationService implements ISecurityRoleInformationS
 
 	public static final String	BEAN_NAME	= "databaseRoleInformationService";
 	/** The Constant logger. */
-	private static final Logger	logger	= LoggerFactory.getLogger(DatabaseRoleInformationService.class);
+	private static final Logger	logger		= LoggerFactory.getLogger(DatabaseRoleInformationService.class);
 
 	/** The profile repository. */
 	private IOntimizeDaoSupport	profileRepository;
@@ -63,7 +63,7 @@ public class DatabaseRoleInformationService implements ISecurityRoleInformationS
 			return null;
 		}
 
-		final Map<String, Object> filter = new HashMap<String, Object>();
+		final Map<String, Object> filter = new HashMap<>();
 		filter.put(this.roleNameColumn, roleName);
 		final List<String> columnsToQuery = Arrays.asList(new String[] { this.roleNameColumn, this.clientPermissionColumn });
 		final EntityResult res = this.profileRepository.query(filter, columnsToQuery, null, this.clientPermissionQueryId);
@@ -72,7 +72,7 @@ public class DatabaseRoleInformationService implements ISecurityRoleInformationS
 		}
 		CheckingTools.failIf(res.calculateRecordNumber() > 1, "Multiple results for role");
 		final List<?> clientPermissions = (List<?>) res.get(this.clientPermissionColumn);
-		Map<String, ?> clientPermission = new Hashtable<String, Object>();
+		Map<String, ?> clientPermission = new Hashtable<>();
 		try {
 			final String plainClientPermission = (String) clientPermissions.get(0);
 			if (plainClientPermission != null) {
@@ -98,8 +98,8 @@ public class DatabaseRoleInformationService implements ISecurityRoleInformationS
 	 * @return the list
 	 */
 	protected List<String> loadServerPermissions(final String roleName) {
-		final List<String> listPermission = new ArrayList<String>();
-		final Map<String, Object> filter = new HashMap<String, Object>();
+		final List<String> listPermission = new ArrayList<>();
+		final Map<String, Object> filter = new HashMap<>();
 		filter.put(this.roleNameColumn, roleName);
 		final List<String> columnsToQuery = Arrays.asList(new String[] { this.roleNameColumn, this.serverPermissionKeyColumn });
 		final EntityResult res = this.profileRepository.query(filter, columnsToQuery, null, this.serverPermissionQueryId);

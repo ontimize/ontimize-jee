@@ -54,7 +54,7 @@ public class DownDateHelper implements ApplicationContextAware, IDownDateHelper 
 
 	@Override
 	public EntityResult downRecord(DefaultOntimizeDaoHelper daoHelper, IOntimizeDaoSupport dao, String downDateColumn, Date downDate, Map<?, ?> keysValues) {
-		if ((downDate == null)) {
+		if (downDate == null) {
 			downDate = new Date();
 		} else if (keysValues.containsKey(IDownDateHelper.DOWNDATE_DEFAULT_ATTR)) {
 			downDate = (Date) keysValues.get(IDownDateHelper.DOWNDATE_DEFAULT_ATTR);
@@ -116,10 +116,10 @@ public class DownDateHelper implements ApplicationContextAware, IDownDateHelper 
 		if (exp == null) {
 			return false;
 		}
-		if (this.hasDowndateFilterByExprChild(exp.getLeftOperand(), downDateColumn) && (exp.getOperator().equals(BasicOperator.EQUAL_OP))) {
+		if (this.hasDowndateFilterByExprChild(exp.getLeftOperand(), downDateColumn) && exp.getOperator().equals(BasicOperator.EQUAL_OP)) {
 			return true;
 		}
-		if (this.hasDowndateFilterByExprChild(exp.getRightOperand(), downDateColumn) && (exp.getOperator().equals(BasicOperator.EQUAL_OP))) {
+		if (this.hasDowndateFilterByExprChild(exp.getRightOperand(), downDateColumn) && exp.getOperator().equals(BasicOperator.EQUAL_OP)) {
 			return true;
 		}
 		return false;

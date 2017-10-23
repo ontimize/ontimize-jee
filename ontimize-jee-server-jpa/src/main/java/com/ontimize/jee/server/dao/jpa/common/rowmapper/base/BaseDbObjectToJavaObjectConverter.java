@@ -28,7 +28,7 @@ import com.ontimize.jee.server.dao.jpa.common.rowmapper.exceptions.RowMapperExce
  */
 public class BaseDbObjectToJavaObjectConverter implements IDbObjectToJavaObjectConverter {
 
-	private static final Logger	logger	= LoggerFactory.getLogger(BaseDbObjectToJavaObjectConverter.class);
+	private static final Logger logger = LoggerFactory.getLogger(BaseDbObjectToJavaObjectConverter.class);
 
 	/**
 	 * {@inheritDoc}
@@ -59,17 +59,17 @@ public class BaseDbObjectToJavaObjectConverter implements IDbObjectToJavaObjectC
 			// TODO check if new Object can receive original Number
 			if (toType.equals(Double.class)) {
 				return ((Number) input).doubleValue();
-			} else if ((toType.equals(Long.class))) {
+			} else if (toType.equals(Long.class)) {
 				return ((Number) input).longValue();
-			} else if ((toType.equals(Integer.class))) {
+			} else if (toType.equals(Integer.class)) {
 				return ((Number) input).intValue();
-			} else if ((toType.equals(BigInteger.class))) {
+			} else if (toType.equals(BigInteger.class)) {
 				return BigInteger.valueOf(((Number) input).longValue());
-			} else if ((toType.equals(BigDecimal.class))) {
+			} else if (toType.equals(BigDecimal.class)) {
 				return BigDecimal.valueOf(((Number) input).doubleValue());
-			} else if ((toType.equals(Short.class))) {
+			} else if (toType.equals(Short.class)) {
 				return ((Number) input).shortValue();
-			} else if ((toType.equals(Float.class))) {
+			} else if (toType.equals(Float.class)) {
 				return ((Number) input).floatValue();
 			}
 		}

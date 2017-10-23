@@ -54,8 +54,7 @@ public interface II18nService {
 	 *
 	 * @param locale
 	 *            the locale
-	 * @return The keys of the object are Strings with the bundle class name (for example com.ontimize.gui.i18m.bundle) and each value is the
-	 *         ResourceBundle object
+	 * @return The keys of the object are Strings with the bundle class name (for example com.ontimize.gui.i18m.bundle) and each value is the ResourceBundle object
 	 * @throws OntimizeJEERuntimeException
 	 *             the ontimize jee runtime exception
 	 */
@@ -81,8 +80,7 @@ public interface II18nService {
 	void updateBundleValues(DatabaseBundleValues values) throws OntimizeJEERuntimeException;
 
 	/**
-	 * Delete the specified key and its translations values in the database
-	 * bundle
+	 * Delete the specified key and its translations values in the database bundle
 	 *
 	 * @param values
 	 *            the values

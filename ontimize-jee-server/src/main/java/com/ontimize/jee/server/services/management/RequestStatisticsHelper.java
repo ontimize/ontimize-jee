@@ -29,7 +29,7 @@ import com.ontimize.jee.server.services.management.dao.IRequestStatisticsDao;
 public class RequestStatisticsHelper {
 
 	/** The logger. */
-	private final static Logger logger = LoggerFactory.getLogger(RequestStatisticsHelper.class);
+	private static final Logger		logger	= LoggerFactory.getLogger(RequestStatisticsHelper.class);
 
 	@Autowired
 	DefaultOntimizeDaoHelper		daoHelper;
@@ -37,8 +37,7 @@ public class RequestStatisticsHelper {
 	@Autowired(required = false)
 	protected IRequestStatisticsDao	requestStatisticsDao;
 
-	public void insertRequestStatistics(String serviceName, String methodName, Object params, String user, Date date, long timeExecution,
-			String exception) {
+	public void insertRequestStatistics(String serviceName, String methodName, Object params, String user, Date date, long timeExecution, String exception) {
 		try {
 			// new ScheduledThreadPoolExecutor(corePoolSize)
 			Hashtable<Object, Object> attributesValues = new Hashtable<>();
@@ -50,7 +49,7 @@ public class RequestStatisticsHelper {
 			MapTools.safePut(attributesValues, "SERVICE_EXCEPTION", exception);
 
 			// FIXME: process params
-			StringBuffer sbParams = new StringBuffer();
+			StringBuilder sbParams = new StringBuilder();
 			if (params instanceof Object[]) {
 				Object[] values = (Object[]) params;
 				if (values.length != 0) {
@@ -157,8 +156,7 @@ public class RequestStatisticsHelper {
 		if ((this.daoHelper != null) && (this.requestStatisticsDao != null)) {
 			List<String> attributes = new ArrayList<>();
 			attributes.add("ID_REQUEST_STATISTICS");
-			Vector<Number> keysToDelete = (Vector<Number>) this.daoHelper.query(this.requestStatisticsDao, keysValues, attributes)
-					.get("ID_REQUEST_STATISTICS");
+			Vector<Number> keysToDelete = (Vector<Number>) this.daoHelper.query(this.requestStatisticsDao, keysValues, attributes).get("ID_REQUEST_STATISTICS");
 
 			if (keysToDelete != null) {
 				for (Number key : keysToDelete) {

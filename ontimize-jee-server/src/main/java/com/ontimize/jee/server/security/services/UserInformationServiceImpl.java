@@ -13,7 +13,6 @@ import com.ontimize.jee.common.security.PermissionsProviderSecured;
 import com.ontimize.jee.common.services.user.IUserInformationService;
 import com.ontimize.jee.common.services.user.UserInformation;
 
-
 /**
  * Implementación del servicio.
  *
@@ -21,16 +20,14 @@ import com.ontimize.jee.common.services.user.UserInformation;
  */
 public class UserInformationServiceImpl implements IUserInformationService {
 
-    /**
-     *
-     * {@inheritDoc}
-     */
+	/**
+	 *
+	 * {@inheritDoc}
+	 */
 	@Secured({ PermissionsProviderSecured.SECURED })
-    @Override
-    public UserInformation getUserInformation() {
-        UserInformation principal = (UserInformation) SecurityContextHolder.getContext()
-                .getAuthentication()
-                .getPrincipal();
-        return principal;
-    }
+	@Override
+	public UserInformation getUserInformation() {
+		UserInformation principal = (UserInformation) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		return principal;
+	}
 }

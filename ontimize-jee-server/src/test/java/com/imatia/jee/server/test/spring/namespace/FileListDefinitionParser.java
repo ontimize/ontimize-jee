@@ -13,8 +13,8 @@ import org.w3c.dom.NodeList;
 import com.ontimize.jee.common.spring.parser.DefinitionParserUtil;
 
 /**
- * Returns a list of files that are in a directory. The list may be limited by nesting a core-commons:fileFilter tag that will do the intersection of
- * all the fileFilters vs what is in the directory. <p/>
+ * Returns a list of files that are in a directory. The list may be limited by nesting a core-commons:fileFilter tag that will do the intersection of all the fileFilters vs what is
+ * in the directory. <p/>
  *
  * Also supports the nesting of beans, idref, ref, and value tags that return File objects (the value tag's value will be converted to a new File)
  *
@@ -23,24 +23,22 @@ import com.ontimize.jee.common.spring.parser.DefinitionParserUtil;
  * Get all the files in the current directory <core-commons:fileList directory="."/>
  *
  * Get all the files in the current directory that end in XML <core-commons:fileList directory="."> <core-commons:fileFilter> <bean
- * class="org.apache.commons.io.filefilter.RegexFileFilter"> <constructor-arg value=".*.xml"/> </bean> </core-commons:fileFilter>
+ * class="org.apache.commons.io.filefilter.RegexFileFilter"> <constructor-arg value=".*.xml"/> </bean> </core-commons:fileFilter> </core-commons:fileList>
+ *
+ * Get all the files in the current directory that end in XML (specify the fileList separately) <core-commons:fileList> <core-commons:fileFilter> <bean
+ * class="org.apache.commons.io.filefilter.RegexFileFilter"> <constructor-arg value=".*.xml"/> </bean> </core-commons:fileFilter> <core-commons:fileList directory="."/>
  * </core-commons:fileList>
  *
- * Get all the files in the current directory that end in XML (specify the fileList separately) <core-commons:fileList> <core-commons:fileFilter>
- * <bean class="org.apache.commons.io.filefilter.RegexFileFilter"> <constructor-arg value=".*.xml"/> </bean> </core-commons:fileFilter>
- * <core-commons:fileList directory="."/> </core-commons:fileList>
- *
  * Get all files in the /tmp and /something directory that end in .xml <core-commons:fileList directory="/tmp"> <core-commons:fileFilter> <bean
- * class="org.apache.commons.io.filefilter.RegexFileFilter"> <constructor-arg value=".*.xml"/> </bean> </core-commons:fileFilter>
- * <core-commons:fileList directory="/something"/> </core-commons:fileList>
+ * class="org.apache.commons.io.filefilter.RegexFileFilter"> <constructor-arg value=".*.xml"/> </bean> </core-commons:fileFilter> <core-commons:fileList directory="/something"/>
+ * </core-commons:fileList>
  *
- * Get all files in the /tmp and /something directory that end in .xml and can be written to <core-commons:fileList directory="/tmp">
- * <core-commons:fileFilter> <bean class="org.apache.commons.io.filefilter.CanWriteFileFilter"/> <bean
- * class="org.apache.commons.io.filefilter.RegexFileFilter"> <constructor-arg value=".*.xml"/> </bean> </core-commons:fileFilter>
- * <core-commons:fileList directory="/something"/> </core-commons:fileList>
+ * Get all files in the /tmp and /something directory that end in .xml and can be written to <core-commons:fileList directory="/tmp"> <core-commons:fileFilter> <bean
+ * class="org.apache.commons.io.filefilter.CanWriteFileFilter"/> <bean class="org.apache.commons.io.filefilter.RegexFileFilter"> <constructor-arg value=".*.xml"/> </bean>
+ * </core-commons:fileFilter> <core-commons:fileList directory="/something"/> </core-commons:fileList>
  *
- * Get all files in the /tmp directory and the pom.xml file in another directory <core-commons:fileList> <core-commons:fileList directory="/tmp"/>
- * <value>pom.xml</value> </core-commons:fileList>
+ * Get all files in the /tmp directory and the pom.xml file in another directory <core-commons:fileList> <core-commons:fileList directory="/tmp"/> <value>pom.xml</value>
+ * </core-commons:fileList>
  *
  * @author seamans
  *
@@ -93,7 +91,7 @@ public class FileListDefinitionParser extends AbstractSingleBeanDefinitionParser
 		List<Element> fileLists = DomUtils.getChildElementsByTagName(element, "fileList");
 		// Any objects that created will be placed in a ManagedList
 		// so Spring does the bulk of the resolution work for us
-		ManagedList<Object> nestedFiles = new ManagedList<Object>();
+		ManagedList<Object> nestedFiles = new ManagedList<>();
 		if (fileLists.size() > 0) {
 			// Just make a new Parser for each one and let them do the work
 			FileListDefinitionParser fldp = new FileListDefinitionParser();

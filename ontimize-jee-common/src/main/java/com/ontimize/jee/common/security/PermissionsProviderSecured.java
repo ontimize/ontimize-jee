@@ -1,8 +1,8 @@
 /**
-* PermissionsProviderSecured.java 18-abr-2013
+ * PermissionsProviderSecured.java 18-abr-2013
  *
- * 
- * 
+ *
+ *
  */
 package com.ontimize.jee.common.security;
 
@@ -13,6 +13,6 @@ package com.ontimize.jee.common.security;
  */
 public final class PermissionsProviderSecured {
 
-    /** The Constant SECURED. */
-    public static final String SECURED = "PermissionsProviderSecured";
+	/** The Constant SECURED. */
+	public static final String SECURED = "PermissionsProviderSecured";
 }

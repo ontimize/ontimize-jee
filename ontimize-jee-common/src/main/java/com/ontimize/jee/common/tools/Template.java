@@ -88,7 +88,7 @@ public class Template {
 	 * @return the string
 	 */
 	public String fillTemplate(Map<String, ?> mValues) {
-		if ((mValues == null) || (mValues.isEmpty())) {
+		if ((mValues == null) || mValues.isEmpty()) {
 			return this.template.toString();
 		}
 		StringBuilder sb = new StringBuilder(this.template);
@@ -128,7 +128,7 @@ public class Template {
 	 *            the value
 	 */
 	private void replace(StringBuilder sb, String key, String value) {
-		value = (value == null) ? "" : value;
+		value = value == null ? "" : value;
 		int idx = 0;
 		while ((idx = sb.indexOf(key, idx)) >= 0) {
 			sb.replace(idx, idx + key.length(), value);

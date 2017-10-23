@@ -20,7 +20,7 @@ import com.ontimize.jee.common.tools.proxy.InvalidDelegateException;
 public class DefaultLocatorInvocationHandler implements InvocationHandler {
 
 	/** the logger. */
-	private final static Logger			logger	= LoggerFactory.getLogger(DefaultLocatorInvocationHandler.class);
+	private static final Logger			logger	= LoggerFactory.getLogger(DefaultLocatorInvocationHandler.class);
 
 	/** The invocation delegates. */
 	protected List<IInvocationDelegate>	invocationDelegates;
@@ -30,7 +30,7 @@ public class DefaultLocatorInvocationHandler implements InvocationHandler {
 	 */
 	public DefaultLocatorInvocationHandler() {
 		super();
-		this.invocationDelegates = new ArrayList<IInvocationDelegate>();
+		this.invocationDelegates = new ArrayList<>();
 	}
 
 	/**
@@ -55,7 +55,8 @@ public class DefaultLocatorInvocationHandler implements InvocationHandler {
 	/**
 	 * Adds the delegate.
 	 *
-	 * @param delegate the delegate
+	 * @param delegate
+	 *            the delegate
 	 */
 	public void addDelegate(IInvocationDelegate delegate) {
 		this.invocationDelegates.add(delegate);

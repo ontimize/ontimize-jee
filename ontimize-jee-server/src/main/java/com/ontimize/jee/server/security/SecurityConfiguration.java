@@ -80,5 +80,4 @@ public class SecurityConfiguration {
 		this.roleInformationService = roleInformationService;
 	}
 
-
 }

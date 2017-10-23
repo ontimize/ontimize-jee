@@ -23,9 +23,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public final class ImageTools {
-	private static final Logger logger = LoggerFactory.getLogger(ImageTools.class);
 
-	private static final double SCALE_PRECISION = 0.001;
+	private static final Logger	logger			= LoggerFactory.getLogger(ImageTools.class);
+
+	private static final double	SCALE_PRECISION	= 0.001;
 
 	private ImageTools() {
 		super();
@@ -114,7 +115,7 @@ public final class ImageTools {
 	}
 
 	public static BufferedImage imageToBufferedImage(ImageIcon imageIcon)
-			throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException, IOException {
+	        throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException, IOException {
 
 		Class<? extends ImageIcon> clazz = imageIcon.getClass();
 		Field urlField = clazz.getDeclaredField("location");

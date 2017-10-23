@@ -54,7 +54,7 @@ public class DeleteRequestStatisticsHistory extends Thread {
 
 				// Clean
 				DeleteRequestStatisticsHistory.this.cleanRequestStatistics();
-			} catch (Throwable e) {
+			} catch (Exception e) {
 				DeleteRequestStatisticsHistory.logger.error("Uncatched error. Detail:", e);
 			} finally {
 				if (DeleteRequestStatisticsHistory.this.isRunning()) {

@@ -28,7 +28,7 @@ public class EntityFunctionAttributeDispatcher extends AbstractAttributeDispatch
 			List<Object> filterAttributes = new ArrayList<>();
 			if (attributeAdv.getParentkeys() != null) {
 				for (int k = 0; k < attributeAdv.getParentkeys().size(); k++) {
-					if (!(filterAttributes.contains(attributeAdv.getParentkeys().get(k)))) {
+					if (!filterAttributes.contains(attributeAdv.getParentkeys().get(k))) {
 						filterAttributes.add(attributeAdv.getParentkeys().get(k));
 					}
 				}
@@ -47,8 +47,7 @@ public class EntityFunctionAttributeDispatcher extends AbstractAttributeDispatch
 					} else {
 						if (attributeAdv.isUseNullValueToParentkeys()) {
 							if (result.containsKey(filterAttributes.get(m))) {
-								queryFilterValues.put(filterAttributes.get(m),
-										new NullValue(result.getColumnSQLType(filterAttributes.get(m).toString())));
+								queryFilterValues.put(filterAttributes.get(m), new NullValue(result.getColumnSQLType(filterAttributes.get(m).toString())));
 							}
 						}
 					}
@@ -63,7 +62,7 @@ public class EntityFunctionAttributeDispatcher extends AbstractAttributeDispatch
 
 				Object resultObject = res.get(attributeAdv.getAttr());
 				if (resultObject != null) {
-					if ((resultObject instanceof Vector)) {
+					if (resultObject instanceof Vector) {
 						queryResults.add(k, ((List<?>) resultObject).get(0));
 					} else {
 						queryResults.add(k, resultObject);
@@ -76,20 +75,20 @@ public class EntityFunctionAttributeDispatcher extends AbstractAttributeDispatch
 	}
 
 	@Override
-	public EntityResult processInsertAttribute(EntityFunctionAttribute attribute, InsertOperation insertOperation,
-			Map<?, ?> generatedKeysInParentEntity, Map<?, ?> attributesValuesInsertedInParentEntity, ApplicationContext applicationContext) {
+	public EntityResult processInsertAttribute(EntityFunctionAttribute attribute, InsertOperation insertOperation, Map<?, ?> generatedKeysInParentEntity,
+	        Map<?, ?> attributesValuesInsertedInParentEntity, ApplicationContext applicationContext) {
 		return null;
 	}
 
 	@Override
-	public EntityResult processUpdateAttribute(EntityFunctionAttribute attribute, UpdateOperation updateOperation,
-			Map<?, ?> generatedValuesInParentEntity, Map<?, ?> filterInParentEntity, ApplicationContext applicationContext) {
+	public EntityResult processUpdateAttribute(EntityFunctionAttribute attribute, UpdateOperation updateOperation, Map<?, ?> generatedValuesInParentEntity,
+	        Map<?, ?> filterInParentEntity, ApplicationContext applicationContext) {
 		return null;
 	}
 
 	@Override
-	public EntityResult processDeleteAttribute(EntityFunctionAttribute attribute, DeleteOperation deleteOperation,
-			Map<?, ?> generatedValuesInParentEntity, Map<?, ?> filterInParentEntity, ApplicationContext applicationContext) {
+	public EntityResult processDeleteAttribute(EntityFunctionAttribute attribute, DeleteOperation deleteOperation, Map<?, ?> generatedValuesInParentEntity,
+	        Map<?, ?> filterInParentEntity, ApplicationContext applicationContext) {
 		return null;
 	}
 }

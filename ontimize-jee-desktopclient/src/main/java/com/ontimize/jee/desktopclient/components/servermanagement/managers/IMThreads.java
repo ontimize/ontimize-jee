@@ -36,14 +36,15 @@ import com.ontimize.jee.desktopclient.spring.BeansFactory;
  * The Class IMThreads.
  */
 public class IMThreads extends BasicInteractionManager {
-	private static final Logger logger = LoggerFactory.getLogger(IMThreads.class);
+
+	private static final Logger			logger	= LoggerFactory.getLogger(IMThreads.class);
 
 	@FormComponent(attr = "FILECHOOSER")
-	protected Row rowFileChooser;
+	protected Row						rowFileChooser;
 
-	protected EmbeddedJFileChooser fileChooser;
+	protected EmbeddedJFileChooser		fileChooser;
 
-	protected IServerManagementService serverManagement;
+	protected IServerManagementService	serverManagement;
 
 	public IMThreads() {
 		super();
@@ -57,7 +58,7 @@ public class IMThreads extends BasicInteractionManager {
 		this.fileChooser = new EmbeddedJFileChooser(EmbeddedJFileChooser.MODE.BOTH, new ThreadsToFileListener());
 		this.fileChooser.setFileFilter(new FileNameExtensionFilter("TXT FILES", "txt"));
 		this.rowFileChooser.add(new JScrollPane(this.fileChooser),
-				new GridBagConstraints(0, 1, 3, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(2, 2, 2, 2), 0, 0));
+		        new GridBagConstraints(0, 1, 3, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(2, 2, 2, 2), 0, 0));
 
 		this.serverManagement = BeansFactory.getBean(IServerManagementService.class);
 	}

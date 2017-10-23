@@ -14,7 +14,7 @@ import com.ontimize.gui.DefaultToolBarListener;
 public class MultiModuleToolBarListener extends DefaultToolBarListener {
 
 	/** The listener list. */
-	protected List<IModuleActionToolBarListener>	listenerList;
+	protected List<IModuleActionToolBarListener> listenerList;
 
 	/**
 	 * Instantiates a new multi module menu listener.

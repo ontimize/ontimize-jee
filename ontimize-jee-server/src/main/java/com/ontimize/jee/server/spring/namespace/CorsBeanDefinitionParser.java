@@ -18,6 +18,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.w3c.dom.Element;
 
 public class CorsBeanDefinitionParser implements BeanDefinitionParser {
+
 	public static final String			CORS_CONFIGURATION_BEAN_NAME	= "ontimizeJeeCorsConfigurations";
 
 	private static final List<String>	DEFAULT_ALLOWED_ORIGINS			= Arrays.asList("*");
@@ -33,7 +34,7 @@ public class CorsBeanDefinitionParser implements BeanDefinitionParser {
 	@Override
 	public BeanDefinition parse(Element element, ParserContext parserContext) {
 
-		Map<String, CorsConfiguration> corsConfigurations = new LinkedHashMap<String, CorsConfiguration>();
+		Map<String, CorsConfiguration> corsConfigurations = new LinkedHashMap<>();
 		List<Element> mappings = DomUtils.getChildElementsByTagName(element, "mapping");
 
 		if (mappings.isEmpty()) {

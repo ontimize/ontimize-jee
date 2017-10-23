@@ -8,7 +8,7 @@ import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
 public interface IRemoteApplicationPreferencesEngine {
 
 	/** The Constant KEY_USER_PREFERENCE. */
-	static final String	KEY_USER_PREFERENCE	= "user_preference";
+	static final String KEY_USER_PREFERENCE = "user_preference";
 
 	/**
 	 * Method to get the preferences remotely.

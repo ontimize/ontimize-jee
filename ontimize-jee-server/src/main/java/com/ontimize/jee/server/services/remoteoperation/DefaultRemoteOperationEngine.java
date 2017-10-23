@@ -26,7 +26,7 @@ import com.ontimize.jee.server.callback.ICallbackHandler;
 public class DefaultRemoteOperationEngine implements IRemoteOperationEngine, InitializingBean, ICallbackEventListener {
 
 	/** The logger. */
-	private static Logger											logger							= LoggerFactory.getLogger(DefaultRemoteOperationEngine.class);
+	private static Logger											logger	= LoggerFactory.getLogger(DefaultRemoteOperationEngine.class);
 	private final ThreadPoolExecutor								executorService;
 
 	/** The sessions. */
@@ -99,6 +99,7 @@ public class DefaultRemoteOperationEngine implements IRemoteOperationEngine, Ini
 	}
 
 	public static class RemoteOperationId {
+
 		private final CallbackSession	session;
 		private final String			id;
 
@@ -116,8 +117,8 @@ public class DefaultRemoteOperationEngine implements IRemoteOperationEngine, Ini
 		public int hashCode() {
 			final int prime = 31;
 			int result = 1;
-			result = (prime * result) + ((this.id == null) ? 0 : this.id.hashCode());
-			result = (prime * result) + ((this.session == null) ? 0 : this.session.hashCode());
+			result = (prime * result) + (this.id == null ? 0 : this.id.hashCode());
+			result = (prime * result) + (this.session == null ? 0 : this.session.hashCode());
 			return result;
 		}
 
@@ -157,7 +158,8 @@ public class DefaultRemoteOperationEngine implements IRemoteOperationEngine, Ini
 	}
 
 	public static class RemoteOperationTask implements Runnable {
-		private final RemoteOperationDelegate	delegate;
+
+		private final RemoteOperationDelegate delegate;
 
 		public RemoteOperationTask(RemoteOperationDelegate delegate) {
 			super();

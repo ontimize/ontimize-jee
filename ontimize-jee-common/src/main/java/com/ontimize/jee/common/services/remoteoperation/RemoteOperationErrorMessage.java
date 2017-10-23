@@ -17,6 +17,7 @@ public class RemoteOperationErrorMessage implements Serializable {
 	public RemoteOperationErrorMessage() {
 		super();
 	}
+
 	/**
 	 * Instantiates a new remote operation error message.
 	 *

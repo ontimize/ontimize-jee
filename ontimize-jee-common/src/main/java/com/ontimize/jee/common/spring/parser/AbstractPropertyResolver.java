@@ -1,6 +1,5 @@
 package com.ontimize.jee.common.spring.parser;
 
-
 /**
  * The Class AbstractPropertyResolver.
  *

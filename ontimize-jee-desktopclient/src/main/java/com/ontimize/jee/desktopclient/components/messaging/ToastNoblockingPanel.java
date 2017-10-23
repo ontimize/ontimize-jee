@@ -98,7 +98,7 @@ public class ToastNoblockingPanel extends AbstractToastPanel {
 		this.add(this.scrollMsg, new GridBagConstraints(1, 0, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(3, 0, 2, 3), 0, 0));
 		this.add(this.scrollDsc, new GridBagConstraints(1, 1, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(2, 0, 3, 0), 0, 0));
 		this.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createCompoundBorder(new LineBorder(Color.black, 2, true), new LineBorder(Color.white, 2, true)),
-				BorderFactory.createEmptyBorder(10, 10, 10, 10)));
+		        BorderFactory.createEmptyBorder(10, 10, 10, 10)));
 
 	}
 
@@ -253,7 +253,7 @@ public class ToastNoblockingPanel extends AbstractToastPanel {
 		}
 
 		// Nota: no se que le pasa al layout, pero a veces se le va la calculando tamanos, asi que metemos algo de margen
-		return new Dimension(maxWidth, ((lines.size() + 1) * (font.getSize() + 3)));
+		return new Dimension(maxWidth, (lines.size() + 1) * (font.getSize() + 3));
 	}
 
 	private static List<String> calculeTextLines(String text, String contentType) {
@@ -320,7 +320,7 @@ public class ToastNoblockingPanel extends AbstractToastPanel {
 	 * @return the list
 	 */
 	private static List<String> calculeTextLinesSingle(String text, String separator) {
-		return new ArrayList<String>(Arrays.asList(text.split(separator)));
+		return new ArrayList<>(Arrays.asList(text.split(separator)));
 	}
 
 	/**
@@ -354,18 +354,18 @@ public class ToastNoblockingPanel extends AbstractToastPanel {
 		int initBodyTagStart = Math.max(0, s.indexOf("<body>"));
 		int endBodyTag = Math.min(s.length(), s.indexOf("</body>"));
 		s = s.substring(0, initBodyTagStart).replaceAll("\r", "").replaceAll("\n", "").replaceAll(" ", "") + s.substring(initBodyTagStart, endBodyTag + "</body>".length())
-		.replaceAll("\r", "").replaceAll("\n", "").replaceAll("  ", " ")
-		.replaceAll("  ", " ") + s.substring(endBodyTag + "</body>".length()).replaceAll("\r", "").replaceAll("\n", "").replaceAll(" ", "");
+		        .replaceAll("\r", "").replaceAll("\n", "").replaceAll("  ", " ")
+		        .replaceAll("  ", " ") + s.substring(endBodyTag + "</body>".length()).replaceAll("\r", "").replaceAll("\n", "").replaceAll(" ", "");
 
 		// Drop basic tags
 		s = s.replaceAll("<html>", "").replaceAll("</html>", "").replaceAll("<body>", "").replaceAll("</body>", "").replaceAll("<head>", "").replaceAll("</head>", "")
-				.replaceAll("<b>", "").replaceAll("</b>", "").replaceAll("<i>", "").replaceAll("</i>", "").replaceAll("<u>", "").replaceAll("</u>", "");
+		        .replaceAll("<b>", "").replaceAll("</b>", "").replaceAll("<i>", "").replaceAll("</i>", "").replaceAll("<u>", "").replaceAll("</u>", "");
 
 		// Consider spcial tags that affect in rendering new lines
 		s = s.replaceAll("<br>", ToastNoblockingPanel.getDefaultLineSeparator(null)).replaceAll("<ol><li>", ToastNoblockingPanel.getDefaultLineSeparator(null))
-				.replaceAll("<ul><li>", ToastNoblockingPanel.getDefaultLineSeparator(null)).replaceAll("<li>", ToastNoblockingPanel.getDefaultLineSeparator(null))
-				.replaceAll("</ol>", "").replaceAll("<ul>", "").replaceAll("</ul>", "").replaceAll("</li>", "").replaceAll("<ol>", "").replaceAll("</ol>", "")
-				.replaceAll("<ul>", "").replaceAll("</ul>", "").replaceAll("<center>", ToastNoblockingPanel.getDefaultLineSeparator(null)).replaceAll("</center>", "");
+		        .replaceAll("<ul><li>", ToastNoblockingPanel.getDefaultLineSeparator(null)).replaceAll("<li>", ToastNoblockingPanel.getDefaultLineSeparator(null))
+		        .replaceAll("</ol>", "").replaceAll("<ul>", "").replaceAll("</ul>", "").replaceAll("</li>", "").replaceAll("<ol>", "").replaceAll("</ol>", "")
+		        .replaceAll("<ul>", "").replaceAll("</ul>", "").replaceAll("<center>", ToastNoblockingPanel.getDefaultLineSeparator(null)).replaceAll("</center>", "");
 
 		// Remove other unccomon labels
 		while ((s.indexOf("<") >= 0) && (s.indexOf(">") >= 0)) {
@@ -417,7 +417,7 @@ public class ToastNoblockingPanel extends AbstractToastPanel {
 					finalString.append(finalString.length() == 0 ? "" : ToastNoblockingPanel.getDefaultLineSeparator(contentType)).append(s2);
 				}
 			} else {
-				finalString.append((finalString.length() == 0 ? "" : ToastNoblockingPanel.getDefaultLineSeparator(contentType))).append(s);
+				finalString.append(finalString.length() == 0 ? "" : ToastNoblockingPanel.getDefaultLineSeparator(contentType)).append(s);
 			}
 		}
 
@@ -445,7 +445,7 @@ public class ToastNoblockingPanel extends AbstractToastPanel {
 	 * @return the line separator
 	 */
 	protected static String getDefaultLineSeparator(String contentType) {
-		return ("text/html".equals(contentType)) ? "<br>" : "\r\n";
+		return "text/html".equals(contentType) ? "<br>" : "\r\n";
 	}
 
 	/**
@@ -456,7 +456,7 @@ public class ToastNoblockingPanel extends AbstractToastPanel {
 	 * @return the line separator
 	 */
 	protected static List<String> getLineSeparators(String contentType) {
-		return ("text/html".equals(contentType)) ? Arrays.asList(new String[] { "<br>", "<li>", "<center>", "<tr>" }) : Arrays.asList(new String[] { "\r\n", "\n" });
+		return "text/html".equals(contentType) ? Arrays.asList(new String[] { "<br>", "<li>", "<center>", "<tr>" }) : Arrays.asList(new String[] { "\r\n", "\n" });
 	}
 
 	/**
@@ -471,7 +471,7 @@ public class ToastNoblockingPanel extends AbstractToastPanel {
 	 * @return the list
 	 */
 	protected List<String> splitLine(String s, Font font, int maxWidth) {
-		List<String> newLines = new ArrayList<String>();
+		List<String> newLines = new ArrayList<>();
 
 		if ((s == null) || "".equals(s)) {
 			return newLines;
@@ -552,6 +552,7 @@ public class ToastNoblockingPanel extends AbstractToastPanel {
 	 * Custom JCsollPane that limit dimension, to ensure always enter in the screen
 	 */
 	protected class AdaptableScrollPane extends JScrollPane {
+
 		protected double heightPercent;
 
 		public AdaptableScrollPane(Component comp, double percent) {

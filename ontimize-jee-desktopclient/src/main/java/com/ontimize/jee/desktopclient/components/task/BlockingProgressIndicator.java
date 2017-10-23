@@ -27,7 +27,7 @@ import javax.swing.Timer;
  * The Class BlockingProgressIndicator.
  */
 public class BlockingProgressIndicator extends JPanel
-implements ActionListener, WorkerStatusUpdateListener, PropertyChangeListener, MouseListener, MouseMotionListener, FocusListener {
+        implements ActionListener, WorkerStatusUpdateListener, PropertyChangeListener, MouseListener, MouseMotionListener, FocusListener {
 
 	public static int					MAX_SIZE_WIDTH				= 300;
 	public static int					MAX_SIZE_HEIGHT				= 175;
@@ -106,6 +106,7 @@ implements ActionListener, WorkerStatusUpdateListener, PropertyChangeListener, M
 		this.add(this.informationPanel);
 
 		this.containerResizedListener = new ComponentAdapter() {
+
 			@Override
 			public void componentResized(ComponentEvent e) {
 				BlockingProgressIndicator.this.positionInformationPanel();
@@ -114,7 +115,7 @@ implements ActionListener, WorkerStatusUpdateListener, PropertyChangeListener, M
 	}
 
 	/** The previous glass component. */
-	private Component	previousGlassComponent	= null;
+	private Component previousGlassComponent = null;
 
 	/**
 	 * Inicia la a nimación para mostrar el panel deslizante.

@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import javax.swing.FocusManager;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
@@ -34,8 +32,7 @@ import com.ontimize.xml.DefaultXMLParametersManager;
 public class MultiModuleApplicationLauncher {
 
 	/** The Constant logger. */
-	private final static Logger	logger	= LoggerFactory.getLogger(MultiModuleApplicationLauncher.class);
-
+	private static final Logger logger = LoggerFactory.getLogger(MultiModuleApplicationLauncher.class);
 
 	/**
 	 * Instantiates a new multi module application launcher.
@@ -59,7 +56,7 @@ public class MultiModuleApplicationLauncher {
 	 *             the ontimize jee exception
 	 */
 	public void launch(final String labelsPath, final String clientApplicationPath, final String[] springConfigurationFiles, final String[] args)
-			throws OntimizeJEERuntimeException {
+	        throws OntimizeJEERuntimeException {
 
 		URL urlLabelsFile = Thread.currentThread().getContextClassLoader().getResource(labelsPath);
 		URL urlXMLFile = Thread.currentThread().getContextClassLoader().getResource(clientApplicationPath);
@@ -71,6 +68,7 @@ public class MultiModuleApplicationLauncher {
 		}
 
 		Thread th = new Thread("Multimodule application launcher thread") {
+
 			@Override
 			public void run() {
 				MultiModuleApplicationLauncher.this.doInCreationThread(labelsPath, clientApplicationPath, springConfigurationFiles, args);
@@ -91,8 +89,7 @@ public class MultiModuleApplicationLauncher {
 	 * @param args
 	 *            the args
 	 */
-	protected void doInCreationThread(final String labelsPath, final String clientApplicationPath, final String[] springConfigurationFiles,
-			String[] args) {
+	protected void doInCreationThread(final String labelsPath, final String clientApplicationPath, final String[] springConfigurationFiles, String[] args) {
 		try {
 			BeansFactory.init(springConfigurationFiles);
 			this.checkLibraries();
@@ -100,33 +97,33 @@ public class MultiModuleApplicationLauncher {
 				MultiModuleApplicationLauncher.logger.info("FixedFocusManager established");
 				FocusManager.setCurrentManager(new FixedFocusManager());
 			}
-			XMLMultiModuleApplicationBuilder applicationBuilder = new XMLMultiModuleApplicationBuilder(Thread.currentThread().getContextClassLoader()
-					.getResource(labelsPath).toString());
+			XMLMultiModuleApplicationBuilder applicationBuilder = new XMLMultiModuleApplicationBuilder(
+			        Thread.currentThread().getContextClassLoader().getResource(labelsPath).toString());
 			XMLApplicationBuilder.setXMLApplicationBuilder(applicationBuilder);
 
 			final Application application = applicationBuilder.buildApplication(clientApplicationPath);
 			application.login();
 			SwingUtilities.invokeAndWait(new Runnable() {
+
 				@Override
 				public void run() {
 					application.show();
 				}
 			});
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			MultiModuleApplicationLauncher.logger.error("ERROR: Application cannot be started", e);
-			System.exit(-3);
+			// System.exit(-3);
 		}
 	}
 
 	/**
-	 * Launches the client application. <br/> <code>Syntax: ApplicationLauncher 'xmlLabelFile' 'xmlApplicationFile' ['package'] [-d(for debug)]
-	 * [-https/http (for https/http tunneling)] [-nathttp/nathttps (for https/http tunneling using NAT socket factory)] [-ssl -sslnoreconnect]</code>
-	 * <br/> The parameters configuration is:<br/> <p> <Table BORDER=1 CELLPADDING=3 CELLSPACING=1 RULES=ROWS FRAME=BOX> <tr> <td><b>param</b></td>
-	 * <td><b>meaning</b></td> <td><b>status</b></td> <td><b>example</b></td> </tr> <tr> <td>xmlLabelFile</td> <td>the path to the file that contains
-	 * the label information, which is used to interpret the xml tags</td> <td>mandatory; a default file exist</td> <td>com/ontimize/gui/labels.xml,
-	 * which is the default path with the labels of the default Ontimize fields and components</td> </tr> <tr> <td>xmlApplicationFile</td> <td>the
-	 * path to the file that describes the application</td> <td>mandatory</td> <td>com/project/client/clientapplication.xml</td> </tr> <tr>
-	 * <td>package</td> <td></td> <td>optional</td> <td></td> </tr> <tr> <td></td> <td></td> <td></td> <td></td> </tr> </Table>
+	 * Launches the client application. <br/> <code>Syntax: ApplicationLauncher 'xmlLabelFile' 'xmlApplicationFile' ['package'] [-d(for debug)] [-https/http (for https/http
+	 * tunneling)] [-nathttp/nathttps (for https/http tunneling using NAT socket factory)] [-ssl -sslnoreconnect]</code> <br/> The parameters configuration is:<br/> <p> <Table
+	 * BORDER=1 CELLPADDING=3 CELLSPACING=1 RULES=ROWS FRAME=BOX> <tr> <td><b>param</b></td> <td><b>meaning</b></td> <td><b>status</b></td> <td><b>example</b></td> </tr> <tr>
+	 * <td>xmlLabelFile</td> <td>the path to the file that contains the label information, which is used to interpret the xml tags</td> <td>mandatory; a default file exist</td>
+	 * <td>com/ontimize/gui/labels.xml, which is the default path with the labels of the default Ontimize fields and components</td> </tr> <tr> <td>xmlApplicationFile</td> <td>the
+	 * path to the file that describes the application</td> <td>mandatory</td> <td>com/project/client/clientapplication.xml</td> </tr> <tr> <td>package</td> <td></td>
+	 * <td>optional</td> <td></td> </tr> <tr> <td></td> <td></td> <td></td> <td></td> </tr> </Table>
 	 *
 	 * @param args
 	 *            the arguments
@@ -135,9 +132,9 @@ public class MultiModuleApplicationLauncher {
 		args = MultiModuleApplicationLauncher.configureSystemProperties(args);
 
 		if ((args == null) || (args.length < 2)) {
-			System.out
-					.println("Syntax: ApplicationLauncher 'xmlLabelFile' 'xmlApplicationFile' ['springConfigurationFile'] [-d(for debug)] [-conf conffiles]. \nThe first and the second parameters must include the complete path relative to the classpath");
-			System.exit(-1);
+			MultiModuleApplicationLauncher.logger.debug(
+			        "Syntax: ApplicationLauncher 'xmlLabelFile' 'xmlApplicationFile' ['springConfigurationFile'] [-d(for debug)] [-conf conffiles]. \nThe first and the second parameters must include the complete path relative to the classpath");
+			// System.exit(-1);
 		}
 
 		String lf = System.getProperty("com.ontimize.gui.lafclassname");
@@ -172,7 +169,7 @@ public class MultiModuleApplicationLauncher {
 				break;
 			}
 			// configurationfiles option
-			if ((i < (args.length - 1)) && (args[i] != null) && (args[i].equalsIgnoreCase("-conf")) && (args[i + 1] != null)) {
+			if ((i < (args.length - 1)) && (args[i] != null) && args[i].equalsIgnoreCase("-conf") && (args[i + 1] != null)) {
 				DefaultXMLParametersManager.setXMLDefaultParameterFile(args[i + 1]);
 				break;
 			}
@@ -180,12 +177,9 @@ public class MultiModuleApplicationLauncher {
 
 		try {
 			this.launch(sLabelsFile, sXMLFile, springConfigurationFiles, args);
-		} catch (Error outOfMemoryError) {
-			JOptionPane.showMessageDialog(new JFrame(), "Insufficient memory", "Application Error", JOptionPane.ERROR_MESSAGE);
-			System.exit(-1);
 		} catch (Exception e) {
 			MessageDialog.showErrorMessage(null, e.getMessage());
-			System.exit(-2);
+			// System.exit(-2);
 		}
 	}
 
@@ -194,6 +188,7 @@ public class MultiModuleApplicationLauncher {
 	 */
 	protected void checkLibraries() {
 		new Thread("Check Libraries") {
+
 			@Override
 			public void run() {
 				super.run();
@@ -212,8 +207,8 @@ public class MultiModuleApplicationLauncher {
 	}
 
 	/**
-	 * Ensures to define as System properties all parameters received as arguments. From Java 7 update 45 there is not available to define it in JNLP
-	 * file, was ignored. When receives a "ignore" parameter will be ignored.
+	 * Ensures to define as System properties all parameters received as arguments. From Java 7 update 45 there is not available to define it in JNLP file, was ignored. When
+	 * receives a "ignore" parameter will be ignored.
 	 *
 	 * Common use is as soon as posibble in launcher code this: "args = ClientLaucherUtils.configureSystemProperties(args);"
 	 *
@@ -222,7 +217,7 @@ public class MultiModuleApplicationLauncher {
 	 * @return the string[]
 	 */
 	public static String[] configureSystemProperties(String[] args) {
-		List<String> arguments = new ArrayList<String>();
+		List<String> arguments = new ArrayList<>();
 		for (int i = 0; i < args.length; i++) {
 			String value = args[i];
 			if (value != null) {

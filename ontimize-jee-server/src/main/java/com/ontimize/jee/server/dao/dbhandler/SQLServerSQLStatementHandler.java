@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class SQLServerSQLStatementHandler extends com.ontimize.db.handler.SQLServerSQLStatementHandler {
+
 	private static final Logger logger = LoggerFactory.getLogger(SQLServerSQLStatementHandler.class);
 
 	public SQLServerSQLStatementHandler() {

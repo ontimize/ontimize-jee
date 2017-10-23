@@ -68,14 +68,13 @@ public class SessionHelper implements ApplicationContextAware {
 	}
 
 	private SessionDto toDto(ExpiringSession session) {
-		HashMap<String, Object> sessionAttrs = new HashMap<String, Object>(session.getAttributeNames().size());
+		HashMap<String, Object> sessionAttrs = new HashMap<>(session.getAttributeNames().size());
 		for (String attrName : session.getAttributeNames()) {
 			Object attrValue = session.getAttribute(attrName);
 			sessionAttrs.put(attrName, attrValue);
 		}
 
-		return new SessionDto(session.getId(), sessionAttrs, session.getLastAccessedTime(), session.getCreationTime(),
-				session.getMaxInactiveIntervalInSeconds());
+		return new SessionDto(session.getId(), sessionAttrs, session.getLastAccessedTime(), session.getCreationTime(), session.getMaxInactiveIntervalInSeconds());
 	}
 
 	@Override

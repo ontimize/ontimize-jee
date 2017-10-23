@@ -19,22 +19,21 @@ public class EntityResultResultSetExtractor implements ResultSetExtractor<Entity
 	/** The sql handler. */
 	private final SQLStatementHandler		sqlHandler;
 	private final QueryTemplateInformation	queryTemplateInformation;
-    private final List<?> attributes;
+	private final List<?>					attributes;
 
-    /**
-     * Instantiates a new entity result result set extractor.
-     *
-     * @param sqlHandler
-     *            the sql handler
-     * @param list
-     */
-    public EntityResultResultSetExtractor(final SQLStatementHandler sqlHandler, final QueryTemplateInformation queryTemplateInformation, final List<?> attributes) {
-        super();
-        this.sqlHandler = sqlHandler;
-        this.queryTemplateInformation = queryTemplateInformation;
-        this.attributes = attributes;
-    }
-
+	/**
+	 * Instantiates a new entity result result set extractor.
+	 *
+	 * @param sqlHandler
+	 *            the sql handler
+	 * @param list
+	 */
+	public EntityResultResultSetExtractor(final SQLStatementHandler sqlHandler, final QueryTemplateInformation queryTemplateInformation, final List<?> attributes) {
+		super();
+		this.sqlHandler = sqlHandler;
+		this.queryTemplateInformation = queryTemplateInformation;
+		this.attributes = attributes;
+	}
 
 	/**
 	 * Instantiates a new entity result result set extractor.
@@ -44,7 +43,7 @@ public class EntityResultResultSetExtractor implements ResultSetExtractor<Entity
 	 * @param list
 	 */
 	public EntityResultResultSetExtractor(SQLStatementHandler sqlHandler, QueryTemplateInformation queryTemplateInformation) {
-		this(sqlHandler,queryTemplateInformation,null);
+		this(sqlHandler, queryTemplateInformation, null);
 	}
 
 	/*

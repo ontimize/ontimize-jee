@@ -12,53 +12,51 @@ import com.ontimize.db.EntityResult;
 
 public class EntityResultSerializer extends StdSerializer<EntityResult> {
 
-	public static final String CODE_KEY = "code";
-	public static final String MESSAGE_KEY = "message";
-	public static final String DATA_KEY = "data";
-	public static final String SQL_TYPES_KEY = "sqlTypes";
+	public static final String	CODE_KEY		= "code";
+	public static final String	MESSAGE_KEY		= "message";
+	public static final String	DATA_KEY		= "data";
+	public static final String	SQL_TYPES_KEY	= "sqlTypes";
 
 	public EntityResultSerializer() {
 		super(EntityResult.class);
 	}
 
 	@Override
-	public void serialize(EntityResult value, JsonGenerator jgen, SerializerProvider provider)
-			throws IOException, JsonGenerationException {
+	public void serialize(EntityResult value, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonGenerationException {
 		jgen.writeStartObject();
-		jgen.writeNumberField(CODE_KEY, value.getCode());
-		jgen.writeStringField(MESSAGE_KEY, value.getMessage() != null ? value.getMessage() : "");
-		jgen.writeFieldName(DATA_KEY);
-		
+		jgen.writeNumberField(EntityResultSerializer.CODE_KEY, value.getCode());
+		jgen.writeStringField(EntityResultSerializer.MESSAGE_KEY, value.getMessage() != null ? value.getMessage() : "");
+		jgen.writeFieldName(EntityResultSerializer.DATA_KEY);
+
 		int number = value.calculateRecordNumber();
-		
-		if( number != 0){
-			
+
+		if (number != 0) {
+
 			jgen.writeStartArray();
-			
+
 			// EntityResult has values
-			for(int i=0;i<number;i++){
-				
+			for (int i = 0; i < number; i++) {
+
 				Hashtable record = value.getRecordValues(i);
 				jgen.writeObject(record);
 			}
 			jgen.writeEndArray();
-		}
-		else{
+		} else {
 			// Check if EntityResult is the result of one insertion
-			Hashtable<String, Object> data = new Hashtable<String, Object>();
+			Hashtable<String, Object> data = new Hashtable<>();
 			Enumeration<Object> keys = value.keys();
-			
-			while( keys.hasMoreElements() ){
-				
+
+			while (keys.hasMoreElements()) {
+
 				String itemKey = (String) keys.nextElement();
-				
-				data.put( itemKey, value.get(itemKey) );
+
+				data.put(itemKey, value.get(itemKey));
 			}
-			
+
 			jgen.writeObject(data);
 		}
-		
-		jgen.writeFieldName(SQL_TYPES_KEY);
+
+		jgen.writeFieldName(EntityResultSerializer.SQL_TYPES_KEY);
 		Hashtable sqlTypes = value.getColumnSQLTypes();
 		jgen.writeObject(sqlTypes);
 		jgen.writeEndObject();

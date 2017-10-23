@@ -26,7 +26,7 @@ import com.ontimize.jee.server.configuration.OntimizeConfiguration;
 public class I18nServiceImpl implements II18nService, ApplicationContextAware {
 
 	/** The engine. */
-	private II18nService	engine;
+	private II18nService engine;
 
 	/**
 	 * The Constructor.
@@ -103,7 +103,7 @@ public class I18nServiceImpl implements II18nService, ApplicationContextAware {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.ontimize.jee.common.services.i18n.II18nService#deleteBundleValues(com
 	 * .ontimize.gui.i18n.DatabaseBundleValues)
@@ -143,6 +143,5 @@ public class I18nServiceImpl implements II18nService, ApplicationContextAware {
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		this.setEngine(applicationContext.getBean(OntimizeConfiguration.class).getI18nConfiguration().getEngine());
 	}
-
 
 }

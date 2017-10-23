@@ -23,7 +23,7 @@ import com.ontimize.jee.server.dao.IOntimizeDaoSupport;
 public class DatabaseUserRoleInformationService implements ISecurityUserRoleInformationService {
 
 	/** The Constant logger. */
-	private static final Logger	logger	= LoggerFactory.getLogger(DatabaseUserRoleInformationService.class);
+	private static final Logger	logger		= LoggerFactory.getLogger(DatabaseUserRoleInformationService.class);
 
 	public static final String	BEAN_NAME	= "databaseUserRoleInformationService";
 
@@ -50,12 +50,12 @@ public class DatabaseUserRoleInformationService implements ISecurityUserRoleInfo
 	@Override
 	public Collection<GrantedAuthority> loadUserRoles(String userLogin) {
 		DatabaseUserRoleInformationService.logger.trace(String.format("Getting user details for %s", userLogin));
-		Map<String, Object> filter = new HashMap<String, Object>();
+		Map<String, Object> filter = new HashMap<>();
 		filter.put(this.roleLoginColumn, userLogin);
 		List<String> columnsToQuery = Arrays.asList(new String[] { this.roleNameColumn });
 		EntityResult resRoles = this.userRolesRepository.query(filter, columnsToQuery, null, this.roleQueryId);
 		List<Object> roles = (List<Object>) resRoles.get(this.roleNameColumn);
-		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+		List<GrantedAuthority> authorities = new ArrayList<>();
 		if ((roles != null) && (roles.size() > 0)) {
 			for (Object ob : roles) {
 				authorities.add(new SimpleGrantedAuthority((String) ob));

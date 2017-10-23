@@ -16,18 +16,18 @@ import com.ontimize.jee.server.services.i18n.I18nConfiguration;
 public class I18nBeanDefinitionParser extends AbstractSingleBeanDefinitionParser {
 
 	/** The Constant SCOPE. */
-	private static final String	SCOPE	= "scope";
-	private static final String I18N_ENGINE_PROPERTY = "i18n-engine";
-	private static final String I18N_DATABASE_CONFIGURATION_PROPERTY = "database-i18n";
-	private static final String ENGINE = "engine";
+	private static final String	SCOPE									= "scope";
+	private static final String	I18N_ENGINE_PROPERTY					= "i18n-engine";
+	private static final String	I18N_DATABASE_CONFIGURATION_PROPERTY	= "database-i18n";
+	private static final String	ENGINE									= "engine";
 
-	private static final String I18N_REF_BUNDLE_REPOSITORY = "ref-bundle-repository";
-	private static final String I18N_REF_BUNDLE_VALUE_REPOSITORY = "ref-bundle-value-repository";
-	private static final String I18N_BUNDLE_KEY_COLUMN = "bundle-key-column";
-	private static final String I18N_BUNDLE_CLASS_NAME_COLUMN = "bundle-class-name-column";
-	private static final String I18N_BUNDLE_DESCRIPTION_COLUMN = "bundle-description-column";
-	private static final String I18N_BUNDLE_VALUE_KEY_COLUMN = "bundle-value-key-column";
-	private static final String I18N_BUNDLE_VALUE_TEXT_KEY_COLUMN = "bundle-value-text-key-column";
+	private static final String	I18N_REF_BUNDLE_REPOSITORY				= "ref-bundle-repository";
+	private static final String	I18N_REF_BUNDLE_VALUE_REPOSITORY		= "ref-bundle-value-repository";
+	private static final String	I18N_BUNDLE_KEY_COLUMN					= "bundle-key-column";
+	private static final String	I18N_BUNDLE_CLASS_NAME_COLUMN			= "bundle-class-name-column";
+	private static final String	I18N_BUNDLE_DESCRIPTION_COLUMN			= "bundle-description-column";
+	private static final String	I18N_BUNDLE_VALUE_KEY_COLUMN			= "bundle-value-key-column";
+	private static final String	I18N_BUNDLE_VALUE_TEXT_KEY_COLUMN		= "bundle-value-text-key-column";
 
 	/*
 	 * (non-Javadoc)
@@ -59,8 +59,7 @@ public class I18nBeanDefinitionParser extends AbstractSingleBeanDefinitionParser
 			engine = new DatabaseI18nParser().parse(child, nestedCtx);
 		} else {
 			// construimos el bean que nos venga que deberia ser un II18nService
-			engine = DefinitionParserUtil.parseNode(child, ctx, builder.getBeanDefinition(),
-					element.getAttribute(I18nBeanDefinitionParser.SCOPE), false);
+			engine = DefinitionParserUtil.parseNode(child, ctx, builder.getBeanDefinition(), element.getAttribute(I18nBeanDefinitionParser.SCOPE), false);
 		}
 		builder.addPropertyValue(I18nBeanDefinitionParser.ENGINE, engine);
 		builder.setLazyInit(true);
@@ -103,7 +102,7 @@ public class I18nBeanDefinitionParser extends AbstractSingleBeanDefinitionParser
 			builder.addPropertyValue("bundleDescriptionColumn", DefinitionParserUtil.nullIfEmpty(element.getAttribute(I18nBeanDefinitionParser.I18N_BUNDLE_DESCRIPTION_COLUMN)));
 			builder.addPropertyValue("bundleValuesKeyColumn", DefinitionParserUtil.nullIfEmpty(element.getAttribute(I18nBeanDefinitionParser.I18N_BUNDLE_VALUE_KEY_COLUMN)));
 			builder.addPropertyValue("bundleValuesTextKeyColumn",
-					DefinitionParserUtil.nullIfEmpty(element.getAttribute(I18nBeanDefinitionParser.I18N_BUNDLE_VALUE_TEXT_KEY_COLUMN)));
+			        DefinitionParserUtil.nullIfEmpty(element.getAttribute(I18nBeanDefinitionParser.I18N_BUNDLE_VALUE_TEXT_KEY_COLUMN)));
 			builder.setLazyInit(true);
 		}
 	}

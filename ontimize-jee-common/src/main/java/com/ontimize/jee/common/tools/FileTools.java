@@ -127,10 +127,8 @@ public final class FileTools {
 		if (srcFile.getCanonicalPath().equals(destFile.getCanonicalPath())) {
 			throw new IOException("Source '" + srcFile + "' and destination '" + destFile + "' are the same");
 		}
-		if ((destFile.getParentFile() != null) && !destFile.getParentFile().exists()) {
-			if (destFile.getParentFile().mkdirs() == false) {
-				throw new IOException("Destination '" + destFile + "' directory cannot be created");
-			}
+		if ((destFile.getParentFile() != null) && !destFile.getParentFile().exists() && !destFile.getParentFile().mkdirs()) {
+			throw new IOException("Destination '" + destFile + "' directory cannot be created");
 		}
 		if (destFile.exists() && !destFile.canWrite()) {
 			throw new IOException("Destination '" + destFile + "' exists but is read-only");
@@ -200,7 +198,7 @@ public final class FileTools {
 				}
 			}
 		}
-		return (path.delete());
+		return path.delete();
 	}
 
 	/**
@@ -352,9 +350,9 @@ public final class FileTools {
 	public static String changeExtension(String name, String ext) {
 		int lastIndexOf = name.lastIndexOf('.');
 		if (lastIndexOf >= 0) {
-			return name.substring(0, lastIndexOf) + ((ext.charAt(0) == '.') ? "" : ".") + ext;
+			return name.substring(0, lastIndexOf) + (ext.charAt(0) == '.' ? "" : ".") + ext;
 		}
-		return name + ((ext.charAt(0) == '.') ? "" : ".") + ext;
+		return name + (ext.charAt(0) == '.' ? "" : ".") + ext;
 	}
 
 	public static String[] listFilesByExtension(File dirOut, final String ext) throws IOException {
@@ -362,6 +360,7 @@ public final class FileTools {
 			throw new IOException("NOT_DIRECTORY_FILE");
 		}
 		return dirOut.list(new FilenameFilter() {
+
 			@Override
 			public boolean accept(File dir, String name) {
 				return name.toLowerCase().endsWith(ext.toLowerCase());
@@ -423,7 +422,7 @@ public final class FileTools {
 	 * @throws IOException
 	 */
 	public static Map<String, String> readManifest(File jarFile) {
-		Map<String, String> values = new HashMap<String, String>();
+		Map<String, String> values = new HashMap<>();
 		try (JarFile jar = new JarFile(jarFile)) {
 			Manifest mf = jar.getManifest();
 			FileTools.catchValuesFromManifest(values, mf);
@@ -446,7 +445,7 @@ public final class FileTools {
 	}
 
 	public static Map<String, String> readManifest(InputStream jarFileStream, Class classToLookFor) {
-		Map<String, String> values = new HashMap<String, String>();
+		Map<String, String> values = new HashMap<>();
 		try {
 			// Java 7+ ----------------------
 			try (JarInputStream jarIS = new JarInputStream(jarFileStream)) {

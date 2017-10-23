@@ -8,7 +8,7 @@ import java.io.Serializable;
 public abstract class AbstractGeneratedKey<T> implements Serializable {
 
 	/** The generated key. */
-	private T	generatedKey;
+	private T generatedKey;
 
 	/**
 	 * Instantiates a new generated key.
@@ -48,7 +48,7 @@ public abstract class AbstractGeneratedKey<T> implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = (prime * result) + ((this.generatedKey == null) ? 0 : this.generatedKey.hashCode());
+		result = (prime * result) + (this.generatedKey == null ? 0 : this.generatedKey.hashCode());
 		return result;
 	}
 

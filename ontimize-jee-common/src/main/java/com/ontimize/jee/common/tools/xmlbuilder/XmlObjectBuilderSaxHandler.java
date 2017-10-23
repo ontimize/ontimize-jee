@@ -46,9 +46,9 @@ public class XmlObjectBuilderSaxHandler extends DefaultHandler {
 	public XmlObjectBuilderSaxHandler(final Object root, final Map<String, String> equivalences, final Map<String, String> extraRootParameters) {
 		super();
 		this.extraRootParameters = extraRootParameters;
-		this.stack = new LinkedList<Object>();
+		this.stack = new LinkedList<>();
 		this.equivalences = equivalences;
-		this.objectParameters = new HashMap<Object, Map<String, String>>();
+		this.objectParameters = new HashMap<>();
 		this.stack.push(root);
 	}
 
@@ -57,7 +57,7 @@ public class XmlObjectBuilderSaxHandler extends DefaultHandler {
 	 */
 	@Override
 	public void startElement(final String uri, final String localName, final String qName, final Attributes attributes) throws SAXException {
-		Map<String, String> parameters = new HashMap<String, String>();
+		Map<String, String> parameters = new HashMap<>();
 		for (int i = 0; i < attributes.getLength(); i++) {
 			parameters.put(attributes.getQName(i), attributes.getValue(i));
 		}
@@ -78,8 +78,8 @@ public class XmlObjectBuilderSaxHandler extends DefaultHandler {
 	}
 
 	/**
-	 * Se encarga de realizar la construccion de los objetos definidos en el xml. Se invoca al constructor por defecto y se comprueba que el objeto padre en la jerarqu�a xml tenga
-	 * un m�todo add(Object ob) para anadirle el objeto construido. Adem�s si el componente es Initalizable se invoca al m�todo init.
+	 * Se encarga de realizar la construccion de los objetos definidos en el xml. Se invoca al constructor por defecto y se comprueba que el objeto padre en la jerarqu�a xml
+	 * tenga un m�todo add(Object ob) para anadirle el objeto construido. Adem�s si el componente es Initalizable se invoca al m�todo init.
 	 *
 	 * @param qName
 	 *            el nombre del elemento en el xml
@@ -103,15 +103,15 @@ public class XmlObjectBuilderSaxHandler extends DefaultHandler {
 	 * @throws NoSuchMethodException
 	 *             the no such method exception {@link IInitializable} se invoca al metodo {@link Initializable.init(Map<String,?)}
 	 */
-	protected Object buildObject(final String qName, final Map<String, String> parameters, final Object parent) throws ClassNotFoundException, IllegalArgumentException,
-			SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, ParserConfigurationException, SAXException,
-			IOException {
+	protected Object buildObject(final String qName, final Map<String, String> parameters, final Object parent)
+	        throws ClassNotFoundException, IllegalArgumentException, SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException,
+	        NoSuchMethodException, ParserConfigurationException, SAXException, IOException {
 		String className = qName.replace('-', '$');// para poder declarar clases internas
 
 		Object ob = null;
 		if ("Include".equalsIgnoreCase(className)) {
 			ob = new XmlObjectBuilder().buildFromXml(parent, XmlObjectBuilder.class.getClassLoader().getResourceAsStream(parameters.get("includefile")), this.equivalences,
-					parameters);
+			        parameters);
 		} else {
 
 			String equivalence = this.equivalences == null ? null : this.equivalences.get(className);
@@ -120,15 +120,15 @@ public class XmlObjectBuilderSaxHandler extends DefaultHandler {
 			try {
 				// opcion1 constructor con padre+map
 				ob = ReflectionTools.newInstance(className, parent, parameters);
-			} catch (Throwable ex) {
+			} catch (Exception ex) {
 				try {
 					// opcion2 constructor con parametros
 					ob = ReflectionTools.newInstance(className, parameters);
-				} catch (Throwable ex2) {
+				} catch (Exception ex2) {
 					try {
 						// opcion3 constructor con padre
 						ob = ReflectionTools.newInstance(className, parent);
-					} catch (Throwable ex3) {
+					} catch (Exception ex3) {
 						// opcion4 constructor por defecto
 						ob = ReflectionTools.newInstance(className);
 					}

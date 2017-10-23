@@ -8,7 +8,7 @@ import com.ontimize.jee.common.tools.MessageType;
 public class NoTraceOntimizeJEEException extends OntimizeJEEException {
 
 	/** The Constant serialVersionUID. */
-	private static final long	serialVersionUID	= 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Instantiates a new ontimize jee exception.
@@ -47,7 +47,7 @@ public class NoTraceOntimizeJEEException extends OntimizeJEEException {
 	 */
 	public NoTraceOntimizeJEEException(Throwable cause) {
 		this(cause.getMessage(), cause, NoTraceOntimizeJEEException.getMessageParams(cause), NoTraceOntimizeJEEException.getMessageType(cause),
-				NoTraceOntimizeJEEException.isBlocking(cause), NoTraceOntimizeJEEException.isSilent(cause));
+		        NoTraceOntimizeJEEException.isBlocking(cause), NoTraceOntimizeJEEException.isSilent(cause));
 	}
 
 	private static Object[] getMessageParams(Throwable cause) {
@@ -66,18 +66,19 @@ public class NoTraceOntimizeJEEException extends OntimizeJEEException {
 	}
 
 	private static boolean isBlocking(Throwable cause) {
-		if ((cause instanceof IParametrizedException)) {
+		if (cause instanceof IParametrizedException) {
 			return ((IParametrizedException) cause).isMessageBlocking();
 		}
 		return false;
 	}
 
 	private static boolean isSilent(Throwable cause) {
-		if ((cause instanceof IParametrizedException)) {
+		if (cause instanceof IParametrizedException) {
 			return ((IParametrizedException) cause).isSilent();
 		}
 		return false;
 	}
+
 	/**
 	 * Instantiates a new ontimize jee exception.
 	 *

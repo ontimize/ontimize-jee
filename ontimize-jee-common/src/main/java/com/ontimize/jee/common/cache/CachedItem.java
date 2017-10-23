@@ -14,6 +14,7 @@ package com.ontimize.jee.common.cache;
  * @author <a href="user@email.com">Author</a>
  */
 public class CachedItem<T> {
+
 	private long	timestamp;
 	private T		value;
 

@@ -10,7 +10,7 @@ import com.ontimize.jee.common.cache.AbstractGenericCache;
  *
  * @author joaquin.romero
  */
-public class MemoryUserCache extends AbstractGenericCache<String, UserDetails> implements UserCache{
+public class MemoryUserCache extends AbstractGenericCache<String, UserDetails> implements UserCache {
 
 	/**
 	 * Instantiates a new memory user cache.
@@ -22,7 +22,8 @@ public class MemoryUserCache extends AbstractGenericCache<String, UserDetails> i
 	/**
 	 * Instantiates a new memory user cache.
 	 *
-	 * @param ttl the ttl
+	 * @param ttl
+	 *            the ttl
 	 */
 	public MemoryUserCache(long ttl) {
 		super(ttl);
@@ -41,7 +42,7 @@ public class MemoryUserCache extends AbstractGenericCache<String, UserDetails> i
 	 */
 	@Override
 	public UserDetails getUserFromCache(String username) {
-		return get(username);
+		return this.get(username);
 	}
 
 	/* (non-Javadoc)
@@ -49,7 +50,7 @@ public class MemoryUserCache extends AbstractGenericCache<String, UserDetails> i
 	 */
 	@Override
 	public void putUserInCache(UserDetails user) {
-		put(user.getUsername(), user);
+		this.put(user.getUsername(), user);
 	}
 
 	/* (non-Javadoc)
@@ -57,7 +58,7 @@ public class MemoryUserCache extends AbstractGenericCache<String, UserDetails> i
 	 */
 	@Override
 	public void removeUserFromCache(String username) {
-		invalidateCache(username);
+		this.invalidateCache(username);
 	}
 
 }

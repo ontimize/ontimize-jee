@@ -17,7 +17,7 @@ import com.ontimize.jee.desktopclient.locator.preferences.RemoteApplicationPrefe
 public class RemoteApplicationPreferenceReferencerDelegate extends AbstractInvocationDelegate implements RemoteApplicationPreferenceReferencer {
 
 	/** The preferences manager. */
-	private RemoteApplicationPreferences	preferencesManager;
+	private RemoteApplicationPreferences preferencesManager;
 
 	/*
 	 * (non-Javadoc)
@@ -31,8 +31,8 @@ public class RemoteApplicationPreferenceReferencerDelegate extends AbstractInvoc
 			interfaces.add(RemoteApplicationPreferences.class);
 			interfacesExtending = interfaces.toArray(new Class<?>[0]);
 
-			this.preferencesManager = (RemoteApplicationPreferences) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
-						interfacesExtending, new RemoteApplicationPreferencesInvocationHandler());
+			this.preferencesManager = (RemoteApplicationPreferences) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), interfacesExtending,
+			        new RemoteApplicationPreferencesInvocationHandler());
 		}
 		return this.preferencesManager;
 	}

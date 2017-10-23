@@ -1,4 +1,5 @@
 package com.ontimize.jee.server.spring;
+
 import javax.servlet.ServletContext;
 
 import org.springframework.beans.factory.FactoryBean;

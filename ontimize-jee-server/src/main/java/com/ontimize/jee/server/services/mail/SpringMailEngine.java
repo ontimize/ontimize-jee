@@ -101,7 +101,7 @@ public class SpringMailEngine implements IMailEngine, InitializingBean {
 	 */
 	@Override
 	public void sendMail(String from, List<String> to, List<String> cc, List<String> bcc, String subject, String body, Map<String, byte[]> attachments,
-			Map<String, byte[]> inlineResources) throws OntimizeJEEException {
+	        Map<String, byte[]> inlineResources) throws OntimizeJEEException {
 		Map<String, InputStreamSource> attach = new HashMap<>();
 		if (attachments != null) {
 			for (Entry<String, byte[]> entry : attachments.entrySet()) {
@@ -112,6 +112,7 @@ public class SpringMailEngine implements IMailEngine, InitializingBean {
 		if (inlineResources != null) {
 			for (final Entry<String, byte[]> entry : inlineResources.entrySet()) {
 				inline.put(entry.getKey(), new ByteArrayResource(entry.getValue()) {
+
 					// ByteArrayResource.getFilename() returns null but Spring needs a value in that method
 					@Override
 					public String getFilename() {
@@ -130,11 +131,12 @@ public class SpringMailEngine implements IMailEngine, InitializingBean {
 	 */
 	@Override
 	public void sendMailFromInputSteams(String from, List<String> to, List<String> cc, List<String> bcc, String subject, String body, Map<String, Path> attachments,
-			Map<String, Path> inlineResources) throws OntimizeJEEException {
+	        Map<String, Path> inlineResources) throws OntimizeJEEException {
 		Map<String, InputStreamSource> attach = new HashMap<>();
 		if (attachments != null) {
 			for (final Entry<String, Path> entry : attachments.entrySet()) {
 				attach.put(entry.getKey(), new InputStreamSource() {
+
 					@Override
 					public java.io.InputStream getInputStream() throws java.io.IOException {
 						return Files.newInputStream(entry.getValue());
@@ -178,7 +180,7 @@ public class SpringMailEngine implements IMailEngine, InitializingBean {
 	 *             the messaging exception
 	 */
 	protected void sendMailSpring(String from, List<String> to, List<String> cc, List<String> bcc, String subject, String body, Map<String, InputStreamSource> attachments,
-			Map<String, Resource> inlineResources) throws OntimizeJEEException {
+	        Map<String, Resource> inlineResources) throws OntimizeJEEException {
 		try {
 			MimeMessage message = this.mailSender.createMimeMessage();
 			MimeMessageHelper helper = new MimeMessageHelper(message, this.hasAttachments(inlineResources, attachments));

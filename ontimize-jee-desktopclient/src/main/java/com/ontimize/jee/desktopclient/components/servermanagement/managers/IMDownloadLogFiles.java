@@ -32,15 +32,16 @@ import com.ontimize.jee.desktopclient.spring.BeansFactory;
  * The Class IMLiveLogConsole.
  */
 public class IMDownloadLogFiles extends BasicInteractionManager {
-	private static final Logger logger = LoggerFactory.getLogger(IMDownloadLogFiles.class);
+
+	private static final Logger			logger	= LoggerFactory.getLogger(IMDownloadLogFiles.class);
 
 	@FormComponent(attr = "B_REFRESH")
-	protected Button	bRefresh;
+	protected Button					bRefresh;
 	@FormComponent(attr = "B_DOWNLOAD")
-	protected Button	bDownload;
+	protected Button					bDownload;
 
 	@FormComponent(attr = "LOGFILES")
-	protected Table tLogFiles;
+	protected Table						tLogFiles;
 
 	private IServerManagementService	serverManagement;
 	private JFileChooser				chooser;
@@ -94,6 +95,7 @@ public class IMDownloadLogFiles extends BasicInteractionManager {
 	}
 
 	public class RefreshDownloadLogFilesListener implements ActionListener {
+
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			new Thread(new Runnable() {
@@ -112,6 +114,7 @@ public class IMDownloadLogFiles extends BasicInteractionManager {
 	}
 
 	public class DownloadLogFileListener implements ActionListener {
+
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			new Thread(new Runnable() {

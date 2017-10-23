@@ -12,7 +12,7 @@ import com.ontimize.jee.server.dao.common.INameConverter;
 public class UnderscoreToCamelcaseNameConverter implements INameConverter {
 
 	/** The upper case. */
-	private boolean	upperCase;
+	private boolean upperCase;
 
 	/**
 	 * Instantiates a new underscore to camelcase name converter.
@@ -59,8 +59,7 @@ public class UnderscoreToCamelcaseNameConverter implements INameConverter {
 	}
 
 	/**
-	 * Convert a name in camelCase to an underscored name in lower case. Any upper case letters are converted to lower case with a preceding
-	 * underscore.
+	 * Convert a name in camelCase to an underscored name in lower case. Any upper case letters are converted to lower case with a preceding underscore.
 	 *
 	 * @param name
 	 *            the string containing original name
@@ -85,8 +84,7 @@ public class UnderscoreToCamelcaseNameConverter implements INameConverter {
 	}
 
 	/**
-	 * Convert a name in camelCase to an underscored name in lower case. Any upper case letters are converted to lower case with a preceding
-	 * underscore.
+	 * Convert a name in camelCase to an underscored name in lower case. Any upper case letters are converted to lower case with a preceding underscore.
 	 *
 	 * @param name
 	 *            the string containing original name

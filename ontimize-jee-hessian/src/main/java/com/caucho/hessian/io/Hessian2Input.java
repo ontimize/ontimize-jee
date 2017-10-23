@@ -1,18 +1,16 @@
 /*
- * Copyright (c) 2001-2008 Caucho Technology, Inc. All rights reserved. The Apache Software License, Version 1.1 Redistribution and use in source and
- * binary forms, with or without modification, are permitted provided that the following conditions are met: 1. Redistributions of source code must
- * retain the above copyright notice, this list of conditions and the following disclaimer. 2. Redistributions in binary form must reproduce the above
- * copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
- * 3. The end-user documentation included with the redistribution, if any, must include the following acknowlegement: "This product includes software
- * developed by the Caucho Technology (http://www.caucho.com/)." Alternately, this acknowlegement may appear in the software itself, if and wherever
- * such third-party acknowlegements normally appear. 4. The names "Hessian", "Resin", and "Caucho" must not be used to endorse or promote products
- * derived from this software without prior written permission. For written permission, please contact info@caucho.com. 5. Products derived from this
- * software may not be called "Resin" nor may "Resin" appear in their names without prior written permission of Caucho Technology. THIS SOFTWARE IS
- * PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL CAUCHO TECHNOLOGY OR ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * Copyright (c) 2001-2008 Caucho Technology, Inc. All rights reserved. The Apache Software License, Version 1.1 Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met: 1. Redistributions of source code must retain the above copyright notice, this list of conditions and
+ * the following disclaimer. 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution. 3. The end-user documentation included with the redistribution, if any, must include the following acknowlegement: "This
+ * product includes software developed by the Caucho Technology (http://www.caucho.com/)." Alternately, this acknowlegement may appear in the software itself, if and wherever such
+ * third-party acknowlegements normally appear. 4. The names "Hessian", "Resin", and "Caucho" must not be used to endorse or promote products derived from this software without
+ * prior written permission. For written permission, please contact info@caucho.com. 5. Products derived from this software may not be called "Resin" nor may "Resin" appear in
+ * their names without prior written permission of Caucho Technology. THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL CAUCHO TECHNOLOGY OR ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+ * BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+ * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * @author Scott Ferguson
  */
 
@@ -31,12 +29,11 @@ import java.util.HashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-//@formatter:off
+// @formatter:off
 /**
  * Input stream for Hessian requests.
  *
- * <p>HessianInput is unbuffered, so any client needs to provide
- * its own buffering.
+ * <p>HessianInput is unbuffered, so any client needs to provide its own buffering.
  *
  * <pre>
  * InputStream is = ...; // from http connection
@@ -48,10 +45,10 @@ import org.slf4j.LoggerFactory;
  * in.completeReply();      // read reply footer
  * </pre>
  */
-//@formatter:on
+// @formatter:on
 public class Hessian2Input extends AbstractHessianInput implements Hessian2Constants {
 
-	private static final Logger				log			= LoggerFactory.getLogger(Hessian2Input.class);
+	private static final Logger				logger		= LoggerFactory.getLogger(Hessian2Input.class);
 	private static final int				END_OF_DATA	= -2;
 
 	private static Field					detailMessageField;
@@ -65,9 +62,9 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 
 	private static boolean					isCloseStreamOnClose;
 
-	protected ArrayList<Object>				refs		= new ArrayList<Object>();
-	protected ArrayList<ObjectDefinition>	classDefs	= new ArrayList<ObjectDefinition>();
-	protected ArrayList<String>				types		= new ArrayList<String>();
+	protected ArrayList<Object>				refs		= new ArrayList<>();
+	protected ArrayList<ObjectDefinition>	classDefs	= new ArrayList<>();
+	protected ArrayList<String>				types		= new ArrayList<>();
 
 	// the underlying input stream
 	private InputStream						is;
@@ -179,7 +176,9 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 	/**
 	 * Starts reading the call
 	 *
-	 * <pre> c major minor </pre>
+	 * <pre>
+	 *  c major minor
+	 * </pre>
 	 */
 	@Override
 	public int readCall() throws IOException {
@@ -195,7 +194,9 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 	/**
 	 * Starts reading the envelope
 	 *
-	 * <pre> E major minor </pre>
+	 * <pre>
+	 *  E major minor
+	 * </pre>
 	 */
 	public int readEnvelope() throws IOException {
 		int tag = this.read();
@@ -222,7 +223,9 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 	 *
 	 * <p>A successful completion will have a single value:
 	 *
-	 * <pre> Z </pre>
+	 * <pre>
+	 * Z
+	 * </pre>
 	 */
 	public void completeEnvelope() throws IOException {
 		int tag = this.read();
@@ -237,7 +240,9 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 	 *
 	 * <p>A successful completion will have a single value:
 	 *
-	 * <pre> string </pre>
+	 * <pre>
+	 * string
+	 * </pre>
 	 */
 	@Override
 	public String readMethod() throws IOException {
@@ -249,7 +254,9 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 	/**
 	 * Returns the number of method arguments
 	 *
-	 * <pre> int </pre>
+	 * <pre>
+	 *  int
+	 * </pre>
 	 */
 	@Override
 	public int readMethodArgLength() throws IOException {
@@ -261,7 +268,9 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 	 *
 	 * <p>The call expects the following protocol data
 	 *
-	 * <pre> c major minor m b16 b8 method </pre>
+	 * <pre>
+	 *  c major minor m b16 b8 method
+	 * </pre>
 	 */
 	@Override
 	public void startCall() throws IOException {
@@ -287,7 +296,7 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 	 *
 	 * <p>A successful completion will have a single value:
 	 *
-	 * <pre> </pre>
+	 * <pre></pre>
 	 */
 	@Override
 	public void completeCall() throws IOException {}
@@ -316,7 +325,7 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 					sb.append((char) ch);
 				}
 			} catch (IOException e) {
-				Hessian2Input.log.info(e.toString(), e);
+				Hessian2Input.logger.info(e.toString(), e);
 			}
 
 			throw this.error("expected hessian reply at " + this.codeName(tag) + "\n" + sb);
@@ -328,7 +337,9 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 	 *
 	 * <p>A successful completion will have a single value:
 	 *
-	 * <pre> r </pre>
+	 * <pre>
+	 * r
+	 * </pre>
 	 */
 	@Override
 	public void startReply() throws Throwable {
@@ -350,18 +361,14 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 			if ((message != null) && (Hessian2Input.detailMessageField != null)) {
 				try {
 					Hessian2Input.detailMessageField.set(this.replyFault, message);
-				} catch (Throwable e) {
+				} catch (Exception e) {
+					Hessian2Input.logger.trace(null, e);
 				}
 			}
-
 			return this.replyFault;
-		}
-
-		else {
+		} else {
 			String code = (String) fault.get("code");
-
 			this.replyFault = new HessianServiceException(message, code, detail);
-
 			return this.replyFault;
 		}
 	}
@@ -371,7 +378,9 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 	 *
 	 * <p>A successful completion will have a single value:
 	 *
-	 * <pre> z </pre>
+	 * <pre>
+	 * z
+	 * </pre>
 	 */
 	@Override
 	public void completeReply() throws IOException {}
@@ -381,7 +390,9 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 	 *
 	 * <p>A successful completion will have a single value:
 	 *
-	 * <pre> z </pre>
+	 * <pre>
+	 * z
+	 * </pre>
 	 */
 	public void completeValueReply() throws IOException {
 		int tag = this.read();
@@ -394,7 +405,9 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 	/**
 	 * Reads a header, returning null if there are no headers.
 	 *
-	 * <pre> H b16 b8 value </pre>
+	 * <pre>
+	 *  H b16 b8 value
+	 * </pre>
 	 */
 	@Override
 	public String readHeader() throws IOException {
@@ -404,7 +417,9 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 	/**
 	 * Starts reading a packet
 	 *
-	 * <pre> p major minor </pre>
+	 * <pre>
+	 *  p major minor
+	 * </pre>
 	 */
 	public int startMessage() throws IOException {
 		int tag = this.read();
@@ -426,7 +441,9 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 	 *
 	 * <p>A successful completion will have a single value:
 	 *
-	 * <pre> z </pre>
+	 * <pre>
+	 * z
+	 * </pre>
 	 */
 	public void completeMessage() throws IOException {
 		int tag = this.read();
@@ -439,7 +456,9 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 	/**
 	 * Reads a null
 	 *
-	 * <pre> N </pre>
+	 * <pre>
+	 * N
+	 * </pre>
 	 */
 	@Override
 	public void readNull() throws IOException {
@@ -457,11 +476,13 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 	/**
 	 * Reads a boolean
 	 *
-	 * <pre> T F </pre>
+	 * <pre>
+	 *  T F
+	 * </pre>
 	 */
 	@Override
 	public boolean readBoolean() throws IOException {
-		int tag = this.offset < this.length ? (this.buffer[this.offset++] & 0xff) : this.read();
+		int tag = this.offset < this.length ? this.buffer[this.offset++] & 0xff : this.read();
 
 		switch (tag) {
 			case 'T':
@@ -469,7 +490,7 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 			case 'F':
 				return false;
 
-				// direct integer
+			// direct integer
 			case 0x80:
 			case 0x81:
 			case 0x82:
@@ -539,11 +560,11 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 			case 0xbf:
 				return tag != Hessian2Constants.BC_INT_ZERO;
 
-				// INT_BYTE = 0
+			// INT_BYTE = 0
 			case 0xc8:
 				return this.read() != 0;
 
-				// INT_BYTE != 0
+			// INT_BYTE != 0
 			case 0xc0:
 			case 0xc1:
 			case 0xc2:
@@ -562,11 +583,11 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 				this.read();
 				return true;
 
-				// INT_SHORT = 0
+			// INT_SHORT = 0
 			case 0xd4:
 				return ((256 * this.read()) + this.read()) != 0;
 
-				// INT_SHORT != 0
+			// INT_SHORT != 0
 			case 0xd0:
 			case 0xd1:
 			case 0xd2:
@@ -608,11 +629,11 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 			case 0xef:
 				return tag != Hessian2Constants.BC_LONG_ZERO;
 
-				// LONG_BYTE = 0
+			// LONG_BYTE = 0
 			case 0xf8:
 				return this.read() != 0;
 
-				// LONG_BYTE != 0
+			// LONG_BYTE != 0
 			case 0xf0:
 			case 0xf1:
 			case 0xf2:
@@ -631,11 +652,11 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 				this.read();
 				return true;
 
-				// INT_SHORT = 0
+			// INT_SHORT = 0
 			case 0x3c:
 				return ((256 * this.read()) + this.read()) != 0;
 
-				// INT_SHORT != 0
+			// INT_SHORT != 0
 			case 0x38:
 			case 0x39:
 			case 0x3a:
@@ -685,7 +706,9 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 	/**
 	 * Reads a short
 	 *
-	 * <pre> I b32 b24 b16 b8 </pre>
+	 * <pre>
+	 *  I b32 b24 b16 b8
+	 * </pre>
 	 */
 	public short readShort() throws IOException {
 		return (short) this.readInt();
@@ -694,7 +717,9 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 	/**
 	 * Reads an integer
 	 *
-	 * <pre> I b32 b24 b16 b8 </pre>
+	 * <pre>
+	 *  I b32 b24 b16 b8
+	 * </pre>
 	 */
 	@Override
 	public final int readInt() throws IOException {
@@ -711,7 +736,7 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 			case 'T':
 				return 1;
 
-				// direct integer
+			// direct integer
 			case 0x80:
 			case 0x81:
 			case 0x82:
@@ -781,7 +806,7 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 			case 0xbf:
 				return tag - Hessian2Constants.BC_INT_ZERO;
 
-				/* byte int */
+			/* byte int */
 			case 0xc0:
 			case 0xc1:
 			case 0xc2:
@@ -800,7 +825,7 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 			case 0xcf:
 				return ((tag - Hessian2Constants.BC_INT_BYTE_ZERO) << 8) + this.read();
 
-				/* short int */
+			/* short int */
 			case 0xd0:
 			case 0xd1:
 			case 0xd2:
@@ -813,9 +838,9 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 
 			case 'I':
 			case BC_LONG_INT:
-				return ((this.read() << 24) + (this.read() << 16) + (this.read() << 8) + this.read());
+				return (this.read() << 24) + (this.read() << 16) + (this.read() << 8) + this.read();
 
-				// direct long
+			// direct long
 			case 0xd8:
 			case 0xd9:
 			case 0xda:
@@ -843,7 +868,7 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 			case 0xef:
 				return tag - Hessian2Constants.BC_LONG_ZERO;
 
-				/* byte long */
+			/* byte long */
 			case 0xf0:
 			case 0xf1:
 			case 0xf2:
@@ -862,7 +887,7 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 			case 0xff:
 				return ((tag - Hessian2Constants.BC_LONG_BYTE_ZERO) << 8) + this.read();
 
-				/* short long */
+			/* short long */
 			case 0x38:
 			case 0x39:
 			case 0x3a:
@@ -882,12 +907,12 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 			case BC_DOUBLE_ONE:
 				return 1;
 
-				// case LONG_BYTE:
+			// case LONG_BYTE:
 			case BC_DOUBLE_BYTE:
 				return (byte) (this.offset < this.length ? this.buffer[this.offset++] : this.read());
 
-				// case INT_SHORT:
-				// case LONG_SHORT:
+			// case INT_SHORT:
+			// case LONG_SHORT:
 			case BC_DOUBLE_SHORT:
 				return (short) ((256 * this.read()) + this.read());
 
@@ -908,7 +933,9 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 	/**
 	 * Reads a long
 	 *
-	 * <pre> L b64 b56 b48 b40 b32 b24 b16 b8 </pre>
+	 * <pre>
+	 *  L b64 b56 b48 b40 b32 b24 b16 b8
+	 * </pre>
 	 */
 	@Override
 	public long readLong() throws IOException {
@@ -924,7 +951,7 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 			case 'T':
 				return 1;
 
-				// direct integer
+			// direct integer
 			case 0x80:
 			case 0x81:
 			case 0x82:
@@ -994,7 +1021,7 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 			case 0xbf:
 				return tag - Hessian2Constants.BC_INT_ZERO;
 
-				/* byte int */
+			/* byte int */
 			case 0xc0:
 			case 0xc1:
 			case 0xc2:
@@ -1013,7 +1040,7 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 			case 0xcf:
 				return ((tag - Hessian2Constants.BC_INT_BYTE_ZERO) << 8) + this.read();
 
-				/* short int */
+			/* short int */
 			case 0xd0:
 			case 0xd1:
 			case 0xd2:
@@ -1024,12 +1051,12 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 			case 0xd7:
 				return ((tag - Hessian2Constants.BC_INT_SHORT_ZERO) << 16) + (256 * this.read()) + this.read();
 
-				// case LONG_BYTE:
+			// case LONG_BYTE:
 			case BC_DOUBLE_BYTE:
 				return (byte) (this.offset < this.length ? this.buffer[this.offset++] : this.read());
 
-				// case INT_SHORT:
-				// case LONG_SHORT:
+			// case INT_SHORT:
+			// case LONG_SHORT:
 			case BC_DOUBLE_SHORT:
 				return (short) ((256 * this.read()) + this.read());
 
@@ -1037,7 +1064,7 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 			case BC_LONG_INT:
 				return this.parseInt();
 
-				// direct long
+			// direct long
 			case 0xd8:
 			case 0xd9:
 			case 0xda:
@@ -1065,7 +1092,7 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 			case 0xef:
 				return tag - Hessian2Constants.BC_LONG_ZERO;
 
-				/* byte long */
+			/* byte long */
 			case 0xf0:
 			case 0xf1:
 			case 0xf2:
@@ -1084,7 +1111,7 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 			case 0xff:
 				return ((tag - Hessian2Constants.BC_LONG_BYTE_ZERO) << 8) + this.read();
 
-				/* short long */
+			/* short long */
 			case 0x38:
 			case 0x39:
 			case 0x3a:
@@ -1121,7 +1148,9 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 	/**
 	 * Reads a float
 	 *
-	 * <pre> D b64 b56 b48 b40 b32 b24 b16 b8 </pre>
+	 * <pre>
+	 *  D b64 b56 b48 b40 b32 b24 b16 b8
+	 * </pre>
 	 */
 	public float readFloat() throws IOException {
 		return (float) this.readDouble();
@@ -1130,7 +1159,9 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 	/**
 	 * Reads a double
 	 *
-	 * <pre> D b64 b56 b48 b40 b32 b24 b16 b8 </pre>
+	 * <pre>
+	 *  D b64 b56 b48 b40 b32 b24 b16 b8
+	 * </pre>
 	 */
 	@Override
 	public double readDouble() throws IOException {
@@ -1146,7 +1177,7 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 			case 'T':
 				return 1;
 
-				// direct integer
+			// direct integer
 			case 0x80:
 			case 0x81:
 			case 0x82:
@@ -1216,7 +1247,7 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 			case 0xbf:
 				return tag - 0x90;
 
-				/* byte int */
+			/* byte int */
 			case 0xc0:
 			case 0xc1:
 			case 0xc2:
@@ -1235,7 +1266,7 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 			case 0xcf:
 				return ((tag - Hessian2Constants.BC_INT_BYTE_ZERO) << 8) + this.read();
 
-				/* short int */
+			/* short int */
 			case 0xd0:
 			case 0xd1:
 			case 0xd2:
@@ -1250,7 +1281,7 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 			case BC_LONG_INT:
 				return this.parseInt();
 
-				// direct long
+			// direct long
 			case 0xd8:
 			case 0xd9:
 			case 0xda:
@@ -1278,7 +1309,7 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 			case 0xef:
 				return tag - Hessian2Constants.BC_LONG_ZERO;
 
-				/* byte long */
+			/* byte long */
 			case 0xf0:
 			case 0xf1:
 			case 0xf2:
@@ -1297,7 +1328,7 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 			case 0xff:
 				return ((tag - Hessian2Constants.BC_LONG_BYTE_ZERO) << 8) + this.read();
 
-				/* short long */
+			/* short long */
 			case 0x38:
 			case 0x39:
 			case 0x3a:
@@ -1340,7 +1371,9 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 	/**
 	 * Reads a date.
 	 *
-	 * <pre> T b64 b56 b48 b40 b32 b24 b16 b8 </pre>
+	 * <pre>
+	 *  T b64 b56 b48 b40 b32 b24 b16 b8
+	 * </pre>
 	 */
 	@Override
 	public long readUTCDate() throws IOException {
@@ -1558,7 +1591,9 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 	/**
 	 * Reads a string
 	 *
-	 * <pre> S b16 b8 string value </pre>
+	 * <pre>
+	 *  S b16 b8 string value
+	 * </pre>
 	 */
 	@Override
 	public String readString() throws IOException {
@@ -1572,7 +1607,7 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 			case 'F':
 				return "false";
 
-				// direct integer
+			// direct integer
 			case 0x80:
 			case 0x81:
 			case 0x82:
@@ -1640,9 +1675,9 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 			case 0xbd:
 			case 0xbe:
 			case 0xbf:
-				return String.valueOf((tag - 0x90));
+				return String.valueOf(tag - 0x90);
 
-				/* byte int */
+			/* byte int */
 			case 0xc0:
 			case 0xc1:
 			case 0xc2:
@@ -1661,7 +1696,7 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 			case 0xcf:
 				return String.valueOf(((tag - Hessian2Constants.BC_INT_BYTE_ZERO) << 8) + this.read());
 
-				/* short int */
+			/* short int */
 			case 0xd0:
 			case 0xd1:
 			case 0xd2:
@@ -1676,7 +1711,7 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 			case BC_LONG_INT:
 				return String.valueOf(this.parseInt());
 
-				// direct long
+			// direct long
 			case 0xd8:
 			case 0xd9:
 			case 0xda:
@@ -1704,7 +1739,7 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 			case 0xef:
 				return String.valueOf(tag - Hessian2Constants.BC_LONG_ZERO);
 
-				/* byte long */
+			/* byte long */
 			case 0xf0:
 			case 0xf1:
 			case 0xf2:
@@ -1723,7 +1758,7 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 			case 0xff:
 				return String.valueOf(((tag - Hessian2Constants.BC_LONG_BYTE_ZERO) << 8) + this.read());
 
-				/* short long */
+			/* short long */
 			case 0x38:
 			case 0x39:
 			case 0x3a:
@@ -1747,7 +1782,7 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 				return String.valueOf((byte) (this.offset < this.length ? this.buffer[this.offset++] : this.read()));
 
 			case BC_DOUBLE_SHORT:
-				return String.valueOf(((short) ((256 * this.read()) + this.read())));
+				return String.valueOf((short) ((256 * this.read()) + this.read()));
 
 			case BC_DOUBLE_MILL: {
 				int mills = this.parseInt();
@@ -1772,7 +1807,7 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 
 				return this.sbuf.toString();
 
-				// 0-byte string
+			// 0-byte string
 			case 0x00:
 			case 0x01:
 			case 0x02:
@@ -1840,7 +1875,9 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 	/**
 	 * Reads a byte array
 	 *
-	 * <pre> B b16 b8 data value </pre>
+	 * <pre>
+	 *  B b16 b8 data value
+	 * </pre>
 	 */
 	@Override
 	public byte[] readBytes() throws IOException {
@@ -2123,7 +2160,7 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 			return this.readObject();
 		}
 
-		int tag = this.offset < this.length ? (this.buffer[this.offset++] & 0xff) : this.read();
+		int tag = this.offset < this.length ? this.buffer[this.offset++] & 0xff : this.read();
 
 		switch (tag) {
 			case 'N':
@@ -2302,7 +2339,7 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 	 */
 	@Override
 	public Object readObject() throws IOException {
-		int tag = this.offset < this.length ? (this.buffer[this.offset++] & 0xff) : this.read();
+		int tag = this.offset < this.length ? this.buffer[this.offset++] & 0xff : this.read();
 
 		switch (tag) {
 			case 'N':
@@ -2314,7 +2351,7 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 			case 'F':
 				return Boolean.valueOf(false);
 
-				// direct integer
+			// direct integer
 			case 0x80:
 			case 0x81:
 			case 0x82:
@@ -2384,7 +2421,7 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 			case 0xbf:
 				return Integer.valueOf(tag - Hessian2Constants.BC_INT_ZERO);
 
-				/* byte int */
+			/* byte int */
 			case 0xc0:
 			case 0xc1:
 			case 0xc2:
@@ -2403,7 +2440,7 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 			case 0xcf:
 				return Integer.valueOf(((tag - Hessian2Constants.BC_INT_BYTE_ZERO) << 8) + this.read());
 
-				/* short int */
+			/* short int */
 			case 0xd0:
 			case 0xd1:
 			case 0xd2:
@@ -2417,7 +2454,7 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 			case 'I':
 				return Integer.valueOf(this.parseInt());
 
-				// direct long
+			// direct long
 			case 0xd8:
 			case 0xd9:
 			case 0xda:
@@ -2445,7 +2482,7 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 			case 0xef:
 				return Long.valueOf(tag - Hessian2Constants.BC_LONG_ZERO);
 
-				/* byte long */
+			/* byte long */
 			case 0xf0:
 			case 0xf1:
 			case 0xf2:
@@ -2464,7 +2501,7 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 			case 0xff:
 				return Long.valueOf(((tag - Hessian2Constants.BC_LONG_BYTE_ZERO) << 8) + this.read());
 
-				/* short long */
+			/* short long */
 			case 0x38:
 			case 0x39:
 			case 0x3a:
@@ -2780,7 +2817,9 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 	/**
 	 * Reads an object definition:
 	 *
-	 * <pre> O string <int> (string)* <value>* </pre>
+	 * <pre>
+	 *  O string <int> (string)* <value>*
+	 * </pre>
 	 */
 	private void readObjectDefinition(Class<?> cl) throws IOException {
 		String type = this.readString();
@@ -2866,7 +2905,7 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 		int code;
 
 		if (this.offset < this.length) {
-			code = (this.buffer[this.offset] & 0xff);
+			code = this.buffer[this.offset] & 0xff;
 		} else {
 			code = this.read();
 
@@ -2875,7 +2914,7 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 			}
 		}
 
-		return ((code < 0) || (code == 'Z'));
+		return (code < 0) || (code == 'Z');
 	}
 
 	/**
@@ -2883,7 +2922,7 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 	 */
 	@Override
 	public void readEnd() throws IOException {
-		int code = this.offset < this.length ? (this.buffer[this.offset++] & 0xff) : this.read();
+		int code = this.offset < this.length ? this.buffer[this.offset++] & 0xff : this.read();
 
 		if (code == 'Z') {
 			return;
@@ -2899,7 +2938,7 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 	 */
 	@Override
 	public void readMapEnd() throws IOException {
-		int code = this.offset < this.length ? (this.buffer[this.offset++] & 0xff) : this.read();
+		int code = this.offset < this.length ? this.buffer[this.offset++] & 0xff : this.read();
 
 		if (code != 'Z') {
 			throw this.error("expected end of map ('Z') at '" + this.codeName(code) + "'");
@@ -2911,7 +2950,7 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 	 */
 	@Override
 	public void readListEnd() throws IOException {
-		int code = this.offset < this.length ? (this.buffer[this.offset++] & 0xff) : this.read();
+		int code = this.offset < this.length ? this.buffer[this.offset++] & 0xff : this.read();
 
 		if (code != 'Z') {
 			throw this.error("expected end of list ('Z') at '" + this.codeName(code) + "'");
@@ -2991,11 +3030,13 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 	/**
 	 * Parses a type from the stream.
 	 *
-	 * <pre> type ::= string type ::= int </pre>
+	 * <pre>
+	 *  type ::= string type ::= int
+	 * </pre>
 	 */
 	@Override
 	public String readType() throws IOException {
-		int code = this.offset < this.length ? (this.buffer[this.offset++] & 0xff) : this.read();
+		int code = this.offset < this.length ? this.buffer[this.offset++] & 0xff : this.read();
 		this.offset--;
 
 		switch (code) {
@@ -3065,7 +3106,9 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 	/**
 	 * Parses the length for an array
 	 *
-	 * <pre> l b32 b24 b16 b8 </pre>
+	 * <pre>
+	 *  l b32 b24 b16 b8
+	 * </pre>
 	 */
 	@Override
 	public int readLength() throws IOException {
@@ -3075,7 +3118,9 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 	/**
 	 * Parses a 32-bit integer value from the stream.
 	 *
-	 * <pre> b32 b24 b16 b8 </pre>
+	 * <pre>
+	 *  b32 b24 b16 b8
+	 * </pre>
 	 */
 	private int parseInt() throws IOException {
 		int offset = this.offset;
@@ -3104,7 +3149,9 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 	/**
 	 * Parses a 64-bit long value from the stream.
 	 *
-	 * <pre> b64 b56 b48 b40 b32 b24 b16 b8 </pre>
+	 * <pre>
+	 *  b64 b56 b48 b40 b32 b24 b16 b8
+	 * </pre>
 	 */
 	private long parseLong() throws IOException {
 		long b64 = this.read();
@@ -3116,13 +3163,15 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 		long b16 = this.read();
 		long b8 = this.read();
 
-		return ((b64 << 56) + (b56 << 48) + (b48 << 40) + (b40 << 32) + (b32 << 24) + (b24 << 16) + (b16 << 8) + b8);
+		return (b64 << 56) + (b56 << 48) + (b48 << 40) + (b40 << 32) + (b32 << 24) + (b24 << 16) + (b16 << 8) + b8;
 	}
 
 	/**
 	 * Parses a 64-bit double value from the stream.
 	 *
-	 * <pre> b64 b56 b48 b40 b32 b24 b16 b8 </pre>
+	 * <pre>
+	 *  b64 b56 b48 b40 b32 b24 b16 b8
+	 * </pre>
 	 */
 	private double parseDouble() throws IOException {
 		long bits = this.parseLong();
@@ -3171,7 +3220,7 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 			return false;
 		}
 
-		int code = this.offset < this.length ? (this.buffer[this.offset++] & 0xff) : this.read();
+		int code = this.offset < this.length ? this.buffer[this.offset++] & 0xff : this.read();
 
 		switch (code) {
 			case BC_STRING_CHUNK:
@@ -3242,7 +3291,7 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 	 * Parses a single UTF8 character.
 	 */
 	private int parseUTF8Char() throws IOException {
-		int ch = this.offset < this.length ? (this.buffer[this.offset++] & 0xff) : this.read();
+		int ch = this.offset < this.length ? this.buffer[this.offset++] & 0xff : this.read();
 
 		if (ch < 0x80) {
 			return ch;
@@ -3527,13 +3576,12 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 				Object obj = this.readObject();
 
 				if (obj != null) {
-					return this
-							.error("expected " + expect + " at 0x" + Integer.toHexString(ch & 0xff) + " " + obj.getClass().getName() + " (" + obj + ")" + "\n  " + context + "");
+					return this.error("expected " + expect + " at 0x" + Integer.toHexString(ch & 0xff) + " " + obj.getClass().getName() + " (" + obj + ")" + "\n  " + context + "");
 				} else {
 					return this.error("expected " + expect + " at 0x" + Integer.toHexString(ch & 0xff) + " null");
 				}
 			} catch (Exception e) {
-				Hessian2Input.log.info(e.toString(), e);
+				Hessian2Input.logger.info(e.toString(), e);
 
 				return this.error("expected " + expect + " at 0x" + Integer.toHexString(ch & 0xff));
 			}
@@ -3601,7 +3649,8 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 	}
 
 	class ReadInputStream extends InputStream {
-		boolean	_isClosed	= false;
+
+		boolean _isClosed = false;
 
 		@Override
 		public int read() throws IOException {
@@ -3634,11 +3683,13 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 		@Override
 		public void close() throws IOException {
 			while (this.read() >= 0) {
+				// do nothing
 			}
 		}
-	};
+	}
 
 	final static class ObjectDefinition {
+
 		private final String		_type;
 		private final Deserializer	_reader;
 		private final Object[]		_fields;
@@ -3672,7 +3723,8 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 		try {
 			Hessian2Input.detailMessageField = Throwable.class.getDeclaredField("detailMessage");
 			Hessian2Input.detailMessageField.setAccessible(true);
-		} catch (Throwable e) {
+		} catch (Exception e) {
+			Hessian2Input.logger.trace(null, e);
 		}
 	}
 }

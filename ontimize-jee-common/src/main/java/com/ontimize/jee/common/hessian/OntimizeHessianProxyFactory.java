@@ -103,7 +103,9 @@ public class OntimizeHessianProxyFactory extends HessianProxyFactory implements 
 	/**
 	 * Creates a new proxy with the specified URL. The returned object is a proxy with the interface specified by api.
 	 *
-	 * <pre> String url = "http://localhost:8080/ejb/hello"); HelloHome hello = (HelloHome) factory.create(HelloHome.class, url); </pre>
+	 * <pre>
+	 *  String url = "http://localhost:8080/ejb/hello"); HelloHome hello = (HelloHome) factory.create(HelloHome.class, url);
+	 * </pre>
 	 *
 	 * @param api
 	 *            the interface the proxy class needs to implement

@@ -39,7 +39,7 @@ public class WindowTools {
 				break;
 			}
 		}
-		List<Window> visibleWindows = new ArrayList<Window>();
+		List<Window> visibleWindows = new ArrayList<>();
 		for (Window window : windows) {
 			if (window.isVisible()) {
 				visibleWindows.add(window);

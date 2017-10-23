@@ -54,8 +54,8 @@ public class ReferenceFieldAttributeDispatcher extends AbstractAttributeDispatch
 	 * com.ontimize.jee.common.services.cascadeoperation.InsertOperation, java.util.Map, java.util.Map, org.springframework.context.ApplicationContext)
 	 */
 	@Override
-	public EntityResult processInsertAttribute(ReferenceFieldAttribute attribute, InsertOperation insertOperation,
-			Map<?, ?> generatedKeysInParentEntity, Map<?, ?> attributesValuesInsertedInParentEntity, ApplicationContext applicationContext) {
+	public EntityResult processInsertAttribute(ReferenceFieldAttribute attribute, InsertOperation insertOperation, Map<?, ?> generatedKeysInParentEntity,
+	        Map<?, ?> attributesValuesInsertedInParentEntity, ApplicationContext applicationContext) {
 		return null;
 	}
 
@@ -65,8 +65,8 @@ public class ReferenceFieldAttributeDispatcher extends AbstractAttributeDispatch
 	 * com.ontimize.jee.common.services.cascadeoperation.UpdateOperation, java.util.Map, java.util.Map, org.springframework.context.ApplicationContext)
 	 */
 	@Override
-	public EntityResult processUpdateAttribute(ReferenceFieldAttribute attribute, UpdateOperation updateOperation,
-			Map<?, ?> generatedValuesInParentEntity, Map<?, ?> filterInParentEntity, ApplicationContext applicationContext) {
+	public EntityResult processUpdateAttribute(ReferenceFieldAttribute attribute, UpdateOperation updateOperation, Map<?, ?> generatedValuesInParentEntity,
+	        Map<?, ?> filterInParentEntity, ApplicationContext applicationContext) {
 		return null;
 	}
 
@@ -76,8 +76,8 @@ public class ReferenceFieldAttributeDispatcher extends AbstractAttributeDispatch
 	 * com.ontimize.jee.common.services.cascadeoperation.DeleteOperation, java.util.Map, java.util.Map, org.springframework.context.ApplicationContext)
 	 */
 	@Override
-	public EntityResult processDeleteAttribute(ReferenceFieldAttribute attribute, DeleteOperation deleteOperation,
-			Map<?, ?> generatedValuesInParentEntity, Map<?, ?> filterInParentEntity, ApplicationContext applicationContext) {
+	public EntityResult processDeleteAttribute(ReferenceFieldAttribute attribute, DeleteOperation deleteOperation, Map<?, ?> generatedValuesInParentEntity,
+	        Map<?, ?> filterInParentEntity, ApplicationContext applicationContext) {
 		return null;
 	}
 

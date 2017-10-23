@@ -41,7 +41,7 @@ public final class ObjectTools {
 	public static void isEquals(final Object oba, final Object obb) throws ObjectNotEqualsException {
 		boolean equals = true;
 		if (oba == null) {
-			equals = (obb == null);
+			equals = obb == null;
 		} else {
 			equals = oba.equals(obb);
 		}
@@ -62,7 +62,7 @@ public final class ObjectTools {
 	public static boolean safeIsEquals(final Object oba, final Object obb) {
 		boolean equals = true;
 		if (oba == null) {
-			equals = (obb == null);
+			equals = obb == null;
 		} else {
 			equals = oba.equals(obb);
 		}
@@ -173,7 +173,7 @@ public final class ObjectTools {
 	public static String getStringRepresentation(Object o, boolean expandInnerChilds) {
 		StringBuilder sb = new StringBuilder();
 
-		ObjectTools.getStringRepresentation(o, expandInnerChilds, sb, 0, "Object", new ArrayList<Object>());
+		ObjectTools.getStringRepresentation(o, expandInnerChilds, sb, 0, "Object", new ArrayList<>());
 
 		return sb.toString();
 	}

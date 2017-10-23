@@ -8,9 +8,9 @@ package com.ontimize.jee.common.integration;
  */
 public enum Operator {
 
-    /** The and. */
-    AND,
-    /** The or. */
-    OR
+	/** The and. */
+	AND,
+	/** The or. */
+	OR
 
 }

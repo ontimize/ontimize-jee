@@ -108,7 +108,7 @@ public class ChronometerNano {
 	 * @return the long
 	 */
 	public long timeFromLastElapsed() {
-		return System.nanoTime() - ((this.lastElapsed == 0) ? this.start : this.lastElapsed);
+		return System.nanoTime() - (this.lastElapsed == 0 ? this.start : this.lastElapsed);
 	}
 
 	/**

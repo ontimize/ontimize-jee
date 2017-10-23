@@ -1,18 +1,16 @@
 /*
- * Copyright (c) 2001-2004 Caucho Technology, Inc. All rights reserved. The Apache Software License, Version 1.1 Redistribution and use in source and
- * binary forms, with or without modification, are permitted provided that the following conditions are met: 1. Redistributions of source code must
- * retain the above copyright notice, this list of conditions and the following disclaimer. 2. Redistributions in binary form must reproduce the above
- * copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
- * 3. The end-user documentation included with the redistribution, if any, must include the following acknowlegement: "This product includes software
- * developed by the Caucho Technology (http://www.caucho.com/)." Alternately, this acknowlegement may appear in the software itself, if and wherever
- * such third-party acknowlegements normally appear. 4. The names "Burlap", "Resin", and "Caucho" must not be used to endorse or promote products
- * derived from this software without prior written permission. For written permission, please contact info@caucho.com. 5. Products derived from this
- * software may not be called "Resin" nor may "Resin" appear in their names without prior written permission of Caucho Technology. THIS SOFTWARE IS
- * PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL CAUCHO TECHNOLOGY OR ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * Copyright (c) 2001-2004 Caucho Technology, Inc. All rights reserved. The Apache Software License, Version 1.1 Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met: 1. Redistributions of source code must retain the above copyright notice, this list of conditions and
+ * the following disclaimer. 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution. 3. The end-user documentation included with the redistribution, if any, must include the following acknowlegement: "This
+ * product includes software developed by the Caucho Technology (http://www.caucho.com/)." Alternately, this acknowlegement may appear in the software itself, if and wherever such
+ * third-party acknowlegements normally appear. 4. The names "Burlap", "Resin", and "Caucho" must not be used to endorse or promote products derived from this software without
+ * prior written permission. For written permission, please contact info@caucho.com. 5. Products derived from this software may not be called "Resin" nor may "Resin" appear in
+ * their names without prior written permission of Caucho Technology. THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL CAUCHO TECHNOLOGY OR ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+ * BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+ * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * @author Scott Ferguson
  */
 
@@ -23,10 +21,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
 
-//@formatter:off
+// @formatter:off
 /**
- * Abstract base class for Hessian requests.  Hessian users should only
- * need to use the methods in this class.
+ * Abstract base class for Hessian requests. Hessian users should only need to use the methods in this class.
  *
  * <pre>
  * AbstractHessianInput in = ...; // get input
@@ -37,8 +34,9 @@ import java.io.Reader;
  * in.completeReply();      // read reply footer
  * </pre>
  */
-//@formatter:on
+// @formatter:on
 abstract public class AbstractHessianInput {
+
 	private HessianRemoteResolver	resolver;
 	private byte[]					buffer;
 
@@ -74,7 +72,9 @@ abstract public class AbstractHessianInput {
 	/**
 	 * Reads the call
 	 *
-	 * <pre> c major minor </pre>
+	 * <pre>
+	 *  c major minor
+	 * </pre>
 	 */
 	abstract public int readCall() throws IOException;
 
@@ -86,7 +86,9 @@ abstract public class AbstractHessianInput {
 	/**
 	 * Reads a header, returning null if there are no headers.
 	 *
-	 * <pre> H b16 b8 value </pre>
+	 * <pre>
+	 *  H b16 b8 value
+	 * </pre>
 	 */
 	abstract public String readHeader() throws IOException;
 
@@ -95,7 +97,9 @@ abstract public class AbstractHessianInput {
 	 *
 	 * <p>A successful completion will have a single value:
 	 *
-	 * <pre> m b16 b8 method </pre>
+	 * <pre>
+	 *  m b16 b8 method
+	 * </pre>
 	 */
 	abstract public String readMethod() throws IOException;
 
@@ -113,7 +117,9 @@ abstract public class AbstractHessianInput {
 	 *
 	 * <p>The call expects the following protocol data
 	 *
-	 * <pre> c major minor m b16 b8 method </pre>
+	 * <pre>
+	 *  c major minor m b16 b8 method
+	 * </pre>
 	 */
 	abstract public void startCall() throws IOException;
 
@@ -122,7 +128,9 @@ abstract public class AbstractHessianInput {
 	 *
 	 * <p>The call expects the following protocol data
 	 *
-	 * <pre> Z </pre>
+	 * <pre>
+	 * Z
+	 * </pre>
 	 */
 	abstract public void completeCall() throws IOException;
 
@@ -136,7 +144,9 @@ abstract public class AbstractHessianInput {
 	 *
 	 * <p>A successful completion will have a single value:
 	 *
-	 * <pre> r v </pre>
+	 * <pre>
+	 *  r v
+	 * </pre>
 	 */
 	abstract public void startReply() throws Throwable;
 
@@ -150,87 +160,111 @@ abstract public class AbstractHessianInput {
 	 *
 	 * <p>A successful completion will have a single value:
 	 *
-	 * <pre> z </pre>
+	 * <pre>
+	 * z
+	 * </pre>
 	 */
 	abstract public void completeReply() throws IOException;
 
 	/**
 	 * Reads a boolean
 	 *
-	 * <pre> T F </pre>
+	 * <pre>
+	 *  T F
+	 * </pre>
 	 */
 	abstract public boolean readBoolean() throws IOException;
 
 	/**
 	 * Reads a null
 	 *
-	 * <pre> N </pre>
+	 * <pre>
+	 * N
+	 * </pre>
 	 */
 	abstract public void readNull() throws IOException;
 
 	/**
 	 * Reads an integer
 	 *
-	 * <pre> I b32 b24 b16 b8 </pre>
+	 * <pre>
+	 *  I b32 b24 b16 b8
+	 * </pre>
 	 */
 	abstract public int readInt() throws IOException;
 
 	/**
 	 * Reads a long
 	 *
-	 * <pre> L b64 b56 b48 b40 b32 b24 b16 b8 </pre>
+	 * <pre>
+	 *  L b64 b56 b48 b40 b32 b24 b16 b8
+	 * </pre>
 	 */
 	abstract public long readLong() throws IOException;
 
 	/**
 	 * Reads a double.
 	 *
-	 * <pre> D b64 b56 b48 b40 b32 b24 b16 b8 </pre>
+	 * <pre>
+	 *  D b64 b56 b48 b40 b32 b24 b16 b8
+	 * </pre>
 	 */
 	abstract public double readDouble() throws IOException;
 
 	/**
 	 * Reads a date.
 	 *
-	 * <pre> T b64 b56 b48 b40 b32 b24 b16 b8 </pre>
+	 * <pre>
+	 *  T b64 b56 b48 b40 b32 b24 b16 b8
+	 * </pre>
 	 */
 	abstract public long readUTCDate() throws IOException;
 
 	/**
 	 * Reads a string encoded in UTF-8
 	 *
-	 * <pre> s b16 b8 non-final string chunk S b16 b8 final string chunk </pre>
+	 * <pre>
+	 *  s b16 b8 non-final string chunk S b16 b8 final string chunk
+	 * </pre>
 	 */
 	abstract public String readString() throws IOException;
 
 	/**
 	 * Reads an XML node encoded in UTF-8
 	 *
-	 * <pre> x b16 b8 non-final xml chunk X b16 b8 final xml chunk </pre>
+	 * <pre>
+	 *  x b16 b8 non-final xml chunk X b16 b8 final xml chunk
+	 * </pre>
 	 */
 	public org.w3c.dom.Node readNode() throws IOException {
 		throw new UnsupportedOperationException(this.getClass().getSimpleName());
 	}
 
 	/**
-	 * Starts reading a string. All the characters must be read before calling the next method. The actual characters will be read with the reader's
-	 * read() or read(char [], int, int).
+	 * Starts reading a string. All the characters must be read before calling the next method. The actual characters will be read with the reader's read() or read(char [], int,
+	 * int).
 	 *
-	 * <pre> s b16 b8 non-final string chunk S b16 b8 final string chunk </pre>
+	 * <pre>
+	 *  s b16 b8 non-final string chunk S b16 b8 final string chunk
+	 * </pre>
 	 */
 	abstract public Reader getReader() throws IOException;
 
 	/**
 	 * Starts reading a byte array using an input stream. All the bytes must be read before calling the following method.
 	 *
-	 * <pre> b b16 b8 non-final binary chunk B b16 b8 final binary chunk </pre>
+	 * <pre>
+	 *  b b16 b8 non-final binary chunk B b16 b8 final binary chunk
+	 * </pre>
 	 */
 	abstract public InputStream readInputStream() throws IOException;
 
 	/**
 	 * Reads data to an output stream.
 	 *
-	 * <pre> b b16 b8 non-final binary chunk B b16 b8 final binary chunk </pre>
+	 * <pre>
+	 *  b b16 b8 non-final binary chunk B b16 b8 final binary chunk
+	 * </pre>
 	 */
 	public boolean readToOutputStream(OutputStream os) throws IOException {
 		InputStream is = this.readInputStream();
@@ -259,7 +293,9 @@ abstract public class AbstractHessianInput {
 	/**
 	 * Reads a byte array.
 	 *
-	 * <pre> b b16 b8 non-final binary chunk B b16 b8 final binary chunk </pre>
+	 * <pre>
+	 *  b b16 b8 non-final binary chunk B b16 b8 final binary chunk
+	 * </pre>
 	 */
 	abstract public byte[] readBytes() throws IOException;
 
@@ -277,8 +313,7 @@ abstract public class AbstractHessianInput {
 	abstract public Object readObject() throws IOException;
 
 	/**
-	 * Reads a remote object reference to the stream. The type is the type of
-	 * the remote interface.
+	 * Reads a remote object reference to the stream. The type is the type of the remote interface.
 	 *
 	 * <pre>
 	 * <code>'r' 't' b16 b8 type url </code>
@@ -289,7 +324,9 @@ abstract public class AbstractHessianInput {
 	/**
 	 * Reads a reference
 	 *
-	 * <pre> R b32 b24 b16 b8 </pre>
+	 * <pre>
+	 *  R b32 b24 b16 b8
+	 * </pre>
 	 */
 	abstract public Object readRef() throws IOException;
 

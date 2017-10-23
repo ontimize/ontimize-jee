@@ -15,10 +15,11 @@ import com.ontimize.util.operation.RemoteOperationManager;
  * The Class RemoteOperationManagerProxyHandler.
  */
 public class WebsocketRemoteOperationManager implements RemoteOperationManager {
-	private final static AtomicLong	ID_GENERATOR	= new AtomicLong();
+
+	private static final AtomicLong	ID_GENERATOR	= new AtomicLong();
 
 	/** The logger. */
-	private final static Logger	logger	= LoggerFactory.getLogger(WebsocketRemoteOperationManager.class);
+	private static final Logger		logger			= LoggerFactory.getLogger(WebsocketRemoteOperationManager.class);
 
 	/**
 	 * Instantiates a new remote operation manager proxy handler.

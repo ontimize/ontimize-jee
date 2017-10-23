@@ -23,22 +23,19 @@ public final class CheckingTools {
 	 */
 	public static void failIfNull(Object toCheck, String messageFormat, Object... messageParameters) {
 		if (toCheck == null) {
-			throw new OntimizeJEERuntimeException(((messageParameters == null) || (messageParameters.length == 0)) ? messageFormat : String.format(
-					messageFormat, messageParameters));
+			throw new OntimizeJEERuntimeException((messageParameters == null) || (messageParameters.length == 0) ? messageFormat : String.format(messageFormat, messageParameters));
 		}
 	}
 
 	/**
-	 * Si el objeto a chequear es true lanza una {@link OntimizeJEERuntimeException}
-	 * con el texto indicado
+	 * Si el objeto a chequear es true lanza una {@link OntimizeJEERuntimeException} con el texto indicado
 	 *
 	 * @param toCheck
 	 * @param exceptionText
 	 */
 	public static void failIf(boolean toCheck, String messageFormat, Object... messageParameters) {
 		if (toCheck) {
-			throw new OntimizeJEERuntimeException(((messageParameters == null) || (messageParameters.length == 0)) ? messageFormat : String.format(
-					messageFormat, messageParameters));
+			throw new OntimizeJEERuntimeException((messageParameters == null) || (messageParameters.length == 0) ? messageFormat : String.format(messageFormat, messageParameters));
 		}
 	}
 
@@ -48,11 +45,9 @@ public final class CheckingTools {
 	 * @param toCheck
 	 * @param exceptionText
 	 */
-	public static <T extends Throwable> void failIf(boolean toCheck, Class<T> exceptionClass, String messageFormat, Object... messageParameters)
-			throws T {
+	public static <T extends Throwable> void failIf(boolean toCheck, Class<T> exceptionClass, String messageFormat, Object... messageParameters) throws T {
 		if (toCheck) {
-			String message = ((messageParameters == null) || (messageParameters.length == 0)) ? messageFormat : String.format(messageFormat,
-					messageParameters);
+			String message = (messageParameters == null) || (messageParameters.length == 0) ? messageFormat : String.format(messageFormat, messageParameters);
 			throw ReflectionTools.newInstance(exceptionClass, message);
 		}
 	}
@@ -94,7 +89,7 @@ public final class CheckingTools {
 			if (rs == null) {
 				throw new OntimizeJEEException("EMPTY_RESULT");
 			} else if (rs.getCode() == EntityResult.OPERATION_WRONG) {
-				throw new OntimizeJEEException(rs.getMessage(),rs.getMessageParameter());
+				throw new OntimizeJEEException(rs.getMessage(), rs.getMessageParameter());
 			}
 		} catch (OntimizeJEEException ex) {
 			if (messageFormat != null) {
@@ -122,8 +117,9 @@ public final class CheckingTools {
 	 * @throws Exception
 	 *             Cuando o es reaultado NULL o no es correcto.
 	 */
-	public static void checkValidEntityResult(EntityResult res, String messageFormat, boolean checkSomeRecordRequired, boolean checkOnlyOneRecord, Object... messageParameters) throws Exception {
-		CheckingTools.checkValidEntityResult(res, messageFormat,messageParameters);
+	public static void checkValidEntityResult(EntityResult res, String messageFormat, boolean checkSomeRecordRequired, boolean checkOnlyOneRecord, Object... messageParameters)
+	        throws Exception {
+		CheckingTools.checkValidEntityResult(res, messageFormat, messageParameters);
 		try {
 			int num = res.calculateRecordNumber();
 			if (checkSomeRecordRequired && (num <= 0)) {

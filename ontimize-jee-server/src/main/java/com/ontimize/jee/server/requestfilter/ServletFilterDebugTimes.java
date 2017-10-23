@@ -25,42 +25,41 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class ServletFilterDebugTimes implements Filter {
-    static Logger logger = LoggerFactory.getLogger(ServletFilterDebugTimes.class);
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void destroy() {
-        // do nothing
-    }
+	private static final Logger logger = LoggerFactory.getLogger(ServletFilterDebugTimes.class);
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain filterChain)
-            throws IOException,
-            ServletException {
-        if (request instanceof HttpServletRequest) {
-            long time = System.currentTimeMillis();
-            try {
-                filterChain.doFilter(request, response);
-            } catch (Throwable e) {
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void destroy() {
+		// do nothing
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain filterChain) throws IOException, ServletException {
+		if (request instanceof HttpServletRequest) {
+			long time = System.currentTimeMillis();
+			try {
+				filterChain.doFilter(request, response);
+			} catch (Exception e) {
 				ServletFilterDebugTimes.logger.error(null, e);
-            } finally {
-                time = System.currentTimeMillis() - time;
-                ServletFilterDebugTimes.logger.debug("[FULL TIME] Processing time: " + time + " ms");
-            }
-        }
-    }
+			} finally {
+				time = System.currentTimeMillis() - time;
+				ServletFilterDebugTimes.logger.debug("[FULL TIME] Processing time: " + time + " ms");
+			}
+		}
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void init(final FilterConfig arg0) throws ServletException {
-        // do nothing
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void init(final FilterConfig arg0) throws ServletException {
+		// do nothing
+	}
 
 }

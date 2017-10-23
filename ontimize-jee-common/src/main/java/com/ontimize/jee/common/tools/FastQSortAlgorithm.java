@@ -11,12 +11,12 @@ import org.slf4j.LoggerFactory;
  */
 public class FastQSortAlgorithm {
 
-	private static final Logger	logger	= LoggerFactory.getLogger(FastQSortAlgorithm.class);
+	private static final Logger logger = LoggerFactory.getLogger(FastQSortAlgorithm.class);
+
 	/**
-	 * This is a generic version of C.A.R Hoare's Quick Sort algorithm. This will handle arrays that are already sorted, and arrays with duplicate
-	 * keys.<BR> If you think of a one dimensional array as going from the lowest index on the left to the highest index on the right then the
-	 * parameters to this function are lowest index or left and highest index or right. The first time you call this function it will be with the
-	 * parameters 0, a.length - 1.
+	 * This is a generic version of C.A.R Hoare's Quick Sort algorithm. This will handle arrays that are already sorted, and arrays with duplicate keys.<BR> If you think of a one
+	 * dimensional array as going from the lowest index on the left to the highest index on the right then the parameters to this function are lowest index or left and highest
+	 * index or right. The first time you call this function it will be with the parameters 0, a.length - 1.
 	 *
 	 * @param a
 	 *            an integer array
@@ -171,7 +171,7 @@ public class FastQSortAlgorithm {
 			Integer[] aa = new Integer[] { 3, 24, 542, 1234, 56346, 642, 3414, 5436, 473, 2412, 4121, 41234, 54, 67, 4, 87676, 674646, 346, 342423, 42154, 36, 54, 34643, 64 };
 			String[] a = new String[] { "hola", "adios", "caracola", "flor", null, "traza", "identificador", "marcador" };
 
-			System.out.printf("%20s:", "Cabecera");
+			FastQSortAlgorithm.logger.debug("%20s:", "Cabecera");
 			StringBuilder sb = new StringBuilder();
 			for (int i = 0; i < a.length; i++) {
 				sb.append(String.format("%8d", i));
@@ -204,7 +204,7 @@ public class FastQSortAlgorithm {
 			FastQSortAlgorithm.logger.info(sb.toString());
 			FastQSortAlgorithm.logger.info("");
 		} catch (Exception e) {
-			FastQSortAlgorithm.logger.error(null,e);
+			FastQSortAlgorithm.logger.error(null, e);
 		}
 	}
 }

@@ -29,15 +29,15 @@ import com.ontimize.jee.server.security.authentication.OntimizeAuthenticationPro
 
 public class DigestAuthenticationMechanism implements IAuthenticationMechanism {
 
-	private static final Logger										logger						= LoggerFactory.getLogger(DigestAuthenticationMechanism.class);
+	private static final Logger				logger					= LoggerFactory.getLogger(DigestAuthenticationMechanism.class);
 
-	private DigestAuthenticationEntryPoint							authenticationEntryPoint;
-	private boolean													passwordAlreadyEncoded		= false;
-	protected MessageSourceAccessor									messages					= SpringSecurityMessageSource.getAccessor();
+	private DigestAuthenticationEntryPoint	authenticationEntryPoint;
+	private boolean							passwordAlreadyEncoded	= false;
+	protected MessageSourceAccessor			messages				= SpringSecurityMessageSource.getAccessor();
 
 	@Override
 	public AuthenticationResult authenticate(HttpServletRequest request, HttpServletResponse response, AuthenticationManager authenticationManager,
-			UserDetailsService userDetailsService) {
+	        UserDetailsService userDetailsService) {
 		String header = request.getHeader("Authorization");
 
 		if ((header == null) || !header.startsWith("Digest ")) {
@@ -65,15 +65,15 @@ public class DigestAuthenticationMechanism implements IAuthenticationMechanism {
 			CheckingTools.failIf(user == null, AuthenticationServiceException.class, "AuthenticationDao returned null, which is an interface contract violation");
 			serverDigestMd5 = digestAuth.calculateServerDigest(user.getPassword(), request.getMethod());
 		} catch (UsernameNotFoundException notFound) {
-			throw new BadCredentialsException(this.messages.getMessage("DigestAuthenticationFilter.usernameNotFound", new Object[] { digestAuth.getUsername() },
-					"Username {0} not found"));
+			throw new BadCredentialsException(
+			        this.messages.getMessage("DigestAuthenticationFilter.usernameNotFound", new Object[] { digestAuth.getUsername() }, "Username {0} not found"));
 
 		}
 
 		// If digest is still incorrect, definitely reject authentication attempt
 		if (!serverDigestMd5.equals(digestAuth.getResponse())) {
 			DigestAuthenticationMechanism.logger.debug("Expected response: '{}' but received: '{}'; is AuthenticationDao returning clear text passwords?", serverDigestMd5,
-					digestAuth.getResponse());
+			        digestAuth.getResponse());
 			throw new BadCredentialsException(this.messages.getMessage("DigestAuthenticationFilter.incorrectResponse", "Incorrect response"));
 		}
 
@@ -113,6 +113,7 @@ public class DigestAuthenticationMechanism implements IAuthenticationMechanism {
 	}
 
 	private class DigestData {
+
 		private final String	username;
 		private final String	realm;
 		private final String	nonce;
@@ -139,8 +140,8 @@ public class DigestAuthenticationMechanism implements IAuthenticationMechanism {
 			this.cnonce = headerMap.get("cnonce"); // RFC 2617 extension
 
 			if (DigestAuthenticationMechanism.logger.isDebugEnabled()) {
-				DigestAuthenticationMechanism.logger
-						.debug("Extracted username: '" + this.username + "'; realm: '" + this.realm + "'; nonce: '" + this.nonce + "'; uri: '" + this.uri + "'; response: '" + this.response + "'");
+				DigestAuthenticationMechanism.logger.debug(
+				        "Extracted username: '" + this.username + "'; realm: '" + this.realm + "'; nonce: '" + this.nonce + "'; uri: '" + this.uri + "'; response: '" + this.response + "'");
 			}
 		}
 
@@ -148,7 +149,7 @@ public class DigestAuthenticationMechanism implements IAuthenticationMechanism {
 			// Check all required parameters were supplied (ie RFC 2069)
 			if ((this.username == null) || (this.realm == null) || (this.nonce == null) || (this.uri == null) || (this.response == null)) {
 				throw new BadCredentialsException(DigestAuthenticationMechanism.this.messages.getMessage("DigestAuthenticationFilter.missingMandatory",
-						new Object[] { this.section212response }, "Missing mandatory digest value; received header {0}"));
+				        new Object[] { this.section212response }, "Missing mandatory digest value; received header {0}"));
 			}
 			// Check all required parameters for an "auth" qop were supplied (ie RFC 2617)
 			if ("auth".equals(this.qop)) {
@@ -158,20 +159,20 @@ public class DigestAuthenticationMechanism implements IAuthenticationMechanism {
 					}
 
 					throw new BadCredentialsException(DigestAuthenticationMechanism.this.messages.getMessage("DigestAuthenticationFilter.missingAuth",
-							new Object[] { this.section212response }, "Missing mandatory digest value; received header {0}"));
+					        new Object[] { this.section212response }, "Missing mandatory digest value; received header {0}"));
 				}
 			}
 
 			// Check realm name equals what we expected
 			if (!expectedRealm.equals(this.realm)) {
 				throw new BadCredentialsException(DigestAuthenticationMechanism.this.messages.getMessage("DigestAuthenticationFilter.incorrectRealm",
-						new Object[] { this.realm, expectedRealm }, "Response realm name '{0}' does not match system realm name of '{1}'"));
+				        new Object[] { this.realm, expectedRealm }, "Response realm name '{0}' does not match system realm name of '{1}'"));
 			}
 
 			// Check nonce was Base64 encoded (as sent by DigestAuthenticationEntryPoint)
 			if (!Base64.isBase64(this.nonce.getBytes())) {
 				throw new BadCredentialsException(DigestAuthenticationMechanism.this.messages.getMessage("DigestAuthenticationFilter.nonceEncoding", new Object[] { this.nonce },
-						"Nonce is not encoded in Base64; received nonce {0}"));
+				        "Nonce is not encoded in Base64; received nonce {0}"));
 			}
 
 			// Decode nonce from Base64
@@ -182,7 +183,7 @@ public class DigestAuthenticationMechanism implements IAuthenticationMechanism {
 
 			if (nonceTokens.length != 2) {
 				throw new BadCredentialsException(DigestAuthenticationMechanism.this.messages.getMessage("DigestAuthenticationFilter.nonceNotTwoTokens",
-						new Object[] { nonceAsPlainText }, "Nonce should have yielded two tokens but was {0}"));
+				        new Object[] { nonceAsPlainText }, "Nonce should have yielded two tokens but was {0}"));
 			}
 
 			// Extract expiry time from nonce
@@ -191,15 +192,15 @@ public class DigestAuthenticationMechanism implements IAuthenticationMechanism {
 				this.nonceExpiryTime = new Long(nonceTokens[0]).longValue();
 			} catch (NumberFormatException nfe) {
 				throw new BadCredentialsException(DigestAuthenticationMechanism.this.messages.getMessage("DigestAuthenticationFilter.nonceNotNumeric",
-						new Object[] { nonceAsPlainText }, "Nonce token should have yielded a numeric first token, but was {0}"));
+				        new Object[] { nonceAsPlainText }, "Nonce token should have yielded a numeric first token, but was {0}"));
 			}
 
 			// Check signature of nonce matches this expiry time
 			String expectedNonceSignature = DigestAuthUtils.md5Hex(this.nonceExpiryTime + ":" + entryPointKey);
 
 			if (!expectedNonceSignature.equals(nonceTokens[1])) {
-				new BadCredentialsException(DigestAuthenticationMechanism.this.messages.getMessage("DigestAuthenticationFilter.nonceCompromised",
-						new Object[] { nonceAsPlainText }, "Nonce token compromised {0}"));
+				new BadCredentialsException(DigestAuthenticationMechanism.this.messages.getMessage("DigestAuthenticationFilter.nonceCompromised", new Object[] { nonceAsPlainText },
+				        "Nonce token compromised {0}"));
 			}
 		}
 
@@ -207,7 +208,8 @@ public class DigestAuthenticationMechanism implements IAuthenticationMechanism {
 			// Compute the expected response-digest (will be in hex form)
 
 			// Don't catch IllegalArgumentException (already checked validity)
-			return DigestAuthUtils.generateDigest(DigestAuthenticationMechanism.this.passwordAlreadyEncoded, this.username, this.realm, password, httpMethod, this.uri, this.qop, this.nonce, this.nc, this.cnonce);
+			return DigestAuthUtils.generateDigest(DigestAuthenticationMechanism.this.passwordAlreadyEncoded, this.username, this.realm, password, httpMethod, this.uri, this.qop,
+			        this.nonce, this.nc, this.cnonce);
 		}
 
 		boolean isNonceExpired() {

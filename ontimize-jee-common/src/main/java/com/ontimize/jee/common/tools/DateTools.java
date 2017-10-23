@@ -325,9 +325,9 @@ public final class DateTools {
 	public static boolean safeIsEquals(final Object oba, final Object obb) {
 		boolean equals = true;
 		if (oba == null) {
-			equals = (obb == null);
+			equals = obb == null;
 		} else if (obb == null) {
-			equals = (oba == null);
+			equals = oba == null;
 		} else {
 			try {
 				long timea = ((Date) oba).getTime();
@@ -357,6 +357,7 @@ public final class DateTools {
 		cal.setTime(date);
 		return cal;
 	}
+
 	public static Calendar createCalendar(int year, int month, int day) {
 		return DateTools.createCalendar(year, month, day, 0, 0, 0, 0);
 	}

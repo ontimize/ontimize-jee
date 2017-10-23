@@ -13,6 +13,7 @@ import com.ontimize.jee.common.tools.FileTools;
  * The Class ByteSizeTableCellRenderer.
  */
 public class ByteSizeTableCellRenderer extends CellRenderer {
+
 	private static final long serialVersionUID = 1L;
 
 	/**

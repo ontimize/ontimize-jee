@@ -36,6 +36,7 @@ public class RemoteOperationStatusMessage implements Serializable {
 	public RemoteOperationStatusMessage() {
 		super();
 	}
+
 	/**
 	 * Instantiates a new remote operation status message.
 	 *
@@ -52,8 +53,7 @@ public class RemoteOperationStatusMessage implements Serializable {
 	 * @param extraInformation
 	 *            the extra information
 	 */
-	public RemoteOperationStatusMessage(RemoteOperationStatus status, int currentStep, int maxSteps, long estimatedTime, String message,
-			Object extraInformation) {
+	public RemoteOperationStatusMessage(RemoteOperationStatus status, int currentStep, int maxSteps, long estimatedTime, String message, Object extraInformation) {
 		super();
 		this.status = status;
 		this.currentStep = currentStep;

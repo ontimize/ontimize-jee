@@ -11,17 +11,17 @@ import java.util.Map;
 public class Role {
 
 	/** The server permission. */
-	protected List<String> serverPermissions;
+	protected List<String>		serverPermissions;
 
 	/** The client permissions. */
-	protected Map<String, ?> clientPermissions;
+	protected Map<String, ?>	clientPermissions;
 
 	/** The name. */
-	protected String name;
+	protected String			name;
 
 	/**
 	 * Instantiates a new role.
-	 * 
+	 *
 	 * @param name
 	 *            the name
 	 * @param serverPermission
@@ -35,17 +35,17 @@ public class Role {
 		this.serverPermissions = serverPermission;
 		this.clientPermissions = clientPermission;
 		if (this.serverPermissions == null) {
-			this.serverPermissions = new ArrayList<String>();
+			this.serverPermissions = new ArrayList<>();
 		}
 		if (this.clientPermissions == null) {
 			// Hashtable en vez de hashmap porque el cliente ontimize no está adaptado
-			this.clientPermissions = new Hashtable<String, Object>();
+			this.clientPermissions = new Hashtable<>();
 		}
 	}
 
 	/**
 	 * Gets the permission.
-	 * 
+	 *
 	 * @return the permission
 	 */
 	public List<String> getServerPermissions() {
@@ -54,7 +54,7 @@ public class Role {
 
 	/**
 	 * Adds the permission.
-	 * 
+	 *
 	 * @param permission
 	 *            the permission
 	 */
@@ -64,7 +64,7 @@ public class Role {
 
 	/**
 	 * Gets the name.
-	 * 
+	 *
 	 * @return the name
 	 */
 	public String getName() {
@@ -73,7 +73,7 @@ public class Role {
 
 	/**
 	 * Sets the name.
-	 * 
+	 *
 	 * @param value
 	 *            the new name
 	 */
@@ -83,7 +83,7 @@ public class Role {
 
 	/**
 	 * Checks for permission.
-	 * 
+	 *
 	 * @param permissionName
 	 *            the permission name
 	 * @return true, if successful
@@ -97,7 +97,7 @@ public class Role {
 
 	/**
 	 * Gets the client permissions.
-	 * 
+	 *
 	 * @return the client permissions
 	 */
 	public Map<String, ?> getClientPermissions() {

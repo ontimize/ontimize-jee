@@ -37,40 +37,41 @@ import com.ontimize.jee.desktopclient.spring.BeansFactory;
  * The Class IMSqlQuery.
  */
 public class IMSqlManager extends BasicInteractionManager {
-	private static final Logger logger = LoggerFactory.getLogger(IMSqlManager.class);
+
+	private static final Logger		logger	= LoggerFactory.getLogger(IMSqlManager.class);
 
 	/** The connections button. */
 	@FormComponent(attr = "B_REFRESH")
-	protected Button bRefresh;
+	protected Button				bRefresh;
 
 	/** The query field. */
 	@FormComponent(attr = "QUERY")
-	protected MemoDataField	queryField;
+	protected MemoDataField			queryField;
 	/** The query button. */
 	@FormComponent(attr = "B_QUERY")
-	protected Button		bQuery;
+	protected Button				bQuery;
 	/** The results. */
 	@FormComponent(attr = "RESULTS")
-	protected Table			tableResults;
+	protected Table					tableResults;
 
 	/** The history. */
 	@FormComponent(attr = "SQL_LIST")
-	protected ListSql sqlList;
+	protected ListSql				sqlList;
 
 	/** The ListSql buttons. */
 	@FormComponent(attr = "SaveEntry")
-	protected Button	saveEntry;
+	protected Button				saveEntry;
 	@FormComponent(attr = "SaveAsEntry")
-	protected Button	saveAsEntry;
+	protected Button				saveAsEntry;
 	@FormComponent(attr = "DeleteEntry")
-	protected Button	deleteEntry;
+	protected Button				deleteEntry;
 	@FormComponent(attr = "DeleteAll")
-	protected Button	deleteAll;
+	protected Button				deleteAll;
 
 	@FormComponent(attr = "CONNECTION_NAME")
-	protected TextComboDataField comboConnectionName;
+	protected TextComboDataField	comboConnectionName;
 
-	private final String user = "DEV";
+	private final String			user	= "DEV";
 
 	public IMSqlManager() {
 		super();
@@ -101,6 +102,7 @@ public class IMSqlManager extends BasicInteractionManager {
 	 */
 	protected void configureRecentList() {
 		this.sqlList.addListMouseListener(new MouseAdapter() {
+
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (e.getClickCount() == 2) {
@@ -139,6 +141,7 @@ public class IMSqlManager extends BasicInteractionManager {
 	 * Install connections button listener.
 	 */
 	public class ConnectionButtonListener implements ActionListener {
+
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			new Thread(new Runnable() {
@@ -151,7 +154,7 @@ public class IMSqlManager extends BasicInteractionManager {
 						if (availableDataSources == null) {
 							IMSqlManager.this.comboConnectionName.setValues(new Vector<String>());
 						} else {
-							IMSqlManager.this.comboConnectionName.setValues(new Vector<String>(availableDataSources));
+							IMSqlManager.this.comboConnectionName.setValues(new Vector<>(availableDataSources));
 						}
 					} catch (Exception ex) {
 						IMSqlManager.logger.error(null, ex);
@@ -166,6 +169,7 @@ public class IMSqlManager extends BasicInteractionManager {
 	 * Install query button listener.
 	 */
 	public class QueryButtonListener implements ActionListener {
+
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			new Thread(new Runnable() {
@@ -197,7 +201,7 @@ public class IMSqlManager extends BasicInteractionManager {
 						} catch (Exception ex) {
 							IMSqlManager.logger.error(null, ex);
 							EntityResult res = new EntityResult();
-							Hashtable<String, String> data = new Hashtable<String, String>();
+							Hashtable<String, String> data = new Hashtable<>();
 							data.put("EXCEPTION", ex.getClass().getName());
 							data.put("MESSAGE", ex.getMessage());
 							res.addRecord(data);
@@ -254,8 +258,7 @@ public class IMSqlManager extends BasicInteractionManager {
 							IMSqlManager.this.sqlList.addEntry(selectedEntry);
 						}
 						MainApplication application = (MainApplication) ApplicationManager.getApplication();
-						application.getPreferences().setPreference(IMSqlManager.this.user, "SQLSentence" + selectedEntry.getCode(),
-								selectedEntry.toString());
+						application.getPreferences().setPreference(IMSqlManager.this.user, "SQLSentence" + selectedEntry.getCode(), selectedEntry.toString());
 						application.getPreferences().savePreferences();
 					}
 				}
@@ -273,7 +276,7 @@ public class IMSqlManager extends BasicInteractionManager {
 				public void run() {
 					if ((IMSqlManager.this.queryField.getValue() != null) && !"".equals(IMSqlManager.this.queryField.getValue())) {
 						SentenceSql sentence = new SentenceSql((String) IMSqlManager.this.queryField.getValue(), IMSqlManager.this.user);
-						(IMSqlManager.this.sqlList).addEntry(sentence);
+						IMSqlManager.this.sqlList.addEntry(sentence);
 						MainApplication application = (MainApplication) ApplicationManager.getApplication();
 						application.getPreferences().setPreference(IMSqlManager.this.user, "SQLSentence" + sentence.getCode(), sentence.toString());
 						application.getPreferences().savePreferences();
@@ -294,8 +297,7 @@ public class IMSqlManager extends BasicInteractionManager {
 					Object selectedEntry = IMSqlManager.this.sqlList.getSelectedEntry();
 					if ((selectedEntry != null) && IMSqlManager.this.sqlList.deleteCurrentSelectedEntry()) {
 						MainApplication application = (MainApplication) ApplicationManager.getApplication();
-						application.getPreferences().setPreference(IMSqlManager.this.user, "SQLSentence" + ((SentenceSql) selectedEntry).getCode(),
-								null);
+						application.getPreferences().setPreference(IMSqlManager.this.user, "SQLSentence" + ((SentenceSql) selectedEntry).getCode(), null);
 						application.getPreferences().savePreferences();
 					}
 				}
@@ -337,10 +339,10 @@ public class IMSqlManager extends BasicInteractionManager {
 	public static class SentenceListRenderer extends JLabel implements ListCellRenderer {
 
 		/** The Constant BASIC_BGCOLOR_COLOR. */
-		private static final Color BASIC_BGCOLOR_COLOR = Color.decode("#e9e9e9");
+		private static final Color	BASIC_BGCOLOR_COLOR		= Color.decode("#e9e9e9");
 
 		/** The Constant HIGHLIGHT_BGCOLOR_COLOR. */
-		private static final Color HIGHLIGHT_BGCOLOR_COLOR = Color.decode("#e9d2a5");
+		private static final Color	HIGHLIGHT_BGCOLOR_COLOR	= Color.decode("#e9d2a5");
 
 		/**
 		 * Instantiates a new sentence list renderer.

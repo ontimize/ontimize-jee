@@ -75,9 +75,9 @@ public class UserInformation implements UserDetails, CredentialsContainer {
 	 *            the client permissions
 	 */
 	public UserInformation(String username, String password, boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked,
-			Collection<? extends GrantedAuthority> authorities, Map<String, ?> clientPermissions) {
+	        Collection<? extends GrantedAuthority> authorities, Map<String, ?> clientPermissions) {
 		super();
-		if (((username == null) || "".equals(username))) {
+		if ((username == null) || "".equals(username)) {
 			throw new IllegalArgumentException("Cannot pass null or empty values to constructor");
 		}
 

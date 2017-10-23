@@ -10,6 +10,7 @@ import com.ontimize.jee.common.tools.MessageType;
  * @author joaquin.romero
  */
 public class OntimizeJEERuntimeException extends RuntimeException implements IParametrizedException {
+
 	/** The msg parameters. */
 	private final Object[]		msgParameters;
 
@@ -173,8 +174,8 @@ public class OntimizeJEERuntimeException extends RuntimeException implements IPa
 	 * @param writableStackTrace
 	 *            the writable stack trace
 	 */
-	public OntimizeJEERuntimeException(String message, Throwable cause, Object[] msgParameters, MessageType msgType, boolean msgBlocking, boolean silent,
-			boolean enableSuppression, boolean writableStackTrace) {
+	public OntimizeJEERuntimeException(String message, Throwable cause, Object[] msgParameters, MessageType msgType, boolean msgBlocking, boolean silent, boolean enableSuppression,
+	        boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
 		this.msgType = msgType == null ? MessageType.ERROR : msgType;
 		this.msgBlocking = msgBlocking;
@@ -195,7 +196,7 @@ public class OntimizeJEERuntimeException extends RuntimeException implements IPa
 	 *            the writable stack trace
 	 */
 	public OntimizeJEERuntimeException(String message, Throwable cause, MessageType msgType, boolean msgBlocking, boolean silent, boolean enableSuppression,
-			boolean writableStackTrace) {
+	        boolean writableStackTrace) {
 		this(message, cause, null, msgType, msgBlocking, silent, enableSuppression, writableStackTrace);
 	}
 

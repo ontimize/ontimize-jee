@@ -1,4 +1,5 @@
 package com.ontimize.jee.server.security.authentication.oauth2;
+
 import java.io.Serializable;
 import java.util.Collection;
 
@@ -7,11 +8,11 @@ import org.springframework.security.core.GrantedAuthority;
 
 public class OAuth2ClientToken extends AbstractAuthenticationToken {
 
-	private static final long serialVersionUID = 1L;
+	private static final long	serialVersionUID	= 1L;
 
-	private Serializable credential = null;
-	private Serializable principal = null;
-	private String redirectUri = null;
+	private Serializable		credential			= null;
+	private Serializable		principal			= null;
+	private String				redirectUri			= null;
 
 	/**
 	 * @param credential
@@ -28,8 +29,7 @@ public class OAuth2ClientToken extends AbstractAuthenticationToken {
 	 * @param credential
 	 * @param authorities
 	 */
-	public OAuth2ClientToken(Serializable principal, Serializable credential,
-			Collection<? extends GrantedAuthority> authorities) {
+	public OAuth2ClientToken(Serializable principal, Serializable credential, Collection<? extends GrantedAuthority> authorities) {
 		super(authorities);
 		this.credential = credential;
 		this.principal = principal;
@@ -87,7 +87,7 @@ public class OAuth2ClientToken extends AbstractAuthenticationToken {
 			return false;
 		}
 
-		if ((this.getDetails() != null) && (!this.getDetails().equals(test.getDetails()))) {
+		if ((this.getDetails() != null) && !this.getDetails().equals(test.getDetails())) {
 			return false;
 		}
 

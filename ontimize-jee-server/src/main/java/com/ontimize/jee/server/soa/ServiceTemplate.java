@@ -10,8 +10,9 @@ import org.slf4j.LoggerFactory;
  *            the generic type
  */
 public abstract class ServiceTemplate<T> {
+
 	/** The Constant logger. */
-	private static final Logger	logger	= LoggerFactory.getLogger(ServiceTemplate.class);
+	private static final Logger logger = LoggerFactory.getLogger(ServiceTemplate.class);
 
 	/**
 	 * Instantiates a new service template.
