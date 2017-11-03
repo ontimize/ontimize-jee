@@ -11,6 +11,7 @@ import org.springframework.remoting.RemoteAccessException;
 import com.caucho.hessian.util.IExceptionTranslator;
 import com.ontimize.jee.common.exceptions.IParametrizedException;
 import com.ontimize.jee.common.exceptions.NoTraceOntimizeJEEException;
+import com.ontimize.jee.common.exceptions.OntimizeJEEException;
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
 import com.ontimize.jee.common.tools.ExceptionTools;
 import com.ontimize.jee.common.tools.ReflectionTools;
@@ -48,6 +49,8 @@ public class OntimizeExceptionTranslator implements IExceptionTranslator, com.on
 		} else if ((error instanceof RemoteAccessException) && (error.getCause() != null)) {
 			return this.rescueCorrectExceptionToClient(error.getCause());
 		} else if ((error instanceof OntimizeJEERuntimeException) && (error.getCause() != null) && (error.getMessage() == null)) {
+			return this.rescueCorrectExceptionToClient(error.getCause());
+		} else if ((error instanceof OntimizeJEEException) && (error.getCause() != null) && (error.getMessage() == null)) {
 			return this.rescueCorrectExceptionToClient(error.getCause());
 		} else if ((error instanceof InvocationTargetException) && (((InvocationTargetException) error).getTargetException() != null) && (error.getMessage() == null)) {
 			return this.rescueCorrectExceptionToClient(((InvocationTargetException) error).getTargetException());
