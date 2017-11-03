@@ -22,7 +22,7 @@ import com.ontimize.jee.server.dao.DefaultOntimizeDaoHelper;
 import com.ontimize.jee.server.services.management.dao.IRequestStatisticsDao;
 
 /**
- * The Class DMSServiceCategoryHelper.
+ * The Class RequestStatisticsHelper.
  */
 @Component
 @Lazy(value = true)
