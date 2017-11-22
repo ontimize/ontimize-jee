@@ -10,12 +10,15 @@ import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
@@ -31,6 +34,8 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -83,7 +88,6 @@ public class XMLMultiModuleApplicationBuilder extends XMLApplicationBuilder {
 
 	/*
 	 * (non-Javadoc)
-	 *
 	 * @see com.ontimize.builder.xml.XMLApplicationBuilder#buildApplication(java.lang.String)
 	 */
 	@Override
@@ -101,13 +105,24 @@ public class XMLMultiModuleApplicationBuilder extends XMLApplicationBuilder {
 	 *            the file uri
 	 * @return the input stream
 	 */
-	private Pair<InputStream, List<String>> composeClientConfigurationFile(String fileURI) {
+	protected Pair<InputStream, List<String>> composeClientConfigurationFile(String fileURI) {
 		List<String> bundles = new ArrayList<>();
 		try {
 			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 			List<Node> extraChildNodes = new ArrayList<>();
-			Enumeration<URL> resources = classLoader.getResources(fileURI);
-			List<Document> resourceModulesAsDocs = this.toDocs(resources);
+			HashSet<Resource> resources = new HashSet<>();//
+			PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(classLoader);
+			Resource[] cpResources = resolver.getResources("classpath*:" + fileURI);
+			if (cpResources == null || cpResources.length == 0) {
+				throw new OntimizeJEERuntimeException(fileURI + " not found");
+			}
+			resources.addAll(Arrays.asList(cpResources));
+			Vector<URL> urls = new Vector<>(resources.size());
+			for (Resource res : cpResources) {
+				urls.add(res.getURL());
+			}
+
+			List<Document> resourceModulesAsDocs = this.toDocs(urls.elements());
 			Document mainDocument = this.getMainDocAndRemove(resourceModulesAsDocs);
 			for (Document doc : resourceModulesAsDocs) {
 				if (XMLMultiModuleApplicationBuilder.ONTIMIZE_MODULE.equals(doc.getDocumentElement().getNodeName())) {
