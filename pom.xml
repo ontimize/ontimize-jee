@@ -91,8 +91,7 @@
 		<!-- =========================================================== -->
 		<pluginManagement>
 			<plugins>
-				<!-- Resources plugin (2.4.x versions do not correctly filter files containing 
-					'@' character). -->
+				<!-- Resources plugin (2.4.x versions do not correctly filter files containing '@' character). -->
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-resources-plugin</artifactId>
