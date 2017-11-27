@@ -67,6 +67,7 @@ public class SQLServerSQLStatementHandler extends com.ontimize.db.handler.SQLSer
 						bInputStream.close();
 					}
 				} catch (Exception e) {
+					SQLServerSQLStatementHandler.logger.trace(null, e);
 				}
 			}
 		}

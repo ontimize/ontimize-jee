@@ -34,16 +34,17 @@ import org.slf4j.LoggerFactory;
  */
 public final class FileTools {
 
+	/** The Constant logger. */
+	private static final Logger	logger		= LoggerFactory.getLogger(FileTools.class);
+
+	private static final int	BUFFER_SIZE	= 4096;
+
 	/**
 	 * Instantiates a new file tools.
 	 */
 	private FileTools() {
 		super();
 	}
-
-	/** The Constant logger. */
-	private static final Logger	logger		= LoggerFactory.getLogger(FileTools.class);
-	private static final int	BUFFER_SIZE	= 4096;
 
 	/**
 	 * Delete file quitely.
@@ -59,7 +60,7 @@ public final class FileTools {
 		try {
 			Files.deleteIfExists(file);
 		} catch (IOException e) {
-			FileTools.logger.error("could not remove file {}", file);
+			FileTools.logger.error("could not remove file {}", file, e);
 			file.toFile().deleteOnExit();
 		}
 	}
@@ -405,6 +406,7 @@ public final class FileTools {
 				try {
 					return new URL(URLEncoder.encode(thePathEncoded, "UTF-8"));
 				} catch (Exception ex2) {
+					FileTools.logger.trace("Error detecting jar file URL - 2. Detail: ", ex2);
 					return new URL(URLDecoder.decode(thePathEncoded, "UTF-8"));
 				}
 			} catch (Exception e2) {
@@ -427,7 +429,7 @@ public final class FileTools {
 			Manifest mf = jar.getManifest();
 			FileTools.catchValuesFromManifest(values, mf);
 		} catch (Exception ex) {
-			FileTools.logger.error("Error reading JAR file MANIFEST. Detail:" + ex.getMessage());
+			FileTools.logger.error("Error reading JAR file MANIFEST. Detail:", ex);
 		}
 
 		return values;

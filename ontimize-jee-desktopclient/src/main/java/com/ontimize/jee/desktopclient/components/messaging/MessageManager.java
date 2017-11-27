@@ -329,7 +329,7 @@ public class MessageManager implements IMessageManager {
 			}
 			ImageIcon ico = this.getMessageIcon(messageType);
 			ToastMessage toastMessage = new ToastMessage(parent, blocking, translatedMessage, translatedDetail, ico, ToastMessage.MESSAGE_TIME_SHORT, null,
-			        blocking ? ToastBlockingPanel.class : ToastNoblockingPanel.class, null, null, null);
+					blocking ? ToastBlockingPanel.class : ToastNoblockingPanel.class, null, null, null);
 			Toast.showMessage(toastMessage);
 			return 0;
 		} finally {
@@ -559,6 +559,7 @@ public class MessageManager implements IMessageManager {
 				try {
 					dataFieldValues = form.getDataFieldValues(true);
 				} catch (Exception e) {
+					MessageManager.logger.trace(null, e);
 					// Protect from when some table in mutating
 					dataFieldValues = form.getDataFieldValues(false);
 				}
@@ -663,6 +664,7 @@ public class MessageManager implements IMessageManager {
 		try {
 			return ApplicationManager.getTranslation(message, this.getResourceBundle(component), args);
 		} catch (Exception e) {
+			MessageManager.logger.trace(null, e);
 			return message;
 		}
 	}

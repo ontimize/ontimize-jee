@@ -235,7 +235,7 @@ public class OntimizeJpaDaoSupport implements ApplicationContextAware, IOntimize
 	}
 
 	protected <T> T innerQuery(final Map<?, ?> keysValues, final List<String> validAttributes, final List<?> sort, final String queryId, Class<T> resultStyleClass,
-	        Class<?> queryResultClass, boolean failIfTemplateInfoNotMatch) throws SQLException, Exception {
+			Class<?> queryResultClass, boolean failIfTemplateInfoNotMatch) throws SQLException, Exception {
 
 		// Process ORDER BY columns
 		final List<Object> validSort = this.adaptSort(sort);
@@ -316,6 +316,7 @@ public class OntimizeJpaDaoSupport implements ApplicationContextAware, IOntimize
 					this.entityManager.getMetamodel().entity(queryResultClass);
 					result.setColumnSQLTypes(OntimizeJpaUtils.getSQLTypes(selectQuery, validAttributes, queryResultClass, this.entityManager));
 				} catch (IllegalArgumentException iae) {
+					OntimizeJpaDaoSupport.logger.trace(null, iae);
 					result.setColumnSQLTypes(OntimizeJpaUtils.getSQLTypes(selectQuery, validAttributes, queryResultClass));
 				}
 
@@ -380,7 +381,6 @@ public class OntimizeJpaDaoSupport implements ApplicationContextAware, IOntimize
 
 	/*
 	 * (non-Javadoc)
-	 *
 	 * @see com.ontimize.jee.server.dao.IOntimizeDaoSupport#insert(java.util.Map)
 	 */
 	@Override
@@ -530,7 +530,7 @@ public class OntimizeJpaDaoSupport implements ApplicationContextAware, IOntimize
 								final Method meth2 = BeanUtils.findDeclaredMethodWithMinimalParameters(cl, MappingInfoUtils.buildGetterMethodName(e.getKey(), null));
 								if (meth2 == null) {
 									OntimizeJpaDaoSupport.logger
-									        .warn("Key '" + e.getKey() + "' does not have a getter method for embedded attributed declared on bean " + cl.getName());
+											.warn("Key '" + e.getKey() + "' does not have a getter method for embedded attributed declared on bean " + cl.getName());
 								} else {
 									currentValue = meth2.invoke(entityBean);
 								}
@@ -554,7 +554,7 @@ public class OntimizeJpaDaoSupport implements ApplicationContextAware, IOntimize
 
 				} else if ((totalData != null) && (totalData.size() > 1)) {
 					return new EntityResult(EntityResult.OPERATION_WRONG, EntityResult.OPERATION_WRONG,
-					        "something happened persisting changes in entity " + cl.getCanonicalName() + ", more than one result returned with primary keys");
+							"something happened persisting changes in entity " + cl.getCanonicalName() + ", more than one result returned with primary keys");
 				} else {
 					OntimizeJpaDaoSupport.logger.warn("nothing to update");
 					result.setCode(EntityResult.OPERATION_SUCCESSFUL_SHOW_MESSAGE);
@@ -628,7 +628,7 @@ public class OntimizeJpaDaoSupport implements ApplicationContextAware, IOntimize
 
 				} else if ((totalData != null) && (totalData.size() > 1)) {
 					return new EntityResult(EntityResult.OPERATION_WRONG, EntityResult.OPERATION_WRONG,
-					        "something happened deleting entity " + cl.getCanonicalName() + ", more than one result returned with primary keys");
+							"something happened deleting entity " + cl.getCanonicalName() + ", more than one result returned with primary keys");
 				} else {
 					OntimizeJpaDaoSupport.logger.warn("nothing to delete");
 					result.setCode(EntityResult.OPERATION_SUCCESSFUL_SHOW_MESSAGE);
@@ -733,8 +733,9 @@ public class OntimizeJpaDaoSupport implements ApplicationContextAware, IOntimize
 
 					}
 				} catch (IllegalArgumentException iae) {
+					OntimizeJpaDaoSupport.logger.trace(null, iae);
 					return new EntityResult(EntityResult.OPERATION_WRONG, EntityResult.OPERATION_WRONG,
-					        "entity " + cl.getCanonicalName() + " has not unique method for attribute " + key);
+							"entity " + cl.getCanonicalName() + " has not unique method for attribute " + key);
 				}
 
 			}
@@ -968,7 +969,7 @@ public class OntimizeJpaDaoSupport implements ApplicationContextAware, IOntimize
 	 * @return the string
 	 */
 	protected String prepareQuery(final Syntax syntax, final QueryTemplateInformation queryTemplateInformation, final List<String> attributes, final Map<?, ?> keysValues,
-	        final List<Object> sort, final Class<?> beanClass) {
+			final List<Object> sort, final Class<?> beanClass) {
 
 		List<String> vattributes = this.processReferenceDataFieldAttributes(attributes);
 
@@ -1455,7 +1456,7 @@ public class OntimizeJpaDaoSupport implements ApplicationContextAware, IOntimize
 	 * @return the string
 	 */
 	protected String transformColumnName(String ob, final MappingInfo mappingInfo, final List<AmbiguousColumnType> ambiguousColumns,
-	        final List<FunctionColumnType> functionColumns) {
+			final List<FunctionColumnType> functionColumns) {
 		if (mappingInfo != null) {
 			String obTemp = OntimizeJpaUtils.getDBColumnName(mappingInfo, ob);
 			if (obTemp == null) {
@@ -1822,8 +1823,8 @@ public class OntimizeJpaDaoSupport implements ApplicationContextAware, IOntimize
 					final Class<?> returnTypeClass = query.getReturn() != null ? Class.forName(query.getReturn().getReturnType()) : this.entityBeanClass;
 					final MappingInfo mappingInfo = MappingInfoUtils.buildMappingInfo(query, this.entityBeanClass, returnTypeClass);
 					this.addQueryTemplateInformation(query.getId(), query.getSentence().getValue(), Syntax.valueOf(query.getSyntax()), returnTypeClass, mappingInfo,
-					        query.getAmbiguousColumns() != null ? query.getAmbiguousColumns().getAmbiguousColumn() : new ArrayList<AmbiguousColumnType>(),
-					        query.getFunctionColumns() != null ? query.getFunctionColumns().getFunctionColumn() : new ArrayList<FunctionColumnType>());
+							query.getAmbiguousColumns() != null ? query.getAmbiguousColumns().getAmbiguousColumn() : new ArrayList<AmbiguousColumnType>(),
+							query.getFunctionColumns() != null ? query.getFunctionColumns().getFunctionColumn() : new ArrayList<FunctionColumnType>());
 				}
 			}
 			final String entityManagerName = setup.getEntitymanager();
@@ -1857,7 +1858,7 @@ public class OntimizeJpaDaoSupport implements ApplicationContextAware, IOntimize
 	 *            the function columns
 	 */
 	public void addQueryTemplateInformation(final String id, final String value, final Syntax syntax, final Class<?> resultClass, final MappingInfo mappingInfo,
-	        final List<AmbiguousColumnType> ambiguousColumns, final List<FunctionColumnType> functionColumns) {
+			final List<AmbiguousColumnType> ambiguousColumns, final List<FunctionColumnType> functionColumns) {
 		this.sqlQueries.put(id, new QueryTemplateInformation(value, syntax, resultClass, mappingInfo, ambiguousColumns, functionColumns));
 	}
 

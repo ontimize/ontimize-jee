@@ -3,11 +3,14 @@
  */
 package com.ontimize.jee.desktopclient.components.servermanagement.window.list;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.ontimize.gui.ApplicationManager;
 import com.ontimize.gui.MainApplication;
 
 /**
- * TODO Copiado de Sentence de utilmize
+ * Copiado de Sentence de utilmize
  */
 
 /**
@@ -15,14 +18,16 @@ import com.ontimize.gui.MainApplication;
  */
 public class SentenceSql {
 
+	private static final Logger	logger		= LoggerFactory.getLogger(SentenceSql.class);
+
 	/** The next code. */
-	protected static int	nextCode	= -1;
+	protected static int		nextCode	= -1;
 
 	/** The code. */
-	protected int			code;
+	protected int				code;
 
 	/** The sql sentence. */
-	protected String		sqlSentence;
+	protected String			sqlSentence;
 
 	/**
 	 * Instantiates a new sentence.
@@ -112,6 +117,7 @@ public class SentenceSql {
 						SentenceSql.nextCode = 0;
 					}
 				} catch (Exception e) {
+					SentenceSql.logger.trace(null, e);
 					SentenceSql.nextCode = 0;
 				}
 			}
@@ -123,7 +129,7 @@ public class SentenceSql {
 				application.getPreferences().setPreference(user, "SQLSentenceCode", String.valueOf(SentenceSql.nextCode));
 				application.getPreferences().savePreferences();
 			} catch (Exception e) {
-				// do nothing
+				SentenceSql.logger.trace(null, e);
 			}
 		}
 	}

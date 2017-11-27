@@ -54,8 +54,9 @@ public class WriteReplaceSerializer extends AbstractSerializer {
 				this.writeReplace = writeReplace;
 			}
 		} catch (ClassNotFoundException e) {
+			WriteReplaceSerializer.log.trace(null, e);
 		} catch (Exception e) {
-			WriteReplaceSerializer.log.trace(e.toString(), e);
+			WriteReplaceSerializer.log.trace(null, e);
 		}
 
 		this.writeReplace = WriteReplaceSerializer.getWriteReplace(cl);
@@ -142,6 +143,7 @@ public class WriteReplaceSerializer extends AbstractSerializer {
 		} catch (RuntimeException e) {
 			throw e;
 		} catch (InvocationTargetException e) {
+			WriteReplaceSerializer.log.trace(null, e);
 			throw new RuntimeException(e.getCause());
 		} catch (Exception e) {
 			throw new RuntimeException(e);

@@ -72,9 +72,9 @@ public class OntimizeServletFilter implements Filter {
 				HttpSession session = httpRequest.getSession(false);
 				try {
 					OntimizeServletFilter.logger.debug("[APP TIME] Processing session request {} time: {} ms",
-					        session == null ? SecurityContextHolder.getContext().getAuthentication().getPrincipal() : session.getId(), time);
+							session == null ? SecurityContextHolder.getContext().getAuthentication().getPrincipal() : session.getId(), time);
 				} catch (Exception ex) {
-					OntimizeServletFilter.logger.debug("[APP TIME] Processing request time: {} ms", time);
+					OntimizeServletFilter.logger.debug("[APP TIME] Processing request time: {} ms", time, ex);
 				}
 			}
 		}

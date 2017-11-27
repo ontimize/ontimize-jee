@@ -37,6 +37,7 @@ public class OntimizeExceptionTranslator implements IExceptionTranslator, com.on
 			try {
 				return ReflectionTools.newInstance(error.getClass(), oee.getMessage(), oee.getMessageParameters(), null, oee.getMessageType(), false, false);
 			} catch (Exception ex) {
+				OntimizeExceptionTranslator.logger.trace(null, ex);
 				return new NoTraceOntimizeJEEException(oee.getMessage(), null, oee.getMessageParameters(), null, false, false);
 			}
 		}

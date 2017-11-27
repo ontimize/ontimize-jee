@@ -24,6 +24,9 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 // @formatter:off
 /**
  * Input stream for Hessian requests, deserializing objects using the java.io.Serialization protocol.
@@ -54,6 +57,8 @@ import java.util.HashMap;
  */
 // @formatter:on
 public class HessianSerializerInput extends Hessian2Input {
+
+	private static final Logger log = LoggerFactory.getLogger(HessianSerializerInput.class);
 
 	/**
 	 * Creates a new Hessian input stream, initialized with an underlying input stream.
@@ -111,6 +116,7 @@ public class HessianSerializerInput extends Hessian2Input {
 				Method method = cl.getMethod("readResolve", new Class[0]);
 				return method.invoke(obj, new Object[0]);
 			} catch (Exception e) {
+				HessianSerializerInput.log.trace(null, e);
 			}
 
 			return obj;

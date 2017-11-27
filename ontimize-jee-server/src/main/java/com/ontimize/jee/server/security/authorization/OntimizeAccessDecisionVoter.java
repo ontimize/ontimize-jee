@@ -107,6 +107,7 @@ public class OntimizeAccessDecisionVoter implements AccessDecisionVoter<Object>,
 					}
 				} catch (final PermissionValidationException e) {
 					// ups it doesn't validate the 0 checkers I passed to it
+					OntimizeAccessDecisionVoter.logger.trace(null, e);
 				}
 				OntimizeAccessDecisionVoter.logger.error("This roles:" + roles.toString() + " have not access to:" + property);
 			}

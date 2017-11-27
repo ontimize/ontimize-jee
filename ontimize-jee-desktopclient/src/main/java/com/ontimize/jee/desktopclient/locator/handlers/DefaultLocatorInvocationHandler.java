@@ -62,7 +62,8 @@ public class DefaultLocatorInvocationHandler implements InvocationHandler {
 		this.invocationDelegates.add(delegate);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.lang.reflect.InvocationHandler#invoke(java.lang.Object, java.lang.reflect.Method, java.lang.Object[])
 	 */
 	@Override
@@ -72,7 +73,7 @@ public class DefaultLocatorInvocationHandler implements InvocationHandler {
 			try {
 				return delegate.invoke(proxy, method, args);
 			} catch (InvalidDelegateException e) {
-				// do nothing
+				DefaultLocatorInvocationHandler.logger.trace(null, e);
 			}
 		}
 		throw new InvalidDelegateException(method.getName());

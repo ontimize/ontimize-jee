@@ -134,8 +134,9 @@ public class BeanSerializer extends AbstractSerializer {
 				return;
 			}
 		} catch (ClassNotFoundException e) {
+			BeanSerializer.log.trace(null, e);
 		} catch (Exception e) {
-			BeanSerializer.log.trace(e.toString(), e);
+			BeanSerializer.log.trace(null, e);
 		}
 
 		this.writeReplace = this.getWriteReplace(cl);

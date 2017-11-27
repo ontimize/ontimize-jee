@@ -135,7 +135,7 @@ class PersistenceUnitReader {
 		} catch (SAXException ex) {
 			throw new IllegalArgumentException("Invalid XML in persistence unit from " + resourceLocation, ex);
 		} catch (ParserConfigurationException ex) {
-			throw new IllegalArgumentException("Internal error parsing persistence unit from " + resourceLocation);
+			throw new IllegalArgumentException("Internal error parsing persistence unit from " + resourceLocation, ex);
 		}
 
 		return infos.toArray(new SpringPersistenceUnitInfo[infos.size()]);
@@ -192,14 +192,14 @@ class PersistenceUnitReader {
 		if (!urlToString.contains(PersistenceUnitReader.META_INF)) {
 			if (PersistenceUnitReader.logger.isInfoEnabled()) {
 				PersistenceUnitReader.logger
-				        .info(resource.getFilename() + " should be located inside META-INF directory; cannot determine persistence unit root URL for " + resource);
+						.info(resource.getFilename() + " should be located inside META-INF directory; cannot determine persistence unit root URL for " + resource);
 			}
 			return null;
 		}
 		if (urlToString.lastIndexOf(PersistenceUnitReader.META_INF) == (urlToString.lastIndexOf('/') - (1 + PersistenceUnitReader.META_INF.length()))) {
 			if (PersistenceUnitReader.logger.isInfoEnabled()) {
 				PersistenceUnitReader.logger
-				        .info(resource.getFilename() + " is not located in the root of META-INF directory; cannot determine persistence unit root URL for " + resource);
+						.info(resource.getFilename() + " is not located in the root of META-INF directory; cannot determine persistence unit root URL for " + resource);
 			}
 			return null;
 		}
@@ -388,7 +388,7 @@ class PersistenceUnitReader {
 						unitInfo.addJarFileUrl(new URL(rootUrl, value));
 					} else {
 						PersistenceUnitReader.logger
-						        .warn("Cannot resolve jar-file entry [" + value + "] in persistence unit '" + unitInfo.getPersistenceUnitName() + "' without root URL");
+								.warn("Cannot resolve jar-file entry [" + value + "] in persistence unit '" + unitInfo.getPersistenceUnitName() + "' without root URL");
 					}
 				}
 			}

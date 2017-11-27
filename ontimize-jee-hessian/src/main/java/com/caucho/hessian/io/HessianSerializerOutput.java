@@ -22,6 +22,9 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 // @formatter:off
 /**
  * Output stream for Hessian requests.
@@ -52,6 +55,8 @@ import java.lang.reflect.Modifier;
  */
 // @formatter:on
 public class HessianSerializerOutput extends Hessian2Output {
+
+	private static final Logger log = LoggerFactory.getLogger(HessianSerializerOutput.class);
 
 	/**
 	 * Creates a new Hessian output stream, initialized with an underlying output stream.
@@ -86,6 +91,7 @@ public class HessianSerializerOutput extends Hessian2Output {
 			this.writeObject(repl);
 			return;
 		} catch (Exception e) {
+			HessianSerializerOutput.log.trace(null, e);
 		}
 
 		try {

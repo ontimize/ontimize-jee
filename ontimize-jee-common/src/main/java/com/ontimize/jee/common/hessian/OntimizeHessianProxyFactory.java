@@ -178,7 +178,7 @@ public class OntimizeHessianProxyFactory extends HessianProxyFactory implements 
 			try {
 				return this.getApplicationContext().getBean(ILoginProvider.class);
 			} catch (NoSuchBeanDefinitionException nofound) {
-				OntimizeHessianProxyFactory.logger.warn("No IloginProvider bean for negociate");
+				OntimizeHessianProxyFactory.logger.warn("No IloginProvider bean for negociate", nofound);
 			}
 		}
 		return null;

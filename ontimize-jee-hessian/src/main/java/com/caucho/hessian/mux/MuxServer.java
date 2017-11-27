@@ -20,10 +20,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Hessian Mux, a peer-to-peer protocol.
  */
 public class MuxServer {
+
+	private static final Logger	log				= LoggerFactory.getLogger(MuxServer.class);
 
 	private final Object		READ_LOCK		= new Object();
 	private final Object		WRITE_LOCK		= new Object();
@@ -150,6 +155,7 @@ public class MuxServer {
 					try {
 						this.WRITE_LOCK.wait(5000);
 					} catch (Exception e) {
+						MuxServer.log.trace(null, e);
 					}
 				}
 			}
@@ -219,6 +225,7 @@ public class MuxServer {
 					try {
 						this.READ_LOCK.wait(5000);
 					} catch (Exception e) {
+						MuxServer.log.trace(null, e);
 					}
 				}
 			}
@@ -227,6 +234,7 @@ public class MuxServer {
 				try {
 					this.readData();
 				} catch (IOException e) {
+					MuxServer.log.trace(null, e);
 					this.close();
 				}
 			}
@@ -244,6 +252,7 @@ public class MuxServer {
 				try {
 					this.READ_LOCK.wait(5000);
 				} catch (Exception e) {
+					MuxServer.log.trace(null, e);
 				}
 			}
 		}

@@ -57,6 +57,7 @@ public class OracleSQLStatementHandler extends com.ontimize.db.handler.OracleSQL
 						bInputStream.close();
 					}
 				} catch (Exception e) {
+					OracleSQLStatementHandler.logger.trace(null, e);
 				}
 			}
 		}

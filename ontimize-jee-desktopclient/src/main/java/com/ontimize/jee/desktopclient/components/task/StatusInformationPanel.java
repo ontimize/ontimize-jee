@@ -24,6 +24,9 @@ import javax.swing.JProgressBar;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.ontimize.gui.ApplicationManager;
 import com.ontimize.gui.ApplicationManager.CancelOperationDialog;
 import com.ontimize.gui.images.ImageManager;
@@ -33,17 +36,19 @@ import com.ontimize.gui.images.ImageManager;
  */
 public class StatusInformationPanel extends JPanel {
 
+	private static final Logger	logger		= LoggerFactory.getLogger(StatusInformationPanel.class);
+
 	/** The font. */
-	public static Font	font		= CancelOperationDialog.font;			// Font.decode("Arial-REGULAR-14");
+	public static Font			font		= CancelOperationDialog.font;							// Font.decode("Arial-REGULAR-14");
 
 	/** The foreground. */
-	public static Color	foreground	= CancelOperationDialog.foreground;		// Color.white;
+	public static Color			foreground	= CancelOperationDialog.foreground;						// Color.white;
 
 	/** The background. */
-	public static Color	background	= CancelOperationDialog.background;		// new Color(0x222222);
+	public static Color			background	= CancelOperationDialog.background;						// new Color(0x222222);
 
 	/** The border color. */
-	public static Color	borderColor	= CancelOperationDialog.borderColor;	// Color.white;
+	public static Color			borderColor	= CancelOperationDialog.borderColor;					// Color.white;
 
 	// Para que cargue la fuente y la primera vez no tarde en mostrarlo
 	{
@@ -164,7 +169,7 @@ public class StatusInformationPanel extends JPanel {
 		}
 		if (info.getEstimatedTime() != null) {
 			this.estimatedTime.setText(ApplicationManager
-			        .getTranslation(StatusInformationPanel.ESTIMATED_TIME_REMAINING) + " " + (int) (info.getEstimatedTime() / 1000D) + StatusInformationPanel.SECONDS);
+					.getTranslation(StatusInformationPanel.ESTIMATED_TIME_REMAINING) + " " + (int) (info.getEstimatedTime() / 1000D) + StatusInformationPanel.SECONDS);
 		} else {
 			this.estimatedTime.setText("");
 		}
@@ -232,11 +237,11 @@ public class StatusInformationPanel extends JPanel {
 
 																													StatusInformationProgressBar.this.setMinimum(0);
 																													StatusInformationProgressBar.this.setMaximum(
-																													        StatusInformationProgressBar.this.getWidth());
+																															StatusInformationProgressBar.this.getWidth());
 																													// Paint progress panel
 																													int value = StatusInformationProgressBar.this.getValue();
 																													if ((value < StatusInformationProgressBar.this
-																													        .getWidth()) && StatusInformationProgressBar.this.increasing) {
+																															.getWidth()) && StatusInformationProgressBar.this.increasing) {
 																														StatusInformationProgressBar.this.setValue(value + 5);
 																													} else {
 																														StatusInformationProgressBar.this.increasing = false;
@@ -251,6 +256,7 @@ public class StatusInformationPanel extends JPanel {
 																										});
 																Thread.sleep(StatusInformationProgressBar.this.updateTime);
 															} catch (Exception e) {
+																StatusInformationPanel.logger.trace(null, e);
 															}
 														}
 													}

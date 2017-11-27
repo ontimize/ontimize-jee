@@ -73,6 +73,7 @@ public class OJeeClientPermissionLocator extends PermissionReferenceLocator {
 			try {
 				bean = BeansFactory.getBean(ILoginProvider.class);
 			} catch (NoSuchBeanDefinitionException ex) {
+				OJeeClientPermissionLocator.logger.trace(null, ex);
 				BeansFactory.registerBeanDefinition("loginProvider", new AnnotatedGenericBeanDefinition(OntimizeLoginProvider.class));
 				// yes, duplicate line. seems spring bug... review when possible
 				BeansFactory.registerBeanDefinition("loginProvider", new AnnotatedGenericBeanDefinition(OntimizeLoginProvider.class));
@@ -125,7 +126,7 @@ public class OJeeClientPermissionLocator extends PermissionReferenceLocator {
 			throw new OntimizeJEERuntimeException(I18NNaming.E_REMOTE_LOCATOR_INVOCATIONHANDLER_MUST_BE_DEFINED);
 		}
 		this.referenceLocatorServer = Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
-		        ReflectionTools.getInterfacesExtending(PermissionSecureReferenceLocator.class, Remote.class), remoteLocatorInvocationHandler);
+				ReflectionTools.getInterfacesExtending(PermissionSecureReferenceLocator.class, Remote.class), remoteLocatorInvocationHandler);
 	}
 
 	@Override
@@ -156,7 +157,7 @@ public class OJeeClientPermissionLocator extends PermissionReferenceLocator {
 			this.updateHourServerThread.start();
 		} else {
 			MessageDialog.showMessage((JDialog) null, "Error retrieving client permissions from column : " + this.clientPermissionsColumn + ", : Returned NULL value",
-			        JOptionPane.ERROR_MESSAGE, null);
+					JOptionPane.ERROR_MESSAGE, null);
 			OJeeClientPermissionLocator.logger.error("Error retrieving client permissions from column : {} . Returned NULL value", this.clientPermissionsColumn);
 		}
 	}

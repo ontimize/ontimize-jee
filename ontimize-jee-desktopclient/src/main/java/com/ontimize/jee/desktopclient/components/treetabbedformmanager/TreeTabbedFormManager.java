@@ -195,7 +195,7 @@ public class TreeTabbedFormManager extends BaseFormManager implements ITreeTabbe
 					this.createLayout(this.applicationFrame, this.parent, this.formBuilder, this.initialForm, this.initialInteractionManager, this.resourceFile, false);
 				} else {
 					this.createLayoutWithTree(this.applicationFrame, this.parent, this.formBuilder, this.initialForm, this.initialInteractionManager, this.resourceFile,
-					        this.managedTreeTableColumn, false);
+							this.managedTreeTableColumn, false);
 					this.managedTreeTableColumn.show(this.managedTreeTableColumn.getFirstLevel().getId());
 				}
 			} else if (ApplicationManager.DEBUG) {
@@ -203,7 +203,7 @@ public class TreeTabbedFormManager extends BaseFormManager implements ITreeTabbe
 			}
 
 		} catch (Exception ex) {
-			throw new RuntimeException(ex.getMessage(), ex);
+			throw new RuntimeException(null, ex);
 		}
 
 	}
@@ -249,7 +249,7 @@ public class TreeTabbedFormManager extends BaseFormManager implements ITreeTabbe
 	 */
 
 	public TreeTabbedFormManager(Frame frame, Container container, FormBuilder builder, String formURI, InteractionManager interactionManager, ResourceBundle resource,
-	        boolean northPanel) {
+			boolean northPanel) {
 		super(frame, container, builder, formURI, interactionManager, resource, northPanel);
 	}
 
@@ -320,7 +320,7 @@ public class TreeTabbedFormManager extends BaseFormManager implements ITreeTabbe
 	}
 
 	private void createLayoutWithTree(Frame frame, Container container, FormBuilder builder, String formURI, InteractionManager interactionManager, ResourceBundle resources,
-	        LevelManager treeTableColumn, boolean controls) {
+			LevelManager treeTableColumn, boolean controls) {
 
 		this.managedTreeTableColumn = treeTableColumn;
 		this.managedTreeTableColumn.setResourceBundle(resources);
@@ -344,7 +344,7 @@ public class TreeTabbedFormManager extends BaseFormManager implements ITreeTabbe
 			}
 		} catch (Exception e) {
 			if (com.ontimize.gui.ApplicationManager.DEBUG) {
-				TreeTabbedFormManager.logger.debug(this.getClass().toString() + ": " + "Error adding form manager to the container. " + e.getMessage());
+				TreeTabbedFormManager.logger.debug("Error adding form manager to the container. ", e);
 			}
 			return;
 		}
@@ -353,7 +353,7 @@ public class TreeTabbedFormManager extends BaseFormManager implements ITreeTabbe
 
 		if (Tree.PREFERRED_WIDTH == -1) {
 			this.managedTreeTableColumn.getGUIComponent()
-			        .setPreferredSize(new Dimension(treeTableColumn.getGUIComponent().getPreferredSize().width + 60, this.treeTableScrollPane.getPreferredSize().height));
+					.setPreferredSize(new Dimension(treeTableColumn.getGUIComponent().getPreferredSize().width + 60, this.treeTableScrollPane.getPreferredSize().height));
 		} else {
 			this.managedTreeTableColumn.getGUIComponent().setPreferredSize(new Dimension(Tree.PREFERRED_WIDTH, this.treeTableScrollPane.getPreferredSize().height));
 		}
@@ -454,7 +454,7 @@ public class TreeTabbedFormManager extends BaseFormManager implements ITreeTabbe
 					}
 				});
 			} catch (Exception e) {
-
+				TreeTabbedFormManager.logger.trace(null, e);
 			}
 		}
 	}
@@ -851,7 +851,7 @@ public class TreeTabbedFormManager extends BaseFormManager implements ITreeTabbe
 				});
 				return res.isEmpty() ? false : true;
 			} catch (Exception ex) {
-				throw new RuntimeException(ex.getMessage());
+				throw new RuntimeException(ex.getMessage(), ex);
 			}
 		}
 	}

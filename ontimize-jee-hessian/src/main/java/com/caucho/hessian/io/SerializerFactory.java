@@ -491,7 +491,7 @@ public class SerializerFactory extends AbstractSerializerFactory {
 		Deserializer reader = this.getObjectDeserializer(type);
 
 		if ((cl == null) || cl.equals(reader.getType()) || cl.isAssignableFrom(reader.getType()) || reader.isReadResolve() || HessianHandle.class
-		        .isAssignableFrom(reader.getType())) {
+				.isAssignableFrom(reader.getType())) {
 			return reader;
 		}
 
@@ -656,6 +656,7 @@ public class SerializerFactory extends AbstractSerializerFactory {
 		try {
 			systemClassLoader = ClassLoader.getSystemClassLoader();
 		} catch (Exception e) {
+			SerializerFactory.log.trace(null, e);
 		}
 
 		SYSTEM_CLASSLOADER = systemClassLoader;

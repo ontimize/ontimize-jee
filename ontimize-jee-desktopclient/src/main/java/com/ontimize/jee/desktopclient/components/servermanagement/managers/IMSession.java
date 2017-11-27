@@ -93,11 +93,12 @@ public class IMSession extends BasicInteractionManager {
 
 								Object attribute = nextSession.getAttribute("SPRING_SECURITY_SAVED_REQUEST");
 								res.addRecord(EntityResultTools.keysvalues("USER", id, "IP", attribute != null ? attribute : "", "BEGINDATE", new Date(beginDate), "ENDDATE",
-								        new Date(lastAccessedTime), "EXPIRATIONTIME", maxInactiveIntervalInSeconds));
+										new Date(lastAccessedTime), "EXPIRATIONTIME", maxInactiveIntervalInSeconds));
 							}
 							IMSession.this.tResults.setValue(res);
 						}
 					} catch (Exception ex) {
+						IMSession.logger.trace(null, ex);
 						MessageDialog.showErrorMessage(IMSession.this.managedForm.getJDialog(), ex.getMessage());
 					}
 				}

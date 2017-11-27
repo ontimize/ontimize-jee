@@ -10,6 +10,9 @@ import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.ontimize.gui.ApplicationManager;
 import com.ontimize.jee.common.tools.MessageType;
 import com.ontimize.jee.common.tools.ParseUtilsExtended;
@@ -19,6 +22,8 @@ import com.ontimize.jee.desktopclient.components.WindowTools;
  * The Class UToastMessage.
  */
 public class ToastMessage {
+
+	private static final Logger			logger				= LoggerFactory.getLogger(ToastNoblockingPanel.class);
 
 	/** The icon warning. */
 	public static ImageIcon				ICON_WARNING		= ParseUtilsExtended.getImageIcon("com/ontimize/gui/images/warning.png", null);
@@ -95,7 +100,7 @@ public class ToastMessage {
 	 *            the bundle description params
 	 */
 	public ToastMessage(Component parent, boolean blocking, String message, String description, ImageIcon icon, int animationTime, Rectangle windowBounds,
-	        Class<? extends JPanel> panelClass, Hashtable<?, ?> otherData, Object[] bundleMessageParams, Object[] bundleDescriptionParams) {
+			Class<? extends JPanel> panelClass, Hashtable<?, ?> otherData, Object[] bundleMessageParams, Object[] bundleDescriptionParams) {
 		super();
 		this.parentWindow = (Window) (parent == null ? null : parent instanceof Window ? parent : WindowTools.getWindowAncestor(parent));
 		this.blocking = blocking;
@@ -263,6 +268,7 @@ public class ToastMessage {
 		try {
 			return ApplicationManager.getTranslation(this.getMessage(), bundle != null ? bundle : ApplicationManager.getApplicationBundle(), this.getBundleMessageParams());
 		} catch (Exception e) {
+			ToastMessage.logger.trace(null, e);
 			return this.getMessage();
 		}
 	}
@@ -278,6 +284,7 @@ public class ToastMessage {
 		try {
 			return ApplicationManager.getTranslation(this.getDescription(), bundle != null ? bundle : ApplicationManager.getApplicationBundle(), this.getBundleDescriptionParams());
 		} catch (Exception e) {
+			ToastMessage.logger.trace(null, e);
 			return this.getDescription();
 		}
 

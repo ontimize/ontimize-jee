@@ -106,6 +106,7 @@ public class IMDownloadLogFiles extends BasicInteractionManager {
 						EntityResult res = IMDownloadLogFiles.this.getLogFiles();
 						IMDownloadLogFiles.this.tLogFiles.setValue(res);
 					} catch (Exception ex) {
+						IMDownloadLogFiles.logger.trace(null, ex);
 						MessageDialog.showErrorMessage(IMDownloadLogFiles.this.managedForm.getJDialog(), ex.getMessage());
 					}
 				}

@@ -30,7 +30,7 @@
 			<arg value="verify" /> 
 			<!--<arg value="site" />--> 
 			<arg value="install" /> 
-			<arg value="deploy:deploy" /> 
+			<!--<arg value="deploy:deploy" />--> 
 			<!--<arg value="-pl" /> 
 			<arg value="com.ontimize.jee:ontimize-jee,ontimize-jee-common,ontimize-jee-desktopclient,ontimize-jee-server,ontimize-jee-desktopclient-dms,ontimize-hessian,ontimize-jee-server-logic" />-->
 			<!--<arg value="com.ontimize.jee:ontimize-jee,ontimize-jee-server,ontimize-jee-common,ontimize-jee-desktopclient,ontimize-hessian" />-->

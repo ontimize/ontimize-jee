@@ -67,7 +67,7 @@ public class EmbeddedJFileChooser extends JPanel {
 			default:
 				this.add(this.fileName, new GridBagConstraints(0, 1, 3, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(2, 2, 2, 2), 0, 0));
 				this.add(this.createRowButtonsComp(this.bOpen, this.bSave),
-				        new GridBagConstraints(2, 2, 1, 1, 0, 0, GridBagConstraints.EAST, GridBagConstraints.LINE_END, new Insets(2, 2, 2, 2), 0, 0));
+						new GridBagConstraints(2, 2, 1, 1, 0, 0, GridBagConstraints.EAST, GridBagConstraints.LINE_END, new Insets(2, 2, 2, 2), 0, 0));
 				break;
 		}
 		this.addPropertyChangeListener(new PropertyChangeListener() {
@@ -174,7 +174,7 @@ public class EmbeddedJFileChooser extends JPanel {
 								}
 							}
 						} catch (IOException e) {
-							EmbeddedJFileChooser.logger.error(e.getMessage());
+							EmbeddedJFileChooser.logger.error(null, e);
 						}
 					}
 

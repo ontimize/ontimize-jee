@@ -24,16 +24,21 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URLConnection;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Internal connection to a server. The default connection is based on java.net
  */
 public class HessianURLConnection extends AbstractHessianConnection {
 
-	private final URI		url;
-	private URLConnection	conn;
+	private static final Logger	logger	= LoggerFactory.getLogger(HessianURLConnection.class);
 
-	private int				statusCode;
-	private String			statusMessage;
+	private final URI			url;
+	private URLConnection		conn;
+
+	private int					statusCode;
+	private String				statusMessage;
 
 	HessianURLConnection(URI url, URLConnection conn) {
 		this.url = url;
@@ -69,6 +74,7 @@ public class HessianURLConnection extends AbstractHessianConnection {
 			try {
 				this.statusCode = httpConn.getResponseCode();
 			} catch (Exception e) {
+				HessianURLConnection.logger.trace(null, e);
 			}
 
 			this.parseResponseHeaders(httpConn);

@@ -19,6 +19,7 @@ public class Trio<K, L, M> implements Serializable {
 
 	/** The second. */
 	private L	second;
+
 	/** The second. */
 	private M	third;
 

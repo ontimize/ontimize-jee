@@ -116,17 +116,15 @@ public abstract class OSwingWorker<T, V> extends SwingWorker<T, V> {
 	 * Envuelve el metodo get del {@link OSwingWorker} para que devuelva directamente la excepcion que se produjo en el doInBackground.
 	 *
 	 * @return the t
+	 * @throws ExecutionException
 	 * @throws Throwable
 	 *             the throwable
 	 */
-	public T uget() throws Throwable {
+	public T uget() throws ExecutionException {
 		try {
 			return super.get();
-		} catch (InterruptedException error) {
-			throw error;
-		} catch (ExecutionException error) {
-			throw error.getCause();
+		} catch (InterruptedException | ExecutionException error) {
+			throw new ExecutionException(error);
 		}
 	}
-
 }

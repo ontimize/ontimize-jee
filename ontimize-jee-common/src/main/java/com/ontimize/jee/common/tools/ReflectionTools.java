@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.ClassUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
 
@@ -22,10 +24,12 @@ import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
  */
 public final class ReflectionTools {
 
+	private static final Logger						logger				= LoggerFactory.getLogger(ReflectionTools.class);
+
 	/**
 	 * Maps primitive <code>Class</code>es to their corresponding wrapper <code>Class</code>.
 	 */
-	private static final Map<Class<?>, Class<?>> primitiveWrapperMap = new HashMap<>();
+	private static final Map<Class<?>, Class<?>>	primitiveWrapperMap	= new HashMap<>();
 	static {
 		ReflectionTools.primitiveWrapperMap.put(Boolean.TYPE, Boolean.class);
 		ReflectionTools.primitiveWrapperMap.put(Byte.TYPE, Byte.class);
@@ -231,7 +235,7 @@ public final class ReflectionTools {
 		}
 
 		throw new OntimizeJEERuntimeException(
-		        String.format("No method %s found in class %s", name, Proxy.class.isAssignableFrom(theClass) ? Arrays.toString(theClass.getInterfaces()) : theClass));
+				String.format("No method %s found in class %s", name, Proxy.class.isAssignableFrom(theClass) ? Arrays.toString(theClass.getInterfaces()) : theClass));
 	}
 
 	/**
@@ -355,12 +359,13 @@ public final class ReflectionTools {
 			try {
 				return innerClass.getDeclaredField(fieldName);
 			} catch (Exception error) {
+				ReflectionTools.logger.trace(null, error);
 				// do nothing
 				for (Class<?> interfaceClass : innerClass.getInterfaces()) {
 					try {
 						return interfaceClass.getDeclaredField(fieldName);
 					} catch (Exception err) {
-						// do nothing
+						ReflectionTools.logger.trace(null, err);
 					}
 				}
 			}

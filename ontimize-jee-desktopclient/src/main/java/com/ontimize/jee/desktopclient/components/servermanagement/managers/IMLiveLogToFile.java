@@ -55,7 +55,7 @@ public class IMLiveLogToFile extends BasicInteractionManager {
 		this.fileChooser = new EmbeddedJFileChooser(EmbeddedJFileChooser.MODE.BOTH, new LiveLogToFileListener());
 		this.fileChooser.setFileFilter(new FileNameExtensionFilter("LOG FILES", "log"));
 		this.rowFileChooser.add(new JScrollPane(this.fileChooser),
-		        new GridBagConstraints(0, 1, 3, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(2, 2, 2, 2), 0, 0));
+				new GridBagConstraints(0, 1, 3, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(2, 2, 2, 2), 0, 0));
 	}
 
 	public class LiveLogToFileListener implements IEmbeddedJFileChooser {
@@ -84,12 +84,14 @@ public class IMLiveLogToFile extends BasicInteractionManager {
 							stream = new ByteArrayInputStream(text.getBytes());
 							IOUtils.copy(stream, Files.newOutputStream(Paths.get(this.finalPath)));
 						} catch (IOException e) {
+							IMLiveLogToFile.logger.trace(null, e);
 							MessageDialog.showErrorMessage(SwingUtilities.getWindowAncestor(IMLiveLogToFile.this.managedForm), e.getMessage());
 						} finally {
 							if (stream != null) {
 								try {
 									stream.close();
 								} catch (IOException e) {
+									IMLiveLogToFile.logger.trace(null, e);
 									MessageDialog.showErrorMessage(SwingUtilities.getWindowAncestor(IMLiveLogToFile.this.managedForm), e.getMessage());
 								}
 							}
@@ -102,7 +104,7 @@ public class IMLiveLogToFile extends BasicInteractionManager {
 								}
 							}
 						} catch (IOException e) {
-							IMLiveLogToFile.logger.error(e.getMessage());
+							IMLiveLogToFile.logger.error(null, e);
 						}
 						IMLiveLogToFile.this.fileChooser.rescanCurrentDirectory();
 					}

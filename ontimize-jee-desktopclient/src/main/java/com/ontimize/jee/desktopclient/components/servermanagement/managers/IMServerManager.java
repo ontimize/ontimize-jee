@@ -56,7 +56,7 @@ public class IMServerManager extends BasicInteractionManager {
 				protected void done() {
 					try {
 						this.uget();
-					} catch (Throwable ex) {
+					} catch (Exception ex) {
 						MessageManager.getMessageManager().showExceptionMessage(ex, IMServerManager.logger);
 					}
 				}

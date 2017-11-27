@@ -54,7 +54,7 @@ public class IMMemory extends BasicInteractionManager {
 		this.fileChooser = new EmbeddedJFileChooser(EmbeddedJFileChooser.MODE.BOTH, new MemoryToFileListener());
 		this.fileChooser.setFileFilter(new FileNameExtensionFilter("BIN FILES", "bin"));
 		this.rowFileChooser.add(new JScrollPane(this.fileChooser),
-		        new GridBagConstraints(0, 1, 3, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(2, 2, 2, 2), 0, 0));
+				new GridBagConstraints(0, 1, 3, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(2, 2, 2, 2), 0, 0));
 
 		this.serverManagement = BeansFactory.getBean(IServerManagementService.class);
 	}
@@ -74,14 +74,17 @@ public class IMMemory extends BasicInteractionManager {
 				heapDumpIs = IMMemory.this.serverManagement.createHeapDump();
 				IOUtils.copy(heapDumpIs, Files.newOutputStream(Paths.get(path)));
 			} catch (OntimizeJEEException e) {
+				IMMemory.logger.trace(null, e);
 				MessageDialog.showErrorMessage(SwingUtilities.getWindowAncestor(IMMemory.this.managedForm), e.getMessage());
 			} catch (IOException e) {
+				IMMemory.logger.trace(null, e);
 				MessageDialog.showErrorMessage(SwingUtilities.getWindowAncestor(IMMemory.this.managedForm), e.getMessage());
 			} finally {
 				if (heapDumpIs != null) {
 					try {
 						heapDumpIs.close();
 					} catch (IOException e) {
+						IMMemory.logger.trace(null, e);
 						MessageDialog.showErrorMessage(SwingUtilities.getWindowAncestor(IMMemory.this.managedForm), e.getMessage());
 					}
 				}

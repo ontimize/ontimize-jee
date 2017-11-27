@@ -58,7 +58,7 @@ public class IMThreads extends BasicInteractionManager {
 		this.fileChooser = new EmbeddedJFileChooser(EmbeddedJFileChooser.MODE.BOTH, new ThreadsToFileListener());
 		this.fileChooser.setFileFilter(new FileNameExtensionFilter("TXT FILES", "txt"));
 		this.rowFileChooser.add(new JScrollPane(this.fileChooser),
-		        new GridBagConstraints(0, 1, 3, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(2, 2, 2, 2), 0, 0));
+				new GridBagConstraints(0, 1, 3, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(2, 2, 2, 2), 0, 0));
 
 		this.serverManagement = BeansFactory.getBean(IServerManagementService.class);
 	}
@@ -79,14 +79,17 @@ public class IMThreads extends BasicInteractionManager {
 				stream = new ByteArrayInputStream(createThreadDump.getBytes(StandardCharsets.UTF_8));
 				IOUtils.copy(stream, Files.newOutputStream(Paths.get(path)));
 			} catch (OntimizeJEEException e) {
+				IMThreads.logger.trace(null, e);
 				MessageDialog.showErrorMessage(SwingUtilities.getWindowAncestor(IMThreads.this.managedForm), e.getMessage());
 			} catch (IOException e) {
+				IMThreads.logger.trace(null, e);
 				MessageDialog.showErrorMessage(SwingUtilities.getWindowAncestor(IMThreads.this.managedForm), e.getMessage());
 			} finally {
 				if (stream != null) {
 					try {
 						stream.close();
 					} catch (IOException e) {
+						IMThreads.logger.trace(null, e);
 						MessageDialog.showErrorMessage(SwingUtilities.getWindowAncestor(IMThreads.this.managedForm), e.getMessage());
 					}
 				}
@@ -99,7 +102,7 @@ public class IMThreads extends BasicInteractionManager {
 					}
 				}
 			} catch (IOException e) {
-				IMThreads.logger.error(e.getMessage());
+				IMThreads.logger.error(null, e);
 			}
 			IMThreads.this.fileChooser.rescanCurrentDirectory();
 		}

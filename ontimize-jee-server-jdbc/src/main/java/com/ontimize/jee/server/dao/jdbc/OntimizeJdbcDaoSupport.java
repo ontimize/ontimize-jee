@@ -211,7 +211,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 			CheckingTools.failIf(vValidAttributes.isEmpty(), "NO_ATTRIBUTES_TO_QUERY");
 			// use table
 			stSQL = this.getStatementHandler().createSelectQuery(this.getSchemaTable(), new Vector<>(vValidAttributes), new Hashtable<>(kvValidKeysValues), new Vector<>(),
-			        new Vector<>(sort == null ? Collections.emptyList() : sort));
+					new Vector<>(sort == null ? Collections.emptyList() : sort));
 		} else {
 			List<String> validColumns = queryTemplateInformation.getValidColumns();
 			kvValidKeysValues = this.getValidQueryingKeysValues(kvValidKeysValues, validColumns);
@@ -239,19 +239,17 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 			cond = cond.trim();
 
 			Pair<String, Integer> replaceAll = StringTools.replaceAll(sqlTemplate, OntimizeJdbcDaoSupport.PLACEHOLDER_WHERE_CONCAT,
-			        cond.length() == 0 ? "" : SQLStatementBuilder.AND + " " + cond);
+					cond.length() == 0 ? "" : SQLStatementBuilder.AND + " " + cond);
 			sqlTemplate = replaceAll.getFirst();
 			for (int i = 1; i < replaceAll.getSecond(); i++) {
 				vValues.addAll(vValues);
 			}
-			// sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_WHERE_CONCAT, cond.length() == 0 ? "" : (SQLStatementBuilder.AND + " " + cond));
 
 			replaceAll = StringTools.replaceAll(sqlTemplate, OntimizeJdbcDaoSupport.PLACEHOLDER_WHERE, cond.length() == 0 ? "" : SQLStatementBuilder.WHERE + " " + cond);
 			sqlTemplate = replaceAll.getFirst();
 			for (int i = 1; i < replaceAll.getSecond(); i++) {
 				vValues.addAll(vValues);
 			}
-			// sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_WHERE, cond.length() == 0 ? "" : (SQLStatementBuilder.WHERE + " " + cond));
 
 			// Order by
 			String order = sort == null ? "" : (String) ReflectionTools.invoke(this.getStatementHandler(), "createSortStatement", new Vector<>(sort), false);
@@ -455,7 +453,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	 * @return the object
 	 */
 	protected BasicExpression applyTransformationsToBasicExpression(final BasicExpression original, List<AmbiguousColumnType> ambiguousColumns,
-	        List<FunctionColumnType> functionColumns) {
+			List<FunctionColumnType> functionColumns) {
 		Object originalLeftOperand = original.getLeftOperand();
 		Operator originalOperator = original.getOperator();
 		Object originalRightOperand = original.getRightOperand();
@@ -1132,30 +1130,9 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 		this.tableMetaDataContext.setNativeJdbcExtractor(nativeJdbcExtractor);
 	}
 
-	// /**
-	// * Get the insert string to be used.
-	// *
-	// * @return the insert string
-	// */
-	// public String getInsertString() {
-	// this.checkCompiled();
-	// return this.insertString;
-	// }
-	//
-	// /**
-	// * Get the array of {@link java.sql.Types} to be used for insert
-	// *
-	// * @return the insert types
-	// */
-	// public int[] getInsertTypes() {
-	// this.checkCompiled();
-	// return this.insertTypes;
-	// }
-
 	// -------------------------------------------------------------------------
 	// Methods handling compilation issues
 	// -------------------------------------------------------------------------
-
 	/**
 	 * Compile this JdbcInsert using provided parameters and meta data plus other settings. This finalizes the configuration for this object and subsequent attempts to compile are
 	 * ignored. This will be implicitly called the first time an un-compiled insert is executed.
@@ -1242,9 +1219,9 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 			if (setup.getQueries() != null) {
 				for (final QueryType query : setup.getQueries().getQuery()) {//
 					this.addQueryTemplateInformation(query.getId(), query.getSentence().getValue(), //
-					        query.getAmbiguousColumns() == null ? null : query.getAmbiguousColumns().getAmbiguousColumn(), //
-					        query.getFunctionColumns() == null ? null : query.getFunctionColumns().getFunctionColumn(), //
-					        query.getValidColumns() != null ? query.getValidColumns().getColumn() : new ArrayList<String>());
+							query.getAmbiguousColumns() == null ? null : query.getAmbiguousColumns().getAmbiguousColumn(), //
+							query.getFunctionColumns() == null ? null : query.getFunctionColumns().getFunctionColumn(), //
+							query.getValidColumns() != null ? query.getValidColumns().getColumn() : new ArrayList<String>());
 				}
 			}
 			this.setGeneratedKeyName(setup.getGeneratedKey());
@@ -1352,7 +1329,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	 * @param validColumns
 	 */
 	public void addQueryTemplateInformation(final String id, final String value, final List<AmbiguousColumnType> ambiguousColumns, final List<FunctionColumnType> functionColumns,
-	        List<String> validColumns) {
+			List<String> validColumns) {
 		this.sqlQueries.put(id, new QueryTemplateInformation(value, ambiguousColumns, functionColumns, validColumns));
 	}
 
@@ -1549,12 +1526,12 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 			}
 			if (this.getGeneratedKeyNames().length < 1) {
 				throw new InvalidDataAccessApiUsageException(
-				        "Generated Key Name(s) not specificed. " + "Using the generated keys features requires specifying the name(s) of the generated column(s)");
+						"Generated Key Name(s) not specificed. " + "Using the generated keys features requires specifying the name(s) of the generated column(s)");
 			}
 			if (this.getGeneratedKeyNames().length > 1) {
 				throw new InvalidDataAccessApiUsageException(
-				        "Current database only supports retreiving the key for a single column. There are " + this.getGeneratedKeyNames().length + " columns specified: " + Arrays
-				                .asList(this.getGeneratedKeyNames()));
+						"Current database only supports retreiving the key for a single column. There are " + this.getGeneratedKeyNames().length + " columns specified: " + Arrays
+								.asList(this.getGeneratedKeyNames()));
 			}
 			// This is a hack to be able to get the generated key from a
 			// database that doesn't support
@@ -1566,7 +1543,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 			Assert.notNull(keyQuery, "Query for simulating get generated keys can't be null");
 			if (keyQuery.toUpperCase().startsWith("RETURNING")) {
 				final Long key = this.getJdbcTemplate().queryForObject(holder.getInsertString() + " " + keyQuery, holder.getValues().toArray(new Object[holder.getValues().size()]),
-				        Long.class);
+						Long.class);
 				final Map<String, Object> keys = new HashMap<>(1);
 				keys.put(this.getGeneratedKeyNames()[0], key);
 				keyHolder.getKeyList().add(keys);
@@ -1620,7 +1597,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	protected PreparedStatement prepareInsertStatementForGeneratedKeys(final Connection con, String insertString) throws SQLException {
 		if (this.getGeneratedKeyNames().length < 1) {
 			throw new InvalidDataAccessApiUsageException(
-			        "Generated Key Name(s) not specificed. " + "Using the generated keys features requires specifying the name(s) of the generated column(s)");
+					"Generated Key Name(s) not specificed. " + "Using the generated keys features requires specifying the name(s) of the generated column(s)");
 		}
 		PreparedStatement ps;
 		if (this.tableMetaDataContext.isGeneratedKeysColumnNameArraySupported()) {
@@ -1650,7 +1627,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 			batchValues[i++] = values;
 		}
 		return this.executeInsertBatchInternal(batchValues, this.tableMetaDataContext.createInsertString(this.getGeneratedKeyNames()),
-		        this.tableMetaDataContext.createInsertTypes());
+				this.tableMetaDataContext.createInsertTypes());
 	}
 
 	/**
@@ -1718,19 +1695,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 				final int sqlType = columnTypes[colIndex - 1];
 				if (ObjectTools.isIn(sqlType, Types.BLOB, Types.BINARY, Types.VARBINARY) && ((value instanceof byte[]) || (value instanceof InputStream))) {
 					if (value instanceof byte[]) {
-
-						// InputStream valueStream = new
-						// ByteArrayInputStream((byte[]) value);
-						//
-						// try {
-						// preparedStatement.setBinaryStream(colIndex,
-						// valueStream, valueStream.available());
-						// } catch (IOException error) {
-						// throw new SQLException(error);
-						// }
-
 						preparedStatement.setBytes(colIndex, (byte[]) value);
-
 					} else {
 						try {
 							// TODO esto no esta soportado por los drivers jdbc 4.0

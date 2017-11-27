@@ -70,7 +70,7 @@ public class LoggerHelper {
 						try {
 							out.wait();
 						} catch (InterruptedException e1) {
-							// do nothing
+							LoggerHelper.logger.trace(null, e1);
 						}
 						LoggerHelper.logger.debug("unregistering remote logger");
 						LoggerHelper.this.unregisterAppender(appender);
@@ -138,6 +138,7 @@ public class LoggerHelper {
 							}
 						}, 2, TimeUnit.SECONDS);
 					} catch (Exception ex) {
+						LoggerHelper.logger.trace(null, ex);
 						this.hasError = true;
 						try {
 							LoggerHelper.logger.info("detected error in log stream");
@@ -147,7 +148,7 @@ public class LoggerHelper {
 									os.close();
 									inPipe.close();
 								} catch (Exception err) {
-									// do nothing
+									LoggerHelper.logger.trace(null, err);
 								}
 							}
 						} finally {

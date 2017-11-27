@@ -148,7 +148,7 @@ public class MultiModuleApplicationLauncher {
 			try {
 				UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 			} catch (Exception ex) {
-				// do nothing
+				MultiModuleApplicationLauncher.logger.trace(null, ex);
 			}
 		}
 

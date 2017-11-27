@@ -20,6 +20,9 @@ import javax.swing.JTextPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.LineBorder;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.ontimize.jee.common.tools.StringTools;
 
 /**
@@ -27,37 +30,39 @@ import com.ontimize.jee.common.tools.StringTools;
  */
 public class ToastNoblockingPanel extends AbstractToastPanel {
 
-	/**
-	 * The percent of screen allowed as maximum message size. Else te content in under a ScrollPane, the will be avialable anywhere.
-	 */
-	public static double	MAXIMUM_WIDTH_PERCENT				= 0.9;
+	private static final Logger	logger								= LoggerFactory.getLogger(ToastNoblockingPanel.class);
 
 	/**
 	 * The percent of screen allowed as maximum message size. Else te content in under a ScrollPane, the will be avialable anywhere.
 	 */
-	public static double	MAXIMUM_HEIGHT_PERCENT				= 0.8;
+	public static double		MAXIMUM_WIDTH_PERCENT				= 0.9;
+
+	/**
+	 * The percent of screen allowed as maximum message size. Else te content in under a ScrollPane, the will be avialable anywhere.
+	 */
+	public static double		MAXIMUM_HEIGHT_PERCENT				= 0.8;
 
 	/**
 	 * The percent of screen destinated to title (the descripton will be the unit minus this) when both messages are shown.
 	 */
-	public static double	TITLE_VERSUS_DESCTIPTION_PERCENT	= 0.2;
+	public static double		TITLE_VERSUS_DESCTIPTION_PERCENT	= 0.2;
 
 	/** The msg label. */
-	protected JTextPane		msgLabel;
+	protected JTextPane			msgLabel;
 
 	/** The dsc label. */
-	protected JTextPane		dscLabel;
+	protected JTextPane			dscLabel;
 
 	/** The ico label. */
-	protected JLabel		icoLabel;
+	protected JLabel			icoLabel;
 
 	/** The message scroll panel */
-	protected JScrollPane	scrollMsg;
+	protected JScrollPane		scrollMsg;
 
 	/** The desc scroll panel */
-	protected JScrollPane	scrollDsc;
+	protected JScrollPane		scrollDsc;
 
-	protected boolean		bothMessages;
+	protected boolean			bothMessages;
 
 	/**
 	 * Instantiates a new u toast noblocking panel.
@@ -98,7 +103,7 @@ public class ToastNoblockingPanel extends AbstractToastPanel {
 		this.add(this.scrollMsg, new GridBagConstraints(1, 0, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(3, 0, 2, 3), 0, 0));
 		this.add(this.scrollDsc, new GridBagConstraints(1, 1, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(2, 0, 3, 0), 0, 0));
 		this.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createCompoundBorder(new LineBorder(Color.black, 2, true), new LineBorder(Color.white, 2, true)),
-		        BorderFactory.createEmptyBorder(10, 10, 10, 10)));
+				BorderFactory.createEmptyBorder(10, 10, 10, 10)));
 
 	}
 
@@ -230,6 +235,7 @@ public class ToastNoblockingPanel extends AbstractToastPanel {
 				return ToastNoblockingPanel.calculeValidSizePlainText(text, minimunSize, font);
 			}
 		} catch (Exception e) {
+			ToastNoblockingPanel.logger.trace(null, e);
 			return minimunSize;
 		}
 	}
@@ -267,6 +273,7 @@ public class ToastNoblockingPanel extends AbstractToastPanel {
 				return ToastNoblockingPanel.calculeTextLines(text, ToastNoblockingPanel.getLineSeparators(contentType));
 			}
 		} catch (Exception e) {
+			ToastNoblockingPanel.logger.trace(null, e);
 			return Arrays.asList(new String[] { text });
 		}
 	}
@@ -354,18 +361,18 @@ public class ToastNoblockingPanel extends AbstractToastPanel {
 		int initBodyTagStart = Math.max(0, s.indexOf("<body>"));
 		int endBodyTag = Math.min(s.length(), s.indexOf("</body>"));
 		s = s.substring(0, initBodyTagStart).replaceAll("\r", "").replaceAll("\n", "").replaceAll(" ", "") + s.substring(initBodyTagStart, endBodyTag + "</body>".length())
-		        .replaceAll("\r", "").replaceAll("\n", "").replaceAll("  ", " ")
-		        .replaceAll("  ", " ") + s.substring(endBodyTag + "</body>".length()).replaceAll("\r", "").replaceAll("\n", "").replaceAll(" ", "");
+				.replaceAll("\r", "").replaceAll("\n", "").replaceAll("  ", " ")
+				.replaceAll("  ", " ") + s.substring(endBodyTag + "</body>".length()).replaceAll("\r", "").replaceAll("\n", "").replaceAll(" ", "");
 
 		// Drop basic tags
 		s = s.replaceAll("<html>", "").replaceAll("</html>", "").replaceAll("<body>", "").replaceAll("</body>", "").replaceAll("<head>", "").replaceAll("</head>", "")
-		        .replaceAll("<b>", "").replaceAll("</b>", "").replaceAll("<i>", "").replaceAll("</i>", "").replaceAll("<u>", "").replaceAll("</u>", "");
+				.replaceAll("<b>", "").replaceAll("</b>", "").replaceAll("<i>", "").replaceAll("</i>", "").replaceAll("<u>", "").replaceAll("</u>", "");
 
 		// Consider spcial tags that affect in rendering new lines
 		s = s.replaceAll("<br>", ToastNoblockingPanel.getDefaultLineSeparator(null)).replaceAll("<ol><li>", ToastNoblockingPanel.getDefaultLineSeparator(null))
-		        .replaceAll("<ul><li>", ToastNoblockingPanel.getDefaultLineSeparator(null)).replaceAll("<li>", ToastNoblockingPanel.getDefaultLineSeparator(null))
-		        .replaceAll("</ol>", "").replaceAll("<ul>", "").replaceAll("</ul>", "").replaceAll("</li>", "").replaceAll("<ol>", "").replaceAll("</ol>", "")
-		        .replaceAll("<ul>", "").replaceAll("</ul>", "").replaceAll("<center>", ToastNoblockingPanel.getDefaultLineSeparator(null)).replaceAll("</center>", "");
+				.replaceAll("<ul><li>", ToastNoblockingPanel.getDefaultLineSeparator(null)).replaceAll("<li>", ToastNoblockingPanel.getDefaultLineSeparator(null))
+				.replaceAll("</ol>", "").replaceAll("<ul>", "").replaceAll("</ul>", "").replaceAll("</li>", "").replaceAll("<ol>", "").replaceAll("</ol>", "")
+				.replaceAll("<ul>", "").replaceAll("</ul>", "").replaceAll("<center>", ToastNoblockingPanel.getDefaultLineSeparator(null)).replaceAll("</center>", "");
 
 		// Remove other unccomon labels
 		while ((s.indexOf("<") >= 0) && (s.indexOf(">") >= 0)) {

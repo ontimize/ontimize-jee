@@ -123,6 +123,7 @@ public class BeanDeserializer extends AbstractMapDeserializer {
 				return this.readResolve.invoke(obj, new Object[0]);
 			}
 		} catch (Exception e) {
+			BeanDeserializer.logger.trace(null, e);
 		}
 
 		return obj;

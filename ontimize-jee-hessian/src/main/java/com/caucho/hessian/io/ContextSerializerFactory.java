@@ -159,7 +159,7 @@ public class ContextSerializerFactory {
 
 			return ser;
 		} catch (ClassNotFoundException e) {
-			ContextSerializerFactory.log.trace(e.toString(), e);
+			ContextSerializerFactory.log.trace(null, e);
 		} catch (Exception e) {
 			throw new HessianException(e);
 		}
@@ -208,7 +208,7 @@ public class ContextSerializerFactory {
 
 			return ser;
 		} catch (ClassNotFoundException e) {
-			ContextSerializerFactory.log.trace(e.toString(), e);
+			ContextSerializerFactory.log.trace(null, e);
 		} catch (Exception e) {
 			throw new HessianException(e);
 		}
@@ -310,14 +310,14 @@ public class ContextSerializerFactory {
 						try {
 							apiClass = Class.forName(apiName, false, classLoader);
 						} catch (ClassNotFoundException e) {
-							ContextSerializerFactory.log.info("{}: {} is not available in this context: {}", url, apiName, this.getClassLoader());
+							ContextSerializerFactory.log.info("{}: {} is not available in this context: {}", url, apiName, this.getClassLoader(), e);
 							continue;
 						}
 
 						try {
 							serializerClass = Class.forName(serializerName, false, classLoader);
 						} catch (ClassNotFoundException e) {
-							ContextSerializerFactory.log.info("{}: {} is not available in this context: {}", url, serializerName, this.getClassLoader());
+							ContextSerializerFactory.log.info("{}: {} is not available in this context: {}", url, serializerName, this.getClassLoader(), e);
 							continue;
 						}
 
@@ -397,9 +397,9 @@ public class ContextSerializerFactory {
 		ContextSerializerFactory.staticDeserializerMap.put(Number.class.getName(), new BasicDeserializer(BasicSerializer.NUMBER));
 
 		/*
-		 * for (Class cl : new Class[] { BigDecimal.class, File.class, ObjectName.class }) { _staticSerializerMap.put(cl, StringValueSerializer.SER);
-		 * _staticDeserializerMap.put(cl, new StringValueDeserializer(cl)); } _staticSerializerMap.put(ObjectName.class, StringValueSerializer.SER);
-		 * try { _staticDeserializerMap.put(ObjectName.class, new StringValueDeserializer(ObjectName.class)); } catch (Throwable e) { }
+		 * for (Class cl : new Class[] { BigDecimal.class, File.class, ObjectName.class }) { _staticSerializerMap.put(cl, StringValueSerializer.SER); _staticDeserializerMap.put(cl,
+		 * new StringValueDeserializer(cl)); } _staticSerializerMap.put(ObjectName.class, StringValueSerializer.SER); try { _staticDeserializerMap.put(ObjectName.class, new
+		 * StringValueDeserializer(ObjectName.class)); } catch (Throwable e) { }
 		 */
 
 		ContextSerializerFactory.staticSerializerMap.put(InetAddress.class.getName(), InetAddressSerializer.create());
@@ -419,6 +419,7 @@ public class ContextSerializerFactory {
 		try {
 			systemClassLoader = ClassLoader.getSystemClassLoader();
 		} catch (Exception e) {
+			ContextSerializerFactory.log.trace(null, e);
 		}
 
 		SYSTEM_CLASS_LOADER = systemClassLoader;

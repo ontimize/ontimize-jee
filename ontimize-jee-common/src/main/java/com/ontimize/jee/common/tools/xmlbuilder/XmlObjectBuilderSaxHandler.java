@@ -11,6 +11,8 @@ import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -23,6 +25,8 @@ import com.ontimize.jee.common.tools.ReflectionTools;
  *
  */
 public class XmlObjectBuilderSaxHandler extends DefaultHandler {
+
+	private static final Logger					log	= LoggerFactory.getLogger(XmlObjectBuilderSaxHandler.class);
 
 	/** The stack. */
 	protected Deque<Object>						stack;
@@ -104,14 +108,14 @@ public class XmlObjectBuilderSaxHandler extends DefaultHandler {
 	 *             the no such method exception {@link IInitializable} se invoca al metodo {@link Initializable.init(Map<String,?)}
 	 */
 	protected Object buildObject(final String qName, final Map<String, String> parameters, final Object parent)
-	        throws ClassNotFoundException, IllegalArgumentException, SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException,
-	        NoSuchMethodException, ParserConfigurationException, SAXException, IOException {
+			throws ClassNotFoundException, IllegalArgumentException, SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException,
+			NoSuchMethodException, ParserConfigurationException, SAXException, IOException {
 		String className = qName.replace('-', '$');// para poder declarar clases internas
 
 		Object ob = null;
 		if ("Include".equalsIgnoreCase(className)) {
 			ob = new XmlObjectBuilder().buildFromXml(parent, XmlObjectBuilder.class.getClassLoader().getResourceAsStream(parameters.get("includefile")), this.equivalences,
-			        parameters);
+					parameters);
 		} else {
 
 			String equivalence = this.equivalences == null ? null : this.equivalences.get(className);
@@ -121,14 +125,17 @@ public class XmlObjectBuilderSaxHandler extends DefaultHandler {
 				// opcion1 constructor con padre+map
 				ob = ReflectionTools.newInstance(className, parent, parameters);
 			} catch (Exception ex) {
+				log.trace(null, ex);
 				try {
 					// opcion2 constructor con parametros
 					ob = ReflectionTools.newInstance(className, parameters);
 				} catch (Exception ex2) {
+					log.trace(null, ex2);
 					try {
 						// opcion3 constructor con padre
 						ob = ReflectionTools.newInstance(className, parent);
 					} catch (Exception ex3) {
+						log.trace(null, ex3);
 						// opcion4 constructor por defecto
 						ob = ReflectionTools.newInstance(className);
 					}
@@ -162,6 +169,7 @@ public class XmlObjectBuilderSaxHandler extends DefaultHandler {
 			try {
 				ReflectionTools.invoke(parent, "add", ob, parameters);
 			} catch (Exception ex) {
+				log.trace(null, ex);
 				if ((parent instanceof Container) && (ob instanceof AbstractFormComponent)) {
 					((Container) parent).add((Component) ob, ((AbstractFormComponent) ob).getConstraints(((Container) parent).getLayout()));
 				} else {

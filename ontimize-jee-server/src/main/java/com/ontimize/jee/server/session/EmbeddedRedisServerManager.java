@@ -1,7 +1,6 @@
 package com.ontimize.jee.server.session;
 
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.Lifecycle;
 
 // import redis.embedded.RedisServer;
@@ -11,47 +10,26 @@ import org.springframework.context.Lifecycle;
  */
 public class EmbeddedRedisServerManager implements InitializingBean, Lifecycle {
 
-	/** The redis server. */
-	@Autowired
-	// private RedisServer redisServer;
-
-	/**
-	 * Sets the redis server.
-	 *
-	 * @param redisServer
-	 *            the new redis server
-	 */
-	// public void setRedisServer(RedisServer redisServer) {
-	// this.redisServer = redisServer;
-	// }
-
 	/*
 	 * (non-Javadoc)
 	 * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
 	 */
 	@Override
-	public void afterPropertiesSet() throws Exception {
-		// this.redisServer.start();
-	}
+	public void afterPropertiesSet() throws Exception {}
 
 	/*
 	 * (non-Javadoc)
 	 * @see org.springframework.context.Lifecycle#start()
 	 */
 	@Override
-	public void start() {
-
-	}
+	public void start() {}
 
 	/*
 	 * (non-Javadoc)
 	 * @see org.springframework.context.Lifecycle#stop()
 	 */
 	@Override
-	public void stop() {
-		// this.redisServer.stop();
-
-	}
+	public void stop() {}
 
 	/*
 	 * (non-Javadoc)

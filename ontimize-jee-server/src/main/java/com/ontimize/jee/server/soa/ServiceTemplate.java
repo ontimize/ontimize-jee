@@ -31,7 +31,7 @@ public abstract class ServiceTemplate<T> {
 	public T execute() throws ServiceException {
 		try {
 			return this.doTask();
-		} catch (Throwable error) {
+		} catch (Exception error) {
 			ServiceTemplate.logger.error(null, error);
 			ServiceExceptionDetails serviceExceptionDetailsArray[] = new ServiceExceptionDetails[1];
 			ServiceExceptionDetails serviceExceptionDetails = new ServiceExceptionDetails();
@@ -49,6 +49,6 @@ public abstract class ServiceTemplate<T> {
 	 * @throws Throwable
 	 *             the throwable
 	 */
-	protected abstract T doTask() throws Throwable;
+	protected abstract T doTask() throws Exception;
 
 }

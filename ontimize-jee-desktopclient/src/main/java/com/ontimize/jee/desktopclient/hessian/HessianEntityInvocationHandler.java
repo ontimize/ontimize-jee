@@ -82,6 +82,7 @@ public class HessianEntityInvocationHandler extends AbstractInvocationDelegate i
 			HessianEntityInvocationHandler.logger.error("The invoked method's declaration does not match given parameters", e);
 			throw e;
 		} catch (InvocationTargetException e) {
+			HessianEntityInvocationHandler.logger.trace(null, e);
 			if (e.getCause() instanceof Exception) {
 				throw (Exception) e.getCause();
 			} else {

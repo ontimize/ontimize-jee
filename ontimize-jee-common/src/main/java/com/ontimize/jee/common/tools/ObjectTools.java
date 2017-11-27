@@ -12,6 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
 
 /**
@@ -20,6 +23,8 @@ import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
  * @author <a href=""></a>
  */
 public final class ObjectTools {
+
+	private static final Logger logger = LoggerFactory.getLogger(ObjectTools.class.getName());
 
 	/**
 	 * Instantiates a new object tools.
@@ -208,6 +213,7 @@ public final class ObjectTools {
 						sb.append(sb2.toString());
 					}
 				} catch (OntimizeJEERuntimeException ex) {
+					ObjectTools.logger.trace(null, ex);
 				}
 			}
 		}

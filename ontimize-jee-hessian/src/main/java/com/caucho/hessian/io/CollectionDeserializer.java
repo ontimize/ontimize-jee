@@ -25,12 +25,17 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Deserializing a JDK 1.2 Collection.
  */
 public class CollectionDeserializer extends AbstractListDeserializer {
 
-	private final Class<?> type;
+	private static final Logger	log	= LoggerFactory.getLogger(CollectionDeserializer.class);
+
+	private final Class<?>		type;
 
 	public CollectionDeserializer(Class<?> type) {
 		this.type = type;
@@ -78,6 +83,7 @@ public class CollectionDeserializer extends AbstractListDeserializer {
 			try {
 				list = (Collection<Object>) this.type.newInstance();
 			} catch (Exception e) {
+				CollectionDeserializer.log.trace(null, e);
 			}
 		}
 

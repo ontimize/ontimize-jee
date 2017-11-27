@@ -20,13 +20,18 @@ import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Deserializing a Java array
  */
 public class ArrayDeserializer extends AbstractListDeserializer {
 
-	private final Class<?>	componentType;
-	private Class<?>		type;
+	private static final Logger	logger	= LoggerFactory.getLogger(ArrayDeserializer.class);
+
+	private final Class<?>		componentType;
+	private Class<?>			type;
 
 	public ArrayDeserializer(Class<?> componentType) {
 		this.componentType = componentType;
@@ -35,6 +40,7 @@ public class ArrayDeserializer extends AbstractListDeserializer {
 			try {
 				this.type = Array.newInstance(this.componentType, 0).getClass();
 			} catch (Exception e) {
+				logger.trace(null, e);
 			}
 		}
 

@@ -71,6 +71,7 @@ public class PostgresSQLStatementHandler extends com.ontimize.db.handler.Postgre
 						bInputStream.close();
 					}
 				} catch (Exception e) {
+					PostgresSQLStatementHandler.logger.trace(null, e);
 				}
 			}
 		}

@@ -262,7 +262,7 @@ public class JavaSerializer extends AbstractSerializer {
 	}
 
 	public static FieldSerializer getFieldSerializer(Class<?> type) {
-		if (int.class.equals(type) || byte.class.equals(type) || short.class.equals(type) || int.class.equals(type)) {
+		if (int.class.equals(type) || byte.class.equals(type) || short.class.equals(type)) {
 			return IntFieldSerializer.SER;
 		} else if (long.class.equals(type)) {
 			return LongFieldSerializer.SER;

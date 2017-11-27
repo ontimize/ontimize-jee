@@ -18,11 +18,16 @@ import java.util.ResourceBundle;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.ontimize.gui.container.Column;
 import com.ontimize.gui.container.Row;
 import com.ontimize.util.ParseUtils;
 
 public class LinkPathManager implements PathManager {
+
+	private static final Logger	logger					= LoggerFactory.getLogger(LinkPathManager.class);
 
 	private static final String	DISPLAY_PATH_SEPARATOR	= "displaypathseparator";
 	private static final String	HANDLE_HTML				= "displaypathhtml";
@@ -106,7 +111,7 @@ public class LinkPathManager implements PathManager {
 	}
 
 	private static void addLevel(Column column, List<Row> rows, final Level level, final LinkPathManager linkPathManager, String separator, boolean isLast,
-	        ResourceBundle resourceBundle) {
+			ResourceBundle resourceBundle) {
 		LinkLabel levelButton = null;
 		if (isLast) {
 			levelButton = new LinkLabel(LinkPathManager.translate(level.getEntityName(), resourceBundle));
@@ -165,6 +170,7 @@ public class LinkPathManager implements PathManager {
 			try {
 				return resourceBundle.getString(text);
 			} catch (MissingResourceException e) {
+				logger.trace(null, e);
 				return text;
 			}
 		}

@@ -11,12 +11,17 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * The Class CustomJavaDeserializer.
  *
  * @author <a href=""></a>
  */
 public class CustomJavaDeserializer extends JavaDeserializer {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(CustomJavaDeserializer.class);
 
 	/**
 	 * Instancia un nuevo custom java deserializer.
@@ -54,7 +59,7 @@ public class CustomJavaDeserializer extends JavaDeserializer {
 				try {
 					field.setAccessible(true);
 				} catch (Exception e) {
-					// do nothing
+					CustomJavaDeserializer.LOGGER.trace(null, e);
 				}
 
 				Class<?> type = field.getType();

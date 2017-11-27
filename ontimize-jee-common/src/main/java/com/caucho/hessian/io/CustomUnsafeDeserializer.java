@@ -12,12 +12,17 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * The Class CustomUnsafeDeserializer.
  *
  * @author <a href=""></a>
  */
 public class CustomUnsafeDeserializer extends UnsafeDeserializer {
+
+	private static final Logger logger = LoggerFactory.getLogger(CustomUnsafeDeserializer.class);
 
 	/**
 	 * Instancia un nuevo custom unsafe deserializer.
@@ -55,7 +60,7 @@ public class CustomUnsafeDeserializer extends UnsafeDeserializer {
 				try {
 					field.setAccessible(true);
 				} catch (Exception e) {
-					// do nothing
+					CustomUnsafeDeserializer.logger.trace(null, e);
 				}
 
 				Class<?> type = field.getType();
@@ -105,6 +110,7 @@ public class CustomUnsafeDeserializer extends UnsafeDeserializer {
 			field.setAccessible(true);
 			return field.get(null);
 		} catch (Exception e) {
+			CustomUnsafeDeserializer.logger.trace(null, e);
 			return null;
 		}
 	}

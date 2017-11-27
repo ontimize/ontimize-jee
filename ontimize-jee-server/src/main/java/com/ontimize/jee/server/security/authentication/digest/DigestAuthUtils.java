@@ -97,7 +97,7 @@ final class DigestAuthUtils {
 	 *             if the supplied qop value is unsupported.
 	 */
 	static String generateDigest(boolean passwordAlreadyEncoded, String username, String realm, String password, String httpMethod, String uri, String qop, String nonce, String nc,
-	        String cnonce) throws IllegalArgumentException {
+			String cnonce) throws IllegalArgumentException {
 		String a1Md5;
 		String a2 = httpMethod + ":" + uri;
 		String a2Md5 = DigestAuthUtils.md5Hex(a2);
@@ -201,7 +201,7 @@ final class DigestAuthUtils {
 		try {
 			digest = MessageDigest.getInstance("MD5");
 		} catch (NoSuchAlgorithmException e) {
-			throw new IllegalStateException("No MD5 algorithm available!");
+			throw new IllegalStateException("No MD5 algorithm available!", e);
 		}
 
 		return new String(Hex.encode(digest.digest(data.getBytes())));

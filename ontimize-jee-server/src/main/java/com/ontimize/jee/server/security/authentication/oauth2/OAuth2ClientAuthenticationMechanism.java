@@ -60,7 +60,7 @@ public class OAuth2ClientAuthenticationMechanism implements IAuthenticationMecha
 	 */
 	@Override
 	public AuthenticationResult authenticate(HttpServletRequest request, HttpServletResponse response, AuthenticationManager authenticationManager,
-	        UserDetailsService userDetailsService) {
+			UserDetailsService userDetailsService) {
 
 		if (OAuth2ClientAuthenticationMechanism.log.isDebugEnabled()) {
 			String url = request.getRequestURI();
@@ -92,16 +92,7 @@ public class OAuth2ClientAuthenticationMechanism implements IAuthenticationMecha
 	 * @throws AuthenticationException
 	 */
 	protected void checkStateParameter(HttpSession session, Map<String, String[]> parameters) {
-		if (1 == 1) {
-			// al poder estar en cluster y ser stateless no se puede hacer esta comprobacion
-			return;
-		}
-		String originalState = (String) session.getAttribute(this.oAuth2ClientProperties.getStateParamName());
-		String[] receivedStates = parameters.get(this.oAuth2ClientProperties.getStateParamName());
-		if ((receivedStates == null) || (receivedStates.length == 0) || !receivedStates[0].equals(originalState)) {
-			OAuth2ClientAuthenticationMechanism.log.error("Received states {} was not equal to original state {}", receivedStates, originalState);
-			throw new AuthenticationServiceException(MessageFormat.format("Received states %s was not equal to original state %s", receivedStates, originalState));
-		}
+		// Al poder estar en cluster y ser stateless no se puede hacer esta comprobacion -> Ver SVN
 	}
 
 	/**
@@ -118,9 +109,9 @@ public class OAuth2ClientAuthenticationMechanism implements IAuthenticationMecha
 			final String errorReason = (errorReasonValues != null) && (errorReasonValues.length > 0) ? errorReasonValues[0] : null;
 			final String errorDescription = (errorDescriptionValues != null) && (errorDescriptionValues.length > 0) ? errorDescriptionValues[0] : null;
 			OAuth2ClientAuthenticationMechanism.log.info("An error was returned by the OAuth Provider: error: %s error_reason: %s, error_description: %s", error, errorReason,
-			        errorDescription);
+					errorDescription);
 			throw new AuthenticationServiceException(
-			        MessageFormat.format("An error was returned by the OAuth Provider: error: %s error_reason: %s, error_description: %s", error, errorReason, errorDescription));
+					MessageFormat.format("An error was returned by the OAuth Provider: error: %s error_reason: %s, error_description: %s", error, errorReason, errorDescription));
 		}
 	}
 
@@ -217,8 +208,8 @@ public class OAuth2ClientAuthenticationMechanism implements IAuthenticationMecha
 		if ((details != null) && !this.oAuth2ClientProperties.getRedirectUri().isAbsolute()) {
 			OntimizeWebAuthenticationDetails oAuth2ClientWebAuthenticationDetails = details;
 			redirectUri = UriComponentsBuilder.fromPath(oAuth2ClientWebAuthenticationDetails.getContextPath()).path(this.oAuth2ClientProperties.getRedirectUri().toString())
-			        .scheme(oAuth2ClientWebAuthenticationDetails.getScheme()).host(oAuth2ClientWebAuthenticationDetails.getHost())
-			        .port(oAuth2ClientWebAuthenticationDetails.getPort()).build().toUri();
+					.scheme(oAuth2ClientWebAuthenticationDetails.getScheme()).host(oAuth2ClientWebAuthenticationDetails.getHost())
+					.port(oAuth2ClientWebAuthenticationDetails.getPort()).build().toUri();
 		} else {
 			redirectUri = this.oAuth2ClientProperties.getRedirectUri();
 		}

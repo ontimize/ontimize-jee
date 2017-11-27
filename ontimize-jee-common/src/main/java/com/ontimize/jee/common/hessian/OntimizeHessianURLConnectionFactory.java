@@ -73,7 +73,7 @@ public class OntimizeHessianURLConnectionFactory extends AbstractHessianConnecti
 			try {
 				conn.setReadTimeout(SafeCasting.longToInt(readTimeout));
 			} catch (Exception e) {
-				// do nothing
+				OntimizeHessianURLConnectionFactory.logger.trace(null, e);
 			}
 		}
 		conn.setRequestProperty("Content-Type", "x-application/hessian");

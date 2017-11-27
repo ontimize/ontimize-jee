@@ -17,10 +17,9 @@ public class ServerManagementAction extends AbstractAction {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (ServerManagementAction.isApplicationManagerWindowVisible()) {
-			// ServerManagementAction.setApplicationManagerWindowVisible(false);
+			// Do nothing
 		} else {
 			// Login Window
-			// new ServerManagementLogin();
 			ServerManagementAction.setApplicationManagerWindowVisible(true);
 		}
 	}

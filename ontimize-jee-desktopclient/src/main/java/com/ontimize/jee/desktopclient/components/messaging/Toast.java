@@ -76,7 +76,7 @@ public class Toast implements Runnable, ActionListener {
 				final ToastMessage msg = this.getNextMessage();
 				final AbstractToastPanel panel = this.getPanel(msg);
 				final JDialog currentDialog = this.createCurrentDialog(panel, msg.isBlocking() ? ModalityType.APPLICATION_MODAL : ModalityType.MODELESS, msg.getWindowBounds(),
-				        msg.getParentWindow());
+						msg.getParentWindow());
 
 				// Set text content and bundle it
 				panel.setMessage(msg);
@@ -187,7 +187,7 @@ public class Toast implements Runnable, ActionListener {
 	 *             the no such method exception
 	 */
 	protected AbstractToastPanel getPanel(ToastMessage msg)
-	        throws IllegalArgumentException, SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+			throws IllegalArgumentException, SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
 		return (AbstractToastPanel) msg.getPanelClass().getConstructor().newInstance();
 	}
 
@@ -245,6 +245,7 @@ public class Toast implements Runnable, ActionListener {
 						t.restart();
 						t.wait();
 					} catch (InterruptedException e1) {
+						Toast.logger.trace(null, e1);
 					}
 				}
 				if (!visible) {

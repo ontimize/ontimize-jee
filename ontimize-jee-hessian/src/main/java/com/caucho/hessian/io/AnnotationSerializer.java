@@ -138,7 +138,7 @@ public class AnnotationSerializer extends AbstractSerializer {
 	}
 
 	private static MethodSerializer getMethodSerializer(Class<?> type) {
-		if (int.class.equals(type) || byte.class.equals(type) || short.class.equals(type) || int.class.equals(type)) {
+		if (int.class.equals(type) || byte.class.equals(type) || short.class.equals(type)) {
 			return IntMethodSerializer.SER;
 		} else if (long.class.equals(type)) {
 			return LongMethodSerializer.SER;
@@ -171,9 +171,10 @@ public class AnnotationSerializer extends AbstractSerializer {
 			try {
 				value = method.invoke(obj);
 			} catch (InvocationTargetException e) {
+				AnnotationSerializer.log.info(null, e);
 				throw AnnotationSerializer.error(method, e.getCause());
 			} catch (IllegalAccessException e) {
-				AnnotationSerializer.log.info(e.toString(), e);
+				AnnotationSerializer.log.info(null, e);
 			}
 
 			try {
@@ -195,9 +196,10 @@ public class AnnotationSerializer extends AbstractSerializer {
 			try {
 				value = (Boolean) method.invoke(obj);
 			} catch (InvocationTargetException e) {
+				AnnotationSerializer.log.info(null, e);
 				throw AnnotationSerializer.error(method, e.getCause());
 			} catch (IllegalAccessException e) {
-				AnnotationSerializer.log.info(e.toString(), e);
+				AnnotationSerializer.log.info(null, e);
 			}
 
 			out.writeBoolean(value);
@@ -215,9 +217,10 @@ public class AnnotationSerializer extends AbstractSerializer {
 			try {
 				value = (Integer) method.invoke(obj);
 			} catch (InvocationTargetException e) {
+				AnnotationSerializer.log.info(null, e);
 				throw AnnotationSerializer.error(method, e.getCause());
 			} catch (IllegalAccessException e) {
-				AnnotationSerializer.log.info(e.toString(), e);
+				AnnotationSerializer.log.info(null, e);
 			}
 
 			out.writeInt(value);
@@ -235,9 +238,10 @@ public class AnnotationSerializer extends AbstractSerializer {
 			try {
 				value = (Long) method.invoke(obj);
 			} catch (InvocationTargetException e) {
+				AnnotationSerializer.log.info(null, e);
 				throw AnnotationSerializer.error(method, e.getCause());
 			} catch (IllegalAccessException e) {
-				AnnotationSerializer.log.info(e.toString(), e);
+				AnnotationSerializer.log.info(null, e);
 			}
 
 			out.writeLong(value);
@@ -255,9 +259,10 @@ public class AnnotationSerializer extends AbstractSerializer {
 			try {
 				value = (Double) method.invoke(obj);
 			} catch (InvocationTargetException e) {
+				AnnotationSerializer.log.info(null, e);
 				throw AnnotationSerializer.error(method, e.getCause());
 			} catch (IllegalAccessException e) {
-				AnnotationSerializer.log.info(e.toString(), e);
+				AnnotationSerializer.log.info(null, e);
 			}
 
 			out.writeDouble(value);
@@ -275,9 +280,10 @@ public class AnnotationSerializer extends AbstractSerializer {
 			try {
 				value = (String) method.invoke(obj);
 			} catch (InvocationTargetException e) {
+				AnnotationSerializer.log.info(null, e);
 				throw AnnotationSerializer.error(method, e.getCause());
 			} catch (IllegalAccessException e) {
-				AnnotationSerializer.log.info(e.toString(), e);
+				AnnotationSerializer.log.info(null, e);
 			}
 
 			out.writeString(value);
@@ -295,9 +301,10 @@ public class AnnotationSerializer extends AbstractSerializer {
 			try {
 				value = (java.util.Date) method.invoke(obj);
 			} catch (InvocationTargetException e) {
+				AnnotationSerializer.log.info(null, e);
 				throw AnnotationSerializer.error(method, e.getCause());
 			} catch (IllegalAccessException e) {
-				AnnotationSerializer.log.info(e.toString(), e);
+				AnnotationSerializer.log.info(null, e);
 			}
 
 			if (value == null) {
