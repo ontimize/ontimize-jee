@@ -56,7 +56,7 @@ public class MultiModuleApplicationLauncher {
 	 *             the ontimize jee exception
 	 */
 	public void launch(final String labelsPath, final String clientApplicationPath, final String[] springConfigurationFiles, final String[] args)
-			throws OntimizeJEERuntimeException {
+	{
 
 		URL urlLabelsFile = Thread.currentThread().getContextClassLoader().getResource(labelsPath);
 		if (urlLabelsFile == null) {
@@ -133,7 +133,7 @@ public class MultiModuleApplicationLauncher {
 		if ((args == null) || (args.length < 2)) {
 			MultiModuleApplicationLauncher.logger.debug(
 					"Syntax: ApplicationLauncher 'xmlLabelFile' 'xmlApplicationFile' ['springConfigurationFile'] [-d(for debug)] [-conf conffiles]. \nThe first and the second parameters must include the complete path relative to the classpath");
-			// System.exit(-1);
+			System.exit(-1);
 		}
 
 		String lf = System.getProperty("com.ontimize.gui.lafclassname");
@@ -177,7 +177,7 @@ public class MultiModuleApplicationLauncher {
 		try {
 			this.launch(sLabelsFile, sXMLFile, springConfigurationFiles, args);
 		} catch (Exception e) {
-			logger.error(null, e);
+			MultiModuleApplicationLauncher.logger.error(null, e);
 			MessageDialog.showErrorMessage(null, e.getMessage());
 			// System.exit(-2);
 		}
