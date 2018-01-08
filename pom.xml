@@ -91,7 +91,8 @@
 		<!-- =========================================================== -->
 		<pluginManagement>
 			<plugins>
-				<!-- Resources plugin (2.4.x versions do not correctly filter files containing '@' character). -->
+				<!-- Resources plugin (2.4.x versions do not correctly filter files containing 
+					'@' character). -->
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-resources-plugin</artifactId>
@@ -627,17 +628,6 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-	<dependencies>
-		<!-- Logging -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-		</dependency>
-	</dependencies>
 
 	<modules>
 		<module>ontimize-jee-server</module>
