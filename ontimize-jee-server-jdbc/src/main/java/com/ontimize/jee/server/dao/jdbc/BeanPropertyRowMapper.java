@@ -4,6 +4,7 @@ import java.beans.PropertyDescriptor;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -124,8 +125,8 @@ public class BeanPropertyRowMapper<T> implements RowMapper<T> {
 					bw.setPropertyValue(pd.getName(), value);
 				} catch (TypeMismatchException e) {
 					BeanPropertyRowMapper.logger
-					        .error("Intercepted TypeMismatchException for row " + rowNumber + " and column '" + column + "' with value " + value + " when setting property '" + pd
-					                .getName() + "' of type " + pd.getPropertyType() + " on object: " + mappedObject);
+					.error("Intercepted TypeMismatchException for row " + rowNumber + " and column '" + column + "' with value " + value + " when setting property '" + pd
+							.getName() + "' of type " + pd.getPropertyType() + " on object: " + mappedObject);
 					throw e;
 				}
 			}
@@ -158,7 +159,7 @@ public class BeanPropertyRowMapper<T> implements RowMapper<T> {
 	 * @see org.springframework.jdbc.support.JdbcUtils#getResultSetValue(java.sql.ResultSet, int, Class)
 	 */
 	protected Object getColumnValue(ResultSet rs, int index, PropertyDescriptor pd) throws SQLException {
-		if (pd.getPropertyType().isArray()) {
+		if (pd.getPropertyType().isArray() && (rs.getMetaData().getColumnType(index) != Types.BINARY)) {
 			return rs.getArray(index).getArray();
 		}
 		return JdbcUtils.getResultSetValue(rs, index, pd.getPropertyType());
