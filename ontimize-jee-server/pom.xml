@@ -95,6 +95,11 @@
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+		</dependency>
+
 		<!-- Zip4j -->
 <!-- 		<dependency> -->
 <!-- 			<groupId>net.lingala.zip4j</groupId> -->
