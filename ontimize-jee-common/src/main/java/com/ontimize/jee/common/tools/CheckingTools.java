@@ -89,7 +89,7 @@ public final class CheckingTools {
 			if (rs == null) {
 				throw new OntimizeJEEException("EMPTY_RESULT");
 			} else if (rs.getCode() == EntityResult.OPERATION_WRONG) {
-				throw new OntimizeJEEException(rs.getMessage(), rs.getMessageParameter());
+				throw new OntimizeJEEException(rs.getMessage(),rs.getMessageParameter());
 			}
 		} catch (OntimizeJEEException ex) {
 			if (messageFormat != null) {
@@ -118,8 +118,8 @@ public final class CheckingTools {
 	 *             Cuando o es reaultado NULL o no es correcto.
 	 */
 	public static void checkValidEntityResult(EntityResult res, String messageFormat, boolean checkSomeRecordRequired, boolean checkOnlyOneRecord, Object... messageParameters)
-	        throws Exception {
-		CheckingTools.checkValidEntityResult(res, messageFormat, messageParameters);
+			throws OntimizeJEEException {
+		CheckingTools.checkValidEntityResult(res, messageFormat,messageParameters);
 		try {
 			int num = res.calculateRecordNumber();
 			if (checkSomeRecordRequired && (num <= 0)) {
