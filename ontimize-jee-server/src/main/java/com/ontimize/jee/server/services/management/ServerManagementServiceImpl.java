@@ -39,7 +39,7 @@ import com.ontimize.util.logging.LogManagerFactory;
 public class ServerManagementServiceImpl implements ApplicationContextAware, IServerManagementService {
 
 	@Autowired
-	private LoggerHelper					loggerHelper;
+	private ILoggerHelper					loggerHelper;
 	@Autowired
 	private HeapDumperHelper				heapDumpHelper;
 	@Autowired

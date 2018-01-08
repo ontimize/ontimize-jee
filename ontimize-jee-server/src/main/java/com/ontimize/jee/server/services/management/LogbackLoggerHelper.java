@@ -42,9 +42,9 @@ import ch.qos.logback.core.OutputStreamAppender;
 
 @Component
 @Lazy(value = true)
-public class LoggerHelper {
+public class LogbackLoggerHelper implements ILoggerHelper {
 
-	private static final Logger	logger			= LoggerFactory.getLogger(LoggerHelper.class);
+	private static final Logger	logger			= LoggerFactory.getLogger(LogbackLoggerHelper.class);
 
 	/** The Constant LAYOUT_PATTERN. */
 	private static final String	LAYOUT_PATTERN	= "[%-5level] %d{dd/MM/yyyy HH:mm:ss.SSS} [%thread] %logger{5}: %msg%n";
@@ -70,15 +70,15 @@ public class LoggerHelper {
 						try {
 							out.wait();
 						} catch (InterruptedException e1) {
-							LoggerHelper.logger.trace(null, e1);
+							LogbackLoggerHelper.logger.trace(null, e1);
 						}
-						LoggerHelper.logger.debug("unregistering remote logger");
-						LoggerHelper.this.unregisterAppender(appender);
+						LogbackLoggerHelper.logger.debug("unregistering remote logger");
+						LogbackLoggerHelper.this.unregisterAppender(appender);
 						try {
 							in.close();
 							out.close();
 						} catch (IOException e) {
-							LoggerHelper.logger.error(null, e);
+							LogbackLoggerHelper.logger.error(null, e);
 						}
 					}
 
@@ -138,17 +138,17 @@ public class LoggerHelper {
 							}
 						}, 2, TimeUnit.SECONDS);
 					} catch (Exception ex) {
-						LoggerHelper.logger.trace(null, ex);
+						LogbackLoggerHelper.logger.trace(null, ex);
 						this.hasError = true;
 						try {
-							LoggerHelper.logger.info("detected error in log stream");
+							LogbackLoggerHelper.logger.info("detected error in log stream");
 							synchronized (os) {
 								os.notify();
 								try {
 									os.close();
 									inPipe.close();
 								} catch (Exception err) {
-									LoggerHelper.logger.trace(null, err);
+									LogbackLoggerHelper.logger.trace(null, err);
 								}
 							}
 						} finally {
@@ -160,7 +160,7 @@ public class LoggerHelper {
 			};
 			outputStreamAppender.setOutputStream(wrapperOutputStream);
 			PatternLayout layout = new PatternLayout();
-			layout.setPattern(LoggerHelper.LAYOUT_PATTERN);
+			layout.setPattern(LogbackLoggerHelper.LAYOUT_PATTERN);
 			layout.setContext(logbackLogger.getLoggerContext());
 			layout.start();
 			outputStreamAppender.setContext(logbackLogger.getLoggerContext());
@@ -183,7 +183,7 @@ public class LoggerHelper {
 
 			@Override
 			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-				res.addRecord((Hashtable) LoggerHelper.this.keysvalues("FILE_NAME", file.toString(), "FILE_SIZE", Files.size(file)));
+				res.addRecord((Hashtable) LogbackLoggerHelper.this.keysvalues("FILE_NAME", file.toString(), "FILE_SIZE", Files.size(file)));
 				return FileVisitResult.CONTINUE;
 			}
 		});
@@ -250,7 +250,7 @@ public class LoggerHelper {
 					StreamUtils.copy(Files.newInputStream(file), zos);
 					zos.closeEntry();
 				} catch (IOException e) {
-					LoggerHelper.logger.error(null, e);
+					LogbackLoggerHelper.logger.error(null, e);
 				}
 			}
 		}, "LoggerHelper copy stream").start();
@@ -283,9 +283,9 @@ public class LoggerHelper {
 		public CustomPatternLayoutEncoder() {
 			super();
 			this.layout = new PatternLayout();
-			((PatternLayout) this.layout).setPattern(LoggerHelper.LAYOUT_PATTERN);
+			((PatternLayout) this.layout).setPattern(LogbackLoggerHelper.LAYOUT_PATTERN);
 			this.layout.start();
-			this.setPattern(LoggerHelper.LAYOUT_PATTERN);
+			this.setPattern(LogbackLoggerHelper.LAYOUT_PATTERN);
 		}
 
 	}
