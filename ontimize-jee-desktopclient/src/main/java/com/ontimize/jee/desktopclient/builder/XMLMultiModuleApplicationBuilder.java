@@ -110,19 +110,9 @@ public class XMLMultiModuleApplicationBuilder extends XMLApplicationBuilder {
 		try {
 			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 			List<Node> extraChildNodes = new ArrayList<>();
-			HashSet<Resource> resources = new HashSet<>();//
-			PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(classLoader);
-			Resource[] cpResources = resolver.getResources("classpath*:" + fileURI);
-			if (cpResources == null || cpResources.length == 0) {
-				throw new OntimizeJEERuntimeException(fileURI + " not found");
-			}
-			resources.addAll(Arrays.asList(cpResources));
-			Vector<URL> urls = new Vector<>(resources.size());
-			for (Resource res : cpResources) {
-				urls.add(res.getURL());
-			}
+			Enumeration<URL> resources = this.localizeResources(fileURI, classLoader);
 
-			List<Document> resourceModulesAsDocs = this.toDocs(urls.elements());
+			List<Document> resourceModulesAsDocs = this.toDocs(resources);
 			Document mainDocument = this.getMainDocAndRemove(resourceModulesAsDocs);
 			for (Document doc : resourceModulesAsDocs) {
 				if (XMLMultiModuleApplicationBuilder.ONTIMIZE_MODULE.equals(doc.getDocumentElement().getNodeName())) {
@@ -149,6 +139,41 @@ public class XMLMultiModuleApplicationBuilder extends XMLApplicationBuilder {
 			return new Pair<>(new ByteArrayInputStream(res), bundles);
 		} catch (Exception ex) {
 			throw new OntimizeJEERuntimeException("Error joining module descriptions", ex);
+		}
+	}
+
+	private Enumeration<URL> localizeResources(String fileURI, ClassLoader classLoader) throws IOException {
+		if (fileURI.contains("*")) {
+			// Pattern support
+			HashSet<Resource> res = new HashSet<>();//
+			PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(classLoader);
+			Resource[] cpResources = resolver.getResources("classpath*:" + fileURI);
+			if ((cpResources == null) || (cpResources.length == 0)) {
+				throw new OntimizeJEERuntimeException(fileURI + " not found");
+			}
+			res.addAll(Arrays.asList(cpResources));
+			Vector<URL> urls = new Vector<>(res.size());
+			for (Resource r : cpResources) {
+				urls.add(r.getURL());
+			}
+			return urls.elements();
+			// TODO exists a bug throught JavaWebStart and JNLPClassLoader -> not detect properly the APP jars, only inspect System/JRE jars
+		} else if (fileURI.contains(",")) {
+			// Multiple files
+			Vector<URL> urls = new Vector<>();
+			for (String singleFileURI : fileURI.split(",")) {
+				try {
+					Enumeration<URL> resources2 = classLoader.getResources(singleFileURI.trim());
+					if (resources2.hasMoreElements()) {
+						urls.addAll(Collections.list(resources2));
+					}
+				} catch (Exception ex) {
+					XMLMultiModuleApplicationBuilder.logger.warn(null, ex);
+				}
+			}
+			return urls.elements();
+		} else {
+			return classLoader.getResources(fileURI);
 		}
 	}
 
