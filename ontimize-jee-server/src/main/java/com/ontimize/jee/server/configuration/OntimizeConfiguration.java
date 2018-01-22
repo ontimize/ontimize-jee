@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Lazy;
 
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
 import com.ontimize.jee.server.security.SecurityConfiguration;
+import com.ontimize.jee.server.services.formprovider.FormProviderConfiguration;
 import com.ontimize.jee.server.services.i18n.I18nConfiguration;
 import com.ontimize.jee.server.services.mail.MailConfiguration;
 import com.ontimize.jee.server.services.preferences.RemotePreferencesConfiguration;
@@ -15,24 +16,22 @@ import com.ontimize.jee.server.services.remoteoperation.RemoteOperationConfigura
 public class OntimizeConfiguration {
 
 	/** The remote operation configuration. */
-	@Lazy
-	protected RemoteOperationConfiguration		remoteOperationConfiguration;
+	@Lazy protected RemoteOperationConfiguration remoteOperationConfiguration;
 
 	/** The security configuration. */
-	@Lazy
-	protected SecurityConfiguration				securityConfiguration;
+	@Lazy protected SecurityConfiguration securityConfiguration;
 
 	/** The security configuration. */
-	@Lazy
-	protected RemotePreferencesConfiguration	remotePreferencesConfiguration;
+	@Lazy protected RemotePreferencesConfiguration remotePreferencesConfiguration;
 
 	/** The i18n configuration. */
-	@Lazy
-	protected I18nConfiguration					i18nConfiguration;
+	@Lazy protected I18nConfiguration i18nConfiguration;
 
 	/** The mail configuration. */
-	@Lazy
-	protected MailConfiguration					mailConfiguration;
+	@Lazy protected MailConfiguration mailConfiguration;
+
+	/** The form provider configuration */
+	@Lazy protected FormProviderConfiguration formProviderConfiguration;
 
 	/**
 	 * Instantiates a new ontimize configuration.
@@ -111,6 +110,25 @@ public class OntimizeConfiguration {
 	 */
 	public void setI18nConfiguration(I18nConfiguration i18nConfiguration) {
 		this.i18nConfiguration = i18nConfiguration;
+	}
+
+	/**
+	 * Gets the form provider configuration.
+	 *
+	 * @return the form provider configuration
+	 */
+	public FormProviderConfiguration getFormProviderConfiguration() {
+		return this.formProviderConfiguration;
+	}
+
+	/**
+	 * Sets the form provider configuration.
+	 *
+	 * @param formProviderConfiguration
+	 *            the form provider configuration
+	 */
+	public void setFormProviderConfiguration(FormProviderConfiguration formProviderConfiguration) {
+		this.formProviderConfiguration = formProviderConfiguration;
 	}
 
 	/**

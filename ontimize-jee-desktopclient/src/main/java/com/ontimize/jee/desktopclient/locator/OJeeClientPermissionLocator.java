@@ -26,6 +26,7 @@ import com.ontimize.gui.MessageDialog;
 import com.ontimize.jee.common.exceptions.InvalidCredentialsException;
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
 import com.ontimize.jee.common.security.ILoginProvider;
+import com.ontimize.jee.common.services.formprovider.IFormProviderService;
 import com.ontimize.jee.common.services.user.IUserInformationService;
 import com.ontimize.jee.common.services.user.UserInformation;
 import com.ontimize.jee.common.tools.ReflectionTools;
@@ -172,6 +173,17 @@ public class OJeeClientPermissionLocator extends PermissionReferenceLocator {
 
 	public void unregisterSessionListener(ISessionListener listener) {
 		this.sessionListeners.remove(listener);
+	}
+
+	@Override
+	public String getXMLForm(String form, int userid) throws Exception {
+		try {
+			IFormProviderService current = BeansFactory.getBean(IFormProviderService.class);
+			return current.getXMLForm(form);
+		} catch (Exception e) {
+			OJeeClientPermissionLocator.logger.error("Error: {}", e.getMessage());
+			return null;
+		}
 	}
 
 }

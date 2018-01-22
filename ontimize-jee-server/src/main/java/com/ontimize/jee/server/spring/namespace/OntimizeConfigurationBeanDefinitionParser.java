@@ -12,6 +12,7 @@ public class OntimizeConfigurationBeanDefinitionParser extends AbstractSingleBea
 
 	private static final String	REMOTE_I18N				= "remote-i18n";
 	private static final String	REMOTE_MAIL				= "mail";
+	private static final String REMOTE_FORM_PROVIDER = "form-provider";
 	private static final String	REMOTE_OPERATION_ATTR	= "remote-operation";
 	private static final String	REMOTE_PREFERENCES_ATTR	= "remote-preferences";
 	private static final String	SECURITY_ATTR			= "security";
@@ -84,6 +85,15 @@ public class OntimizeConfigurationBeanDefinitionParser extends AbstractSingleBea
 			// Just make a new Parser for each one and let the parser do the work
 			I18nBeanDefinitionParser ro = new I18nBeanDefinitionParser();
 			builder.addPropertyValue("i18nConfiguration", ro.parse(remoteI18n, nestedCtx));
+		}
+
+		// Support form provider
+		Element formProvider = DomUtils.getChildElementByTagName(element, OntimizeConfigurationBeanDefinitionParser.REMOTE_FORM_PROVIDER);
+		if (formProvider != null) {
+			// Just make a new Parser for each one and let the parser do the
+			// work
+			FormProviderBeanDefinitionParser ro = new FormProviderBeanDefinitionParser();
+			builder.addPropertyValue("formProviderConfiguration", ro.parse(formProvider, nestedCtx));
 		}
 
 		// Support for mail
