@@ -12,7 +12,7 @@ public class OntimizeConfigurationBeanDefinitionParser extends AbstractSingleBea
 
 	private static final String	REMOTE_I18N				= "remote-i18n";
 	private static final String	REMOTE_MAIL				= "mail";
-	private static final String REMOTE_FORM_PROVIDER = "form-provider";
+	private static final String	REMOTE_FORM_PROVIDER	= "form-provider";
 	private static final String	REMOTE_OPERATION_ATTR	= "remote-operation";
 	private static final String	REMOTE_PREFERENCES_ATTR	= "remote-preferences";
 	private static final String	SECURITY_ATTR			= "security";
