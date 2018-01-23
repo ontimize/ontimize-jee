@@ -22,6 +22,8 @@
 						<xsd:element ref="remote-preferences" minOccurs="0" maxOccurs="1" />
 						<xsd:element ref="remote-i18n" minOccurs="0" maxOccurs="1" />
 						<xsd:element ref="mail" minOccurs="0" maxOccurs="1" />
+						<xsd:element ref="form-provider" minOccurs="0" maxOccurs="1" />
+
 					</xsd:choice>
 				</xsd:extension>
 			</xsd:complexContent>
@@ -249,6 +251,42 @@
 								<xsd:element ref="beans:idref" />
 								<xsd:element ref="beans:value" />
 								<xsd:element ref="database-i18n" />
+								<!-- <xsd:any minOccurs="0" /> -->
+							</xsd:choice>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- FORM PROVIDER -->
+	<xsd:element name="database-form-provider">
+		<xsd:complexType>
+			<xsd:attribute name="ref-form-provider-repository" type="xsd:string" use="required"/>
+			<xsd:attribute name="form-provider-id-column" type="xsd:string" use="required"/>
+			<xsd:attribute name="form-provider-form-name-column" type="xsd:string" use="required"/>
+			<xsd:attribute name="form-provider-form-xml-column" type="xsd:string" use="required"/>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="form-provider">
+		<xsd:annotation>
+			<xsd:documentation>
+				Configure the database form provider.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="form-provider-engine">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:choice>
+								<xsd:element ref="beans:bean"/>
+								<xsd:element ref="beans:ref"/>
+								<xsd:element ref="beans:idref"/>
+								<xsd:element ref="beans:value"/>
+								<xsd:element ref="database-form-provider"/>
 								<!-- <xsd:any minOccurs="0" /> -->
 							</xsd:choice>
 						</xsd:sequence>
