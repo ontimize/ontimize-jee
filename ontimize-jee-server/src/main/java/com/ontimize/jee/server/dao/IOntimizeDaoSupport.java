@@ -3,6 +3,7 @@ package com.ontimize.jee.server.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.ontimize.db.AdvancedEntityResult;
 import com.ontimize.db.EntityResult;
 
 public interface IOntimizeDaoSupport {
@@ -28,6 +29,28 @@ public interface IOntimizeDaoSupport {
 	EntityResult query(Map<?, ?> keysValues, List<?> attributes, List<?> sort, String queryId);
 
 	<T> List<T> query(Map<?, ?> keysValues, List<?> sort, String queryId, Class<T> clazz);
+
+	/**
+	 * This method must implement a standard pageable query operation returning the set of data that matches the conditions specified by the <code>keysValues</code> parameter. The
+	 * <code>attributes</code> defines which attributes (or columns if data is obtained from a database) must be recovered, and <code>keysValues</code> specifies which set of
+	 * records must be recovered.
+	 * <p>
+	 *
+	 * @param keysValues
+	 *            a Hashtable specifying conditions that must comply the set of records returned. Cannot be null.
+	 * @param attributes
+	 *            a list of columns or attributes that must be recovered for each record returned. Cannot be null. If empty, all attributes should be returned.
+	 * @param recordNumber
+	 *            number of records will be recovered.
+	 * @param startIndex
+	 *            index of the row where the query starts.
+	 * @param orderBy
+	 *            the sort
+	 * @param queryId
+	 *            the query id
+	 * @return a EntityResult with the resulting set of data. This result can be empty if no results exist, and if an error has ocurred this will be indicated in the result.
+	 */
+	AdvancedEntityResult query(Map<?, ?> keysValues, List<?> attributes, int recordNumber, int startIndex, List<?> orderBy, String queryId);
 
 	/**
 	 * This method must implement a standard insert operation with the data contained in <code>attributesValues</code> parameter.<br> <p>

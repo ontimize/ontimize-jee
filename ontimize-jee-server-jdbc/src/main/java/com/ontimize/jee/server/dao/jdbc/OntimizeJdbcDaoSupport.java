@@ -54,6 +54,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.jdbc.support.nativejdbc.NativeJdbcExtractor;
 import org.springframework.util.Assert;
 
+import com.ontimize.db.AdvancedEntityResult;
 import com.ontimize.db.EntityResult;
 import com.ontimize.db.NullValue;
 import com.ontimize.db.SQLStatementBuilder;
@@ -181,6 +182,104 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	}
 
 	/**
+	 * Pageable query.
+	 *
+	 * @param keysValues
+	 *            the keys values
+	 * @param attributes
+	 *            the attributes
+	 * @param recordNumber
+	 *            number of records to query
+	 * @param startIndex
+	 *            number of first row
+	 * @param orderBy
+	 *            list of columns to establish the order
+	 * @param queryId
+	 *            the query id
+	 * @return the entity result
+	 */
+	@Override
+	public AdvancedEntityResult query(Map<?, ?> keysValues, List<?> attributes, int recordNumber, int startIndex, List<?> orderBy, String queryId) {
+		this.checkCompiled();
+		final QueryTemplateInformation queryTemplateInformation = this.getQueryTemplateInformation(queryId);
+		final SQLStatement stSQL = this.composePageableSql(queryId, attributes, keysValues, recordNumber, startIndex, orderBy);
+
+		final String sqlQuery = stSQL.getSQLStatement();
+		final Vector<?> vValues = stSQL.getValues();
+		AdvancedEntityResult advancedER = this.getJdbcTemplate().query(sqlQuery, vValues.toArray(),
+				new AdvancedEntityResultResultSetExtractor(this.getStatementHandler(), queryTemplateInformation, attributes, recordNumber, startIndex));
+
+		advancedER.setTotalRecordCount(this.getQueryRecordNumber(keysValues, queryId));
+		return advancedER;
+
+	}
+
+	protected int getQueryRecordNumber(Map<?, ?> keysValues, final String queryId) {
+		final QueryTemplateInformation queryTemplateInformation = this.getQueryTemplateInformation(queryId);
+		final Map<?, ?> kvWithoutReferenceAttributes = this.processReferenceDataFieldAttributes(keysValues);
+		Hashtable<Object, Object> kvValidKeysValues = new Hashtable<>();
+		final Map<?, ?> processMultipleValueAttributes = this.processMultipleValueAttributes(kvWithoutReferenceAttributes);
+		if (processMultipleValueAttributes != null) {
+			kvValidKeysValues.putAll(processMultipleValueAttributes);
+		}
+
+		EntityResult erResult;
+		String sqlQuery = null;
+		if (queryTemplateInformation!=null){
+			//TODO
+			erResult = null;
+		}else{
+			SQLStatement stSQL = this.getStatementHandler().createCountQuery(this.getSchemaTable(), new Hashtable<>(kvValidKeysValues),  new Vector<>(), new Vector<>());
+			sqlQuery = stSQL.getSQLStatement();
+			Vector vValues = stSQL.getValues();
+			erResult = this.getJdbcTemplate().query(sqlQuery,  vValues.toArray(), new EntityResultResultSetExtractor(this.getStatementHandler(), queryTemplateInformation));
+		}
+
+		if ((erResult == null) || (erResult.getCode() == EntityResult.OPERATION_WRONG)) {
+			OntimizeJdbcDaoSupport.logger.error("Error executed record count query:{} : {}", erResult.getMessage(), sqlQuery);
+			return 0;
+		} else {
+			Vector<?> v = (Vector<?>) erResult.get(SQLStatementBuilder.COUNT_COLUMN_NAME);
+			if ((v == null) || v.isEmpty()) {
+				OntimizeJdbcDaoSupport.logger.error("Error executed record cound query. The result not contain record number.");
+				return 0;
+			}
+			return ((Number) v.get(0)).intValue();
+		}
+	}
+
+	protected SQLStatement composePageableSql(final String queryId, final List<?> attributes, final Map<?, ?> keysValues, final int recordNumber, int startIndex,
+			final List<?> orderBy) {
+		if (this.getStatementHandler().isPageable()) {
+			final QueryTemplateInformation queryTemplateInformation = this.getQueryTemplateInformation(queryId);
+
+			final Map<?, ?> kvWithoutReferenceAttributes = this.processReferenceDataFieldAttributes(keysValues);
+			Hashtable<Object, Object> kvValidKeysValues = new Hashtable<>();
+			final Map<?, ?> processMultipleValueAttributes = this.processMultipleValueAttributes(kvWithoutReferenceAttributes);
+			if (processMultipleValueAttributes != null) {
+				kvValidKeysValues.putAll(processMultipleValueAttributes);
+			}
+
+			List<?> vValidAttributes = this.processReferenceDataFieldAttributes(attributes);
+
+			SQLStatement stSQL = null;
+			if (queryTemplateInformation == null) {
+				vValidAttributes = this.getValidAttributes(vValidAttributes, null);
+				CheckingTools.failIf(vValidAttributes.isEmpty(), "NO_ATTRIBUTES_TO_QUERY");
+				// use table
+				stSQL = this.getStatementHandler().createSelectQuery(this.getSchemaTable(), new Vector<>(vValidAttributes), new Hashtable<>(kvValidKeysValues), new Vector<>(),
+						new Vector<>(orderBy == null ? Collections.emptyList() : orderBy), recordNumber, startIndex);
+			} else {
+
+			}
+			OntimizeJdbcDaoSupport.logger.trace(stSQL.getSQLStatement());
+			return stSQL;
+		} else {
+			return this.composeQuerySql(queryId, attributes, keysValues, orderBy);
+		}
+	}
+
+	/**
 	 * Compose sql.
 	 *
 	 * @param queryId
@@ -260,8 +359,8 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 			sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_ORDER_CONCAT, order.length() == 0 ? "" : SQLStatementBuilder.COMMA + " " + order);
 			sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_ORDER, order.length() == 0 ? "" : SQLStatementBuilder.ORDER_BY + " " + order);
 			stSQL = new SQLStatement(sqlTemplate, vValues);
-			OntimizeJdbcDaoSupport.logger.trace(sqlTemplate);
 		}
+		OntimizeJdbcDaoSupport.logger.trace(stSQL.getSQLStatement());
 		return stSQL;
 	}
 
@@ -1220,8 +1319,8 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 				for (final QueryType query : setup.getQueries().getQuery()) {//
 					this.addQueryTemplateInformation(query.getId(), query.getSentence().getValue(), //
 							query.getAmbiguousColumns() == null ? null : query.getAmbiguousColumns().getAmbiguousColumn(), //
-							query.getFunctionColumns() == null ? null : query.getFunctionColumns().getFunctionColumn(), //
-							query.getValidColumns() != null ? query.getValidColumns().getColumn() : new ArrayList<String>());
+									query.getFunctionColumns() == null ? null : query.getFunctionColumns().getFunctionColumn(), //
+											query.getValidColumns() != null ? query.getValidColumns().getColumn() : new ArrayList<String>());
 				}
 			}
 			this.setGeneratedKeyName(setup.getGeneratedKey());
@@ -1531,7 +1630,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 			if (this.getGeneratedKeyNames().length > 1) {
 				throw new InvalidDataAccessApiUsageException(
 						"Current database only supports retreiving the key for a single column. There are " + this.getGeneratedKeyNames().length + " columns specified: " + Arrays
-								.asList(this.getGeneratedKeyNames()));
+						.asList(this.getGeneratedKeyNames()));
 			}
 			// This is a hack to be able to get the generated key from a
 			// database that doesn't support

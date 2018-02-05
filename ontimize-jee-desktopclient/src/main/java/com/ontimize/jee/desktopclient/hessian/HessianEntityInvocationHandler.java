@@ -170,9 +170,18 @@ public class HessianEntityInvocationHandler extends AbstractInvocationDelegate i
 	 * @see com.ontimize.db.AdvancedEntity#query(java.util.Hashtable, java.util.Vector, int, int, int, java.util.Vector)
 	 */
 	@Override
-	public AdvancedEntityResult query(Hashtable kv, Vector attributes, int sessionId, int recordNumber, int startIndex, Vector orderBy) throws Exception {
-		// TODO ojo que hessian no permite polimorfismo
-		return null;
+	public AdvancedEntityResult query(Hashtable keysValues, Vector attributes, int sessionId, int recordNumber, int startIndex, Vector orderBy) throws Exception {
+		Object hessianProxy = this.getHessianService();
+		Method hessianMethod = null;
+		String methodName = this.serviceMethodPrefix + "Query";
+		hessianMethod = ReflectionTools.getMethodByNameAndParatemers(hessianProxy.getClass(), methodName,
+				new Object[] { keysValues, attributes, recordNumber, startIndex, orderBy });
+		this.checkHessianMethodExists(hessianMethod, methodName);
+		if (this.queryId == null) {
+			return (AdvancedEntityResult) this.invoke(hessianMethod, hessianProxy, keysValues, attributes, recordNumber, startIndex, orderBy);
+		} else {
+			return (AdvancedEntityResult) this.invoke(hessianMethod, hessianProxy, keysValues, attributes, recordNumber, startIndex, orderBy, this.queryId);
+		}
 	}
 
 	/*

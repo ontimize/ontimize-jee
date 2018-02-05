@@ -35,8 +35,8 @@ public interface IOntimizeDaoHelper {
 	 * @return
 	 * @throws Exception
 	 */
-	AdvancedEntityResult advancedQuery(IOntimizeDaoSupport repository, Map<?, ?> kv, List<?> attributes, int recordNumber, int startIndex, List<?> orderBy)
-	        throws OntimizeJEERuntimeException;
+	AdvancedEntityResult query(IOntimizeDaoSupport repository, Map<?, ?> kv, List<?> attributes, int recordNumber, int startIndex, List<?> orderBy, String queryId)
+			throws OntimizeJEERuntimeException;
 
 	/**
 	 * This method must implement a standard query operation returning the set of data that matches the conditions specified by the <code>keysValues</code> parameter. The

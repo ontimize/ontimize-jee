@@ -81,14 +81,32 @@ public class DefaultOntimizeDaoHelper implements IOntimizeDaoHelper, Application
 		return this.applicationContext;
 	}
 
+	public AdvancedEntityResult query(IOntimizeDaoSupport dao, Map<?, ?> keysValues, List<?> attributes, int recordNumber, int startIndex, List<?> orderBy) {
+		return this.query(dao, keysValues, attributes, recordNumber, startIndex, orderBy, IOntimizeDaoSupport.DEFAULT_QUERY_KEY);
+	}
 	/*
 	 * (non-Javadoc)
 	 * @see com.ontimize.jee.common.services.ontimize.IOntimizeService#advancedQuery (java.lang.String, java.util.Map, java.util.List, int, int, java.util.List)
 	 */
 	@Override
-	public AdvancedEntityResult advancedQuery(IOntimizeDaoSupport dao, Map<?, ?> kv, List<?> attributes, int recordNumber, int startIndex, List<?> orderBy) {
-		// TODO
-		return null;
+	public AdvancedEntityResult query(IOntimizeDaoSupport dao, Map<?, ?> keysValues, List<?> attributes, int recordNumber, int startIndex, List<?> orderBy, String queryId) {
+		CheckingTools.failIfNull(dao, "Null dao");
+
+		List<?> vProcessMultipleAttributes = new ArrayList<>();
+		List<?> vMultipleTableAttributes = this.processMultipleTableAttribute(attributes, (List<Object>) vProcessMultipleAttributes);
+		vMultipleTableAttributes = this.processMultipleAttributeKey(vMultipleTableAttributes);
+
+		List<?> vAttributes = new ArrayList<>(vMultipleTableAttributes);
+
+		AdvancedEntityResult erResult = dao.query(keysValues, vAttributes, recordNumber, startIndex, orderBy, queryId);
+
+		if (!erResult.isWrong()) {
+			// TODO
+			// this.queryOtherEntities(new ArrayList<>(vMultipleTableAttributes), erResult);
+			// erResult = this.deleteMultipleTableAttributesColumns(erResult, attributes, vProcessMultipleAttributes);
+		}
+
+		return erResult;
 	}
 
 	/*
@@ -180,7 +198,7 @@ public class DefaultOntimizeDaoHelper implements IOntimizeDaoHelper, Application
 	 * @return the entity result
 	 */
 	public EntityResult propagateToOtherEntities(Map<?, ?> generatedValuesInParentEntity, Map<?, ?> attributesValuesReceivedInParentEntity,
-	        Map<?, ICascadeOperationContainer> attributesValuesToPropagate) {
+			Map<?, ICascadeOperationContainer> attributesValuesToPropagate) {
 		EntityResult result = new EntityResult();
 		for (Entry<?, ICascadeOperationContainer> entry : attributesValuesToPropagate.entrySet()) {
 			// El orden de propagación será primero deletes, luego updates y finalmente insert
@@ -197,13 +215,13 @@ public class DefaultOntimizeDaoHelper implements IOntimizeDaoHelper, Application
 						Map<?, ?> generatedValues = null;
 						if (operation instanceof InsertOperation) {
 							generatedValues = dispatcher.processInsertAttribute(entry.getKey(), (InsertOperation) operation, generatedValuesInParentEntity,
-							        attributesValuesReceivedInParentEntity, this.applicationContext);
+									attributesValuesReceivedInParentEntity, this.applicationContext);
 						} else if (operation instanceof UpdateOperation) {
 							generatedValues = dispatcher.processUpdateAttribute(entry.getKey(), (UpdateOperation) operation, generatedValuesInParentEntity,
-							        attributesValuesReceivedInParentEntity, this.applicationContext);
+									attributesValuesReceivedInParentEntity, this.applicationContext);
 						} else if (operation instanceof DeleteOperation) {
 							generatedValues = dispatcher.processDeleteAttribute(entry.getKey(), (DeleteOperation) operation, generatedValuesInParentEntity,
-							        attributesValuesReceivedInParentEntity, this.applicationContext);
+									attributesValuesReceivedInParentEntity, this.applicationContext);
 						}
 
 						if (generatedValues != null) {

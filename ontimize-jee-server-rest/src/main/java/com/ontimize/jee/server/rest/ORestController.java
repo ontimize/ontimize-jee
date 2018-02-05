@@ -19,10 +19,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.ontimize.db.AdvancedEntityResult;
 import com.ontimize.db.EntityResult;
 import com.ontimize.db.NullValue;
 import com.ontimize.db.SQLStatementBuilder;
 import com.ontimize.db.SQLStatementBuilder.BasicExpression;
+import com.ontimize.db.SQLStatementBuilder.SQLOrder;
 import com.ontimize.jee.common.jackson.OntimizeMapper;
 import com.ontimize.jee.common.tools.CheckingTools;
 import com.ontimize.jee.common.tools.ReflectionTools;
@@ -38,6 +40,7 @@ public abstract class ORestController<S> {
 	public static final String	UPDATE				= "Update";
 
 	public static final String	BASIC_EXPRESSION	= "@basic_expression";
+	public static final String	FILTER_EXPRESSION	= "@filter_expression";
 
 	public abstract S getService();
 
@@ -46,7 +49,7 @@ public abstract class ORestController<S> {
 
 	@RequestMapping(value = "/{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<EntityResult> query(@PathVariable("name") String name, @RequestParam(name = "filter", required = false) String filter,
-	        @RequestParam(name = "columns", required = false) String columns) {
+			@RequestParam(name = "columns", required = false) String columns) {
 		CheckingTools.failIf(this.getService() == null, NullPointerException.class, "Service is null");
 		StringBuffer buffer = new StringBuffer();
 		buffer.append(name).append(ORestController.QUERY);
@@ -86,6 +89,35 @@ public abstract class ORestController<S> {
 			EntityResult entityResult = new EntityResult(EntityResult.OPERATION_WRONG, EntityResult.BEST_COMPRESSION);
 			entityResult.setMessage(e.getMessage());
 			return new ResponseEntity<>(entityResult, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@RequestMapping(value = "/{name}/advancedsearch", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<AdvancedEntityResult> query(@PathVariable("name") String name, @RequestBody AdvancedQueryParameter aQueryParameter) throws Exception {
+		ORestController.logger.debug("Invoked /{}/advancedsearch", name);
+		CheckingTools.failIf(this.getService() == null, NullPointerException.class, "Service is null");
+		ORestController.logger.debug("Service name: {}", this.getService());
+		try {
+			StringBuffer buffer = new StringBuffer();
+			buffer.append(name).append(ORestController.QUERY);
+
+			Map<?, ?> kvQueryParameter = aQueryParameter.getFilter();
+			List<?> avQueryParameter = aQueryParameter.getColumns();
+			HashMap<?, ?> hSqlTypes = aQueryParameter.getSqltypes();
+			Integer pagesize = aQueryParameter.getPageSize();
+			Integer offset = aQueryParameter.getOffset();
+			List<SQLOrder> orderby = aQueryParameter.getOrderBy();
+
+			Map<Object, Object> keysValues = this.createKeysValues(kvQueryParameter, hSqlTypes);
+			List<Object> attributesValues = this.createAttributesValues(avQueryParameter, hSqlTypes);
+
+			AdvancedEntityResult eR = (AdvancedEntityResult) ReflectionTools.invoke(this.getService(), buffer.toString(), keysValues, attributesValues, pagesize, offset, orderby);
+			return new ResponseEntity<>(eR, HttpStatus.OK);
+		} catch (Exception e) {
+			ORestController.logger.error("{}", e.getMessage(), e);
+			AdvancedEntityResult advancedEntityResult = new AdvancedEntityResult(EntityResult.OPERATION_WRONG, EntityResult.BEST_COMPRESSION);
+			advancedEntityResult.setMessage(e.getMessage());
+			return new ResponseEntity<>(advancedEntityResult, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
@@ -190,7 +222,12 @@ public abstract class ORestController<S> {
 
 		if (kvQueryParam.containsKey(ORestController.BASIC_EXPRESSION)) {
 			Object basicExpressionValue = kvQueryParam.remove(ORestController.BASIC_EXPRESSION);
-			this.processBasicExpression(kv, basicExpressionValue, hSqlTypes);
+			this.processBasicExpression(SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY, kv, basicExpressionValue, hSqlTypes);
+		}
+
+		if (kvQueryParam.containsKey(ORestController.FILTER_EXPRESSION)) {
+			Object basicExpressionValue = kvQueryParam.remove(ORestController.FILTER_EXPRESSION);
+			this.processBasicExpression(SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.FILTER_KEY, kv, basicExpressionValue, hSqlTypes);
 		}
 
 		for (Entry<?, ?> next : kvQueryParam.entrySet()) {
@@ -220,11 +257,11 @@ public abstract class ORestController<S> {
 		return av;
 	}
 
-	protected void processBasicExpression(Map<?, ?> keysValues, Object basicExpression, Map<?, ?> hSqlTypes) {
+	protected void processBasicExpression(String key, Map<?, ?> keysValues, Object basicExpression, Map<?, ?> hSqlTypes) {
 		if (basicExpression instanceof Map) {
 			try {
 				BasicExpression bE = BasicExpressionProcessor.getInstance().processBasicEspression(basicExpression, hSqlTypes);
-				((Map<Object, Object>) keysValues).put(SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY, bE);
+				((Map<Object, Object>) keysValues).put(key, bE);
 			} catch (Exception error) {
 				ORestController.logger.error(null, error);
 			}
@@ -232,8 +269,8 @@ public abstract class ORestController<S> {
 
 	}
 
-	protected void processBasicExpression(Map<Object, Object> keysValues, Object basicExpression) {
-		this.processBasicExpression(keysValues, basicExpression, new HashMap<>());
+	protected void processBasicExpression(String key, Map<Object, Object> keysValues, Object basicExpression) {
+		this.processBasicExpression(key, keysValues, basicExpression, new HashMap<>());
 	}
 
 }

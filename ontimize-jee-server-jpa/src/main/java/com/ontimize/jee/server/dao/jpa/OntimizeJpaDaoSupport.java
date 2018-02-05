@@ -42,6 +42,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 
+import com.ontimize.db.AdvancedEntityResult;
 import com.ontimize.db.EntityResult;
 import com.ontimize.db.NullValue;
 import com.ontimize.db.SQLStatementBuilder;
@@ -186,6 +187,12 @@ public class OntimizeJpaDaoSupport implements ApplicationContextAware, IOntimize
 		super();
 		this.configurationFile = configurationFile;
 		this.configurationFilePlaceholder = configurationFilePlaceholder;
+	}
+
+	@Override
+	public AdvancedEntityResult query(Map<?, ?> keysValues, List<?> attributes, int recordNumber, int startIndex, List<?> orderBy, String queryId) {
+		// TODO
+		return null;
 	}
 
 	/**
@@ -530,7 +537,7 @@ public class OntimizeJpaDaoSupport implements ApplicationContextAware, IOntimize
 								final Method meth2 = BeanUtils.findDeclaredMethodWithMinimalParameters(cl, MappingInfoUtils.buildGetterMethodName(e.getKey(), null));
 								if (meth2 == null) {
 									OntimizeJpaDaoSupport.logger
-											.warn("Key '" + e.getKey() + "' does not have a getter method for embedded attributed declared on bean " + cl.getName());
+									.warn("Key '" + e.getKey() + "' does not have a getter method for embedded attributed declared on bean " + cl.getName());
 								} else {
 									currentValue = meth2.invoke(entityBean);
 								}
@@ -1306,10 +1313,10 @@ public class OntimizeJpaDaoSupport implements ApplicationContextAware, IOntimize
 					res.add((String) ob);
 				}
 			} else
-			// If the attribute is ReferenceFieldAttribute add the string to
-			if ((ob instanceof ReferenceFieldAttribute) && !res.contains(((ReferenceFieldAttribute) ob).getAttr())) {
-				res.add(((ReferenceFieldAttribute) ob).getAttr());
-			}
+				// If the attribute is ReferenceFieldAttribute add the string to
+				if ((ob instanceof ReferenceFieldAttribute) && !res.contains(((ReferenceFieldAttribute) ob).getAttr())) {
+					res.add(((ReferenceFieldAttribute) ob).getAttr());
+				}
 		}
 		return res;
 	}
@@ -1824,7 +1831,7 @@ public class OntimizeJpaDaoSupport implements ApplicationContextAware, IOntimize
 					final MappingInfo mappingInfo = MappingInfoUtils.buildMappingInfo(query, this.entityBeanClass, returnTypeClass);
 					this.addQueryTemplateInformation(query.getId(), query.getSentence().getValue(), Syntax.valueOf(query.getSyntax()), returnTypeClass, mappingInfo,
 							query.getAmbiguousColumns() != null ? query.getAmbiguousColumns().getAmbiguousColumn() : new ArrayList<AmbiguousColumnType>(),
-							query.getFunctionColumns() != null ? query.getFunctionColumns().getFunctionColumn() : new ArrayList<FunctionColumnType>());
+									query.getFunctionColumns() != null ? query.getFunctionColumns().getFunctionColumn() : new ArrayList<FunctionColumnType>());
 				}
 			}
 			final String entityManagerName = setup.getEntitymanager();
