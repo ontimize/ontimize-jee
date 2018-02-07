@@ -190,7 +190,7 @@ public class OntimizeJpaDaoSupport implements ApplicationContextAware, IOntimize
 	}
 
 	@Override
-	public AdvancedEntityResult query(Map<?, ?> keysValues, List<?> attributes, int recordNumber, int startIndex, List<?> orderBy, String queryId) {
+	public AdvancedEntityResult paginationQuery(Map<?, ?> keysValues, List<?> attributes, int recordNumber, int startIndex, List<?> orderBy, String queryId) {
 		// TODO
 		return null;
 	}
