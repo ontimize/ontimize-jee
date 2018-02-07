@@ -199,7 +199,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	 * @return the entity result
 	 */
 	@Override
-	public AdvancedEntityResult query(Map<?, ?> keysValues, List<?> attributes, int recordNumber, int startIndex, List<?> orderBy, String queryId) {
+	public AdvancedEntityResult paginationQuery(Map<?, ?> keysValues, List<?> attributes, int recordNumber, int startIndex, List<?> orderBy, String queryId) {
 		this.checkCompiled();
 		final QueryTemplateInformation queryTemplateInformation = this.getQueryTemplateInformation(queryId);
 		final SQLStatement stSQL = this.composePageableSql(queryId, attributes, keysValues, recordNumber, startIndex, orderBy);

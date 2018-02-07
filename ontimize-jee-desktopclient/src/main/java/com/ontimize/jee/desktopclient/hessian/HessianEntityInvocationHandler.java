@@ -173,7 +173,7 @@ public class HessianEntityInvocationHandler extends AbstractInvocationDelegate i
 	public AdvancedEntityResult query(Hashtable keysValues, Vector attributes, int sessionId, int recordNumber, int startIndex, Vector orderBy) throws Exception {
 		Object hessianProxy = this.getHessianService();
 		Method hessianMethod = null;
-		String methodName = this.serviceMethodPrefix + "Query";
+		String methodName = this.serviceMethodPrefix + "PaginationQuery";
 		hessianMethod = ReflectionTools.getMethodByNameAndParatemers(hessianProxy.getClass(), methodName,
 				new Object[] { keysValues, attributes, recordNumber, startIndex, orderBy });
 		this.checkHessianMethodExists(hessianMethod, methodName);

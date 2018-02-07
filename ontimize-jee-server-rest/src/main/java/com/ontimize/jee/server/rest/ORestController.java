@@ -35,6 +35,7 @@ public abstract class ORestController<S> {
 	private final static Logger	logger				= LoggerFactory.getLogger(ORestController.class);
 
 	public static final String	QUERY				= "Query";
+	public static final String	PAGINATION_QUERY	= "PaginationQuery";
 	public static final String	INSERT				= "Insert";
 	public static final String	DELETE				= "Delete";
 	public static final String	UPDATE				= "Update";
@@ -99,7 +100,7 @@ public abstract class ORestController<S> {
 		ORestController.logger.debug("Service name: {}", this.getService());
 		try {
 			StringBuffer buffer = new StringBuffer();
-			buffer.append(name).append(ORestController.QUERY);
+			buffer.append(name).append(ORestController.PAGINATION_QUERY);
 
 			Map<?, ?> kvQueryParameter = aQueryParameter.getFilter();
 			List<?> avQueryParameter = aQueryParameter.getColumns();

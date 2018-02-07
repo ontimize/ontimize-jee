@@ -50,7 +50,7 @@ public interface IOntimizeDaoSupport {
 	 *            the query id
 	 * @return a EntityResult with the resulting set of data. This result can be empty if no results exist, and if an error has ocurred this will be indicated in the result.
 	 */
-	AdvancedEntityResult query(Map<?, ?> keysValues, List<?> attributes, int recordNumber, int startIndex, List<?> orderBy, String queryId);
+	AdvancedEntityResult paginationQuery(Map<?, ?> keysValues, List<?> attributes, int recordNumber, int startIndex, List<?> orderBy, String queryId);
 
 	/**
 	 * This method must implement a standard insert operation with the data contained in <code>attributesValues</code> parameter.<br> <p>

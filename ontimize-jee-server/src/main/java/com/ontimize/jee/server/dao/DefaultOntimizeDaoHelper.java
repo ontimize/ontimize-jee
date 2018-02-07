@@ -81,15 +81,16 @@ public class DefaultOntimizeDaoHelper implements IOntimizeDaoHelper, Application
 		return this.applicationContext;
 	}
 
-	public AdvancedEntityResult query(IOntimizeDaoSupport dao, Map<?, ?> keysValues, List<?> attributes, int recordNumber, int startIndex, List<?> orderBy) {
-		return this.query(dao, keysValues, attributes, recordNumber, startIndex, orderBy, IOntimizeDaoSupport.DEFAULT_QUERY_KEY);
+	public AdvancedEntityResult paginationQuery(IOntimizeDaoSupport dao, Map<?, ?> keysValues, List<?> attributes, int recordNumber, int startIndex, List<?> orderBy) {
+		return this.paginationQuery(dao, keysValues, attributes, recordNumber, startIndex, orderBy, IOntimizeDaoSupport.DEFAULT_QUERY_KEY);
 	}
 	/*
 	 * (non-Javadoc)
 	 * @see com.ontimize.jee.common.services.ontimize.IOntimizeService#advancedQuery (java.lang.String, java.util.Map, java.util.List, int, int, java.util.List)
 	 */
 	@Override
-	public AdvancedEntityResult query(IOntimizeDaoSupport dao, Map<?, ?> keysValues, List<?> attributes, int recordNumber, int startIndex, List<?> orderBy, String queryId) {
+	public AdvancedEntityResult paginationQuery(IOntimizeDaoSupport dao, Map<?, ?> keysValues, List<?> attributes, int recordNumber, int startIndex, List<?> orderBy,
+			String queryId) {
 		CheckingTools.failIfNull(dao, "Null dao");
 
 		List<?> vProcessMultipleAttributes = new ArrayList<>();
@@ -98,7 +99,7 @@ public class DefaultOntimizeDaoHelper implements IOntimizeDaoHelper, Application
 
 		List<?> vAttributes = new ArrayList<>(vMultipleTableAttributes);
 
-		AdvancedEntityResult erResult = dao.query(keysValues, vAttributes, recordNumber, startIndex, orderBy, queryId);
+		AdvancedEntityResult erResult = dao.paginationQuery(keysValues, vAttributes, recordNumber, startIndex, orderBy, queryId);
 
 		if (!erResult.isWrong()) {
 			// TODO

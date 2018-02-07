@@ -35,7 +35,7 @@ public interface IOntimizeDaoHelper {
 	 * @return
 	 * @throws Exception
 	 */
-	AdvancedEntityResult query(IOntimizeDaoSupport repository, Map<?, ?> kv, List<?> attributes, int recordNumber, int startIndex, List<?> orderBy, String queryId)
+	AdvancedEntityResult paginationQuery(IOntimizeDaoSupport repository, Map<?, ?> kv, List<?> attributes, int recordNumber, int startIndex, List<?> orderBy, String queryId)
 			throws OntimizeJEERuntimeException;
 
 	/**
