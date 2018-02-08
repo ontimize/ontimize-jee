@@ -622,8 +622,8 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 		final Map<?, ?> avWithoutMultipleTableAttributes = this.processMultipleTableAttribute(attributesValues);
 		final Map<?, ?> avWithoutReferenceAttributes = this.processReferenceDataFieldAttributes(avWithoutMultipleTableAttributes);
 		final Map<?, ?> avWithoutMultipleValueAttributes = this.processMultipleValueAttributes(avWithoutReferenceAttributes);
-		final Map<String, Object> avValid = this.getValidAttributes(this.processStringKeys(avWithoutMultipleValueAttributes));
-
+		final Map<String, Object> avValidPre = this.getValidAttributes(this.processStringKeys(avWithoutMultipleValueAttributes));
+		final Map<String, Object> avValid = this.removeNullValues(avValidPre);
 		if (avValid.isEmpty()) {
 			// TODO se debería lanzar excepción, pero puede tener colaterales con la one-2-one
 			OntimizeJdbcDaoSupport.logger.warn("Insert: Attributes does not contain any pair key-value valid");
@@ -643,6 +643,25 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 			erResult.put(this.getGeneratedKeyNames()[0].toUpperCase(), res);
 		}
 		return erResult;
+	}
+
+	/**
+	 * Removes the null values.
+	 *
+	 * @param inputAttributesValues
+	 *            the input attributes values
+	 * @return the map
+	 */
+	protected Map<String, Object> removeNullValues(Map<String, Object> inputAttributesValues) {
+		final Map<String, Object> hValidKeysValues = new HashMap<>();
+		for (final Entry<String, ?> entry : inputAttributesValues.entrySet()) {
+			final String oKey = entry.getKey();
+			final Object oValue = entry.getValue();
+			if ((oValue != null) && !(oValue instanceof NullValue)) {
+				hValidKeysValues.put(oKey, oValue);
+			}
+		}
+		return hValidKeysValues;
 	}
 
 	/*
