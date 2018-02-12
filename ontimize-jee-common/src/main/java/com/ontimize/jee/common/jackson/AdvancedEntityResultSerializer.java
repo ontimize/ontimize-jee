@@ -34,15 +34,15 @@ public class AdvancedEntityResultSerializer extends StdSerializer<AdvancedEntity
 
 		int number = value.calculateRecordNumber();
 
+		jgen.writeStartArray();
 		if (number != 0) {
-			jgen.writeStartArray();
 			// EntityResult has values
 			for (int i = 0; i < number; i++) {
 				Hashtable record = value.getRecordValues(i);
 				jgen.writeObject(record);
 			}
-			jgen.writeEndArray();
 		}
+		jgen.writeEndArray();
 
 		jgen.writeFieldName(AdvancedEntityResultSerializer.SQL_TYPES_KEY);
 		Hashtable sqlTypes = value.getColumnSQLTypes();
