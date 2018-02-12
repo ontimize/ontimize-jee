@@ -224,7 +224,7 @@
 			</dependency>
 			<dependency>
 				<groupId>com.ontimize.jee</groupId>
-				<artifactId>ontimize-jee-rest</artifactId>
+				<artifactId>ontimize-jee-server-rest</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
