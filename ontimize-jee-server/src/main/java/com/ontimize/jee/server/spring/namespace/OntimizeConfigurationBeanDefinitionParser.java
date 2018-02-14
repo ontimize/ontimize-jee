@@ -10,12 +10,13 @@ import com.ontimize.jee.server.configuration.OntimizeConfiguration;
 
 public class OntimizeConfigurationBeanDefinitionParser extends AbstractSingleBeanDefinitionParser {
 
-	private static final String	REMOTE_I18N				= "remote-i18n";
-	private static final String	REMOTE_MAIL				= "mail";
-	private static final String	REMOTE_FORM_PROVIDER	= "form-provider";
-	private static final String	REMOTE_OPERATION_ATTR	= "remote-operation";
-	private static final String	REMOTE_PREFERENCES_ATTR	= "remote-preferences";
-	private static final String	SECURITY_ATTR			= "security";
+	private static final String REMOTE_I18N = "remote-i18n";
+	private static final String	REMOTE_MAIL				 = "mail";
+	private static final String	REMOTE_FORM_PROVIDER	 = "form-provider";
+	private static final String REMOTE_SHARE_PREFERENCES = "share-pref";
+	private static final String	REMOTE_OPERATION_ATTR	 = "remote-operation";
+	private static final String	REMOTE_PREFERENCES_ATTR	 = "remote-preferences";
+	private static final String	SECURITY_ATTR			 = "security";
 
 	/**
 	 * The bean that is created for this tag element
@@ -94,6 +95,15 @@ public class OntimizeConfigurationBeanDefinitionParser extends AbstractSingleBea
 			// work
 			FormProviderBeanDefinitionParser ro = new FormProviderBeanDefinitionParser();
 			builder.addPropertyValue("formProviderConfiguration", ro.parse(formProvider, nestedCtx));
+		}
+
+		// Support share preferences
+		Element sharePreferences = DomUtils.getChildElementByTagName(element, OntimizeConfigurationBeanDefinitionParser.REMOTE_SHARE_PREFERENCES);
+		if (sharePreferences != null) {
+			// Just make a new Parser for each one and let the parser do the
+			// work
+			SharePreferencesBeanDefinitionParser ro = new SharePreferencesBeanDefinitionParser();
+			builder.addPropertyValue("sharePreferencesConfiguration", ro.parse(sharePreferences, nestedCtx));
 		}
 
 		// Support for mail

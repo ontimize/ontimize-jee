@@ -16,6 +16,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import com.ontimize.db.EntityResult;
+import com.ontimize.jee.common.exceptions.OntimizeJEEException;
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
 import com.ontimize.jee.common.services.user.UserInformation;
 import com.ontimize.jee.server.configuration.OntimizeConfiguration;
@@ -32,9 +33,6 @@ public class DatabaseUserInformationService implements ISecurityUserInformationS
 
 	/** The Constant logger. */
 	private static final Logger					logger		= LoggerFactory.getLogger(DatabaseUserInformationService.class);
-
-	public static final String					BEAN_NAME	= "databaseUserInformationService";
-
 	/** The user repository. */
 	private IOntimizeDaoSupport					userRepository;
 	/** The user login column. */
@@ -115,6 +113,30 @@ public class DatabaseUserInformationService implements ISecurityUserInformationS
 			return null;
 		}
 		return resUser.getRecordValues(0);
+	}
+
+	@Override
+	public List<UserInformation> getAllUserInformation() throws OntimizeJEEException {
+		List<UserInformation> toret = new ArrayList<>();
+		List<String> listLogin = this.getAllUserInformationLogin();
+		for (int i = 0; i < listLogin.size(); i++) {
+			String login = listLogin.get(i);
+			toret.add(this.loadUserByUsername(login));
+		}
+		return toret;
+	}
+
+	@Override
+	public List<String> getAllUserInformationLogin() throws OntimizeJEEException {
+		List<String> toret = new ArrayList<>();
+		List<String> columnsToQuery = new ArrayList<>();
+		columnsToQuery.add(this.userLoginColumn);
+		EntityResult resUser = this.userRepository.query(new HashMap(), columnsToQuery, null, this.userQueryId);
+		for (int i = 0; i < resUser.calculateRecordNumber(); i++) {
+			String login = (String) resUser.getRecordValues(i).get(this.userLoginColumn);
+			toret.add(login);
+		}
+		return toret;
 	}
 
 	/**

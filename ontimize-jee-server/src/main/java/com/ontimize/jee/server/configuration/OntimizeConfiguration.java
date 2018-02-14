@@ -9,6 +9,7 @@ import com.ontimize.jee.server.services.i18n.I18nConfiguration;
 import com.ontimize.jee.server.services.mail.MailConfiguration;
 import com.ontimize.jee.server.services.preferences.RemotePreferencesConfiguration;
 import com.ontimize.jee.server.services.remoteoperation.RemoteOperationConfiguration;
+import com.ontimize.jee.server.services.sharepreferences.SharePreferencesConfiguration;
 
 /**
  * The Class OntimizeConfiguration.
@@ -32,6 +33,9 @@ public class OntimizeConfiguration {
 
 	/** The form provider configuration */
 	@Lazy protected FormProviderConfiguration formProviderConfiguration;
+
+	/** The form provider configuration */
+	@Lazy protected SharePreferencesConfiguration sharePreferencesConfiguration;
 
 	/**
 	 * Instantiates a new ontimize configuration.
@@ -158,5 +162,26 @@ public class OntimizeConfiguration {
 	 */
 	public void setMailConfiguration(MailConfiguration mailConfiguration) {
 		this.mailConfiguration = mailConfiguration;
+	}
+
+	/**
+	 * Gets the share preferences configuration.
+	 *
+	 * @return {@link SharePreferencesConfiguration} the share preferences
+	 *         configuration
+	 */
+	public SharePreferencesConfiguration getSharePreferencesConfiguration() {
+		return this.sharePreferencesConfiguration;
+	}
+
+	/**
+	 * Sets the share preferences configuration.
+	 *
+	 * @param sharePreferencesConfiguration
+	 *            {@link SharePreferencesConfiguration} the new share
+	 *            preferences configuration.
+	 */
+	public void setSharePreferencesConfiguration(SharePreferencesConfiguration sharePreferencesConfiguration) {
+		this.sharePreferencesConfiguration = sharePreferencesConfiguration;
 	}
 }

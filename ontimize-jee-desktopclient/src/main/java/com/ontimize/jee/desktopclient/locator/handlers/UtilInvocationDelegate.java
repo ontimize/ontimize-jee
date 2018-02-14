@@ -20,6 +20,7 @@ import com.ontimize.locator.ErrorAccessControl;
 import com.ontimize.locator.InitialContext;
 import com.ontimize.locator.UtilReferenceLocator;
 import com.ontimize.util.operation.RemoteOperationManager;
+import com.ontimize.util.share.IShareRemoteReference;
 
 /**
  * The Class UtilLocatorInvocationDelegate.
@@ -27,8 +28,9 @@ import com.ontimize.util.operation.RemoteOperationManager;
 public class UtilInvocationDelegate extends AbstractInvocationDelegate implements UtilReferenceLocator {
 
 	/** The remote operation handler. */
-	protected WebsocketRemoteOperationManager	remoteOperationHandler;
-	protected IDatabaseBundleManager			databaseBundleManager;
+	protected WebsocketRemoteOperationManager remoteOperationHandler;
+	protected IDatabaseBundleManager databaseBundleManager;
+	protected IShareRemoteReference sharePreferencesReference;
 
 	/**
 	 * Instantiates a new util locator invocation delegate.
@@ -131,6 +133,9 @@ public class UtilInvocationDelegate extends AbstractInvocationDelegate implement
 		if (name.equals(ExtendedPropertiesBundle.getDbBundleManagerName())) {
 			return this.getRemoteReferenceDatabaseBundle();
 		}
+		if (name.equals(IShareRemoteReference.REMOTE_NAME)) {
+			return this.getRemoteReferenceSharePreferences();
+		}
 		return null;
 	}
 
@@ -218,8 +223,18 @@ public class UtilInvocationDelegate extends AbstractInvocationDelegate implement
 		}
 
 		this.databaseBundleManager = (IDatabaseBundleManager) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
-		        new Class<?>[] { IDatabaseBundleManager.class }, new DatabaseBundleManagerInvocationDelegate());
+				new Class<?>[] { IDatabaseBundleManager.class }, new DatabaseBundleManagerInvocationDelegate());
 		return this.databaseBundleManager;
+	}
+
+	protected IShareRemoteReference getRemoteReferenceSharePreferences() {
+		if (this.sharePreferencesReference != null) {
+			return this.sharePreferencesReference;
+		}
+
+		this.sharePreferencesReference = (IShareRemoteReference) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
+				new Class<?>[] { IShareRemoteReference.class }, new SharePreferencesInvocationDelegate());
+		return this.sharePreferencesReference;
 	}
 
 	@Override

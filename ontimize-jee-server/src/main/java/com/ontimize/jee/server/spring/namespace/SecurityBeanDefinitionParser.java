@@ -14,6 +14,7 @@ import com.ontimize.jee.common.spring.parser.DefinitionParserUtil;
 import com.ontimize.jee.server.security.DatabaseRoleInformationService;
 import com.ontimize.jee.server.security.DatabaseUserInformationService;
 import com.ontimize.jee.server.security.DatabaseUserRoleInformationService;
+import com.ontimize.jee.server.security.ISecurityUserInformationService;
 import com.ontimize.jee.server.security.SecurityConfiguration;
 import com.ontimize.jee.server.security.authorization.DefaultOntimizeAuthorizator;
 
@@ -127,7 +128,7 @@ public class SecurityBeanDefinitionParser extends AbstractSingleBeanDefinitionPa
 			}
 		}
 		if (engine != null) {
-			ctx.getRegistry().registerBeanDefinition(DatabaseUserInformationService.BEAN_NAME, (BeanDefinition) engine);
+			ctx.getRegistry().registerBeanDefinition(ISecurityUserInformationService.BEAN_NAME, (BeanDefinition) engine);
 		}
 		builder.addPropertyValue("userInformationService", engine);
 		builder.setLazyInit(true);
@@ -286,7 +287,7 @@ public class SecurityBeanDefinitionParser extends AbstractSingleBeanDefinitionPa
 			builder.addPropertyValue("userLoginColumn", DefinitionParserUtil.nullIfEmpty(element.getAttribute(SecurityBeanDefinitionParser.DUIS_USER_LOGIN_COLUMN)));
 			builder.addPropertyValue("userPasswordColumn", DefinitionParserUtil.nullIfEmpty(element.getAttribute(SecurityBeanDefinitionParser.DUIS_USER_PASSWORD_COLUMN)));
 			builder.addPropertyValue("userNeedCheckPassColumn",
-			        DefinitionParserUtil.nullIfEmpty(element.getAttribute(SecurityBeanDefinitionParser.DUIS_USER_NEED_CHECK_PASS_COLUMN)));
+					DefinitionParserUtil.nullIfEmpty(element.getAttribute(SecurityBeanDefinitionParser.DUIS_USER_NEED_CHECK_PASS_COLUMN)));
 			builder.addPropertyValue("userOtherDataColumns", DefinitionParserUtil.nullIfEmpty(element.getAttribute(SecurityBeanDefinitionParser.DUIS_OTHER_DATA)));
 			builder.addPropertyValue("userQueryId", DefinitionParserUtil.nullIfEmpty(element.getAttribute(SecurityBeanDefinitionParser.DUIS_QUERY_ID)));
 
@@ -389,12 +390,12 @@ public class SecurityBeanDefinitionParser extends AbstractSingleBeanDefinitionPa
 			// en otro contexto //TODO check this (we need the same reference)
 			builder.addPropertyValue("roleNameColumn", DefinitionParserUtil.nullIfEmpty(element.getAttribute(SecurityBeanDefinitionParser.DRIS_ROLE_NAME_COLUMN)));
 			builder.addPropertyValue("serverPermissionKeyColumn",
-			        DefinitionParserUtil.nullIfEmpty(element.getAttribute(SecurityBeanDefinitionParser.DRIS_SERVER_PERMISSION_NAME_COLUMN)));
+					DefinitionParserUtil.nullIfEmpty(element.getAttribute(SecurityBeanDefinitionParser.DRIS_SERVER_PERMISSION_NAME_COLUMN)));
 			builder.addPropertyValue("clientPermissionColumn", DefinitionParserUtil.nullIfEmpty(element.getAttribute(SecurityBeanDefinitionParser.DRIS_CLIENT_PERMISSION_COLUMN)));
 			builder.addPropertyValue("serverPermissionQueryId",
-			        DefinitionParserUtil.nullIfEmpty(element.getAttribute(SecurityBeanDefinitionParser.DRIS_SERVER_PERMISSION_QUERY_ID)));
+					DefinitionParserUtil.nullIfEmpty(element.getAttribute(SecurityBeanDefinitionParser.DRIS_SERVER_PERMISSION_QUERY_ID)));
 			builder.addPropertyValue("clientPermissionQueryId",
-			        DefinitionParserUtil.nullIfEmpty(element.getAttribute(SecurityBeanDefinitionParser.DRIS_CLIENT_PERMISSION_QUERY_ID)));
+					DefinitionParserUtil.nullIfEmpty(element.getAttribute(SecurityBeanDefinitionParser.DRIS_CLIENT_PERMISSION_QUERY_ID)));
 
 			// Set the scope
 			builder.setScope(element.getAttribute(SecurityBeanDefinitionParser.SCOPE));
