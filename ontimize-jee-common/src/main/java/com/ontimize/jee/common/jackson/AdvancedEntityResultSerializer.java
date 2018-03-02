@@ -15,7 +15,7 @@ public class AdvancedEntityResultSerializer extends StdSerializer<AdvancedEntity
 	public static final String	MESSAGE_KEY		= "message";
 	public static final String	DATA_KEY		= "data";
 	public static final String	SQL_TYPES_KEY	= "sqlTypes";
-	public static final String	TOTAL_RECORD_NUMBER_KEY	= "totalRecordNumber";
+	public static final String	TOTAL_RECORD_NUMBER_KEY	= "totalQueryRecordsNumber";
 	public static final String	START_RECORD_INDEX_KEY	= "startRecordIndex";
 
 	public AdvancedEntityResultSerializer() {
