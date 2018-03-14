@@ -12,7 +12,7 @@ import com.ontimize.db.SQLStatementBuilder.SQLOrder;
 
 public class SQLOrderDeserializer extends StdDeserializer<SQLOrder> {
 
-	public static final String	COLUMN_KEY		= "column";
+	public static final String	COLUMN_KEY		= "columnName";
 	public static final String	ASCENDENT_KEY	= "ascendent";
 
 	public SQLOrderDeserializer() {
