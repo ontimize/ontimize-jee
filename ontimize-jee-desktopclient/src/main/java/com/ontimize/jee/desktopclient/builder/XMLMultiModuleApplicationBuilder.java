@@ -620,32 +620,6 @@ public class XMLMultiModuleApplicationBuilder extends XMLApplicationBuilder {
 				}
 			}
 
-			// for (int i = 1; i < definitions.size(); i++) {
-			// Document doc = dBuilder.parse(Thread.currentThread().getContextClassLoader().getResourceAsStream(definitions.get(i)));
-			// // optional, but recommended
-			// // read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
-			// doc.getDocumentElement().normalize();
-			//
-			// Element root = doc.getDocumentElement();
-			// if (root != null) {
-			// NodeList childNodes = root.getChildNodes();
-			// for (int j = 0; j < childNodes.getLength(); j++) {
-			// Node testNode = childNodes.item(j);
-			// Node currentNode = this.findNode(mainDocument, testNode, "attr");
-			// if (currentNode == null) {
-			// mainDocument.getDocumentElement().appendChild(mainDocument.importNode(testNode, true));
-			// } else {
-			// NodeList childItems = testNode.getChildNodes();
-			// for (int k = 0; k < childItems.getLength(); k++) {
-			// currentNode.appendChild(mainDocument.importNode(childItems.item(k), true));
-			// }
-			// }
-			// }
-			// }
-			// }
-			//
-			// byte[] res = this.documentToBytes(mainDocument);
-
 			byte[] res = this.documentToBytes(mainDocument);
 
 			XMLMultiModuleApplicationBuilder.logger.debug(new String(res, Charset.defaultCharset()));
