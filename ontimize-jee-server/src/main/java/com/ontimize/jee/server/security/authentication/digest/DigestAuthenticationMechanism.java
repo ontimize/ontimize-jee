@@ -199,7 +199,8 @@ public class DigestAuthenticationMechanism implements IAuthenticationMechanism {
 			String expectedNonceSignature = DigestAuthUtils.md5Hex(this.nonceExpiryTime + ":" + entryPointKey);
 
 			if (!expectedNonceSignature.equals(nonceTokens[1])) {
-				new BadCredentialsException(DigestAuthenticationMechanism.this.messages.getMessage("DigestAuthenticationFilter.nonceCompromised", new Object[] { nonceAsPlainText },
+				throw new BadCredentialsException(DigestAuthenticationMechanism.this.messages.getMessage("DigestAuthenticationFilter.nonceCompromised",
+						new Object[] { nonceAsPlainText },
 						"Nonce token compromised {0}"));
 			}
 		}
