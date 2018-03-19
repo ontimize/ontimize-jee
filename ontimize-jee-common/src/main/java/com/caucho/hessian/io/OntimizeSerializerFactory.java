@@ -11,6 +11,10 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 
+import com.caucho.hessian.io.deserializer.Deserializer;
+import com.caucho.hessian.io.deserializer.JavaDeserializer;
+import com.caucho.hessian.io.serializer.JavaSerializer;
+import com.caucho.hessian.io.serializer.Serializer;
 import com.ontimize.db.EntityResult;
 import com.ontimize.gui.table.TableAttribute;
 import com.ontimize.jee.common.tools.ReflectionTools;
@@ -137,7 +141,7 @@ public class OntimizeSerializerFactory extends AbstractSerializerFactory {
 			theFieldSerializers[theFieldSerializers.length - 1] = new FieldSerializer() {
 
 				@Override
-				void serialize(AbstractHessianOutput out, Object obj, Field field) throws IOException {
+				protected void serialize(AbstractHessianOutput out, Object obj, Field field) throws IOException {
 					// write the map values
 					if (out.addRef(new HashMap<>())) {
 						return;
@@ -181,7 +185,7 @@ public class OntimizeSerializerFactory extends AbstractSerializerFactory {
 			fieldMap.put(OntimizeSerializerFactory.INNER_ONTIMIZE_MAP, new FieldDeserializer() {
 
 				@Override
-				void deserialize(AbstractHessianInput in, Object obj) throws IOException {
+				protected void deserialize(AbstractHessianInput in, Object obj) throws IOException {
 					Map<?, ?> map = (Map<?, ?>) in.readObject();
 					((Map) obj).putAll(map);
 				}
