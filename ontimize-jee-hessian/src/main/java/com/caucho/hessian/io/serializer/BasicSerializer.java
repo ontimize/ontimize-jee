@@ -89,7 +89,6 @@ public class BasicSerializer extends AbstractSerializer implements ObjectSeriali
 			case BOOLEAN:
 				out.writeBoolean(((Boolean) obj).booleanValue());
 				break;
-
 			case BYTE:
 			case SHORT:
 			case INTEGER:
@@ -126,17 +125,7 @@ public class BasicSerializer extends AbstractSerializer implements ObjectSeriali
 				if (out.addRef(obj)) {
 					return;
 				}
-
-				boolean[] data = (boolean[]) obj;
-				boolean hasEnd = out.writeListBegin(data.length, "[boolean");
-				for (int i = 0; i < data.length; i++) {
-					out.writeBoolean(data[i]);
-				}
-
-				if (hasEnd) {
-					out.writeListEnd();
-				}
-
+				this.writeObjectBooleanArray(obj, out);
 				break;
 			}
 
@@ -150,17 +139,7 @@ public class BasicSerializer extends AbstractSerializer implements ObjectSeriali
 				if (out.addRef(obj)) {
 					return;
 				}
-
-				short[] data = (short[]) obj;
-				boolean hasEnd = out.writeListBegin(data.length, "[short");
-
-				for (int i = 0; i < data.length; i++) {
-					out.writeInt(data[i]);
-				}
-
-				if (hasEnd) {
-					out.writeListEnd();
-				}
+				this.writeObjectShortArray(obj, out);
 				break;
 			}
 
@@ -168,19 +147,7 @@ public class BasicSerializer extends AbstractSerializer implements ObjectSeriali
 				if (out.addRef(obj)) {
 					return;
 				}
-
-				int[] data = (int[]) obj;
-
-				boolean hasEnd = out.writeListBegin(data.length, "[int");
-
-				for (int i = 0; i < data.length; i++) {
-					out.writeInt(data[i]);
-				}
-
-				if (hasEnd) {
-					out.writeListEnd();
-				}
-
+				this.writeObjectIntegerArray(obj, out);
 				break;
 			}
 
@@ -188,18 +155,7 @@ public class BasicSerializer extends AbstractSerializer implements ObjectSeriali
 				if (out.addRef(obj)) {
 					return;
 				}
-
-				long[] data = (long[]) obj;
-
-				boolean hasEnd = out.writeListBegin(data.length, "[long");
-
-				for (int i = 0; i < data.length; i++) {
-					out.writeLong(data[i]);
-				}
-
-				if (hasEnd) {
-					out.writeListEnd();
-				}
+				this.writeObjectLongArray(obj, out);
 				break;
 			}
 
@@ -207,18 +163,7 @@ public class BasicSerializer extends AbstractSerializer implements ObjectSeriali
 				if (out.addRef(obj)) {
 					return;
 				}
-
-				float[] data = (float[]) obj;
-
-				boolean hasEnd = out.writeListBegin(data.length, "[float");
-
-				for (int i = 0; i < data.length; i++) {
-					out.writeDouble(data[i]);
-				}
-
-				if (hasEnd) {
-					out.writeListEnd();
-				}
+				this.writeObjectFloatArray(obj, out);
 				break;
 			}
 
@@ -226,17 +171,7 @@ public class BasicSerializer extends AbstractSerializer implements ObjectSeriali
 				if (out.addRef(obj)) {
 					return;
 				}
-
-				double[] data = (double[]) obj;
-				boolean hasEnd = out.writeListBegin(data.length, "[double");
-
-				for (int i = 0; i < data.length; i++) {
-					out.writeDouble(data[i]);
-				}
-
-				if (hasEnd) {
-					out.writeListEnd();
-				}
+				this.writeObjectDoubleArray(obj, out);
 				break;
 			}
 
@@ -244,18 +179,7 @@ public class BasicSerializer extends AbstractSerializer implements ObjectSeriali
 				if (out.addRef(obj)) {
 					return;
 				}
-
-				String[] data = (String[]) obj;
-
-				boolean hasEnd = out.writeListBegin(data.length, "[string");
-
-				for (int i = 0; i < data.length; i++) {
-					out.writeString(data[i]);
-				}
-
-				if (hasEnd) {
-					out.writeListEnd();
-				}
+				this.writeObjectStringArray(obj, out);
 				break;
 			}
 
@@ -269,18 +193,7 @@ public class BasicSerializer extends AbstractSerializer implements ObjectSeriali
 				if (out.addRef(obj)) {
 					return;
 				}
-
-				Object[] data = (Object[]) obj;
-
-				boolean hasEnd = out.writeListBegin(data.length, "[object");
-
-				for (int i = 0; i < data.length; i++) {
-					out.writeObject(data[i]);
-				}
-
-				if (hasEnd) {
-					out.writeListEnd();
-				}
+				this.writeObjectObjectArray(obj, out);
 				break;
 			}
 
@@ -306,6 +219,114 @@ public class BasicSerializer extends AbstractSerializer implements ObjectSeriali
 
 			default:
 				throw new RuntimeException(this.code + " unknown code for " + obj.getClass());
+		}
+	}
+
+	private void writeObjectObjectArray(Object obj, AbstractHessianOutput out) throws IOException {
+		Object[] data = (Object[]) obj;
+
+		boolean hasEnd = out.writeListBegin(data.length, "[object");
+
+		for (int i = 0; i < data.length; i++) {
+			out.writeObject(data[i]);
+		}
+
+		if (hasEnd) {
+			out.writeListEnd();
+		}
+	}
+
+	private void writeObjectStringArray(Object obj, AbstractHessianOutput out) throws IOException {
+		String[] data = (String[]) obj;
+
+		boolean hasEnd = out.writeListBegin(data.length, "[string");
+
+		for (int i = 0; i < data.length; i++) {
+			out.writeString(data[i]);
+		}
+
+		if (hasEnd) {
+			out.writeListEnd();
+		}
+	}
+
+	private void writeObjectDoubleArray(Object obj, AbstractHessianOutput out) throws IOException {
+		double[] data = (double[]) obj;
+		boolean hasEnd = out.writeListBegin(data.length, "[double");
+
+		for (int i = 0; i < data.length; i++) {
+			out.writeDouble(data[i]);
+		}
+
+		if (hasEnd) {
+			out.writeListEnd();
+		}
+	}
+
+	private void writeObjectFloatArray(Object obj, AbstractHessianOutput out) throws IOException {
+		float[] data = (float[]) obj;
+
+		boolean hasEnd = out.writeListBegin(data.length, "[float");
+
+		for (int i = 0; i < data.length; i++) {
+			out.writeDouble(data[i]);
+		}
+
+		if (hasEnd) {
+			out.writeListEnd();
+		}
+	}
+
+	private void writeObjectLongArray(Object obj, AbstractHessianOutput out) throws IOException {
+		long[] data = (long[]) obj;
+
+		boolean hasEnd = out.writeListBegin(data.length, "[long");
+
+		for (int i = 0; i < data.length; i++) {
+			out.writeLong(data[i]);
+		}
+
+		if (hasEnd) {
+			out.writeListEnd();
+		}
+	}
+
+	private void writeObjectIntegerArray(Object obj, AbstractHessianOutput out) throws IOException {
+		int[] data = (int[]) obj;
+
+		boolean hasEnd = out.writeListBegin(data.length, "[int");
+
+		for (int i = 0; i < data.length; i++) {
+			out.writeInt(data[i]);
+		}
+
+		if (hasEnd) {
+			out.writeListEnd();
+		}
+	}
+
+	private void writeObjectShortArray(Object obj, AbstractHessianOutput out) throws IOException {
+		short[] data = (short[]) obj;
+		boolean hasEnd = out.writeListBegin(data.length, "[short");
+
+		for (int i = 0; i < data.length; i++) {
+			out.writeInt(data[i]);
+		}
+
+		if (hasEnd) {
+			out.writeListEnd();
+		}
+	}
+
+	private void writeObjectBooleanArray(Object obj, AbstractHessianOutput out) throws IOException {
+		boolean[] data = (boolean[]) obj;
+		boolean hasEnd = out.writeListBegin(data.length, "[boolean");
+		for (int i = 0; i < data.length; i++) {
+			out.writeBoolean(data[i]);
+		}
+
+		if (hasEnd) {
+			out.writeListEnd();
 		}
 	}
 }

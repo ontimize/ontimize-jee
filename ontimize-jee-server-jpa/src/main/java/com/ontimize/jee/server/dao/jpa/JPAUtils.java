@@ -623,38 +623,46 @@ public final class JPAUtils {
 				return field.getName();
 			}
 
-			Column annotation = field.getAnnotation(Column.class);
-			if ((annotation == null) && (getMethod != null)) {
-				annotation = getMethod.getAnnotation(Column.class);
+			Object toReturn = JPAUtils.getAttributeNameColumnFromDescriptorOne(nameColumn, checkUpdate, field, getMethod);
+			if (toReturn != null) {
+				return toReturn;
 			}
-			if ((annotation != null) && nameColumn.equals(annotation.name())) {
-				if (checkUpdate) {
-					if (annotation.updatable() && annotation.insertable()) {
-						return field.getName();
-					}
-				} else {
+		}
+		return null;
+	}
+
+	private static Object getAttributeNameColumnFromDescriptorOne(String nameColumn, boolean checkUpdate, Field field, Method getMethod) throws IntrospectionException {
+		Column annotation = field.getAnnotation(Column.class);
+		if ((annotation == null) && (getMethod != null)) {
+			annotation = getMethod.getAnnotation(Column.class);
+		}
+		if ((annotation != null) && nameColumn.equals(annotation.name())) {
+			if (checkUpdate) {
+				if (annotation.updatable() && annotation.insertable()) {
 					return field.getName();
 				}
-				return null;
-			}
-
-			EmbeddedId annotaEmb = field.getAnnotation(EmbeddedId.class);
-			if ((annotaEmb == null) && (getMethod != null)) {
-				annotaEmb = getMethod.getAnnotation(EmbeddedId.class);
-			}
-			if (annotaEmb != null) {
-				final Object attributeName = JPAUtils.getAttributeNameColumn(field.getType(), nameColumn);
-				if (attributeName != null) {
-					return attributeName;
-				}
-			}
-
-			// If the attribute has an annotation different of Column or EmbeddedId
-			if ((getMethod != null) && (field.getAnnotation(OneToMany.class) == null) && (getMethod.getAnnotation(OneToMany.class) == null) && (field
-					.getAnnotation(ManyToOne.class) == null) && (getMethod.getAnnotation(ManyToOne.class) == null) && (field
-							.getAnnotation(ManyToMany.class) == null) && (getMethod.getAnnotation(ManyToMany.class) == null) && nameColumn.equals(field.getName())) {
+			} else {
 				return field.getName();
 			}
+			return null;
+		}
+
+		EmbeddedId annotaEmb = field.getAnnotation(EmbeddedId.class);
+		if ((annotaEmb == null) && (getMethod != null)) {
+			annotaEmb = getMethod.getAnnotation(EmbeddedId.class);
+		}
+		if (annotaEmb != null) {
+			final Object attributeName = JPAUtils.getAttributeNameColumn(field.getType(), nameColumn);
+			if (attributeName != null) {
+				return attributeName;
+			}
+		}
+
+		// If the attribute has an annotation different of Column or EmbeddedId
+		if ((getMethod != null) && (field.getAnnotation(OneToMany.class) == null) && (getMethod.getAnnotation(OneToMany.class) == null) && (field
+				.getAnnotation(ManyToOne.class) == null) && (getMethod.getAnnotation(ManyToOne.class) == null) && (field
+						.getAnnotation(ManyToMany.class) == null) && (getMethod.getAnnotation(ManyToMany.class) == null) && nameColumn.equals(field.getName())) {
+			return field.getName();
 		}
 		return null;
 	}

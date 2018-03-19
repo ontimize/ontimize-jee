@@ -310,15 +310,7 @@ public class XMLMultiModuleApplicationBuilder extends XMLApplicationBuilder {
 						} else if (tag.equals(XMLMultiModuleApplicationBuilder.MODULE)) {
 							XMLMultiModuleApplicationBuilder.logger.trace("skipping Module tag, it was already merged, now it is a meaningless tag");
 						} else if (!XMLApplicationBuilder.REFLOCATOR.equals(tag)) {
-							Object ob = this.buildObject(node, locator, application);
-							if ((ob != null) && (ob instanceof IFormManager)) {
-								Object id = ((IFormManager) ob).getId();
-								if (id == null) {
-									XMLMultiModuleApplicationBuilder.logger.warn("'id' attribute is missing in FormManager tag " + ((IFormManager) ob).getId());
-								} else {
-									((Application) application).registerFormManager((String) id, (IFormManager) ob);
-								}
-							}
+							this.buildApplicationFormManager(locator, application, node);
 						}
 					}
 				} catch (Exception e) {
@@ -353,6 +345,18 @@ public class XMLMultiModuleApplicationBuilder extends XMLApplicationBuilder {
 			throw ex;
 		} catch (Exception e2) {
 			throw new OntimizeJEERuntimeException(e2);
+		}
+	}
+
+	private void buildApplicationFormManager(EntityReferenceLocator locator, Object application, CustomNode node) throws Exception {
+		Object ob = this.buildObject(node, locator, application);
+		if ((ob != null) && (ob instanceof IFormManager)) {
+			Object id = ((IFormManager) ob).getId();
+			if (id == null) {
+				XMLMultiModuleApplicationBuilder.logger.warn("'id' attribute is missing in FormManager tag " + ((IFormManager) ob).getId());
+			} else {
+				((Application) application).registerFormManager((String) id, (IFormManager) ob);
+			}
 		}
 	}
 

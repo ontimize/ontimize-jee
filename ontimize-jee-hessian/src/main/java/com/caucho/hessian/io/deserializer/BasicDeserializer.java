@@ -123,7 +123,6 @@ public class BasicDeserializer extends AbstractDeserializer {
 			case NULL:
 				// hessian/3490
 				in.readObject();
-
 				return null;
 
 			case BOOLEAN:
@@ -154,19 +153,11 @@ public class BasicDeserializer extends AbstractDeserializer {
 				return in.readObject();
 
 			case CHARACTER: {
-				String s = in.readString();
-				if ((s == null) || s.equals("")) {
-					return Character.valueOf((char) 0);
-				}
-				return Character.valueOf(s.charAt(0));
+				return this.readObjectCharacter(in);
 			}
 
 			case CHARACTER_OBJECT: {
-				String s = in.readString();
-				if ((s == null) || s.equals("")) {
-					return null;
-				}
-				return Character.valueOf(s.charAt(0));
+				return this.readObjectCharacterObject(in);
 			}
 
 			case DATE:
@@ -179,15 +170,7 @@ public class BasicDeserializer extends AbstractDeserializer {
 				return in.readBytes();
 
 			case CHARACTER_ARRAY: {
-				String s = in.readString();
-
-				if (s == null) {
-					return null;
-				}
-				int len = s.length();
-				char[] chars = new char[len];
-				s.getChars(0, len, chars, 0);
-				return chars;
+				return this.readObjectCharacterArray(in);
 			}
 
 			case BOOLEAN_ARRAY:
@@ -201,6 +184,34 @@ public class BasicDeserializer extends AbstractDeserializer {
 			default:
 				throw new UnsupportedOperationException();
 		}
+	}
+
+	private Object readObjectCharacterArray(AbstractHessianInput in) throws IOException {
+		String s = in.readString();
+
+		if (s == null) {
+			return null;
+		}
+		int len = s.length();
+		char[] chars = new char[len];
+		s.getChars(0, len, chars, 0);
+		return chars;
+	}
+
+	private Object readObjectCharacterObject(AbstractHessianInput in) throws IOException {
+		String s = in.readString();
+		if ((s == null) || s.equals("")) {
+			return null;
+		}
+		return Character.valueOf(s.charAt(0));
+	}
+
+	private Object readObjectCharacter(AbstractHessianInput in) throws IOException {
+		String s = in.readString();
+		if ((s == null) || s.equals("")) {
+			return Character.valueOf((char) 0);
+		}
+		return Character.valueOf(s.charAt(0));
 	}
 
 	protected Object getStringArray(AbstractHessianInput in) throws IOException {
@@ -238,267 +249,283 @@ public class BasicDeserializer extends AbstractDeserializer {
 	@Override
 	public Object readList(AbstractHessianInput in, int length) throws IOException {
 		switch (this.code) {
-			case BOOLEAN_ARRAY: {
-				if (length >= 0) {
-					boolean[] data = new boolean[length];
-
-					in.addRef(data);
-
-					for (int i = 0; i < data.length; i++) {
-						data[i] = in.readBoolean();
-					}
-
-					in.readEnd();
-
-					return data;
-				} else {
-					ArrayList<Boolean> list = new ArrayList<>();
-
-					while (!in.isEnd()) {
-						list.add(Boolean.valueOf(in.readBoolean()));
-					}
-
-					in.readEnd();
-
-					boolean[] data = new boolean[list.size()];
-
-					in.addRef(data);
-
-					for (int i = 0; i < data.length; i++) {
-						data[i] = list.get(i).booleanValue();
-					}
-
-					return data;
-				}
-			}
-
-			case SHORT_ARRAY: {
-				if (length >= 0) {
-					short[] data = new short[length];
-
-					in.addRef(data);
-
-					for (int i = 0; i < data.length; i++) {
-						data[i] = (short) in.readInt();
-					}
-
-					in.readEnd();
-
-					return data;
-				} else {
-					ArrayList<Short> list = new ArrayList<>();
-
-					while (!in.isEnd()) {
-						list.add(Short.valueOf((short) in.readInt()));
-					}
-
-					in.readEnd();
-
-					short[] data = new short[list.size()];
-					for (int i = 0; i < data.length; i++) {
-						data[i] = list.get(i).shortValue();
-					}
-
-					in.addRef(data);
-
-					return data;
-				}
-			}
-
-			case INTEGER_ARRAY: {
-				if (length >= 0) {
-					int[] data = new int[length];
-
-					in.addRef(data);
-
-					for (int i = 0; i < data.length; i++) {
-						data[i] = in.readInt();
-					}
-
-					in.readEnd();
-
-					return data;
-				} else {
-					ArrayList<Integer> list = new ArrayList<>();
-
-					while (!in.isEnd()) {
-						list.add(Integer.valueOf(in.readInt()));
-					}
-
-					in.readEnd();
-
-					int[] data = new int[list.size()];
-					for (int i = 0; i < data.length; i++) {
-						data[i] = list.get(i).intValue();
-					}
-
-					in.addRef(data);
-
-					return data;
-				}
-			}
-
-			case LONG_ARRAY: {
-				if (length >= 0) {
-					long[] data = new long[length];
-
-					in.addRef(data);
-
-					for (int i = 0; i < data.length; i++) {
-						data[i] = in.readLong();
-					}
-
-					in.readEnd();
-
-					return data;
-				} else {
-					ArrayList<Long> list = new ArrayList<>();
-
-					while (!in.isEnd()) {
-						list.add(Long.valueOf(in.readLong()));
-					}
-
-					in.readEnd();
-
-					long[] data = new long[list.size()];
-					for (int i = 0; i < data.length; i++) {
-						data[i] = list.get(i).longValue();
-					}
-
-					in.addRef(data);
-
-					return data;
-				}
-			}
-
-			case FLOAT_ARRAY: {
-				if (length >= 0) {
-					float[] data = new float[length];
-					in.addRef(data);
-
-					for (int i = 0; i < data.length; i++) {
-						data[i] = (float) in.readDouble();
-					}
-
-					in.readEnd();
-
-					return data;
-				} else {
-					ArrayList<Float> list = new ArrayList<>();
-
-					while (!in.isEnd()) {
-						list.add(new Float(in.readDouble()));
-					}
-
-					in.readEnd();
-
-					float[] data = new float[list.size()];
-					for (int i = 0; i < data.length; i++) {
-						data[i] = list.get(i).floatValue();
-					}
-
-					in.addRef(data);
-
-					return data;
-				}
-			}
-
-			case DOUBLE_ARRAY: {
-				if (length >= 0) {
-					double[] data = new double[length];
-					in.addRef(data);
-
-					for (int i = 0; i < data.length; i++) {
-						data[i] = in.readDouble();
-					}
-
-					in.readEnd();
-
-					return data;
-				} else {
-					ArrayList<Double> list = new ArrayList<>();
-
-					while (!in.isEnd()) {
-						list.add(Double.valueOf(in.readDouble()));
-					}
-
-					in.readEnd();
-
-					double[] data = new double[list.size()];
-					in.addRef(data);
-					for (int i = 0; i < data.length; i++) {
-						data[i] = list.get(i).doubleValue();
-					}
-
-					return data;
-				}
-			}
-
-			case STRING_ARRAY: {
-				if (length >= 0) {
-					String[] data = new String[length];
-					in.addRef(data);
-
-					for (int i = 0; i < data.length; i++) {
-						data[i] = in.readString();
-					}
-
-					in.readEnd();
-
-					return data;
-				} else {
-					ArrayList<String> list = new ArrayList<>();
-
-					while (!in.isEnd()) {
-						list.add(in.readString());
-					}
-
-					in.readEnd();
-
-					String[] data = new String[list.size()];
-					in.addRef(data);
-					for (int i = 0; i < data.length; i++) {
-						data[i] = list.get(i);
-					}
-
-					return data;
-				}
-			}
-
-			case OBJECT_ARRAY: {
-				if (length >= 0) {
-					Object[] data = new Object[length];
-					in.addRef(data);
-
-					for (int i = 0; i < data.length; i++) {
-						data[i] = in.readObject();
-					}
-
-					in.readEnd();
-
-					return data;
-				} else {
-					ArrayList<Object> list = new ArrayList<>();
-
-					in.addRef(list); // XXX: potential issues here
-
-					while (!in.isEnd()) {
-						list.add(in.readObject());
-					}
-
-					in.readEnd();
-
-					Object[] data = new Object[list.size()];
-					for (int i = 0; i < data.length; i++) {
-						data[i] = list.get(i);
-					}
-
-					return data;
-				}
-			}
-
+			case BOOLEAN_ARRAY:
+				return this.readListBooleanArray(in, length);
+			case SHORT_ARRAY:
+				return this.readListShortArray(in, length);
+			case INTEGER_ARRAY:
+				return this.readListIntegerArray(in, length);
+			case LONG_ARRAY:
+				return this.readListLongArray(in, length);
+			case FLOAT_ARRAY:
+				return this.readListFloatArray(in, length);
+			case DOUBLE_ARRAY:
+				return this.readListDoubleArray(in, length);
+			case STRING_ARRAY:
+				return this.readListStringArray(in, length);
+			case OBJECT_ARRAY:
+				return this.readListObjectArray(in, length);
 			default:
 				throw new UnsupportedOperationException(String.valueOf(this));
+		}
+	}
+
+	private Object readListObjectArray(AbstractHessianInput in, int length) throws IOException {
+		if (length >= 0) {
+			Object[] data = new Object[length];
+			in.addRef(data);
+
+			for (int i = 0; i < data.length; i++) {
+				data[i] = in.readObject();
+			}
+
+			in.readEnd();
+
+			return data;
+		} else {
+			ArrayList<Object> list = new ArrayList<>();
+
+			in.addRef(list); // XXX: potential issues here
+
+			while (!in.isEnd()) {
+				list.add(in.readObject());
+			}
+
+			in.readEnd();
+
+			Object[] data = new Object[list.size()];
+			for (int i = 0; i < data.length; i++) {
+				data[i] = list.get(i);
+			}
+
+			return data;
+		}
+	}
+
+	private Object readListStringArray(AbstractHessianInput in, int length) throws IOException {
+		if (length >= 0) {
+			String[] data = new String[length];
+			in.addRef(data);
+
+			for (int i = 0; i < data.length; i++) {
+				data[i] = in.readString();
+			}
+
+			in.readEnd();
+
+			return data;
+		} else {
+			ArrayList<String> list = new ArrayList<>();
+
+			while (!in.isEnd()) {
+				list.add(in.readString());
+			}
+
+			in.readEnd();
+
+			String[] data = new String[list.size()];
+			in.addRef(data);
+			for (int i = 0; i < data.length; i++) {
+				data[i] = list.get(i);
+			}
+
+			return data;
+		}
+	}
+
+	private Object readListDoubleArray(AbstractHessianInput in, int length) throws IOException {
+		if (length >= 0) {
+			double[] data = new double[length];
+			in.addRef(data);
+
+			for (int i = 0; i < data.length; i++) {
+				data[i] = in.readDouble();
+			}
+
+			in.readEnd();
+
+			return data;
+		} else {
+			ArrayList<Double> list = new ArrayList<>();
+
+			while (!in.isEnd()) {
+				list.add(Double.valueOf(in.readDouble()));
+			}
+
+			in.readEnd();
+
+			double[] data = new double[list.size()];
+			in.addRef(data);
+			for (int i = 0; i < data.length; i++) {
+				data[i] = list.get(i).doubleValue();
+			}
+
+			return data;
+		}
+	}
+
+	private Object readListFloatArray(AbstractHessianInput in, int length) throws IOException {
+		if (length >= 0) {
+			float[] data = new float[length];
+			in.addRef(data);
+
+			for (int i = 0; i < data.length; i++) {
+				data[i] = (float) in.readDouble();
+			}
+
+			in.readEnd();
+
+			return data;
+		} else {
+			ArrayList<Float> list = new ArrayList<>();
+
+			while (!in.isEnd()) {
+				list.add(new Float(in.readDouble()));
+			}
+
+			in.readEnd();
+
+			float[] data = new float[list.size()];
+			for (int i = 0; i < data.length; i++) {
+				data[i] = list.get(i).floatValue();
+			}
+
+			in.addRef(data);
+
+			return data;
+		}
+	}
+
+	private Object readListLongArray(AbstractHessianInput in, int length) throws IOException {
+		if (length >= 0) {
+			long[] data = new long[length];
+
+			in.addRef(data);
+
+			for (int i = 0; i < data.length; i++) {
+				data[i] = in.readLong();
+			}
+
+			in.readEnd();
+
+			return data;
+		} else {
+			ArrayList<Long> list = new ArrayList<>();
+
+			while (!in.isEnd()) {
+				list.add(Long.valueOf(in.readLong()));
+			}
+
+			in.readEnd();
+
+			long[] data = new long[list.size()];
+			for (int i = 0; i < data.length; i++) {
+				data[i] = list.get(i).longValue();
+			}
+
+			in.addRef(data);
+
+			return data;
+		}
+	}
+
+	private Object readListIntegerArray(AbstractHessianInput in, int length) throws IOException {
+		if (length >= 0) {
+			int[] data = new int[length];
+
+			in.addRef(data);
+
+			for (int i = 0; i < data.length; i++) {
+				data[i] = in.readInt();
+			}
+
+			in.readEnd();
+
+			return data;
+		} else {
+			ArrayList<Integer> list = new ArrayList<>();
+
+			while (!in.isEnd()) {
+				list.add(Integer.valueOf(in.readInt()));
+			}
+
+			in.readEnd();
+
+			int[] data = new int[list.size()];
+			for (int i = 0; i < data.length; i++) {
+				data[i] = list.get(i).intValue();
+			}
+
+			in.addRef(data);
+
+			return data;
+		}
+	}
+
+	private Object readListShortArray(AbstractHessianInput in, int length) throws IOException {
+		if (length >= 0) {
+			short[] data = new short[length];
+
+			in.addRef(data);
+
+			for (int i = 0; i < data.length; i++) {
+				data[i] = (short) in.readInt();
+			}
+
+			in.readEnd();
+
+			return data;
+		} else {
+			ArrayList<Short> list = new ArrayList<>();
+
+			while (!in.isEnd()) {
+				list.add(Short.valueOf((short) in.readInt()));
+			}
+
+			in.readEnd();
+
+			short[] data = new short[list.size()];
+			for (int i = 0; i < data.length; i++) {
+				data[i] = list.get(i).shortValue();
+			}
+
+			in.addRef(data);
+
+			return data;
+		}
+	}
+
+	private Object readListBooleanArray(AbstractHessianInput in, int length) throws IOException {
+		if (length >= 0) {
+			boolean[] data = new boolean[length];
+
+			in.addRef(data);
+
+			for (int i = 0; i < data.length; i++) {
+				data[i] = in.readBoolean();
+			}
+
+			in.readEnd();
+
+			return data;
+		} else {
+			ArrayList<Boolean> list = new ArrayList<>();
+
+			while (!in.isEnd()) {
+				list.add(Boolean.valueOf(in.readBoolean()));
+			}
+
+			in.readEnd();
+
+			boolean[] data = new boolean[list.size()];
+
+			in.addRef(data);
+
+			for (int i = 0; i < data.length; i++) {
+				data[i] = list.get(i).booleanValue();
+			}
+
+			return data;
 		}
 	}
 
