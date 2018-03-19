@@ -564,37 +564,41 @@ public final class ReflectionTools {
 			return true;
 		}
 		if (cls.isPrimitive()) {
-			if (!toClass.isPrimitive()) {
-				return false;
-			}
-			if (Integer.TYPE.equals(cls)) {
-				return Long.TYPE.equals(toClass) || Float.TYPE.equals(toClass) || Double.TYPE.equals(toClass);
-			}
-			if (Long.TYPE.equals(cls)) {
-				return Float.TYPE.equals(toClass) || Double.TYPE.equals(toClass);
-			}
-			if (Boolean.TYPE.equals(cls)) {
-				return false;
-			}
-			if (Double.TYPE.equals(cls)) {
-				return false;
-			}
-			if (Float.TYPE.equals(cls)) {
-				return Double.TYPE.equals(toClass);
-			}
-			if (Character.TYPE.equals(cls)) {
-				return Integer.TYPE.equals(toClass) || Long.TYPE.equals(toClass) || Float.TYPE.equals(toClass) || Double.TYPE.equals(toClass);
-			}
-			if (Short.TYPE.equals(cls)) {
-				return Integer.TYPE.equals(toClass) || Long.TYPE.equals(toClass) || Float.TYPE.equals(toClass) || Double.TYPE.equals(toClass);
-			}
-			if (Byte.TYPE.equals(cls)) {
-				return Short.TYPE.equals(toClass) || Integer.TYPE.equals(toClass) || Long.TYPE.equals(toClass) || Float.TYPE.equals(toClass) || Double.TYPE.equals(toClass);
-			}
-			// should never get here
-			return false;
+			return ReflectionTools.isAssignablePrimitive(cls, toClass);
 		}
 		return toClass.isAssignableFrom(cls);
+	}
+
+	public static boolean isAssignablePrimitive(Class<?> cls, Class<?> toClass) {
+		if (!toClass.isPrimitive()) {
+			return false;
+		}
+		if (Integer.TYPE.equals(cls)) {
+			return Long.TYPE.equals(toClass) || Float.TYPE.equals(toClass) || Double.TYPE.equals(toClass);
+		}
+		if (Long.TYPE.equals(cls)) {
+			return Float.TYPE.equals(toClass) || Double.TYPE.equals(toClass);
+		}
+		if (Boolean.TYPE.equals(cls)) {
+			return false;
+		}
+		if (Double.TYPE.equals(cls)) {
+			return false;
+		}
+		if (Float.TYPE.equals(cls)) {
+			return Double.TYPE.equals(toClass);
+		}
+		if (Character.TYPE.equals(cls)) {
+			return Integer.TYPE.equals(toClass) || Long.TYPE.equals(toClass) || Float.TYPE.equals(toClass) || Double.TYPE.equals(toClass);
+		}
+		if (Short.TYPE.equals(cls)) {
+			return Integer.TYPE.equals(toClass) || Long.TYPE.equals(toClass) || Float.TYPE.equals(toClass) || Double.TYPE.equals(toClass);
+		}
+		if (Byte.TYPE.equals(cls)) {
+			return Short.TYPE.equals(toClass) || Integer.TYPE.equals(toClass) || Long.TYPE.equals(toClass) || Float.TYPE.equals(toClass) || Double.TYPE.equals(toClass);
+		}
+		// should never get here
+		return false;
 	}
 
 	/**

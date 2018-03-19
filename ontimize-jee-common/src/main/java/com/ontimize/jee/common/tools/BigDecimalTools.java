@@ -322,7 +322,7 @@ public final class BigDecimalTools {
 	 * @return the double
 	 */
 	private static double facRecursive(double d) {
-		if ((d == 1.0) || (d == 0.0)) {
+		if ((Double.compare(d, 1.0d) == 0) || (Double.compare(d, 0.0d) == 0)) {
 			return 1.0;
 		} else {
 			return d * BigDecimalTools.facRecursive(d - 1.0);

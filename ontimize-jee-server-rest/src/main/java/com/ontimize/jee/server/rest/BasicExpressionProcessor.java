@@ -111,70 +111,69 @@ public class BasicExpressionProcessor {
 	}
 
 	protected Operator processOperator(Object operatorValue) throws OntimizeJEEException {
-		if (operatorValue instanceof String) {
-			if (BasicExpressionProcessor.OR.equalsIgnoreCase((String) operatorValue)) {
-				return BasicOperator.OR_OP;
-			}
-
-			if (BasicExpressionProcessor.AND.equalsIgnoreCase((String) operatorValue)) {
-				return BasicOperator.AND_OP;
-			}
-
-			if (BasicExpressionProcessor.OR_NOT.equalsIgnoreCase((String) operatorValue)) {
-				return BasicOperator.OR_NOT_OP;
-			}
-
-			if (BasicExpressionProcessor.AND_NOT.equalsIgnoreCase((String) operatorValue)) {
-				return new BasicOperator(BasicOperator.AND_NOT);
-			}
-
-			if (BasicExpressionProcessor.LESS.equalsIgnoreCase((String) operatorValue)) {
-				return new BasicOperator(BasicOperator.LESS);
-			}
-
-			if (BasicExpressionProcessor.LESS_EQUAL.equalsIgnoreCase((String) operatorValue)) {
-				return new BasicOperator(BasicOperator.LESS_EQUAL);
-			}
-
-			if (BasicExpressionProcessor.EQUAL.equalsIgnoreCase((String) operatorValue)) {
-				return new BasicOperator(BasicOperator.EQUAL);
-			}
-
-			if (BasicExpressionProcessor.MORE_EQUAL.equalsIgnoreCase((String) operatorValue)) {
-				return new BasicOperator(BasicOperator.MORE_EQUAL);
-			}
-
-			if (BasicExpressionProcessor.MORE.equalsIgnoreCase((String) operatorValue)) {
-				return new BasicOperator(BasicOperator.MORE);
-			}
-
-			if (BasicExpressionProcessor.NULL.equalsIgnoreCase((String) operatorValue)) {
-				return new BasicOperator(BasicOperator.NULL);
-			}
-
-			if (BasicExpressionProcessor.NOT_EQUAL.equalsIgnoreCase((String) operatorValue)) {
-				return new BasicOperator(BasicOperator.NOT_EQUAL);
-			}
-
-			if (BasicExpressionProcessor.NOT_NULL.equalsIgnoreCase((String) operatorValue)) {
-				return new BasicOperator(BasicOperator.NOT_NULL);
-			}
-
-			if (BasicExpressionProcessor.LIKE.equalsIgnoreCase((String) operatorValue)) {
-				return new BasicOperator(BasicOperator.LIKE);
-			}
-
-			if (BasicExpressionProcessor.NOT_LIKE.equalsIgnoreCase((String) operatorValue)) {
-				return new BasicOperator(BasicOperator.NOT_LIKE);
-			}
-
-			if (BasicExpressionProcessor.IN.equalsIgnoreCase((String) operatorValue)) {
-				return new BasicOperator(SQLStatementBuilder.IN);
-			}
-
-			throw new OntimizeJEEException("operator doesn't defined: " + operatorValue);
-		} else {
+		if (!(operatorValue instanceof String)) {
 			throw new OntimizeJEEException("operator must be a String instance");
 		}
+		if (BasicExpressionProcessor.OR.equalsIgnoreCase((String) operatorValue)) {
+			return BasicOperator.OR_OP;
+		}
+
+		if (BasicExpressionProcessor.AND.equalsIgnoreCase((String) operatorValue)) {
+			return BasicOperator.AND_OP;
+		}
+
+		if (BasicExpressionProcessor.OR_NOT.equalsIgnoreCase((String) operatorValue)) {
+			return BasicOperator.OR_NOT_OP;
+		}
+
+		if (BasicExpressionProcessor.AND_NOT.equalsIgnoreCase((String) operatorValue)) {
+			return new BasicOperator(BasicOperator.AND_NOT);
+		}
+
+		if (BasicExpressionProcessor.LESS.equalsIgnoreCase((String) operatorValue)) {
+			return new BasicOperator(BasicOperator.LESS);
+		}
+
+		if (BasicExpressionProcessor.LESS_EQUAL.equalsIgnoreCase((String) operatorValue)) {
+			return new BasicOperator(BasicOperator.LESS_EQUAL);
+		}
+
+		if (BasicExpressionProcessor.EQUAL.equalsIgnoreCase((String) operatorValue)) {
+			return new BasicOperator(BasicOperator.EQUAL);
+		}
+
+		if (BasicExpressionProcessor.MORE_EQUAL.equalsIgnoreCase((String) operatorValue)) {
+			return new BasicOperator(BasicOperator.MORE_EQUAL);
+		}
+
+		if (BasicExpressionProcessor.MORE.equalsIgnoreCase((String) operatorValue)) {
+			return new BasicOperator(BasicOperator.MORE);
+		}
+
+		if (BasicExpressionProcessor.NULL.equalsIgnoreCase((String) operatorValue)) {
+			return new BasicOperator(BasicOperator.NULL);
+		}
+
+		if (BasicExpressionProcessor.NOT_EQUAL.equalsIgnoreCase((String) operatorValue)) {
+			return new BasicOperator(BasicOperator.NOT_EQUAL);
+		}
+
+		if (BasicExpressionProcessor.NOT_NULL.equalsIgnoreCase((String) operatorValue)) {
+			return new BasicOperator(BasicOperator.NOT_NULL);
+		}
+
+		if (BasicExpressionProcessor.LIKE.equalsIgnoreCase((String) operatorValue)) {
+			return new BasicOperator(BasicOperator.LIKE);
+		}
+
+		if (BasicExpressionProcessor.NOT_LIKE.equalsIgnoreCase((String) operatorValue)) {
+			return new BasicOperator(BasicOperator.NOT_LIKE);
+		}
+
+		if (BasicExpressionProcessor.IN.equalsIgnoreCase((String) operatorValue)) {
+			return new BasicOperator(SQLStatementBuilder.IN);
+		}
+
+		throw new OntimizeJEEException("operator doesn't defined: " + operatorValue);
 	}
 }

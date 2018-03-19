@@ -181,7 +181,7 @@ public class OJeeClientPermissionLocator extends PermissionReferenceLocator {
 			IFormProviderService current = BeansFactory.getBean(IFormProviderService.class);
 			return current.getXMLForm(form);
 		} catch (Exception e) {
-			OJeeClientPermissionLocator.logger.error("Error: {}", e.getMessage());
+			OJeeClientPermissionLocator.logger.error("Error: {}", e.getMessage(), e);
 			return null;
 		}
 	}

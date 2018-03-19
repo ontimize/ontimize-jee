@@ -257,99 +257,98 @@ public class XMLMultiModuleApplicationBuilder extends XMLApplicationBuilder {
 			CustomNode rootNode = new CustomNode(documentClientApplication.getDocumentElement());
 
 			Object application = this.instance(rootNode);
+			if (!(application instanceof Application)) {
+				throw new OntimizeJEERuntimeException("Error: Root is not a com.ontimize.gui.Application instance");
+			}
 
-			if (application instanceof Application) {
-				locator = this.buildLocator(rootNode);
-				if (locator == null) {
-					throw new OntimizeJEERuntimeException("Error: Reference Locator not specified");
-				}
-				((Application) application).setReferencesLocator(locator);
+			locator = this.buildLocator(rootNode);
+			if (locator == null) {
+				throw new OntimizeJEERuntimeException("Error: Reference Locator not specified");
+			}
+			((Application) application).setReferencesLocator(locator);
 
-				// Children of this node must be IFormManager nodes
-				for (int i = 0; i < rootNode.getChildrenNumber(); i++) {
-					Thread.yield();
-					try {
-						CustomNode node = rootNode.child(i);
-						// Creates the object
-						if (node.isTag()) {
-							String tag = node.getNodeInfo();
-							if (tag.equals(XMLApplicationBuilder.MENU)) {
-								String menuFile = node.hashtableAttribute().get("archive");
-								if (menuFile == null) {
-									XMLMultiModuleApplicationBuilder.logger.warn("'archive' parameter is missing in MENU node");
+			// Children of this node must be IFormManager nodes
+			for (int i = 0; i < rootNode.getChildrenNumber(); i++) {
+				Thread.yield();
+				try {
+					CustomNode node = rootNode.child(i);
+					// Creates the object
+					if (node.isTag()) {
+						String tag = node.getNodeInfo();
+						if (tag.equals(XMLApplicationBuilder.MENU)) {
+							String menuFile = node.hashtableAttribute().get("archive");
+							if (menuFile == null) {
+								XMLMultiModuleApplicationBuilder.logger.warn("'archive' parameter is missing in MENU node");
+							} else {
+								menubarDefinitions.add(menuFile);
+							}
+
+						} else if (tag.equals(XMLApplicationBuilder.TOOLBAR)) {
+							String buttonsBarFile = node.hashtableAttribute().get("archive");
+							if (buttonsBarFile == null) {
+								XMLMultiModuleApplicationBuilder.logger.warn("'archive' parameter is missing in TOOLBAR node");
+							} else {
+								toolbarDefinitions.add(buttonsBarFile);
+							}
+
+						} else if (tag.equals(XMLApplicationBuilder.TOOLBARLISTENER)) {
+							ToolBarListener listener = this.buildToolBarListener(node);
+							if (toolbarListener == null) {
+								toolbarListener = (MultiModuleToolBarListener) listener;
+							} else {
+								toolbarListener.addListener((IModuleActionToolBarListener) listener);
+							}
+
+						} else if (tag.equals(XMLApplicationBuilder.MENULISTENER)) {
+							MenuListener listener = this.buildMenuListener(node);
+							if (menuListener == null) {
+								menuListener = (MultiModuleMenuListener) listener;
+							} else {
+								menuListener.addListener((IModuleActionMenuListener) listener);
+							}
+
+						} else if (tag.equals(XMLMultiModuleApplicationBuilder.MODULE)) {
+							XMLMultiModuleApplicationBuilder.logger.trace("skipping Module tag, it was already merged, now it is a meaningless tag");
+						} else if (!XMLApplicationBuilder.REFLOCATOR.equals(tag)) {
+							Object ob = this.buildObject(node, locator, application);
+							if ((ob != null) && (ob instanceof IFormManager)) {
+								Object id = ((IFormManager) ob).getId();
+								if (id == null) {
+									XMLMultiModuleApplicationBuilder.logger.warn("'id' attribute is missing in FormManager tag " + ((IFormManager) ob).getId());
 								} else {
-									menubarDefinitions.add(menuFile);
-								}
-
-							} else if (tag.equals(XMLApplicationBuilder.TOOLBAR)) {
-								String buttonsBarFile = node.hashtableAttribute().get("archive");
-								if (buttonsBarFile == null) {
-									XMLMultiModuleApplicationBuilder.logger.warn("'archive' parameter is missing in TOOLBAR node");
-								} else {
-									toolbarDefinitions.add(buttonsBarFile);
-								}
-
-							} else if (tag.equals(XMLApplicationBuilder.TOOLBARLISTENER)) {
-								ToolBarListener listener = this.buildToolBarListener(node);
-								if (toolbarListener == null) {
-									toolbarListener = (MultiModuleToolBarListener) listener;
-								} else {
-									toolbarListener.addListener((IModuleActionToolBarListener) listener);
-								}
-
-							} else if (tag.equals(XMLApplicationBuilder.MENULISTENER)) {
-								MenuListener listener = this.buildMenuListener(node);
-								if (menuListener == null) {
-									menuListener = (MultiModuleMenuListener) listener;
-								} else {
-									menuListener.addListener((IModuleActionMenuListener) listener);
-								}
-
-							} else if (tag.equals(XMLMultiModuleApplicationBuilder.MODULE)) {
-								XMLMultiModuleApplicationBuilder.logger.trace("skipping Module tag, it was already merged, now it is a meaningless tag");
-							} else if (!XMLApplicationBuilder.REFLOCATOR.equals(tag)) {
-								Object ob = this.buildObject(node, locator, application);
-								if ((ob != null) && (ob instanceof IFormManager)) {
-									Object id = ((IFormManager) ob).getId();
-									if (id == null) {
-										XMLMultiModuleApplicationBuilder.logger.warn("'id' attribute is missing in FormManager tag " + ((IFormManager) ob).getId());
-									} else {
-										((Application) application).registerFormManager((String) id, (IFormManager) ob);
-									}
+									((Application) application).registerFormManager((String) id, (IFormManager) ob);
 								}
 							}
 						}
-					} catch (Exception e) {
-						XMLMultiModuleApplicationBuilder.logger.error(null, e);
 					}
+				} catch (Exception e) {
+					XMLMultiModuleApplicationBuilder.logger.error(null, e);
 				}
-
-				menuBar = this.buildMenuBar(menubarDefinitions);
-				((Application) application).setMenu(menuBar);
-
-				toolbar = this.buildToolBar(toolbarDefinitions);
-				((Application) application).setToolBar(toolbar);
-
-				if ((menuBar != null) && (menuListener != null)) {
-					((Application) application).setMenuListener(menuListener);
-					menuListener.addMenuToListenFor(menuBar);
-					menuListener.setApplication((Application) application);
-					menuListener.setInitialState();
-				} else {
-					XMLMultiModuleApplicationBuilder.logger.warn("Menu Listener not set. Cause: Menu not specified");
-				}
-				if ((toolbar != null) && (toolbarListener != null)) {
-					((Application) application).setToolBarListener(toolbarListener);
-					toolbarListener.addToolBarToListenFor(toolbar);
-					toolbarListener.setApplication((Application) application);
-					toolbarListener.setInitialState();
-				}
-
-				XMLMultiModuleApplicationBuilder.logger.trace("Time elapsed while creating application: {} seconds.", chr.stopSeconds());
-				return (Application) application;
-			} else {
-				throw new OntimizeJEERuntimeException("Error: Root is not a com.ontimize.gui.Application instance");
 			}
+
+			menuBar = this.buildMenuBar(menubarDefinitions);
+			((Application) application).setMenu(menuBar);
+
+			toolbar = this.buildToolBar(toolbarDefinitions);
+			((Application) application).setToolBar(toolbar);
+
+			if ((menuBar != null) && (menuListener != null)) {
+				((Application) application).setMenuListener(menuListener);
+				menuListener.addMenuToListenFor(menuBar);
+				menuListener.setApplication((Application) application);
+				menuListener.setInitialState();
+			} else {
+				XMLMultiModuleApplicationBuilder.logger.warn("Menu Listener not set. Cause: Menu not specified");
+			}
+			if ((toolbar != null) && (toolbarListener != null)) {
+				((Application) application).setToolBarListener(toolbarListener);
+				toolbarListener.addToolBarToListenFor(toolbar);
+				toolbarListener.setApplication((Application) application);
+				toolbarListener.setInitialState();
+			}
+
+			XMLMultiModuleApplicationBuilder.logger.trace("Time elapsed while creating application: {} seconds.", chr.stopSeconds());
+			return (Application) application;
 		} catch (OntimizeJEERuntimeException ex) {
 			throw ex;
 		} catch (Exception e2) {

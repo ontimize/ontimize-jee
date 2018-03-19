@@ -24,38 +24,58 @@ public class DefaultDataConversor implements DataConversor<Object, Object> {
 			return null;
 		}
 		if (toType.equals(Boolean.class)) {
-			if ((input instanceof Boolean) || (input == null)) {
-				return input;
-			}
-			return ParseUtilsExtended.getBoolean(input);
+			return this.convertToBoolean(input);
 		} else if (toType.equals(Integer.class)) {
-			if ((input instanceof Integer) || (input == null)) {
-				return input;
-			}
-			return Integer.valueOf(input.toString());
+			return this.convertToInteter(input);
 		} else if (toType.equals(Long.class)) {
-			if ((input instanceof Long) || (input == null)) {
-				return input;
-			}
-			return Long.valueOf(input.toString());
+			return this.convertToLong(input);
 		} else if (toType.equals(Double.class)) {
-			if ((input instanceof Double) || (input == null)) {
-				return input;
-			}
-			return Double.valueOf(input.toString());
+			return this.convertToDouble(input);
 		} else if (toType.equals(BigDecimal.class)) {
-			if ((input instanceof BigDecimal) || (input == null)) {
-				return input;
-			} else if (input instanceof Integer) {
-				return BigDecimal.valueOf((Integer) input);
-			} else if (input instanceof Long) {
-				return BigDecimal.valueOf((Long) input);
-			} else if (input instanceof Double) {
-				return BigDecimal.valueOf((Double) input);
-			}
-			return BigDecimal.ZERO;
+			return this.convertToBigDecimal(input);
 		}
 		return input;
+	}
+
+	private Object convertToBoolean(Object input) {
+		if ((input instanceof Boolean) || (input == null)) {
+			return input;
+		}
+		return ParseUtilsExtended.getBoolean(input);
+	}
+
+	private Object convertToInteter(Object input) {
+		if ((input instanceof Integer) || (input == null)) {
+			return input;
+		}
+		return Integer.valueOf(input.toString());
+	}
+
+	private Object convertToLong(Object input) {
+		if ((input instanceof Long) || (input == null)) {
+			return input;
+		}
+		return Long.valueOf(input.toString());
+	}
+
+	private Object convertToDouble(Object input) {
+		if ((input instanceof Double) || (input == null)) {
+			return input;
+		}
+		return Double.valueOf(input.toString());
+	}
+
+	private Object convertToBigDecimal(Object input) {
+		if ((input instanceof BigDecimal) || (input == null)) {
+			return input;
+		} else if (input instanceof Integer) {
+			return BigDecimal.valueOf((Integer) input);
+		} else if (input instanceof Long) {
+			return BigDecimal.valueOf((Long) input);
+		} else if (input instanceof Double) {
+			return BigDecimal.valueOf((Double) input);
+		}
+		return BigDecimal.ZERO;
 	}
 
 	/**

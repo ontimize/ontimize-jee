@@ -80,7 +80,7 @@ public class SlideBarAnimation implements ActionListener {
 		 * This may be 0 if millisPassed is small enough
 		 */
 		double i = millisPassed * this.valuePerMilli;
-		if (i == 0) {
+		if (Double.compare(i, 0.0d) == 0) {
 			SlideBarAnimation.logger.debug("WARNING: Animation is incrementing by zero... potential infinite loop");
 			// throw new RuntimeException("CRITICAL ERROR : Animation broken : incrementing by zero... so infinite loop");
 		}

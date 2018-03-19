@@ -253,11 +253,7 @@ public class OntimizeJpaDaoSupport implements ApplicationContextAware, IOntimize
 		List<?> totalData = null;
 		if ((queryTemplateInformation == null) && (((queryId != null) && queryId.equalsIgnoreCase(IOntimizeDaoSupport.DEFAULT_QUERY_KEY)) || (queryId == null))) {
 			if (queryResultClass == null) {
-				if (EntityResult.class.isAssignableFrom(resultStyleClass)) {
-					return (T) this.newEntityResultErrorQueryEntityClassNull();
-				} else {
-					throw new RuntimeException("Entity class is null");
-				}
+				return this.prepareEmptyResult(resultStyleClass);
 			}
 			final String query = this.prepareQuery(QueryTemplateInformation.Syntax.JPQL, null, validAttributes, keysValues, validSort, queryResultClass);
 			selectQuery = this.entityManager.createQuery(query);
@@ -265,11 +261,7 @@ public class OntimizeJpaDaoSupport implements ApplicationContextAware, IOntimize
 			totalData = selectQuery.getResultList();
 		} else if ((queryTemplateInformation != null) && queryTemplateInformation.getSyntax().equals(QueryTemplateInformation.Syntax.JPQL)) { // JPA query style
 			if (queryResultClass == null) {
-				if (EntityResult.class.isAssignableFrom(resultStyleClass)) {
-					return (T) this.newEntityResultErrorQueryEntityClassNull();
-				} else {
-					throw new RuntimeException("Entity class is null");
-				}
+				return this.prepareEmptyResult(resultStyleClass);
 			}
 			final String query = this.prepareQuery(queryTemplateInformation.getSyntax(), queryTemplateInformation, validAttributes, keysValues, validSort, queryResultClass);
 			if (queryTemplateInformation.getResultClass().equals(queryResultClass)) {
@@ -301,7 +293,6 @@ public class OntimizeJpaDaoSupport implements ApplicationContextAware, IOntimize
 				this.adaptQuery(selectQuery);
 				totalData = this.executeQuery(selectQuery, OntimizeJpaUtils.getSelectColumnNames(query), queryTemplateInformation);
 			}
-
 		} else {
 			if (EntityResult.class.isAssignableFrom(resultStyleClass)) {
 				EntityResult result = new EntityResult(EntityResult.OPERATION_WRONG, EntityResult.OPERATION_WRONG, I18NNaming.MC_ERROR_QUERY_TYPE_NOT_KNOWN);
@@ -313,6 +304,10 @@ public class OntimizeJpaDaoSupport implements ApplicationContextAware, IOntimize
 			}
 		}
 
+		return this.prepareResult(validAttributes, resultStyleClass, queryResultClass, selectQuery, totalData);
+	}
+
+	private <T> T prepareResult(final List<String> validAttributes, Class<T> resultStyleClass, Class<?> queryResultClass, Query selectQuery, List<?> totalData) throws Exception {
 		if (EntityResult.class.isAssignableFrom(resultStyleClass)) {
 			EntityResult result = null;
 			if ((totalData != null) && (totalData.size() > 0)) {
@@ -336,6 +331,14 @@ public class OntimizeJpaDaoSupport implements ApplicationContextAware, IOntimize
 			return (T) result;
 		} else {
 			return (T) totalData;
+		}
+	}
+
+	private <T> T prepareEmptyResult(Class<T> resultStyleClass) {
+		if (EntityResult.class.isAssignableFrom(resultStyleClass)) {
+			return (T) this.newEntityResultErrorQueryEntityClassNull();
+		} else {
+			throw new RuntimeException("Entity class is null");
 		}
 	}
 

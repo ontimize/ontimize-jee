@@ -45,49 +45,55 @@ public final class MappingInfoUtils {
 			throw new RuntimeException("Some column mapping for entity '" + entityClazz + "' must be specified");
 		}
 		for (final ColumnMapping cm : columnMapping) {
-			if ((cm.getDbColumn() == null) || cm.getDbColumn().trim().isEmpty()) {
-				throw new RuntimeException("DBColumn for column mapping for entity '" + entityClazz + "' must be specified");
-			} else {
-				if (cm.getBeanAttribute() == null) {
-					if (((cm.getBeanAttributeGetterMethod() == null) || cm.getBeanAttributeGetterMethod().trim().isEmpty()) && ((cm.getBeanAttributeSetterMethod() == null) || cm
-							.getBeanAttributeSetterMethod().trim().isEmpty())) {
-						throw new RuntimeException(
-								"Bean-attribute and/or bean-atribute-getter-method and/or bean-atribute-setter-method for column mapping for entity '" + entityClazz + "', must be specified");
-					}
-				} else if (cm.getBeanAttribute().trim().isEmpty()) {
-					throw new RuntimeException("Bean-attribute for column mapping for entity '" + entityClazz + "', if attribute is specified, then it must contain something");
-				} else {
-					final String getter = MappingInfoUtils.buildGetterMethodName(cm.getBeanAttribute().trim(), cm.getBeanAttributeGetterMethod());
-					final String setter = MappingInfoUtils.buildSetterMethodName(cm.getBeanAttribute().trim(), cm.getBeanAttributeSetterMethod());
-					boolean getterFound = false;
-					boolean setterFound = false;
-					final Method[] methods = entityClass.getMethods();
-					for (final Method m : methods) {
-						if (!getterFound && m.getName().equals(getter) && ((m.getParameterTypes() == null) || (m.getParameterTypes().length == 0))) {
-							getterFound = true;
-						}
-						if (!setterFound && m.getName().equals(setter) && (m.getParameterTypes() != null) && (m.getParameterTypes().length == 1)) {
-							setterFound = true;
-						}
-					}
-					if (getterFound && !setterFound) {
-						throw new RuntimeException("Wrong column mapping (dbcolumn='" + cm
-								.getDbColumn() + "'), no method found for entity '" + entityClazz + "' that matches setter method '" + setter + "' with one argument");
-					} else if (!getterFound && setterFound) {
-						throw new RuntimeException("Wrong column mapping (dbcolumn='" + cm
-								.getDbColumn() + "'), no method found for entity '" + entityClazz + "' that matches getter method '" + getter + "' with none argument, and this field is insertable or updatable");
-					} else if (!getterFound && !setterFound) {
-						throw new RuntimeException("Wrong column mapping (dbcolumn='" + cm
-								.getDbColumn() + "'), any method found for entity '" + entityClazz + "' that matches neither setter method '" + setter + "' with one argument, nor getter method '" + getter + "' with none argument");
-					}
-
-				}
-			}
+			MappingInfoUtils.validateColumnDefinicion(entityClazz, entityClass, cm);
 
 		}
 
 		// TODO more validations here
+	}
 
+	private static void validateColumnDefinicion(final String entityClazz, Class<?> entityClass, final ColumnMapping cm) {
+		if ((cm.getDbColumn() == null) || cm.getDbColumn().trim().isEmpty()) {
+			throw new RuntimeException("DBColumn for column mapping for entity '" + entityClazz + "' must be specified");
+		}
+		if (cm.getBeanAttribute() == null) {
+			if (((cm.getBeanAttributeGetterMethod() == null) || cm.getBeanAttributeGetterMethod().trim().isEmpty()) && ((cm.getBeanAttributeSetterMethod() == null) || cm
+					.getBeanAttributeSetterMethod().trim().isEmpty())) {
+				throw new RuntimeException(
+						"Bean-attribute and/or bean-atribute-getter-method and/or bean-atribute-setter-method for column mapping for entity '" + entityClazz + "', must be specified");
+			}
+		} else if (cm.getBeanAttribute().trim().isEmpty()) {
+			throw new RuntimeException("Bean-attribute for column mapping for entity '" + entityClazz + "', if attribute is specified, then it must contain something");
+		} else {
+			MappingInfoUtils.validateColumnDefinicionGetterSetter(entityClazz, entityClass, cm);
+
+		}
+	}
+
+	private static void validateColumnDefinicionGetterSetter(final String entityClazz, Class<?> entityClass, final ColumnMapping cm) {
+		final String getter = MappingInfoUtils.buildGetterMethodName(cm.getBeanAttribute().trim(), cm.getBeanAttributeGetterMethod());
+		final String setter = MappingInfoUtils.buildSetterMethodName(cm.getBeanAttribute().trim(), cm.getBeanAttributeSetterMethod());
+		boolean getterFound = false;
+		boolean setterFound = false;
+		final Method[] methods = entityClass.getMethods();
+		for (final Method m : methods) {
+			if (!getterFound && m.getName().equals(getter) && ((m.getParameterTypes() == null) || (m.getParameterTypes().length == 0))) {
+				getterFound = true;
+			}
+			if (!setterFound && m.getName().equals(setter) && (m.getParameterTypes() != null) && (m.getParameterTypes().length == 1)) {
+				setterFound = true;
+			}
+		}
+		if (getterFound && !setterFound) {
+			throw new RuntimeException("Wrong column mapping (dbcolumn='" + cm
+					.getDbColumn() + "'), no method found for entity '" + entityClazz + "' that matches setter method '" + setter + "' with one argument");
+		} else if (!getterFound && setterFound) {
+			throw new RuntimeException("Wrong column mapping (dbcolumn='" + cm
+					.getDbColumn() + "'), no method found for entity '" + entityClazz + "' that matches getter method '" + getter + "' with none argument, and this field is insertable or updatable");
+		} else if (!getterFound && !setterFound) {
+			throw new RuntimeException("Wrong column mapping (dbcolumn='" + cm
+					.getDbColumn() + "'), any method found for entity '" + entityClazz + "' that matches neither setter method '" + setter + "' with one argument, nor getter method '" + getter + "' with none argument");
+		}
 	}
 
 	/**
@@ -149,7 +155,7 @@ public final class MappingInfoUtils {
 			final Class<?> forName = Class.forName(returnType2);
 			if (Integer.class.isAssignableFrom(forName) || Long.class.isAssignableFrom(forName) || Double.class.isAssignableFrom(forName) || Float.class
 					.isAssignableFrom(forName) || Short.class.isAssignableFrom(forName) || Character.class.isAssignableFrom(forName) || String.class
-							.isAssignableFrom(forName) || Date.class.isAssignableFrom(forName) || Byte.class.isAssignableFrom(forName) || Boolean.class.isAssignableFrom(forName)) {
+					.isAssignableFrom(forName) || Date.class.isAssignableFrom(forName) || Byte.class.isAssignableFrom(forName) || Boolean.class.isAssignableFrom(forName)) {
 				return true;
 			}
 			return false;

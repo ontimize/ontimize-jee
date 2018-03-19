@@ -24,7 +24,7 @@ public class FormProviderEngine implements IFormProviderService, InitializingBea
 
 		Map<String, String> filter = new HashMap<String, String>();
 
-		if ((form != null) && !this.formProviderFormNameColumn.isEmpty() && !this.formProviderFormNameColumn.isEmpty() && !this.formProviderFormXMLColumn.isEmpty()) {
+		if ((form != null) && !this.formProviderFormNameColumn.isEmpty() && !this.formProviderFormXMLColumn.isEmpty()) {
 			filter.put(this.formProviderFormNameColumn, form);
 			EntityResult toret = this.daoFormProvider.query(filter, Arrays.asList(new String[] { this.formProviderFormXMLColumn }), (List<String>) null, (String) null);
 
