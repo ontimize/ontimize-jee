@@ -33,7 +33,7 @@ public class XMLClientProviderInvocationDelegate extends AbstractInvocationDeleg
 
 	@Override
 	public void reloadXMLMenu(int userId) throws Exception {
-
+		// Do nothing
 	}
 
 	@Override
@@ -43,7 +43,7 @@ public class XMLClientProviderInvocationDelegate extends AbstractInvocationDeleg
 
 	@Override
 	public void reloadXMLToolbar(int userId) throws Exception {
-
+		// Do nothing
 	}
 
 	@Override

@@ -68,7 +68,7 @@ public class TaskResultTableCellEditor extends AbstractCellEditor implements Tab
 
 			@Override
 			public void editingCanceled(ChangeEvent e) {
-
+				// Do nothing
 			}
 		});
 	}

@@ -216,7 +216,7 @@ public class DefaultTask extends Observable implements ITask {
 	 */
 	@Override
 	public void onTaskClicked() {
-
+		// Do nothing
 	}
 
 	/**

@@ -13,7 +13,7 @@ public class TestRemoteOperation extends AbstractRemoteOperation {
 
 	@Override
 	public void init(Object parameters) {
-
+		// Do nothing
 	}
 
 	@Override

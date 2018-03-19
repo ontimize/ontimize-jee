@@ -27,7 +27,7 @@ import javax.swing.Timer;
  * The Class BlockingProgressIndicator.
  */
 public class BlockingProgressIndicator extends JPanel
-        implements ActionListener, WorkerStatusUpdateListener, PropertyChangeListener, MouseListener, MouseMotionListener, FocusListener {
+implements ActionListener, WorkerStatusUpdateListener, PropertyChangeListener, MouseListener, MouseMotionListener, FocusListener {
 
 	public static int					MAX_SIZE_WIDTH				= 300;
 	public static int					MAX_SIZE_HEIGHT				= 175;
@@ -426,27 +426,43 @@ public class BlockingProgressIndicator extends JPanel
 	}
 
 	@Override
-	public void focusGained(FocusEvent fe) {}
+	public void focusGained(FocusEvent fe) {
+		// Do nothing
+	}
 
 	@Override
-	public void mouseDragged(MouseEvent e) {}
+	public void mouseDragged(MouseEvent e) {
+		// Do nothing
+	}
 
 	@Override
-	public void mouseMoved(MouseEvent e) {}
+	public void mouseMoved(MouseEvent e) {
+		// Do nothing
+	}
 
 	@Override
-	public void mouseClicked(MouseEvent e) {}
+	public void mouseClicked(MouseEvent e) {
+		// Do nothing
+	}
 
 	@Override
-	public void mouseEntered(MouseEvent e) {}
+	public void mouseEntered(MouseEvent e) {
+		// Do nothing
+	}
 
 	@Override
-	public void mouseExited(MouseEvent e) {}
+	public void mouseExited(MouseEvent e) {
+		// Do nothing
+	}
 
 	@Override
-	public void mousePressed(MouseEvent e) {}
+	public void mousePressed(MouseEvent e) {
+		// Do nothing
+	}
 
 	@Override
-	public void mouseReleased(MouseEvent e) {}
+	public void mouseReleased(MouseEvent e) {
+		// Do nothing
+	}
 
 }

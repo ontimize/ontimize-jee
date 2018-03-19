@@ -141,7 +141,9 @@ public class BeanPropertyRowMapper<T> implements RowMapper<T> {
 	 * @param bw
 	 *            the BeanWrapper to initialize
 	 */
-	protected void initBeanWrapper(BeanWrapper bw) {}
+	protected void initBeanWrapper(BeanWrapper bw) {
+		// Do nothing
+	}
 
 	/**
 	 * Retrieve a JDBC object value for the specified column. <p>The default implementation calls {@link JdbcUtils#getResultSetValue(java.sql.ResultSet, int, Class)}. Subclasses

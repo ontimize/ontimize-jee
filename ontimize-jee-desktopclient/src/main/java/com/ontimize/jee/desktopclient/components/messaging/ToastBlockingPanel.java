@@ -78,7 +78,9 @@ public class ToastBlockingPanel extends ToastNoblockingPanel implements ActionLi
 	}
 
 	@Override
-	public void setComponentLocale(Locale l) {}
+	public void setComponentLocale(Locale l) {
+		// Do nothing
+	}
 
 	@Override
 	public void setResourceBundle(ResourceBundle resourceBundle) {

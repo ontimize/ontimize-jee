@@ -3,24 +3,17 @@ package com.ontimize.jee.desktopclient.components.servermanagement.managers;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.ontimize.annotation.FormComponent;
 import com.ontimize.gui.BasicInteractionManager;
 import com.ontimize.gui.Form;
 import com.ontimize.gui.button.Button;
 import com.ontimize.gui.field.MemoDataField;
 import com.ontimize.gui.manager.IFormManager;
-import com.ontimize.jee.common.services.servermanagement.IServerManagementService;
-import com.ontimize.jee.desktopclient.spring.BeansFactory;
 
 /**
  * The Class IMLiveLogConsole.
  */
 public class IMLiveLogConsole extends BasicInteractionManager {
-
-	private static final Logger	logger	= LoggerFactory.getLogger(IMLiveLogConsole.class);
 
 	@FormComponent(attr = "CONSOLE")
 	protected MemoDataField		console;
@@ -48,7 +41,6 @@ public class IMLiveLogConsole extends BasicInteractionManager {
 		};
 
 		private LiveLogConsoleActionCommands	actionCommand;
-		private final IServerManagementService	serverManagement;
 		private final MemoDataField				console;
 
 		public LiveLogConsoleListener(MemoDataField console, Button startButton, Button stopButton) {
@@ -56,7 +48,6 @@ public class IMLiveLogConsole extends BasicInteractionManager {
 			this.console = console;
 			startButton.addActionListener(this);
 			stopButton.addActionListener(this);
-			this.serverManagement = BeansFactory.getBean(IServerManagementService.class);
 		}
 
 		@Override

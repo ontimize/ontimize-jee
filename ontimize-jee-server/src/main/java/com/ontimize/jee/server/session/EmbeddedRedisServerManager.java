@@ -13,21 +13,27 @@ public class EmbeddedRedisServerManager implements InitializingBean, Lifecycle {
 	 * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
 	 */
 	@Override
-	public void afterPropertiesSet() throws Exception {}
+	public void afterPropertiesSet() throws Exception {
+		// Do nothing
+	}
 
 	/*
 	 * (non-Javadoc)
 	 * @see org.springframework.context.Lifecycle#start()
 	 */
 	@Override
-	public void start() {}
+	public void start() {
+		// Do nothing
+	}
 
 	/*
 	 * (non-Javadoc)
 	 * @see org.springframework.context.Lifecycle#stop()
 	 */
 	@Override
-	public void stop() {}
+	public void stop() {
+		// Do nothing
+	}
 
 	/*
 	 * (non-Javadoc)

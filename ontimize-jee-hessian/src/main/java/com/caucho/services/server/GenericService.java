@@ -40,7 +40,9 @@ public class GenericService implements Service {
 	/**
 	 * Initialize the service instance.
 	 */
-	public void init() throws ServletException {}
+	public void init() throws ServletException {
+		// Do nothing
+	}
 
 	/**
 	 * Returns the named initialization parameter.
@@ -74,5 +76,7 @@ public class GenericService implements Service {
 	 * Cleanup the service instance.
 	 */
 	@Override
-	public void destroy() {}
+	public void destroy() {
+		// Do nothing
+	}
 }
