@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
 
+import com.caucho.hessian.io.serializer.Serializer;
 import com.caucho.hessian.util.IdentityIntMap;
 
 /**
@@ -1176,7 +1177,7 @@ public class Hessian2Output extends AbstractHessianOutput implements Hessian2Con
 	 *            the integer value to write.
 	 */
 	@Override
-	protected void writeRef(int value) throws IOException {
+	public void writeRef(int value) throws IOException {
 		if (Hessian2Output.SIZE < (this.offset + 16)) {
 			this.flushBuffer();
 		}

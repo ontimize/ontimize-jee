@@ -377,7 +377,7 @@ abstract public class AbstractHessianOutput {
 	 * @param value
 	 *            the integer value to write.
 	 */
-	abstract protected void writeRef(int value) throws IOException;
+	abstract public void writeRef(int value) throws IOException;
 
 	/**
 	 * Removes a reference.

@@ -16,6 +16,11 @@
 
 package com.caucho.hessian.io;
 
+import com.caucho.hessian.io.deserializer.BeanDeserializer;
+import com.caucho.hessian.io.deserializer.Deserializer;
+import com.caucho.hessian.io.serializer.BeanSerializer;
+import com.caucho.hessian.io.serializer.Serializer;
+
 /**
  * Factory for returning serialization methods.
  */

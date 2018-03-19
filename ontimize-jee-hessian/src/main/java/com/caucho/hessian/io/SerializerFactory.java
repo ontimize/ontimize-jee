@@ -36,6 +36,40 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.caucho.hessian.io.deserializer.AnnotationDeserializer;
+import com.caucho.hessian.io.deserializer.ArrayDeserializer;
+import com.caucho.hessian.io.deserializer.BasicDeserializer;
+import com.caucho.hessian.io.deserializer.ClassDeserializer;
+import com.caucho.hessian.io.deserializer.CollectionDeserializer;
+import com.caucho.hessian.io.deserializer.Deserializer;
+import com.caucho.hessian.io.deserializer.EnumDeserializer;
+import com.caucho.hessian.io.deserializer.EnumerationDeserializer;
+import com.caucho.hessian.io.deserializer.InputStreamDeserializer;
+import com.caucho.hessian.io.deserializer.IteratorDeserializer;
+import com.caucho.hessian.io.deserializer.JavaDeserializer;
+import com.caucho.hessian.io.deserializer.MapDeserializer;
+import com.caucho.hessian.io.deserializer.ObjectDeserializer;
+import com.caucho.hessian.io.deserializer.RemoteDeserializer;
+import com.caucho.hessian.io.deserializer.UnsafeDeserializer;
+import com.caucho.hessian.io.serializer.AnnotationSerializer;
+import com.caucho.hessian.io.serializer.ArraySerializer;
+import com.caucho.hessian.io.serializer.BasicSerializer;
+import com.caucho.hessian.io.serializer.CalendarSerializer;
+import com.caucho.hessian.io.serializer.CollectionSerializer;
+import com.caucho.hessian.io.serializer.EnumSerializer;
+import com.caucho.hessian.io.serializer.EnumerationSerializer;
+import com.caucho.hessian.io.serializer.InetAddressSerializer;
+import com.caucho.hessian.io.serializer.InputStreamSerializer;
+import com.caucho.hessian.io.serializer.IteratorSerializer;
+import com.caucho.hessian.io.serializer.JavaSerializer;
+import com.caucho.hessian.io.serializer.MapSerializer;
+import com.caucho.hessian.io.serializer.ObjectSerializer;
+import com.caucho.hessian.io.serializer.RemoteSerializer;
+import com.caucho.hessian.io.serializer.Serializer;
+import com.caucho.hessian.io.serializer.ThrowableSerializer;
+import com.caucho.hessian.io.serializer.UnsafeSerializer;
+import com.caucho.hessian.io.serializer.WriteReplaceSerializer;
+
 /**
  * Factory for returning serialization methods.
  */
@@ -158,9 +192,8 @@ public class SerializerFactory extends AbstractSerializerFactory {
 
 		if (serializer instanceof ObjectSerializer) {
 			return ((ObjectSerializer) serializer).getObjectSerializer();
-		} else {
-			return serializer;
 		}
+		return serializer;
 	}
 
 	/**
@@ -243,17 +276,13 @@ public class SerializerFactory extends AbstractSerializerFactory {
 			if (this.mapSerializer == null) {
 				this.mapSerializer = new MapSerializer();
 			}
-
 			return this.mapSerializer;
 		} else if (Collection.class.isAssignableFrom(cl)) {
 			if (this.collectionSerializer == null) {
 				this.collectionSerializer = new CollectionSerializer();
 			}
-
 			return this.collectionSerializer;
-		}
-
-		else if (cl.isArray()) {
+		} else if (cl.isArray()) {
 			return new ArraySerializer();
 		} else if (Throwable.class.isAssignableFrom(cl)) {
 			return new ThrowableSerializer(cl, this.getClassLoader());
@@ -294,9 +323,8 @@ public class SerializerFactory extends AbstractSerializerFactory {
 
 		if (this.isEnableUnsafeSerializer && (JavaSerializer.getWriteReplace(cl) == null)) {
 			return UnsafeSerializer.create(cl);
-		} else {
-			return JavaSerializer.create(cl);
 		}
+		return JavaSerializer.create(cl);
 	}
 
 	/**
@@ -401,17 +429,13 @@ public class SerializerFactory extends AbstractSerializerFactory {
 	protected Deserializer getCustomDeserializer(Class<?> cl) {
 		try {
 			Class<?> serClass = Class.forName(cl.getName() + "HessianDeserializer", false, cl.getClassLoader());
-
 			Deserializer ser = (Deserializer) serClass.newInstance();
-
 			return ser;
 		} catch (ClassNotFoundException e) {
 			SerializerFactory.log.trace(e.toString(), e);
-
 			return null;
 		} catch (Exception e) {
 			SerializerFactory.log.info(e.toString(), e);
-
 			return null;
 		}
 	}
@@ -432,9 +456,8 @@ public class SerializerFactory extends AbstractSerializerFactory {
 
 		if (this.isEnableUnsafeSerializer) {
 			return new UnsafeDeserializer(cl);
-		} else {
-			return new JavaDeserializer(cl);
 		}
+		return new JavaDeserializer(cl);
 	}
 
 	/**
@@ -445,9 +468,8 @@ public class SerializerFactory extends AbstractSerializerFactory {
 
 		if (deserializer != null) {
 			return deserializer.readList(in, length);
-		} else {
-			return new CollectionDeserializer(ArrayList.class).readList(in, length);
 		}
+		return new CollectionDeserializer(ArrayList.class).readList(in, length);
 	}
 
 	/**

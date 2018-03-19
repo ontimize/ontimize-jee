@@ -33,6 +33,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.caucho.hessian.HessianException;
+import com.caucho.hessian.io.deserializer.AbstractDeserializer;
+import com.caucho.hessian.io.deserializer.BasicDeserializer;
+import com.caucho.hessian.io.deserializer.Deserializer;
+import com.caucho.hessian.io.deserializer.JavaDeserializer;
+import com.caucho.hessian.io.deserializer.SqlDateDeserializer;
+import com.caucho.hessian.io.deserializer.StackTraceElementDeserializer;
+import com.caucho.hessian.io.serializer.AbstractSerializer;
+import com.caucho.hessian.io.serializer.BasicSerializer;
+import com.caucho.hessian.io.serializer.ByteArraySerializer;
+import com.caucho.hessian.io.serializer.ClassSerializer;
+import com.caucho.hessian.io.serializer.InetAddressSerializer;
+import com.caucho.hessian.io.serializer.Serializer;
+import com.caucho.hessian.io.serializer.SqlDateSerializer;
 
 /**
  * The classloader-specific Factory for returning serialization

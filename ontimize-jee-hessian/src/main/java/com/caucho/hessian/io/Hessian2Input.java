@@ -29,6 +29,8 @@ import java.util.HashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.caucho.hessian.io.deserializer.Deserializer;
+
 // @formatter:off
 /**
  * Input stream for Hessian requests.
