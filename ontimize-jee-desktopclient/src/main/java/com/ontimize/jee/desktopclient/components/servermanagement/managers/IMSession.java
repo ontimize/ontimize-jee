@@ -85,12 +85,6 @@ public class IMSession extends BasicInteractionManager {
 								long lastAccessedTime = nextSession.getLastAccessedTime();
 								int maxInactiveIntervalInSeconds = nextSession.getMaxInactiveIntervalInSeconds();
 
-								// Set<String> attributeNames = nextSession.getAttributeNames();
-								// Iterator<String> attrIter = attributeNames.iterator();
-								// while (attrIter.hasNext()) {
-								// String nextAttr = attrIter.next();
-								// }
-
 								Object attribute = nextSession.getAttribute("SPRING_SECURITY_SAVED_REQUEST");
 								res.addRecord(EntityResultTools.keysvalues("USER", id, "IP", attribute != null ? attribute : "", "BEGINDATE", new Date(beginDate), "ENDDATE",
 										new Date(lastAccessedTime), "EXPIRATIONTIME", maxInactiveIntervalInSeconds));

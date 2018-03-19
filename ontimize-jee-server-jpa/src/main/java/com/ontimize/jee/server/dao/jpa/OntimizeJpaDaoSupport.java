@@ -430,9 +430,7 @@ public class OntimizeJpaDaoSupport implements ApplicationContextAware, IOntimize
 
 			EntityResult result = null;
 
-			// final List<String> attrs = new ArrayList<String>(attributesValuesAdapted.keySet());
 			try {
-				// result = OntimizeJpaUtils.transformListToEntityResultBeans(Arrays.asList(entityBean), attrs);
 				// nombre de la columna PK
 				final SingularAttribute<?, ?> id = entity.getId(entity.getIdType().getJavaType());
 				// valor de la PK
@@ -535,7 +533,7 @@ public class OntimizeJpaDaoSupport implements ApplicationContextAware, IOntimize
 							Object valueToSet = e.getValue();
 							Attribute<? super Object, ?> attribute = entity.getAttribute(e.getKey());
 							if ((attribute != null) && attribute.getPersistentAttributeType().equals(PersistentAttributeType.EMBEDDED)) {
-								// if it is an embedded attribute then we must merge values, from e.getValue();
+								// if it is an embedded attribute then we must merge values, from e.getValue()
 								Object currentValue = null;
 								final Method meth2 = BeanUtils.findDeclaredMethodWithMinimalParameters(cl, MappingInfoUtils.buildGetterMethodName(e.getKey(), null));
 								if (meth2 == null) {
@@ -1646,12 +1644,10 @@ public class OntimizeJpaDaoSupport implements ApplicationContextAware, IOntimize
 	 */
 	protected String adaptAttribute(final Object attribute) {
 		if (attribute instanceof TableAttribute) {
-			// return ((TableAttribute) attribute).getEntity(); // see queryotherentities
 			return null;
 		}
 		if (attribute instanceof MultipleTableAttribute) {
 			return null;
-			// return ((MultipleTableAttribute) attribute).getAttribute().toString();
 		}
 		// TODO else controlar los demas tipos de keys que nos pueden pasar aqui
 		// TODO check if entity bean contains attribute, if it doesn't return null;

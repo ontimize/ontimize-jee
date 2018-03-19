@@ -50,7 +50,6 @@ public class OJeeClientPermissionLocator extends PermissionReferenceLocator {
 
 	protected List<ISessionListener>	sessionListeners;
 
-	// protected String authorizationToken;
 	protected UserInformation			userInformation;
 
 	public OJeeClientPermissionLocator(Hashtable params) {

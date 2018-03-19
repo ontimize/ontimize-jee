@@ -30,8 +30,6 @@ public class DefaultLevel extends Table implements Level {
 	private String						nextLevelId;
 	private String						previousLevelId;
 	private String						id;
-	// private Hashtable<?, ?> parentSelectedRowData = null;
-	// private int selectedCount = 0;
 	private boolean						showInMainFormAvailable;
 	private String						displayTextFormat;
 	protected FormatPattern				displayTextFormatPattern;

@@ -62,7 +62,6 @@ public class TreeTabbedDetailForm extends BaseDetailForm {
 		this.form.disableDataFields();
 
 		if (form.getInteractionManager() instanceof BasicInteractionManager) {
-			// ((BasicInteractionManager) form.getInteractionManager()).setDetailForm(true);
 			ReflectionTools.invoke(form.getInteractionManager(), "setDetailForm", true);
 		}
 

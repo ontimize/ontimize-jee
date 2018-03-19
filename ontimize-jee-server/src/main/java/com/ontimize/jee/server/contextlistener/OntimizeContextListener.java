@@ -23,18 +23,7 @@ public class OntimizeContextListener implements ServletContextListener {
 	 */
 	@Override
 	public void contextInitialized(final ServletContextEvent event) {
-
-		// SLF4JBridgeHandler.removeHandlersForRootLogger();
-		// SLF4JBridgeHandler.install();
-
-		// stuff to do when servlet context initialized
-		// try {
-		// ReflectionTools.invoke(Class.forName("org.slf4j.impl.StaticLoggerBinder"), "reset");
-		// ReflectionTools.invoke(LoggerFactory.class, "reset");
-		// } catch (Exception e) {
-		// OntimizeContextListener.logger.error(null, e);
-		// }
-		// OntimizeContextListener.logger.error("Ontimzie context initialized");
+		// Do nothing
 	}
 
 	/**

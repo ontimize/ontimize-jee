@@ -18,8 +18,6 @@ public class DefaultPathManager implements PathManager {
 	private String				separator;
 	private boolean				isDisplayPathHtml;
 
-	// private LevelManager levelManager;
-
 	private Label				label;
 
 	public DefaultPathManager() {
@@ -81,7 +79,6 @@ public class DefaultPathManager implements PathManager {
 
 	@Override
 	public void setLevelManager(LevelManager levelManager) {
-		// this.levelManager = levelManager;
 		// do nothing
 	}
 

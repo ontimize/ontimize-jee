@@ -140,37 +140,37 @@ public class TaskManagerGUI extends javax.swing.JFrame {
 		javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this.getContentPane());
 		this.getContentPane().setLayout(layout);
 		layout.setHorizontalGroup(//
-		        layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup( //
-		                layout.createSequentialGroup()/* .addContainerGap() */.addGroup(//
-		                        layout.createParallelGroup(//
-		                                javax.swing.GroupLayout.Alignment.LEADING).addGroup(//
-		                                        layout.createSequentialGroup().addGap(TaskManagerGUI.GAP_SIZE, TaskManagerGUI.GAP_SIZE, TaskManagerGUI.GAP_SIZE)//
-		                                                .addComponent(this.jbnPause)
-		                                                //
-		                                                .addComponent(this.jbnResume)//
-		                                                .addComponent(this.jbnCancel)//
-		                                                .addComponent(this.cleanSelected).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)//
-		                                                .addComponent(this.cleanFinished).addComponent(this.jbnHide)
-		                                                .addGap(TaskManagerGUI.GAP_SIZE, TaskManagerGUI.GAP_SIZE, TaskManagerGUI.GAP_SIZE))//
-		                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup())//
-		                                .addComponent(this.jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 550, Short.MAX_VALUE))/* .addContainerGap() */
-				));
+				layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup( //
+						layout.createSequentialGroup()/* .addContainerGap() */.addGroup(//
+								layout.createParallelGroup(//
+										javax.swing.GroupLayout.Alignment.LEADING).addGroup(//
+												layout.createSequentialGroup().addGap(TaskManagerGUI.GAP_SIZE, TaskManagerGUI.GAP_SIZE, TaskManagerGUI.GAP_SIZE)//
+												.addComponent(this.jbnPause)
+												//
+												.addComponent(this.jbnResume)//
+												.addComponent(this.jbnCancel)//
+												.addComponent(this.cleanSelected).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)//
+												.addComponent(this.cleanFinished).addComponent(this.jbnHide)
+												.addGap(TaskManagerGUI.GAP_SIZE, TaskManagerGUI.GAP_SIZE, TaskManagerGUI.GAP_SIZE))//
+								.addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup())//
+								.addComponent(this.jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 550, Short.MAX_VALUE))/* .addContainerGap() */
+						));
 
 		layout.linkSize(javax.swing.SwingConstants.HORIZONTAL,
-		        new java.awt.Component[] { this.jbnPause, this.jbnResume, this.jbnCancel, this.cleanSelected, this.cleanFinished, this.jbnHide });
+				new java.awt.Component[] { this.jbnPause, this.jbnResume, this.jbnCancel, this.cleanSelected, this.cleanFinished, this.jbnHide });
 
 		layout.setVerticalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-		        .addGroup(layout.createSequentialGroup()/* .addContainerGap() */.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED) //
-		                .addComponent(this.jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
-		                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED) //
-		                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)//
-		                        .addComponent(this.jbnPause)//
-		                        .addComponent(this.jbnResume)//
-		                        .addComponent(this.jbnCancel)//
-		                        .addComponent(this.cleanSelected)//
-		                        .addComponent(this.cleanFinished)//
-		                        .addComponent(this.jbnHide))//
-		                .addContainerGap()));
+				.addGroup(layout.createSequentialGroup()/* .addContainerGap() */.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED) //
+						.addComponent(this.jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
+						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED) //
+						.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)//
+								.addComponent(this.jbnPause)//
+								.addComponent(this.jbnResume)//
+								.addComponent(this.jbnCancel)//
+								.addComponent(this.cleanSelected)//
+								.addComponent(this.cleanFinished)//
+								.addComponent(this.jbnHide))//
+						.addContainerGap()));
 		this.pack();
 	}
 
@@ -304,49 +304,38 @@ public class TaskManagerGUI extends javax.swing.JFrame {
 		ITask task = this.getSelectedTask();
 		if (task == null) {
 			// No download is selected in table.
-			this.jbnPause.setEnabled(false);
-			this.jbnResume.setEnabled(false);
-			this.jbnCancel.setEnabled(false);
-			this.cleanSelected.setEnabled(false);
+			this.updateButtons(false, false, false, false);
 			return;
 		}
 		TaskStatus status = task.getStatus();
 		switch (status) {
 			case RUNNING:
-				this.jbnPause.setEnabled(true);
-				this.jbnResume.setEnabled(false);
-				this.jbnCancel.setEnabled(true);
-				this.cleanSelected.setEnabled(false);
+				this.updateButtons(true, false, true, false);
 				break;
 			case PAUSED:
-				this.jbnPause.setEnabled(false);
-				this.jbnResume.setEnabled(true);
-				this.jbnCancel.setEnabled(true);
-				this.cleanSelected.setEnabled(false);
+				this.updateButtons(false, true, true, false);
 				break;
 			case ERROR:
-				this.jbnPause.setEnabled(false);
-				this.jbnResume.setEnabled(true);
-				this.jbnCancel.setEnabled(false);
-				this.cleanSelected.setEnabled(true);
+				this.updateButtons(false, true, false, true);
 				break;
 			case COMPLETED:
-				this.jbnPause.setEnabled(false);
-				this.jbnResume.setEnabled(false);
-				this.jbnCancel.setEnabled(false);
-				this.cleanSelected.setEnabled(true);
+				this.updateButtons(false, false, false, true);
 				break;
 			case CANCELLED:
-				this.jbnPause.setEnabled(false);
-				this.jbnResume.setEnabled(false);
-				this.jbnCancel.setEnabled(false);
-				this.cleanSelected.setEnabled(true);
+				this.updateButtons(false, false, false, true);
 				break;
 			case ON_PREPARE:
 				break;
 			default:
 				break;
 		}
+	}
+
+	private void updateButtons(boolean pause, boolean resume, boolean cancel, boolean clean) {
+		this.jbnPause.setEnabled(pause);
+		this.jbnResume.setEnabled(resume);
+		this.jbnCancel.setEnabled(cancel);
+		this.cleanSelected.setEnabled(clean);
 	}
 
 	/**

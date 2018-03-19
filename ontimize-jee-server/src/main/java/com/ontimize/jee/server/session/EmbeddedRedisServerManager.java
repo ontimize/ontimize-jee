@@ -3,8 +3,6 @@ package com.ontimize.jee.server.session;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.Lifecycle;
 
-// import redis.embedded.RedisServer;
-
 /**
  * The Class EmbeddedRedisServerManager.
  */
@@ -37,7 +35,6 @@ public class EmbeddedRedisServerManager implements InitializingBean, Lifecycle {
 	 */
 	@Override
 	public boolean isRunning() {
-		// return this.redisServer.isActive();
 		return false;
 	}
 

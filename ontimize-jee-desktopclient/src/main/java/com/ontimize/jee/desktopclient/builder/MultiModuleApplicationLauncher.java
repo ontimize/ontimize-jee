@@ -111,7 +111,6 @@ public class MultiModuleApplicationLauncher {
 			});
 		} catch (Exception e) {
 			MultiModuleApplicationLauncher.logger.error("ERROR: Application cannot be started", e);
-			// System.exit(-3);
 		}
 	}
 
@@ -179,7 +178,6 @@ public class MultiModuleApplicationLauncher {
 		} catch (Exception e) {
 			MultiModuleApplicationLauncher.logger.error(null, e);
 			MessageDialog.showErrorMessage(null, e.getMessage());
-			// System.exit(-2);
 		}
 	}
 

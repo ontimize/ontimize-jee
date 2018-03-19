@@ -28,7 +28,6 @@ import javafx.scene.web.WebView;
 
 public class LoginIntoOAuth2Component extends Row {
 
-	// private static final String CSS_FILE = "game-forms/components/expression/Expression.css";
 	private static final Logger	logger	= LoggerFactory.getLogger(LoginIntoOAuth2Component.class);
 	private WebView				webView;
 	private JFXPanel			fxPanel;

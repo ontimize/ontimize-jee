@@ -223,7 +223,6 @@ public class DefaultLevelManager extends Column implements LevelManager {
 				public void actionPerformed(ActionEvent e) {
 					DefaultLevelManager.logger.debug("refresh actual table.");
 					DefaultLevelManager.this.show(DefaultLevelManager.this.currentShowLevel);
-					// DefaultLevelManager.this.getLevel(DefaultLevelManager.this.currentShowLevel).reload();
 				}
 			});
 			b = this.bRefresh;
@@ -454,10 +453,6 @@ public class DefaultLevelManager extends Column implements LevelManager {
 
 	private void openDetailForm(IDetailForm detailForm, Level level, int mode) {
 		detailForm.setQueryInsertMode();
-		// if (level != null) {
-		// detailForm.resetParentkeys(level.getParentKeys());
-		// }
-
 		if (mode == InteractionManager.INSERT) {
 			detailForm.setInsertMode();
 		} else if (mode == InteractionManager.QUERY) {

@@ -143,9 +143,6 @@ public class CustomPersistenceAnnotationBeanPostProcessor extends PersistenceAnn
 
 	@Override
 	protected EntityManagerFactory findEntityManagerFactory(final String unitName, final String requestingBeanName) throws NoSuchBeanDefinitionException {
-		// TODO Auto-generated method stub
-		// return super.findEntityManagerFactory(unitName, requestingBeanName);
-
 		if (this.beanFactory == null) {
 			throw new IllegalStateException("ListableBeanFactory required for EntityManagerFactory bean lookup");
 		}
@@ -159,37 +156,4 @@ public class CustomPersistenceAnnotationBeanPostProcessor extends PersistenceAnn
 			return this.findDefaultEntityManagerFactory(requestingBeanName);
 		}
 	}
-
-	// @Override
-	// protected EntityManagerFactory findDefaultEntityManagerFactory(final String requestingBeanName)
-	// throws NoSuchBeanDefinitionException {
-	//
-	// final String[] beanNames =
-	// BeanFactoryUtils.beanNamesForTypeIncludingAncestors(this.beanFactory, EntityManagerFactory.class);
-	// if (this.defaultPersistenceUnitName != null) {
-	// for (final String uName: beanNames){
-	// if (this.defaultPersistenceUnitName.equalsIgnoreCase(uName)) {
-	// final EntityManagerFactory emf = (EntityManagerFactory) this.beanFactory.getBean(uName);
-	// if (this.beanFactory instanceof ConfigurableBeanFactory) {
-	// ((ConfigurableBeanFactory) this.beanFactory).registerDependentBean(uName, requestingBeanName);
-	// }
-	// return emf;
-	// }
-	// }
-	// }
-	// if (beanNames.length == 1) {
-	// final String unitName = beanNames[0];
-	// final EntityManagerFactory emf = (EntityManagerFactory) this.beanFactory.getBean(unitName);
-	// if (this.beanFactory instanceof ConfigurableBeanFactory) {
-	// ((ConfigurableBeanFactory) this.beanFactory).registerDependentBean(unitName, requestingBeanName);
-	// }
-	// return emf;
-	// }
-	// else if (beanNames.length > 1) {
-	// throw new NoUniqueBeanDefinitionException(EntityManagerFactory.class, beanNames);
-	// }
-	// else {
-	// throw new NoSuchBeanDefinitionException(EntityManagerFactory.class);
-	// }
-	// }
 }

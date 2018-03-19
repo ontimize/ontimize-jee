@@ -77,8 +77,6 @@ public class IntMap {
 	public final int get(Object key) {
 		int tmpPrime = this.prime;
 		int hash = this.hashCode(key) % tmpPrime;
-		// int hash = key.hashCode() & mask;
-
 		final Object[] keys = this.keys;
 
 		while (true) {
@@ -100,8 +98,6 @@ public class IntMap {
 	public final int put(Object key, int value, boolean isReplace) {
 		int prime = this.prime;
 		int hash = this.hashCode(key) % prime;
-		// int hash = key.hashCode() % prime;
-
 		Object[] keys = this.keys;
 
 		while (true) {

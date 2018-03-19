@@ -103,8 +103,8 @@ public class DefaultOntimizeDaoHelper implements IOntimizeDaoHelper, Application
 
 		if (!erResult.isWrong()) {
 			// TODO
-			// this.queryOtherEntities(new ArrayList<>(vMultipleTableAttributes), erResult);
-			// erResult = this.deleteMultipleTableAttributesColumns(erResult, attributes, vProcessMultipleAttributes);
+			// this.queryOtherEntities(new ArrayList<>(vMultipleTableAttributes), erResult)
+			// erResult = this.deleteMultipleTableAttributesColumns(erResult, attributes, vProcessMultipleAttributes)
 		}
 
 		return erResult;

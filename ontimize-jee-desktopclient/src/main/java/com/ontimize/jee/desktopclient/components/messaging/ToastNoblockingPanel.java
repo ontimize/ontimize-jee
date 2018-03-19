@@ -361,8 +361,8 @@ public class ToastNoblockingPanel extends AbstractToastPanel {
 		int initBodyTagStart = Math.max(0, s.indexOf("<body>"));
 		int endBodyTag = Math.min(s.length(), s.indexOf("</body>"));
 		s = s.substring(0, initBodyTagStart).replaceAll("\r", "").replaceAll("\n", "").replaceAll(" ", "") + s.substring(initBodyTagStart, endBodyTag + "</body>".length())
-				.replaceAll("\r", "").replaceAll("\n", "").replaceAll("  ", " ")
-				.replaceAll("  ", " ") + s.substring(endBodyTag + "</body>".length()).replaceAll("\r", "").replaceAll("\n", "").replaceAll(" ", "");
+		.replaceAll("\r", "").replaceAll("\n", "").replaceAll("  ", " ")
+		.replaceAll("  ", " ") + s.substring(endBodyTag + "</body>".length()).replaceAll("\r", "").replaceAll("\n", "").replaceAll(" ", "");
 
 		// Drop basic tags
 		s = s.replaceAll("<html>", "").replaceAll("</html>", "").replaceAll("<body>", "").replaceAll("</body>", "").replaceAll("<head>", "").replaceAll("</head>", "")
@@ -415,10 +415,7 @@ public class ToastNoblockingPanel extends AbstractToastPanel {
 		List<String> lines = ToastNoblockingPanel.calculeTextLines(msgText, contentType);
 		for (String s : lines) {
 			if (ToastNoblockingPanel.calculeLineWidth(s, font) > maxWidth) {
-				////////////// TEMP
-				// if (UToastNoblockingPanel.calculeValidSize(s, new Dimension(10, 10), contentType, font)> maxWidth) {
-				// This line is too longer than screen, we need to split, How? if Contains white spaces characters try to divide by it, else force
-				// division at maximum
+				// This line is too longer than screen, we need to split, How? if Contains white spaces characters try to divide by it, else force division at maximum
 				List<String> subLines = this.splitLine(s, font, maxWidth);
 				for (String s2 : subLines) {
 					finalString.append(finalString.length() == 0 ? "" : ToastNoblockingPanel.getDefaultLineSeparator(contentType)).append(s2);

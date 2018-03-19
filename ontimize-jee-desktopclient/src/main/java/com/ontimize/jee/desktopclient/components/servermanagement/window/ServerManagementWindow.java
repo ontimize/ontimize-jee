@@ -154,7 +154,6 @@ public class ServerManagementWindow extends JFrame {
 			form.setInteractionManager(iManager);
 			try {
 				form.setResourceBundle(ResourceBundle.getBundle("ontimize-jee-i18n.bundle"));
-				// form.setResourceBundle(ApplicationManager.getApplicationBundle());
 			} catch (Exception ex) {
 				ServerManagementWindow.logger.warn("Ingores app bundle", ex);
 			}

@@ -74,10 +74,8 @@ public class RemoteApplicationPreferencesInvocationHandler extends AbstractInvoc
 	public void setRemotePreference(int sessionId, String user, String preferenceName, String value) throws Exception {
 		if (user == null) {
 			this.queue.put(new Operation("setDefaultPreference", new Object[] { preferenceName, value }));
-			// this.getRemotePreferencesService().setDefaultPreference(preferenceName, value);
 		} else {
 			this.queue.put(new Operation("setPreference", new Object[] { preferenceName, value }));
-			// this.getRemotePreferencesService().setPreference(preferenceName, value);
 		}
 	}
 
@@ -90,7 +88,6 @@ public class RemoteApplicationPreferencesInvocationHandler extends AbstractInvoc
 		if (!this.isLogged()) {
 			return;
 		}
-		// this.queue.put(new Operation("savePreferences", new Object[] {}));
 		this.getRemotePreferencesService().savePreferences();
 	}
 

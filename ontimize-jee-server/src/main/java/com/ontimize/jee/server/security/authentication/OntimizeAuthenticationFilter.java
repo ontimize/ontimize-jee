@@ -38,8 +38,6 @@ public class OntimizeAuthenticationFilter extends AbstractAuthenticationProcessi
 
 	public static final String										ORIGIN						= "Origin";
 
-	// private final AuthenticationFailureHandler loginFailureHandler = new SimpleUrlAuthenticationFailureHandler();
-
 	protected AuthenticationDetailsSource<HttpServletRequest, ?>	authenticationDetailsSource	= new OntimizeWebAuthenticationDetailsSource();
 	private List<IAuthenticationMechanism>							authenticationMechanismList;
 
@@ -93,7 +91,6 @@ public class OntimizeAuthenticationFilter extends AbstractAuthenticationProcessi
 				this.successfulAuthentication(request, response, chain, authResult);
 			}
 			chain.doFilter(request, response);
-			// sessionStrategy.onAuthentication(authResult, request, response);
 		} catch (InternalAuthenticationServiceException failed) {
 			OntimizeAuthenticationFilter.logger.error("An internal error occurred while trying to authenticate the user.", failed);
 			this.unsuccessfulAuthentication(request, response, failed);
@@ -125,7 +122,6 @@ public class OntimizeAuthenticationFilter extends AbstractAuthenticationProcessi
 					return authentication;
 				}
 			}
-			// this.authenticationEntryPoint.commence(request, response, new InsufficientAuthenticationException("No valid provider found"));
 		} catch (AuthenticationException authEx) {
 			this.authenticationEntryPoint.commence(request, response, authEx);
 		}

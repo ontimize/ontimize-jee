@@ -51,11 +51,8 @@ public class TableAttributeDispatcher extends AbstractAttributeDispatcher<TableA
 	protected EntityResult processQueryAttribute(TableAttribute tableAttribute, EntityResult result, ApplicationContext appContext, int k) {
 		String entityName = tableAttribute.getEntity();
 
-		// TODO tener en cuenta que se puede pedir el número de registros
+		// TODO tener en cuenta que se puede pedir el numero de registros
 		int requestedRecordNumber = tableAttribute.getRecordNumberToInitiallyDownload();
-		// if (!(entity instanceof AdvancedEntity) && requestedRecordNumber > 0) {
-		// logger.warn("Record number has been requested for a table but entity doesn't implement AdvancedEntity");
-		// }
 
 		// For each record compose filters
 		Map<Object, Object> finalKeysValues = this.collectKeysValues(tableAttribute, result, k);
@@ -68,7 +65,7 @@ public class TableAttributeDispatcher extends AbstractAttributeDispatcher<TableA
 			TableAttributeDispatcher.logger.error(" UNIMPLEMENTED TABLEATTRIBUTE WITH \"RECORDNUMBERTOINITIALLYDOWNLOAD\" LENGTH.");
 			// TODO implementar esta query
 			// res = ((AdvancedEntity)entity).query(hOtherKeysValues, (Vector)((Hashtable) oAttribute).get(sKey), otherEntitySessionId, requestedRecordNumber, 0, ((TableAttribute)
-			// oAttribute).getOrderBy());
+			// oAttribute).getOrderBy())
 		}
 		return res;
 	}
@@ -86,11 +83,11 @@ public class TableAttributeDispatcher extends AbstractAttributeDispatcher<TableA
 			Vector<?> vKeyValues = (Vector<?>) result.get(parentkeyColumn);
 			if (vKeyValues == null) {
 				TableAttributeDispatcher.logger.warn(" RESULT VECTOR NOT FOUND IN QUERY RESULT NEITHER FOR PARENTKEY: '{}' NOR FOR: '{}'. CHECK CONFIGURATION.", parentkeys.get(j),
-				        parentkeyColumn);
+						parentkeyColumn);
 			}
 			Object oOtherKeyValue = vKeyValues == null ? null : vKeyValues.get(k);
 			TableAttributeDispatcher.logger.trace("The entity \"{}\" receives the value \"{}\" for the column with alias \"{}\"", tableAttribute.getEntity(), oOtherKeyValue,
-			        parentkeyColumn);
+					parentkeyColumn);
 
 			if (oOtherKeyValue != null) {
 				finalKeysValues.put(tableAttribute.getParentkeyEquivalence(parentkeys.get(j).toString()), oOtherKeyValue);
@@ -115,7 +112,7 @@ public class TableAttributeDispatcher extends AbstractAttributeDispatcher<TableA
 	 */
 	@Override
 	public EntityResult processInsertAttribute(TableAttribute attribute, InsertOperation insertOperation, Map<?, ?> generatedKeysInParentEntity,
-	        Map<?, ?> attributesValuesInsertedInParentEntity, ApplicationContext applicationContext) {
+			Map<?, ?> attributesValuesInsertedInParentEntity, ApplicationContext applicationContext) {
 		String entityName = attribute.getEntity();
 		if (entityName != null) {
 			Map<?, ?> valuesToInsert = insertOperation.getValuesToInsert();
@@ -142,7 +139,7 @@ public class TableAttributeDispatcher extends AbstractAttributeDispatcher<TableA
 	 */
 	@Override
 	public EntityResult processUpdateAttribute(TableAttribute attribute, UpdateOperation updateOperation, Map<?, ?> generatedValuesInParentEntity, Map<?, ?> valuesInParentEntity,
-	        ApplicationContext applicationContext) {
+			ApplicationContext applicationContext) {
 		String entityName = attribute.getEntity();
 		if (entityName != null) {
 			Map<?, ?> valuesToUpdate = updateOperation.getValuesToUpdate();
@@ -169,7 +166,7 @@ public class TableAttributeDispatcher extends AbstractAttributeDispatcher<TableA
 	 */
 	@Override
 	public EntityResult processDeleteAttribute(TableAttribute attribute, DeleteOperation deleteOperation, Map<?, ?> generatedValuesInParentEntity, Map<?, ?> filterInParentEntity,
-	        ApplicationContext applicationContext) {
+			ApplicationContext applicationContext) {
 		String entityName = attribute.getEntity();
 		if (entityName != null) {
 			Map<?, ?> filter = deleteOperation.getFilter();

@@ -295,11 +295,8 @@ public class TreeTabbedFormManager extends BaseFormManager implements ITreeTabbe
 	protected JComponent createCenterPanel() {
 		this.tabbedPane = new FormTabbedPane();
 
-		// this.cardPanel = new JPanel(new CardLayout());
-
 		if (this.managedTreeTableColumn == null) {
 			return this.tabbedPane;
-			// return this.cardPanel;
 		} else {
 			this.splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT) {
 
@@ -353,7 +350,7 @@ public class TreeTabbedFormManager extends BaseFormManager implements ITreeTabbe
 
 		if (Tree.PREFERRED_WIDTH == -1) {
 			this.managedTreeTableColumn.getGUIComponent()
-					.setPreferredSize(new Dimension(treeTableColumn.getGUIComponent().getPreferredSize().width + 60, this.treeTableScrollPane.getPreferredSize().height));
+			.setPreferredSize(new Dimension(treeTableColumn.getGUIComponent().getPreferredSize().width + 60, this.treeTableScrollPane.getPreferredSize().height));
 		} else {
 			this.managedTreeTableColumn.getGUIComponent().setPreferredSize(new Dimension(Tree.PREFERRED_WIDTH, this.treeTableScrollPane.getPreferredSize().height));
 		}
@@ -800,17 +797,7 @@ public class TreeTabbedFormManager extends BaseFormManager implements ITreeTabbe
 	}
 
 	protected void registerApplicationPreferencesListener() {
-		// if (!this.preferenceListenersRegistered) {
-		// if ((this.aPreferences != null) && (this.managedTreeTableColumn != null)) {
-		// this.aPreferences.addApplicationPreferencesListener(this.managedTreeTableColumn);
-		// String user = null;
-		// if ((this.locator != null) && (this.locator instanceof ClientReferenceLocator)) {
-		// user = ((ClientReferenceLocator) this.locator).getUser();
-		// }
-		// this.managedTreeTableColumn.initPreferences(this.aPreferences, user);
-		// this.preferenceListenersRegistered = true;
-		// }
-		// }
+		// Nothing
 	}
 
 	@Override

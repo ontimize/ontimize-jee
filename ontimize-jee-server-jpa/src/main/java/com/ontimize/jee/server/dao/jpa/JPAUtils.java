@@ -888,127 +888,12 @@ public final class JPAUtils {
 			msg = cause.getMessage();
 		}
 
-		// try {
-		// if (cause instanceof ConstraintException) {
-		// final ConstraintException cex = (ConstraintException) cause;
-		// final List<ConstraintFailure> failures = cex.getConstraintFailures();
-		// if (failures.size() >= 1) {
-		// msg = failures.get(0).getConstraintMessage();
-		// final List<String> allConstraintMsg = new ArrayList<String>();
-		// for (final ConstraintFailure failure : cex.getConstraintFailures()) {
-		// final String msgCode = failure.getConstraintMessage();
-		// if ((msgCode != null) && (msgCode.length() > 0)) {
-		// allConstraintMsg.add(msgCode);
-		// }
-		// }
-		// if (allConstraintMsg.size() > 0) {
-		// messages.put(DefaultParametersJpa.LIST_ABL_CONSTRAINT_MESSAGES, allConstraintMsg);
-		// }
-		// }
-		// }
-		// } catch (final Exception ex) {
-		// if (JPAUtils.DEBUG) {
-		// logger.error(null,ex);
-		// }
-		// } catch (final Error er) {
-		// if (JPAUtils.DEBUG) {
-		// er.printStackTrace();
-		// }
-		// }
 		if ((msg == null) || (msg.length() <= 0)) {
 			msg = msgDefault;
 		}
 		messages.put(OntimizeJpaNaming.EXCEPTION_MESSAGE_DB_ERROR, msg);
 		return messages;
 	}
-
-	// /**
-	// * If there is columns with '.' change the values of these columns to references of beans.
-	// * E.g.: If attributesValues = {profile.idprofile = 3, profile.name="admin"} then we change these two colums with
-	// the instance of Profiles
-	// * with idProfile=3 and name="admin" ->attributesValues = {profile = Profile(3,admin)}
-	// *
-	// * @param attributesValues A list of name columns.
-	// * @param entityBean The main bean of any Entity.
-	// * @param em The transaction reference
-	// * @return A new list of attributesValues with ManyToOne related beans.
-	// * @throws Exception
-	// */
-	// public static Hashtable checkEmbeddedAttributesValuesOneBean(Hashtable<Object, Object> attributesValues,
-	// EntityManager em, String entityBean, String queryEntityBean, int operation) throws Exception{
-	// return HibernateUtils.checkEmbeddedAttributesValuesOneBean(attributesValues, em, entityBean, queryEntityBean,
-	// operation);
-	// }
-	//
-	// /**
-	// * Check if the values in "attributesValues" represents the information of a related bean with "entityClass" bean.
-	// * @param attributesValues The information from client.
-	// * @param manyToOneRelations The relations @ManyToOne of an entity class bean.
-	// * @param em Transaction
-	// * @param entityClass Some entity EntityClass bean.
-	// * @param queyEntityClass Some entity QueryEntityClass bean.
-	// * @return A hastable with valid values of "attributesValues"
-	// * @throws Exception
-	// */
-	// public static Hashtable checkManyOneAttributesValues(Hashtable<Object, Object> attributesValues,
-	// Hashtable<Object, BeanManyToOneDetails> manyToOneRelations, EntityManager em, String entityClass, String
-	// queyEntityClass) throws Exception{
-	// Hashtable validAttributesValues = (Hashtable) attributesValues.clone();
-	// if(entityClass.equals(queyEntityClass))//One bean
-	// return checkManyOneAttributesValuesOneBean(validAttributesValues, entityClass, em);
-	// else return checkManyOneAttributesValuesTwoBeans(validAttributesValues, manyToOneRelations, em);
-	// }
-	//
-	// /**
-	// * If there is columns with '.' change the values of these columns to references of beans.
-	// * E.g.: If attributesValues = {profile.idprofile = 3, profile.name="admin"} then we change these two colums with
-	// the instance of Profiles
-	// * with idProfile=3 and name="admin" ->attributesValues = {profile = Profile(3,admin)}
-	// *
-	// * @param attributesValues A list of name columns.
-	// * @param entityBean The main bean of any Entity.
-	// * @param em The transaction reference
-	// * @return A new list of attributesValues with ManyToOne related beans.
-	// * @throws Exception
-	// */
-	// public static Hashtable checkManyOneAttributesValuesOneBean(
-	// Hashtable<Object, Object> attributesValues, String entityBean, EntityManager em) throws Exception{
-	// return HibernateUtils.checkManyOneAttributesValuesOneBean(attributesValues, entityBean, em);
-	// }
-	//
-	//
-	// /**
-	// * Check if the values in "attributesValues" represents the information of a related bean with "entityClass" bean.
-	// * @param oneToOneRelations The relations @OneToOne of an entity class bean.
-	// * @param em The transaction reference
-	// * @param entityClass Some entity EntityClass bean.
-	// * @param operation Indicate if the operation is a query/update/delete.
-	// * @return A hastable with valid values of "attributesValues".
-	// * @throws Exception
-	// */
-	// public static Hashtable checkOneOneAttributesValues( Hashtable validAttValues, Hashtable<Object,
-	// BeanManyToOneDetails> oneToOneRelations,
-	// EntityManager em, String entityClass, String queryEntityClass, int operation) throws Exception{
-	// return HibernateUtils.checkOneOneAttributesValues(validAttValues, oneToOneRelations, em, entityClass,
-	// queryEntityClass, operation);
-	// }
-	//
-	// /**
-	// * If there is columns with '.' change the values of these columns to references of beans.
-	// * E.g.: If attributesValues = {profile.idprofile = 3, profile.name="admin"} then we change these two colums with
-	// the instance of Profiles
-	// * with idProfile=3 and name="admin" ->attributesValues = {profile = Profile(3,admin)}
-	// *
-	// * @param attributesValues A list of name columns.
-	// * @param entityBean The main bean of any Entity.
-	// * @param em The transaction reference
-	// * @return A new list of attributesValues with ManyToOne related beans.
-	// * @throws Exception
-	// */
-	// public static Hashtable checkOneOneAttributesValuesOneBean(
-	// Hashtable<Object, Object> attributesValues, String entityBean, EntityManager em, int operation) throws Exception{
-	// return HibernateUtils.checkOneOneAttributesValuesOneBean(attributesValues, entityBean, em, operation);
-	// }
 
 	/**
 	 * Get a list of embedded attributes in entityClass.

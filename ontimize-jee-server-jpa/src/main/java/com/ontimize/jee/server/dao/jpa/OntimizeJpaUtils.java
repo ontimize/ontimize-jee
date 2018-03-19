@@ -528,7 +528,6 @@ public final class OntimizeJpaUtils {
 				final SingularAttribute<?, ?> idClassAttribute = entity.getId(idType.getJavaType());
 				// TODO convertir tipos primitivos
 				return DataConversorsUtil.convert(realKeys.get(idClassAttribute.getName()), idType.getJavaType());
-				// return realKeys.get(idClassAttribute.getName());
 			} else {
 				Class<?> idTypeClass = idType.getJavaType();
 				Object entityBean = BeanUtils.instantiate(idTypeClass);

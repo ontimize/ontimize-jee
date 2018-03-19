@@ -57,16 +57,6 @@ public class RemoteOperationDelegate implements IRemoteOperationListener {
 			this.operation.setListener(this);
 			this.operation.init(parameters);
 
-			// TODO incluir la capa de autorización
-			// ProxyFactory proxyFactory = new ProxyFactory(this.operation);
-			// //falta rellenar el MethdSecurityInterceptor
-			// proxyFactory.addAdvice(new MethodSecurityInterceptor());
-			// this.operation = (IRemoteOperation) proxyFactory.getProxy();
-
-			// this.remoteOperationManager = (IRemoteOperationManager) this.context.getAutowireCapableBeanFactory().createBean(
-			// DefaultRemoteOperationManager.class);
-			// configureBean(this.remoteOperationManager, "defaultRemoteOperationManager");
-
 			this.status = RemoteOperationStatus.WAITING;
 			this.onOperationStep(-1, -1, -1, null, null);
 		} catch (Exception e) {

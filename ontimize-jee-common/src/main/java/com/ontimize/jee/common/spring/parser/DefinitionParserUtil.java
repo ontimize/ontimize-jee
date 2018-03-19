@@ -111,7 +111,6 @@ public final class DefinitionParserUtil {
 				deps.add(((Element) node).getAttribute("bean"));
 				parentBean.setDependsOn(deps.toArray(new String[deps.size()]));
 				return DefinitionParserUtil.parseReferenceValue(ctx, (Element) node, "bean");
-				// return ctx.getRegistry().getBeanDefinition(node.getAttributes().getNamedItem("bean").getTextContent());
 			}
 			// We need to create the bean
 			else if (tagName.equals("bean")) {
@@ -129,24 +128,6 @@ public final class DefinitionParserUtil {
 				}
 				return bdHolder.getBeanDefinition();
 
-				// // There is no quick little util I could find to create a bean
-				// // on the fly programmatically in Spring and still support all
-				// // Spring functionality so basically I mimic what Spring actually
-				// // does but on a smaller scale. Everything Spring allows is
-				// // still supported
-				//
-				// // Create a factory to make the bean
-				// DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
-				// // Set up a parser for the bean
-				// BeanDefinitionParserDelegate pd = new BeanDefinitionParserDelegate(ctx.getReaderContext());
-				// // Parse the bean get its information, now in a DefintionHolder
-				// BeanDefinitionHolder bh = pd.parseBeanDefinitionElement(elem, parentBean);
-				// // Register the bean will all the other beans Spring is aware of
-				// BeanDefinitionReaderUtils.registerBeanDefinition(bh, beanFactory);
-				// // Get the bean from the factory. This will allows Spring
-				// // to do all its work (EL processing, scope, etc) and give us
-				// // the actual bean itself
-				// return beanFactory.getBean(bh.getBeanName());
 			}
 			/*
 			 * This is handled a bit differently in that it actually sets the property on the parent bean for us based on the property

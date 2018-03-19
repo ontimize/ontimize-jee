@@ -7,7 +7,6 @@ public abstract class AbstractIdentifiedOntimizeTest extends AbstractOntimizeTes
 	@Override
 	protected String getServiceBaseUrl() {
 		return "http://127.0.0.1:9999/rexunta/services/hessian";
-		// return "http://10.7.0.70:8080/gasim/services/hessian";
 	}
 
 	@Override

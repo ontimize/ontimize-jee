@@ -39,16 +39,16 @@ public class StatusInformationPanel extends JPanel {
 	private static final Logger	logger		= LoggerFactory.getLogger(StatusInformationPanel.class);
 
 	/** The font. */
-	public static Font			font		= CancelOperationDialog.font;							// Font.decode("Arial-REGULAR-14");
+	public static Font			font		= CancelOperationDialog.font;
 
 	/** The foreground. */
-	public static Color			foreground	= CancelOperationDialog.foreground;						// Color.white;
+	public static Color			foreground	= CancelOperationDialog.foreground;
 
 	/** The background. */
-	public static Color			background	= CancelOperationDialog.background;						// new Color(0x222222);
+	public static Color			background	= CancelOperationDialog.background;
 
 	/** The border color. */
-	public static Color			borderColor	= CancelOperationDialog.borderColor;					// Color.white;
+	public static Color			borderColor	= CancelOperationDialog.borderColor;
 
 	// Para que cargue la fuente y la primera vez no tarde en mostrarlo
 	{
@@ -222,45 +222,45 @@ public class StatusInformationPanel extends JPanel {
 		boolean				increasing			= true;
 		Runnable			indeterminateTask	= new Runnable() {
 
-													@Override
-													public void run() {
-														while (StatusInformationProgressBar.this.customIndeterminate && StatusInformationProgressBar.this.isShowing()) {
-															try {
-																SwingUtilities.invokeAndWait(new Runnable() {
+			@Override
+			public void run() {
+				while (StatusInformationProgressBar.this.customIndeterminate && StatusInformationProgressBar.this.isShowing()) {
+					try {
+						SwingUtilities.invokeAndWait(new Runnable() {
 
-																											@Override
-																											public void run() {
-																												synchronized (StatusInformationProgressBar.this) {
-																													if (!StatusInformationProgressBar.this.customIndeterminate) {
-																														return;
-																													}
+							@Override
+							public void run() {
+								synchronized (StatusInformationProgressBar.this) {
+									if (!StatusInformationProgressBar.this.customIndeterminate) {
+										return;
+									}
 
-																													StatusInformationProgressBar.this.setMinimum(0);
-																													StatusInformationProgressBar.this.setMaximum(
-																															StatusInformationProgressBar.this.getWidth());
-																													// Paint progress panel
-																													int value = StatusInformationProgressBar.this.getValue();
-																													if ((value < StatusInformationProgressBar.this
-																															.getWidth()) && StatusInformationProgressBar.this.increasing) {
-																														StatusInformationProgressBar.this.setValue(value + 5);
-																													} else {
-																														StatusInformationProgressBar.this.increasing = false;
-																														StatusInformationProgressBar.this.setValue(value - 5);
-																														if (value <= 0) {
-																															StatusInformationProgressBar.this.increasing = true;
-																														}
-																													}
-																												}
-																												StatusInformationProgressBar.this.repaint();
-																											}
-																										});
-																Thread.sleep(StatusInformationProgressBar.this.updateTime);
-															} catch (Exception e) {
-																StatusInformationPanel.logger.trace(null, e);
-															}
-														}
-													}
-												};
+									StatusInformationProgressBar.this.setMinimum(0);
+									StatusInformationProgressBar.this.setMaximum(
+											StatusInformationProgressBar.this.getWidth());
+									// Paint progress panel
+									int value = StatusInformationProgressBar.this.getValue();
+									if ((value < StatusInformationProgressBar.this
+											.getWidth()) && StatusInformationProgressBar.this.increasing) {
+										StatusInformationProgressBar.this.setValue(value + 5);
+									} else {
+										StatusInformationProgressBar.this.increasing = false;
+										StatusInformationProgressBar.this.setValue(value - 5);
+										if (value <= 0) {
+											StatusInformationProgressBar.this.increasing = true;
+										}
+									}
+								}
+								StatusInformationProgressBar.this.repaint();
+							}
+						});
+						Thread.sleep(StatusInformationProgressBar.this.updateTime);
+					} catch (Exception e) {
+						StatusInformationPanel.logger.trace(null, e);
+					}
+				}
+			}
+		};
 
 		public StatusInformationProgressBar() {
 			super();

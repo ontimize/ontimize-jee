@@ -68,9 +68,6 @@ public abstract class AbstractGenericCache<K, V> {
 			}
 			if (cachedItem == null) {
 				// TODO hacer que el valor del cached item sea un future
-				// synchronized (this) {
-				// cachedItem = this.cache.get(key);
-				// if (cachedItem == null) {
 				cachedItem = new CachedItem<>();
 				final V result = this.requestData(key);
 				if (result != null) {
@@ -81,8 +78,6 @@ public abstract class AbstractGenericCache<K, V> {
 				} else {
 					return null;
 				}
-				// }
-				// }
 			} else {
 				AbstractGenericCache.logger.debug("Acierto de cache para la clave: " + key + ". Valor: " + cachedItem.getValue());
 			}

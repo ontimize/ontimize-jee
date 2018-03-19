@@ -55,15 +55,6 @@ public class OntimizeConfigurationBeanDefinitionParser extends AbstractSingleBea
 			builder.addPropertyValue("remoteOperationConfiguration", ro.parse(remoteOperation, nestedCtx));
 		}
 
-		// // Support for dms
-		// Element dms = DomUtils.getChildElementByTagName(element, "dms");
-		// if (dms != null) {
-		// // Just make a new Parser for each one and let the parser do the work
-		// DMSBeanDefinitionParser ro = new DMSBeanDefinitionParser();
-		// builder.addPropertyValue("dmsConfiguration", ro.parse(dms,
-		// nestedCtx));
-		// }
-
 		// Support for authentication and authorization
 		Element security = DomUtils.getChildElementByTagName(element, OntimizeConfigurationBeanDefinitionParser.SECURITY_ATTR);
 		if (security != null) {
@@ -91,8 +82,7 @@ public class OntimizeConfigurationBeanDefinitionParser extends AbstractSingleBea
 		// Support form provider
 		Element formProvider = DomUtils.getChildElementByTagName(element, OntimizeConfigurationBeanDefinitionParser.REMOTE_FORM_PROVIDER);
 		if (formProvider != null) {
-			// Just make a new Parser for each one and let the parser do the
-			// work
+			// Just make a new Parser for each one and let the parser do the work
 			FormProviderBeanDefinitionParser ro = new FormProviderBeanDefinitionParser();
 			builder.addPropertyValue("formProviderConfiguration", ro.parse(formProvider, nestedCtx));
 		}
@@ -100,8 +90,7 @@ public class OntimizeConfigurationBeanDefinitionParser extends AbstractSingleBea
 		// Support share preferences
 		Element sharePreferences = DomUtils.getChildElementByTagName(element, OntimizeConfigurationBeanDefinitionParser.REMOTE_SHARE_PREFERENCES);
 		if (sharePreferences != null) {
-			// Just make a new Parser for each one and let the parser do the
-			// work
+			// Just make a new Parser for each one and let the parser do the work
 			SharePreferencesBeanDefinitionParser ro = new SharePreferencesBeanDefinitionParser();
 			builder.addPropertyValue("sharePreferencesConfiguration", ro.parse(sharePreferences, nestedCtx));
 		}
@@ -114,15 +103,5 @@ public class OntimizeConfigurationBeanDefinitionParser extends AbstractSingleBea
 			builder.addPropertyValue("mailConfiguration", ro.parse(mail, nestedCtx));
 		}
 		builder.setLazyInit(true);
-
-		// // Support for report
-		// Element report = DomUtils.getChildElementByTagName(element,
-		// "report");
-		// if (report != null) {
-		// // Just make a new Parser for each one and let the parser do the work
-		// ReportBeanDefinitionParser ro = new ReportBeanDefinitionParser();
-		// builder.addPropertyValue("reportStoreConfiguration", ro.parse(report,
-		// nestedCtx));
-		// }
 	}
 }

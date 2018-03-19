@@ -71,7 +71,6 @@ public class SlideBarSection extends JPanel {
 		});
 
 		// absolute layout
-		// setLayout(null);
 		this.setLayout(new BorderLayout());
 
 		this.add(this.titlePanel, BorderLayout.NORTH);
@@ -93,7 +92,6 @@ public class SlideBarSection extends JPanel {
 		this.titlePanel.add(new JLabel(icon), BorderLayout.WEST);
 		this.titlePanel.add(sliderbarLabel);
 		this.setMinimumSize(new Dimension(this.minComponentWidth, this.minComponentHeight));
-		// component.setPreferredSize(new Dimension(0,0));
 
 		this.add(component, BorderLayout.CENTER);
 		this.revalidate();
@@ -260,62 +258,82 @@ public class SlideBarSection extends JPanel {
 
 			switch (direction) {
 				case NORTH:
-					for (i = 0; i < size; i++) {
-						g.drawLine(mid - i, i, mid + i, i);
-					}
-					if (!isEnabled) {
-						g.setColor(this.highlight);
-						g.drawLine((mid - i) + 2, i, mid + i, i);
-					}
+					this.paintTriangleNorth(g, size, isEnabled, mid);
 					break;
 				case SOUTH:
-					if (!isEnabled) {
-						g.translate(1, 1);
-						g.setColor(this.highlight);
-						for (i = size - 1; i >= 0; i--) {
-							g.drawLine(mid - i, j, mid + i, j);
-							j++;
-						}
-						g.translate(-1, -1);
-						g.setColor(this.shadow);
-					}
-
-					j = 0;
-					for (i = size - 1; i >= 0; i--) {
-						g.drawLine(mid - i, j, mid + i, j);
-						j++;
-					}
+					this.paintTriangleSouth(g, size, isEnabled, mid, j);
 					break;
 				case WEST:
-					for (i = 0; i < size; i++) {
-						g.drawLine(i, mid - i, i, mid + i);
-					}
-					if (!isEnabled) {
-						g.setColor(this.highlight);
-						g.drawLine(i, (mid - i) + 2, i, mid + i);
-					}
+					this.paintTriangleWest(g, size, isEnabled, mid);
 					break;
 				case EAST:
-					if (!isEnabled) {
-						g.translate(1, 1);
-						g.setColor(this.highlight);
-						for (i = size - 1; i >= 0; i--) {
-							g.drawLine(j, mid - i, j, mid + i);
-							j++;
-						}
-						g.translate(-1, -1);
-						g.setColor(this.shadow);
-					}
-
-					j = 0;
-					for (i = size - 1; i >= 0; i--) {
-						g.drawLine(j, mid - i, j, mid + i);
-						j++;
-					}
+					this.paintTriangleEast(g, size, isEnabled, mid, j);
 					break;
 			}
 			g.translate(-x, -y);
 			g.setColor(oldColor);
+		}
+
+		private void paintTriangleEast(Graphics g, int size, boolean isEnabled, int mid, int j) {
+			int i;
+			if (!isEnabled) {
+				g.translate(1, 1);
+				g.setColor(this.highlight);
+				for (i = size - 1; i >= 0; i--) {
+					g.drawLine(j, mid - i, j, mid + i);
+					j++;
+				}
+				g.translate(-1, -1);
+				g.setColor(this.shadow);
+			}
+
+			j = 0;
+			for (i = size - 1; i >= 0; i--) {
+				g.drawLine(j, mid - i, j, mid + i);
+				j++;
+			}
+		}
+
+		private void paintTriangleWest(Graphics g, int size, boolean isEnabled, int mid) {
+			int i;
+			for (i = 0; i < size; i++) {
+				g.drawLine(i, mid - i, i, mid + i);
+			}
+			if (!isEnabled) {
+				g.setColor(this.highlight);
+				g.drawLine(i, (mid - i) + 2, i, mid + i);
+			}
+		}
+
+		private void paintTriangleSouth(Graphics g, int size, boolean isEnabled, int mid, int j) {
+			int i;
+			if (!isEnabled) {
+				g.translate(1, 1);
+				g.setColor(this.highlight);
+				for (i = size - 1; i >= 0; i--) {
+					g.drawLine(mid - i, j, mid + i, j);
+					j++;
+				}
+				g.translate(-1, -1);
+				g.setColor(this.shadow);
+			}
+
+			j = 0;
+			for (i = size - 1; i >= 0; i--) {
+				g.drawLine(mid - i, j, mid + i, j);
+				j++;
+			}
+		}
+
+		private void paintTriangleNorth(Graphics g, int size, boolean isEnabled, int mid) {
+			int i;
+			for (i = 0; i < size; i++) {
+				g.drawLine(mid - i, i, mid + i, i);
+			}
+			if (!isEnabled) {
+				g.setColor(this.highlight);
+				g.drawLine((mid - i) + 2, i, mid + i, i);
+			}
 		}
 
 		public void changeDirection(int d) {

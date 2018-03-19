@@ -83,7 +83,7 @@ public abstract class AbstractQLConditionValuesProcessor implements QLConditionV
 				// Check wildcards:
 				if (oValue instanceof String) {
 					sbStringQuery = this.appendStringComparisonClause(sbStringQuery, (String) oKey, (String) oValue, isLast, encloseColumnName,
-					        (wildcards == null) || wildcards.isEmpty() || wildcards.contains(oKey));
+							(wildcards == null) || wildcards.isEmpty() || wildcards.contains(oKey));
 				} else if (oValue instanceof SearchValue) {
 					sbStringQuery = this.addSearchValue(sbStringQuery, (String) oKey, (SearchValue) oValue, isLast, encloseColumnName);
 				} else if (oValue instanceof NoWildCard) {
@@ -102,7 +102,7 @@ public abstract class AbstractQLConditionValuesProcessor implements QLConditionV
 	}
 
 	protected StringBuilder appendStringComparisonClause(final StringBuilder sbStringQuery, final String oKey, final String oValue, final boolean isLast,
-	        final boolean encloseColumnName, final boolean wildcarded) {
+			final boolean encloseColumnName, final boolean wildcarded) {
 		String targetValue = "'" + oValue + "'";
 		StringBuilder sbStringQueryInner = sbStringQuery;
 
@@ -144,9 +144,7 @@ public abstract class AbstractQLConditionValuesProcessor implements QLConditionV
 			sbStringQueryInner.append(SQLStatementBuilder.OPEN_PARENTHESIS);
 		}
 
-		// sbStringQueryInner.append("'");
 		sbStringQueryInner.append(targetValue);
-		// sbStringQueryInner.append("'");
 		if (this.upperLike) {
 			sbStringQueryInner.append(SQLStatementBuilder.CLOSE_PARENTHESIS);
 		}
@@ -206,7 +204,7 @@ public abstract class AbstractQLConditionValuesProcessor implements QLConditionV
 		final Object oSearchValue = oValue.getValue();
 		if ((oSearchValue instanceof List) && !((List<?>) oSearchValue).isEmpty()) {
 			final List<?> vSearchValues = (List<?>) oSearchValue;
-			// Here the query;
+			// Here the query
 			sbStringQueryInner.append(SQLStatementBuilder.OPEN_PARENTHESIS);
 			for (int vs = 0; vs < vSearchValues.size(); vs++) {
 				String lastOperatorToAppend = null;
@@ -258,7 +256,7 @@ public abstract class AbstractQLConditionValuesProcessor implements QLConditionV
 	}
 
 	private StringBuilder appendInAndExistsClause(final String oKey, final Object oSearchValue, String condition, final boolean encloseColumnName,
-	        StringBuilder sbStringQueryInner) {
+			StringBuilder sbStringQueryInner) {
 		// If it is IN, then value is a vector with
 		// Objects
 		if (oSearchValue instanceof List) {
@@ -354,7 +352,7 @@ public abstract class AbstractQLConditionValuesProcessor implements QLConditionV
 	}
 
 	protected StringBuilder addColumnValue(final StringBuilder sbStringQuery, final String oKey, final Object objectValue, final String lastOperatorToAppend,
-	        final boolean encloseColumnName) {
+			final boolean encloseColumnName) {
 		StringBuilder sbStringQueryInner = sbStringQuery;
 		if ((objectValue != null) && !(objectValue instanceof NullValue)) {
 			if (objectValue instanceof List) {

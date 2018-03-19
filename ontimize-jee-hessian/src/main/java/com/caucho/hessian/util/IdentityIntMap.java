@@ -73,8 +73,6 @@ public class IdentityIntMap {
 	public final int get(Object key) {
 		int prime = this.prime;
 		int hash = System.identityHashCode(key) % prime;
-		// int hash = key.hashCode() & mask;
-
 		final Object[] keys = this.keys;
 
 		while (true) {
@@ -96,8 +94,6 @@ public class IdentityIntMap {
 	public final int put(Object key, int value, boolean isReplace) {
 		int prime = this.prime;
 		int hash = Math.abs(System.identityHashCode(key) % prime);
-		// int hash = key.hashCode() % prime;
-
 		Object[] keys = this.keys;
 
 		while (true) {
