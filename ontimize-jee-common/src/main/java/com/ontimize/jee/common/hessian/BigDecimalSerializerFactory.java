@@ -4,12 +4,12 @@ import java.io.IOException;
 import java.math.BigDecimal;
 
 import com.caucho.hessian.io.AbstractHessianOutput;
-import com.caucho.hessian.io.AbstractSerializer;
 import com.caucho.hessian.io.AbstractSerializerFactory;
-import com.caucho.hessian.io.AbstractStringValueDeserializer;
-import com.caucho.hessian.io.Deserializer;
 import com.caucho.hessian.io.HessianProtocolException;
-import com.caucho.hessian.io.Serializer;
+import com.caucho.hessian.io.deserializer.AbstractStringValueDeserializer;
+import com.caucho.hessian.io.deserializer.Deserializer;
+import com.caucho.hessian.io.serializer.AbstractSerializer;
+import com.caucho.hessian.io.serializer.Serializer;
 
 public class BigDecimalSerializerFactory extends AbstractSerializerFactory {
 

@@ -8,14 +8,14 @@ package com.ontimize.jee.common.hessian;
 
 import java.io.InputStream;
 
-import com.caucho.hessian.io.CustomJavaDeserializer;
-import com.caucho.hessian.io.CustomUnsafeDeserializer;
-import com.caucho.hessian.io.Deserializer;
-import com.caucho.hessian.io.InputStreamDeserializer;
 import com.caucho.hessian.io.OntimizeSerializerFactory;
 import com.caucho.hessian.io.SerializerFactory;
-import com.caucho.hessian.io.UnsafeDeserializer;
-import com.caucho.hessian.io.UnsafeSerializer;
+import com.caucho.hessian.io.deserializer.CustomJavaDeserializer;
+import com.caucho.hessian.io.deserializer.CustomUnsafeDeserializer;
+import com.caucho.hessian.io.deserializer.Deserializer;
+import com.caucho.hessian.io.deserializer.InputStreamDeserializer;
+import com.caucho.hessian.io.deserializer.UnsafeDeserializer;
+import com.caucho.hessian.io.serializer.UnsafeSerializer;
 
 /**
  * The Class CustomSerializerFactory.
