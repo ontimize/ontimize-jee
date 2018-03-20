@@ -575,7 +575,7 @@ public class SerializerFactory extends AbstractSerializerFactory {
 	 * Returns a deserializer based on a string type.
 	 */
 	public Deserializer getDeserializer(String type) throws HessianProtocolException {
-		if ((type == null) || type.equals("")) {
+		if ((type == null) || "".equals(type)) {
 			return null;
 		}
 

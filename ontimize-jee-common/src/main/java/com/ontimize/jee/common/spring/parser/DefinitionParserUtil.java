@@ -86,11 +86,11 @@ public final class DefinitionParserUtil {
 			Element elem = (Element) node;
 			String tagName = node.getLocalName();
 
-			if (tagName.equals("value")) {
+			if ("value".equals(tagName)) {
 				String val = node.getTextContent();
 				// to get around an issue with Spring Batch not parsing Spring EL
 				// we will do it for them
-				if (scope.equals("step") && val.startsWith("#{") && val.endsWith("}") && !val.startsWith("#{jobParameters")) {
+				if ("step".equals(scope) && val.startsWith("#{") && val.endsWith("}") && !val.startsWith("#{jobParameters")) {
 					// Set up a new EL parser
 					ExpressionParser parser = new SpelExpressionParser();
 					// Parse the value
@@ -103,7 +103,7 @@ public final class DefinitionParserUtil {
 				}
 			}
 			// Either of these is a just a lookup of an existing bean
-			else if (tagName.equals("ref") || tagName.equals("idref")) {
+			else if ("ref".equals(tagName) || "idref".equals(tagName)) {
 				List<String> deps = new ArrayList<>();
 				if (parentBean.getDependsOn() != null) {
 					deps.addAll(Arrays.asList(parentBean.getDependsOn()));
@@ -113,7 +113,7 @@ public final class DefinitionParserUtil {
 				return DefinitionParserUtil.parseReferenceValue(ctx, (Element) node, "bean");
 			}
 			// We need to create the bean
-			else if (tagName.equals("bean")) {
+			else if ("bean".equals(tagName)) {
 				BeanDefinitionHolder bdHolder = ctx.getDelegate().parseBeanDefinitionElement(elem);
 				if (bdHolder != null) {
 					bdHolder = ctx.getDelegate().decorateBeanDefinitionIfRequired(elem, bdHolder);
@@ -132,7 +132,7 @@ public final class DefinitionParserUtil {
 			/*
 			 * This is handled a bit differently in that it actually sets the property on the parent bean for us based on the property
 			 */
-			else if (tagName.equals("property")) {
+			else if ("property".equals(tagName)) {
 				BeanDefinitionParserDelegate pd = new BeanDefinitionParserDelegate(ctx.getReaderContext());
 				// This method actually set eh property on the parentBean for us so
 				// we don't have to add anything to the objects object

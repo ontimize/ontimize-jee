@@ -54,11 +54,11 @@ public class ArraySerializer extends AbstractSerializer {
 
 		String name = cl.getName();
 
-		if (name.equals("java.lang.String")) {
+		if ("java.lang.String".equals(name)) {
 			return "string";
-		} else if (name.equals("java.lang.Object")) {
+		} else if ("java.lang.Object".equals(name)) {
 			return "object";
-		} else if (name.equals("java.util.Date")) {
+		} else if ("java.util.Date".equals(name)) {
 			return "date";
 		} else {
 			return name;

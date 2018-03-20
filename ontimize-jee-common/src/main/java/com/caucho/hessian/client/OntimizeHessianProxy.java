@@ -71,7 +71,7 @@ public class OntimizeHessianProxy extends HessianProxy {
 			Class<?>[] params = method.getParameterTypes();
 
 			// equals and hashCode are special cased
-			if (methodName.equals("equals") && (params.length == 1) && params[0].equals(Object.class)) {
+			if ("equals".equals(methodName) && (params.length == 1) && params[0].equals(Object.class)) {
 				Object value = args[0];
 				if ((value == null) || !Proxy.isProxyClass(value.getClass())) {
 					return Boolean.FALSE;
@@ -88,13 +88,13 @@ public class OntimizeHessianProxy extends HessianProxy {
 				// JOK: este es el motivo de sobrescribir el metodo: el URL.equals que hay en la version original es lentisimo en segun que
 				// circunstancias, es necesario cambiarlo por URI.equals
 				return Boolean.valueOf(this.getURL().equals(handler.getURL()));
-			} else if (methodName.equals("hashCode") && (params.length == 0)) {
+			} else if ("hashCode".equals(methodName) && (params.length == 0)) {
 				return Integer.valueOf(this.getURL().hashCode());
-			} else if (methodName.equals("getHessianType")) {
+			} else if ("getHessianType".equals(methodName)) {
 				return proxy.getClass().getInterfaces()[0].getName();
-			} else if (methodName.equals("getHessianURL")) {
+			} else if ("getHessianURL".equals(methodName)) {
 				return this.getURL().toString();
-			} else if (methodName.equals("toString") && (params.length == 0)) {
+			} else if ("toString".equals(methodName) && (params.length == 0)) {
 				return "HessianProxy[" + this.getURL() + "]";
 			}
 
@@ -134,7 +134,7 @@ public class OntimizeHessianProxy extends HessianProxy {
 					/* + */value = new ResultInputStream(conn, is, in, (InputStream) value);
 					/* + */is = null;
 					/* + */conn = null;
-					/* + */}
+				/* + */}
 				return value;
 			} else if (code == 'r') {
 				int major = is.read();
@@ -225,7 +225,7 @@ public class OntimizeHessianProxy extends HessianProxy {
 
 		conn = this.getFactory().getConnectionFactory().open(this.getURL());
 		if ((args != null) && (args.length > 0) && (args[args.length - 1] instanceof InputStream) && (conn instanceof OntimizeHessianURLConnection) && (((OntimizeHessianURLConnection) conn)
-		        .getUnderlinedConnection() instanceof HttpURLConnection)) {
+				.getUnderlinedConnection() instanceof HttpURLConnection)) {
 			((HttpURLConnection) ((OntimizeHessianURLConnection) conn).getUnderlinedConnection()).setChunkedStreamingMode(0);
 		}
 		boolean isValid = false;

@@ -287,7 +287,7 @@ public class HessianServlet extends HttpServlet {
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpServletResponse res = (HttpServletResponse) response;
 
-		if (!req.getMethod().equals("POST")) {
+		if (!"POST".equals(req.getMethod())) {
 			res.setStatus(500); // , "Hessian Requires POST");
 			PrintWriter out = res.getWriter();
 

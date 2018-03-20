@@ -413,13 +413,13 @@ public class HessianProxyFactory implements ServiceProxyFactory, ObjectFactory {
 			String type = addr.getType();
 			String value = (String) addr.getContent();
 
-			if (type.equals("type")) {
+			if ("type".equals(type)) {
 				api = value;
-			} else if (type.equals("url")) {
+			} else if ("url".equals(type)) {
 				url = value;
-			} else if (type.equals("user")) {
+			} else if ("user".equals(type)) {
 				this.setUser(value);
-			} else if (type.equals("password")) {
+			} else if ("password".equals(type)) {
 				this.setPassword(value);
 			}
 		}

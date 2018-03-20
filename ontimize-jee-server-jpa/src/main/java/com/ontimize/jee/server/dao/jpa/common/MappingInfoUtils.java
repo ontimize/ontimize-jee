@@ -149,7 +149,7 @@ public final class MappingInfoUtils {
 	 */
 	public static Boolean isPrimitive(final String returnType2) {
 		try {
-			if (returnType2.equalsIgnoreCase("byte[]")) {
+			if ("byte[]".equalsIgnoreCase(returnType2)) {
 				return true;
 			}
 			final Class<?> forName = Class.forName(returnType2);

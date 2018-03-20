@@ -466,7 +466,7 @@ public class UnsafeSerializer extends AbstractSerializer {
 			Class<?> unsafeClass = Class.forName("sun.misc.Unsafe");
 			Field theUnsafe = null;
 			for (Field field : unsafeClass.getDeclaredFields()) {
-				if (field.getName().equals("theUnsafe")) {
+				if ("theUnsafe".equals(field.getName())) {
 					theUnsafe = field;
 				}
 			}

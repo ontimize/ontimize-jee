@@ -59,7 +59,7 @@ public class EnumDeserializer extends AbstractDeserializer {
 		while (!in.isEnd()) {
 			String key = in.readString();
 
-			if (key.equals("name")) {
+			if ("name".equals(key)) {
 				name = in.readString();
 			} else {
 				in.readObject();

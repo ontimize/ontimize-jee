@@ -70,11 +70,11 @@ public class LocaleSerializerFactory extends AbstractSerializerFactory {
 			while (!in.isEnd()) {
 				String key = in.readString();
 
-				if (key.equals("language")) {
+				if ("language".equals(key)) {
 					languageValue = in.readString();
-				} else if (key.equals("country")) {
+				} else if ("country".equals(key)) {
 					countryValue = in.readString();
-				} else if (key.equals("variant")) {
+				} else if ("variant".equals(key)) {
 					variantValue = in.readString();
 				} else {
 					in.readString();
@@ -103,11 +103,11 @@ public class LocaleSerializerFactory extends AbstractSerializerFactory {
 			String variantValue = null;
 
 			for (Object key : fields) {
-				if (key.equals("language")) {
+				if ("language".equals(key)) {
 					languageValue = in.readString();
-				} else if (key.equals("country")) {
+				} else if ("country".equals(key)) {
 					countryValue = in.readString();
-				} else if (key.equals("variant")) {
+				} else if ("variant".equals(key)) {
 					variantValue = in.readString();
 				} else {
 					in.readObject();

@@ -41,13 +41,13 @@ public class AnnotationInvocationHandler implements InvocationHandler {
 
 		boolean zeroArgs = (args == null) || (args.length == 0);
 
-		if (name.equals("annotationType") && zeroArgs) {
+		if ("annotationType".equals(name) && zeroArgs) {
 			return this.annType;
-		} else if (name.equals("toString") && zeroArgs) {
+		} else if ("toString".equals(name) && zeroArgs) {
 			return this.toString();
-		} else if (name.equals("hashCode") && zeroArgs) {
+		} else if ("hashCode".equals(name) && zeroArgs) {
 			return this.doHashCode();
-		} else if (name.equals("equals") && !zeroArgs && (args.length == 1)) {
+		} else if ("equals".equals(name) && !zeroArgs && (args.length == 1)) {
 			return this.doEquals(args[0]);
 		} else if (!zeroArgs) {
 			return null;

@@ -98,7 +98,7 @@ public class HessianProxy implements InvocationHandler, Serializable {
 			Class<?>[] params = method.getParameterTypes();
 
 			// equals and hashCode are special cased
-			if (methodName.equals("equals") && (params.length == 1) && params[0].equals(Object.class)) {
+			if ("equals".equals(methodName) && (params.length == 1) && params[0].equals(Object.class)) {
 				Object value = args[0];
 				if ((value == null) || !Proxy.isProxyClass(value.getClass())) {
 					return Boolean.FALSE;
@@ -113,13 +113,13 @@ public class HessianProxy implements InvocationHandler, Serializable {
 				HessianProxy handler = (HessianProxy) proxyHandler;
 
 				return new Boolean(this.url.equals(handler.getURL()));
-			} else if (methodName.equals("hashCode") && (params.length == 0)) {
+			} else if ("hashCode".equals(methodName) && (params.length == 0)) {
 				return new Integer(this.url.hashCode());
-			} else if (methodName.equals("getHessianType")) {
+			} else if ("getHessianType".equals(methodName)) {
 				return proxy.getClass().getInterfaces()[0].getName();
-			} else if (methodName.equals("getHessianURL")) {
+			} else if ("getHessianURL".equals(methodName)) {
 				return this.url.toString();
-			} else if (methodName.equals("toString") && (params.length == 0)) {
+			} else if ("toString".equals(methodName) && (params.length == 0)) {
 				return "HessianProxy[" + this.url + "]";
 			}
 

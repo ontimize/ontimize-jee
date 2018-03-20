@@ -38,7 +38,7 @@ abstract public class AbstractStreamDeserializer extends AbstractDeserializer {
 		while (!in.isEnd()) {
 			String key = in.readString();
 
-			if (key.equals("value")) {
+			if ("value".equals(key)) {
 				value = this.readStreamValue(in);
 			} else {
 				in.readObject();

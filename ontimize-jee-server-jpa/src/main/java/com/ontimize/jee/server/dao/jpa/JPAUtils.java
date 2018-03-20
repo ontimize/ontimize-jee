@@ -142,7 +142,7 @@ public final class JPAUtils {
 		final PropertyDescriptor[] propertyDescriptors = Introspector.getBeanInfo(beanClass).getPropertyDescriptors();
 		final int len = propertyDescriptors.length;
 		for (int i = 0; i < len; i++) {
-			if (propertyDescriptors[i].getName().equalsIgnoreCase("class")) {
+			if ("class".equalsIgnoreCase(propertyDescriptors[i].getName())) {
 				continue;
 			}
 			final Field field = JPAUtils.getDeclaredFieldByName(beanClass, propertyDescriptors[i].getName());
@@ -187,7 +187,7 @@ public final class JPAUtils {
 		final PropertyDescriptor[] propertyDescriptors = Introspector.getBeanInfo(beanClass).getPropertyDescriptors();
 		final int len = propertyDescriptors.length;
 		for (int i = 0; i < len; i++) {
-			if (propertyDescriptors[i].getName().equalsIgnoreCase("class")) {
+			if ("class".equalsIgnoreCase(propertyDescriptors[i].getName())) {
 				continue;
 			}
 			final Field field = JPAUtils.getDeclaredFieldByName(beanClass, propertyDescriptors[i].getName());
@@ -239,7 +239,7 @@ public final class JPAUtils {
 		final PropertyDescriptor[] propertyDescriptors = Introspector.getBeanInfo(beanClass).getPropertyDescriptors();
 		final int len = propertyDescriptors.length;
 		for (int i = 0; i < len; i++) {
-			if (propertyDescriptors[i].getName().equalsIgnoreCase("class")) {
+			if ("class".equalsIgnoreCase(propertyDescriptors[i].getName())) {
 				continue;
 			}
 			final Field field = JPAUtils.getDeclaredFieldByName(beanClass, propertyDescriptors[i].getName());
@@ -370,7 +370,7 @@ public final class JPAUtils {
 		final PropertyDescriptor[] propertyDescriptors = Introspector.getBeanInfo(beanClass).getPropertyDescriptors();
 		final int len = propertyDescriptors.length;
 		for (int i = 0; i < len; i++) {
-			if (propertyDescriptors[i].getName().equalsIgnoreCase("class")) {
+			if ("class".equalsIgnoreCase(propertyDescriptors[i].getName())) {
 				continue;
 			}
 			final Field field = JPAUtils.getDeclaredFieldByName(beanClass, propertyDescriptors[i].getName());
@@ -426,7 +426,7 @@ public final class JPAUtils {
 
 		final int len = propertyDescriptors.length - 1;
 		for (int i = len; i >= 0; i--) {
-			if (propertyDescriptors[i].getName().equalsIgnoreCase("class")) {
+			if ("class".equalsIgnoreCase(propertyDescriptors[i].getName())) {
 				continue;
 			}
 			final Field field = JPAUtils.getDeclaredFieldByName(beanClass, propertyDescriptors[i].getName());
@@ -562,7 +562,7 @@ public final class JPAUtils {
 		final PropertyDescriptor[] propertyDescriptors = Introspector.getBeanInfo(aClass).getPropertyDescriptors();
 		final int len = propertyDescriptors.length - 1;
 		for (int i = len; i >= 0; i--) {
-			if (propertyDescriptors[i].getName().equalsIgnoreCase("class")) {
+			if ("class".equalsIgnoreCase(propertyDescriptors[i].getName())) {
 				continue;
 			}
 			final Field aField = JPAUtils.getDeclaredFieldByName(aClass, propertyDescriptors[i].getName());
@@ -603,7 +603,7 @@ public final class JPAUtils {
 		final PropertyDescriptor[] propertyDescriptors = Introspector.getBeanInfo(beanClass).getPropertyDescriptors();
 		final int len = propertyDescriptors.length - 1;
 		for (int i = len; i >= 0; i--) {
-			if (propertyDescriptors[i].getName().equalsIgnoreCase("class")) {
+			if ("class".equalsIgnoreCase(propertyDescriptors[i].getName())) {
 				continue;
 			}
 			Object toReturn = JPAUtils.getAttributeNameColumnFromDescriptor(beanClass, nameColumn, checkUpdate, propertyDescriptors[i]);
@@ -681,7 +681,7 @@ public final class JPAUtils {
 		final PropertyDescriptor[] propertyDescriptors = Introspector.getBeanInfo(beanClass).getPropertyDescriptors();
 		final int len = propertyDescriptors.length - 1;
 		for (int i = len; i >= 0; i--) {
-			if (propertyDescriptors[i].getName().equalsIgnoreCase("class")) {
+			if ("class".equalsIgnoreCase(propertyDescriptors[i].getName())) {
 				continue;
 			}
 			final Field field = JPAUtils.getDeclaredFieldByName(beanClass, propertyDescriptors[i].getName());
@@ -732,7 +732,7 @@ public final class JPAUtils {
 		final PropertyDescriptor[] propertyDescriptors = Introspector.getBeanInfo(beanClass).getPropertyDescriptors();
 		final int len = propertyDescriptors.length - 1;
 		for (int i = len; i >= 0; i--) {
-			if (propertyDescriptors[i].getName().equalsIgnoreCase("class")) {
+			if ("class".equalsIgnoreCase(propertyDescriptors[i].getName())) {
 				continue;
 			}
 			final Field field = JPAUtils.getDeclaredFieldByName(beanClass, propertyDescriptors[i].getName());
@@ -914,7 +914,7 @@ public final class JPAUtils {
 		final Class beanClass = Class.forName(entityClass);
 		final PropertyDescriptor[] propertyDescriptors = Introspector.getBeanInfo(beanClass).getPropertyDescriptors();
 		for (int i = 0; i < propertyDescriptors.length; i++) {
-			if (propertyDescriptors[i].getName().equalsIgnoreCase("class")) {
+			if ("class".equalsIgnoreCase(propertyDescriptors[i].getName())) {
 				continue;
 			}
 
@@ -945,7 +945,7 @@ public final class JPAUtils {
 		final Class beanClass = Class.forName(entityClass);
 		final PropertyDescriptor[] propertyDescriptors = Introspector.getBeanInfo(beanClass).getPropertyDescriptors();
 		for (int i = 0; i < propertyDescriptors.length; i++) {
-			if (propertyDescriptors[i].getName().equalsIgnoreCase("class")) {
+			if ("class".equalsIgnoreCase(propertyDescriptors[i].getName())) {
 				continue;
 			}
 
@@ -990,7 +990,7 @@ public final class JPAUtils {
 		final Class beanClass = Class.forName(entityClass);
 		final PropertyDescriptor[] propertyDescriptors = Introspector.getBeanInfo(beanClass).getPropertyDescriptors();
 		for (int i = 0; i < propertyDescriptors.length; i++) {
-			if (propertyDescriptors[i].getName().equalsIgnoreCase("class")) {
+			if ("class".equalsIgnoreCase(propertyDescriptors[i].getName())) {
 				continue;
 			}
 
@@ -1034,7 +1034,7 @@ public final class JPAUtils {
 		final PropertyDescriptor[] propertyDescriptors = Introspector.getBeanInfo(beanClass).getPropertyDescriptors();
 		final int len = propertyDescriptors.length;
 		for (int i = 0; i < len; i++) {
-			if (propertyDescriptors[i].getName().equalsIgnoreCase("class")) {
+			if ("class".equalsIgnoreCase(propertyDescriptors[i].getName())) {
 				continue;
 			}
 			final Field field = JPAUtils.getDeclaredFieldByName(beanClass, propertyDescriptors[i].getName());

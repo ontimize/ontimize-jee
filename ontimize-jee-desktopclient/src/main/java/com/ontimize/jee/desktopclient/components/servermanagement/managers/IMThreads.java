@@ -68,7 +68,7 @@ public class IMThreads extends BasicInteractionManager {
 		@Override
 		public void setPathFileChooser(String path) {
 			// Check extension
-			if (!FilenameUtils.getExtension(path).equalsIgnoreCase("txt")) {
+			if (!"txt".equalsIgnoreCase(FilenameUtils.getExtension(path))) {
 				// filename is NO OK as-is
 				path = path + ".txt";
 			}

@@ -111,7 +111,7 @@ public class AnnotationSerializer extends AbstractSerializer {
 			ArrayList<Method> methods = new ArrayList<>();
 
 			for (Method method : this.annType.getDeclaredMethods()) {
-				if (method.getName().equals("hashCode") || method.getName().equals("toString") || method.getName().equals("annotationType")) {
+				if ("hashCode".equals(method.getName()) || "toString".equals(method.getName()) || "annotationType".equals(method.getName())) {
 					continue;
 				}
 

@@ -49,7 +49,7 @@ public class ClassDeserializer extends AbstractMapDeserializer {
 		while (!in.isEnd()) {
 			String key = in.readString();
 
-			if (key.equals("name")) {
+			if ("name".equals(key)) {
 				name = in.readString();
 			} else {
 				in.readObject();

@@ -26,12 +26,12 @@ public class FormLoginAuthenticationMechanism implements IAuthenticationMechanis
 
 	@Override
 	public AuthenticationResult authenticate(HttpServletRequest request, HttpServletResponse response, AuthenticationManager authenticationManager,
-	        UserDetailsService userDetailsService) {
+			UserDetailsService userDetailsService) {
 		if (!this.loginRequestMatcher.matches(request)) {
 			return null;
 		}
 
-		if (this.postOnly && !request.getMethod().equals("POST")) {
+		if (this.postOnly && !"POST".equals(request.getMethod())) {
 			throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
 		}
 

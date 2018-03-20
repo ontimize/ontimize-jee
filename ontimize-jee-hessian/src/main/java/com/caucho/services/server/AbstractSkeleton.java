@@ -140,25 +140,25 @@ abstract public class AbstractSkeleton {
 	public static String mangleClass(Class<?> cl, boolean isFull) {
 		String name = cl.getName();
 
-		if (name.equals("boolean") || name.equals("java.lang.Boolean")) {
+		if ("boolean".equals(name) || name.equals("java.lang.Boolean")) {
 			return "boolean";
-		} else if (name.equals("int") || name.equals("java.lang.Integer") || name.equals("short") || name.equals("java.lang.Short") || name.equals("byte") || name
-		        .equals("java.lang.Byte")) {
+		} else if ("int".equals(name) || "java.lang.Integer".equals(name) || "short".equals(name) || "java.lang.Short".equals(name) || "byte".equals(name) || "java.lang.Byte"
+				.equals(name)) {
 			return "int";
-		} else if (name.equals("long") || name.equals("java.lang.Long")) {
+		} else if ("long".equals(name) || "java.lang.Long".equals(name)) {
 			return "long";
-		} else if (name.equals("float") || name.equals("java.lang.Float") || name.equals("double") || name.equals("java.lang.Double")) {
+		} else if ("float".equals(name) || "java.lang.Float".equals(name) || "double".equals(name) || "java.lang.Double".equals(name)) {
 			return "double";
-		} else if (name.equals("java.lang.String") || name.equals("com.caucho.util.CharBuffer") || name.equals("char") || name.equals("java.lang.Character") || name
-		        .equals("java.io.Reader")) {
+		} else if ("java.lang.String".equals(name) || "com.caucho.util.CharBuffer".equals(name) || "char".equals(name) || "java.lang.Character".equals(name) || "java.io.Reader"
+				.equals(name)) {
 			return "string";
-		} else if (name.equals("java.util.Date") || name.equals("com.caucho.util.QDate")) {
+		} else if ("java.util.Date".equals(name) || "com.caucho.util.QDate".equals(name)) {
 			return "date";
-		} else if (InputStream.class.isAssignableFrom(cl) || name.equals("[B")) {
+		} else if (InputStream.class.isAssignableFrom(cl) || "[B".equals(name)) {
 			return "binary";
 		} else if (cl.isArray()) {
 			return "[" + AbstractSkeleton.mangleClass(cl.getComponentType(), isFull);
-		} else if (name.equals("org.w3c.dom.Node") || name.equals("org.w3c.dom.Element") || name.equals("org.w3c.dom.Document")) {
+		} else if ("org.w3c.dom.Node".equals(name) || "org.w3c.dom.Element".equals(name) || "org.w3c.dom.Document".equals(name)) {
 			return "xml";
 		} else if (isFull) {
 			return name;

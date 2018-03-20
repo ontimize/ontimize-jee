@@ -143,7 +143,7 @@ public class UnsafeDeserializer extends AbstractMapDeserializer {
 			for (int i = 0; i < methods.length; i++) {
 				Method method = methods[i];
 
-				if (method.getName().equals("readResolve") && (method.getParameterTypes().length == 0)) {
+				if ("readResolve".equals(method.getName()) && (method.getParameterTypes().length == 0)) {
 					return method;
 				}
 			}
@@ -718,7 +718,7 @@ public class UnsafeDeserializer extends AbstractMapDeserializer {
 			Class<?> unsafe = Class.forName("sun.misc.Unsafe");
 			Field theUnsafe = null;
 			for (Field field : unsafe.getDeclaredFields()) {
-				if (field.getName().equals("theUnsafe")) {
+				if ("theUnsafe".equals(field.getName())) {
 					theUnsafe = field;
 				}
 			}

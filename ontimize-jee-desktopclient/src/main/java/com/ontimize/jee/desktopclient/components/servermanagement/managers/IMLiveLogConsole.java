@@ -31,7 +31,8 @@ public class IMLiveLogConsole extends BasicInteractionManager {
 	public void registerInteractionManager(Form f, IFormManager gf) {
 		super.registerInteractionManager(f, gf);
 		this.managedForm.setFormTitle("Live log console");
-		new LiveLogConsoleListener(this.console, this.bStart, this.bStop);
+		LiveLogConsoleListener liveLogConsoleListener = new LiveLogConsoleListener(this.console, this.bStart, this.bStop);
+		liveLogConsoleListener.install();
 	}
 
 	public static class LiveLogConsoleListener implements ActionListener {
@@ -48,6 +49,10 @@ public class IMLiveLogConsole extends BasicInteractionManager {
 			this.console = console;
 			startButton.addActionListener(this);
 			stopButton.addActionListener(this);
+		}
+
+		public void install() {
+			// Do nothing
 		}
 
 		@Override

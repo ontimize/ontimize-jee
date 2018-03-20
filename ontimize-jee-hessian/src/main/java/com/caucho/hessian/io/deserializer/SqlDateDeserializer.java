@@ -54,7 +54,7 @@ public class SqlDateDeserializer extends AbstractDeserializer {
 		while (!in.isEnd()) {
 			String key = in.readString();
 
-			if (key.equals("value")) {
+			if ("value".equals(key)) {
 				initValue = in.readUTCDate();
 			} else {
 				in.readString();
@@ -81,7 +81,7 @@ public class SqlDateDeserializer extends AbstractDeserializer {
 		for (int i = 0; i < fieldNames.length; i++) {
 			String key = fieldNames[i];
 
-			if (key.equals("value")) {
+			if ("value".equals(key)) {
 				initValue = in.readUTCDate();
 			} else {
 				in.readObject();

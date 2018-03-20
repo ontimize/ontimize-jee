@@ -244,7 +244,7 @@ public class EmbeddedJFileChooser extends JPanel {
 			Component[] c = parent.getComponents();
 			for (int j = 0; j < c.length; j++) {
 				String unpack = this.unpack(c[j]);
-				if (unpack.equals("SynthFileChooserUIImpl$3") || unpack.equals("SynthFileChooserUIImpl$AlignedLabel")) {
+				if ("SynthFileChooserUIImpl$3".equals(unpack) || "SynthFileChooserUIImpl$AlignedLabel".equals(unpack)) {
 					c[j].getParent().setVisible(false);
 				}
 				if (((Container) c[j]).getComponentCount() > 0) {

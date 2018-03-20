@@ -64,7 +64,7 @@ public class IMMemory extends BasicInteractionManager {
 		@Override
 		public void setPathFileChooser(String path) {
 			// Check extension
-			if (!FilenameUtils.getExtension(path).equalsIgnoreCase("bin")) {
+			if (!"bin".equalsIgnoreCase(FilenameUtils.getExtension(path))) {
 				// filename is NO OK as-is
 				path = path + ".bin";
 			}

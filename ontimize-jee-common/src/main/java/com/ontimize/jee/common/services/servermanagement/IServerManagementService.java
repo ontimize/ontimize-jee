@@ -71,7 +71,7 @@ public interface IServerManagementService {
 
 	void setLevel(OntimizeJEELogger logger) throws Exception;
 
-	public class OntimizeJEELogger implements Serializable {
+	public static class OntimizeJEELogger implements Serializable {
 
 		private final int	id;
 		private String		loggerName;

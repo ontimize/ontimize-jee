@@ -183,7 +183,7 @@ public class JavaDeserializer extends AbstractMapDeserializer {
 			for (int i = 0; i < methods.length; i++) {
 				Method method = methods[i];
 
-				if (method.getName().equals("readResolve") && (method.getParameterTypes().length == 0)) {
+				if ("readResolve".equals(method.getName()) && (method.getParameterTypes().length == 0)) {
 					return method;
 				}
 			}

@@ -160,14 +160,14 @@ public class MultiModuleApplicationLauncher {
 
 		for (int i = 0; i < args.length; i++) {
 			// debug option
-			if ((args[i] != null) && args[i].equalsIgnoreCase("-d")) {
+			if ((args[i] != null) && "-d".equalsIgnoreCase(args[i])) {
 				Form.RELOAD_BUTTON_VISIBLE = true;
 				ApplicationManager.DEBUG = true;
 				ApplicationManager.setApplicationManagerWindowVisible(true);
 				break;
 			}
 			// configurationfiles option
-			if ((i < (args.length - 1)) && (args[i] != null) && args[i].equalsIgnoreCase("-conf") && (args[i + 1] != null)) {
+			if ((i < (args.length - 1)) && (args[i] != null) && "-conf".equalsIgnoreCase(args[i]) && (args[i + 1] != null)) {
 				DefaultXMLParametersManager.setXMLDefaultParameterFile(args[i + 1]);
 				break;
 			}

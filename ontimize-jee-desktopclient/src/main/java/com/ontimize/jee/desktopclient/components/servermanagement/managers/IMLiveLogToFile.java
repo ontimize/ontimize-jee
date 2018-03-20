@@ -70,7 +70,7 @@ public class IMLiveLogToFile extends BasicInteractionManager {
 				public void run() {
 					this.finalPath = path;
 					// Check extension
-					if (!FilenameUtils.getExtension(path).equalsIgnoreCase("log")) {
+					if (!"log".equalsIgnoreCase(FilenameUtils.getExtension(path))) {
 						// filename is NO OK as-is
 						this.finalPath = this.finalPath + ".log";
 					}

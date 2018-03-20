@@ -200,7 +200,7 @@ public class BasicDeserializer extends AbstractDeserializer {
 
 	private Object readObjectCharacterObject(AbstractHessianInput in) throws IOException {
 		String s = in.readString();
-		if ((s == null) || s.equals("")) {
+		if ((s == null) || "".equals(s)) {
 			return null;
 		}
 		return Character.valueOf(s.charAt(0));
@@ -208,7 +208,7 @@ public class BasicDeserializer extends AbstractDeserializer {
 
 	private Object readObjectCharacter(AbstractHessianInput in) throws IOException {
 		String s = in.readString();
-		if ((s == null) || s.equals("")) {
+		if ((s == null) || "".equals(s)) {
 			return Character.valueOf((char) 0);
 		}
 		return Character.valueOf(s.charAt(0));

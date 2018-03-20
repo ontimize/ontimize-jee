@@ -32,7 +32,7 @@ abstract public class ValueDeserializer extends AbstractDeserializer {
 		while (!in.isEnd()) {
 			String key = in.readString();
 
-			if (key.equals("value")) {
+			if ("value".equals(key)) {
 				initValue = in.readString();
 			} else {
 				in.readObject();

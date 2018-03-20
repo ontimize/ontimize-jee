@@ -128,7 +128,7 @@ public class JavaSerializer extends AbstractSerializer {
 			for (int i = 0; i < methods.length; i++) {
 				Method method = methods[i];
 
-				if (method.getName().equals("writeReplace") && (method.getParameterTypes().length == 0)) {
+				if ("writeReplace".equals(method.getName()) && (method.getParameterTypes().length == 0)) {
 					return method;
 				}
 			}
@@ -143,7 +143,7 @@ public class JavaSerializer extends AbstractSerializer {
 	public Method getWriteReplace(Class<?> cl, Class<?> param) {
 		for (; cl != null; cl = cl.getSuperclass()) {
 			for (Method method : cl.getDeclaredMethods()) {
-				if (method.getName().equals("writeReplace") && (method.getParameterTypes().length == 1) && param.equals(method.getParameterTypes()[0])) {
+				if ("writeReplace".equals(method.getName()) && (method.getParameterTypes().length == 1) && param.equals(method.getParameterTypes()[0])) {
 					return method;
 				}
 			}

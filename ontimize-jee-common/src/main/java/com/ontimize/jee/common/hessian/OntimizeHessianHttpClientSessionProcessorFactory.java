@@ -75,16 +75,16 @@ public final class OntimizeHessianHttpClientSessionProcessorFactory {
 	public static String						JWT_TOKEN			= null;
 	/** The httpproc. */
 	private static HttpProcessor				httpproc			= HttpProcessorBuilder.create().add(new RequestAddCookies()).add(new ResponseProcessCookies())
-	        .add(OntimizeHessianHttpClientSessionProcessorFactory.requestInterceptor).add(OntimizeHessianHttpClientSessionProcessorFactory.responseInterceptor)
-	        .add(new RequestDefaultHeaders())
-	        // Required protocol interceptors
-	        .add(new RequestContent()).add(new RequestTargetHost())
-	        // Recommended protocol interceptors
-	        .add(new RequestClientConnControl()).add(new RequestUserAgent()).add(new RequestExpectContinue(false))
-	        // HTTP state management interceptors
-	        // HTTP authentication interceptors
-	        // httpproc.addInterceptor(new RequestAuthCache());
-	        .add(new RequestTargetAuthentication()).add(new RequestProxyAuthentication()).build();
+			.add(OntimizeHessianHttpClientSessionProcessorFactory.requestInterceptor).add(OntimizeHessianHttpClientSessionProcessorFactory.responseInterceptor)
+			.add(new RequestDefaultHeaders())
+			// Required protocol interceptors
+			.add(new RequestContent()).add(new RequestTargetHost())
+			// Recommended protocol interceptors
+			.add(new RequestClientConnControl()).add(new RequestUserAgent()).add(new RequestExpectContinue(false))
+			// HTTP state management interceptors
+			// HTTP authentication interceptors
+			// httpproc.addInterceptor(new RequestAuthCache());
+			.add(new RequestTargetAuthentication()).add(new RequestProxyAuthentication()).build();
 
 	private static Map<AuthScope, Credentials>	credentials			= new HashMap<>();
 
@@ -106,9 +106,9 @@ public final class OntimizeHessianHttpClientSessionProcessorFactory {
 		Integer port = uri.getPort();
 		if (OntimizeHessianHttpClientSessionProcessorFactory.ENCRYPT) {
 			OntimizeHessianHttpClientSessionProcessorFactory.credentials.put(new AuthScope(host, port, AuthScope.ANY_REALM, AuthSchemes.BASIC),
-			        new UsernamePasswordCredentials(userName, password));
+					new UsernamePasswordCredentials(userName, password));
 			OntimizeHessianHttpClientSessionProcessorFactory.credentials.put(new AuthScope(host, port, AuthScope.ANY_REALM, AuthSchemes.DIGEST),
-			        new UsernamePasswordCredentials(userName, OntimizeHessianHttpClientSessionProcessorFactory.encrypt(password)));
+					new UsernamePasswordCredentials(userName, OntimizeHessianHttpClientSessionProcessorFactory.encrypt(password)));
 		} else {
 			OntimizeHessianHttpClientSessionProcessorFactory.credentials.put(new AuthScope(host, port), new UsernamePasswordCredentials(userName, password));
 		}
@@ -258,8 +258,8 @@ public final class OntimizeHessianHttpClientSessionProcessorFactory {
 		CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
 
 		HttpClientBuilder clientBuilder = HttpClients.custom().disableAutomaticRetries().disableAuthCaching().setDefaultCredentialsProvider(credentialsProvider)
-		        .setDefaultSocketConfig(config).setHttpProcessor(OntimizeHessianHttpClientSessionProcessorFactory.getHttpProcessor())
-		        .setDefaultCookieStore(OntimizeHessianHttpClientSessionProcessorFactory.getCookieStore()).disableRedirectHandling();
+				.setDefaultSocketConfig(config).setHttpProcessor(OntimizeHessianHttpClientSessionProcessorFactory.getHttpProcessor())
+				.setDefaultCookieStore(OntimizeHessianHttpClientSessionProcessorFactory.getCookieStore()).disableRedirectHandling();
 		OntimizeHessianHttpClientSessionProcessorFactory.checkIgnoreSSLCerts(clientBuilder);
 		CloseableHttpClient client = clientBuilder.build();
 		return client;
@@ -288,7 +288,7 @@ public final class OntimizeHessianHttpClientSessionProcessorFactory {
 
 	public static Object getSESSIONID() {
 		for (Cookie cookie : OntimizeHessianHttpClientSessionProcessorFactory.httpCookieStore.getCookies()) {
-			if (cookie.getName().toLowerCase().equals("session")) {
+			if ("session".equals(cookie.getName().toLowerCase())) {
 				return cookie.getValue();
 			}
 		}
