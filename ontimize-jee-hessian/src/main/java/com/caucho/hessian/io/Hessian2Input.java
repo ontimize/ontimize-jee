@@ -2163,36 +2163,32 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 		}
 
 		int tag = this.offset < this.length ? this.buffer[this.offset++] & 0xff : this.read();
-
+		Deserializer reader = null;
+		int ref;
+		int size;
+		ObjectDefinition def;
+		String type;
 		switch (tag) {
 			case 'N':
 				return null;
 
-			case 'H': {
-				Deserializer reader = this.findSerializerFactory().getDeserializer(cl);
-
+			case 'H':
+				reader = this.findSerializerFactory().getDeserializer(cl);
 				return reader.readMap(this);
-			}
 
-			case 'M': {
-				String type = this.readType();
+			case 'M':
+				type = this.readType();
 				// hessian/3bb3
 				if ("".equals(type)) {
-					Deserializer reader;
 					reader = this.findSerializerFactory().getDeserializer(cl);
-
 					return reader.readMap(this);
 				}
-				Deserializer reader;
 				reader = this.findSerializerFactory().getObjectDeserializer(type, cl);
 				return reader.readMap(this);
-			}
 
-			case 'C': {
+			case 'C':
 				this.readObjectDefinition(cl);
-
 				return this.readObject(cl);
-			}
 
 			case 0x60:
 			case 0x61:
@@ -2209,54 +2205,35 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 			case 0x6c:
 			case 0x6d:
 			case 0x6e:
-			case 0x6f: {
-				int ref = tag - 0x60;
-				int size = this.classDefs.size();
+			case 0x6f:
+				ref = tag - 0x60;
+				size = this.classDefs.size();
+				if ((ref < 0) || (size <= ref)) {
+					throw new HessianProtocolException("'" + ref + "' is an unknown class definition");
+				}
+				def = this.classDefs.get(ref);
+				return this.readObjectInstance(cl, def);
+
+			case 'O':
+				ref = this.readInt();
+				size = this.classDefs.size();
 
 				if ((ref < 0) || (size <= ref)) {
 					throw new HessianProtocolException("'" + ref + "' is an unknown class definition");
 				}
-
-				ObjectDefinition def = this.classDefs.get(ref);
-
+				def = this.classDefs.get(ref);
 				return this.readObjectInstance(cl, def);
-			}
 
-			case 'O': {
-				int ref = this.readInt();
-				int size = this.classDefs.size();
-
-				if ((ref < 0) || (size <= ref)) {
-					throw new HessianProtocolException("'" + ref + "' is an unknown class definition");
-				}
-
-				ObjectDefinition def = this.classDefs.get(ref);
-
-				return this.readObjectInstance(cl, def);
-			}
-
-			case BC_LIST_VARIABLE: {
-				String type = this.readType();
-
-				Deserializer reader;
+			case BC_LIST_VARIABLE:
+				type = this.readType();
 				reader = this.findSerializerFactory().getListDeserializer(type, cl);
+				return reader.readList(this, -1);
 
-				Object v = reader.readList(this, -1);
-
-				return v;
-			}
-
-			case BC_LIST_FIXED: {
-				String type = this.readType();
-				int length = this.readInt();
-
-				Deserializer reader;
+			case BC_LIST_FIXED:
+				type = this.readType();
+				size = this.readInt();
 				reader = this.findSerializerFactory().getListDeserializer(type, cl);
-
-				Object v = reader.readLengthList(this, length);
-
-				return v;
-			}
+				return reader.readLengthList(this, size);
 
 			case 0x70:
 			case 0x71:
@@ -2265,38 +2242,20 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 			case 0x74:
 			case 0x75:
 			case 0x76:
-			case 0x77: {
-				int length = tag - 0x70;
-
-				String type = this.readType();
-
-				Deserializer reader;
+			case 0x77:
+				size = tag - 0x70;
+				type = this.readType();
 				reader = this.findSerializerFactory().getListDeserializer(type, cl);
+				return reader.readLengthList(this, size);
 
-				Object v = reader.readLengthList(this, length);
-
-				return v;
-			}
-
-			case BC_LIST_VARIABLE_UNTYPED: {
-				Deserializer reader;
+			case BC_LIST_VARIABLE_UNTYPED:
 				reader = this.findSerializerFactory().getListDeserializer(null, cl);
+				return reader.readList(this, -1);
 
-				Object v = reader.readList(this, -1);
-
-				return v;
-			}
-
-			case BC_LIST_FIXED_UNTYPED: {
-				int length = this.readInt();
-
-				Deserializer reader;
+			case BC_LIST_FIXED_UNTYPED:
+				size = this.readInt();
 				reader = this.findSerializerFactory().getListDeserializer(null, cl);
-
-				Object v = reader.readLengthList(this, length);
-
-				return v;
-			}
+				return reader.readLengthList(this, size);
 
 			case 0x78:
 			case 0x79:
@@ -2305,22 +2264,13 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 			case 0x7c:
 			case 0x7d:
 			case 0x7e:
-			case 0x7f: {
-				int length = tag - 0x78;
-
-				Deserializer reader;
+			case 0x7f:
+				size = tag - 0x78;
 				reader = this.findSerializerFactory().getListDeserializer(null, cl);
-
-				Object v = reader.readLengthList(this, length);
-
-				return v;
-			}
-
-			case BC_REF: {
-				int ref = this.readInt();
-
+				return reader.readLengthList(this, size);
+			case BC_REF:
+				ref = this.readInt();
 				return this.refs.get(ref);
-			}
 		}
 
 		if (tag >= 0) {
@@ -2329,8 +2279,7 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 
 		// hessian/3b2i vs hessian/3406
 		// return readObject();
-		Object value = this.findSerializerFactory().getDeserializer(cl).readObject(this);
-		return value;
+		return this.findSerializerFactory().getDeserializer(cl).readObject(this);
 	}
 
 	/**

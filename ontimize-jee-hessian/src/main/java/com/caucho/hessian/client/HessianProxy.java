@@ -76,6 +76,10 @@ public class HessianProxy implements InvocationHandler, Serializable {
 		return this.url;
 	}
 
+	protected HessianProxyFactory getFactory() {
+		return this.factory;
+	}
+
 	/**
 	 * Handles the object invocation.
 	 *
@@ -241,6 +245,7 @@ public class HessianProxy implements InvocationHandler, Serializable {
 			}
 		}
 	}
+
 
 	/**
 	 * Method that allows subclasses to add request headers such as cookies. Default implementation is empty.

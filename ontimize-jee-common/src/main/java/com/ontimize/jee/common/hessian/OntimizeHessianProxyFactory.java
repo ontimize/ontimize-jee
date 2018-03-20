@@ -122,7 +122,7 @@ public class OntimizeHessianProxyFactory extends HessianProxyFactory implements 
 		}
 		InvocationHandler handler = null;
 
-		handler = new HessianProxy(url, this, api);
+		handler = new OntimizeHessianProxy(url, this, api);
 
 		return Proxy.newProxyInstance(loader, new Class[] { api, HessianRemoteObject.class }, handler);
 	}
