@@ -19,8 +19,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
 import com.caucho.hessian.client.HessianConnectionFactory;
+import com.caucho.hessian.client.HessianProxy;
 import com.caucho.hessian.client.HessianProxyFactory;
-import com.caucho.hessian.client.OntimizeHessianProxy;
 import com.caucho.hessian.io.AbstractHessianOutput;
 import com.caucho.hessian.io.HessianRemoteObject;
 import com.ontimize.jee.common.security.ILoginProvider;
@@ -122,7 +122,7 @@ public class OntimizeHessianProxyFactory extends HessianProxyFactory implements 
 		}
 		InvocationHandler handler = null;
 
-		handler = new OntimizeHessianProxy(url, this, api);
+		handler = new HessianProxy(url, this, api);
 
 		return Proxy.newProxyInstance(loader, new Class[] { api, HessianRemoteObject.class }, handler);
 	}

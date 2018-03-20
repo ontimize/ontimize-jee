@@ -1,4 +1,4 @@
-package com.caucho.hessian.io;
+package com.ontimize.jee.common.hessian;
 
 import java.io.IOException;
 import java.lang.reflect.Array;
@@ -11,6 +11,10 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 
+import com.caucho.hessian.io.AbstractHessianInput;
+import com.caucho.hessian.io.AbstractHessianOutput;
+import com.caucho.hessian.io.AbstractSerializerFactory;
+import com.caucho.hessian.io.HessianProtocolException;
 import com.caucho.hessian.io.deserializer.Deserializer;
 import com.caucho.hessian.io.deserializer.JavaDeserializer;
 import com.caucho.hessian.io.serializer.JavaSerializer;

@@ -283,9 +283,8 @@ public class JavaDeserializer extends AbstractMapDeserializer {
 		} catch (InvocationTargetException e) {
 			if (e.getCause() instanceof Exception) {
 				throw (Exception) e.getCause();
-			} else {
-				throw e;
 			}
+			throw e;
 		}
 
 		return obj;
@@ -295,9 +294,8 @@ public class JavaDeserializer extends AbstractMapDeserializer {
 		try {
 			if (this.constructor != null) {
 				return this.constructor.newInstance(this.constructorArgs);
-			} else {
-				return this.type.newInstance();
 			}
+			return this.type.newInstance();
 		} catch (Exception e) {
 			throw new HessianProtocolException("'" + this.type.getName() + "' could not be instantiated", e);
 		}
@@ -605,10 +603,10 @@ public class JavaDeserializer extends AbstractMapDeserializer {
 
 	public static class SqlDateFieldDeserializer extends FieldDeserializer {
 
-		private final Field _field;
+		protected final Field field;
 
-		SqlDateFieldDeserializer(Field field) {
-			this._field = field;
+		public SqlDateFieldDeserializer(Field field) {
+			this.field = field;
 		}
 
 		@Override
@@ -617,26 +615,22 @@ public class JavaDeserializer extends AbstractMapDeserializer {
 
 			try {
 				java.util.Date date = (java.util.Date) in.readObject();
-
 				if (date != null) {
 					value = new java.sql.Date(date.getTime());
-
-					this._field.set(obj, value);
-				} else {
-					this._field.set(obj, null);
 				}
+				this.field.set(obj, value);
 			} catch (Exception e) {
-				JavaDeserializer.logDeserializeError(this._field, obj, value, e);
+				JavaDeserializer.logDeserializeError(this.field, obj, value, e);
 			}
 		}
 	}
 
 	public static class SqlTimestampFieldDeserializer extends FieldDeserializer {
 
-		private final Field _field;
+		protected final Field field;
 
-		SqlTimestampFieldDeserializer(Field field) {
-			this._field = field;
+		public SqlTimestampFieldDeserializer(Field field) {
+			this.field = field;
 		}
 
 		@Override
@@ -648,23 +642,20 @@ public class JavaDeserializer extends AbstractMapDeserializer {
 
 				if (date != null) {
 					value = new java.sql.Timestamp(date.getTime());
-
-					this._field.set(obj, value);
-				} else {
-					this._field.set(obj, null);
 				}
+				this.field.set(obj, value);
 			} catch (Exception e) {
-				JavaDeserializer.logDeserializeError(this._field, obj, value, e);
+				JavaDeserializer.logDeserializeError(this.field, obj, value, e);
 			}
 		}
 	}
 
 	public static class SqlTimeFieldDeserializer extends FieldDeserializer {
 
-		private final Field _field;
+		protected final Field field;
 
-		SqlTimeFieldDeserializer(Field field) {
-			this._field = field;
+		public SqlTimeFieldDeserializer(Field field) {
+			this.field = field;
 		}
 
 		@Override
@@ -673,16 +664,12 @@ public class JavaDeserializer extends AbstractMapDeserializer {
 
 			try {
 				java.util.Date date = (java.util.Date) in.readObject();
-
 				if (date != null) {
 					value = new java.sql.Time(date.getTime());
-
-					this._field.set(obj, value);
-				} else {
-					this._field.set(obj, null);
 				}
+				this.field.set(obj, value);
 			} catch (Exception e) {
-				JavaDeserializer.logDeserializeError(this._field, obj, value, e);
+				JavaDeserializer.logDeserializeError(this.field, obj, value, e);
 			}
 		}
 	}
@@ -698,8 +685,7 @@ public class JavaDeserializer extends AbstractMapDeserializer {
 
 		if (value != null) {
 			throw new HessianFieldException(fieldName + ": " + value.getClass().getName() + " (" + value + ")" + " cannot be assigned to '" + field.getType().getName() + "'", e);
-		} else {
-			throw new HessianFieldException(fieldName + ": " + field.getType().getName() + " cannot be assigned from null", e);
 		}
+		throw new HessianFieldException(fieldName + ": " + field.getType().getName() + " cannot be assigned from null", e);
 	}
 }

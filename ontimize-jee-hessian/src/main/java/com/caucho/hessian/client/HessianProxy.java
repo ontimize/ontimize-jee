@@ -43,8 +43,9 @@ import com.caucho.services.server.AbstractSkeleton;
  */
 public class HessianProxy implements InvocationHandler, Serializable {
 
+	private static final Logger					logger				= LoggerFactory.getLogger(HessianProxy.class);
+
 	private static final long					serialVersionUID	= 1L;
-	private static final Logger					log					= LoggerFactory.getLogger(HessianProxy.class);
 	protected HessianProxyFactory				factory;
 
 	private final WeakHashMap<Method, String>	mangleMap			= new WeakHashMap<>();
@@ -55,14 +56,14 @@ public class HessianProxy implements InvocationHandler, Serializable {
 	/**
 	 * Protected constructor for subclassing
 	 */
-	protected HessianProxy(URI url, HessianProxyFactory factory) {
+	public HessianProxy(URI url, HessianProxyFactory factory) {
 		this(url, factory, null);
 	}
 
 	/**
 	 * Protected constructor for subclassing
 	 */
-	protected HessianProxy(URI url, HessianProxyFactory factory, Class<?> type) {
+	public HessianProxy(URI url, HessianProxyFactory factory, Class<?> type) {
 		this.factory = factory;
 		this.url = url;
 		this.type = type;
@@ -114,7 +115,7 @@ public class HessianProxy implements InvocationHandler, Serializable {
 		HessianConnection conn = null;
 
 		try {
-			HessianProxy.log.trace("Hessian[{}] calling {}", this.url, mangleName);
+			HessianProxy.logger.trace("Hessian[{}] calling {}", this.url, mangleName);
 			conn = this.sendRequest(mangleName, args);
 			is = this.getInputStream(conn);
 			AbstractHessianInput in;
@@ -126,7 +127,7 @@ public class HessianProxy implements InvocationHandler, Serializable {
 			}
 			int major = is.read();
 			int minor = is.read();
-
+			HessianProxy.logger.debug("Major: {} , Minor: {}", major, minor);
 			in = this.factory.getHessian2Input(is);
 
 			Object value = in.readReply(method.getReturnType());
@@ -143,7 +144,7 @@ public class HessianProxy implements InvocationHandler, Serializable {
 					is.close();
 				}
 			} catch (Exception e) {
-				HessianProxy.log.trace(e.toString(), e);
+				HessianProxy.logger.trace(e.toString(), e);
 			}
 
 			try {
@@ -151,7 +152,7 @@ public class HessianProxy implements InvocationHandler, Serializable {
 					conn.close();
 				}
 			} catch (Exception e) {
-				HessianProxy.log.trace(e.toString(), e);
+				HessianProxy.logger.trace(e.toString(), e);
 			}
 		}
 	}
@@ -172,7 +173,7 @@ public class HessianProxy implements InvocationHandler, Serializable {
 				return Boolean.FALSE;
 			}
 			HessianProxy handler = (HessianProxy) proxyHandler;
-			return new Boolean(this.url.equals(handler.getURL()));
+			return Boolean.valueOf(this.getURL().equals(handler.getURL()));
 		} else if (methodName.equals("hashCode") && (params.length == 0)) {
 			return new Integer(this.url.hashCode());
 		} else if (methodName.equals("getHessianType")) {
@@ -200,9 +201,8 @@ public class HessianProxy implements InvocationHandler, Serializable {
 
 		if ((param == null) || (param.length == 0)) {
 			return method.getName();
-		} else {
-			return AbstractSkeleton.mangleName(method, false);
 		}
+		return AbstractSkeleton.mangleName(method, false);
 	}
 
 	/**
@@ -295,9 +295,8 @@ public class HessianProxy implements InvocationHandler, Serializable {
 				}
 
 				return value;
-			} else {
-				return -1;
 			}
+			return -1;
 		}
 
 		@Override
@@ -310,9 +309,8 @@ public class HessianProxy implements InvocationHandler, Serializable {
 				}
 
 				return value;
-			} else {
-				return -1;
 			}
+			return -1;
 		}
 
 		@Override
@@ -334,7 +332,7 @@ public class HessianProxy implements InvocationHandler, Serializable {
 					hessianIs.close();
 				}
 			} catch (Exception e) {
-				HessianProxy.log.trace(e.toString(), e);
+				HessianProxy.logger.trace(e.toString(), e);
 			}
 
 			try {
@@ -343,7 +341,7 @@ public class HessianProxy implements InvocationHandler, Serializable {
 					in.close();
 				}
 			} catch (Exception e) {
-				HessianProxy.log.trace(e.toString(), e);
+				HessianProxy.logger.trace(e.toString(), e);
 			}
 
 			try {
@@ -351,7 +349,7 @@ public class HessianProxy implements InvocationHandler, Serializable {
 					connIs.close();
 				}
 			} catch (Exception e) {
-				HessianProxy.log.trace(e.toString(), e);
+				HessianProxy.logger.trace(e.toString(), e);
 			}
 
 			try {
@@ -359,7 +357,7 @@ public class HessianProxy implements InvocationHandler, Serializable {
 					conn.close();
 				}
 			} catch (Exception e) {
-				HessianProxy.log.trace(e.toString(), e);
+				HessianProxy.logger.trace(e.toString(), e);
 			}
 		}
 	}
