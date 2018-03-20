@@ -101,7 +101,7 @@ public class Hessian2StreamingInput {
 
 		private final InputStream	_is;
 
-		private int					_length;
+		private long				_length;
 		private boolean				_isPacketEnd;
 
 		StreamingInputStream(InputStream is) {
@@ -182,7 +182,7 @@ public class Hessian2StreamingInput {
 				}
 			}
 
-			int sublen = this._length;
+			int sublen = (int) this._length;
 			if (length < sublen) {
 				sublen = length;
 			}
@@ -198,12 +198,12 @@ public class Hessian2StreamingInput {
 			return sublen;
 		}
 
-		private int readChunkLength(InputStream is) throws IOException {
+		private long readChunkLength(InputStream is) throws IOException {
 			if (this._isPacketEnd) {
 				return -1;
 			}
 
-			int length = 0;
+			long length = 0;
 
 			int code = is.read();
 
@@ -221,8 +221,9 @@ public class Hessian2StreamingInput {
 			} else if (len == 0x7e) {
 				length = ((is.read() & 0xff) << 8) + (is.read() & 0xff);
 			} else {
-				length = ((is.read() & 0xff) << 56) + ((is.read() & 0xff) << 48) + ((is.read() & 0xff) << 40) + ((is.read() & 0xff) << 32) + ((is.read() & 0xff) << 24) + ((is
-				        .read() & 0xff) << 16) + ((is.read() & 0xff) << 8) + (is.read() & 0xff);
+				length = (((long) (is.read() & 0xff)) << 56) + (((long) (is.read() & 0xff)) << 48) + (((long) (is.read() & 0xff)) << 40) + (((long) (is
+						.read() & 0xff)) << 32) + (((long) (is.read() & 0xff)) << 24) + (((long) (is.read() & 0xff)) << 16) + (((long) (is.read() & 0xff)) << 8) + (is
+								.read() & 0xff);
 			}
 
 			return length;

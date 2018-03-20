@@ -223,14 +223,6 @@ public class OntimizeHessianHttpClientConnection extends AbstractHessianConnecti
 	 */
 	@Override
 	public void close() {
-		// no neccesary
-	}
-
-	/**
-	 * Disconnect the connection.
-	 */
-	@Override
-	public void destroy() {
 		try {
 			this.client.close();
 		} catch (IOException error) {

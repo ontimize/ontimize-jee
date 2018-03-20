@@ -159,14 +159,6 @@ public class HessianURLConnection extends AbstractHessianConnection {
 	 */
 	@Override
 	public void close() {
-		// do nothing
-	}
-
-	/**
-	 * Disconnect the connection
-	 */
-	@Override
-	public void destroy() {
 		this.close();
 
 		URLConnection conn = this.conn;

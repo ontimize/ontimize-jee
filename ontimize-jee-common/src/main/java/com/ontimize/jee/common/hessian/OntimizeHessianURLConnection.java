@@ -208,14 +208,6 @@ public class OntimizeHessianURLConnection extends AbstractHessianConnection {
 	 */
 	@Override
 	public void close() {
-		// no neccesary
-	}
-
-	/**
-	 * Disconnect the connection.
-	 */
-	@Override
-	public void destroy() {
 		URLConnection conn = this.conn;
 		this.conn = null;
 

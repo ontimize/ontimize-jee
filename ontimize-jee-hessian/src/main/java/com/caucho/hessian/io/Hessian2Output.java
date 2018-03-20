@@ -774,7 +774,7 @@ public class Hessian2Output extends AbstractHessianOutput implements Hessian2Con
 				buffer[offset++] = (byte) (minutes >> 24);
 				buffer[offset++] = (byte) (minutes >> 16);
 				buffer[offset++] = (byte) (minutes >> 8);
-				buffer[offset++] = (byte) (minutes >> 0);
+				buffer[offset++] = (byte) (minutes);
 
 				this.offset = offset;
 				return;

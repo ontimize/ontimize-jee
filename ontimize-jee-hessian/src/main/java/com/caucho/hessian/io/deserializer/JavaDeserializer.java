@@ -80,11 +80,11 @@ public class JavaDeserializer extends AbstractMapDeserializer {
 				}
 			}
 
-			if ((cost < 0) || (cost > (1 << 48))) {
-				cost = 1 << 48;
+			if ((cost < 0) || (cost > (1l << 48))) {
+				cost = 1l << 48;
 			}
 
-			cost += (long) param.length << 48;
+			cost += ((long) param.length) << 48;
 
 			if (cost < bestCost) {
 				this.constructor = constructors[i];

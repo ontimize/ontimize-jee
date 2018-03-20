@@ -67,18 +67,4 @@ public abstract class AbstractHessianConnection implements HessianConnection {
 	public String getContentEncoding() {
 		return null;
 	}
-
-	/**
-	 * Close/free the connection, using keepalive if appropriate.
-	 */
-	@Override
-	public void close() throws IOException {
-		this.destroy();
-	}
-
-	/**
-	 * Destroy/disconnect the connection
-	 */
-	@Override
-	abstract public void destroy() throws IOException;
 }

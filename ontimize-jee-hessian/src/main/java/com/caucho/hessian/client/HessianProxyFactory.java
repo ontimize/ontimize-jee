@@ -375,10 +375,6 @@ public class HessianProxyFactory implements ServiceProxyFactory, ObjectFactory {
 		return Proxy.newProxyInstance(loader, new Class[] { api, HessianRemoteObject.class }, handler);
 	}
 
-	public AbstractHessianInput getHessianInput(InputStream is) {
-		return this.getHessian2Input(is);
-	}
-
 	public AbstractHessianInput getHessian2Input(InputStream is) {
 		AbstractHessianInput in;
 

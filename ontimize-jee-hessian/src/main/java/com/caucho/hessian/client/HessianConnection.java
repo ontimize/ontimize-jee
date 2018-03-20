@@ -23,7 +23,7 @@ import java.io.OutputStream;
 /**
  * Internal connection to a server. The default connection is based on java.net
  */
-public interface HessianConnection {
+public interface HessianConnection extends AutoCloseable {
 
 	/**
 	 * Adds HTTP headers.
@@ -63,10 +63,7 @@ public interface HessianConnection {
 	/**
 	 * Close/free the connection. If keepalive is allowed, it may be used.
 	 */
+	@Override
 	void close() throws IOException;
 
-	/**
-	 * Shut the connection down.
-	 */
-	void destroy() throws IOException;
 }
