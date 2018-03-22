@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -54,33 +55,33 @@ public class ContextSerializerFactory {
 
 	private static final Logger																log							= LoggerFactory.getLogger(ContextSerializerFactory.class);
 
-	private static final WeakHashMap<ClassLoader, SoftReference<ContextSerializerFactory>>	CONTEXT_REF_MAP				= new WeakHashMap<>();
+	private static final Map<ClassLoader, SoftReference<ContextSerializerFactory>>	CONTEXT_REF_MAP				= new WeakHashMap<>();
 
 	private static final ClassLoader														SYSTEM_CLASS_LOADER;
 
-	private static HashMap<String, Serializer>												staticSerializerMap;
-	private static HashMap<String, Deserializer>											staticDeserializerMap;
-	private static HashMap<String, Deserializer>											staticClassNameMap;
+	private static Map<String, Serializer>											staticSerializerMap;
+	private static Map<String, Deserializer>										staticDeserializerMap;
+	private static Map<String, Deserializer>										staticClassNameMap;
 
 	private ContextSerializerFactory														parent;
 	private final WeakReference<ClassLoader>												loaderRef;
 
-	private final HashSet<String>															serializerFiles				= new HashSet<>();
-	private final HashSet<String>															deserializerFiles			= new HashSet<>();
+	private final Set<String>														serializerFiles				= new HashSet<>();
+	private final Set<String>														deserializerFiles			= new HashSet<>();
 
-	private final HashMap<String, Serializer>												serializerClassMap			= new HashMap<>();
+	private final Map<String, Serializer>											serializerClassMap			= new HashMap<>();
 
-	private final ConcurrentHashMap<String, Serializer>										customSerializerMap			= new ConcurrentHashMap<>();
+	private final Map<String, Serializer>											customSerializerMap			= new ConcurrentHashMap<>();
 
-	private final HashMap<Class<?>, Serializer>												serializerInterfaceMap		= new HashMap<>();
+	private final Map<Class<?>, Serializer>											serializerInterfaceMap		= new HashMap<>();
 
-	private final HashMap<String, Deserializer>												deserializerClassMap		= new HashMap<>();
+	private final Map<String, Deserializer>											deserializerClassMap		= new HashMap<>();
 
-	private final HashMap<String, Deserializer>												deserializerClassNameMap	= new HashMap<>();
+	private final Map<String, Deserializer>											deserializerClassNameMap	= new HashMap<>();
 
-	private final ConcurrentHashMap<String, Deserializer>									customDeserializerMap		= new ConcurrentHashMap<>();
+	private final Map<String, Deserializer>											customDeserializerMap		= new ConcurrentHashMap<>();
 
-	private final HashMap<Class<?>, Deserializer>											deserializerInterfaceMap	= new HashMap<>();
+	private final Map<Class<?>, Deserializer>										deserializerInterfaceMap	= new HashMap<>();
 
 	public ContextSerializerFactory(ContextSerializerFactory parent, ClassLoader loader) {
 		if (loader == null) {
@@ -286,7 +287,7 @@ public class ContextSerializerFactory {
 		}
 	}
 
-	private void initSerializerFiles(String fileName, HashSet<String> fileList, HashMap<Class<?>, Class<?>> classMap, Class<?> type) {
+	private void initSerializerFiles(String fileName, Set<String> fileList, Map<Class<?>, Class<?>> classMap, Class<?> type) {
 		try {
 			ClassLoader classLoader = this.getClassLoader();
 

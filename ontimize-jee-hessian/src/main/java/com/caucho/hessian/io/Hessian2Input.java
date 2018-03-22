@@ -30,6 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.caucho.hessian.io.deserializer.Deserializer;
+import com.caucho.hessian.util.FlowControlTools;
 
 // @formatter:off
 /**
@@ -485,223 +486,68 @@ public class Hessian2Input extends AbstractHessianInput implements Hessian2Const
 	@Override
 	public boolean readBoolean() throws IOException {
 		int tag = this.offset < this.length ? this.buffer[this.offset++] & 0xff : this.read();
-
-		switch (tag) {
-			case 'T':
-				return true;
-			case 'F':
-				return false;
-
-				// direct integer
-			case 0x80:
-			case 0x81:
-			case 0x82:
-			case 0x83:
-			case 0x84:
-			case 0x85:
-			case 0x86:
-			case 0x87:
-			case 0x88:
-			case 0x89:
-			case 0x8a:
-			case 0x8b:
-			case 0x8c:
-			case 0x8d:
-			case 0x8e:
-			case 0x8f:
-
-			case 0x90:
-			case 0x91:
-			case 0x92:
-			case 0x93:
-			case 0x94:
-			case 0x95:
-			case 0x96:
-			case 0x97:
-			case 0x98:
-			case 0x99:
-			case 0x9a:
-			case 0x9b:
-			case 0x9c:
-			case 0x9d:
-			case 0x9e:
-			case 0x9f:
-
-			case 0xa0:
-			case 0xa1:
-			case 0xa2:
-			case 0xa3:
-			case 0xa4:
-			case 0xa5:
-			case 0xa6:
-			case 0xa7:
-			case 0xa8:
-			case 0xa9:
-			case 0xaa:
-			case 0xab:
-			case 0xac:
-			case 0xad:
-			case 0xae:
-			case 0xaf:
-
-			case 0xb0:
-			case 0xb1:
-			case 0xb2:
-			case 0xb3:
-			case 0xb4:
-			case 0xb5:
-			case 0xb6:
-			case 0xb7:
-			case 0xb8:
-			case 0xb9:
-			case 0xba:
-			case 0xbb:
-			case 0xbc:
-			case 0xbd:
-			case 0xbe:
-			case 0xbf:
-				return tag != Hessian2Constants.BC_INT_ZERO;
-
-				// INT_BYTE = 0
-			case 0xc8:
-				return this.read() != 0;
-
-				// INT_BYTE != 0
-			case 0xc0:
-			case 0xc1:
-			case 0xc2:
-			case 0xc3:
-			case 0xc4:
-			case 0xc5:
-			case 0xc6:
-			case 0xc7:
-			case 0xc9:
-			case 0xca:
-			case 0xcb:
-			case 0xcc:
-			case 0xcd:
-			case 0xce:
-			case 0xcf:
-				this.read();
-				return true;
-
-				// INT_SHORT = 0
-			case 0xd4:
-				return ((256 * this.read()) + this.read()) != 0;
-
-				// INT_SHORT != 0
-			case 0xd0:
-			case 0xd1:
-			case 0xd2:
-			case 0xd3:
-			case 0xd5:
-			case 0xd6:
-			case 0xd7:
-				this.read();
-				this.read();
-				return true;
-
-			case 'I':
-				return this.parseInt() != 0;
-
-			case 0xd8:
-			case 0xd9:
-			case 0xda:
-			case 0xdb:
-			case 0xdc:
-			case 0xdd:
-			case 0xde:
-			case 0xdf:
-
-			case 0xe0:
-			case 0xe1:
-			case 0xe2:
-			case 0xe3:
-			case 0xe4:
-			case 0xe5:
-			case 0xe6:
-			case 0xe7:
-			case 0xe8:
-			case 0xe9:
-			case 0xea:
-			case 0xeb:
-			case 0xec:
-			case 0xed:
-			case 0xee:
-			case 0xef:
-				return tag != Hessian2Constants.BC_LONG_ZERO;
-
-				// LONG_BYTE = 0
-			case 0xf8:
-				return this.read() != 0;
-
-				// LONG_BYTE != 0
-			case 0xf0:
-			case 0xf1:
-			case 0xf2:
-			case 0xf3:
-			case 0xf4:
-			case 0xf5:
-			case 0xf6:
-			case 0xf7:
-			case 0xf9:
-			case 0xfa:
-			case 0xfb:
-			case 0xfc:
-			case 0xfd:
-			case 0xfe:
-			case 0xff:
-				this.read();
-				return true;
-
-				// INT_SHORT = 0
-			case 0x3c:
-				return ((256 * this.read()) + this.read()) != 0;
-
-				// INT_SHORT != 0
-			case 0x38:
-			case 0x39:
-			case 0x3a:
-			case 0x3b:
-			case 0x3d:
-			case 0x3e:
-			case 0x3f:
-				this.read();
-				this.read();
-				return true;
-
-			case BC_LONG_INT:
-				return ((0x1000000L * this.read()) + (0x10000L * this.read()) + (0x100 * this.read()) + this.read()) != 0;
-
-			case 'L':
-				return this.parseLong() != 0;
-
-			case BC_DOUBLE_ZERO:
-				return false;
-
-			case BC_DOUBLE_ONE:
-				return true;
-
-			case BC_DOUBLE_BYTE:
-				return this.read() != 0;
-
-			case BC_DOUBLE_SHORT:
-				return ((0x100 * this.read()) + this.read()) != 0;
-
-			case BC_DOUBLE_MILL: {
-				int mills = this.parseInt();
-
-				return mills != 0;
-			}
-
-			case 'D':
-				return this.parseDouble() != 0.0;
-
-			case 'N':
-				return false;
-
-			default:
-				throw this.expect("boolean", tag);
+		if ('T' == tag) {
+			return true;
+		} else if ('F' == tag) {
+			return false;
+		} else if (FlowControlTools.isBetween(tag, 0x80, 0xbf)) {
+			// direct integer
+			return tag != Hessian2Constants.BC_INT_ZERO;
+		} else if (0xc8 == tag) {
+			// INT_BYTE = 0
+			return this.read() != 0;
+		} else if (FlowControlTools.isBetween(tag, 0xc0, 0xc7) || FlowControlTools.isBetween(tag, 0xc9, 0xcf)) {
+			// INT_BYTE != 0
+			this.read();
+			return true;
+		} else if (0xd4 == tag) {
+			// INT_SHORT = 0
+			return ((256 * this.read()) + this.read()) != 0;
+		} else if (FlowControlTools.isBetween(tag, 0xd0, 0xd3) || FlowControlTools.isBetween(tag, 0xd5, 0xd7)) {
+			// INT_SHORT != 0
+			this.read();
+			this.read();
+			return true;
+		} else if ('I' == tag) {
+			return this.parseInt() != 0;
+		} else if (FlowControlTools.isBetween(tag, 0xd8, 0xef)) {
+			return tag != Hessian2Constants.BC_LONG_ZERO;
+		} else if (0xf8 == tag) {
+			// LONG_BYTE = 0
+			return this.read() != 0;
+		} else if (FlowControlTools.isBetween(tag, 0xf0, 0xff)) {
+			// LONG_BYTE != 0
+			this.read();
+			return true;
+		} else if (0x3c == tag) {
+			// INT_SHORT = 0
+			return ((256 * this.read()) + this.read()) != 0;
+		} else if (FlowControlTools.isBetween(tag, 0x38, 0x3b) || FlowControlTools.isBetween(tag, 0x3d, 0x3f)) {
+			// INT_SHORT != 0
+			this.read();
+			this.read();
+			return true;
+		} else if (Hessian2Constants.BC_LONG_INT == tag) {
+			return ((0x1000000L * this.read()) + (0x10000L * this.read()) + (0x100 * this.read()) + this.read()) != 0;
+		} else if ('L' == tag) {
+			return this.parseLong() != 0;
+		} else if (Hessian2Constants.BC_DOUBLE_ZERO == tag) {
+			return false;
+		} else if (Hessian2Constants.BC_DOUBLE_ONE == tag) {
+			return true;
+		} else if (Hessian2Constants.BC_DOUBLE_BYTE == tag) {
+			return this.read() != 0;
+		} else if (Hessian2Constants.BC_DOUBLE_SHORT == tag) {
+			return ((0x100 * this.read()) + this.read()) != 0;
+		} else if (Hessian2Constants.BC_DOUBLE_MILL == tag) {
+			int mills = this.parseInt();
+			return mills != 0;
+		} else if ('D' == tag) {
+			return this.parseDouble() != 0.0;
+		} else if ('N' == tag) {
+			return false;
+		} else {
+			throw this.expect("boolean", tag);
 		}
 	}
 

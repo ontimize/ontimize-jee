@@ -35,7 +35,7 @@ public class DefaultLevel extends Table implements Level {
 	protected FormatPattern				displayTextFormatPattern;
 	private LevelManager				levelManager;
 	private final Map<Object, Object>	lastSelectedKeys	= new HashMap<>();
-	private Hashtable					lastSelectedRowData	= new Hashtable<Object, Vector<Object>>();
+	private Map<String, List<?>>		lastSelectedRowData	= new Hashtable<>();
 
 	public DefaultLevel(Hashtable params) throws Exception {
 		super(params);
@@ -82,8 +82,8 @@ public class DefaultLevel extends Table implements Level {
 	public String getDisplayText() {
 		if ((this.displayTextFormatPattern != null) && (this.getSelectedRowsNumber() == 1)) {
 			Hashtable<Object, Object> tableKeys = new Hashtable<>();
-			Hashtable<Object, Vector<Object>> selectedRowData = this.lastSelectedRowData;
-			for (Entry<Object, Vector<Object>> entry : selectedRowData.entrySet()) {
+			Map<String, List<?>> selectedRowData = this.lastSelectedRowData;
+			for (Entry<String, List<?>> entry : selectedRowData.entrySet()) {
 				if ((entry.getValue() != null) && (entry.getValue().size() == 1)) {
 					if (entry.getValue().get(0) == null) {
 						tableKeys.put(entry.getKey().toString(), "-");
@@ -93,9 +93,8 @@ public class DefaultLevel extends Table implements Level {
 				}
 			}
 			return this.displayTextFormatPattern.parse(0, tableKeys);
-		} else {
-			return ApplicationManager.getTranslation(this.getEntityName(), this.getResourceBundle());
 		}
+		return ApplicationManager.getTranslation(this.getEntityName(), this.getResourceBundle());
 	}
 
 	@Override
@@ -117,11 +116,11 @@ public class DefaultLevel extends Table implements Level {
 					throw new IllegalArgumentException("DefaultLevel: only one row can be selected");
 				} else {
 					DefaultLevel.logger.debug(
-					        "DefaultLevel: Parentkey {} is null. It won't be included in the query.Check the xml file in which the table is defined to ensure that the field has a value",
-					        this.parentkeys.get(i));
+							"DefaultLevel: Parentkey {} is null. It won't be included in the query.Check the xml file in which the table is defined to ensure that the field has a value",
+							this.parentkeys.get(i));
 					if (DefaultLevel.logger.isTraceEnabled()) {
 						MessageDialog.showErrorMessage(this.parentFrame, "DEBUG: DefaultLevel: Parentkey " + this.parentkeys.get(
-						        i) + " is null. It won't be included in the query. " + "Check the xml file in which the table is defined to ensure that the field has a value");
+								i) + " is null. It won't be included in the query. " + "Check the xml file in which the table is defined to ensure that the field has a value");
 					}
 				}
 			}
