@@ -60,17 +60,16 @@ import com.ontimize.util.Base64Utils;
 public final class OntimizeHessianHttpClientSessionProcessorFactory {
 
 	private static final Logger					logger				= LoggerFactory.getLogger(OntimizeHessianHttpClientSessionProcessorFactory.class);
+	public final static String					JWT_HEADER			= "X-Auth-Token";
+
 	/** The sessionid. */
 	// private static String SESSIONID;
 	private static final CookieStore			httpCookieStore		= new BasicCookieStore();
-
 	/** The request interceptor. */
 	private static HttpRequestInterceptor		requestInterceptor	= new SessionIdHttpRequestInterceptor();
-
 	/** The response interceptor. */
 	private static HttpResponseInterceptor		responseInterceptor	= new SessionIdHttpResponseInterceptor();
 
-	public static String						JWT_HEADER			= "X-Auth-Token";
 	public static boolean						ENCRYPT				= true;
 	public static String						JWT_TOKEN			= null;
 	/** The httpproc. */

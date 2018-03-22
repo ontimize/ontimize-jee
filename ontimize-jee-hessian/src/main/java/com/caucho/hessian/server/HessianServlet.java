@@ -41,19 +41,18 @@ import com.caucho.services.server.ServiceContext;
 /**
  * Servlet for serving Hessian services.
  */
-@SuppressWarnings("serial")
 public class HessianServlet extends HttpServlet {
 
-	private Class<?>			_homeAPI;
-	private Object				_homeImpl;
+	private static Class<?>				homeAPI;
+	private static Object				homeImpl;
 
-	private Class<?>			_objectAPI;
-	private Object				_objectImpl;
+	private static Class<?>				objectAPI;
+	private static Object				objectImpl;
 
-	private HessianSkeleton		_homeSkeleton;
-	private HessianSkeleton		_objectSkeleton;
+	private static HessianSkeleton		homeSkeleton;
+	private static HessianSkeleton		objectSkeleton;
 
-	private SerializerFactory	_serializerFactory;
+	private static SerializerFactory	serializerFactory;
 
 	public HessianServlet() {}
 
@@ -65,68 +64,68 @@ public class HessianServlet extends HttpServlet {
 	/**
 	 * Sets the home api.
 	 */
-	public void setHomeAPI(Class<?> api) {
-		this._homeAPI = api;
+	public static void setHomeAPI(Class<?> api) {
+		HessianServlet.homeAPI = api;
 	}
 
 	/**
 	 * Sets the home implementation
 	 */
-	public void setHome(Object home) {
-		this._homeImpl = home;
+	public static void setHome(Object home) {
+		HessianServlet.homeImpl = home;
 	}
 
 	/**
 	 * Sets the object api.
 	 */
-	public void setObjectAPI(Class<?> api) {
-		this._objectAPI = api;
+	public static void setObjectAPI(Class<?> api) {
+		HessianServlet.objectAPI = api;
 	}
 
 	/**
 	 * Sets the object implementation
 	 */
-	public void setObject(Object object) {
-		this._objectImpl = object;
+	public static void setObject(Object object) {
+		HessianServlet.objectImpl = object;
 	}
 
 	/**
 	 * Sets the service class.
 	 */
-	public void setService(Object service) {
-		this.setHome(service);
+	public static void setService(Object service) {
+		HessianServlet.setHome(service);
 	}
 
 	/**
 	 * Sets the api-class.
 	 */
-	public void setAPIClass(Class<?> api) {
-		this.setHomeAPI(api);
+	public static void setAPIClass(Class<?> api) {
+		HessianServlet.setHomeAPI(api);
 	}
 
 	/**
 	 * Gets the api-class.
 	 */
-	public Class<?> getAPIClass() {
-		return this._homeAPI;
+	public static Class<?> getAPIClass() {
+		return HessianServlet.homeAPI;
 	}
 
 	/**
 	 * Sets the serializer factory.
 	 */
-	public void setSerializerFactory(SerializerFactory factory) {
-		this._serializerFactory = factory;
+	public static void setSerializerFactory(SerializerFactory factory) {
+		HessianServlet.serializerFactory = factory;
 	}
 
 	/**
 	 * Gets the serializer factory.
 	 */
 	public SerializerFactory getSerializerFactory() {
-		if (this._serializerFactory == null) {
-			this._serializerFactory = new SerializerFactory();
+		if (HessianServlet.serializerFactory == null) {
+			HessianServlet.serializerFactory = new SerializerFactory();
 		}
 
-		return this._serializerFactory;
+		return HessianServlet.serializerFactory;
 	}
 
 	/**
@@ -156,81 +155,81 @@ public class HessianServlet extends HttpServlet {
 		super.init(config);
 
 		try {
-			if (this._homeImpl != null) {
+			if (HessianServlet.homeImpl != null) {
 			} else if (this.getInitParameter("home-class") != null) {
 				String className = this.getInitParameter("home-class");
 
 				Class<?> homeClass = this.loadClass(className);
 
-				this._homeImpl = homeClass.newInstance();
+				HessianServlet.homeImpl = homeClass.newInstance();
 
-				this.init(this._homeImpl);
+				this.init(HessianServlet.homeImpl);
 			} else if (this.getInitParameter("service-class") != null) {
 				String className = this.getInitParameter("service-class");
 
 				Class<?> homeClass = this.loadClass(className);
 
-				this._homeImpl = homeClass.newInstance();
+				HessianServlet.homeImpl = homeClass.newInstance();
 
-				this.init(this._homeImpl);
+				this.init(HessianServlet.homeImpl);
 			} else {
 				if (this.getClass().equals(HessianServlet.class)) {
 					throw new ServletException("server must extend HessianServlet");
 				}
 
-				this._homeImpl = this;
+				HessianServlet.homeImpl = this;
 			}
 
-			if (this._homeAPI != null) {
+			if (HessianServlet.homeAPI != null) {
 			} else if (this.getInitParameter("home-api") != null) {
 				String className = this.getInitParameter("home-api");
 
-				this._homeAPI = this.loadClass(className);
+				HessianServlet.homeAPI = this.loadClass(className);
 			} else if (this.getInitParameter("api-class") != null) {
 				String className = this.getInitParameter("api-class");
 
-				this._homeAPI = this.loadClass(className);
-			} else if (this._homeImpl != null) {
-				this._homeAPI = this.findRemoteAPI(this._homeImpl.getClass());
+				HessianServlet.homeAPI = this.loadClass(className);
+			} else if (HessianServlet.homeImpl != null) {
+				HessianServlet.homeAPI = this.findRemoteAPI(HessianServlet.homeImpl.getClass());
 
-				if (this._homeAPI == null) {
-					this._homeAPI = this._homeImpl.getClass();
+				if (HessianServlet.homeAPI == null) {
+					HessianServlet.homeAPI = HessianServlet.homeImpl.getClass();
 				}
 
-				this._homeAPI = this._homeImpl.getClass();
+				HessianServlet.homeAPI = HessianServlet.homeImpl.getClass();
 			}
 
-			if (this._objectImpl != null) {
+			if (HessianServlet.objectImpl != null) {
 			} else if (this.getInitParameter("object-class") != null) {
 				String className = this.getInitParameter("object-class");
 
 				Class<?> objectClass = this.loadClass(className);
 
-				this._objectImpl = objectClass.newInstance();
+				HessianServlet.objectImpl = objectClass.newInstance();
 
-				this.init(this._objectImpl);
+				this.init(HessianServlet.objectImpl);
 			}
 
-			if (this._objectAPI != null) {
+			if (HessianServlet.objectAPI != null) {
 			} else if (this.getInitParameter("object-api") != null) {
 				String className = this.getInitParameter("object-api");
 
-				this._objectAPI = this.loadClass(className);
-			} else if (this._objectImpl != null) {
-				this._objectAPI = this._objectImpl.getClass();
+				HessianServlet.objectAPI = this.loadClass(className);
+			} else if (HessianServlet.objectImpl != null) {
+				HessianServlet.objectAPI = HessianServlet.objectImpl.getClass();
 			}
 
-			this._homeSkeleton = new HessianSkeleton(this._homeImpl, this._homeAPI, null);
+			HessianServlet.homeSkeleton = new HessianSkeleton(HessianServlet.homeImpl, HessianServlet.homeAPI, null);
 
-			if (this._objectAPI != null) {
-				this._homeSkeleton.setObjectClass(this._objectAPI);
+			if (HessianServlet.objectAPI != null) {
+				HessianServlet.homeSkeleton.setObjectClass(HessianServlet.objectAPI);
 			}
 
-			if (this._objectImpl != null) {
-				this._objectSkeleton = new HessianSkeleton(this._objectImpl, this._objectAPI, null);
-				this._objectSkeleton.setHomeClass(this._homeAPI);
+			if (HessianServlet.objectImpl != null) {
+				HessianServlet.objectSkeleton = new HessianSkeleton(HessianServlet.objectImpl, HessianServlet.objectAPI, null);
+				HessianServlet.objectSkeleton.setHomeClass(HessianServlet.homeAPI);
 			} else {
-				this._objectSkeleton = this._homeSkeleton;
+				HessianServlet.objectSkeleton = HessianServlet.homeSkeleton;
 			}
 
 			if ("true".equals(this.getInitParameter("debug"))) {
@@ -251,8 +250,8 @@ public class HessianServlet extends HttpServlet {
 		return null;
 
 		/*
-		 * if (implClass == null || implClass.equals(GenericService.class)) return null; Class []interfaces = implClass.getInterfaces(); if
-		 * (interfaces.length == 1) return interfaces[0]; return findRemoteAPI(implClass.getSuperclass());
+		 * if (implClass == null || implClass.equals(GenericService.class)) return null; Class []interfaces = implClass.getInterfaces(); if (interfaces.length == 1) return
+		 * interfaces[0]; return findRemoteAPI(implClass.getSuperclass());
 		 */
 	}
 
@@ -261,9 +260,8 @@ public class HessianServlet extends HttpServlet {
 
 		if (loader != null) {
 			return Class.forName(className, false, loader);
-		} else {
-			return Class.forName(className);
 		}
+		return Class.forName(className);
 	}
 
 	protected ClassLoader getContextClassLoader() {
@@ -327,9 +325,9 @@ public class HessianServlet extends HttpServlet {
 
 	protected void invoke(InputStream is, OutputStream os, String objectId, SerializerFactory serializerFactory) throws Exception {
 		if (objectId != null) {
-			this._objectSkeleton.invoke(is, os, serializerFactory);
+			HessianServlet.objectSkeleton.invoke(is, os, serializerFactory);
 		} else {
-			this._homeSkeleton.invoke(is, os, serializerFactory);
+			HessianServlet.homeSkeleton.invoke(is, os, serializerFactory);
 		}
 	}
 

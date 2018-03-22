@@ -9,6 +9,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.remoting.caucho.HessianClientInterceptor;
 import org.springframework.remoting.caucho.HessianProxyFactoryBean;
@@ -46,6 +48,9 @@ import com.caucho.hessian.util.IExceptionTranslator;
  * @see org.springframework.remoting.rmi.RmiServiceExporter
  */
 public class OntimizeHessianExporter extends RemoteExporter implements InitializingBean, HttpRequestHandler {
+
+	private static final Logger		logger					= LoggerFactory.getLogger(OntimizeHessianExporter.class);
+
 	public static final String		CONTENT_TYPE_HESSIAN	= "application/x-hessian";
 
 	private SerializerFactory		serializerFactory		= new SerializerFactory();
@@ -191,7 +196,7 @@ public class OntimizeHessianExporter extends RemoteExporter implements Initializ
 				out = new Hessian2Output(osToUse);
 				in.readCall();
 			} else {
-				throw new IOException("Expected 'H'/'C' (Hessian 2.0) or 'c' (Hessian 1.0) in hessian input at " + code);
+				throw new IOException("Expected 'H'/'C' (Hessian 2.0) in hessian input at " + code);
 			}
 
 			if (this.serializerFactory != null) {
@@ -209,13 +214,13 @@ public class OntimizeHessianExporter extends RemoteExporter implements Initializ
 					in.close();
 					isToUse.close();
 				} catch (IOException ex) {
-					// ignore
+					OntimizeHessianExporter.logger.trace(null, ex);
 				}
 				try {
 					out.close();
 					osToUse.close();
 				} catch (IOException ex) {
-					// ignore
+					OntimizeHessianExporter.logger.trace(null, ex);
 				}
 			}
 		} finally {
