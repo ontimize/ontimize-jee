@@ -92,7 +92,7 @@ public class OntimizeHessianExporter extends RemoteExporter implements Initializ
 		response.setContentType(OntimizeHessianExporter.CONTENT_TYPE_HESSIAN);
 		try {
 			this.invoke(request.getInputStream(), response.getOutputStream());
-		} catch (Throwable ex) {
+		} catch (Exception ex) {
 			throw new NestedServletException("Hessian skeleton invocation failed", ex);
 		}
 	}
@@ -133,10 +133,11 @@ public class OntimizeHessianExporter extends RemoteExporter implements Initializ
 	 *            the request stream
 	 * @param outputStream
 	 *            the response stream
+	 * @throws Exception
 	 * @throws Throwable
 	 *             if invocation failed
 	 */
-	public void invoke(InputStream inputStream, OutputStream outputStream) throws Throwable {
+	public void invoke(InputStream inputStream, OutputStream outputStream) throws Exception {
 		Assert.notNull(this.skeleton, "Hessian exporter has not been initialized");
 		this.doInvoke(this.skeleton, inputStream, outputStream);
 	}
@@ -150,10 +151,11 @@ public class OntimizeHessianExporter extends RemoteExporter implements Initializ
 	 *            the request stream
 	 * @param outputStream
 	 *            the response stream
+	 * @throws Exception
 	 * @throws Throwable
 	 *             if invocation failed
 	 */
-	protected void doInvoke(HessianSkeleton skeleton, InputStream inputStream, OutputStream outputStream) throws Throwable {
+	protected void doInvoke(HessianSkeleton skeleton, InputStream inputStream, OutputStream outputStream) throws Exception {
 
 		ClassLoader originalClassLoader = this.overrideThreadContextClassLoader();
 		try {
