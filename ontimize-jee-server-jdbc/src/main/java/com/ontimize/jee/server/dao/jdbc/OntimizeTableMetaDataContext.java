@@ -17,6 +17,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
 
 import com.ontimize.jee.common.tools.ReflectionTools;
+import com.ontimize.jee.server.dao.common.INameConvention;
 
 /**
  * The Class OntimizeTableMetaDataContext.
@@ -25,6 +26,7 @@ public class OntimizeTableMetaDataContext extends TableMetaDataContext {
 
 	private TableMetaDataProvider	metaDataProviderCopy;
 	private boolean					processed;
+	private INameConvention			nameConvention;
 
 	/**
 	 * Instantiates a new ontimize table meta data context.
@@ -47,6 +49,14 @@ public class OntimizeTableMetaDataContext extends TableMetaDataContext {
 		return this.metaDataProviderCopy;
 	}
 
+	public INameConvention getNameConvention() {
+		return this.nameConvention;
+	}
+
+	public void setNameConvention(INameConvention nameConvention) {
+		this.nameConvention = nameConvention;
+	}
+
 	/**
 	 * Gets the table parameters.
 	 *
@@ -65,7 +75,7 @@ public class OntimizeTableMetaDataContext extends TableMetaDataContext {
 	public InsertMetaInfoHolder getInsertMetaInfo(Map<String, ?> inParameters) {
 		Map<String, Object> inParametersCase = new HashMap<>(inParameters.size());
 		for (Entry<String, ?> entry : inParameters.entrySet()) {
-			inParametersCase.put(entry.getKey().toUpperCase(), entry.getValue());
+			inParametersCase.put(this.nameConvention.convertName(entry.getKey()), entry.getValue());
 		}
 		List<Object> values = new ArrayList<>();
 		List<Integer> sqlTypes = new ArrayList<>();
@@ -73,7 +83,7 @@ public class OntimizeTableMetaDataContext extends TableMetaDataContext {
 
 		for (Entry<String, ?> entry : inParametersCase.entrySet()) {
 			for (TableParameterMetaData tableColumn : this.getMetaDataProvider().getTableParameterMetaData()) {
-				if (tableColumn.getParameterName().toUpperCase().equals(entry.getKey())) {
+				if (this.nameConvention.convertName(tableColumn.getParameterName()).equals(entry.getKey())) {
 					values.add(entry.getValue());
 					sqlTypes.add(tableColumn.getSqlType());
 					validColumns.add(tableColumn.getParameterName());
@@ -158,16 +168,39 @@ public class OntimizeTableMetaDataContext extends TableMetaDataContext {
 
 	/**
 	 * Get a List of the table upper case column names.
+	 *
+	 * @deprecated
 	 */
+	@Deprecated
 	public List<String> getUpperCaseTableColumns() {
 		List<String> tableColumns = this.getTableColumns();
 		return this.changeColumnNameToUpperCase(tableColumns);
 	}
 
+	public List<String> getNameConventionTableColumns() {
+		List<String> tableColumns = this.getTableColumns();
+		return this.changeColumnNameToNameConvention(tableColumns);
+	}
+
+	/**
+	 * Get a List of the table upper case column names.
+	 *
+	 * @deprecated
+	 */
+	@Deprecated
 	private List<String> changeColumnNameToUpperCase(List<String> columnNames) {
 		for (Object columnName : columnNames) {
 			if (columnName instanceof String) {
 				columnNames.set(columnNames.indexOf(columnName), ((String) columnName).toUpperCase());
+			}
+		}
+		return columnNames;
+	}
+
+	private List<String> changeColumnNameToNameConvention(List<String> columnNames) {
+		for (Object columnName : columnNames) {
+			if (columnName instanceof String) {
+				columnNames.set(columnNames.indexOf(columnName), this.nameConvention.convertName((String) columnName));
 			}
 		}
 		return columnNames;
@@ -182,4 +215,5 @@ public class OntimizeTableMetaDataContext extends TableMetaDataContext {
 	public boolean isProcessed() {
 		return this.processed;
 	}
+
 }

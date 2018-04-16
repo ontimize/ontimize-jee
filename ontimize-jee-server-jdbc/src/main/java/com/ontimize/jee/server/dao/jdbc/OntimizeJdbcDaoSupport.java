@@ -78,6 +78,7 @@ import com.ontimize.jee.common.tools.streamfilter.ReplaceTokensFilterReader;
 import com.ontimize.jee.server.dao.DaoProperty;
 import com.ontimize.jee.server.dao.IOntimizeDaoSupport;
 import com.ontimize.jee.server.dao.common.ConfigurationFile;
+import com.ontimize.jee.server.dao.common.INameConvention;
 import com.ontimize.jee.server.dao.common.INameConverter;
 import com.ontimize.jee.server.dao.jdbc.setup.AmbiguousColumnType;
 import com.ontimize.jee.server.dao.jdbc.setup.FunctionColumnType;
@@ -135,6 +136,12 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	 * Configuration file placeholder
 	 */
 	private String											configurationFilePlaceholder	= null;
+
+	/**
+	 * Name convention
+	 *
+	 */
+	private INameConvention									nameConvention;
 
 	/**
 	 * Instantiates a new ontimize jdbc dao support.
@@ -640,7 +647,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 			if (res == null) {
 				throw new DataRetrievalFailureException(I18NNaming.M_IT_HAS_NOT_CHANGED_ANY_RECORD);
 			}
-			erResult.put(this.getGeneratedKeyNames()[0].toUpperCase(), res);
+			erResult.put(this.nameConvention.convertName(this.getGeneratedKeyNames()[0]), res);
 		}
 		return erResult;
 	}
@@ -891,7 +898,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 		for (final Entry<?, ?> entry : inputAttributesValues.entrySet()) {
 			final Object oKey = entry.getKey();
 			final Object oValue = entry.getValue();
-			if (this.tableMetaDataContext.getUpperCaseTableColumns().contains(oKey)) {
+			if (this.tableMetaDataContext.getNameConventionTableColumns().contains(oKey)) {
 				hValidKeysValues.put((String) oKey, oValue);
 			}
 		}
@@ -1349,6 +1356,9 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 			if (!CheckingTools.isStringEmpty(nameConverter)) {
 				this.setNameConverter((INameConverter) this.applicationContext.getBean(nameConverter));
 			}
+			this.nameConvention = this.applicationContext.getBean(INameConvention.class);
+			this.tableMetaDataContext.setNameConvention(this.nameConvention);
+
 		} catch (final IOException e) {
 			throw new InvalidDataAccessApiUsageException(I18NNaming.M_ERROR_LOADING_CONFIGURATION_FILE, e);
 		}
