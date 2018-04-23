@@ -57,6 +57,7 @@
 		<spring-security-ldap.version>4.0.2.RELEASE</spring-security-ldap.version>
 		<spring-session.version>1.0.2.RELEASE</spring-session.version>
 		<spring-security-jwt.version>1.0.4.RELEASE</spring-security-jwt.version>
+		<spring-data-cassandra.version>1.5.6.RELEASE</spring-data-cassandra.version>
 		<cxf.version>3.1.6</cxf.version>
 		<jackson.version>2.8.5</jackson.version>
 
@@ -417,6 +418,15 @@
 				<artifactId>aspectjweaver</artifactId>
 				<version>${aspectjweaver.version}</version>
 			</dependency>
+
+			<!-- Spring data -->
+			<dependency>
+				<groupId>org.springframework.data</groupId>
+				<artifactId>spring-data-cassandra</artifactId>
+				<version>${spring-data-cassandra.version}</version>
+			</dependency>
+
+
 			<!-- HTTP Client -->
 			<dependency>
 				<groupId>org.apache.httpcomponents</groupId>
@@ -637,7 +647,10 @@
 		<module>ontimize-jee-server-rest</module>
 		<module>ontimize-jee-server-jpa</module>
 		<module>ontimize-jee-server-jdbc</module>
+		<module>ontimize-jee-server-cassandra</module>
 		<module>ontimize-jee-server-logic</module>
 		<module>ontimize-jee-webclient-addons</module>
+
+
 	</modules>
 </project>
