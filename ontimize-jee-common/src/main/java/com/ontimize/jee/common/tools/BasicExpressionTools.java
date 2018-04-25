@@ -388,6 +388,49 @@ public final class BasicExpressionTools {
 	}
 
 	/**
+	 * Allow to replace an expression by another into a complex expression.<br>
+	 * For instance: <br>
+	 *  · Replace name='JACK' by fullName='Jack Jones' <br>
+	 *  · Into the expression (Date=today AND name=Jack) or (date=yesterday and name='Louis')<br>
+	 *  · Results in: (Date=today AND fullName='Jack Jones' ) or (date=yesterday and name='Louis')<br>
+	 *
+	 * @param originalExpr
+	 * @param ipExpr
+	 * @param replaceExpr
+	 * @return
+	 */
+	public static BasicExpression replaceExpression(BasicExpression originalExpr, BasicExpression ipExpr, BasicExpression replaceExpr) {
+		if (originalExpr == ipExpr) {
+			return replaceExpr;
+		}
+		Object leftOperand = originalExpr.getLeftOperand();
+		Object newLeft = null;
+		if (leftOperand instanceof BasicExpression) {
+			newLeft = BasicExpressionTools.replaceExpression((BasicExpression) leftOperand, ipExpr, replaceExpr);
+		} else {
+			newLeft = leftOperand;
+		}
+
+		Object rightOperand = originalExpr.getRightOperand();
+		Object newRight = null;
+		if (rightOperand instanceof BasicExpression) {
+			newRight = BasicExpressionTools.replaceExpression((BasicExpression) rightOperand, ipExpr, replaceExpr);
+		} else {
+			newRight = rightOperand;
+		}
+		if ((newRight != null) && (newLeft != null)) {
+			return new BasicExpression(newLeft, originalExpr.getOperator(), newRight);
+		}
+		if ((newLeft != null) && (newLeft instanceof BasicExpression)) {
+			return (BasicExpression) newLeft;
+		}
+		if ((newRight != null) && (newRight instanceof BasicExpression)) {
+			return (BasicExpression) newRight;
+		}
+		return null;
+	}
+
+	/**
 	 * Rename field.
 	 *
 	 * @param expr
