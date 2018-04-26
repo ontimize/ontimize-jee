@@ -14,6 +14,7 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,7 @@ import com.ontimize.util.logging.LogManagerFactory;
 @Service("ServerManagementService")
 @Lazy(value = true)
 public class ServerManagementServiceImpl implements ApplicationContextAware, IServerManagementService {
-
+	private static final Logger				logger	= LoggerFactory.getLogger(ServerManagementServiceImpl.class);
 	@Autowired
 	private ILoggerHelper					loggerHelper;
 	@Autowired
@@ -219,7 +220,11 @@ public class ServerManagementServiceImpl implements ApplicationContextAware, ISe
 	public void reloadDaos() {
 		Map<String, IOntimizeDaoSupport> beans = BeanFactoryUtils.beansOfTypeIncludingAncestors(this.applicationContext, IOntimizeDaoSupport.class);
 		for (IOntimizeDaoSupport dao : beans.values()) {
-			dao.reload();
+			try {
+				dao.reload();
+			} catch (Exception e) {
+				ServerManagementServiceImpl.logger.error("Error reload dao: ", dao != null ? dao.getClass() : "nullDao", e);
+			}
 		}
 	}
 
