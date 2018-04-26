@@ -29,7 +29,6 @@ import com.ontimize.db.SQLStatementBuilder.BasicOperator;
 import com.ontimize.gui.SearchValue;
 import com.ontimize.gui.field.ReferenceFieldAttribute;
 import com.ontimize.gui.table.TableAttribute;
-import com.ontimize.jee.common.tools.EntityResultTools.PivotGroupOperation.PivotPartialAggregateValue;
 import com.ontimize.jee.common.tools.ertools.AbstractAggregateFunction;
 import com.ontimize.jee.common.tools.ertools.Group;
 import com.ontimize.jee.common.tools.ertools.IAggregateFunction;
@@ -1352,10 +1351,10 @@ public final class EntityResultTools {
 		return EntityResultTools.doGroup(res, otherColumns.toArray(new String[] {}), groupOperations.toArray(new IAggregateFunction[] {}));
 	}
 
+	public static class PivotPartialAggregateValue implements IPartialAggregateValue {
+		Object value = null;
+	}
 	public static class PivotGroupOperation extends AbstractAggregateFunction<PivotPartialAggregateValue> {
-		public static class PivotPartialAggregateValue implements IPartialAggregateValue {
-			Object value = null;
-		}
 
 		public PivotGroupOperation(String opColumnName, String resultColumnName) {
 			super(opColumnName, resultColumnName);
