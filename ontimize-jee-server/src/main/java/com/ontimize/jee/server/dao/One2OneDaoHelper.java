@@ -165,7 +165,7 @@ public class One2OneDaoHelper implements ApplicationContextAware {
 					if (this.checkColumns(subDao.getDao(), attributesValues, null)) {
 						// Checks is secondary exists (then update) else insert
 						boolean joinKeyIsMain = keysValues.containsKey(subDao.getKeySecondary());
-						Object keyValue = this.checksIfExists(daoHelper, mainDao, subDao.getDao(), keysValues, subDao.getKeySecondary());
+						Object keyValue = this.checksIfExists(daoHelper, mainDao, subDao.getDao(), keysValues, subDao.getKeySecondary(), subDao.getKey());
 						if (keyValue != null) {
 							this.checkRequiredColumns(attributesValues, subDao.getRequiredColumns(), false);
 							EntityResult resUpdateSecond = this.updateSubDao(daoHelper, attributesValues, subDao, keyValue);
@@ -244,7 +244,7 @@ public class One2OneDaoHelper implements ApplicationContextAware {
 		}
 	}
 
-	private EntityResult deleteSubDao(DefaultOntimizeDaoHelper daoHelper, Map<?, ?> attributesValues, OneToOneSubDao subDao) throws OntimizeJEEException {
+	protected EntityResult deleteSubDao(DefaultOntimizeDaoHelper daoHelper, Map<?, ?> attributesValues, OneToOneSubDao subDao) throws OntimizeJEEException {
 		if (subDao.getListener() != null) {
 			subDao.getListener().preDelete(subDao.getDao(), attributesValues);
 		}
@@ -258,7 +258,7 @@ public class One2OneDaoHelper implements ApplicationContextAware {
 		return resDeleteSecondary;
 	}
 
-	private EntityResult insertSubDao(DefaultOntimizeDaoHelper daoHelper, Map<?, ?> attributesValues, OneToOneSubDao subDao) throws OntimizeJEEException {
+	protected EntityResult insertSubDao(DefaultOntimizeDaoHelper daoHelper, Map<?, ?> attributesValues, OneToOneSubDao subDao) throws OntimizeJEEException {
 		if (subDao.getListener() != null) {
 			subDao.getListener().preInsert(subDao.getDao(), attributesValues);
 		}
@@ -272,7 +272,7 @@ public class One2OneDaoHelper implements ApplicationContextAware {
 		return resInsertSecondary;
 	}
 
-	private EntityResult updateSubDao(DefaultOntimizeDaoHelper daoHelper, Map<?, ?> attributesValues, OneToOneSubDao subDao, Object keyValue) {
+	protected EntityResult updateSubDao(DefaultOntimizeDaoHelper daoHelper, Map<?, ?> attributesValues, OneToOneSubDao subDao, Object keyValue) {
 		Hashtable<Object, Object> kv2 = EntityResultTools.keysvalues(subDao.getKeySecondary(), keyValue);
 		if (subDao.getListener() != null) {
 			subDao.getListener().preUpdate(subDao.getDao(), attributesValues, kv2);
@@ -287,21 +287,24 @@ public class One2OneDaoHelper implements ApplicationContextAware {
 	}
 
 	protected Object checksIfExists(DefaultOntimizeDaoHelper daoHelper, IOntimizeDaoSupport mainDao, IOntimizeDaoSupport secondaryDao, Map<?, ?> keysValues,
-			String joinKeySecondary) throws Exception {
+			String joinKeySecondary, String joinKeyPrimary) throws Exception {
 		Object secondaryKey = null;
-		if (!keysValues.containsKey(joinKeySecondary)) {
-			EntityResult resQuery = daoHelper.query(mainDao, keysValues, EntityResultTools.attributes(joinKeySecondary));
-			CheckingTools.checkValidEntityResult(resQuery, "E_QUERYING_KEYS_IN_MAIN_DAO");
-			secondaryKey = ((Vector) resQuery.get(joinKeySecondary)).get(0);
-		} else {
+		if (keysValues.containsKey(joinKeySecondary)) {
 			secondaryKey = keysValues.get(joinKeySecondary);
+		} else if (keysValues.containsKey(joinKeyPrimary)) {
+			secondaryKey = keysValues.get(joinKeyPrimary);
+		} else {
+			EntityResult resQuery = daoHelper.query(mainDao, keysValues, EntityResultTools.attributes(joinKeyPrimary));
+			CheckingTools.checkValidEntityResult(resQuery, "E_QUERYING_KEYS_IN_MAIN_DAO", true, true, new Object[] {});
+			secondaryKey = ((Vector) resQuery.get(joinKeySecondary)).get(0);
 		}
-		if (secondaryKey == null) {
-			return null;
-		}
-		EntityResult resQuery = daoHelper.query(secondaryDao, EntityResultTools.keysvalues(joinKeySecondary, secondaryKey), EntityResultTools.attributes(joinKeySecondary));
-		CheckingTools.checkValidEntityResult(resQuery, "E_QUERYING_IN_SECONDARY_DAO");
-		return resQuery.calculateRecordNumber() == 1 ? secondaryKey : null;
+		return secondaryKey;
+		// if (secondaryKey == null) {
+		// return null;
+		// }
+		// EntityResult resQuery = daoHelper.query(secondaryDao, EntityResultTools.keysvalues(joinKeySecondary, secondaryKey), EntityResultTools.attributes(joinKeySecondary));
+		// CheckingTools.checkValidEntityResult(resQuery, "E_QUERYING_IN_SECONDARY_DAO");
+		// return resQuery.calculateRecordNumber() == 1 ? secondaryKey : null;
 	}
 
 	protected boolean checkColumns(IOntimizeDaoSupport dao, Map<?, ?> valuesToChange, List<String> notEnoughColumns) {
