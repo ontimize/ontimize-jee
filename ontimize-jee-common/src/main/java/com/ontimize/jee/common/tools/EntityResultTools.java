@@ -3,7 +3,6 @@
  */
 package com.ontimize.jee.common.tools;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
@@ -30,7 +29,11 @@ import com.ontimize.db.SQLStatementBuilder.BasicOperator;
 import com.ontimize.gui.SearchValue;
 import com.ontimize.gui.field.ReferenceFieldAttribute;
 import com.ontimize.gui.table.TableAttribute;
-import com.ontimize.jee.common.exceptions.OntimizeJEEException;
+import com.ontimize.jee.common.tools.EntityResultTools.PivotGroupOperation.PivotPartialAggregateValue;
+import com.ontimize.jee.common.tools.ertools.AbstractAggregateFunction;
+import com.ontimize.jee.common.tools.ertools.Group;
+import com.ontimize.jee.common.tools.ertools.IAggregateFunction;
+import com.ontimize.jee.common.tools.ertools.IPartialAggregateValue;
 import com.ontimize.report.TableSorter;
 
 /**
@@ -57,56 +60,6 @@ public final class EntityResultTools {
 		INNER
 	}
 
-	/**
-	 * The Enum GroupType.
-	 */
-	public enum GroupType {
-
-		/** The none. */
-		NONE,
-		/** The sum. */
-		SUM,
-		/** The min. */
-		MIN,
-		/** The max. */
-		MAX,
-		/** The avg. */
-		AVG,
-		/** The count */
-		COUNT
-	}
-
-	public static class GroupTypeOperation {
-
-		private final String	opColumn;
-		private final GroupType	groupType;
-		private final String	renameColumn;
-
-		public String getOpColumn() {
-			return this.opColumn;
-		}
-
-		public String getRenameColumn() {
-			return this.renameColumn;
-		}
-
-		public GroupType getGroupType() {
-			return this.groupType;
-		}
-
-		public GroupTypeOperation(String opColumn, GroupType groupType) {
-			this.opColumn = opColumn;
-			this.groupType = groupType;
-			this.renameColumn = opColumn + "_" + groupType.name();
-		}
-
-		public GroupTypeOperation(String opColumn, String renameColumn, GroupType groupType) {
-			this.opColumn = opColumn;
-			this.groupType = groupType;
-			this.renameColumn = renameColumn;
-		}
-
-	}
 
 	/**
 	 * Hace un join entre dos {@link EntityResult}. El join puede ser LEFT o INNER. En columnKeysA se indican las columnas por las que se hace el join (mismo nombre en los dos
@@ -228,7 +181,7 @@ public final class EntityResultTools {
 	 * @return the entity result
 	 */
 	private static EntityResult doFastJoin(EntityResult a, EntityResult b, String keyNameA, String keyNameB, JoinType joinType, EntityResult res, Vector<Object> resColumnsA,
-	        Vector<Object> resColumnsB, Vector<Object> resColumns, Vector<Object> resColumnsCommon) {
+			Vector<Object> resColumnsB, Vector<Object> resColumns, Vector<Object> resColumnsCommon) {
 
 		Object[] keysSortedA = null;
 		int[] indexesA = null;
@@ -337,7 +290,7 @@ public final class EntityResultTools {
 	 *            the only inner join
 	 */
 	private static void doJoinForTable(EntityResult res, Vector<Object> resColumns, Vector<Object> resColumnsA, Vector<Object> resColumnsB, Vector<Object> resColumnsCommon,
-	        Hashtable<Object, Object> rowA, EntityResult b, String[] columnKeysA, String[] columnKeysB, boolean onlyInnerJoin) {
+			Hashtable<Object, Object> rowA, EntityResult b, String[] columnKeysA, String[] columnKeysB, boolean onlyInnerJoin) {
 		int rcount = b.calculateRecordNumber();
 		boolean match = false;
 		int index = res.calculateRecordNumber();
@@ -441,220 +394,6 @@ public final class EntityResultTools {
 	}
 
 	/**
-	 * Agrupa los valores de un {@link EntityResult}. Se pueden indicar funciones de agregado
-	 *
-	 * @param a
-	 *            the a
-	 * @param groupColumns
-	 *            the group columns
-	 * @param groupType
-	 *            the group type
-	 * @param columnToGroup
-	 *            the column to group
-	 * @param count
-	 *            the count
-	 * @return the entity result
-	 * @throws Exception
-	 *             the exception
-	 */
-	public static EntityResult doGroup(EntityResult a, String[] groupColumns, GroupType groupType, String columnToGroup, boolean count) throws Exception {
-		if (groupColumns.length <= 0) {
-			throw new Exception("GroupColumns are mandatory");
-		}
-
-		if (a.isEmpty()) {
-			return a;
-		}
-
-		if (groupColumns.length == 1) {
-			return EntityResultTools.doFastGroup(a, groupColumns[0], groupType, columnToGroup, count);
-		} else {
-			return EntityResultTools.doSlowGroup(a, groupColumns, groupType, columnToGroup, count);
-		}
-	}
-
-	/**
-	 * Do slow group.
-	 *
-	 * @param a
-	 *            the a
-	 * @param groupColumns
-	 *            the group columns
-	 * @param groupType
-	 *            the group type
-	 * @param columnToGroup
-	 *            the column to group
-	 * @param count
-	 *            the count
-	 * @return the entity result
-	 * @throws OntimizeJEEException
-	 *             the exception
-	 */
-	private static EntityResult doSlowGroup(EntityResult a, String[] groupColumns, GroupType groupType, String columnToGroup, boolean count) throws OntimizeJEEException {
-
-		Vector<Group> groups = new Vector<>();
-
-		int rcount = a.calculateRecordNumber();
-		for (int i = 0; i < rcount; i++) {
-			Hashtable recordValues = a.getRecordValues(i);
-			Group group = EntityResultTools.checkGroup(groups, recordValues);
-			if (group != null) {
-				// Add values
-				group.addValue(recordValues.get(columnToGroup));
-			} else {
-				// Add keys and values
-				Hashtable ks = new Hashtable();
-				for (String s : groupColumns) {
-					Object value = recordValues.get(s);
-					if (value == null) {
-						throw new OntimizeJEEException("GroupColumn \"" + s + "\" is null. It is not supported");
-					}
-					ks.put(s, value);
-				}
-				groups.add(new Group(ks, recordValues.get(columnToGroup)));
-			}
-
-		}
-
-		EntityResult res = new EntityResult();
-		Vector<Object> resultColumns = new Vector<Object>(Arrays.asList(groupColumns));
-		resultColumns.add(groupType.toString());
-		if (count) {
-			resultColumns.add("COUNT");
-		}
-		EntityResultTools.initEntityResult(res, resultColumns);
-
-		for (Group g : groups) {
-			Hashtable record = new Hashtable();
-			// Group columns
-			for (String s : groupColumns) {
-				record.put(s, g.getKeys().get(s));
-			}
-
-			// Grouped column
-			Object value = EntityResultTools.parseGroupFunction(groupType, g.getValues());
-			if (value != null) {
-				record.put(groupType.toString(), value);
-			}
-
-			// Count column
-			if (count) {
-				record.put("COUNT", g.getValues().size());
-			}
-
-			res.addRecord(record);
-		}
-		return res;
-	}
-
-	/**
-	 * Do fast group.
-	 *
-	 * @param er
-	 *            the a
-	 * @param groupColumn
-	 *            the group column
-	 * @param groupType
-	 *            the group type
-	 * @param opColumn
-	 *            the op column
-	 * @param count
-	 *            the count
-	 * @return the entity result
-	 */
-	private static EntityResult doFastGroup(EntityResult er, String groupColumn, GroupType groupType, String opColumn, boolean count) {
-		boolean hasOp = er.get(opColumn) != null;
-		EntityResult res = new EntityResult();
-		if (count) {
-			EntityResultTools.initEntityResult(res, groupColumn, opColumn, "COUNT");
-		} else {
-			EntityResultTools.initEntityResult(res, groupColumn, opColumn);
-		}
-		Object[] keysSorted = ((Vector) er.get(groupColumn)).toArray();
-		int[] indexes = FastQSortAlgorithm.sort(keysSorted);
-		Object currentKey = null;
-		Object currentOp = null;
-		int resIndex = 0;
-		int counter = 0;
-		for (int i = 0; i < keysSorted.length; i++) {
-			if ((keysSorted[i] == null) || !keysSorted[i].equals(currentKey)) {
-				// cambio de grupo
-				if (currentKey != null) {
-					((Vector) res.get(groupColumn)).add(resIndex, currentKey);
-					if (!groupColumn.equals(opColumn)) {
-						((Vector) res.get(opColumn)).add(resIndex, currentOp);
-					}
-					if (count) {
-						((Vector) res.get("COUNT")).add(resIndex, Integer.valueOf(counter));
-					}
-					resIndex++;
-				}
-				currentKey = keysSorted[i];
-				currentOp = null;
-				counter = 0;
-			}
-			if (hasOp) {
-				Object newOp = ((Vector) er.get(opColumn)).get(indexes[i]);
-				switch (groupType) {
-					case NONE:
-						currentOp = null;
-						break;
-					case MAX:
-						Number converted = (newOp instanceof Number) || (newOp == null) ? (Number) newOp : new Double((String) newOp);
-						if (currentOp == null) {
-							currentOp = converted;
-						} else if (converted != null) {
-							double c = ((Number) currentOp).doubleValue();
-							double n = converted.doubleValue();
-							currentOp = n > c ? converted : currentOp;
-						}
-						break;
-					case SUM:
-						converted = (newOp instanceof Number) || (newOp == null) ? (Number) newOp : new Double((String) newOp);
-						if (currentOp == null) {
-							currentOp = converted;
-						} else if (converted != null) {
-							double c = ((Number) currentOp).doubleValue();
-							double n = converted.doubleValue();
-							currentOp = new Double(c + n);
-						}
-						break;
-					default:
-						break;
-				}
-			}
-			counter++;
-		}
-		if (currentKey != null) {
-			((Vector) res.get(groupColumn)).add(resIndex, currentKey);
-			if (!groupColumn.equals(opColumn)) {
-				((Vector) res.get(opColumn)).add(resIndex, currentOp);
-			}
-			if (count) {
-				((Vector) res.get("COUNT")).add(resIndex, new Integer(counter));
-			}
-			resIndex++;
-		}
-
-		if (!groupColumn.equals(opColumn)) {
-			switch (groupType) {
-				case NONE:
-					break;
-				case MAX:
-					EntityResultTools.renameColumn(res, opColumn, "MAX");
-					break;
-				case SUM:
-					EntityResultTools.renameColumn(res, opColumn, "SUM");
-					break;
-				default:
-					break;
-			}
-		}
-		return res;
-
-	}
-
-	/**
 	 * Agrupa los valores de un {@link EntityResult}. Se pueden indicar múltiples funciones de agregado. TODO: versión mejorada de EntityResult doGroup(EntityResult a, String[]
 	 * groupColumns, GroupType groupType, String columnToGroup, boolean count)
 	 *
@@ -668,7 +407,7 @@ public final class EntityResultTools {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public static EntityResult doGroup(EntityResult er, String[] groupColumns, GroupTypeOperation... groupOperations) throws Exception {
+	public static EntityResult doGroup(EntityResult er, String[] groupColumns, IAggregateFunction... aggregateFunctions) throws Exception {
 		if (groupColumns.length <= 0) {
 			throw new Exception("GroupColumns are mandatory");
 		}
@@ -677,351 +416,66 @@ public final class EntityResultTools {
 			return er;
 		}
 
-		if (groupColumns.length == 1) {
-			return EntityResultTools.doFastGroup(er, groupColumns[0], groupOperations);
-		} else {
-			return EntityResultTools.doSlowGroup(er, groupColumns, groupOperations);
-		}
-	}
-
-	/**
-	 * Do slow group.
-	 *
-	 * @param er
-	 *            the entity result
-	 * @param groupColumns
-	 *            the group columns
-	 * @param groupOperations
-	 *            the GroupTypeOperation
-	 * @return the entity result
-	 * @throws Exception
-	 *             the exception
-	 */
-	private static EntityResult doSlowGroup(EntityResult er, String[] groupColumns, GroupTypeOperation... groupOperations) throws Exception {
-		Vector<Group> groups = new Vector<>();
+		List<Group> groups = new ArrayList<>();
 
 		int rcount = er.calculateRecordNumber();
 		for (int i = 0; i < rcount; i++) {
-			Hashtable recordValues = er.getRecordValues(i);
-			Group group = EntityResultTools.checkGroup(groups, recordValues);
-			if (group != null) {
-				// Add values
-				for (GroupTypeOperation groupOperation : groupOperations) {
-					String opColumn = groupOperation.getOpColumn();
-					group.addValue(recordValues.get(opColumn));
-				}
-			} else {
+			Group group = EntityResultTools.checkGroup(groups, er, i);
+			if (group == null) {
 				// Add keys and values
-				HashMap ks = new HashMap();
-				for (String s : groupColumns) {
-					Object value = recordValues.get(s);
-					// if (value == null) {
-					// value = "WARN-no method";
-					// throw new Exception("GroupColumn \"" + s + "\" is null. It is not supported");
-					// }
-					ks.put(s, value);
+				Map<String, Object> ks = new HashMap<>();
+				for (String groupCol : groupColumns) {
+					ks.put(groupCol, ((List) er.get(groupCol)).get(i));
 				}
-				Group newGroup = new Group(ks);
-				for (GroupTypeOperation groupOperation : groupOperations) {
-					String opColumn = groupOperation.getOpColumn();
-					newGroup.addValue(recordValues.get(opColumn));
-				}
-				groups.add(newGroup);
+				group = new Group(ks, aggregateFunctions);
+				groups.add(group);
 			}
-
+			group.onNewGroupRecord(er, i);
 		}
 
 		EntityResult res = new EntityResult();
 		Vector<Object> resultColumns = new Vector<Object>(Arrays.asList(groupColumns));
-		for (GroupTypeOperation groupOperation : groupOperations) {
-			String renameColumn = groupOperation.getRenameColumn();
-			resultColumns.add(renameColumn);
+		for (Group group : groups) {
+			resultColumns.addAll(group.getAggregatedColumnNames());
 		}
-		EntityResultTools.initEntityResult(res, resultColumns);
+		EntityResultTools.initEntityResult(res, resultColumns, groups.size());
 
-		for (Group g : groups) {
-			Hashtable record = new Hashtable();
-			// Group columns
-			for (String s : groupColumns) {
-				MapTools.safePut(record, s, g.getKeys().get(s));
+		int rowIdx = 0;
+		for (Group group : groups) {
+			for (Entry<String, Object> groupColEntry : group.getKeys().entrySet()) {
+				((List) res.get(groupColEntry.getKey())).add(rowIdx, groupColEntry.getValue());
 			}
-
-			// Grouped column
-			int length = groupOperations.length;
-			for (int i = 0; i <= (length - 1); i++) {
-				GroupTypeOperation groupTypeOperation = groupOperations[i];
-				GroupType groupType = groupTypeOperation.getGroupType();
-				String renameColumn = groupTypeOperation.getRenameColumn();
-				// Select correct values
-				List values = g.getValues();
-				Vector opValues = new Vector<>();
-				for (int y = i; y <= (values.size() - 1); y += length) {
-					opValues.add(values.get(y));
-				}
-
-				Object value = EntityResultTools.parseGroupFunction(groupType, opValues);
-				if (value != null) {
-					record.put(renameColumn, value);
-				}
-
+			for (Entry<String, Object> aggregateColEntry : group.getAggregateValues().entrySet()) {
+				((List) res.get(aggregateColEntry.getKey())).add(rowIdx, aggregateColEntry.getValue());
 			}
-			res.addRecord(record);
+			rowIdx++;
 		}
 		return res;
 	}
 
-	static class GroupOperationWrap {
-
-		GroupTypeOperation	operation;
-		Number				currentValue;
-
-		public GroupOperationWrap(GroupTypeOperation operation) {
-			super();
-			this.operation = operation;
-			this.currentValue = null;
-		}
-
-		public Object getOpColumn() {
-			return this.operation.getOpColumn();
-		}
-
-		public GroupType getGroupType() {
-			return this.operation.getGroupType();
-		}
-
-		public String getRenameColumn() {
-			return this.operation.getRenameColumn();
-		}
-
-	}
-
 	/**
-	 * Do fast group.
+	 * Check group.
 	 *
-	 * @param er
-	 *            the entity result
-	 * @param groupColumns
-	 *            the group columns
-	 * @param groupOperations
-	 *            the GroupTypeOperation
-	 * @return the entity result
+	 * @param groups
+	 *            the groups
+	 * @param recordValues
+	 *            the record values
+	 * @return the group
 	 */
-	private static EntityResult doFastGroup(EntityResult er, String groupColumn, GroupTypeOperation... gOperations) {
-		boolean hasOp = false;
-		List<String> opColumns = new ArrayList<>();
-		List<GroupOperationWrap> groupOperations = new ArrayList<>();
-		if (gOperations != null) {
-			hasOp = true;
-			for (GroupTypeOperation groupOperation : gOperations) {
-				String opColumn = groupOperation.getOpColumn();
-				String opName = groupOperation.getGroupType().name();
-				opColumns.add(opColumn + "_" + opName);
-				if (er.get(opColumn) == null) {
-					hasOp = false;
+	private static Group checkGroup(List<Group> groups, EntityResult er, int index) {
+		for (Group group : groups) {
+			boolean isEqGroup = true;
+			for (Entry<String, Object> entry : group.getKeys().entrySet()) {
+				if (!ObjectTools.safeIsEquals(entry.getValue(), ((List) er.get(entry.getKey())).get(index))) {
+					isEqGroup = false;
+					break;
 				}
-				groupOperations.add(new GroupOperationWrap(groupOperation));
-
+			}
+			if (isEqGroup) {
+				return group;
 			}
 		}
-		EntityResult res = new EntityResult();
-		opColumns.add(groupColumn);
-		EntityResultTools.initEntityResult(res, opColumns);
-		Object[] keysSorted = ((Vector) er.get(groupColumn)).toArray();
-		int[] indexes = FastQSortAlgorithm.sort(keysSorted);
-		Object currentKey = null;
-		int resIndex = 0;
-
-		int counter = 0;
-
-		Vector vectorGroupColumn = (Vector) res.get(groupColumn);
-		for (int i = 0; i < keysSorted.length; i++) {
-			if ((keysSorted[i] == null) || !keysSorted[i].equals(currentKey)) {
-				// cambio de grupo
-				if (currentKey != null) {
-					resIndex = EntityResultTools.refactor(groupColumn, res, currentKey, resIndex, counter, vectorGroupColumn, groupOperations.toArray(new GroupOperationWrap[] {}));
-				}
-				currentKey = keysSorted[i];
-				for (GroupOperationWrap groupOperation : groupOperations) {
-					groupOperation.currentValue = null;
-				}
-				counter = 0;
-			}
-			counter++;
-			if (hasOp) {
-				for (GroupOperationWrap groupOperation : groupOperations) {
-					Object newOp = ((Vector) er.get(groupOperation.getOpColumn())).get(indexes[i]);
-					GroupType groupType = groupOperation.getGroupType();
-					if (groupType != null) {
-						switch (groupType) {
-							case NONE:
-								groupOperation.currentValue = null;
-								counter = 0;
-								break;
-							case AVG:
-								Number converted = (newOp instanceof Number) || (newOp == null) ? (Number) newOp : new Double((String) newOp);
-								if (groupOperation.currentValue == null) {
-									groupOperation.currentValue = converted;
-								} else if (converted != null) {
-									double c = groupOperation.currentValue.doubleValue();
-									double n = converted.doubleValue();
-									groupOperation.currentValue = new Double((n + (c * (counter - 1))) / counter);
-								}
-								break;
-							case MAX:
-								converted = (newOp instanceof Number) || (newOp == null) ? (Number) newOp : new Double((String) newOp);
-								if (groupOperation.currentValue == null) {
-									groupOperation.currentValue = converted;
-								} else if (converted != null) {
-									double c = groupOperation.currentValue.doubleValue();
-									double n = converted.doubleValue();
-									groupOperation.currentValue = n > c ? converted : groupOperation.currentValue;
-								}
-								break;
-							case MIN:
-								converted = (newOp instanceof Number) || (newOp == null) ? (Number) newOp : new Double((String) newOp);
-								if (groupOperation.currentValue == null) {
-									groupOperation.currentValue = converted;
-								} else if (converted != null) {
-									double c = groupOperation.currentValue.doubleValue();
-									double n = converted.doubleValue();
-									groupOperation.currentValue = n < c ? converted : groupOperation.currentValue;
-								}
-								break;
-							case SUM:
-								converted = (newOp instanceof Number) || (newOp == null) ? (Number) newOp : new Double((String) newOp);
-								if (groupOperation.currentValue == null) {
-									groupOperation.currentValue = converted;
-								} else if (converted != null) {
-									double c = groupOperation.currentValue.doubleValue();
-									double n = converted.doubleValue();
-									groupOperation.currentValue = new Double(c + n);
-								}
-								break;
-							default:
-								break;
-						}
-					}
-				}
-			}
-		}
-		if (currentKey != null) {
-			resIndex = EntityResultTools.refactor(groupColumn, res, currentKey, resIndex, counter, vectorGroupColumn, groupOperations.toArray(new GroupOperationWrap[] {}));
-		}
-
-		for (GroupOperationWrap groupOperation : groupOperations) {
-			String opColumn = groupOperation.getOpColumn() + "_" + groupOperation.getGroupType().name();
-			String renameColumn = groupOperation.getRenameColumn();
-			if (!groupColumn.equals(opColumn)) {
-				GroupType groupType = groupOperation.getGroupType();
-				if (groupType != null) {
-					EntityResultTools.renameColumn(res, opColumn, renameColumn);
-				}
-			}
-		}
-		return res;
-	}
-
-	private static int refactor(String groupColumn, EntityResult res, Object currentKey, int resIndex, int counter, Vector vectorGroupColumn,
-	        GroupOperationWrap... groupOperations) {
-		vectorGroupColumn.add(resIndex, currentKey);
-
-		for (GroupOperationWrap groupOperation : groupOperations) {
-			String opColumn = groupOperation.getOpColumn() + "_" + groupOperation.getGroupType().name();
-			if (!groupColumn.equals(opColumn)) {
-				((Vector) res.get(opColumn)).add(resIndex, groupOperation.currentValue);
-			}
-		}
-		resIndex++;
-		return resIndex;
-	}
-
-	/**
-	 * Parses the group function.
-	 *
-	 * @param groupType
-	 *            the group type
-	 * @param values
-	 *            the values
-	 * @return the object
-	 * @throws OntimizeJEEException
-	 *             the exception
-	 */
-	private static Object parseGroupFunction(GroupType groupType, List<?> values) throws OntimizeJEEException {
-		// TODO Separar cada funcion (interfaz IGroupFnction)
-		// TODO No necesariamente necesitamos un double, deberia ser del tipo de
-		// dato que nos llega
-		if (groupType == GroupType.NONE) {
-			return null;
-		} else if (groupType == GroupType.SUM) {
-			BigDecimal finalValue = new BigDecimal(0.0d);
-			boolean someValue = false;
-			for (Object o : values) {
-				if (o != null) {
-					if (!(o instanceof Number)) {
-						throw new OntimizeJEEException("Not a number in sum operation");
-					}
-					finalValue = finalValue.add(o instanceof BigDecimal ? (BigDecimal) o : new BigDecimal(o.toString()));
-					someValue = true;
-				}
-			}
-			return someValue ? finalValue : null;
-		} else if (groupType == GroupType.MAX) {
-			BigDecimal finalValue = new BigDecimal(-Double.MAX_VALUE);
-			boolean someValue = false;
-			for (Object o : values) {
-				if (o == null) {
-					continue;
-				}
-				try {
-					if (!(o instanceof Number)) {
-						o = Double.parseDouble(o.toString());
-					}
-				} catch (Exception e) {
-					throw new OntimizeJEEException("Required numeric column to group.");
-				}
-
-				finalValue = ((Number) o).doubleValue() > finalValue.doubleValue() ? new BigDecimal(o.toString()) : finalValue;
-				someValue = true;
-			}
-
-			return someValue ? finalValue : null;
-		} else if (groupType == GroupType.MIN) {
-			BigDecimal finalValue = new BigDecimal(+Double.MAX_VALUE);
-			boolean someValue = false;
-			for (Object o : values) {
-				if (o == null) {
-					continue;
-				}
-				try {
-					if (!(o instanceof Number)) {
-						o = Double.parseDouble(o.toString());
-					}
-				} catch (Exception e) {
-					throw new OntimizeJEEException("Required numeric column to group.");
-				}
-
-				finalValue = ((Number) o).doubleValue() < finalValue.doubleValue() ? new BigDecimal(o.toString()) : finalValue;
-				someValue = true;
-			}
-			return someValue ? finalValue : null;
-		} else if (groupType == GroupType.AVG) {
-			BigDecimal finalValue = new BigDecimal(0.0d);
-			boolean someValue = false;
-			for (Object o : values) {
-				if (o != null) {
-					if (!(o instanceof Number)) {
-						throw new OntimizeJEEException("Not a number in sum operation");
-					}
-					finalValue = finalValue.add(o instanceof BigDecimal ? (BigDecimal) o : new BigDecimal(o.toString()));
-					someValue = true;
-				}
-			}
-			return someValue ? finalValue.divide(new BigDecimal(values.size())) : null;
-		} else if (groupType == GroupType.COUNT) {
-			return new BigDecimal(values.size());
-		} else {
-			throw new OntimizeJEEException("Unsupported group funtion \"" + groupType.toString() + " \".");
-		}
+		return null;
 	}
 
 	/**
@@ -1042,31 +496,6 @@ public final class EntityResultTools {
 	}
 
 	/**
-	 * Check group.
-	 *
-	 * @param groups
-	 *            the groups
-	 * @param recordValues
-	 *            the record values
-	 * @return the group
-	 */
-	private static Group checkGroup(Vector<Group> groups, Hashtable recordValues) {
-		for (Group group : groups) {
-			boolean isEqGroup = true;
-			for (Entry<Object, Object> entry : group.getKeys().entrySet()) {
-				if (!ObjectTools.safeIsEquals(entry.getValue(), recordValues.get(entry.getKey()))) {
-					isEqGroup = false;
-					break;
-				}
-			}
-			if (isEqGroup) {
-				return group;
-			}
-		}
-		return null;
-	}
-
-	/**
 	 * Do sort.
 	 *
 	 * @param res
@@ -1078,9 +507,8 @@ public final class EntityResultTools {
 	public static EntityResult doSort(EntityResult res, String... cols) {
 		if (cols.length == 1) {
 			return EntityResultTools.doFastSort(res, cols[0]);
-		} else {
-			return EntityResultTools.doSlowSort(res, cols);
 		}
+		return EntityResultTools.doSlowSort(res, cols);
 
 	}
 
@@ -1181,7 +609,7 @@ public final class EntityResultTools {
 	 * @param res
 	 *            the res
 	 */
-	private static String printResult(EntityResult res) {
+	public static String printResult(EntityResult res) {
 		StringBuilder sb = new StringBuilder();
 		if ((res == null) || res.isEmpty()) {
 			sb.append("Result empty.");
@@ -1219,88 +647,6 @@ public final class EntityResultTools {
 			}
 		}
 		return -1;
-	}
-
-	/**
-	 * The Class Group.
-	 */
-	static class Group {
-
-		/** The keys. */
-		protected Map<Object, Object>	keys;
-
-		/** The values. */
-		protected List<Object>			values;
-
-		/**
-		 * Instantiates a new group.
-		 *
-		 * @param keys
-		 *            the keys
-		 * @param values
-		 *            the values
-		 */
-		public Group(Map<Object, Object> keys) {
-			this.keys = keys;
-		}
-
-		/**
-		 * Instantiates a new group.
-		 *
-		 * @param keys
-		 *            the keys
-		 * @param values
-		 *            the values
-		 */
-		public Group(Map<Object, Object> keys, List<Object> values) {
-			this.keys = keys;
-			this.values = values;
-		}
-
-		/**
-		 * Instantiates a new group.
-		 *
-		 * @param keys
-		 *            the keys
-		 * @param value
-		 *            the value
-		 */
-		public Group(Map<Object, Object> keys, Object value) {
-			this.keys = keys;
-			this.values = new Vector();
-			this.values.add(value);
-		}
-
-		/**
-		 * Gets the keys.
-		 *
-		 * @return the keys
-		 */
-		public Map<Object, Object> getKeys() {
-			return this.keys;
-		}
-
-		/**
-		 * Gets the values.
-		 *
-		 * @return the values
-		 */
-		public List<Object> getValues() {
-			return this.values;
-		}
-
-		/**
-		 * Adds the value.
-		 *
-		 * @param value
-		 *            the value
-		 */
-		public void addValue(Object value) {
-			if (this.values == null) {
-				this.values = new Vector();
-			}
-			this.values.add(value);
-		}
 	}
 
 	/**
@@ -1976,9 +1322,9 @@ public final class EntityResultTools {
 
 	}
 
-	public static EntityResult pivot(EntityResult er, String pivotColumn, List<String> otherColumns, GroupTypeOperation operationColumn) throws Exception {
+	public static EntityResult pivot(EntityResult er, String pivotColumn, List<String> otherColumns, IAggregateFunction operation) throws Exception {
 		EntityResult res = new EntityResult();
-		if ((er == null) || (pivotColumn == null) || (operationColumn == null)) {
+		if ((er == null) || (pivotColumn == null) || (operation == null)) {
 			return res;
 		}
 		HashSet<Object> setPivotColumn = new HashSet<>((Vector) er.get(pivotColumn));
@@ -1989,14 +1335,55 @@ public final class EntityResultTools {
 
 		for (Object pivotValue : setPivotColumn) {
 			EntityResult filteredRes = EntityResultTools.dofilter(er, EntityResultTools.keysvalues(pivotColumn, pivotValue));
-			EntityResult group = EntityResultTools.doGroup(filteredRes, otherColumns.toArray(new String[] {}), operationColumn);
-			EntityResultTools.renameColumn(group, operationColumn.getRenameColumn(), pivotValue.toString());
+			EntityResult group = EntityResultTools.doGroup(filteredRes, otherColumns.toArray(new String[] {}), operation);
+
+			List<String> aggregatedColumnNames = operation.getAggregatedColumnNames();
+			if (aggregatedColumnNames.size() > 1) {
+				EntityResultTools.logger.warn("Operation with aggregated values more than one not supported");
+			}
+			EntityResultTools.renameColumn(group, aggregatedColumnNames.get(0), pivotValue.toString());
+
 			res = EntityResultTools.doUnionAll(res, group);
 		}
-		List<GroupTypeOperation> groupOperations = new ArrayList<>();
+		List<IAggregateFunction> groupOperations = new ArrayList<>();
 		for (Object pivotValue : setPivotColumn) {
-			groupOperations.add(new GroupTypeOperation(pivotValue.toString(), pivotValue.toString(), GroupType.SUM));
+			groupOperations.add(new PivotGroupOperation(pivotValue.toString(), pivotValue.toString()));
 		}
-		return EntityResultTools.doGroup(res, otherColumns.toArray(new String[] {}), groupOperations.toArray(new GroupTypeOperation[] {}));
+		return EntityResultTools.doGroup(res, otherColumns.toArray(new String[] {}), groupOperations.toArray(new IAggregateFunction[] {}));
+	}
+
+	public static class PivotGroupOperation extends AbstractAggregateFunction<PivotPartialAggregateValue> {
+		public static class PivotPartialAggregateValue implements IPartialAggregateValue {
+			Object value = null;
+		}
+
+		public PivotGroupOperation(String opColumnName, String resultColumnName) {
+			super(opColumnName, resultColumnName);
+		}
+
+		@Override
+		public Map<String, Object> computeAggregatedGroupValue(PivotPartialAggregateValue partialValue) {
+			Map<String, Object> res = new HashMap<>();
+			res.put(this.getResultColumn(), partialValue == null ? null : partialValue.value);
+			return res;
+		}
+
+		@Override
+		public PivotPartialAggregateValue onNewGroupRecord(PivotPartialAggregateValue partialValue, EntityResult res, int idx) {
+			if (partialValue == null) {
+				partialValue = new PivotPartialAggregateValue();
+			}
+			List<?> val = (List<?>) res.get(this.getOpColumn());
+			if (val != null) {
+				Object nb = val.get(idx);
+				if (nb != null) {
+					if (partialValue.value != null) {
+						EntityResultTools.logger.warn("more than one not null value grouping in pivot");
+					}
+					partialValue.value = nb;
+				}
+			}
+			return partialValue;
+		}
 	}
 }

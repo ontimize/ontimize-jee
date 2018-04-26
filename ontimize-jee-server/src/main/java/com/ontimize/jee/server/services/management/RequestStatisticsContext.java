@@ -9,8 +9,11 @@ import org.slf4j.LoggerFactory;
 
 import com.ontimize.db.EntityResult;
 import com.ontimize.jee.common.tools.EntityResultTools;
-import com.ontimize.jee.common.tools.EntityResultTools.GroupType;
-import com.ontimize.jee.common.tools.EntityResultTools.GroupTypeOperation;
+import com.ontimize.jee.common.tools.ertools.AvgAggregateFunction;
+import com.ontimize.jee.common.tools.ertools.CountAggregateFunction;
+import com.ontimize.jee.common.tools.ertools.IAggregateFunction;
+import com.ontimize.jee.common.tools.ertools.MaxAggregateFunction;
+import com.ontimize.jee.common.tools.ertools.MinAggregateFunction;
 
 public class RequestStatisticsContext {
 
@@ -20,7 +23,7 @@ public class RequestStatisticsContext {
 	private static RequestStatisticsContext	instance;
 
 	private EntityResult					rs		= new EntityResult(
-	        Arrays.asList("SERVICE_NAME", "METHOD_NAME", "USER_NAME", "METHOD_PARAMS", "EXECUTION_DATE", "EXECUTION_TIME", "SERVICE_EXCEPTION"));
+			Arrays.asList("SERVICE_NAME", "METHOD_NAME", "USER_NAME", "METHOD_PARAMS", "EXECUTION_DATE", "EXECUTION_TIME", "SERVICE_EXCEPTION"));
 
 	public EntityResult getContext() {
 		return this.rs;
@@ -51,10 +54,10 @@ public class RequestStatisticsContext {
 		EntityResult dofilter = EntityResultTools.dofilter(this.rs, keysValues);
 		if (statistics) {
 			try {
-				GroupTypeOperation count = new GroupTypeOperation("SERVICE_NAME", "MEASURES", GroupType.COUNT);
-				GroupTypeOperation min = new GroupTypeOperation("EXECUTION_TIME", "MIN_TIME", GroupType.MIN);
-				GroupTypeOperation max = new GroupTypeOperation("EXECUTION_TIME", "MAX_TIME", GroupType.MAX);
-				GroupTypeOperation avg = new GroupTypeOperation("EXECUTION_TIME", "MEAN_TIME", GroupType.AVG);
+				IAggregateFunction count = new CountAggregateFunction("SERVICE_NAME", "MEASURES");
+				IAggregateFunction min = new MinAggregateFunction("EXECUTION_TIME", "MIN_TIME");
+				IAggregateFunction max = new MaxAggregateFunction("EXECUTION_TIME", "MAX_TIME");
+				IAggregateFunction avg = new AvgAggregateFunction("EXECUTION_TIME", "MEAN_TIME");
 				dofilter = EntityResultTools.doGroup(dofilter, new String[] { "SERVICE_NAME", "METHOD_NAME" }, count, min, max, avg);
 			} catch (Exception ex) {
 				RequestStatisticsContext.logger.error(null, ex);
