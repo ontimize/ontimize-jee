@@ -34,12 +34,8 @@ public class OntimizeExceptionTranslator implements IExceptionTranslator, com.on
 		Throwable error = this.rescueCorrectExceptionToClient(original);
 		if (error instanceof IParametrizedException) {
 			IParametrizedException oee = (IParametrizedException) error;
-			try {
-				return ReflectionTools.newInstance(error.getClass(), oee.getMessage(), oee.getMessageParameters(), null, oee.getMessageType(), false, false);
-			} catch (Exception ex) {
-				OntimizeExceptionTranslator.logger.trace(null, ex);
-				return new NoTraceOntimizeJEEException(oee.getMessage(), null, oee.getMessageParameters(), null, false, false);
-			}
+			ReflectionTools.setFieldValue(oee, "cause", null);
+			return error;
 		}
 		return new NoTraceOntimizeJEEException(error.getMessage());
 	}
