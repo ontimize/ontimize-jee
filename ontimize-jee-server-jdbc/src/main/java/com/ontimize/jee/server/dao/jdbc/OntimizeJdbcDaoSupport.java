@@ -41,6 +41,7 @@ import org.springframework.dao.InvalidDataAccessResourceUsageException;
 import org.springframework.jdbc.SQLWarningException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.ConnectionCallback;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.SqlParameterValue;
 import org.springframework.jdbc.core.SqlTypeValue;
@@ -70,6 +71,7 @@ import com.ontimize.gui.field.MultipleTableAttribute;
 import com.ontimize.gui.field.ReferenceFieldAttribute;
 import com.ontimize.jee.common.naming.I18NNaming;
 import com.ontimize.jee.common.tools.CheckingTools;
+import com.ontimize.jee.common.tools.Chronometer;
 import com.ontimize.jee.common.tools.ObjectTools;
 import com.ontimize.jee.common.tools.Pair;
 import com.ontimize.jee.common.tools.ReflectionTools;
@@ -185,7 +187,14 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 		final Vector<?> vValues = stSQL.getValues();
 		// TODO los atributos que se pasan al entityresultsetextractor tienen que ir "desambiguados" porque cuando el DefaultSQLStatementHandler busca
 		// las columnas toUpperCase y toLowerCase no tiene en cuenta el '.'
-		return this.getJdbcTemplate().query(sqlQuery, vValues.toArray(), new EntityResultResultSetExtractor(this.getStatementHandler(), queryTemplateInformation, attributes));
+		Chronometer chrono = new Chronometer().start();
+		try {
+			EntityResult query = this.getJdbcTemplate().query(sqlQuery, vValues.toArray(),
+					new EntityResultResultSetExtractor(this.getStatementHandler(), queryTemplateInformation, attributes));
+			return query;
+		} finally {
+			OntimizeJdbcDaoSupport.logger.trace("Time consumed in query+result= {} ms", chrono.stopMs());
+		}
 	}
 
 	/**
@@ -2025,4 +2034,12 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 		return new OntimizeTableMetaDataContext();
 	}
 
+	@Override
+	protected JdbcTemplate createJdbcTemplate(DataSource dataSource) {
+		OntimizeJdbcDaoSupport.logger.trace("Creating new JdbcTemplate with fetchSize=1000");
+		JdbcTemplate template = super.createJdbcTemplate(dataSource);
+		template.setFetchSize(1000);
+		OntimizeJdbcDaoSupport.logger.trace("Creating new JdbcTemplate has finally fetchSize=" + template.getFetchSize());
+		return template;
+	}
 }
