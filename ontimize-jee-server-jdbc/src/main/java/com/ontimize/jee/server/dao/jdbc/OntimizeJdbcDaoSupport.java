@@ -1298,7 +1298,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 			this.compileInternal();
 			this.compiled = true;
 			if (OntimizeJdbcDaoSupport.logger.isDebugEnabled()) {
-				OntimizeJdbcDaoSupport.logger.debug("JdbcInsert for table [" + this.getTableName() + "] compiled");
+				OntimizeJdbcDaoSupport.logger.debug("JdbcInsert for table [{}] compiled", this.getTableName());
 			}
 		}
 	}
