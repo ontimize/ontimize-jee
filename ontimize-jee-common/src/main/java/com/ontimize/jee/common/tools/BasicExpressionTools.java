@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import com.ontimize.db.SQLStatementBuilder.BasicExpression;
 import com.ontimize.db.SQLStatementBuilder.BasicField;
 import com.ontimize.db.SQLStatementBuilder.BasicOperator;
+import com.ontimize.db.SQLStatementBuilder.Operator;
 import com.ontimize.gui.Form;
 import com.ontimize.gui.SearchValue;
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
@@ -81,13 +82,35 @@ public final class BasicExpressionTools {
 	}
 
 	/**
-	 * Combine expression.
+	 * Combine expression (with AND operator).
 	 *
 	 * @param exprs
 	 *            the exprs
 	 * @return the basic expression
 	 */
 	public static BasicExpression combineExpression(BasicExpression... exprs) {
+		return BasicExpressionTools.combineExpression(BasicOperator.AND_OP, exprs);
+	}
+
+	/**
+	 * Combine expression (with OR operator).
+	 *
+	 * @param exprs
+	 *            the exprs
+	 * @return the basic expression
+	 */
+	public static BasicExpression combineExpressionOr(BasicExpression... exprs) {
+		return BasicExpressionTools.combineExpression(BasicOperator.OR_OP, exprs);
+	}
+
+	/**
+	 * Combine expression (with received operator).
+	 *
+	 * @param op
+	 * @param exprs
+	 * @return
+	 */
+	public static BasicExpression combineExpression(Operator op, BasicExpression... exprs) {
 		ArrayList<BasicExpression> join = new ArrayList<>();
 		if (exprs != null) {
 			for (BasicExpression expr : exprs) {
@@ -101,7 +124,7 @@ public final class BasicExpressionTools {
 			if (fullExpr == null) {
 				fullExpr = newExpr;
 			} else {
-				fullExpr = new BasicExpression(fullExpr, BasicOperator.AND_OP, newExpr);
+				fullExpr = new BasicExpression(fullExpr, op, newExpr);
 			}
 		}
 		return fullExpr;
@@ -121,6 +144,9 @@ public final class BasicExpressionTools {
 			case SearchValue.EQUAL:
 				return new BasicExpression(basicField, BasicOperator.EQUAL_OP, searchValue.getValue());
 			case SearchValue.IN:
+				if ((searchValue.getValue() instanceof List) && (((List) searchValue.getValue()).size() >= 1000)) {
+					return BasicExpressionTools.convertSearchValueInComplex(basicField, (List<Object>) searchValue.getValue());
+				}
 				return new BasicExpression(basicField, BasicOperator.IN_OP, searchValue.getValue());
 			case SearchValue.NOT_IN:
 				return new BasicExpression(basicField, BasicOperator.NOT_IN_OP, searchValue.getValue());
@@ -149,6 +175,21 @@ public final class BasicExpressionTools {
 			default:
 				throw new OntimizeJEERuntimeException("INVALID_OP");
 		}
+	}
+
+	/**
+	 * Some DDBB has limitations to do IN search over 1000 records
+	 * 
+	 * @param basicField
+	 * @param value
+	 * @return
+	 */
+	private static BasicExpression convertSearchValueInComplex(BasicField basicField, List<Object> value) {
+		BasicExpression be = null;
+		for (int i = 0; i < value.size(); i += 999) {
+			be = BasicExpressionTools.combineExpressionOr(be, new BasicExpression(basicField, BasicOperator.IN_OP, value.subList(i, Math.min(i + 999, value.size()))));
+		}
+		return be;
 	}
 
 	private static BasicExpression convertSearchValueNotBetween(BasicField basicField, SearchValue searchValue) {
