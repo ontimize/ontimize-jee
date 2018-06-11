@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.caucho.hessian.util.IExceptionTranslator;
 import com.ontimize.db.AdvancedEntityResult;
 import com.ontimize.db.EntityResult;
 import com.ontimize.db.NullValue;
@@ -47,6 +48,8 @@ public abstract class ORestController<S> {
 
 	@Autowired
 	OntimizeMapper mapper;
+	@Autowired(required = false)
+	protected IExceptionTranslator	exceptionTranslator;
 
 	@RequestMapping(value = "/{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<EntityResult> query(@PathVariable("name") String name, @RequestParam(name = "filter", required = false) String filter,
@@ -86,10 +89,7 @@ public abstract class ORestController<S> {
 			EntityResult eR = (EntityResult) ReflectionTools.invoke(this.getService(), buffer.toString(), keysValues, attributesValues);
 			return new ResponseEntity<>(eR, HttpStatus.OK);
 		} catch (Exception e) {
-			ORestController.logger.error("{}", e.getMessage(), e);
-			EntityResult entityResult = new EntityResult(EntityResult.OPERATION_WRONG, EntityResult.BEST_COMPRESSION);
-			entityResult.setMessage(e.getMessage());
-			return new ResponseEntity<>(entityResult, HttpStatus.INTERNAL_SERVER_ERROR);
+			return this.processError(e);
 		}
 	}
 
@@ -115,10 +115,7 @@ public abstract class ORestController<S> {
 			AdvancedEntityResult eR = (AdvancedEntityResult) ReflectionTools.invoke(this.getService(), buffer.toString(), keysValues, attributesValues, pagesize, offset, orderby);
 			return new ResponseEntity<>(eR, HttpStatus.OK);
 		} catch (Exception e) {
-			ORestController.logger.error("{}", e.getMessage(), e);
-			AdvancedEntityResult advancedEntityResult = new AdvancedEntityResult(EntityResult.OPERATION_WRONG, EntityResult.BEST_COMPRESSION);
-			advancedEntityResult.setMessage(e.getMessage());
-			return new ResponseEntity<>(advancedEntityResult, HttpStatus.INTERNAL_SERVER_ERROR);
+			return this.processAdvancedError(e);
 		}
 	}
 
@@ -134,10 +131,7 @@ public abstract class ORestController<S> {
 			EntityResult eR = (EntityResult) ReflectionTools.invoke(this.getService(), buffer.toString(), attributes);
 			return new ResponseEntity<>(eR, HttpStatus.OK);
 		} catch (Exception e) {
-			ORestController.logger.error("{}", e.getMessage(), e);
-			EntityResult entityResult = new EntityResult(EntityResult.OPERATION_WRONG, EntityResult.BEST_COMPRESSION);
-			entityResult.setMessage(e.getMessage());
-			return new ResponseEntity<>(entityResult, HttpStatus.INTERNAL_SERVER_ERROR);
+			return this.processError(e);
 		}
 	}
 
@@ -154,10 +148,7 @@ public abstract class ORestController<S> {
 			EntityResult eR = (EntityResult) ReflectionTools.invoke(this.getService(), buffer.toString(), attributes);
 			return new ResponseEntity<>(eR, HttpStatus.OK);
 		} catch (Exception e) {
-			ORestController.logger.error("{}", e.getMessage(), e);
-			EntityResult entityResult = new EntityResult(EntityResult.OPERATION_WRONG, EntityResult.BEST_COMPRESSION);
-			entityResult.setMessage(e.getMessage());
-			return new ResponseEntity<>(entityResult, HttpStatus.INTERNAL_SERVER_ERROR);
+			return this.processError(e);
 		}
 	}
 
@@ -175,11 +166,36 @@ public abstract class ORestController<S> {
 			EntityResult eR = (EntityResult) ReflectionTools.invoke(this.getService(), buffer.toString(), av, kv);
 			return new ResponseEntity<>(eR, HttpStatus.OK);
 		} catch (Exception e) {
-			ORestController.logger.error("{}", e.getMessage(), e);
-			EntityResult entityResult = new EntityResult(EntityResult.OPERATION_WRONG, EntityResult.BEST_COMPRESSION);
-			entityResult.setMessage(e.getMessage());
-			return new ResponseEntity<>(entityResult, HttpStatus.INTERNAL_SERVER_ERROR);
+			return this.processError(e);
 		}
+	}
+
+	protected ResponseEntity<EntityResult> processError(Exception error) {
+		ORestController.logger.error("{}", error.getMessage(), error);
+		EntityResult entityResult = new EntityResult(EntityResult.OPERATION_WRONG, EntityResult.BEST_COMPRESSION);
+		entityResult.setMessage(this.getErrorMessage(error));
+		return new ResponseEntity<>(entityResult, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
+	protected ResponseEntity<AdvancedEntityResult> processAdvancedError(Exception error) {
+		ORestController.logger.error("{}", error.getMessage(), error);
+		AdvancedEntityResult advancedEntityResult = new AdvancedEntityResult(EntityResult.OPERATION_WRONG, EntityResult.BEST_COMPRESSION);
+		advancedEntityResult.setMessage(this.getErrorMessage(error));
+		return new ResponseEntity<>(advancedEntityResult, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
+	protected String getErrorMessage(Exception error) {
+		if (this.exceptionTranslator != null) {
+			if (error.getCause() != null) {
+				// deberian venir siempre en una ontimizejeeruntimeexception que lanza reflectiontools
+				return this.exceptionTranslator.translateException(error.getCause()).getMessage();
+			}
+			return this.exceptionTranslator.translateException(error).getMessage();
+		}
+		if (error.getCause() != null) {
+			return error.getCause().getMessage();
+		}
+		return error.getMessage();
 	}
 
 	protected Map<Object, Object> createKeysValues(String filter) {
