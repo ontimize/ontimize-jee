@@ -353,17 +353,20 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 			}
 			cond = cond.trim();
 
+			Vector<Object> vValuesTemp = new Vector<Object>();
+			vValuesTemp.addAll(vValues);
+
 			Pair<String, Integer> replaceAll = StringTools.replaceAll(sqlTemplate, OntimizeJdbcDaoSupport.PLACEHOLDER_WHERE_CONCAT,
 					cond.length() == 0 ? "" : SQLStatementBuilder.AND + " " + cond);
 			sqlTemplate = replaceAll.getFirst();
 			for (int i = 1; i < replaceAll.getSecond(); i++) {
-				vValues.addAll(vValues);
+				vValues.addAll(vValuesTemp);
 			}
 
 			replaceAll = StringTools.replaceAll(sqlTemplate, OntimizeJdbcDaoSupport.PLACEHOLDER_WHERE, cond.length() == 0 ? "" : SQLStatementBuilder.WHERE + " " + cond);
 			sqlTemplate = replaceAll.getFirst();
 			for (int i = 1; i < replaceAll.getSecond(); i++) {
-				vValues.addAll(vValues);
+				vValues.addAll(vValuesTemp);
 			}
 
 			// Order by
