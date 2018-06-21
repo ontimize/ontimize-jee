@@ -1,16 +1,19 @@
 package com.ontimize.jee.server.rest;
 
 import java.sql.Timestamp;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.regex.Pattern;
 
 import javax.xml.bind.DatatypeConverter;
 
+import com.ontimize.util.Base64Utils;
 import com.ontimize.util.ParseUtils;
 
 public class ParseUtilsExt extends ParseUtils {
-
+	public final static int BASE64       =  6464;
+	
 	protected final static Pattern ISO8601 = Pattern.compile(
 	        "^([\\+-]?\\d{4}(?!\\d{2}\\b))((-?)((0[1-9]|1[0-2])(\\3([12]\\d|0[1-9]|3[01]))?|W([0-4]\\d|5[0-2])(-?[1-7])?|(00[1-9]|0[1-9]\\d|[12]\\d{2}|3([0-5]\\d|6[1-6])))([T\\s]((([01]\\d|2[0-3])((:?)[0-5]\\d)?|24\\:?00)([\\.,]\\d+(?!:))?)?(\\17[0-5]\\d([\\.,]\\d+)?)?([zZ]|([\\+-])([01]\\d|2[0-3]):?([0-5]\\d)?)?)?)?$");
 
@@ -21,6 +24,8 @@ public class ParseUtilsExt extends ParseUtils {
 				return ParseUtilsExt.parseDate(object);
 			case java.sql.Types.TIMESTAMP:
 				return ParseUtilsExt.parseTimpestamp(object);
+			case ParseUtilsExt.BASE64:
+				return ParseUtilsExt.parseBase64(object);
 			default:
 				return ParseUtils.getValueForSQLType(object, sqlType);
 		}
@@ -50,6 +55,17 @@ public class ParseUtilsExt extends ParseUtils {
 			return new Timestamp(calendar.getTimeInMillis());
 		} else if (time instanceof Timestamp) {
 			return (Timestamp) time;
+		}
+		return null;
+	}
+	
+	public static byte[] parseBase64(Object base64) {
+		if (base64 instanceof String) {
+			try {
+				return Base64Utils.decode(((String) base64).toCharArray());
+			} catch(Exception error) {
+				
+			}
 		}
 		return null;
 	}
