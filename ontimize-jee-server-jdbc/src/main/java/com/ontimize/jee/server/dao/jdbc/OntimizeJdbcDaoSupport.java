@@ -105,6 +105,8 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	protected static final String							PLACEHOLDER_WHERE_CONCAT		= "#WHERE_CONCAT#";
 	/** The Constant PLACEHOLDER_COLUMNS. */
 	protected static final String							PLACEHOLDER_COLUMNS				= "#COLUMNS#";
+	/** The Constant PLACEHOLDER_PAGINATION. */
+	protected static final String PLACEHOLDER_PAGINATION ="#PAGINATION";
 
 	/** Context used to retrieve and manage database metadata. */
 	protected final OntimizeTableMetaDataContext			tableMetaDataContext;
@@ -239,17 +241,70 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 			kvValidKeysValues.putAll(processMultipleValueAttributes);
 		}
 
-		EntityResult erResult;
-		String sqlQuery = null;
+		SQLStatement stSQL = null;
+	
 		if (queryTemplateInformation!=null){
 			//TODO
-			erResult = null;
-		}else{
-			SQLStatement stSQL = this.getStatementHandler().createCountQuery(this.getSchemaTable(), new Hashtable<>(kvValidKeysValues),  new Vector<>(), new Vector<>());
-			sqlQuery = stSQL.getSQLStatement();
-			Vector vValues = stSQL.getValues();
-			erResult = this.getJdbcTemplate().query(sqlQuery,  vValues.toArray(), new EntityResultResultSetExtractor(this.getStatementHandler(), queryTemplateInformation));
+			/*
+			List<String> validColumns = queryTemplateInformation.getValidColumns();
+			kvValidKeysValues = this.getValidQueryingKeysValues(kvValidKeysValues, validColumns);
+			vValidAttributes = this.getValidAttributes(vValidAttributes, validColumns);
+
+			kvValidKeysValues = this.applyTransformations(queryTemplateInformation, kvValidKeysValues);
+			vValidAttributes = this.applyTransformations(queryTemplateInformation, vValidAttributes);
+			CheckingTools.failIf(vValidAttributes.isEmpty(), "NO_ATTRIBUTES_TO_QUERY");
+			final StringBuilder sbColumns = new StringBuilder();
+			// columns
+			for (final Object ob : vValidAttributes) {
+				sbColumns.append(ob.toString());
+				sbColumns.append(SQLStatementBuilder.COMMA);
+			}
+			for (int i = 0; i < SQLStatementBuilder.COMMA.length(); i++) {
+				sbColumns.deleteCharAt(sbColumns.length() - 1);
+			}
+			String sqlTemplate = queryTemplateInformation.getSqlTemplate().replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_COLUMNS, sbColumns.toString());
+			// Where
+			final Vector<Object> vValues = new Vector<>();
+			String cond = this.getStatementHandler().createQueryConditionsWithoutWhere(kvValidKeysValues, new Vector<>(), vValues);
+			if (cond == null) {
+				cond = "";
+			}
+			cond = cond.trim();
+
+			Vector<Object> vValuesTemp = new Vector<Object>();
+			vValuesTemp.addAll(vValues);
+
+			Pair<String, Integer> replaceAll = StringTools.replaceAll(sqlTemplate, OntimizeJdbcDaoSupport.PLACEHOLDER_WHERE_CONCAT,
+					cond.length() == 0 ? "" : SQLStatementBuilder.AND + " " + cond);
+			sqlTemplate = replaceAll.getFirst();
+			for (int i = 1; i < replaceAll.getSecond(); i++) {
+				vValues.addAll(vValuesTemp);
+			}
+
+			replaceAll = StringTools.replaceAll(sqlTemplate, OntimizeJdbcDaoSupport.PLACEHOLDER_WHERE, cond.length() == 0 ? "" : SQLStatementBuilder.WHERE + " " + cond);
+			sqlTemplate = replaceAll.getFirst();
+			for (int i = 1; i < replaceAll.getSecond(); i++) {
+				vValues.addAll(vValuesTemp);
+			}
+
+			// Order by
+			String order = orderBy == null ? "" : (String) ReflectionTools.invoke(this.getStatementHandler(), "createSortStatement", new Vector<>(orderBy), false);
+			if (order.length() > 0) {
+				order = order.substring(SQLStatementBuilder.ORDER_BY.length());
+			}
+			order = order.trim();
+			sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_ORDER_CONCAT, order.length() == 0 ? "" : SQLStatementBuilder.COMMA + " " + order);
+			sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_ORDER, order.length() == 0 ? "" : SQLStatementBuilder.ORDER_BY + " " + order);
+			stSQL = new SQLStatement(sqlTemplate, vValues);
+			*/
+		} else {
+			stSQL = this.getStatementHandler().createCountQuery(this.getSchemaTable(), new Hashtable<>(kvValidKeysValues), new Vector<>(), new Vector<>());
 		}
+		
+		String sqlQuery = stSQL.getSQLStatement();
+		Vector vValues = stSQL.getValues();
+		EntityResult erResult = this.getJdbcTemplate().query(sqlQuery,  vValues.toArray(), new EntityResultResultSetExtractor(this.getStatementHandler(), queryTemplateInformation));
+
 
 		if ((erResult == null) || (erResult.getCode() == EntityResult.OPERATION_WRONG)) {
 			OntimizeJdbcDaoSupport.logger.error("Error executed record count query:{} : {}", erResult.getMessage(), sqlQuery);
@@ -286,7 +341,58 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 				stSQL = this.getStatementHandler().createSelectQuery(this.getSchemaTable(), new Vector<>(vValidAttributes), new Hashtable<>(kvValidKeysValues), new Vector<>(),
 						new Vector<>(orderBy == null ? Collections.emptyList() : orderBy), recordNumber, startIndex);
 			} else {
+				List<String> validColumns = queryTemplateInformation.getValidColumns();
+				kvValidKeysValues = this.getValidQueryingKeysValues(kvValidKeysValues, validColumns);
+				vValidAttributes = this.getValidAttributes(vValidAttributes, validColumns);
 
+				kvValidKeysValues = this.applyTransformations(queryTemplateInformation, kvValidKeysValues);
+				vValidAttributes = this.applyTransformations(queryTemplateInformation, vValidAttributes);
+				CheckingTools.failIf(vValidAttributes.isEmpty(), "NO_ATTRIBUTES_TO_QUERY");
+				final StringBuilder sbColumns = new StringBuilder();
+				// columns
+				for (final Object ob : vValidAttributes) {
+					sbColumns.append(ob.toString());
+					sbColumns.append(SQLStatementBuilder.COMMA);
+				}
+				for (int i = 0; i < SQLStatementBuilder.COMMA.length(); i++) {
+					sbColumns.deleteCharAt(sbColumns.length() - 1);
+				}
+				String sqlTemplate = queryTemplateInformation.getSqlTemplate().replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_COLUMNS, sbColumns.toString());
+				// Where
+				final Vector<Object> vValues = new Vector<>();
+				String cond = this.getStatementHandler().createQueryConditionsWithoutWhere(kvValidKeysValues, new Vector<>(), vValues);
+				if (cond == null) {
+					cond = "";
+				}
+				cond = cond.trim();
+
+				Vector<Object> vValuesTemp = new Vector<Object>();
+				vValuesTemp.addAll(vValues);
+
+				Pair<String, Integer> replaceAll = StringTools.replaceAll(sqlTemplate, OntimizeJdbcDaoSupport.PLACEHOLDER_WHERE_CONCAT,
+						cond.length() == 0 ? "" : SQLStatementBuilder.AND + " " + cond);
+				sqlTemplate = replaceAll.getFirst();
+				for (int i = 1; i < replaceAll.getSecond(); i++) {
+					vValues.addAll(vValuesTemp);
+				}
+
+				replaceAll = StringTools.replaceAll(sqlTemplate, OntimizeJdbcDaoSupport.PLACEHOLDER_WHERE, cond.length() == 0 ? "" : SQLStatementBuilder.WHERE + " " + cond);
+				sqlTemplate = replaceAll.getFirst();
+				for (int i = 1; i < replaceAll.getSecond(); i++) {
+					vValues.addAll(vValuesTemp);
+				}
+
+				// Order by
+				String order = orderBy == null ? "" : (String) ReflectionTools.invoke(this.getStatementHandler(), "createSortStatement", new Vector<>(orderBy), false);
+				if (order.length() > 0) {
+					order = order.substring(SQLStatementBuilder.ORDER_BY.length());
+				}
+				order = order.trim();
+				sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_ORDER_CONCAT, order.length() == 0 ? "" : SQLStatementBuilder.COMMA + " " + order);
+				sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_ORDER, order.length() == 0 ? "" : SQLStatementBuilder.ORDER_BY + " " + order);
+				performPlaceHolderPagination(sqlTemplate, startIndex, recordNumber);
+				stSQL = new SQLStatement(sqlTemplate, vValues);
+			
 			}
 			OntimizeJdbcDaoSupport.logger.trace(stSQL.getSQLStatement());
 			return stSQL;
@@ -295,6 +401,26 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 		}
 	}
 
+	protected String performPlaceHolderPagination(String sqlTemplate, int startIndex, int recordNumber) {
+		// TODO implements this method in handlers. this.getStatementHandler().
+		if (sqlTemplate.contains(OntimizeJdbcDaoSupport.PLACEHOLDER_PAGINATION)) {
+			StringBuilder builder = new StringBuilder();
+			if (recordNumber >= 0) {
+				builder.append(" LIMIT ");
+				builder.append(recordNumber);
+			}
+
+			if (startIndex >= 0) {
+				builder.append(" OFFSET ");
+				builder.append(startIndex);
+			}
+
+			sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_PAGINATION, builder.toString());
+		}
+		
+		return sqlTemplate;
+	}
+	
 	/**
 	 * Compose sql.
 	 *
