@@ -487,7 +487,7 @@ public class TreeTabbedFormManager extends BaseFormManager implements ITreeTabbe
 	}
 
 	@Override
-	public void free() throws Exception {
+	public void free() {
 		super.free();
 		try {
 			if (this.managedTreeTableColumn != null) {
