@@ -63,6 +63,7 @@ import com.ontimize.db.SQLStatementBuilder.BasicExpression;
 import com.ontimize.db.SQLStatementBuilder.BasicField;
 import com.ontimize.db.SQLStatementBuilder.ExtendedSQLConditionValuesProcessor;
 import com.ontimize.db.SQLStatementBuilder.Operator;
+import com.ontimize.db.SQLStatementBuilder.SQLOrder;
 import com.ontimize.db.SQLStatementBuilder.SQLStatement;
 import com.ontimize.db.handler.SQLStatementHandler;
 import com.ontimize.db.util.DBFunctionName;
@@ -74,7 +75,6 @@ import com.ontimize.jee.common.tools.CheckingTools;
 import com.ontimize.jee.common.tools.Chronometer;
 import com.ontimize.jee.common.tools.ObjectTools;
 import com.ontimize.jee.common.tools.Pair;
-import com.ontimize.jee.common.tools.ReflectionTools;
 import com.ontimize.jee.common.tools.StringTools;
 import com.ontimize.jee.common.tools.streamfilter.ReplaceTokensFilterReader;
 import com.ontimize.jee.server.dao.DaoProperty;
@@ -85,6 +85,7 @@ import com.ontimize.jee.server.dao.common.INameConverter;
 import com.ontimize.jee.server.dao.jdbc.setup.AmbiguousColumnType;
 import com.ontimize.jee.server.dao.jdbc.setup.FunctionColumnType;
 import com.ontimize.jee.server.dao.jdbc.setup.JdbcEntitySetupType;
+import com.ontimize.jee.server.dao.jdbc.setup.OrderColumnType;
 import com.ontimize.jee.server.dao.jdbc.setup.QueryType;
 
 /**
@@ -367,7 +368,9 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 				}
 
 				// Order by
-				String order = orderBy == null ? "" : (String) ReflectionTools.invoke(this.getStatementHandler(), "createSortStatement", new Vector<>(orderBy), false);
+				List<OrderColumnType> orderColumns = queryTemplateInformation.getOrderColumns();
+				Vector<Object> sortColumns = this.applyOrderColumns(orderBy, orderColumns);
+				String order = this.getStatementHandler().createSortStatement(sortColumns, false);
 				if (order.length() > 0) {
 					order = order.substring(SQLStatementBuilder.ORDER_BY.length());
 				}
@@ -480,11 +483,14 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 			}
 
 			// Order by
-			String order = sort == null ? "" : this.getStatementHandler().createSortStatement(new Vector<>(sort), false);
+			List<OrderColumnType> orderColumns = queryTemplateInformation.getOrderColumns();
+			Vector<Object> sortColumns = this.applyOrderColumns(sort, orderColumns);
+			String order = this.getStatementHandler().createSortStatement(sortColumns, false);
 			if (order.length() > 0) {
 				order = order.substring(SQLStatementBuilder.ORDER_BY.length());
 			}
 			order = order.trim();
+
 			sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_ORDER_CONCAT, order.length() == 0 ? "" : SQLStatementBuilder.COMMA + " " + order);
 			sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_ORDER, order.length() == 0 ? "" : SQLStatementBuilder.ORDER_BY + " " + order);
 			stSQL = new SQLStatement(sqlTemplate, vValues);
@@ -627,6 +633,24 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 			}
 		}
 		return res;
+	}
+
+	protected Vector<Object> applyOrderColumns(final List<?> sort, final List<OrderColumnType> orderColumns) {
+		Vector<Object> vResult = new Vector<>();
+		if ((sort != null) && (sort.size() > 0)) {
+			for (Object current : sort) {
+				vResult.add(current);
+			}
+		}
+
+		if ((orderColumns != null) && (orderColumns.size() > 0)) {
+			for (OrderColumnType orderColumnType : orderColumns) {
+				SQLOrder sqlOrder = new SQLOrder(orderColumnType.getName(), "ASC".equals(orderColumnType.getType()));
+				vResult.add(sqlOrder);
+			}
+		}
+
+		return vResult;
 	}
 
 	/**
@@ -1468,7 +1492,8 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 					this.addQueryTemplateInformation(query.getId(), query.getSentence().getValue(), //
 							query.getAmbiguousColumns() == null ? null : query.getAmbiguousColumns().getAmbiguousColumn(), //
 									query.getFunctionColumns() == null ? null : query.getFunctionColumns().getFunctionColumn(), //
-											query.getValidColumns() != null ? query.getValidColumns().getColumn() : new ArrayList<String>());
+											query.getValidColumns() != null ? query.getValidColumns().getColumn() : new ArrayList<String>(), //
+													query.getOrderColumns() == null ? null : query.getOrderColumns().getOrderColumn());
 				}
 			}
 			this.setGeneratedKeyName(setup.getGeneratedKey());
@@ -1565,8 +1590,9 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	 * @param functionColumns
 	 *            the function columns
 	 */
-	public void addQueryTemplateInformation(final String id, final String value, final List<AmbiguousColumnType> ambiguousColumns, final List<FunctionColumnType> functionColumns) {
-		this.addQueryTemplateInformation(id, value, ambiguousColumns, functionColumns, new ArrayList<String>());
+	public void addQueryTemplateInformation(final String id, final String value, final List<AmbiguousColumnType> ambiguousColumns, final List<FunctionColumnType> functionColumns,
+			List<OrderColumnType> orderColumns) {
+		this.addQueryTemplateInformation(id, value, ambiguousColumns, functionColumns, new ArrayList<String>(), orderColumns);
 	}
 
 	/**
@@ -1579,8 +1605,8 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	 * @param validColumns
 	 */
 	public void addQueryTemplateInformation(final String id, final String value, final List<AmbiguousColumnType> ambiguousColumns, final List<FunctionColumnType> functionColumns,
-			List<String> validColumns) {
-		this.sqlQueries.put(id, new QueryTemplateInformation(value, ambiguousColumns, functionColumns, validColumns));
+			List<String> validColumns, List<OrderColumnType> orderColumns) {
+		this.sqlQueries.put(id, new QueryTemplateInformation(value, ambiguousColumns, functionColumns, validColumns, orderColumns));
 	}
 
 	/**

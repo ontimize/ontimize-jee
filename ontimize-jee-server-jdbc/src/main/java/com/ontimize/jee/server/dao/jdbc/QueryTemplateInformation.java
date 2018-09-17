@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.ontimize.jee.server.dao.jdbc.setup.AmbiguousColumnType;
 import com.ontimize.jee.server.dao.jdbc.setup.FunctionColumnType;
+import com.ontimize.jee.server.dao.jdbc.setup.OrderColumnType;
 
 /**
  * Clase que almacena la información de una plantilla de consulta SQL.
@@ -23,6 +24,9 @@ public class QueryTemplateInformation {
 	/** The valid columns. */
 	private List<String>				validColumns;
 
+	/** The order columns. */
+	private List<OrderColumnType>		orderColumns;
+
 	/**
 	 * Instantiates a new query template information.
 	 *
@@ -33,13 +37,16 @@ public class QueryTemplateInformation {
 	 * @param functionColumns
 	 *            the function columns
 	 */
-	public QueryTemplateInformation(String sql, List<AmbiguousColumnType> ambiguousColumns, List<FunctionColumnType> functionColumns, List<String> validColumns) {
+	public QueryTemplateInformation(String sql, List<AmbiguousColumnType> ambiguousColumns, List<FunctionColumnType> functionColumns, List<String> validColumns,
+			List<OrderColumnType> orderColumns) {
 		this();
 		this.sqlTemplate = sql;
 		this.ambiguousColumns = ambiguousColumns;
 		this.functionColumns = functionColumns;
 		this.validColumns = validColumns;
+		this.orderColumns = orderColumns;
 	}
+
 
 	/**
 	 * Instantiates a new query template information.
@@ -122,4 +129,18 @@ public class QueryTemplateInformation {
 	public void setValidColumns(List<String> validColumns) {
 		this.validColumns = validColumns;
 	}
+
+	/**
+	 * Gets the order columns.
+	 *
+	 * @return the order columns
+	 */
+	public List<OrderColumnType> getOrderColumns() {
+		return this.orderColumns;
+	}
+
+	public void setOrderColumns(List<OrderColumnType> orderColumns) {
+		this.orderColumns = orderColumns;
+	}
+
 }
