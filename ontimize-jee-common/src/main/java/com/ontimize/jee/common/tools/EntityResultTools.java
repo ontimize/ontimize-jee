@@ -1315,7 +1315,10 @@ public final class EntityResultTools {
 
 		@Override
 		public boolean evaluate(Object test) {
-			Matcher m = this.p.matcher("aaaaab");
+			if (test == null) {
+				return false;
+			}
+			Matcher m = this.p.matcher(test.toString());
 			return m.matches();
 		}
 
