@@ -106,7 +106,7 @@ public class Pair<K, L> implements Serializable {
 		if (this.getClass() != obj.getClass()) {
 			return false;
 		}
-		Pair other = (Pair) obj;
+		Pair<?, ?> other = (Pair<?, ?>) obj;
 		if (this.first == null) {
 			if (other.first != null) {
 				return false;
