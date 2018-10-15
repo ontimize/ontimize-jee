@@ -12,11 +12,14 @@ import org.springframework.stereotype.Component;
 
 import com.ontimize.db.EntityResult;
 import com.ontimize.db.NullValue;
+import com.ontimize.db.SQLStatementBuilder.BasicExpression;
+import com.ontimize.db.SQLStatementBuilder.BasicField;
 import com.ontimize.db.SQLStatementBuilder.BasicOperator;
 import com.ontimize.db.SQLStatementBuilder.Expression;
 import com.ontimize.db.SQLStatementBuilder.ExtendedSQLConditionValuesProcessor;
 import com.ontimize.db.SQLStatementBuilder.Field;
 import com.ontimize.gui.SearchValue;
+import com.ontimize.jee.common.tools.BasicExpressionTools;
 import com.ontimize.jee.common.tools.EntityResultTools;
 import com.ontimize.jee.common.tools.MapTools;
 import com.ontimize.jee.common.tools.ObjectTools;
@@ -76,7 +79,11 @@ public class DownDateHelper implements ApplicationContextAware, IDownDateHelper 
 		boolean hasDowndateFilter = this.hasDowndateFilter(keysValues, downDateColumn);
 		boolean directRecordAccess = this.isDirectRecordAccess(keysValues, daoKeyColumn);
 		if (!hasDowndateFilter && !directRecordAccess) {
-			MapTools.safePut(keysValues, downDateColumn, new SearchValue(SearchValue.NULL, null));
+			BasicExpression exp = (BasicExpression) keysValues.get(ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY);
+			Expression expDownDate1 = new BasicExpression(new BasicField(downDateColumn), BasicOperator.NULL_OP, null);
+			Expression expDownDate2 = new BasicExpression(new BasicField(downDateColumn), BasicOperator.MORE_OP, new Date());
+			BasicExpression expDownDate = new BasicExpression(expDownDate1, BasicOperator.OR_OP, expDownDate2);
+			MapTools.safePut(keysValues, ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY, BasicExpressionTools.combineExpression(exp, expDownDate));
 			return true;
 		}
 		return hasDowndateFilter;
