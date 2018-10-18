@@ -179,7 +179,7 @@ public final class BasicExpressionTools {
 
 	/**
 	 * Some DDBB has limitations to do IN search over 1000 records
-	 * 
+	 *
 	 * @param basicField
 	 * @param value
 	 * @return
@@ -468,7 +468,7 @@ public final class BasicExpressionTools {
 		if ((newRight != null) && (newRight instanceof BasicExpression)) {
 			return (BasicExpression) newRight;
 		}
-		return null;
+		return originalExpr;
 	}
 
 	/**
