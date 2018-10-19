@@ -706,4 +706,35 @@ public final class BasicExpressionTools {
 		}
 	}
 
+	public static String toString(BasicExpression be) {
+		StringBuilder sb = new StringBuilder();
+		BasicExpressionTools.toString(be, sb);
+		return sb.toString();
+	}
+
+	private static void toString(BasicExpression be, StringBuilder sb) {
+		if (be == null) {
+			return;
+		}
+		sb.append("(");
+		Object left = be.getLeftOperand();
+		if (left instanceof BasicExpression) {
+			BasicExpressionTools.toString((BasicExpression) left, sb);
+		} else {
+			sb.append(left.toString());
+		}
+		sb.append(be.getOperator());
+
+		Object right = be.getRightOperand();
+		if (right != null) {
+			if (right instanceof BasicExpression) {
+				BasicExpressionTools.toString((BasicExpression) right, sb);
+			} else {
+				sb.append(right.toString());
+			}
+		}
+		sb.append(")");
+	}
+
 }
+
