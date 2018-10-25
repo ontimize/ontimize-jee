@@ -82,7 +82,7 @@ public class BeanPropertyRowMapper<T> implements RowMapper<T> {
 		PropertyDescriptor[] pds = BeanUtils.getPropertyDescriptors(mappedClass);
 		for (PropertyDescriptor pd : pds) {
 			if (pd.getWriteMethod() != null) {
-				this.mappedFields.put(propertyConverter.convertToDb(mappedClass, pd.getName(), ds).toUpperCase(), pd);
+				this.mappedFields.put(propertyConverter.convertToDb(mappedClass, pd.getName(), ds), pd);
 			}
 		}
 	}
