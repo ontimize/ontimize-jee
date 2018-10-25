@@ -115,7 +115,7 @@ public class BeanPropertyRowMapper<T> implements RowMapper<T> {
 
 		for (int index = 1; index <= columnCount; index++) {
 			String column = JdbcUtils.lookupColumnName(rsmd, index);
-			PropertyDescriptor pd = this.mappedFields.get(column.toUpperCase());
+			PropertyDescriptor pd = this.mappedFields.get(column);
 			if (pd != null) {
 				Object value = this.getColumnValue(rs, index, pd);
 				if (BeanPropertyRowMapper.logger.isDebugEnabled() && (rowNumber == 0)) {
