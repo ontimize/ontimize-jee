@@ -17,7 +17,7 @@ public class DBErrorMessagesTranslator {
 	private static final Logger	logger	= LoggerFactory.getLogger(DBErrorMessagesTranslator.class);
 
 	/** The props. */
-	private Properties			props;
+	private final Properties	props;
 
 	/**
 	 * Instantiates a new DB error messages.
@@ -29,16 +29,24 @@ public class DBErrorMessagesTranslator {
 	 */
 	public DBErrorMessagesTranslator(String uriProperties) throws IOException {
 		super();
-
-		URL url = Thread.currentThread().getContextClassLoader().getResource(uriProperties);
-		if (url == null) {
-			throw new IOException("Url " + uriProperties + " not found");
-		} else {
-			this.props = new Properties();
+		String[] uris = this.splitUri(uriProperties);
+		this.props = new Properties();
+		for (String uri : uris) {
+			URL url = Thread.currentThread().getContextClassLoader().getResource(uri);
+			if (url == null) {
+				throw new IOException("Url " + uriProperties + " not found");
+			}
 			try (InputStream input = url.openStream()) {
 				this.props.load(input);
 			}
 		}
+	}
+
+	protected String[] splitUri(String uriProperties) {
+		if (uriProperties == null) {
+			return new String[] {};
+		}
+		return uriProperties.split(";");
 	}
 
 	/**
