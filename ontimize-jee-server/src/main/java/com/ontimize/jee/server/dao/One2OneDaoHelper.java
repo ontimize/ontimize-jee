@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -23,6 +25,8 @@ import com.ontimize.jee.common.tools.ObjectTools;
 @Component
 @Lazy(true)
 public class One2OneDaoHelper implements ApplicationContextAware {
+
+	private static final Logger logger = LoggerFactory.getLogger(One2OneDaoHelper.class);
 
 	// @formatter:off
 	/**
@@ -150,9 +154,11 @@ public class One2OneDaoHelper implements ApplicationContextAware {
 	public EntityResult update(DefaultOntimizeDaoHelper daoHelper, IOntimizeDaoSupport mainDao, List<OneToOneSubDao> secondaryDaos, Map<?, ?> attributesValues,
 			Map<?, ?> keysValues, One2OneType type) throws OntimizeJEERuntimeException {
 		try {
-			EntityResult result = null;
+			EntityResult result = new EntityResult(EntityResult.OPERATION_SUCCESSFUL, EntityResult.NODATA_RESULT);
+			boolean opDone = false;
 			// Checks formodifications in main dao
 			if (this.checkColumns(mainDao, attributesValues, null)) {
+				opDone = true;
 				EntityResult resUpdateMain = daoHelper.update(mainDao, attributesValues, keysValues);
 				CheckingTools.checkValidEntityResult(resUpdateMain, "E_UPDATING_MAIN_DAO");
 				result = resUpdateMain;
@@ -163,6 +169,7 @@ public class One2OneDaoHelper implements ApplicationContextAware {
 				for (OneToOneSubDao subDao : secondaryDaos) {
 					// Checks for modifications in second dao
 					if (this.checkColumns(subDao.getDao(), attributesValues, null)) {
+						opDone = true;
 						// Checks is secondary exists (then update) else insert
 						boolean joinKeyIsMain = keysValues.containsKey(subDao.getKeySecondary());
 						Object keyValue = this.checksIfExists(daoHelper, mainDao, subDao.getDao(), keysValues, subDao.getKeySecondary(), subDao.getKey());
@@ -170,7 +177,9 @@ public class One2OneDaoHelper implements ApplicationContextAware {
 							this.checkRequiredColumns(attributesValues, subDao.getRequiredColumns(), false);
 							EntityResult resUpdateSecond = this.updateSubDao(daoHelper, attributesValues, subDao, keyValue);
 							CheckingTools.checkValidEntityResult(resUpdateSecond, "E_UPDATING_SEOCONDARY_DAO");
-							result = resUpdateSecond;
+							if (resUpdateSecond != null) {
+								result.putAll(resUpdateSecond);
+							}
 						} else if (this.checkColumns(subDao.getDao(), attributesValues, subDao.getNotEnoughColumns())) {
 							this.checkRequiredColumns(attributesValues, subDao.getRequiredColumns(), true);
 							Map<Object, Object> values = new Hashtable<>();
@@ -184,14 +193,15 @@ public class One2OneDaoHelper implements ApplicationContextAware {
 										EntityResultTools.keysvalues(subDao.getKey(), resInsertSecondary.get(subDao.getKeySecondary())), keysValues);
 								CheckingTools.checkValidEntityResult(resUpdateMain, "E_UPDATING_MAIN_DAO");
 							}
-							result = resInsertSecondary;
+							if (resInsertSecondary != null) {
+								result.putAll(resInsertSecondary);
+							}
 						}
 					}
 				}
 			}
-			// TODO: Jok, no se si es bueno hacer esto aqui, pero al menos que no sea un Exception sin tipar
-			if (result == null) {
-				throw new Exception("NO_DATA_TO_MODIFY");
+			if (!opDone) {
+				One2OneDaoHelper.logger.warn("NO_DATA_TO_MODIFY");
 			}
 			return result;
 		} catch (OntimizeJEERuntimeException ex) {
