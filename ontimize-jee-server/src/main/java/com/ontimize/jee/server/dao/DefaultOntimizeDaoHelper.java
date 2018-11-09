@@ -487,6 +487,9 @@ public class DefaultOntimizeDaoHelper implements IOntimizeDaoHelper, Application
 	 * @return
 	 */
 	public UserInformation getUser() {
+		if (SecurityContextHolder.getContext().getAuthentication() == null) {
+			return null;
+		}
 		return (UserInformation) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	}
 
