@@ -107,7 +107,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	/** The Constant PLACEHOLDER_COLUMNS. */
 	protected static final String							PLACEHOLDER_COLUMNS				= "#COLUMNS#";
 	/** The Constant PLACEHOLDER_PAGINATION. 
-	 * 	@deprecated it's necessary use this tag in queries for pagination
+	 * 	@deprecated it isn't necessary use this tag in queries for pagination
 	 * */
 	@Deprecated 
 	protected static final String							PLACEHOLDER_PAGINATION			= "#PAGINATION#";
