@@ -106,7 +106,10 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	protected static final String							PLACEHOLDER_WHERE_CONCAT		= "#WHERE_CONCAT#";
 	/** The Constant PLACEHOLDER_COLUMNS. */
 	protected static final String							PLACEHOLDER_COLUMNS				= "#COLUMNS#";
-	/** The Constant PLACEHOLDER_PAGINATION. */
+	/** The Constant PLACEHOLDER_PAGINATION. 
+	 * 	@deprecated it's necessary use this tag in queries for pagination
+	 * */
+	@Deprecated 
 	protected static final String							PLACEHOLDER_PAGINATION			= "#PAGINATION#";
 	
 	/** The Constant PLACEHOLDER_SCHEMA. */
@@ -393,23 +396,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	}
 
 	protected String performPlaceHolderPagination(String sqlTemplate, int startIndex, int recordNumber) {
-		// TODO implements this method in handlers. this.getStatementHandler().
-		if (sqlTemplate.contains(OntimizeJdbcDaoSupport.PLACEHOLDER_PAGINATION)) {
-			StringBuilder builder = new StringBuilder();
-			if (recordNumber >= 0) {
-				builder.append(" LIMIT ");
-				builder.append(recordNumber);
-			}
-
-			if (startIndex >= 0) {
-				builder.append(" OFFSET ");
-				builder.append(startIndex);
-			}
-
-			sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_PAGINATION, builder.toString());
-		}
-
-		return sqlTemplate;
+		return this.getStatementHandler().convertPaginationStatement(sqlTemplate, startIndex, recordNumber);
 	}
 
 	/**
