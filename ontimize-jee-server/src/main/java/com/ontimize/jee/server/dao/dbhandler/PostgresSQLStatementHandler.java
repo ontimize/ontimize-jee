@@ -78,22 +78,6 @@ public class PostgresSQLStatementHandler extends com.ontimize.db.handler.Postgre
 	}
 
 	@Override
-	protected void changeColumnNames(EntityResult result, List columnNames) {
-		this.changeColumnNameToUpperCase(columnNames);
-		super.changeColumnNames(result, columnNames);
-	}
-
-	private void changeColumnNameToUpperCase(List columnNames) {
-		if (columnNames != null) {
-			for (Object columnName : columnNames) {
-				if (columnName instanceof String) {
-					columnNames.set(columnNames.indexOf(columnName), ((String) columnName).toUpperCase());
-				}
-			}
-		}
-	}
-
-	@Override
 	public boolean checkColumnName(String columnName) {
 		boolean superCheck = super.checkColumnName(columnName);
 
