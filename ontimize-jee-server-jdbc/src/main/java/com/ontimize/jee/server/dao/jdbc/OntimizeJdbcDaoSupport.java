@@ -396,6 +396,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	}
 
 	protected String performPlaceHolderPagination(String sqlTemplate, int startIndex, int recordNumber) {
+		sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_PAGINATION, "");
 		return this.getStatementHandler().convertPaginationStatement(sqlTemplate, startIndex, recordNumber);
 	}
 
