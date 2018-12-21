@@ -14,6 +14,7 @@ public class OntimizeMapper extends ObjectMapper {
 		module.addSerializer(EntityResult.class, new EntityResultSerializer());
 		module.addSerializer(AdvancedEntityResult.class, new AdvancedEntityResultSerializer());
 		module.addDeserializer(SQLOrder.class, new SQLOrderDeserializer());
+		module.addDeserializer(EntityResult.class, new EntityResultDeserializer());
 		this.registerModule(module);
 	}
 }
