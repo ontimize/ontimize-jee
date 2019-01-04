@@ -167,9 +167,11 @@ public class UnsafeSerializer extends AbstractSerializer {
 				fieldSerializers[i].serialize(out, obj);
 			}
 		} catch (RuntimeException e) {
-			throw new RuntimeException(e.getMessage() + "\n class: " + obj.getClass().getName() + " (object=" + obj + ")", e);
+			UnsafeSerializer.logger.error(e.getMessage() + "\n class: " + obj.getClass().getName(), e);
+			throw new RuntimeException(e.getMessage() + "\n class: " + obj.getClass().getName(), e);
 		} catch (IOException e) {
-			throw new IOExceptionWrapper(e.getMessage() + "\n class: " + obj.getClass().getName() + " (object=" + obj + ")", e);
+			UnsafeSerializer.logger.error(e.getMessage() + "\n class: " + obj.getClass().getName(), e);
+			throw new IOExceptionWrapper(e.getMessage() + "\n class: " + obj.getClass().getName(), e);
 		}
 	}
 
