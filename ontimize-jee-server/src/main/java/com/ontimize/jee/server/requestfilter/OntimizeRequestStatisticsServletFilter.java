@@ -124,7 +124,7 @@ public class OntimizeRequestStatisticsServletFilter implements Filter {
 	@Override
 	public void init(final FilterConfig arg0) throws ServletException {
 		// do nothing
-		this.service = (IServerManagementService) WebApplicationContextUtils.getWebApplicationContext(arg0.getServletContext()).getBean("ServerManagementService");
+		this.service = WebApplicationContextUtils.getWebApplicationContext(arg0.getServletContext()).getBean(IServerManagementService.class);
 	}
 
 }
