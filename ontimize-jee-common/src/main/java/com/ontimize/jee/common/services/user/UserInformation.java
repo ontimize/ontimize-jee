@@ -1,5 +1,6 @@
 package com.ontimize.jee.common.services.user;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -8,6 +9,8 @@ import java.util.Map;
 import org.springframework.security.core.CredentialsContainer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * Server user information.
@@ -20,23 +23,28 @@ public class UserInformation implements UserDetails, CredentialsContainer {
 	private static final long					serialVersionUID	= 1L;
 
 	/** The other data. */
-	private final Map<Object, Object>			otherData;
+	private Map<Object, Object> 				otherData;
 	/** The password. */
+	@JsonIgnore
 	private transient String					password;
 	/** The username. */
-	private final String						username;
+	private String 								username;
 	/** The authorities. */
-	private final Collection<GrantedAuthority>	authorities;
+	private Collection<GrantedAuthority>	authorities;
 	/** The account non expired. */
-	private final boolean						accountNonExpired;
+	private boolean							accountNonExpired;
 	/** The account non locked. */
-	private final boolean						accountNonLocked;
+	private boolean							accountNonLocked;
 	/** The credentials non expired. */
-	private final boolean						credentialsNonExpired;
+	private boolean							credentialsNonExpired;
 	/** The enabled. */
-	private final boolean						enabled;
+	private boolean							enabled;
 	/** The client permissions. */
-	private final Map<String, ?>				clientPermissions;
+	private Map<String, ?>					clientPermissions;
+
+	public UserInformation() {
+		this(" ", null, new ArrayList<GrantedAuthority>(), null);
+	}
 
 	/**
 	 * Calls the more complex constructor with all boolean arguments set to {@code true}.
@@ -75,7 +83,7 @@ public class UserInformation implements UserDetails, CredentialsContainer {
 	 *            the client permissions
 	 */
 	public UserInformation(String username, String password, boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked,
-	        Collection<? extends GrantedAuthority> authorities, Map<String, ?> clientPermissions) {
+			Collection<? extends GrantedAuthority> authorities, Map<String, ?> clientPermissions) {
 		super();
 		if ((username == null) || "".equals(username)) {
 			throw new IllegalArgumentException("Cannot pass null or empty values to constructor");
@@ -100,6 +108,14 @@ public class UserInformation implements UserDetails, CredentialsContainer {
 	@Override
 	public String getPassword() {
 		return this.password;
+	}
+
+	/**
+	 *
+	 * @param password
+	 */
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	/**
@@ -135,12 +151,11 @@ public class UserInformation implements UserDetails, CredentialsContainer {
 	}
 
 	/**
-	 * Gets the login.
 	 *
-	 * @return the login
+	 * @param otherData
 	 */
-	public String getLogin() {
-		return this.getUsername();
+	public void setOtherData(Map<Object, Object> otherData) {
+		this.otherData = otherData;
 	}
 
 	/*
@@ -152,6 +167,23 @@ public class UserInformation implements UserDetails, CredentialsContainer {
 		return this.authorities;
 	}
 
+	public void setAuthorities(Collection<GrantedAuthority> authorities) {
+		this.authorities = authorities;
+	}
+
+	/**
+	 * Gets the login.
+	 *
+	 * @return the login
+	 */
+	public String getLogin() {
+		return this.getUsername();
+	}
+
+	public void setLogin(String login) {
+		this.setUsername(login);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.springframework.security.core.userdetails.UserDetails#getUsername()
@@ -159,6 +191,14 @@ public class UserInformation implements UserDetails, CredentialsContainer {
 	@Override
 	public String getUsername() {
 		return this.username;
+	}
+
+	/**
+	 *
+	 * @param username
+	 */
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	/*
@@ -170,6 +210,14 @@ public class UserInformation implements UserDetails, CredentialsContainer {
 		return this.enabled;
 	}
 
+	/**
+	 *
+	 * @param enabled
+	 */
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.springframework.security.core.userdetails.UserDetails#isAccountNonExpired()
@@ -177,6 +225,14 @@ public class UserInformation implements UserDetails, CredentialsContainer {
 	@Override
 	public boolean isAccountNonExpired() {
 		return this.accountNonExpired;
+	}
+
+	/**
+	 *
+	 * @param accountNonExpired
+	 */
+	public void setAccountNonExpired(boolean accountNonExpired) {
+		this.accountNonExpired = accountNonExpired;
 	}
 
 	/*
@@ -188,6 +244,14 @@ public class UserInformation implements UserDetails, CredentialsContainer {
 		return this.accountNonLocked;
 	}
 
+	/**
+	 *
+	 * @param accountNonLocked
+	 */
+	public void setAccountNonLocked(boolean accountNonLocked) {
+		this.accountNonLocked = accountNonLocked;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.springframework.security.core.userdetails.UserDetails#isCredentialsNonExpired()
@@ -195,6 +259,31 @@ public class UserInformation implements UserDetails, CredentialsContainer {
 	@Override
 	public boolean isCredentialsNonExpired() {
 		return this.credentialsNonExpired;
+	}
+
+	/**
+	 *
+	 * @param credentialsNonExpired
+	 */
+	public void setCredentialsNonExpired(boolean credentialsNonExpired) {
+		this.credentialsNonExpired = credentialsNonExpired;
+	}
+
+	/**
+	 * Gets the client permissions.
+	 *
+	 * @return the client permissions
+	 */
+	public Map<String, ?> getClientPermissions() {
+		return this.clientPermissions;
+	}
+
+	/**
+	 *
+	 * @return
+	 */
+	public void setClientPermissions(Map<String, ?> clientPermissions) {
+		this.clientPermissions = clientPermissions;
 	}
 
 	/*
@@ -265,23 +354,4 @@ public class UserInformation implements UserDetails, CredentialsContainer {
 
 		return sb.toString();
 	}
-
-	/**
-	 * Gets the client permissions.
-	 *
-	 * @return the client permissions
-	 */
-	public Map<String, ?> getClientPermissions() {
-		return this.clientPermissions;
-	}
-
-	/**
-	 * Allow to set password value.
-	 *
-	 * @param password
-	 */
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
 }
