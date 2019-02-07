@@ -29,6 +29,7 @@ import com.ontimize.gui.field.TextComboDataField;
 import com.ontimize.gui.manager.IFormManager;
 import com.ontimize.gui.table.Table;
 import com.ontimize.jee.common.services.servermanagement.IServerManagementService;
+import com.ontimize.jee.common.tools.MapTools;
 import com.ontimize.jee.desktopclient.components.servermanagement.window.list.ListSql;
 import com.ontimize.jee.desktopclient.components.servermanagement.window.list.SentenceSql;
 import com.ontimize.jee.desktopclient.spring.BeansFactory;
@@ -203,7 +204,7 @@ public class IMSqlManager extends BasicInteractionManager {
 							EntityResult res = new EntityResult();
 							Hashtable<String, String> data = new Hashtable<>();
 							data.put("EXCEPTION", ex.getClass().getName());
-							data.put("MESSAGE", ex.getMessage());
+							MapTools.safePut(data, "MESSAGE", ex.getMessage());
 							res.addRecord(data);
 							IMSqlManager.this.tableResults.setValue(res);
 						}
