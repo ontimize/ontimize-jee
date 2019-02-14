@@ -60,10 +60,21 @@ public abstract class RemoteConfigurationRestController<T extends IRemoteConfigu
 	@RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<EntityResult> updateUserConfiguration(@RequestBody UpdateParameter updateParameter) {
 		try {
-			Map<?, ?> keysValues = updateParameter.getFilter();
+			Map<Object, Object> keysValues = updateParameter.getFilter();
 			this.checkRemoteConfigurationParams(keysValues);
-			Map<?, ?> attributesValues = updateParameter.getData();
-			EntityResult result = this.getService().remoteConfigurationUpdate(attributesValues, keysValues);
+			Map<Object, Object> attributesValues = updateParameter.getData();
+
+			// Insert the provided configuration in case there is no configuration persisted previously for the provided keys
+			String configColumn = this.remoteConfigurationNameConverter != null ? this.remoteConfigurationNameConverter
+					.getConfigurationColumn() : IRemoteConfigurationDao.DEFAULT_COLUMN_CONFIG;
+			List<String> attributes = Arrays.asList(configColumn);
+			EntityResult result = this.getService().remoteConfigurationQuery(keysValues, attributes);
+			if (EntityResult.OPERATION_WRONG != result.getCode() && result.calculateRecordNumber() == 0) {
+				attributesValues.putAll(keysValues);
+				result = this.getService().remoteConfigurationInsert(attributesValues);
+			} else {
+				result = this.getService().remoteConfigurationUpdate(attributesValues, keysValues);
+			}
 			return new ResponseEntity<>(result, HttpStatus.OK);
 		} catch (Exception e) {
 			return this.processError(e);
