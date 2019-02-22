@@ -11,6 +11,13 @@ public abstract class AbstractGeneratedKey<T> implements Serializable {
 	private T generatedKey;
 
 	/**
+	 * Simple constructor to support as bean.
+	 */
+	public AbstractGeneratedKey() {
+		// Do nothing
+	}
+
+	/**
 	 * Instantiates a new generated key.
 	 *
 	 * @param generatedKey
@@ -20,6 +27,7 @@ public abstract class AbstractGeneratedKey<T> implements Serializable {
 		super();
 		this.generatedKey = generatedKey;
 	}
+
 
 	/**
 	 * Gets the generated key.
