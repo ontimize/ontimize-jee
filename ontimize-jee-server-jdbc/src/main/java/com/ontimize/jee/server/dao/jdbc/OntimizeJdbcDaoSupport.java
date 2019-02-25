@@ -52,7 +52,6 @@ import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.JdbcUtils;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.jdbc.support.nativejdbc.NativeJdbcExtractor;
 import org.springframework.util.Assert;
 
 import com.ontimize.db.AdvancedEntityResult;
@@ -283,7 +282,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 			for (int i = 1; i < replaceAll.getSecond(); i++) {
 				vValues.addAll(vValuesTemp);
 			}
-			sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_SCHEMA, getSchemaName());
+			sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_SCHEMA, this.getSchemaName());
 			sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_ORDER_CONCAT, "");
 			sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_ORDER, "");
 			sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_PAGINATION, "");
@@ -384,7 +383,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 				sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_ORDER_CONCAT, order.length() == 0 ? "" : SQLStatementBuilder.COMMA + " " + order);
 				sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_ORDER, order.length() == 0 ? "" : SQLStatementBuilder.ORDER_BY + " " + order);
 				sqlTemplate = this.performPlaceHolderPagination(sqlTemplate, startIndex, recordNumber);
-				sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_SCHEMA, getSchemaName());
+				sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_SCHEMA, this.getSchemaName());
 				stSQL = new SQLStatement(sqlTemplate, vValues);
 
 			}
@@ -488,7 +487,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 
 			sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_ORDER_CONCAT, order.length() == 0 ? "" : SQLStatementBuilder.COMMA + " " + order);
 			sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_ORDER, order.length() == 0 ? "" : SQLStatementBuilder.ORDER_BY + " " + order);
-			sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_SCHEMA, getSchemaName());
+			sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_SCHEMA, this.getSchemaName());
 			sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_PAGINATION,"");
 			stSQL = new SQLStatement(sqlTemplate, vValues);
 		}
@@ -1386,16 +1385,6 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	 */
 	public void setOverrideIncludeSynonymsDefault(final boolean override) {
 		this.tableMetaDataContext.setOverrideIncludeSynonymsDefault(override);
-	}
-
-	/**
-	 * Set the {@link NativeJdbcExtractor} to use to retrieve the native connection if necessary.
-	 *
-	 * @param nativeJdbcExtractor
-	 *            the new native jdbc extractor
-	 */
-	public void setNativeJdbcExtractor(final NativeJdbcExtractor nativeJdbcExtractor) {
-		this.tableMetaDataContext.setNativeJdbcExtractor(nativeJdbcExtractor);
 	}
 
 	// -------------------------------------------------------------------------
