@@ -19,6 +19,16 @@ public final class NegativeLongGeneratedKey extends AbstractGeneratedKey<Long> {
 	}
 
 	/**
+	 * Support to define as bean
+	 *
+	 * @param generatedKey
+	 *            the generated key
+	 */
+	public NegativeLongGeneratedKey() {
+		super();
+	}
+
+	/**
 	 * Instantiates a new generated key.
 	 *
 	 * @param generatedKey
