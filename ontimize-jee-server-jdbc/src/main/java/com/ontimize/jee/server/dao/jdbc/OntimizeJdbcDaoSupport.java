@@ -106,12 +106,12 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	protected static final String							PLACEHOLDER_WHERE_CONCAT		= "#WHERE_CONCAT#";
 	/** The Constant PLACEHOLDER_COLUMNS. */
 	protected static final String							PLACEHOLDER_COLUMNS				= "#COLUMNS#";
-	/** The Constant PLACEHOLDER_PAGINATION. 
+	/** The Constant PLACEHOLDER_PAGINATION.
 	 * 	@deprecated it isn't necessary use this tag in queries for pagination
 	 * */
-	@Deprecated 
+	@Deprecated
 	protected static final String							PLACEHOLDER_PAGINATION			= "#PAGINATION#";
-	
+
 	/** The Constant PLACEHOLDER_SCHEMA. */
 	protected static final String 							PLACEHOLDER_SCHEMA 				= "#SCHEMA#";
 
@@ -283,7 +283,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 			for (int i = 1; i < replaceAll.getSecond(); i++) {
 				vValues.addAll(vValuesTemp);
 			}
-			sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_SCHEMA, getSchemaName());
+			sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_SCHEMA, this.getSchemaName());
 			sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_ORDER_CONCAT, "");
 			sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_ORDER, "");
 			sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_PAGINATION, "");
@@ -384,7 +384,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 				sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_ORDER_CONCAT, order.length() == 0 ? "" : SQLStatementBuilder.COMMA + " " + order);
 				sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_ORDER, order.length() == 0 ? "" : SQLStatementBuilder.ORDER_BY + " " + order);
 				sqlTemplate = this.performPlaceHolderPagination(sqlTemplate, startIndex, recordNumber);
-				sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_SCHEMA, getSchemaName());
+				sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_SCHEMA, this.getSchemaName());
 				stSQL = new SQLStatement(sqlTemplate, vValues);
 
 			}
@@ -450,7 +450,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 				sbColumns.deleteCharAt(sbColumns.length() - 1);
 			}
 			String sqlTemplate = queryTemplateInformation.getSqlTemplate().replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_COLUMNS, sbColumns.toString());
-			
+
 			// Where
 			final Vector<Object> vValues = new Vector<>();
 			String cond = this.getStatementHandler().createQueryConditionsWithoutWhere(kvValidKeysValues, new Vector<>(), vValues);
@@ -475,8 +475,8 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 				vValues.addAll(vValuesTemp);
 			}
 
-			
-			
+
+
 			// Order by
 			List<OrderColumnType> orderColumns = queryTemplateInformation.getOrderColumns();
 			Vector<Object> sortColumns = this.applyOrderColumns(sort, orderColumns);
@@ -488,7 +488,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 
 			sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_ORDER_CONCAT, order.length() == 0 ? "" : SQLStatementBuilder.COMMA + " " + order);
 			sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_ORDER, order.length() == 0 ? "" : SQLStatementBuilder.ORDER_BY + " " + order);
-			sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_SCHEMA, getSchemaName());
+			sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_SCHEMA, this.getSchemaName());
 			sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_PAGINATION,"");
 			stSQL = new SQLStatement(sqlTemplate, vValues);
 		}
@@ -1038,10 +1038,11 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	 */
 	public Map<String, Object> getValidAttributes(final Map<?, ?> inputAttributesValues) {
 		final Map<String, Object> hValidKeysValues = new HashMap<>();
+		List<String> nameConventionTableColumns = this.tableMetaDataContext.getNameConventionTableColumns();
 		for (final Entry<?, ?> entry : inputAttributesValues.entrySet()) {
 			final Object oKey = entry.getKey();
 			final Object oValue = entry.getValue();
-			if (this.tableMetaDataContext.getNameConventionTableColumns().contains(oKey)) {
+			if (nameConventionTableColumns.contains(oKey)) {
 				hValidKeysValues.put((String) oKey, oValue);
 			}
 		}
