@@ -258,9 +258,10 @@ public final class OntimizeHessianHttpClientSessionProcessorFactory {
 
 		HttpClientBuilder clientBuilder = HttpClients.custom().disableAutomaticRetries().disableAuthCaching().setDefaultCredentialsProvider(credentialsProvider)
 				.setDefaultSocketConfig(config).setHttpProcessor(OntimizeHessianHttpClientSessionProcessorFactory.getHttpProcessor())
-				.setDefaultCookieStore(OntimizeHessianHttpClientSessionProcessorFactory.getCookieStore()).disableRedirectHandling();
+				.setDefaultCookieStore(OntimizeHessianHttpClientSessionProcessorFactory.getCookieStore()).disableRedirectHandling().setMaxConnPerRoute(20);
 		OntimizeHessianHttpClientSessionProcessorFactory.checkIgnoreSSLCerts(clientBuilder);
 		CloseableHttpClient client = clientBuilder.build();
+
 		return client;
 	}
 
