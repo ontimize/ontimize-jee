@@ -105,12 +105,12 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	protected static final String							PLACEHOLDER_WHERE_CONCAT		= "#WHERE_CONCAT#";
 	/** The Constant PLACEHOLDER_COLUMNS. */
 	protected static final String							PLACEHOLDER_COLUMNS				= "#COLUMNS#";
-	/** The Constant PLACEHOLDER_PAGINATION. 
+	/** The Constant PLACEHOLDER_PAGINATION.
 	 * 	@deprecated it isn't necessary use this tag in queries for pagination
 	 * */
-	@Deprecated 
+	@Deprecated
 	protected static final String							PLACEHOLDER_PAGINATION			= "#PAGINATION#";
-	
+
 	/** The Constant PLACEHOLDER_SCHEMA. */
 	protected static final String 							PLACEHOLDER_SCHEMA 				= "#SCHEMA#";
 
@@ -449,7 +449,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 				sbColumns.deleteCharAt(sbColumns.length() - 1);
 			}
 			String sqlTemplate = queryTemplateInformation.getSqlTemplate().replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_COLUMNS, sbColumns.toString());
-			
+
 			// Where
 			final Vector<Object> vValues = new Vector<>();
 			String cond = this.getStatementHandler().createQueryConditionsWithoutWhere(kvValidKeysValues, new Vector<>(), vValues);
@@ -474,8 +474,8 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 				vValues.addAll(vValuesTemp);
 			}
 
-			
-			
+
+
 			// Order by
 			List<OrderColumnType> orderColumns = queryTemplateInformation.getOrderColumns();
 			Vector<Object> sortColumns = this.applyOrderColumns(sort, orderColumns);
@@ -1037,10 +1037,11 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	 */
 	public Map<String, Object> getValidAttributes(final Map<?, ?> inputAttributesValues) {
 		final Map<String, Object> hValidKeysValues = new HashMap<>();
+		List<String> nameConventionTableColumns = this.tableMetaDataContext.getNameConventionTableColumns();
 		for (final Entry<?, ?> entry : inputAttributesValues.entrySet()) {
 			final Object oKey = entry.getKey();
 			final Object oValue = entry.getValue();
-			if (this.tableMetaDataContext.getNameConventionTableColumns().contains(oKey)) {
+			if (nameConventionTableColumns.contains(oKey)) {
 				hValidKeysValues.put((String) oKey, oValue);
 			}
 		}
