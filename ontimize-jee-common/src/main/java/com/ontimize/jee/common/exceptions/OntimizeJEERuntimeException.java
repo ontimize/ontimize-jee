@@ -12,13 +12,13 @@ import com.ontimize.jee.common.tools.MessageType;
 public class OntimizeJEERuntimeException extends RuntimeException implements IParametrizedException {
 
 	/** The msg parameters. */
-	private final Object[]		msgParameters;
+	private Object[]			msgParameters;
 
 	/** The msg type. */
-	private final MessageType	msgType;
+	private MessageType			msgType;
 
 	/** The msg blocking. */
-	private final boolean		msgBlocking;
+	private boolean				msgBlocking;
 
 	/** The silent. */
 	private boolean				silent;
@@ -175,7 +175,7 @@ public class OntimizeJEERuntimeException extends RuntimeException implements IPa
 	 *            the writable stack trace
 	 */
 	public OntimizeJEERuntimeException(String message, Throwable cause, Object[] msgParameters, MessageType msgType, boolean msgBlocking, boolean silent, boolean enableSuppression,
-	        boolean writableStackTrace) {
+			boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
 		this.msgType = msgType == null ? MessageType.ERROR : msgType;
 		this.msgBlocking = msgBlocking;
@@ -196,7 +196,7 @@ public class OntimizeJEERuntimeException extends RuntimeException implements IPa
 	 *            the writable stack trace
 	 */
 	public OntimizeJEERuntimeException(String message, Throwable cause, MessageType msgType, boolean msgBlocking, boolean silent, boolean enableSuppression,
-	        boolean writableStackTrace) {
+			boolean writableStackTrace) {
 		this(message, cause, null, msgType, msgBlocking, silent, enableSuppression, writableStackTrace);
 	}
 
@@ -210,6 +210,10 @@ public class OntimizeJEERuntimeException extends RuntimeException implements IPa
 		return this.msgParameters == null ? null : Arrays.copyOf(this.msgParameters, this.msgParameters.length);
 	}
 
+	public void setMessageParameters(Object[] mesParams) {
+		this.msgParameters = mesParams;
+	}
+
 	/**
 	 * Devuelve el tipo de mensaje que se mostrara al usuario.
 	 *
@@ -218,6 +222,10 @@ public class OntimizeJEERuntimeException extends RuntimeException implements IPa
 	@Override
 	public MessageType getMessageType() {
 		return this.msgType;
+	}
+
+	public void setMessageType(MessageType type) {
+		this.msgType = type;
 	}
 
 	/**
@@ -230,14 +238,8 @@ public class OntimizeJEERuntimeException extends RuntimeException implements IPa
 		return this.msgBlocking;
 	}
 
-	/**
-	 * Establece si se debe mostrar un mensaje en la UI.
-	 *
-	 * @param silent
-	 *            the new silent
-	 */
-	public void setSilent(boolean silent) {
-		this.silent = silent;
+	public void setMessageBlocking(boolean blocking) {
+		this.msgBlocking = blocking;
 	}
 
 	/**
@@ -248,5 +250,15 @@ public class OntimizeJEERuntimeException extends RuntimeException implements IPa
 	@Override
 	public boolean isSilent() {
 		return this.silent;
+	}
+
+	/**
+	 * Establece si se debe mostrar un mensaje en la UI.
+	 *
+	 * @param silent
+	 *            the new silent
+	 */
+	public void setSilent(boolean silent) {
+		this.silent = silent;
 	}
 }

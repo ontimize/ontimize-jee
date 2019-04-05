@@ -15,13 +15,13 @@ public class OntimizeJEEException extends Exception implements IParametrizedExce
 	private static final long	serialVersionUID	= 1L;
 
 	/** The msg type. */
-	private final MessageType	msgType;
+	private MessageType			msgType;
 
 	/** The msg blocking. */
-	private final boolean		msgBlocking;
+	private boolean				msgBlocking;
 
 	/** The msg parameters. */
-	private final Object[]		msgParameters;
+	private Object[]			msgParameters;
 
 	/** The silent. */
 	private boolean				silent;
@@ -155,7 +155,7 @@ public class OntimizeJEEException extends Exception implements IParametrizedExce
 	 *            the writable stack trace
 	 */
 	public OntimizeJEEException(String message, Throwable cause, Object[] msgParameters, MessageType msgType, boolean msgBlocking, boolean silent, boolean enableSuppression,
-	        boolean writableStackTrace) {
+			boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
 		this.msgType = msgType == null ? MessageType.ERROR : msgType;
 		this.msgBlocking = msgBlocking;
@@ -189,6 +189,10 @@ public class OntimizeJEEException extends Exception implements IParametrizedExce
 		return this.msgParameters == null ? null : Arrays.copyOf(this.msgParameters, this.msgParameters.length);
 	}
 
+	public void setMessageParameters(Object[] msgParams) {
+		this.msgParameters = msgParams;
+	}
+
 	/**
 	 * Devuelve el tipo de mensaje que se mostrara al usuario.
 	 *
@@ -197,6 +201,10 @@ public class OntimizeJEEException extends Exception implements IParametrizedExce
 	@Override
 	public MessageType getMessageType() {
 		return this.msgType;
+	}
+
+	public void setMessageType(MessageType type) {
+		this.msgType = type;
 	}
 
 	/**
@@ -209,14 +217,8 @@ public class OntimizeJEEException extends Exception implements IParametrizedExce
 		return this.msgBlocking;
 	}
 
-	/**
-	 * Establece si se debe mostrar un mensaje en la UI.
-	 *
-	 * @param silent
-	 *            the new silent
-	 */
-	public void setSilent(boolean silent) {
-		this.silent = silent;
+	public void setMessageBlocking(boolean blocking) {
+		this.msgBlocking = blocking;
 	}
 
 	/**
@@ -228,4 +230,15 @@ public class OntimizeJEEException extends Exception implements IParametrizedExce
 	public boolean isSilent() {
 		return this.silent;
 	}
+
+	/**
+	 * Establece si se debe mostrar un mensaje en la UI.
+	 *
+	 * @param silent
+	 *            the new silent
+	 */
+	public void setSilent(boolean silent) {
+		this.silent = silent;
+	}
+
 }
