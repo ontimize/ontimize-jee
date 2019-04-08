@@ -47,7 +47,7 @@ public class NoTraceOntimizeJEEException extends OntimizeJEEException {
 	 */
 	public NoTraceOntimizeJEEException(Throwable cause) {
 		this(cause.getMessage(), cause, NoTraceOntimizeJEEException.getMessageParams(cause), NoTraceOntimizeJEEException.getMessageType(cause),
-		        NoTraceOntimizeJEEException.isBlocking(cause), NoTraceOntimizeJEEException.isSilent(cause));
+				NoTraceOntimizeJEEException.isBlocking(cause), NoTraceOntimizeJEEException.isSilent(cause));
 	}
 
 	private static Object[] getMessageParams(Throwable cause) {
@@ -103,6 +103,21 @@ public class NoTraceOntimizeJEEException extends OntimizeJEEException {
 	 */
 	public NoTraceOntimizeJEEException(String message, Throwable cause, Object[] msgParameters, MessageType type, boolean msgBocking, boolean silent) {
 		super(message, cause, msgParameters, type, msgBocking, silent, false, false);
+	}
+
+	/**
+	 * Instantiates a new ontimize jee exception.
+	 *
+	 * @param message
+	 *            the message
+	 * @param cause
+	 *            the cause
+	 * @param msgParameters
+	 *            the msg parameters
+	 */
+	public NoTraceOntimizeJEEException(String message, Throwable cause, Object[] msgParameters, MessageType type, boolean msgBocking, boolean silent, boolean enableSuppression,
+			boolean writableStackTrace) {
+		super(message, cause, msgParameters, type, msgBocking, silent, enableSuppression, writableStackTrace);
 	}
 
 	/**
