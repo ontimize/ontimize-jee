@@ -43,14 +43,16 @@ public interface IMassiveModificationHelper {
 	 * @return
 	 */
 	EntityResult update(DefaultOntimizeDaoHelper daoHelper, IOntimizeDaoSupport dao, String pkColumn, Map<?, ?> attributesValues, Map<?, ?> keysValues)
-	        throws OntimizeJEERuntimeException;
+			throws OntimizeJEERuntimeException;
 
 	EntityResult update(DefaultOntimizeDaoHelper daoHelper, One2OneDaoHelper one2oneHelper, IOntimizeDaoSupport mainDao, String pkColumn, List<OneToOneSubDao> secondaryDaos,
-	        Map<?, ?> attributesValues, Map<?, ?> keysValues, One2OneType type) throws OntimizeJEERuntimeException;
+			Map<?, ?> attributesValues, Map<?, ?> keysValues, One2OneType type) throws OntimizeJEERuntimeException;
 
 	EntityResult insert(DefaultOntimizeDaoHelper daoHelper, IOntimizeDaoSupport dao, String vKeysColumn, String pkColumn, Map<?, ?> attributesValues);
 
 	EntityResult insert(DefaultOntimizeDaoHelper daoHelper, One2OneDaoHelper one2oneHelper, IOntimizeDaoSupport mainDao, String pkColumn, List<OneToOneSubDao> secondaryDaos,
-	        Map<?, ?> attributesValues, One2OneType type) throws OntimizeJEERuntimeException;
+			Map<?, ?> attributesValues, One2OneType type) throws OntimizeJEERuntimeException;
+
+	boolean isMassiveModification(Object key, Map<?, ?> keysValues);
 
 }

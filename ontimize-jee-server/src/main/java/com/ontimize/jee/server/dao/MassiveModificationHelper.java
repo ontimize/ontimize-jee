@@ -126,7 +126,7 @@ public class MassiveModificationHelper implements ApplicationContextAware, IMass
 
 	@Override
 	public EntityResult update(DefaultOntimizeDaoHelper daoHelper, IOntimizeDaoSupport dao, String pkColumn, Map<?, ?> attributesValues, Map<?, ?> keysValues)
-	        throws OntimizeJEERuntimeException {
+			throws OntimizeJEERuntimeException {
 		if (keysValues.containsKey(pkColumn) && (keysValues.get(pkColumn) instanceof int[])) {
 			int[] ids = (int[]) keysValues.get(pkColumn);
 			for (int id : ids) {
@@ -141,7 +141,7 @@ public class MassiveModificationHelper implements ApplicationContextAware, IMass
 
 	@Override
 	public EntityResult update(DefaultOntimizeDaoHelper daoHelper, One2OneDaoHelper one2oneHelper, IOntimizeDaoSupport mainDao, String pkColumn, List<OneToOneSubDao> secondaryDaos,
-	        Map<?, ?> attributesValues, Map<?, ?> keysValues, One2OneType type) throws OntimizeJEERuntimeException {
+			Map<?, ?> attributesValues, Map<?, ?> keysValues, One2OneType type) throws OntimizeJEERuntimeException {
 		if (keysValues.containsKey(pkColumn) && (keysValues.get(pkColumn) instanceof int[])) {
 			int[] ids = (int[]) keysValues.get(pkColumn);
 			for (int id : ids) {
@@ -192,7 +192,7 @@ public class MassiveModificationHelper implements ApplicationContextAware, IMass
 
 	@Override
 	public EntityResult insert(DefaultOntimizeDaoHelper daoHelper, One2OneDaoHelper one2oneHelper, IOntimizeDaoSupport mainDao, String pkColumn, List<OneToOneSubDao> secondaryDaos,
-	        Map<?, ?> attributesValues, One2OneType type) throws OntimizeJEERuntimeException {
+			Map<?, ?> attributesValues, One2OneType type) throws OntimizeJEERuntimeException {
 		if (attributesValues.containsKey(pkColumn) && (attributesValues.get(pkColumn) instanceof int[])) {
 			int[] ids = (int[]) attributesValues.get(pkColumn);
 			attributesValues.remove(pkColumn);
@@ -205,8 +205,9 @@ public class MassiveModificationHelper implements ApplicationContextAware, IMass
 		return one2oneHelper.insert(daoHelper, mainDao, secondaryDaos, attributesValues, type);
 	}
 
+	@Override
 	public boolean isMassiveModification(Object key, Map<?, ?> keysValues) {
-		return keysValues.containsKey(key) && (keysValues.get(key) instanceof int[]);
+		return (keysValues != null) && keysValues.containsKey(key) && (keysValues.get(key) instanceof int[]);
 	}
 
 	public static String getStringAttr(Object attribute) {
