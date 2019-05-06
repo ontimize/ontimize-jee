@@ -73,9 +73,11 @@ public interface IServerManagementService {
 
 	public static class OntimizeJEELogger implements Serializable {
 
-		private final int	id;
+		private int		id;
 		private String		loggerName;
 		private Level		loggerLevel;
+
+		public OntimizeJEELogger() {}
 
 		public OntimizeJEELogger(int id, String name, Level level) {
 			this.id = id;
@@ -101,6 +103,10 @@ public interface IServerManagementService {
 
 		public int getId() {
 			return this.id;
+		}
+
+		public void setId(int id) {
+			this.id = id;
 		}
 
 	}
