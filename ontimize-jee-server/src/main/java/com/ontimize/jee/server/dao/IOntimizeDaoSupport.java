@@ -30,6 +30,10 @@ public interface IOntimizeDaoSupport {
 
 	<T> List<T> query(Map<?, ?> keysValues, List<?> sort, String queryId, Class<T> clazz);
 
+	EntityResult query(Map<?, ?> keysValues, List<?> attributes, List<?> sort, String queryId, ISQLQueryAdapter adapter);
+
+	<T> List<T> query(Map<?, ?> keysValues, List<?> sort, String queryId, Class<T> clazz, ISQLQueryAdapter adapter);
+
 	/**
 	 * This method must implement a standard pageable query operation returning the set of data that matches the conditions specified by the <code>keysValues</code> parameter. The
 	 * <code>attributes</code> defines which attributes (or columns if data is obtained from a database) must be recovered, and <code>keysValues</code> specifies which set of
@@ -51,6 +55,8 @@ public interface IOntimizeDaoSupport {
 	 * @return a EntityResult with the resulting set of data. This result can be empty if no results exist, and if an error has ocurred this will be indicated in the result.
 	 */
 	AdvancedEntityResult paginationQuery(Map<?, ?> keysValues, List<?> attributes, int recordNumber, int startIndex, List<?> orderBy, String queryId);
+
+	AdvancedEntityResult paginationQuery(Map<?, ?> keysValues, List<?> attributes, int recordNumber, int startIndex, List<?> orderBy, String queryId, ISQLQueryAdapter adapter);
 
 	/**
 	 * This method must implement a standard insert operation with the data contained in <code>attributesValues</code> parameter.<br> <p>

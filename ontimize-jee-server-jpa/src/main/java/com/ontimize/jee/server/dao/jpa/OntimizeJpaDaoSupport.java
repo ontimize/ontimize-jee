@@ -56,12 +56,14 @@ import com.ontimize.gui.SearchValue;
 import com.ontimize.gui.field.MultipleTableAttribute;
 import com.ontimize.gui.field.ReferenceFieldAttribute;
 import com.ontimize.gui.table.TableAttribute;
+import com.ontimize.jee.common.exceptions.OntimizeJEEException;
 import com.ontimize.jee.common.naming.I18NNaming;
 import com.ontimize.jee.common.tools.CheckingTools;
 import com.ontimize.jee.common.tools.ParseUtilsExtended;
 import com.ontimize.jee.common.tools.streamfilter.ReplaceTokensFilterReader;
 import com.ontimize.jee.server.dao.DaoProperty;
 import com.ontimize.jee.server.dao.IOntimizeDaoSupport;
+import com.ontimize.jee.server.dao.ISQLQueryAdapter;
 import com.ontimize.jee.server.dao.common.ConfigurationFile;
 import com.ontimize.jee.server.dao.common.ExtraWhereSections;
 import com.ontimize.jee.server.dao.common.WhereSection;
@@ -190,11 +192,20 @@ public class OntimizeJpaDaoSupport implements ApplicationContextAware, IOntimize
 	}
 
 	@Override
-	public AdvancedEntityResult paginationQuery(Map<?, ?> keysValues, List<?> attributes, int recordNumber, int startIndex, List<?> orderBy, String queryId) {
+	public AdvancedEntityResult paginationQuery(Map<?, ?> keysValues, List<?> attributes, int recordNumber, int startIndex, List<?> orderBy, String queryId,
+			ISQLQueryAdapter adapter) {
 		// TODO
 		return null;
 	}
+	@Override
+	public AdvancedEntityResult paginationQuery(Map<?, ?> keysValues, List<?> attributes, int recordNumber, int startIndex, List<?> orderBy, String queryId) {
+		return this.paginationQuery(keysValues, attributes, recordNumber, startIndex, orderBy, queryId, null);
+	}
 
+	@Override
+	public EntityResult query(Map<?, ?> keysValues, List<?> attributes, List<?> sort, String queryId) {
+		return this.query(keysValues, attributes, sort, queryId, null);
+	}
 	/**
 	 * Query.
 	 *
@@ -210,29 +221,34 @@ public class OntimizeJpaDaoSupport implements ApplicationContextAware, IOntimize
 	 * @see com.ontimize.jee.server.dao.IOntimizeDaoSupport#query(java.util.Map, java.util.List, java.util.List, java.lang.String)
 	 */
 	@Override
-	public EntityResult query(final Map<?, ?> keysValues, final List<?> attributes, final List<?> sort, final String queryId) {
+	public EntityResult query(final Map<?, ?> keysValues, final List<?> attributes, final List<?> sort, final String queryId, ISQLQueryAdapter adapter) {
 		try {
 			this.check();
 			final Class<?> queryEntityClass = this.getQueryEntityClass();
 			// Get valid attributes
 			final List<String> validAttributes = this.adaptAttributes(attributes);
 
-			return this.innerQuery(keysValues, validAttributes, sort, queryId, EntityResult.class, queryEntityClass, false);
+			return this.innerQuery(keysValues, validAttributes, sort, queryId, EntityResult.class, queryEntityClass, false, adapter);
 		} catch (final Exception e) {
 			OntimizeJpaDaoSupport.logger.error(e.getMessage(), e);
 			return new EntityResult(EntityResult.OPERATION_WRONG, EntityResult.OPERATION_WRONG, e.getMessage());
 		}
 	}
 
+	@Override
+	public <T> List<T> query(final Map<?, ?> keysValues, final List<?> sort, final String queryId, final Class<T> clazz) {
+		return this.query(keysValues, sort, queryId, clazz, null);
+
+	}
 	/**
 	 *
 	 * @see com.ontimize.jee.server.dao.IOntimizeDaoSupport#query(java.util.Map, java.util.List, java.lang.String, java.lang.Class)
 	 */
 	@Override
-	public <T> List<T> query(final Map<?, ?> keysValues, final List<?> sort, final String queryId, final Class<T> clazz) {
+	public <T> List<T> query(final Map<?, ?> keysValues, final List<?> sort, final String queryId, final Class<T> clazz, ISQLQueryAdapter adapter) {
 		try {
 			this.check();
-			return this.innerQuery(keysValues, null, sort, queryId, List.class, clazz, true);
+			return this.innerQuery(keysValues, null, sort, queryId, List.class, clazz, true, adapter);
 		} catch (SQLException e) {
 			OntimizeJpaDaoSupport.logger.error(e.getMessage(), e);
 			throw new RuntimeException(e);
@@ -242,7 +258,10 @@ public class OntimizeJpaDaoSupport implements ApplicationContextAware, IOntimize
 	}
 
 	protected <T> T innerQuery(final Map<?, ?> keysValues, final List<String> validAttributes, final List<?> sort, final String queryId, Class<T> resultStyleClass,
-			Class<?> queryResultClass, boolean failIfTemplateInfoNotMatch) throws SQLException, Exception {
+			Class<?> queryResultClass, boolean failIfTemplateInfoNotMatch, ISQLQueryAdapter adapter) throws SQLException, Exception {
+		if (adapter != null) {
+			throw new OntimizeJEEException("NOT_IMPLEMENTED");
+		}
 
 		// Process ORDER BY columns
 		final List<Object> validSort = this.adaptSort(sort);
