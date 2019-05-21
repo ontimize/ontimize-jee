@@ -27,8 +27,20 @@ public class Template {
 	 *            the is
 	 */
 	public Template(InputStream is) {
+		this(is, null);
+	}
+
+	/**
+	 * The Constructor.
+	 *
+	 * @param is
+	 *            the is
+	 * @param charsetName
+	 *            the charset name
+	 */
+	public Template(InputStream is, String charsetName) {
 		super();
-		this.loadTemplate(is);
+		this.loadTemplate(is, charsetName);
 	}
 
 	/**
@@ -38,10 +50,22 @@ public class Template {
 	 *            the class path
 	 */
 	public Template(String classPath) {
+		this(classPath, null);
+	}
+
+	/**
+	 * The Constructor.
+	 *
+	 * @param classPath
+	 *            the class path
+	 * @param charsetName
+	 *            the charset name
+	 */
+	public Template(String classPath, String charsetName) {
 		try {
 			InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(classPath);
 			try {
-				this.loadTemplate(is);
+				this.loadTemplate(is, charsetName);
 			} finally {
 				if (is != null) {
 					is.close();
@@ -59,9 +83,21 @@ public class Template {
 	 *            the is
 	 */
 	protected void loadTemplate(InputStream is) {
+		this.loadTemplate(is, null);
+	}
+
+	/**
+	 * Load template.
+	 *
+	 * @param is
+	 *            the is
+	 * @param charsetName
+	 *            the charsetName
+	 */
+	protected void loadTemplate(InputStream is, String charsetName) {
 		InputStreamReader isr = null;
 		try {
-			isr = new InputStreamReader(is);
+			isr = !StringTools.isEmpty(charsetName) ? new InputStreamReader(is, charsetName) : new InputStreamReader(is);
 			char[] buffer = new char[1024];
 			int readed = 0;
 			while ((readed = isr.read(buffer)) != -1) {
