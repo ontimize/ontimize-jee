@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://www.ontimize.com/schema/jdbc"
+	xmlns:tns="http://www.ontimize.com/schema/jdbc"
+	elementFormDefault="qualified">
+
+	<element name="JdbcEntitySetup" type="tns:JdbcEntitySetupType" />
+	<complexType name="JdbcEntitySetupType">
+		<annotation>
+			<documentation>
+				Root element to setup the dao
+			</documentation>
+		</annotation>
+		<sequence>
+			<element name="DeleteKeys" type="tns:ColumnGroupType"
+				maxOccurs="1" minOccurs="0">
+			</element>
+			<element name="UpdateKeys" type="tns:ColumnGroupType"
+				maxOccurs="1" minOccurs="0">
+			</element>
+			<element name="GeneratedKey" type="string" maxOccurs="1"
+				minOccurs="0"></element>
+			<element name="Queries" type="tns:QueriesType" maxOccurs="1"
+				minOccurs="0"></element>
+		</sequence>
+		<attribute name="table" type="string">
+			<annotation>
+				<documentation>Table name</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="schema" type="string">
+			<annotation>
+				<documentation>Schema name</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="catalog" type="string">
+			<annotation>
+				<documentation>Catalog name.</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="datasource" type="string"></attribute>
+		<attribute name="sqlhandler" type="string"></attribute>
+		<attribute name="nameconverter" type="string"></attribute>
+	</complexType>
+
+	<complexType name="ColumnGroupType">
+		<sequence>
+			<element name="Column" type="string" maxOccurs="unbounded"
+				minOccurs="0"></element>
+		</sequence>
+	</complexType>
+
+	<complexType name="QueriesType">
+		<sequence>
+			<element name="Query" type="tns:QueryType"
+				maxOccurs="unbounded" minOccurs="0"></element>
+		</sequence>
+	</complexType>
+
+	<complexType name="QueryType">
+		<sequence>
+			<element name="AmbiguousColumns"
+				type="tns:AmbiguousColumnsType" maxOccurs="1" minOccurs="0"></element>
+			<element name="ValidColumns" type="tns:ColumnGroupType"
+				maxOccurs="1" minOccurs="0">
+				<annotation>
+					<documentation>Optional node to limit columns can be queried. When
+						specified, only valid columns from received will be queried to DB.
+					</documentation>
+				</annotation>
+			</element>
+			<element name="FunctionColumns"
+				type="tns:FunctionColumnsType" maxOccurs="1" minOccurs="0"></element>
+			<element name="OrderColumns"
+				type="tns:OrderColumnsType" maxOccurs="1" minOccurs="0"></element>
+			<element name="Sentence" type="tns:SentenceType"
+				maxOccurs="1" minOccurs="1"></element>
+		</sequence>
+		<attribute name="id" type="string"></attribute>
+	</complexType>
+
+	<complexType name="AmbiguousColumnsType">
+		<sequence>
+			<element name="AmbiguousColumn"
+				type="tns:AmbiguousColumnType" maxOccurs="unbounded" minOccurs="1"></element>
+		</sequence>
+	</complexType>
+
+	<complexType name="AmbiguousColumnType">
+		<attribute name="name" type="string" use="required"></attribute>
+		<attribute name="prefix" type="string"></attribute>
+		<attribute name="databaseName" type="string"></attribute>
+	</complexType>
+
+	<complexType name="FunctionColumnsType">
+		<sequence>
+			<element name="FunctionColumn" type="tns:FunctionColumnType"
+				maxOccurs="unbounded" minOccurs="1"></element>
+		</sequence>
+	</complexType>
+
+	<complexType name="FunctionColumnType">
+		<attribute name="name" type="string" use="required"></attribute>
+		<attribute name="value" type="string" use="required"></attribute>
+	</complexType>
+
+	<complexType name="SentenceType">
+		<simpleContent>
+			<extension base="string">
+			</extension>
+		</simpleContent>
+	</complexType>
+	
+	<complexType name="OrderColumnType">
+		<attribute name="name" type="string" use="required"></attribute>
+		<attribute name="type" use="required">
+			<simpleType>
+				 <restriction base="string">
+				 	<enumeration value="ASC" />
+					<enumeration value="DES" />
+				 </restriction>
+			</simpleType>
+		</attribute>
+	</complexType>
+
+	<complexType name="OrderColumnsType">
+		<sequence>
+			<element name="OrderColumn" type="tns:OrderColumnType"
+				maxOccurs="unbounded" minOccurs="1"></element>
+		</sequence>
+	</complexType>
+</schema>

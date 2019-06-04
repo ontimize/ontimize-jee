@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<Form keys="a" entity="a" columns="a" title="LiveLogFile" buttons="no">
+	<Column expand="yes" margin="20;0;20;0">
+		<Row expand="no">
+			<Column expand="yes" />
+			<Column expand="no">
+				<Row>
+					<Button attr="B_REFRESH" key="B_REFRESH" text="B_REFRESH" align="center" labelsize="13" icon="" />
+				</Row>
+			</Column>
+		</Row>
+		<Row attr="RESULTS" expand="yes" />
+		<Table attr="DETAILS" entity="DETAILS" cols="Logger;Level;Trace;Debug;Info;Warn;Error;Off;Inherit" numrowscolumn="false">
+		</Table>
+
+	</Column>
+</Form>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<Form keys="a" entity="a" columns="a" title="LiveLogFile" buttons="no">	
+	<Column expandlast="no" margin="20;0;20;0">
+		<Row expand="no">
+			<Column expand="yes"/>
+			<Column expand="no">
+				<Row>
+					<Button attr="B_REFRESH" key="B_REFRESH" text="B_REFRESH" align="center"  />
+				</Row>
+			</Column>
+		</Row>
+		<Row  expand="yes">
+			<Table attr="LOGFILES" entity="LOGFILES" cols="FILE_NAME;FILE_SIZE" dynamic="yes" translateheader="yes" />
+		</Row>
+		<Row expand="no">
+			<Column expand="yes"/>
+			<Column expand="no">
+				<Row>
+					<Button attr="B_DOWNLOAD" key="B_DOWNLOAD" text="B_DOWNLOAD" align="center" />
+				</Row>
+			</Column>
+		</Row>
+	</Column>
+</Form>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Form keys="a" entity="a" columns="a" title="RequestsStatistics" buttons="no">
+	<Column margin="5;5;5;5" expandlast="no">
+		<Row expand="yes">
+			<Column>
+				<Row expand="no">
+					<Column expand="yes" />
+					<Column expand="no" margin="5;5;5;5">
+						<Grid rows="1" columns="3">
+							<Button attr="B_QUERY" key="B_QUERY" text="B_QUERY" align="right" expand="no" />
+						</Grid>
+					</Column>
+				</Row>
+				<Row expand="yes">
+					<Table attr="RESULTS" entity="RESULTS" translateheader="yes" cols="SERVICE_NAME;METHOD_NAME;MEASURES;MIN_TIME;MAX_TIME;MEAN_TIME" />
+				</Row>
+				<com.utilmize.client.gui.UCollapsiblePanel orientation="vertical" expandvertical="yes" expand="yes" startshowed="yes" title="details" valign="top">
+					<Row expand="no">
+						<Column expand="yes" />
+						<DateDataField calendaricon="base-images/calendar16.png" attr="BEFORE_DATE" align="left" labelsize="15" enabled="yes" />
+						<DateDataField calendaricon="base-images/calendar16.png" attr="AFTER_DATE" align="left" labelsize="15" enabled="yes" />
+						<Button attr="B_REQUEST" key="B_REQUEST" text="B_REQUEST" align="right" expand="no" />
+					</Row>
+					<Row expand="yes">
+						<Table attr="DETAILS" entity="DETAILS" translateheader="yes" cols="USER_NAME;METHOD_PARAMS;EXECUTION_DATE;EXECUTION_TIME;SERVICE_EXCEPTION">
+							<com.utilmize.client.gui.field.table.render.UXmlDateCellRenderer column="EXECUTION_DATE" format="dd/MM/yyyy HH:mm:ss" />
+						</Table>
+					</Row>
+				</com.utilmize.client.gui.UCollapsiblePanel>
+				<CollapsiblePanelFiller />
+			</Column>
+		</Row>
+	</Column>
+</Form>

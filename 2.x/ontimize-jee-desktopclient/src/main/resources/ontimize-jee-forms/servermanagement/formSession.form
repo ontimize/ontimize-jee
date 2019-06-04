@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<Form keys="a" entity="a" columns="a" title="SessionStatistics" buttons="no">
+	<Column expandlast="yes" margin="20;0;20;0">
+		<Row expand="no">
+			<Column expand="yes" />
+			<Column expand="no">
+				<Row>
+					<Button attr="B_REQUEST" key="B_REQUEST" text="B_REQUEST" align="center" />
+				</Row>
+			</Column>
+		</Row>
+		<Table attr="RESULTS" entity="RESULTS" dynamic="yes" translateheader="yes" cols="USER;IP;BEGINDATE;ENDDATE;EXPIRATIONTIME" >
+			<com.utilmize.client.gui.field.table.render.UXmlDateCellRenderer
+            	column="BEGINDATE" format="dd/MM/yyyy HH:mm:ss" />
+            <com.utilmize.client.gui.field.table.render.UXmlDateCellRenderer
+            	column="ENDDATE" format="dd/MM/yyyy HH:mm:ss" />
+		</Table>
+	</Column>
+</Form>
