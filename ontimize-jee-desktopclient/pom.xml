@@ -49,15 +49,5 @@
 			<groupId>net.sf.jasperreports</groupId>
 			<artifactId>jasperreports</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>com.ontimize</groupId>
-			<artifactId>ontimize-more-plaf-j7</artifactId>
-			<exclusions>
-				<exclusion>
-					<artifactId>ontimize-core</artifactId>
-					<groupId>com.ontimize</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
 	</dependencies>
 </project>
