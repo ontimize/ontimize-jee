@@ -10,8 +10,10 @@
 			</Column>
 		</Row>
 		<Row attr="RESULTS" expand="yes" />
-		<Table attr="DETAILS" entity="DETAILS" cols="Logger;Level;Trace;Debug;Info;Warn;Error;Off;Inherit" numrowscolumn="false">
-		</Table>
-
+		<com.ontimize.jee.desktopclient.components.servermanagement.LoggerTable attr="DETAILS" entity="DETAILS" 
+		      cols="OntimizeLogger;Logger;Level;Trace;Debug;Info;Warn;Error;Off;Inherit" 
+		      visiblecols="Logger;Level;Trace;Debug;Info;Warn;Error;Off;Inherit"
+		      numrowscolumn="false">
+		</com.ontimize.jee.desktopclient.components.servermanagement.LoggerTable>
 	</Column>
 </Form>
