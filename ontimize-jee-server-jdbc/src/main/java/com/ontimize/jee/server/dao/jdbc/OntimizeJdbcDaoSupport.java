@@ -31,6 +31,7 @@ import javax.xml.bind.JAXB;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.dao.DataAccessException;
@@ -82,6 +83,7 @@ import com.ontimize.jee.server.dao.IOntimizeDaoSupport;
 import com.ontimize.jee.server.dao.common.ConfigurationFile;
 import com.ontimize.jee.server.dao.common.INameConvention;
 import com.ontimize.jee.server.dao.common.INameConverter;
+import com.ontimize.jee.server.dao.jdbc.extension.IDaoExtensionHelper;
 import com.ontimize.jee.server.dao.jdbc.setup.AmbiguousColumnType;
 import com.ontimize.jee.server.dao.jdbc.setup.FunctionColumnType;
 import com.ontimize.jee.server.dao.jdbc.setup.JdbcEntitySetupType;
@@ -152,7 +154,12 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	 * Name convention
 	 *
 	 */
+	@Autowired
 	private INameConvention									nameConvention;
+
+	/** Dao Extension helper. */
+	@Autowired(required = false)
+	private IDaoExtensionHelper								daoExtensionHelper;
 
 	/**
 	 * Instantiates a new ontimize jdbc dao support.
@@ -1479,14 +1486,19 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 				reader = new InputStreamReader(is);
 			}
 
-			final JdbcEntitySetupType setup = JAXB.unmarshal(reader, JdbcEntitySetupType.class);
-			this.setTableName(setup.getTable());
-			this.setSchemaName(setup.getSchema());
-			this.setCatalogName(setup.getCatalog());
-			this.setDeleteKeys(setup.getDeleteKeys().getColumn());
-			this.setUpdateKeys(setup.getUpdateKeys().getColumn());
-			if (setup.getQueries() != null) {
-				for (final QueryType query : setup.getQueries().getQuery()) {//
+			JdbcEntitySetupType baseSetup = JAXB.unmarshal(reader, JdbcEntitySetupType.class);
+
+			// Support to Dao extensions
+			JdbcEntitySetupType setupConfig = this.checkDaoExtensions(baseSetup, path, pathToPlaceHolder);
+
+			// Process setup information to configure dao
+			this.setTableName(setupConfig.getTable());
+			this.setSchemaName(setupConfig.getSchema());
+			this.setCatalogName(setupConfig.getCatalog());
+			this.setDeleteKeys(setupConfig.getDeleteKeys().getColumn());
+			this.setUpdateKeys(setupConfig.getUpdateKeys().getColumn());
+			if (setupConfig.getQueries() != null) {
+				for (final QueryType query : setupConfig.getQueries().getQuery()) {//
 					this.addQueryTemplateInformation(query.getId(), query.getSentence().getValue(), //
 							query.getAmbiguousColumns() == null ? null : query.getAmbiguousColumns().getAmbiguousColumn(), //
 									query.getFunctionColumns() == null ? null : query.getFunctionColumns().getFunctionColumn(), //
@@ -1494,20 +1506,26 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 													query.getOrderColumns() == null ? null : query.getOrderColumns().getOrderColumn());
 				}
 			}
-			this.setGeneratedKeyName(setup.getGeneratedKey());
-			this.setDataSource((DataSource) this.applicationContext.getBean(setup.getDatasource()));
-			this.setStatementHandler((SQLStatementHandler) this.applicationContext.getBean(setup.getSqlhandler()));
-			final String nameConverter = setup.getNameconverter();
+			this.setGeneratedKeyName(setupConfig.getGeneratedKey());
+			this.setDataSource((DataSource) this.applicationContext.getBean(setupConfig.getDatasource()));
+			this.setStatementHandler((SQLStatementHandler) this.applicationContext.getBean(setupConfig.getSqlhandler()));
+
+			final String nameConverter = setupConfig.getNameconverter();
 			if (!CheckingTools.isStringEmpty(nameConverter)) {
 				this.setNameConverter((INameConverter) this.applicationContext.getBean(nameConverter));
 			}
-			this.nameConvention = this.applicationContext.getBean(INameConvention.class);
 			this.tableMetaDataContext.setNameConvention(this.nameConvention);
-
 		} catch (final IOException e) {
 			throw new InvalidDataAccessApiUsageException(I18NNaming.M_ERROR_LOADING_CONFIGURATION_FILE, e);
 		}
 
+	}
+
+	protected JdbcEntitySetupType checkDaoExtensions(JdbcEntitySetupType baseSetup, final String path, final String pathToPlaceHolder) {
+		if (this.daoExtensionHelper == null) {
+			return baseSetup;
+		}
+		return this.daoExtensionHelper.checkDaoExtensions(baseSetup, path, pathToPlaceHolder);
 	}
 
 	/**
