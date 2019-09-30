@@ -1638,6 +1638,35 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	}
 
 	/**
+	 * Ensures to clone some query and register it with custom "queryId". Usefull with partial queries to customize. After use this method, ensure to
+	 * call to "removeQueryTemplateInformation" as last step.
+	 *
+	 * @param id
+	 *            returns the new QueryId
+	 * @return
+	 */
+	public String cloneQueryTemplateInformation(final String id) {
+		this.checkCompiled();
+		QueryTemplateInformation queryTemplateInformation = this.sqlQueries.get(id);
+
+		// Register a dummy QueryTemplateInformation to avoid synchronized method
+		String uniqueId = "temp_" + id + "_" + System.nanoTime();
+		this.addQueryTemplateInformation(uniqueId, queryTemplateInformation.getSqlTemplate(), queryTemplateInformation.getAmbiguousColumns(),
+				queryTemplateInformation.getFunctionColumns(), queryTemplateInformation.getValidColumns(), queryTemplateInformation.getOrderColumns());
+
+		return uniqueId;
+	}
+
+	/**
+	 * Be careful calling to this method, do not remove "defined -in-dao queries", only clones.
+	 *
+	 * @param id
+	 */
+	public void removeQueryTemplateInformation(final String id) {
+		this.sqlQueries.remove(id);
+	}
+
+	/**
 	 * Method to perform the actual compilation. Subclasses can override this template method to perform their own compilation. Invoked after this base class's compilation is
 	 * complete.
 	 */
