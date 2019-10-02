@@ -91,6 +91,12 @@ public class DefaultOntimizeDaoHelper implements IOntimizeDaoHelper, Application
 	@Override
 	public AdvancedEntityResult paginationQuery(IOntimizeDaoSupport dao, Map<?, ?> keysValues, List<?> attributes, int recordNumber, int startIndex, List<?> orderBy,
 			String queryId) {
+		return this.paginationQuery(dao, keysValues, attributes, recordNumber, startIndex, orderBy, queryId, null);
+	}
+
+	@Override
+	public AdvancedEntityResult paginationQuery(IOntimizeDaoSupport dao, Map<?, ?> keysValues, List<?> attributes, int recordNumber, int startIndex, List<?> orderBy,
+			String queryId, ISQLQueryAdapter adapter) {
 		CheckingTools.failIfNull(dao, "Null dao");
 
 		List<?> vProcessMultipleAttributes = new ArrayList<>();
@@ -135,12 +141,23 @@ public class DefaultOntimizeDaoHelper implements IOntimizeDaoHelper, Application
 		return this.query(dao, keysValues, attributes, (List<?>) null, queryId);
 	}
 
+	@Override
+	public EntityResult query(IOntimizeDaoSupport dao, Map<?, ?> keysValues, List<?> attributes, List<?> sort, String queryId) {
+		return this.query(dao, keysValues, attributes, sort, queryId, null);
+	}
+
+	@Override
+	public EntityResult query(IOntimizeDaoSupport repository, Map<?, ?> keysValues, List<?> attributes, String queryId, ISQLQueryAdapter adapter)
+			throws OntimizeJEERuntimeException {
+		return this.query(repository, keysValues, attributes, null, queryId, adapter);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * @see com.ontimize.jee.common.services.ontimize.IOntimizeService#query(java.lang .String, java.util.Map, java.util.List)
 	 */
 	@Override
-	public EntityResult query(IOntimizeDaoSupport dao, Map<?, ?> keysValues, List<?> attributes, List<?> sort, String queryId) {
+	public EntityResult query(IOntimizeDaoSupport dao, Map<?, ?> keysValues, List<?> attributes, List<?> sort, String queryId, ISQLQueryAdapter adapter) {
 		CheckingTools.failIfNull(dao, "Null dao");
 
 		List<?> vProcessMultipleAttributes = new ArrayList<>();
@@ -149,7 +166,7 @@ public class DefaultOntimizeDaoHelper implements IOntimizeDaoHelper, Application
 
 		List<?> vAttributes = new ArrayList<>(vMultipleTableAttributes);
 
-		EntityResult erResult = dao.query(keysValues, vAttributes, sort, queryId);
+		EntityResult erResult = dao.query(keysValues, vAttributes, sort, queryId, adapter);
 
 		if (!erResult.isWrong()) {
 			this.queryOtherEntities(new ArrayList<>(vMultipleTableAttributes), erResult);
@@ -165,6 +182,11 @@ public class DefaultOntimizeDaoHelper implements IOntimizeDaoHelper, Application
 	 */
 	@Override
 	public <T> List<T> query(IOntimizeDaoSupport dao, Map<?, ?> keysValues, List<?> sort, String queryId, Class<T> clazz) {
+		return this.query(dao, keysValues, sort, queryId, clazz, null);
+	}
+
+	@Override
+	public <T> List<T> query(IOntimizeDaoSupport dao, Map<?, ?> keysValues, List<?> sort, String queryId, Class<T> clazz, ISQLQueryAdapter adapter) {
 		CheckingTools.failIfNull(dao, "Null dao");
 		return dao.query(keysValues, sort, queryId, clazz);
 	}

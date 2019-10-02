@@ -38,6 +38,9 @@ public interface IOntimizeDaoHelper {
 	AdvancedEntityResult paginationQuery(IOntimizeDaoSupport repository, Map<?, ?> kv, List<?> attributes, int recordNumber, int startIndex, List<?> orderBy, String queryId)
 			throws OntimizeJEERuntimeException;
 
+	AdvancedEntityResult paginationQuery(IOntimizeDaoSupport repository, Map<?, ?> kv, List<?> attributes, int recordNumber, int startIndex, List<?> orderBy, String queryId,
+			ISQLQueryAdapter adapter) throws OntimizeJEERuntimeException;
+
 	/**
 	 * This method must implement a standard query operation returning the set of data that matches the conditions specified by the <code>keysValues</code> parameter. The
 	 * <code>attributes</code> defines which attributes (or columns if data is obtained from a database) must be recovered, and <code>keysValues</code> specifies which set of
@@ -56,6 +59,8 @@ public interface IOntimizeDaoHelper {
 	 *             if any exception occurs
 	 */
 	EntityResult query(IOntimizeDaoSupport repository, Map<?, ?> keysValues, List<?> attributes, String queryId) throws OntimizeJEERuntimeException;
+
+	EntityResult query(IOntimizeDaoSupport repository, Map<?, ?> keysValues, List<?> attributes, String queryId, ISQLQueryAdapter adapter) throws OntimizeJEERuntimeException;
 
 	/**
 	 * This method must implement a standard query operation returning the set of data that matches the conditions specified by the <code>keysValues</code> parameter. The
@@ -78,6 +83,8 @@ public interface IOntimizeDaoHelper {
 	 */
 	EntityResult query(IOntimizeDaoSupport dao, Map<?, ?> keysValues, List<?> attributes, List<?> sort, String queryId);
 
+	EntityResult query(IOntimizeDaoSupport dao, Map<?, ?> keysValues, List<?> attributes, List<?> sort, String queryId, ISQLQueryAdapter adapter);
+
 	/**
 	 * Query using especific repository.
 	 *
@@ -96,6 +103,8 @@ public interface IOntimizeDaoHelper {
 	 * @return the list
 	 */
 	<T> List<T> query(IOntimizeDaoSupport repository, Map<?, ?> keysValues, List<?> sort, String queryId, Class<T> clazz);
+
+	<T> List<T> query(IOntimizeDaoSupport repository, Map<?, ?> keysValues, List<?> sort, String queryId, Class<T> clazz, ISQLQueryAdapter adapter);
 
 	/**
 	 * This method must implement a standard insert operation with the data contained in <code>attributesValues</code> parameter.<br> <p>

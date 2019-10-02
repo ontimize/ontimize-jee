@@ -17,6 +17,7 @@ import com.ontimize.db.EntityResult;
 import com.ontimize.db.NullValue;
 import com.ontimize.jee.common.exceptions.OntimizeJEEException;
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
+import com.ontimize.jee.common.naming.I18NNaming;
 import com.ontimize.jee.common.tools.CheckingTools;
 import com.ontimize.jee.common.tools.EntityResultTools;
 import com.ontimize.jee.common.tools.MapTools;
@@ -185,7 +186,7 @@ public class One2OneDaoHelper implements ApplicationContextAware {
 								opDone = true;
 							} catch (Exception sqlError) {
 								someError = sqlError;
-								if ("entity.no_registers_have_been_updated".equals(sqlError.getMessage())) {
+								if (I18NNaming.M_IT_HAS_NOT_CHANGED_ANY_RECORD.equals(sqlError.getMessage())) {
 									// Ignore it
 									One2OneDaoHelper.logger.trace("IGNORING_UPDATE", sqlError);
 								} else {

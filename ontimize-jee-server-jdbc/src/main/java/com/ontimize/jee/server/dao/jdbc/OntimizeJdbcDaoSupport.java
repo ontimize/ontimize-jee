@@ -80,6 +80,7 @@ import com.ontimize.jee.common.tools.StringTools;
 import com.ontimize.jee.common.tools.streamfilter.ReplaceTokensFilterReader;
 import com.ontimize.jee.server.dao.DaoProperty;
 import com.ontimize.jee.server.dao.IOntimizeDaoSupport;
+import com.ontimize.jee.server.dao.ISQLQueryAdapter;
 import com.ontimize.jee.server.dao.common.ConfigurationFile;
 import com.ontimize.jee.server.dao.common.INameConvention;
 import com.ontimize.jee.server.dao.common.INameConverter;
@@ -96,7 +97,7 @@ import com.ontimize.jee.server.dao.jdbc.setup.QueryType;
 public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements ApplicationContextAware, IOntimizeDaoSupport {
 
 	/** The logger. */
-	protected final static Logger							logger							= LoggerFactory.getLogger(OntimizeJdbcDaoSupport.class);
+	protected static final Logger							logger							= LoggerFactory.getLogger(OntimizeJdbcDaoSupport.class);
 
 	/** The Constant PLACEHOLDER_ORDER. */
 	protected static final String							PLACEHOLDER_ORDER				= "#ORDER#";
@@ -108,12 +109,6 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	protected static final String							PLACEHOLDER_WHERE_CONCAT		= "#WHERE_CONCAT#";
 	/** The Constant PLACEHOLDER_COLUMNS. */
 	protected static final String							PLACEHOLDER_COLUMNS				= "#COLUMNS#";
-	/** The Constant PLACEHOLDER_PAGINATION.
-	 * 	@deprecated it isn't necessary use this tag in queries for pagination
-	 * */
-	@Deprecated
-	protected static final String							PLACEHOLDER_PAGINATION			= "#PAGINATION#";
-
 	/** The Constant PLACEHOLDER_SCHEMA. */
 	protected static final String 							PLACEHOLDER_SCHEMA 				= "#SCHEMA#";
 
@@ -175,10 +170,11 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 		this.configurationFilePlaceholder = configurationFilePlaceholder;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.ontimize.jee.server.entity.IOntimizeDaoSupport#query(java.util.Map, java.util.List, java.util.List, java.lang.String)
-	 */
+	@Override
+	public EntityResult query(Map<?, ?> keysValues, List<?> attributes, List<?> sort, String queryId) {
+		return this.query(keysValues, attributes, sort, queryId, null);
+	}
+
 	/**
 	 * Query.
 	 *
@@ -193,11 +189,11 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	 * @return the entity result
 	 */
 	@Override
-	public EntityResult query(final Map<?, ?> keysValues, final List<?> attributes, final List<?> sort, final String queryId) {
+	public EntityResult query(final Map<?, ?> keysValues, final List<?> attributes, final List<?> sort, final String queryId, ISQLQueryAdapter queryAdapter) {
 		this.checkCompiled();
 		final QueryTemplateInformation queryTemplateInformation = this.getQueryTemplateInformation(queryId);
 
-		final SQLStatement stSQL = this.composeQuerySql(queryId, attributes, keysValues, sort);
+		final SQLStatement stSQL = this.composeQuerySql(queryId, attributes, keysValues, sort, null, queryAdapter);
 
 		final String sqlQuery = stSQL.getSQLStatement();
 		final Vector<?> vValues = stSQL.getValues();
@@ -213,6 +209,10 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 		}
 	}
 
+	@Override
+	public AdvancedEntityResult paginationQuery(Map<?, ?> keysValues, List<?> attributes, int recordNumber, int startIndex, List<?> orderBy, String queryId) {
+		return this.paginationQuery(keysValues, attributes, recordNumber, startIndex, orderBy, queryId, null);
+	}
 	/**
 	 * Pageable query.
 	 *
@@ -231,11 +231,12 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	 * @return the entity result
 	 */
 	@Override
-	public AdvancedEntityResult paginationQuery(Map<?, ?> keysValues, List<?> attributes, int recordNumber, int startIndex, List<?> orderBy, String queryId) {
+	public AdvancedEntityResult paginationQuery(Map<?, ?> keysValues, List<?> attributes, int recordNumber, int startIndex, List<?> orderBy, String queryId,
+			ISQLQueryAdapter queryAdapter) {
 		this.checkCompiled();
 		final QueryTemplateInformation queryTemplateInformation = this.getQueryTemplateInformation(queryId);
-		final SQLStatement stSQL = this.composePageableSql(queryId, attributes, keysValues, recordNumber, startIndex, orderBy);
-
+		final SQLStatement stSQL = this.composeQuerySql(queryId, attributes, keysValues, orderBy, new PageableInfo(recordNumber, startIndex),
+				queryAdapter);
 		final String sqlQuery = stSQL.getSQLStatement();
 		final Vector<?> vValues = stSQL.getValues();
 		AdvancedEntityResult advancedER = this.getJdbcTemplate().query(sqlQuery, vValues.toArray(),
@@ -293,118 +294,33 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 			sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_SCHEMA, this.getSchemaName());
 			sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_ORDER_CONCAT, "");
 			sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_ORDER, "");
-			sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_PAGINATION, "");
 			stSQL = new SQLStatement(sqlTemplate, vValues);
 		} else {
 			stSQL = this.getStatementHandler().createCountQuery(this.getSchemaTable(), new Hashtable<>(kvValidKeysValues), new Vector<>(), new Vector<>());
 		}
 
 		String sqlQuery = stSQL.getSQLStatement();
-		Vector vValues = stSQL.getValues();
+		List vValues = stSQL.getValues();
 		EntityResult erResult = this.getJdbcTemplate().query(sqlQuery,  vValues.toArray(), new EntityResultResultSetExtractor(this.getStatementHandler(), queryTemplateInformation));
-
 
 		if ((erResult == null) || (erResult.getCode() == EntityResult.OPERATION_WRONG)) {
 			OntimizeJdbcDaoSupport.logger.error("Error executed record count query:{} : {}", erResult.getMessage(), sqlQuery);
 			return 0;
-		} else {
-			Vector<?> v = (Vector<?>) erResult.get(SQLStatementBuilder.COUNT_COLUMN_NAME);
-			if ((v == null) || v.isEmpty()) {
-				OntimizeJdbcDaoSupport.logger.error("Error executed record cound query. The result not contain record number.");
-				return 0;
-			}
-			return ((Number) v.get(0)).intValue();
 		}
-	}
-
-	protected SQLStatement composePageableSql(final String queryId, final List<?> attributes, final Map<?, ?> keysValues, final int recordNumber, int startIndex,
-			final List<?> orderBy) {
-		if (this.getStatementHandler().isPageable()) {
-			final QueryTemplateInformation queryTemplateInformation = this.getQueryTemplateInformation(queryId);
-
-			final Map<?, ?> kvWithoutReferenceAttributes = this.processReferenceDataFieldAttributes(keysValues);
-			Hashtable<Object, Object> kvValidKeysValues = new Hashtable<>();
-			final Map<?, ?> processMultipleValueAttributes = this.processMultipleValueAttributes(kvWithoutReferenceAttributes);
-			if (processMultipleValueAttributes != null) {
-				kvValidKeysValues.putAll(processMultipleValueAttributes);
-			}
-
-			List<?> vValidAttributes = this.processReferenceDataFieldAttributes(attributes);
-
-			SQLStatement stSQL = null;
-			if (queryTemplateInformation == null) {
-				vValidAttributes = this.getValidAttributes(vValidAttributes, null);
-				CheckingTools.failIf(vValidAttributes.isEmpty(), "NO_ATTRIBUTES_TO_QUERY");
-				// use table
-				stSQL = this.getStatementHandler().createSelectQuery(this.getSchemaTable(), new Vector<>(vValidAttributes), new Hashtable<>(kvValidKeysValues), new Vector<>(),
-						new Vector<>(orderBy == null ? Collections.emptyList() : orderBy), recordNumber, startIndex);
-			} else {
-				List<String> validColumns = queryTemplateInformation.getValidColumns();
-				kvValidKeysValues = this.getValidQueryingKeysValues(kvValidKeysValues, validColumns);
-				vValidAttributes = this.getValidAttributes(vValidAttributes, validColumns);
-
-				kvValidKeysValues = this.applyTransformations(queryTemplateInformation, kvValidKeysValues);
-				vValidAttributes = this.applyTransformations(queryTemplateInformation, vValidAttributes);
-				CheckingTools.failIf(vValidAttributes.isEmpty(), "NO_ATTRIBUTES_TO_QUERY");
-				final StringBuilder sbColumns = new StringBuilder();
-				// columns
-				for (final Object ob : vValidAttributes) {
-					sbColumns.append(ob.toString());
-					sbColumns.append(SQLStatementBuilder.COMMA);
-				}
-				for (int i = 0; i < SQLStatementBuilder.COMMA.length(); i++) {
-					sbColumns.deleteCharAt(sbColumns.length() - 1);
-				}
-				String sqlTemplate = queryTemplateInformation.getSqlTemplate().replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_COLUMNS, sbColumns.toString());
-				// Where
-				final Vector<Object> vValues = new Vector<>();
-				String cond = this.getStatementHandler().createQueryConditionsWithoutWhere(kvValidKeysValues, new Vector<>(), vValues);
-				if (cond == null) {
-					cond = "";
-				}
-				cond = cond.trim();
-
-				Vector<Object> vValuesTemp = new Vector<Object>();
-				vValuesTemp.addAll(vValues);
-
-				Pair<String, Integer> replaceAll = StringTools.replaceAll(sqlTemplate, OntimizeJdbcDaoSupport.PLACEHOLDER_WHERE_CONCAT,
-						cond.length() == 0 ? "" : SQLStatementBuilder.AND + " " + cond);
-				sqlTemplate = replaceAll.getFirst();
-				for (int i = 1; i < replaceAll.getSecond(); i++) {
-					vValues.addAll(vValuesTemp);
-				}
-
-				replaceAll = StringTools.replaceAll(sqlTemplate, OntimizeJdbcDaoSupport.PLACEHOLDER_WHERE, cond.length() == 0 ? "" : SQLStatementBuilder.WHERE + " " + cond);
-				sqlTemplate = replaceAll.getFirst();
-				for (int i = 1; i < replaceAll.getSecond(); i++) {
-					vValues.addAll(vValuesTemp);
-				}
-
-				// Order by
-				List<OrderColumnType> orderColumns = queryTemplateInformation.getOrderColumns();
-				Vector<Object> sortColumns = this.applyOrderColumns(orderBy, orderColumns);
-				String order = this.getStatementHandler().createSortStatement(sortColumns, false);
-				if (order.length() > 0) {
-					order = order.substring(SQLStatementBuilder.ORDER_BY.length());
-				}
-				order = order.trim();
-				sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_ORDER_CONCAT, order.length() == 0 ? "" : SQLStatementBuilder.COMMA + " " + order);
-				sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_ORDER, order.length() == 0 ? "" : SQLStatementBuilder.ORDER_BY + " " + order);
-				sqlTemplate = this.performPlaceHolderPagination(sqlTemplate, startIndex, recordNumber);
-				sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_SCHEMA, this.getSchemaName());
-				stSQL = new SQLStatement(sqlTemplate, vValues);
-
-			}
-			OntimizeJdbcDaoSupport.logger.trace(stSQL.getSQLStatement());
-			return stSQL;
-		} else {
-			return this.composeQuerySql(queryId, attributes, keysValues, orderBy);
+		
+		Vector<?> v = (Vector<?>) erResult.get(SQLStatementBuilder.COUNT_COLUMN_NAME);
+		if ((v == null) || v.isEmpty()) {
+			OntimizeJdbcDaoSupport.logger.error("Error executed record cound query. The result not contain record number.");
+			return 0;
 		}
-	}
+		return ((Number) v.get(0)).intValue();
+				}
 
-	protected String performPlaceHolderPagination(String sqlTemplate, int startIndex, int recordNumber) {
-		sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_PAGINATION, "");
-		return this.getStatementHandler().convertPaginationStatement(sqlTemplate, startIndex, recordNumber);
+	protected String performPlaceHolderPagination(String sqlTemplate, PageableInfo pageableInfo) {
+		if (pageableInfo == null) {
+			return sqlTemplate;
+				}
+		return this.getStatementHandler().convertPaginationStatement(sqlTemplate, pageableInfo.getStartIndex(), pageableInfo.getRecordNumber());
 	}
 
 	/**
@@ -420,7 +336,8 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	 *            the sort
 	 * @return the SQL statement
 	 */
-	protected SQLStatement composeQuerySql(final String queryId, final List<?> attributes, final Map<?, ?> keysValues, final List<?> sort) {
+	protected SQLStatement composeQuerySql(final String queryId, final List<?> attributes, final Map<?, ?> keysValues, final List<?> sort, PageableInfo pageableInfo,
+			ISQLQueryAdapter queryAdapter) {
 		final QueryTemplateInformation queryTemplateInformation = this.getQueryTemplateInformation(queryId);
 
 		final Map<?, ?> kvWithoutReferenceAttributes = this.processReferenceDataFieldAttributes(keysValues);
@@ -437,8 +354,14 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 			vValidAttributes = this.getValidAttributes(vValidAttributes, null);
 			CheckingTools.failIf(vValidAttributes.isEmpty(), "NO_ATTRIBUTES_TO_QUERY");
 			// use table
-			stSQL = this.getStatementHandler().createSelectQuery(this.getSchemaTable(), new Vector<>(vValidAttributes), new Hashtable<>(kvValidKeysValues), new Vector<>(),
-					new Vector<>(sort == null ? Collections.emptyList() : sort));
+			if (pageableInfo != null) {
+				stSQL = this.getStatementHandler().createSelectQuery(this.getSchemaTable(), new Vector<>(vValidAttributes), new Hashtable<>(kvValidKeysValues), new Vector<>(),
+						new Vector<>(sort == null ? Collections.emptyList() : sort), pageableInfo.getRecordNumber(), pageableInfo.getStartIndex());
+			} else {
+				stSQL = this.getStatementHandler().createSelectQuery(this.getSchemaTable(), new Vector<>(vValidAttributes), new Hashtable<>(kvValidKeysValues), new Vector<>(),
+						new Vector<>(sort == null ? Collections.emptyList() : sort));
+			}
+
 		} else {
 			List<String> validColumns = queryTemplateInformation.getValidColumns();
 			kvValidKeysValues = this.getValidQueryingKeysValues(kvValidKeysValues, validColumns);
@@ -482,8 +405,6 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 				vValues.addAll(vValuesTemp);
 			}
 
-
-
 			// Order by
 			List<OrderColumnType> orderColumns = queryTemplateInformation.getOrderColumns();
 			Vector<Object> sortColumns = this.applyOrderColumns(sort, orderColumns);
@@ -495,12 +416,22 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 
 			sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_ORDER_CONCAT, order.length() == 0 ? "" : SQLStatementBuilder.COMMA + " " + order);
 			sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_ORDER, order.length() == 0 ? "" : SQLStatementBuilder.ORDER_BY + " " + order);
+			if (pageableInfo != null) {
+				sqlTemplate = this.performPlaceHolderPagination(sqlTemplate, pageableInfo);
+			}
 			sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_SCHEMA, this.getSchemaName());
-			sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_PAGINATION,"");
 			stSQL = new SQLStatement(sqlTemplate, vValues);
+		}
+		if (queryAdapter != null) {
+			stSQL = queryAdapter.adaptQuery(stSQL, this, keysValues, kvValidKeysValues, attributes, vValidAttributes, sort, queryId);
 		}
 		OntimizeJdbcDaoSupport.logger.trace(stSQL.getSQLStatement());
 		return stSQL;
+	}
+
+	@Override
+	public <T> List<T> query(final Map<?, ?> keysValues, final List<?> sort, final String queryId, final Class<T> clazz) {
+		return this.query(keysValues, sort, queryId, clazz, null);
 	}
 
 	/**
@@ -519,10 +450,10 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	 * @return the list
 	 */
 	@Override
-	public <T> List<T> query(final Map<?, ?> keysValues, final List<?> sort, final String queryId, final Class<T> clazz) {
+	public <T> List<T> query(final Map<?, ?> keysValues, final List<?> sort, final String queryId, final Class<T> clazz, ISQLQueryAdapter queryAdapter) {
 		this.checkCompiled();
 		BeanPropertyRowMapper<T> rowMapper = this.createRowMapper(clazz);
-		final SQLStatement stSQL = this.composeQuerySql(queryId, rowMapper.convertBeanPropertiesToDB(clazz), keysValues, sort);
+		final SQLStatement stSQL = this.composeQuerySql(queryId, rowMapper.convertBeanPropertiesToDB(clazz), keysValues, sort, null, queryAdapter);
 		final String sqlQuery = stSQL.getSQLStatement();
 		final Vector<?> vValues = stSQL.getValues();
 		return this.getJdbcTemplate().query(sqlQuery, vValues.toArray(), rowMapper);
@@ -1635,35 +1566,6 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	public QueryTemplateInformation getQueryTemplateInformation(final String id) {
 		this.checkCompiled();
 		return this.sqlQueries.get(id);
-	}
-
-	/**
-	 * Ensures to clone some query and register it with custom "queryId". Usefull with partial queries to customize. After use this method, ensure to
-	 * call to "removeQueryTemplateInformation" as last step.
-	 *
-	 * @param id
-	 *            returns the new QueryId
-	 * @return
-	 */
-	public String cloneQueryTemplateInformation(final String id) {
-		this.checkCompiled();
-		QueryTemplateInformation queryTemplateInformation = this.sqlQueries.get(id);
-
-		// Register a dummy QueryTemplateInformation to avoid synchronized method
-		String uniqueId = "temp_" + id + "_" + System.nanoTime();
-		this.addQueryTemplateInformation(uniqueId, queryTemplateInformation.getSqlTemplate(), queryTemplateInformation.getAmbiguousColumns(),
-				queryTemplateInformation.getFunctionColumns(), queryTemplateInformation.getValidColumns(), queryTemplateInformation.getOrderColumns());
-
-		return uniqueId;
-	}
-
-	/**
-	 * Be careful calling to this method, do not remove "defined -in-dao queries", only clones.
-	 *
-	 * @param id
-	 */
-	public void removeQueryTemplateInformation(final String id) {
-		this.sqlQueries.remove(id);
 	}
 
 	/**

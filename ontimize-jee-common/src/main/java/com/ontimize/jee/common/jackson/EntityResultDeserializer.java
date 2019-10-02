@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -54,21 +55,23 @@ public class EntityResultDeserializer extends StdDeserializer<EntityResult> {
 		JsonNode dataNode = node.get(EntityResultDeserializer.DATA_KEY);
 		Set<String> columns = new LinkedHashSet<>();
 		List<Hashtable<String, Object>> records = new ArrayList<>();
+		Map<String, Object> rawData = new HashMap<>();
 		if (dataNode.isArray()) {
 			ArrayNode arrayNode = (ArrayNode) node.withArray(EntityResultDeserializer.DATA_KEY);
 			for (int i = 0; i < arrayNode.size(); i++) {
 				Hashtable<String, Object> record = this.deserializeObject((ObjectNode) arrayNode.get(i), sqlTypes);
-				columns.addAll((Set<String>) record.keySet());
+				columns.addAll(record.keySet());
 				records.add(record);
 			}
 		} else if (dataNode.isObject()) {
-			this.deserializeObject((ObjectNode) dataNode, sqlTypes);
+			rawData = this.deserializeObject((ObjectNode) dataNode, sqlTypes);
 		}
 
 		EntityResult er = new EntityResult(Arrays.asList(columns.toArray()));
 		for (Hashtable<String, Object> record : records) {
 			er.addRecord(record);
 		}
+		er.putAll(rawData);
 		er.setCode(code);
 		er.setMessage(message);
 		er.setColumnSQLTypes((Hashtable) sqlTypes);
@@ -79,7 +82,7 @@ public class EntityResultDeserializer extends StdDeserializer<EntityResult> {
 		Hashtable<String, Object> result = new Hashtable<>();
 		Iterator<String> ite = node.fieldNames();
 		while (ite.hasNext()) {
-			String key = (String) ite.next();
+			String key = ite.next();
 			int value = node.get(key).asInt();
 			result.put(key, value);
 		}
@@ -90,7 +93,7 @@ public class EntityResultDeserializer extends StdDeserializer<EntityResult> {
 		Hashtable<String, Object> result = new Hashtable<>();
 		Iterator<String> ite = node.fieldNames();
 		while (ite.hasNext()) {
-			String key = (String) ite.next();
+			String key = ite.next();
 			JsonNode valueNode = node.get(key);
 			int sqlType = ((sqlTypes != null) && sqlTypes.containsKey(key)) ? (Integer) sqlTypes.get(key) : Types.OTHER;
 			Object value = this.deserializeValue(valueNode, sqlType);

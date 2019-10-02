@@ -1,5 +1,6 @@
 package com.ontimize.jee.server.rest;
 
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +30,7 @@ import com.ontimize.db.SQLStatementBuilder.SQLOrder;
 import com.ontimize.jee.common.jackson.OntimizeMapper;
 import com.ontimize.jee.common.tools.CheckingTools;
 import com.ontimize.jee.common.tools.ReflectionTools;
+import com.ontimize.util.ParseUtils;
 
 public abstract class ORestController<S> {
 
@@ -254,6 +256,9 @@ public abstract class ORestController<S> {
 				int sqlType = (Integer) hSqlTypes.get(key);
 				value = ParseUtilsExt.getValueForSQLType(value, sqlType);
 				if (value == null) {
+					if (ParseUtilsExt.BASE64 == sqlType) {
+						sqlType = Types.BINARY;
+					}
 					value = new NullValue(sqlType);
 				}
 			} else if (value == null) {

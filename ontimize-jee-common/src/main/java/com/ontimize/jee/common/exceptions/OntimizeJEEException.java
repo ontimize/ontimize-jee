@@ -222,16 +222,6 @@ public class OntimizeJEEException extends Exception implements IParametrizedExce
 	}
 
 	/**
-	 * Checks if is silent.
-	 *
-	 * @return true, if is silent
-	 */
-	@Override
-	public boolean isSilent() {
-		return this.silent;
-	}
-
-	/**
 	 * Establece si se debe mostrar un mensaje en la UI.
 	 *
 	 * @param silent
@@ -241,4 +231,13 @@ public class OntimizeJEEException extends Exception implements IParametrizedExce
 		this.silent = silent;
 	}
 
+	/**
+	 * Checks if is silent.
+	 *
+	 * @return true, if is silent
+	 */
+	@Override
+	public boolean isSilent() {
+		return this.silent;
+	}
 }

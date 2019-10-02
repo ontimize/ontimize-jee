@@ -45,6 +45,7 @@ import com.ontimize.jee.common.tools.CheckingTools;
 import com.ontimize.jee.common.tools.streamfilter.ReplaceTokensFilterReader;
 import com.ontimize.jee.server.dao.DaoProperty;
 import com.ontimize.jee.server.dao.IOntimizeDaoSupport;
+import com.ontimize.jee.server.dao.ISQLQueryAdapter;
 import com.ontimize.jee.server.dao.common.ConfigurationFile;
 import com.ontimize.jee.server.dao.common.INameConvention;
 import com.ontimize.jee.server.dao.cql.handler.CQLStatementHandler;
@@ -115,11 +116,18 @@ public class OntimizeCassandraDaoSupport implements IOntimizeDaoSupport, Applica
 
 	@Override
 	public EntityResult query(Map<?, ?> keysValues, List<?> attributes, List<?> sort, String queryId) {
+		return this.query(keysValues, attributes, sort, queryId, null);
+
+	}
+
+	@Override
+	public EntityResult query(Map<?, ?> keysValues, List<?> attributes, List<?> sort, String queryId, ISQLQueryAdapter adapter) {
+
 		this.checkCompiled();
 
 		final CassandraQueryTemplateInformation cassandraQueryInformation = this.getCassandraQueryTemplateInformation(queryId);
 
-		final CQLStatement stSQL = this.composeCQLQuery(queryId, attributes, keysValues, sort);
+		final CQLStatement stSQL = this.composeCQLQuery(queryId, attributes, keysValues, sort, adapter);
 
 		return this.getCqlTemplate().query(stSQL.getCQLStatement(), new PreparedStatementBinder() {
 			@Override
@@ -135,7 +143,11 @@ public class OntimizeCassandraDaoSupport implements IOntimizeDaoSupport, Applica
 		}, new EntityResultResultSetExtractor(this.getStatementHandler(), cassandraQueryInformation, (List<String>) attributes));
 	}
 
-	protected CQLStatement composeCQLQuery(final String queryId, final List<?> attributes, final Map<?, ?> keysValues, final List<?> sort) {
+	protected CQLStatement composeCQLQuery(final String queryId, final List<?> attributes, final Map<?, ?> keysValues, final List<?> sort, ISQLQueryAdapter adapter) {
+		if (adapter != null) {
+			throw new OntimizeJEERuntimeException("NOT_IMPLEMENTED");
+		}
+
 		final CassandraQueryTemplateInformation cassandraQueryInformation = this.getCassandraQueryTemplateInformation(queryId);
 
 		final Map<?, ?> kvWithoutReferenceAttributes = this.processReferenceDataFieldAttributes(keysValues);
@@ -172,12 +184,21 @@ public class OntimizeCassandraDaoSupport implements IOntimizeDaoSupport, Applica
 	}
 
 	@Override
-	public <T> List<T> query(Map<?, ?> keysValues, List<?> sort, String queryId, Class<T> clazz) {
+	public <T> List<T> query(Map<?, ?> keysValues, List<?> sort, String queryId, Class<T> clazz, ISQLQueryAdapter adapter) {
 		return null;
+	}
+	@Override
+	public <T> List<T> query(Map<?, ?> keysValues, List<?> sort, String queryId, Class<T> clazz) {
+		return this.query(keysValues, sort, queryId, clazz, null);
 	}
 
 	@Override
 	public AdvancedEntityResult paginationQuery(Map<?, ?> keysValues, List<?> attributes, int recordNumber, int startIndex, List<?> orderBy, String queryId) {
+		return this.paginationQuery(keysValues, attributes, recordNumber, startIndex, orderBy, queryId, null);
+	}
+	@Override
+	public AdvancedEntityResult paginationQuery(Map<?, ?> keysValues, List<?> attributes, int recordNumber, int startIndex, List<?> orderBy, String queryId,
+			ISQLQueryAdapter adapter) {
 		return null;
 	}
 
@@ -243,10 +264,8 @@ public class OntimizeCassandraDaoSupport implements IOntimizeDaoSupport, Applica
 	}
 
 	/**
-	 * Returns a hashtable containing a list of valid key-value pairs from those contained in the <code>attributesValues</code> argument.
-	 * <p>
-	 * A key-value pair is valid if the key is in the table column list.
-	 * <p>
+	 * Returns a hashtable containing a list of valid key-value pairs from those contained in the <code>attributesValues</code> argument. <p> A key-value pair is valid if the key
+	 * is in the table column list. <p>
 	 *
 	 * @param inputAttributesValues
 	 *            the attributes values
@@ -316,11 +335,8 @@ public class OntimizeCassandraDaoSupport implements IOntimizeDaoSupport, Applica
 	}
 
 	/**
-	 * Processes the ReferenceFieldAttribute objects contained in <code>keysValues</code>.
-	 * <p>
-	 * Returns a hashtable containing all the objects contained in the argument <code>keysValues</code> except in the case of keys that are ReferenceFieldAttribute objects, which
-	 * are replaced by ((ReferenceFieldAttribute)object).getAttr()
-	 * <p>
+	 * Processes the ReferenceFieldAttribute objects contained in <code>keysValues</code>. <p> Returns a hashtable containing all the objects contained in the argument
+	 * <code>keysValues</code> except in the case of keys that are ReferenceFieldAttribute objects, which are replaced by ((ReferenceFieldAttribute)object).getAttr() <p>
 	 *
 	 * @param keysValues
 	 *            the keysValues to process
@@ -345,11 +361,8 @@ public class OntimizeCassandraDaoSupport implements IOntimizeDaoSupport, Applica
 	}
 
 	/**
-	 * Processes the ReferenceFieldAttribute objects contained in <code>list</code>.
-	 * <p>
-	 * Returns a List containing all the objects in the argument <code>list</code> except in the case of keys that are ReferenceFieldAttribute objects, which are maintained but
-	 * also ((ReferenceFieldAttribute)object).getAttr() is added
-	 * <p>
+	 * Processes the ReferenceFieldAttribute objects contained in <code>list</code>. <p> Returns a List containing all the objects in the argument <code>list</code> except in the
+	 * case of keys that are ReferenceFieldAttribute objects, which are maintained but also ((ReferenceFieldAttribute)object).getAttr() is added <p>
 	 *
 	 * @param list
 	 *            the list to process
@@ -564,9 +577,7 @@ public class OntimizeCassandraDaoSupport implements IOntimizeDaoSupport, Applica
 	}
 
 	/**
-	 * Check whether this operation has been compiled already; lazily compile it if not already compiled.
-	 * <p>
-	 * Automatically called by {@code validateParameters}.
+	 * Check whether this operation has been compiled already; lazily compile it if not already compiled. <p> Automatically called by {@code validateParameters}.
 	 */
 	protected void checkCompiled() {
 		if (!this.isCompiled()) {
@@ -675,12 +686,8 @@ public class OntimizeCassandraDaoSupport implements IOntimizeDaoSupport, Applica
 	}
 
 	/**
-	 * Returns a hashtable containing a list of valid key-value pairs from those contained in the <code>keysValues</code> argument.
-	 * <p>
-	 * A key-value pair is valid if the key is valid.
-	 * <p>
-	 * Only keys matching (case-sensitive) any of the columns defined by the 'update_keys' parameter are considered valid.
-	 * <p>
+	 * Returns a hashtable containing a list of valid key-value pairs from those contained in the <code>keysValues</code> argument. <p> A key-value pair is valid if the key is
+	 * valid. <p> Only keys matching (case-sensitive) any of the columns defined by the 'update_keys' parameter are considered valid. <p>
 	 *
 	 * @param keysValues
 	 *            the keys values
@@ -698,8 +705,7 @@ public class OntimizeCassandraDaoSupport implements IOntimizeDaoSupport, Applica
 	}
 
 	/**
-	 * Checks if <code>keysValues</code> contains a value for all columns defined in 'update_keys' parameter.
-	 * <p>
+	 * Checks if <code>keysValues</code> contains a value for all columns defined in 'update_keys' parameter. <p>
 	 *
 	 * @param keysValues
 	 *            the keys values

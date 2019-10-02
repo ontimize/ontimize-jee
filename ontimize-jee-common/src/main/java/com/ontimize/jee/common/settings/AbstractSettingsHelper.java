@@ -1,6 +1,5 @@
 package com.ontimize.jee.common.settings;
 
-import org.omg.CORBA.portable.ApplicationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +38,7 @@ public abstract class AbstractSettingsHelper implements ISettingsHelper {
 	 *             the application exception
 	 * @throws OntimizeJEEException
 	 */
-	protected abstract String query(String key) throws ApplicationException, OntimizeJEEException;
+	protected abstract String query(String key) throws OntimizeJEEException;
 
 	/**
 	 * Gets the string.

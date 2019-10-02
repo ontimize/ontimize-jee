@@ -1,11 +1,13 @@
 package com.ontimize.jee.common.callback;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+
 import org.apache.commons.lang3.StringEscapeUtils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
 import com.ontimize.jee.common.jackson.OntimizeMapper;
-import com.ontimize.util.Base64Utils;
 
 public class CallbackWrapperMessage {
 
@@ -71,17 +73,8 @@ public class CallbackWrapperMessage {
 
 	public String serialize() {
 		try {
-			return Base64Utils.encode(new OntimizeMapper().writeValueAsString(this));
+			return Base64.getEncoder().encodeToString(new OntimizeMapper().writeValueAsString(this).getBytes(StandardCharsets.ISO_8859_1));
 		} catch (JsonProcessingException error) {
-			throw new OntimizeJEERuntimeException(error);
-		}
-	}
-
-	public static CallbackWrapperMessage deserialize(String message) {
-		try {
-			String newMessage = Base64Utils.decode(message);
-			return new OntimizeMapper().readValue(newMessage, CallbackWrapperMessage.class);
-		} catch (Exception error) {
 			throw new OntimizeJEERuntimeException(error);
 		}
 	}

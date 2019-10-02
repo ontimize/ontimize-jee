@@ -243,16 +243,6 @@ public class OntimizeJEERuntimeException extends RuntimeException implements IPa
 	}
 
 	/**
-	 * Checks if is silent.
-	 *
-	 * @return true, if is silent
-	 */
-	@Override
-	public boolean isSilent() {
-		return this.silent;
-	}
-
-	/**
 	 * Establece si se debe mostrar un mensaje en la UI.
 	 *
 	 * @param silent
@@ -260,5 +250,15 @@ public class OntimizeJEERuntimeException extends RuntimeException implements IPa
 	 */
 	public void setSilent(boolean silent) {
 		this.silent = silent;
+	}
+
+	/**
+	 * Checks if is silent.
+	 *
+	 * @return true, if is silent
+	 */
+	@Override
+	public boolean isSilent() {
+		return this.silent;
 	}
 }
