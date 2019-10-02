@@ -76,7 +76,7 @@
 		<commons-collections.version>4.1</commons-collections.version>
 		<commons-io.version>2.4</commons-io.version>
 		<mesp.version>1.0.2</mesp.version>
-		<ontimize.version>5.11.0</ontimize.version>
+		<ontimize.version>5.11.1</ontimize.version>
 		<ontimize.plaf.version>1.0.10</ontimize.plaf.version>
 		<ontimize.plaf.color.version>1.3.1</ontimize.plaf.color.version>
 		<zip4j.version>1.3.2</zip4j.version>
