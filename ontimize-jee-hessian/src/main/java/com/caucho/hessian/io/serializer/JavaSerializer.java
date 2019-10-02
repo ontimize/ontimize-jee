@@ -245,9 +245,9 @@ public class JavaSerializer extends AbstractSerializer {
 				this.fieldSerializers[i].serialize(out, obj, field);
 			}
 		} catch (RuntimeException e) {
-			throw new RuntimeException(e.getMessage() + "\n class: " + obj.getClass().getName() + " (object=" + obj + ")", e);
+			throw new RuntimeException(e.getMessage() + "\n class: " + obj.getClass().getName() + " (object=" + obj.getClass().getName() + ")", e);
 		} catch (IOException e) {
-			throw new IOExceptionWrapper(e.getMessage() + "\n class: " + obj.getClass().getName() + " (object=" + obj + ")", e);
+			throw new IOExceptionWrapper(e.getMessage() + "\n class: " + obj.getClass().getName() + " (object=" + obj.getClass().getName() + ")", e);
 		}
 	}
 
