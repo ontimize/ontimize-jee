@@ -50,7 +50,11 @@ public class OntimizeAuthenticationFilter extends AbstractAuthenticationProcessi
 	private AuthenticationEntryPoint								authenticationEntryPoint;
 
 	public OntimizeAuthenticationFilter() {
-		super("/**");
+		this("/**");
+	}
+
+	public OntimizeAuthenticationFilter(String path) {
+		super(path);
 		this.generateJwtHeader = false;
 	}
 
