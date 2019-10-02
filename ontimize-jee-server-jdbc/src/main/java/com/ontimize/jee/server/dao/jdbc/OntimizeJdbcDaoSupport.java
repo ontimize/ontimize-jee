@@ -53,7 +53,6 @@ import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.JdbcUtils;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.jdbc.support.nativejdbc.NativeJdbcExtractor;
 import org.springframework.util.Assert;
 
 import com.ontimize.db.AdvancedEntityResult;
@@ -1327,15 +1326,6 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 		this.tableMetaDataContext.setOverrideIncludeSynonymsDefault(override);
 	}
 
-	/**
-	 * Set the {@link NativeJdbcExtractor} to use to retrieve the native connection if necessary.
-	 *
-	 * @param nativeJdbcExtractor
-	 *            the new native jdbc extractor
-	 */
-	public void setNativeJdbcExtractor(final NativeJdbcExtractor nativeJdbcExtractor) {
-		this.tableMetaDataContext.setNativeJdbcExtractor(nativeJdbcExtractor);
-	}
 
 	// -------------------------------------------------------------------------
 	// Methods handling compilation issues
