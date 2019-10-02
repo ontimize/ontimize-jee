@@ -17,6 +17,7 @@ import com.ontimize.db.EntityResult;
 import com.ontimize.db.NullValue;
 import com.ontimize.jee.common.exceptions.OntimizeJEEException;
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
+import com.ontimize.jee.common.naming.I18NNaming;
 import com.ontimize.jee.common.tools.CheckingTools;
 import com.ontimize.jee.common.tools.EntityResultTools;
 import com.ontimize.jee.common.tools.MapTools;
@@ -156,6 +157,7 @@ public class One2OneDaoHelper implements ApplicationContextAware {
 		try {
 			EntityResult result = new EntityResult(EntityResult.OPERATION_SUCCESSFUL, EntityResult.NODATA_RESULT);
 			boolean opDone = false;
+			Exception someError = null;
 			// Checks formodifications in main dao
 			if (this.checkColumns(mainDao, attributesValues, null)) {
 				opDone = true;
@@ -169,16 +171,27 @@ public class One2OneDaoHelper implements ApplicationContextAware {
 				for (OneToOneSubDao subDao : secondaryDaos) {
 					// Checks for modifications in second dao
 					if (this.checkColumns(subDao.getDao(), attributesValues, null)) {
-						opDone = true;
 						// Checks is secondary exists (then update) else insert
 						boolean joinKeyIsMain = keysValues.containsKey(subDao.getKeySecondary());
 						Object keyValue = this.checksIfExists(daoHelper, mainDao, subDao.getDao(), keysValues, subDao.getKeySecondary(), subDao.getKey());
 						if (keyValue != null) {
+							// Update only if some field will be valid
+							try {
 							this.checkRequiredColumns(attributesValues, subDao.getRequiredColumns(), false);
 							EntityResult resUpdateSecond = this.updateSubDao(daoHelper, attributesValues, subDao, keyValue);
 							CheckingTools.checkValidEntityResult(resUpdateSecond, "E_UPDATING_SEOCONDARY_DAO");
 							if (resUpdateSecond != null) {
 								result.putAll(resUpdateSecond);
+							}
+								opDone = true;
+							} catch (Exception sqlError) {
+								someError = sqlError;
+								if (I18NNaming.M_IT_HAS_NOT_CHANGED_ANY_RECORD.equals(sqlError.getMessage())) {
+									// Ignore it
+									One2OneDaoHelper.logger.trace("IGNORING_UPDATE", sqlError);
+								} else {
+									throw sqlError;
+								}
 							}
 						} else if (this.checkColumns(subDao.getDao(), attributesValues, subDao.getNotEnoughColumns())) {
 							this.checkRequiredColumns(attributesValues, subDao.getRequiredColumns(), true);
@@ -196,12 +209,13 @@ public class One2OneDaoHelper implements ApplicationContextAware {
 							if (resInsertSecondary != null) {
 								result.putAll(resInsertSecondary);
 							}
+							opDone = true;
 						}
 					}
 				}
 			}
 			if (!opDone) {
-				One2OneDaoHelper.logger.warn("NO_DATA_TO_MODIFY");
+				One2OneDaoHelper.logger.warn("NO_DATA_TO_MODIFY", someError);
 			}
 			return result;
 		} catch (OntimizeJEERuntimeException ex) {
