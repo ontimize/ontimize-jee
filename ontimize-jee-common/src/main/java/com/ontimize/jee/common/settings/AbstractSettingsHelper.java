@@ -1,6 +1,5 @@
 package com.ontimize.jee.common.settings;
 
-import org.omg.CORBA.portable.ApplicationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
