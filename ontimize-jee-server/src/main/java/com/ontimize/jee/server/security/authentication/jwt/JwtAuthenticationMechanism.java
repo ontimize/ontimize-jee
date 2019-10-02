@@ -5,6 +5,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,19 +21,23 @@ import com.ontimize.jee.server.security.authentication.OntimizeAuthenticationPro
 
 public class JwtAuthenticationMechanism implements IAuthenticationMechanism {
 
+	private static final Logger	logger						= LoggerFactory.getLogger(JwtAuthenticationMechanism.class);
+
 	public static final String	JWT_TOKEN_KEY_CREATION_TIME	= "creation-time";
 	public static final String	JWT_TOKEN_KEY_USERNAME		= "username";
 	private long				tokenExpirationTime;
 	private IJwtService			jwtService;
+	protected boolean			refreshToken;
 
 	public JwtAuthenticationMechanism() {
 		super();
 		this.tokenExpirationTime = 0;
+		this.refreshToken = false;
 	}
 
 	@Override
 	public AuthenticationResult authenticate(HttpServletRequest request, HttpServletResponse response, AuthenticationManager authenticationManager,
-	        UserDetailsService userDetailsService) {
+			UserDetailsService userDetailsService) {
 		String header = request.getHeader("Authorization");
 		if ((header == null) || !header.startsWith("Bearer ")) {
 			// throw new JwtTokenMissingException("No JWT token found in request headers");
@@ -39,7 +45,7 @@ public class JwtAuthenticationMechanism implements IAuthenticationMechanism {
 		}
 
 		String authToken = header.substring(7);
-		return new AuthenticationResult(false, this.composeAthenticationToken(authToken, userDetailsService));
+		return new AuthenticationResult(this.refreshToken, this.composeAthenticationToken(authToken, userDetailsService));
 	}
 
 	protected Authentication composeAthenticationToken(String token, UserDetailsService userDetailsService) throws AuthenticationException {
@@ -47,7 +53,9 @@ public class JwtAuthenticationMechanism implements IAuthenticationMechanism {
 		String username = this.obtainUsernameFromClaims(claims);
 		long tokenCreationTime = this.obtainTokenCreationTimeFromClaims(claims);
 		// TODO marcar un tiempo de expiracion del token
+		JwtAuthenticationMechanism.logger.debug("token info {} : {}", this.tokenExpirationTime, tokenCreationTime);
 		if ((this.tokenExpirationTime > 0) && ((tokenCreationTime + this.tokenExpirationTime) < System.currentTimeMillis())) {
+			JwtAuthenticationMechanism.logger.debug("token expired {} : {}", this.tokenExpirationTime, tokenCreationTime);
 			throw new NonceExpiredException("Token expired");
 		}
 		if (username == null) {
@@ -83,4 +91,20 @@ public class JwtAuthenticationMechanism implements IAuthenticationMechanism {
 	public long getTokenExpirationTime() {
 		return this.tokenExpirationTime;
 	}
+
+	/**
+	 * @return the refreshToken
+	 */
+	public boolean isRefreshToken() {
+		return this.refreshToken;
+	}
+
+	/**
+	 * @param refreshToken
+	 *            the refreshToken to set
+	 */
+	public void setRefreshToken(boolean refreshToken) {
+		this.refreshToken = refreshToken;
+	}
+
 }
