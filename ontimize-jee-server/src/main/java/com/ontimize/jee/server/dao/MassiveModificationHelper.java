@@ -205,8 +205,9 @@ public class MassiveModificationHelper implements ApplicationContextAware, IMass
 		return one2oneHelper.insert(daoHelper, mainDao, secondaryDaos, attributesValues, type);
 	}
 
+	@Override
 	public boolean isMassiveModification(Object key, Map<?, ?> keysValues) {
-		return keysValues.containsKey(key) && (keysValues.get(key) instanceof int[]);
+		return (keysValues != null) && keysValues.containsKey(key) && (keysValues.get(key) instanceof int[]);
 	}
 
 	public static String getStringAttr(Object attribute) {

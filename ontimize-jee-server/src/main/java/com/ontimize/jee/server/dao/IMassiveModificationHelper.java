@@ -53,4 +53,6 @@ public interface IMassiveModificationHelper {
 	EntityResult insert(DefaultOntimizeDaoHelper daoHelper, One2OneDaoHelper one2oneHelper, IOntimizeDaoSupport mainDao, String pkColumn, List<OneToOneSubDao> secondaryDaos,
 	        Map<?, ?> attributesValues, One2OneType type) throws OntimizeJEERuntimeException;
 
+	boolean isMassiveModification(Object key, Map<?, ?> keysValues);
+
 }
