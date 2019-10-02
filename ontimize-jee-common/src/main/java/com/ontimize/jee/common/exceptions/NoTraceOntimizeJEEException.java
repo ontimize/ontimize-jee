@@ -106,6 +106,21 @@ public class NoTraceOntimizeJEEException extends OntimizeJEEException {
 	}
 
 	/**
+	 * Instantiates a new ontimize jee exception.
+	 *
+	 * @param message
+	 *            the message
+	 * @param cause
+	 *            the cause
+	 * @param msgParameters
+	 *            the msg parameters
+	 */
+	public NoTraceOntimizeJEEException(String message, Throwable cause, Object[] msgParameters, MessageType type, boolean msgBocking, boolean silent, boolean enableSuppression,
+			boolean writableStackTrace) {
+		super(message, cause, msgParameters, type, msgBocking, silent, enableSuppression, writableStackTrace);
+	}
+
+	/**
 	 * Instantiates a new no trace ontimize jee exception.
 	 *
 	 * @param cause

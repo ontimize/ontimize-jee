@@ -12,13 +12,13 @@ import com.ontimize.jee.common.tools.MessageType;
 public class OntimizeJEERuntimeException extends RuntimeException implements IParametrizedException {
 
 	/** The msg parameters. */
-	private final Object[]		msgParameters;
+	private Object[]			msgParameters;
 
 	/** The msg type. */
-	private final MessageType	msgType;
+	private MessageType			msgType;
 
 	/** The msg blocking. */
-	private final boolean		msgBlocking;
+	private boolean				msgBlocking;
 
 	/** The silent. */
 	private boolean				silent;
@@ -210,6 +210,10 @@ public class OntimizeJEERuntimeException extends RuntimeException implements IPa
 		return this.msgParameters == null ? null : Arrays.copyOf(this.msgParameters, this.msgParameters.length);
 	}
 
+	public void setMessageParameters(Object[] mesParams) {
+		this.msgParameters = mesParams;
+	}
+
 	/**
 	 * Devuelve el tipo de mensaje que se mostrara al usuario.
 	 *
@@ -220,6 +224,10 @@ public class OntimizeJEERuntimeException extends RuntimeException implements IPa
 		return this.msgType;
 	}
 
+	public void setMessageType(MessageType type) {
+		this.msgType = type;
+	}
+
 	/**
 	 * Devuelve si el mensaje que se mostrara al usuario sera bloqueante o no.
 	 *
@@ -228,6 +236,10 @@ public class OntimizeJEERuntimeException extends RuntimeException implements IPa
 	@Override
 	public boolean isMessageBlocking() {
 		return this.msgBlocking;
+	}
+
+	public void setMessageBlocking(boolean blocking) {
+		this.msgBlocking = blocking;
 	}
 
 	/**

@@ -15,13 +15,13 @@ public class OntimizeJEEException extends Exception implements IParametrizedExce
 	private static final long	serialVersionUID	= 1L;
 
 	/** The msg type. */
-	private final MessageType	msgType;
+	private MessageType			msgType;
 
 	/** The msg blocking. */
-	private final boolean		msgBlocking;
+	private boolean				msgBlocking;
 
 	/** The msg parameters. */
-	private final Object[]		msgParameters;
+	private Object[]			msgParameters;
 
 	/** The silent. */
 	private boolean				silent;
@@ -189,6 +189,10 @@ public class OntimizeJEEException extends Exception implements IParametrizedExce
 		return this.msgParameters == null ? null : Arrays.copyOf(this.msgParameters, this.msgParameters.length);
 	}
 
+	public void setMessageParameters(Object[] msgParams) {
+		this.msgParameters = msgParams;
+	}
+
 	/**
 	 * Devuelve el tipo de mensaje que se mostrara al usuario.
 	 *
@@ -199,6 +203,10 @@ public class OntimizeJEEException extends Exception implements IParametrizedExce
 		return this.msgType;
 	}
 
+	public void setMessageType(MessageType type) {
+		this.msgType = type;
+	}
+
 	/**
 	 * Devuelve si el mensaje que se mostrara al usuario sera bloqueante o no.
 	 *
@@ -207,6 +215,10 @@ public class OntimizeJEEException extends Exception implements IParametrizedExce
 	@Override
 	public boolean isMessageBlocking() {
 		return this.msgBlocking;
+	}
+
+	public void setMessageBlocking(boolean blocking) {
+		this.msgBlocking = blocking;
 	}
 
 	/**
