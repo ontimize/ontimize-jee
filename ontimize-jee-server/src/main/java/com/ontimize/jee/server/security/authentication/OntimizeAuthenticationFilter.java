@@ -1,9 +1,7 @@
 package com.ontimize.jee.server.security.authentication;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -20,15 +18,12 @@ import org.springframework.security.authentication.InternalAuthenticationService
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserCache;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.util.Assert;
 
 import com.ontimize.jee.server.security.CachedUserDetailsService;
-import com.ontimize.jee.server.security.authentication.jwt.IJwtService;
-import com.ontimize.jee.server.security.authentication.jwt.JwtAuthenticationMechanism;
 
 public class OntimizeAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
@@ -44,7 +39,7 @@ public class OntimizeAuthenticationFilter extends AbstractAuthenticationProcessi
 	private UserCache												userCache;
 	private UserDetailsService										userDetailsService;
 	private boolean													generateJwtHeader;
-	private IJwtService												jwtService;
+	private ISecurityJWTTokenGenerator								tokenGenerator;
 
 	private UserDetailsService										cachedUserDetailsService;
 	private AuthenticationEntryPoint								authenticationEntryPoint;
@@ -98,11 +93,9 @@ public class OntimizeAuthenticationFilter extends AbstractAuthenticationProcessi
 		} catch (InternalAuthenticationServiceException failed) {
 			OntimizeAuthenticationFilter.logger.error("An internal error occurred while trying to authenticate the user.", failed);
 			this.unsuccessfulAuthentication(request, response, failed);
-			return;
 		} catch (AuthenticationException failed) {
 			// Authentication failed
 			this.unsuccessfulAuthentication(request, response, failed);
-			return;
 		}
 	}
 
@@ -135,28 +128,15 @@ public class OntimizeAuthenticationFilter extends AbstractAuthenticationProcessi
 	protected void successfulLogin(HttpServletRequest request, HttpServletResponse response, Authentication authResult) throws IOException, ServletException {
 		OntimizeAuthenticationFilter.logger.debug("Authentication request success: {}", authResult);
 		if (this.generateJwtHeader) {
-			Map<String, Object> claims = this.provideClaims(request, authResult);
-			String token = this.jwtService.sign(claims);
+			String token = this.generateToken(request, authResult);
 			response.setHeader(OntimizeAuthenticationFilter.DEFAULT_TOKEN_HEADER, token);
 		}
 	}
 
-	protected Map<String, Object> provideClaims(HttpServletRequest request, Authentication authResult) {
-		UserDetails userDetails = (UserDetails) authResult.getPrincipal();
-		String username = userDetails.getUsername();
-		Map<String, Object> claims = new HashMap<>();
-		claims.put(JwtAuthenticationMechanism.JWT_TOKEN_KEY_USERNAME, username);
-		claims.put(JwtAuthenticationMechanism.JWT_TOKEN_KEY_CREATION_TIME, System.currentTimeMillis());
-		return claims;
+	protected String generateToken(HttpServletRequest request, Authentication authResult) {
+		return this.tokenGenerator.generateToken(request, authResult);
 	}
 
-	public IJwtService getJwtService() {
-		return this.jwtService;
-	}
-
-	public void setJwtService(IJwtService jwtService) {
-		this.jwtService = jwtService;
-	}
 
 	public void setGenerateJwtHeader(boolean generateJwtHeader) {
 		this.generateJwtHeader = generateJwtHeader;
@@ -196,5 +176,13 @@ public class OntimizeAuthenticationFilter extends AbstractAuthenticationProcessi
 
 	public void setAuthenticationEntryPoint(AuthenticationEntryPoint authenticationEntryPoint) {
 		this.authenticationEntryPoint = authenticationEntryPoint;
+	}
+
+	public void setTokenGenerator(ISecurityJWTTokenGenerator tokenGenerator) {
+		this.tokenGenerator = tokenGenerator;
+	}
+
+	public ISecurityJWTTokenGenerator getTokenGenerator() {
+		return this.tokenGenerator;
 	}
 }

@@ -1,6 +1,6 @@
 package com.ontimize.jee.server.security.authorization;
 
-import java.util.List;
+import java.util.Collection;
 
 /**
  * The Interface ISecurityAuthorizator.
@@ -16,7 +16,7 @@ public interface ISecurityAuthorizator {
 	 *            the user roles
 	 * @return true, if successful
 	 */
-	boolean hasPermission(String permissionName, List<String> userRoles);
+	boolean hasPermission(String permissionName, Collection<String> userRoles);
 
 	/**
 	 * Gets the role.

@@ -3,7 +3,7 @@
  */
 package com.ontimize.jee.server.security.authorization;
 
-import java.util.List;
+import java.util.Collection;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -73,7 +73,7 @@ public class DefaultOntimizeAuthorizator implements ISecurityAuthorizator, Initi
 	 *             the permission validation exception
 	 */
 	@Override
-	public synchronized boolean hasPermission(final String permissionName, final List<String> userRoles) throws PermissionValidationException {
+	public synchronized boolean hasPermission(final String permissionName, final Collection<String> userRoles) throws PermissionValidationException {
 		DefaultOntimizeAuthorizator.logger.trace("Checking permission {} for roles {}", permissionName, StringUtils.join(userRoles, ","));
 
 		for (final String roleName : userRoles) {

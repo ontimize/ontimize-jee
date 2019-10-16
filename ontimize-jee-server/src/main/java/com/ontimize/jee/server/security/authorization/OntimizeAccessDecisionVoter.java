@@ -75,9 +75,8 @@ public class OntimizeAccessDecisionVoter implements AccessDecisionVoter<Object>,
 	private int voteDefault(final Authentication arg0, final Object arg1, final Collection<ConfigAttribute> arg2) {
 		if (this.defaultVoter == null) {
 			return AccessDecisionVoter.ACCESS_ABSTAIN;
-		} else {
-			return this.defaultVoter.vote(arg0, arg1, arg2);
 		}
+		return this.defaultVoter.vote(arg0, arg1, arg2);
 	}
 
 	/**
