@@ -31,6 +31,7 @@ import com.ontimize.jee.common.dao.ICascadeOperationContainer;
 import com.ontimize.jee.common.dao.IOperation;
 import com.ontimize.jee.common.dao.InsertOperation;
 import com.ontimize.jee.common.dao.UpdateOperation;
+import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
 import com.ontimize.jee.common.services.user.UserInformation;
 import com.ontimize.jee.common.tools.CheckingTools;
 import com.ontimize.jee.server.dao.common.attributedispatcher.EntityFunctionAttributeDispatcher;
