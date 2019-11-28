@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import com.ontimize.gui.ApplicationManager;
 import com.ontimize.jee.common.tools.MessageType;
 import com.ontimize.jee.common.tools.ParseUtilsExtended;
+import com.ontimize.jee.common.tools.StringTools;
 import com.ontimize.jee.desktopclient.components.WindowTools;
 
 /**
@@ -281,6 +282,9 @@ public class ToastMessage {
 	 * @return the translated description
 	 */
 	public String getTranslatedDescription(ResourceBundle bundle) {
+		if (StringTools.isEmpty(this.getDescription())) {
+			return this.getDescription();
+		}
 		try {
 			return ApplicationManager.getTranslation(this.getDescription(), bundle != null ? bundle : ApplicationManager.getApplicationBundle(), this.getBundleDescriptionParams());
 		} catch (Exception e) {
