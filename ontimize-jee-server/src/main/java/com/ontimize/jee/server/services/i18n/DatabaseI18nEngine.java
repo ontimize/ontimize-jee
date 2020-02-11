@@ -16,7 +16,6 @@ import com.ontimize.db.EntityResult;
 import com.ontimize.gui.ApplicationManager;
 import com.ontimize.gui.SearchValue;
 import com.ontimize.gui.i18n.DatabaseBundleDescriptor;
-import com.ontimize.gui.i18n.DatabaseBundleManager;
 import com.ontimize.gui.i18n.DatabaseBundleValues;
 import com.ontimize.gui.i18n.DatabaseBundleValues.BundleValue;
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
@@ -260,7 +259,7 @@ public class DatabaseI18nEngine implements II18nService, InitializingBean {
 			Object key = this.getBundleValueKey(filter);
 			if (key != null) {
 				// delete
-				filter.put(DatabaseBundleManager.bundleValuesKeyColumn, key);
+				filter.put(this.bundleValuesKeyColumn, key);
 				this.daoBundleValues.delete(filter);
 			}
 
