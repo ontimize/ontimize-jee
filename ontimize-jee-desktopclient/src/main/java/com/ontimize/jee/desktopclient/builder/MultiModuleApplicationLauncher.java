@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 
 import com.ontimize.builder.xml.XMLApplicationBuilder;
 import com.ontimize.gui.Application;
-import com.ontimize.gui.ApplicationLauncher;
 import com.ontimize.gui.ApplicationManager;
 import com.ontimize.gui.FixedFocusManager;
 import com.ontimize.gui.Form;
@@ -33,6 +32,8 @@ public class MultiModuleApplicationLauncher {
 
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(MultiModuleApplicationLauncher.class);
+	
+	public static String START_LOOK_AND_FEEL = UIManager.getSystemLookAndFeelClassName();
 
 	/**
 	 * Instantiates a new multi module application launcher.
@@ -137,7 +138,7 @@ public class MultiModuleApplicationLauncher {
 
 		String lf = System.getProperty("com.ontimize.gui.lafclassname");
 		if (lf == null) {
-			lf = ApplicationLauncher.START_LOOK_AND_FEEL;
+			lf = MultiModuleApplicationLauncher.START_LOOK_AND_FEEL;
 		}
 
 		try {

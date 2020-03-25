@@ -13,7 +13,9 @@ import com.ontimize.jee.common.services.remoteoperation.RemoteOperationStatusMes
 import com.ontimize.jee.common.tools.Pair;
 import com.ontimize.jee.desktopclient.components.task.OSwingWorker;
 import com.ontimize.jee.desktopclient.components.task.WorkerStatusInfo;
-import com.ontimize.locator.ReferenceLocator;
+import com.ontimize.locator.EntityReferenceLocator;
+import com.ontimize.locator.UtilReferenceLocator;
+import com.ontimize.util.operation.RemoteOperationManager;
 
 /**
  * The Class AbstractRemoteOperationSwingWorker.
@@ -57,12 +59,12 @@ public class RemoteOperationSwingWorker<T, V> extends OSwingWorker<T, V> {
 	 */
 	@Override
 	protected T doInBackground() throws Exception {
-		ReferenceLocator referenceLocator = (ReferenceLocator) ApplicationManager.getApplication().getReferenceLocator();
+		EntityReferenceLocator referenceLocator = ApplicationManager.getApplication().getReferenceLocator();
 		int sessionId = referenceLocator.getSessionId();
-		WebsocketRemoteOperationManager manager = (WebsocketRemoteOperationManager) referenceLocator.getRemoteOperationManager(sessionId);
+		RemoteOperationManager manager = ((UtilReferenceLocator)referenceLocator).getRemoteOperationManager(sessionId);
 		IRemoteOperationListener<T> remoteOperationListener = new RemoteOperationListener<>();
 		synchronized (remoteOperationListener) {
-			this.delegate = manager.run(this.remoteClassName, this.parameters, sessionId, remoteOperationListener);
+			this.delegate = ((WebsocketRemoteOperationManager)manager).run(this.remoteClassName, this.parameters, sessionId, remoteOperationListener);
 			// free memory
 			this.parameters = null;
 			remoteOperationListener.wait();

@@ -1,7 +1,6 @@
 package com.ontimize.jee.desktopclient.locator.handlers;
 
 import com.ontimize.jee.common.tools.proxy.AbstractInvocationDelegate;
-import com.ontimize.ols.LObjectInfo;
 import com.ontimize.ols.RemoteLOk;
 
 /**
@@ -24,28 +23,30 @@ public class LicenseLocatorInvocationDelegate extends AbstractInvocationDelegate
 	 */
 	@Override
 	public Object getLInfoObject(int sessionId) throws Exception {
-		return new LObjectInfo("ALL") {
-
-			@Override
-			public boolean ok(String number) {
-				return true;
-			}
-
-			@Override
-			public boolean ok() {
-				return true;
-			}
-
-			@Override
-			public boolean isValid(long now) {
-				return true;
-			}
-
-			@Override
-			public boolean isDevelopementL() {
-				return false;
-			}
-		};
+//		return new LObjectInfo("ALL") {
+//
+//			@Override
+//			public boolean ok(String number) {
+//				return true;
+//			}
+//
+//			@Override
+//			public boolean ok() {
+//				return true;
+//			}
+//
+//			@Override
+//			public boolean isValid(long now) {
+//				return true;
+//			}
+//
+//			@Override
+//			public boolean isDevelopementL() {
+//				return false;
+//			}
+//		};
+		
+		return null;
 	}
 
 	/*
