@@ -12,19 +12,6 @@
 		<url>http://imatia.com</url>
 	</organization>
 
-	<distributionManagement>
-		<repository>
-			<id>imatia-artifactory</id>
-			<name>libs-release-local</name>
-			<url>http://37.139.121.79:8081/artifactory/libs-release-local</url>
-		</repository>
-		<snapshotRepository>
-			<id>imatia-artifactory</id>
-			<name>libs-snapshot-local</name>
-			<url>http://37.139.121.79:8081/artifactory/libs-snapshot-local</url>
-		</snapshotRepository>
-	</distributionManagement>
-
 	<properties>
 		<jdk.version.client>1.8</jdk.version.client>
 		<jdk.version.server>1.8</jdk.version.server>
