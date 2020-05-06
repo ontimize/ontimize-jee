@@ -12,6 +12,19 @@
 		<url>http://imatia.com</url>
 	</organization>
 
+	<distributionManagement>
+		<repository>
+			<id>imatia-public</id>
+			<name>ontimize-release-opensource</name>
+			<url>https://artifactory.imatia.com/public-artifactory/ontimize-release-opensource</url>
+		</repository>
+		<snapshotRepository>
+			<id>imatia-artifactory</id>
+			<name>libs-snapshot-local</name>
+			<url>https://artifactory.imatia.com/artifactory/libs-snapshot-local</url>
+		</snapshotRepository>
+	</distributionManagement>
+	
 	<properties>
 		<jdk.version.client>1.8</jdk.version.client>
 		<jdk.version.server>1.8</jdk.version.server>
@@ -640,17 +653,4 @@
 		<module>ontimize-jee-server-logic</module>
 		<module>ontimize-jee-webclient-addons</module>
 	</modules>
-	
-	<distributionManagement>
-		<repository>
-			<id>imatia-public</id>
-			<name>ontimize-release-opensource</name>
-			<url>https://artifactory.imatia.com/public-artifactory/ontimize-release-opensource</url>
-		</repository>
-		<snapshotRepository>
-			<id>imatia-artifactory</id>
-			<name>libs-snapshot-local</name>
-			<url>https://artifactory.imatia.com/artifactory/libs-snapshot-local</url>
-		</snapshotRepository>
-	</distributionManagement>
 </project>
