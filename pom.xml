@@ -494,6 +494,7 @@
 				<scope>provided</scope>
 				<version>1.1</version>
 			</dependency>
+			
 			<!-- JEE 7 dependencies https://wikis.oracle.com/display/GlassFish/Java+EE+7+Maven+Coordinates -->
 			<dependency>
 				<groupId>javax.websocket</groupId>
@@ -507,12 +508,14 @@
 				<version>${servlet-api.version}</version>
 				<scope>provided</scope>
 			</dependency>
+			
 			<!-- documents -->
 			<dependency>
 				<groupId>commons-codec</groupId>
 				<artifactId>commons-codec</artifactId>
 				<version>${commons-codec.version}</version>
 			</dependency>
+			
 			<!-- Jmimemagic -->
 			<dependency>
 				<groupId>jmimemagic</groupId>
@@ -525,12 +528,14 @@
 					</exclusion>
 				</exclusions>
 			</dependency>
+			
 			<!-- commons io -->
 			<dependency>
 				<groupId>commons-io</groupId>
 				<artifactId>commons-io</artifactId>
 				<version>${commons-io.version}</version>
 			</dependency>
+			
 			<!-- Jasper -->
 			<dependency>
 				<groupId>net.sf.jasperreports</groupId>
@@ -543,6 +548,7 @@
 					</exclusion>
 				</exclusions>
 			</dependency>
+			
 			<!-- DYNAMIC JASPER -->
 			<dependency>
 				<groupId>ar.com.fdvs</groupId>
@@ -550,18 +556,21 @@
 				<version>${dynamicjasper.version}</version>
 				<optional>true</optional>
 			</dependency>
+			
 			<!-- XML Config -->
 			<dependency>
 				<groupId>org.apache.commons</groupId>
 				<artifactId>commons-collections4</artifactId>
 				<version>${commons-collections.version}</version>
 			</dependency>
+			
 			<!-- si alguien utiliza la version vieja -->
 			<dependency>
 				<groupId>commons-collections</groupId>
 				<artifactId>commons-collections</artifactId>
 				<version>3.2.2</version>
 			</dependency>
+			
 			<!-- MESP -->
 			<dependency>
 				<groupId>mesp</groupId>
@@ -606,6 +615,7 @@
 				<version>${jee.version}</version>
 				<scope>provided</scope>
 			</dependency>
+			
 			<!-- apache cxf -->
 			<dependency>
 				<groupId>org.apache.cxf</groupId>
@@ -617,6 +627,7 @@
 				<artifactId>cxf-rt-transports-http</artifactId>
 				<version>${cxf.version}</version>
 			</dependency>
+			
 			<!-- Zip4j -->
 			<dependency>
 				<groupId>net.lingala.zip4j</groupId>
