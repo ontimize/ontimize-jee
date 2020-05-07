@@ -190,7 +190,7 @@ public class DefaultOntimizeDaoHelper implements IOntimizeDaoHelper, Application
 	@Override
 	public <T> List<T> query(IOntimizeDaoSupport dao, Map<?, ?> keysValues, List<?> sort, String queryId, Class<T> clazz, ISQLQueryAdapter adapter) {
 		CheckingTools.failIfNull(dao, "Null dao");
-		return dao.query(keysValues, sort, queryId, clazz);
+		return dao.query(keysValues, sort, queryId, clazz, adapter);
 	}
 
 	/*
