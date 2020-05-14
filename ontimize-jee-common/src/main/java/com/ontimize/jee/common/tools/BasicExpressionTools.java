@@ -3,7 +3,6 @@ package com.ontimize.jee.common.tools;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -11,17 +10,16 @@ import java.util.Set;
 import java.util.Vector;
 import java.util.regex.Pattern;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.ontimize.db.SQLStatementBuilder.BasicExpression;
 import com.ontimize.db.SQLStatementBuilder.BasicField;
 import com.ontimize.db.SQLStatementBuilder.BasicOperator;
 import com.ontimize.db.SQLStatementBuilder.Operator;
-import com.ontimize.gui.Form;
 import com.ontimize.gui.SearchValue;
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
-import com.ontimize.util.ParseUtils;
+import com.ontimize.util.ParseTools;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * The Class BasicExpressionTools.
@@ -202,48 +200,6 @@ public final class BasicExpressionTools {
 				new BasicExpression(basicField, BasicOperator.LESS_EQUAL_OP, ((List) searchValue.getValue()).get(1)));
 	}
 
-	/**
-	 * Ensure to complete a BasicExpression with filters with another "susceptible" filters form another keys, depending on values at form. For each "otherKey" received, if tis
-	 * value is not null at form will be considered to add as a filter.
-	 *
-	 * @param sourceExpr
-	 *            the source expr
-	 * @param form
-	 *            the form
-	 * @param otherKeys
-	 *            List of possible keys to add to filter. It is accepted "String-with-attr", "SimpleFieldFilter-object" or "BetweenDateFilter-object"
-	 * @return the basic expression
-	 */
-	public static BasicExpression completeExpresionFromKeys(BasicExpression sourceExpr, Form form, List<Object> otherKeys) {
-		Map<Object, Object> kv = new HashMap<>();
-		for (Object obj : otherKeys) {
-			if (obj instanceof String) {
-				// Direct filter from attr in form to db column
-				Object value = form.getDataFieldValue((String) obj);
-				if (value != null) {
-					kv.put(obj, value);
-				}
-			} else if (obj instanceof SimpleFieldFilter) {
-				// Simple filter from attr in form to another named db column
-				Object value = form.getDataFieldValue(((SimpleFieldFilter) obj).getFormFieldAttr());
-				if (value != null) {
-					kv.put(((SimpleFieldFilter) obj).getFormFieldAttr(), value);
-				}
-			} else if (obj instanceof BetweenDateFilter) {
-				// Simple filter from two attrs in form (since - to) to single db column
-				Object value = form.getDataFieldValue(((BetweenDateFilter) obj).getSinceFormFieldAttr());
-				if (value != null) {
-					kv.put(((BetweenDateFilter) obj).getSinceFormFieldAttr(), value);
-				}
-				value = form.getDataFieldValue(((BetweenDateFilter) obj).getToFormFieldAttr());
-				if (value != null) {
-					kv.put(((BetweenDateFilter) obj).getToFormFieldAttr(), value);
-				}
-			}
-		}
-		return BasicExpressionTools.completeExpresionFromKeys(sourceExpr, kv, otherKeys);
-	}
-
 	public static BasicExpression completeExpresionFromKeys(BasicExpression sourceExpr, Map<Object, Object> kv, List<Object> otherKeys) {
 
 		for (Object obj : otherKeys) {
@@ -290,7 +246,7 @@ public final class BasicExpressionTools {
 							checked = ((Boolean) dataFieldValue).booleanValue();
 						} catch (Exception ex) {
 							BasicExpressionTools.logger.debug("error getting boolean value, parsing...", ex);
-							checked = ParseUtils.getBoolean(String.valueOf(dataFieldValue), false);
+							checked = ParseTools.getBoolean(String.valueOf(dataFieldValue), false);
 						}
 						if (checked) {
 							sourceExpr = BasicExpressionTools.combineExpression(sourceExpr,

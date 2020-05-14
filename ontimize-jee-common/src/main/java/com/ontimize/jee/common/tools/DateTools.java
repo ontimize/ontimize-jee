@@ -4,13 +4,13 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 import java.util.TimeZone;
 import java.util.Vector;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ontimize.gui.ApplicationManager;
 import com.ontimize.gui.SearchValue;
 
 /**
@@ -292,10 +292,13 @@ public final class DateTools {
 	 *
 	 * @param d
 	 *            the d
+	 * @param locale
+	 *
 	 * @return the calendar
+	 *
 	 */
-	public static Calendar dateToCal(Date d) {
-		Calendar c = Calendar.getInstance(ApplicationManager.getLocale());
+	public static Calendar dateToCal(Date d, Locale locale) {
+		Calendar c = Calendar.getInstance(locale);
 		c.setTime(d);
 		return c;
 	}

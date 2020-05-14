@@ -25,17 +25,17 @@ import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.Type;
 import javax.persistence.metamodel.Type.PersistenceType;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 
 import com.ontimize.db.EntityResult;
-import com.ontimize.db.EntityResultUtils;
 import com.ontimize.db.NullValue;
+import com.ontimize.jee.common.tools.EntityResultTools;
 import com.ontimize.jee.server.dao.jpa.common.MappingInfo;
 import com.ontimize.jee.server.dao.jpa.common.MappingInfoUtils;
 import com.ontimize.jee.server.dao.jpa.dataconversors.DataConversorsUtil;
 import com.ontimize.jee.server.dao.jpa.setup.ColumnMapping;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class OntimizeJpaUtils.
@@ -72,7 +72,7 @@ public final class OntimizeJpaUtils {
 			columnList.addAll(JPAUtils.getColumnNames(data.get(0).getClass()));
 		}
 
-		EntityResult result = EntityResultUtils.createEmptyEntityResult(columnList);
+		EntityResult result = EntityResultTools.createEmptyEntityResult(columnList);
 
 		for (final Object obj : data) {
 			for (final String col : columnList) {
@@ -112,7 +112,7 @@ public final class OntimizeJpaUtils {
 			columnList.addAll(JPAUtils.getColumnNames(data.getClass()));
 		}
 
-		EntityResult result = EntityResultUtils.createEmptyEntityResult(columnList);
+		EntityResult result = com.ontimize.db.EntityResultTools.createEmptyEntityResult(columnList);
 
 		for (final String col : columnList) {
 			if (col != null) {

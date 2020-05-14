@@ -13,7 +13,6 @@ import java.util.ResourceBundle;
 import org.springframework.beans.factory.InitializingBean;
 
 import com.ontimize.db.EntityResult;
-import com.ontimize.gui.ApplicationManager;
 import com.ontimize.gui.SearchValue;
 import com.ontimize.gui.i18n.DatabaseBundleDescriptor;
 import com.ontimize.gui.i18n.DatabaseBundleValues;
@@ -24,6 +23,7 @@ import com.ontimize.jee.common.services.i18n.TmpDatabaseResourceBundle;
 import com.ontimize.jee.common.tools.CheckingTools;
 import com.ontimize.jee.server.dao.DaoProperty;
 import com.ontimize.jee.server.dao.IOntimizeDaoSupport;
+import com.ontimize.util.ParseTools;
 
 /**
  * The Class DatabaseI18nEngine.
@@ -375,14 +375,14 @@ public class DatabaseI18nEngine implements II18nService, InitializingBean {
 	 * @return the locale string
 	 */
 	protected String getLocaleString(String locale) {
-		List<Object> tokensAt = ApplicationManager.getTokensAt(locale, "_");
+		List<Object> tokensAt = ParseTools.getTokensAt(locale, "_");
 		if (tokensAt.size() >= 2) {
 			tokensAt.set(0, tokensAt.get(0).toString().toLowerCase());
 			tokensAt.set(1, tokensAt.get(1).toString().toUpperCase());
 			if (tokensAt.size() > 2) {
 				tokensAt.set(2, tokensAt.get(2).toString().toLowerCase());
 			}
-			return ApplicationManager.vectorToStringSeparateBy(tokensAt, "_");
+			return ParseTools.vectorToStringSeparateBy(tokensAt, "_");
 		}
 		return null;
 	}

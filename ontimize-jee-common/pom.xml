@@ -53,7 +53,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.ontimize</groupId>
-			<artifactId>ontimize-core-client</artifactId>
+			<artifactId>ontimize-core-common</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>javax.websocket</groupId>

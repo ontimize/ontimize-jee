@@ -6,8 +6,6 @@ import java.util.List;
 
 import com.ontimize.db.EntityResult;
 import com.ontimize.jee.common.exceptions.OntimizeJEEException;
-import com.ontimize.util.share.FormAddUserSharedReference;
-import com.ontimize.util.share.FormUpdateSharedReference;
 import com.ontimize.util.share.SharedElement;
 
 public interface ISharePreferencesService {

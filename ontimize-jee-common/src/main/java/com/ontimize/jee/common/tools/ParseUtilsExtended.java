@@ -20,18 +20,16 @@ import javax.swing.Icon;
 import javax.swing.SwingConstants;
 import javax.xml.bind.DatatypeConverter;
 
+import com.ontimize.util.ParseTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ontimize.gui.ApplicationManager;
-import com.ontimize.gui.images.ImageManager;
 import com.ontimize.util.Base64Utils;
-import com.ontimize.util.ParseUtils;
 
 /**
  * The Class ParseUtilsExtended.
  */
-public class ParseUtilsExtended extends ParseUtils {
+public class ParseUtilsExtended extends ParseTools {
 
 	private static final Logger		logger	= LoggerFactory.getLogger(ParseUtilsExtended.class);
 
@@ -340,15 +338,6 @@ public class ParseUtilsExtended extends ParseUtils {
 		return defaultValue;
 	}
 
-	public static String getTranslatedString(String s, String defaultValue) {
-		return ParseUtilsExtended.getTranslatedString(s, defaultValue, null);
-	}
-
-	public static String getTranslatedString(String s, String defaultValue, ResourceBundle bundle) {
-		String value = ParseUtilsExtended.getString(s, defaultValue);
-		return ApplicationManager.getTranslation(value, bundle == null ? ApplicationManager.getApplicationBundle() : bundle);
-	}
-
 	public static double getDouble(String s, double defaultValue) {
 		if ((s != null) && !"".equals(s)) {
 			return Double.parseDouble(s);
@@ -374,7 +363,7 @@ public class ParseUtilsExtended extends ParseUtils {
 		if (value == null) {
 			return defaultValue;
 		}
-		return ApplicationManager.getTokensAt(value, separator1, separator2);
+		return ParseTools.getTokensAt(value, separator1, separator2);
 	}
 
 	public static String getMapString(Map<Object, Object> map, String separator1, String separator2, String defaultValue) {
@@ -429,14 +418,6 @@ public class ParseUtilsExtended extends ParseUtils {
 		}
 
 		return params;
-	}
-
-	public static Icon getIcon(String icon, Icon defaultValue) {
-		Icon toReturn = null;
-		if (icon != null) {
-			toReturn = ImageManager.getIcon(icon);
-		}
-		return ObjectTools.coalesce(toReturn, defaultValue);
 	}
 
 	/**
@@ -514,7 +495,7 @@ public class ParseUtilsExtended extends ParseUtils {
 			case ParseUtilsExtended.BASE64:
 				return ParseUtilsExtended.parseBase64(object);
 			default:
-				return ParseUtils.getValueForSQLType(object, sqlType);
+				return ParseTools.getValueForSQLType(object, sqlType);
 		}
 	}
 

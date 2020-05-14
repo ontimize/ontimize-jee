@@ -25,6 +25,10 @@
 	</build>
 	<dependencies>
 		<dependency>
+			<groupId>com.ontimize</groupId>
+			<artifactId>ontimize-core-client</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>${projectGroupId}</groupId>
 			<artifactId>ontimize-jee-common</artifactId>
 		</dependency>

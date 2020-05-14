@@ -23,7 +23,7 @@ import com.ontimize.jee.common.tools.BasicExpressionTools;
 import com.ontimize.jee.common.tools.EntityResultTools;
 import com.ontimize.jee.common.tools.MapTools;
 import com.ontimize.jee.common.tools.ObjectTools;
-import com.ontimize.util.ParseUtils;
+import com.ontimize.util.ParseTools;
 
 @Component
 @Lazy(value = true)
@@ -153,7 +153,7 @@ public class DownDateHelper implements ApplicationContextAware, IDownDateHelper 
 			if (oChecked instanceof Boolean) {
 				return ((Boolean) oChecked).booleanValue();
 			} else {
-				return ParseUtils.getBoolean(String.valueOf(oChecked), false);
+				return ParseTools.getBoolean(String.valueOf(oChecked), false);
 			}
 		} else if (keysValues.containsKey(ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY)) {
 			Expression exp = (Expression) keysValues.get(ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY);
@@ -210,7 +210,7 @@ public class DownDateHelper implements ApplicationContextAware, IDownDateHelper 
 		if (oChecked instanceof Boolean) {
 			return ((Boolean) oChecked).booleanValue();
 		} else {
-			return ParseUtils.getBoolean(String.valueOf(oChecked), false);
+			return ParseTools.getBoolean(String.valueOf(oChecked), false);
 		}
 	}
 
