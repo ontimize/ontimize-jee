@@ -51,5 +51,11 @@
 			<artifactId>itext</artifactId>
 			<scope>provided</scope>
 		</dependency>
+
+		<!-- Temporalmente hay que borrar la dependecia con el módulo de exportacion -->
+		<dependency>
+			<groupId>com.ontimize</groupId>
+			<artifactId>ontimize-core-client</artifactId>
+		</dependency>
 	</dependencies>
 </project>
