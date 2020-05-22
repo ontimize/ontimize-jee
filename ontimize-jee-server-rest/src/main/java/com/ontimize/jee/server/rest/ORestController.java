@@ -30,7 +30,7 @@ import com.ontimize.db.SQLStatementBuilder.SQLOrder;
 import com.ontimize.jee.common.jackson.OntimizeMapper;
 import com.ontimize.jee.common.tools.CheckingTools;
 import com.ontimize.jee.common.tools.ReflectionTools;
-import com.ontimize.util.ParseUtils;
+
 
 public abstract class ORestController<S> {
 

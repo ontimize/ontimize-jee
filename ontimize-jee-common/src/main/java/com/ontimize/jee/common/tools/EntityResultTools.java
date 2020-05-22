@@ -33,12 +33,11 @@ import com.ontimize.jee.common.tools.ertools.AbstractAggregateFunction;
 import com.ontimize.jee.common.tools.ertools.Group;
 import com.ontimize.jee.common.tools.ertools.IAggregateFunction;
 import com.ontimize.jee.common.tools.ertools.IPartialAggregateValue;
-import com.ontimize.report.TableSorter;
 
 /**
  * Clase de utilidades para EntityResult.
  */
-public final class EntityResultTools {
+public final class EntityResultTools extends com.ontimize.db.EntityResultTools {
 
 	private static final Logger	logger						= LoggerFactory.getLogger(EntityResultTools.class);
 	/** The Constant MAX_IN_EXPRESSION_SUPPORT. */
@@ -180,7 +179,7 @@ public final class EntityResultTools {
 	 * @return the entity result
 	 */
 	private static EntityResult doFastJoin(EntityResult a, EntityResult b, String keyNameA, String keyNameB, JoinType joinType, EntityResult res, Vector<Object> resColumnsA,
-			Vector<Object> resColumnsB, Vector<Object> resColumns, Vector<Object> resColumnsCommon) {
+		Vector<Object> resColumnsB, Vector<Object> resColumns, Vector<Object> resColumnsCommon) {
 
 		Object[] keysSortedA = null;
 		int[] indexesA = null;
@@ -289,7 +288,7 @@ public final class EntityResultTools {
 	 *            the only inner join
 	 */
 	private static void doJoinForTable(EntityResult res, Vector<Object> resColumns, Vector<Object> resColumnsA, Vector<Object> resColumnsB, Vector<Object> resColumnsCommon,
-			Hashtable<Object, Object> rowA, EntityResult b, String[] columnKeysA, String[] columnKeysB, boolean onlyInnerJoin) {
+		Hashtable<Object, Object> rowA, EntityResult b, String[] columnKeysA, String[] columnKeysB, boolean onlyInnerJoin) {
 		int rcount = b.calculateRecordNumber();
 		boolean match = false;
 		int index = res.calculateRecordNumber();
@@ -393,7 +392,7 @@ public final class EntityResultTools {
 	}
 
 	/**
-	 * Agrupa los valores de un {@link EntityResult}. Se pueden indicar múltiples funciones de agregado. TODO: versión mejorada de EntityResult doGroup(EntityResult a, String[]
+	 * Agrupa los valores de un {@link EntityResult}. Se pueden indicar m?ltiples funciones de agregado. TODO: versi?n mejorada de EntityResult doGroup(EntityResult a, String[]
 	 * groupColumns, GroupType groupType, String columnToGroup, boolean count)
 	 *
 	 * @param er
@@ -494,22 +493,6 @@ public final class EntityResultTools {
 		}
 	}
 
-	/**
-	 * Do sort.
-	 *
-	 * @param res
-	 *            the res
-	 * @param cols
-	 *            the cols
-	 * @return the entity result
-	 */
-	public static EntityResult doSort(EntityResult res, String... cols) {
-		if (cols.length == 1) {
-			return EntityResultTools.doFastSort(res, cols[0]);
-		}
-		return EntityResultTools.doSlowSort(res, cols);
-
-	}
 
 	/**
 	 * Do fast sort.
@@ -535,69 +518,6 @@ public final class EntityResultTools {
 			for (int i = 0; i < indexes.length; i++) {
 				vDest.add(i, vOrig.get(indexes[i]));
 			}
-		}
-		return res;
-	}
-
-	/**
-	 * Do slow sort.
-	 *
-	 * @param res
-	 *            the res
-	 * @param cols
-	 *            the cols
-	 * @return the entity result
-	 */
-	protected static EntityResult doSlowSort(EntityResult res, String... cols) {
-		if (res != null) {
-			TableModel model = com.ontimize.db.EntityResultUtils.createTableModel(res, new Vector(res.keySet()), false, false, false);
-			TableSorter sorter = new TableSorter(model) {
-
-				@Override
-				public int compareRowsByColumn(int row1, int row2, int column) {
-					Class type = this.model.getColumnClass(column);
-					TableModel data = this.model;
-					if (type == java.lang.String.class) {
-						String s1 = (String) data.getValueAt(row1, column);
-						String s2 = (String) data.getValueAt(row2, column);
-						if (s1 == null) {
-							return -1;
-						}
-						if (s2 == null) {
-							return 1;
-						}
-						return s1.compareToIgnoreCase(s2);
-					} else {
-						return super.compareRowsByColumn(row1, row2, column);
-					}
-				}
-			};
-			for (String column : cols) {
-				sorter.sortByColumn(EntityResultTools.getColumnIndex(sorter, column));
-			}
-			return EntityResultTools.getOrderedEntityResult(sorter, res);
-		} else {
-			return res;
-		}
-
-	}
-
-	/**
-	 * Gets the ordered entity result.
-	 *
-	 * @param sorter
-	 *            the sorter
-	 * @param er
-	 *            the er
-	 * @return the ordered entity result
-	 */
-	protected static EntityResult getOrderedEntityResult(TableSorter sorter, EntityResult er) {
-		EntityResult res = new EntityResult();
-		EntityResultTools.initEntityResult(res, new Vector(er.keySet()));
-		int j = 0;
-		for (int i : sorter.getIndexes()) {
-			EntityResultTools.fastAddRecord(res, j, er, i);
-			j++;
 		}
 		return res;
 	}
@@ -630,23 +550,7 @@ public final class EntityResultTools {
 		return sb.toString();
 	}
 
-	/**
-	 * Gets the column index.
-	 *
-	 * @param model
-	 *            the model
-	 * @param column
-	 *            the column
-	 * @return the column index
-	 */
-	protected static int getColumnIndex(TableModel model, String column) {
-		for (int i = 0; i < model.getColumnCount(); i++) {
-			if (column.equals(model.getColumnName(i))) {
-				return i;
-			}
-		}
-		return -1;
-	}
+
 
 	/**
 	 * Imprime un entityResult.
