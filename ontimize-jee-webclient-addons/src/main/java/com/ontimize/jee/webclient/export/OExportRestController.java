@@ -40,6 +40,14 @@ public abstract class OExportRestController<S, T extends IExportService> extends
 
 	@Autowired
 	private T exportService;
+	
+	/**
+	 * Returns the export service.
+	 * @return
+	 */
+	public T getExportService() {
+		return this.exportService;
+	}
 
 	@GetMapping(value = "/{extension}/{id}")
 	public void downloadFile(@PathVariable(name = "extension", required = true) final String fileExtension,
