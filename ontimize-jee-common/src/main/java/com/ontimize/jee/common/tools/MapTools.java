@@ -17,6 +17,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Properties;
 
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
 
@@ -133,9 +134,15 @@ public final class MapTools {
 		} catch (Exception ex) {
 			throw new OntimizeJEERuntimeException(ex);
 		}
+		MapTools.safePutAll(res, first, false);
+		MapTools.safePutAll(res, second, false);
 		res.putAll(first);
 		res.putAll(second);
 		return res;
+	}
+
+	public static <U, V> Map<U, ? extends V> union(Map<U, V> first, Properties second) {
+		return MapTools.union(first, new HashMap(second));
 	}
 
 	/**
@@ -210,6 +217,15 @@ public final class MapTools {
 			return false;
 		}
 		return MapTools.safePut(h, key, value);
+	}
+
+	public static <T, Q> void safePutAll(Map<T, Q> h, Map<T, ? extends Q> newEntries, boolean abortWhenExist) {
+		if ((h == null) || (newEntries == null)) {
+			return;
+		}
+		for (T key : newEntries.keySet()) {
+			MapTools.safePut(h, key, newEntries.get(key), abortWhenExist);
+		}
 	}
 
 	/**

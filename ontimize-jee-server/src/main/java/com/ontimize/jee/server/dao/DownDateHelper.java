@@ -57,12 +57,8 @@ public class DownDateHelper implements ApplicationContextAware, IDownDateHelper 
 
 	@Override
 	public EntityResult downRecord(DefaultOntimizeDaoHelper daoHelper, IOntimizeDaoSupport dao, String downDateColumn, Date downDate, Map<?, ?> keysValues) {
-		if (downDate == null) {
-			downDate = new Date();
-		} else if (keysValues.containsKey(IDownDateHelper.DOWNDATE_DEFAULT_ATTR)) {
-			downDate = (Date) keysValues.get(IDownDateHelper.DOWNDATE_DEFAULT_ATTR);
-		}
-		return daoHelper.update(dao, EntityResultTools.keysvalues(downDateColumn, downDate), keysValues);
+		Date downdateDate = ObjectTools.coalesce(downDate, (Date) keysValues.get(IDownDateHelper.DOWNDATE_DEFAULT_ATTR), new Date());
+		return daoHelper.update(dao, EntityResultTools.keysvalues(downDateColumn, downdateDate), keysValues);
 	}
 
 	@Override
