@@ -5,12 +5,11 @@ package com.caucho.hessian.util;
  */
 public interface IExceptionTranslator {
 
-	/**
-	 * Translate exception.
-	 *
-	 * @param original
-	 *            the original
-	 * @return the throwable
-	 */
-	Throwable translateException(Throwable original);
+    /**
+     * Translate exception.
+     * @param original the original
+     * @return the throwable
+     */
+    Throwable translateException(Throwable original);
+
 }

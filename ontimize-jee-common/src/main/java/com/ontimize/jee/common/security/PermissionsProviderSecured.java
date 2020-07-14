@@ -13,6 +13,7 @@ package com.ontimize.jee.common.security;
  */
 public final class PermissionsProviderSecured {
 
-	/** The Constant SECURED. */
-	public static final String SECURED = "PermissionsProviderSecured";
+    /** The Constant SECURED. */
+    public static final String SECURED = "PermissionsProviderSecured";
+
 }

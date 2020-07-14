@@ -7,6 +7,8 @@ import com.ontimize.db.SQLStatementBuilder.SQLStatement;
 
 public interface ISQLQueryAdapter {
 
-	SQLStatement adaptQuery(SQLStatement sqlStatement, IOntimizeDaoSupport dao, Map<?, ?> keysValues, Map<?, ?> validKeysValues, List<?> attributes, List<?> validAttributes,
-			List<?> sort, String queryId);
+    SQLStatement adaptQuery(SQLStatement sqlStatement, IOntimizeDaoSupport dao, Map<?, ?> keysValues,
+            Map<?, ?> validKeysValues, List<?> attributes, List<?> validAttributes,
+            List<?> sort, String queryId);
+
 }

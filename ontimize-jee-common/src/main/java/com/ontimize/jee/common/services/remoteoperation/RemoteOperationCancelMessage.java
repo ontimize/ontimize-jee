@@ -9,37 +9,39 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
  */
 public class RemoteOperationCancelMessage implements Serializable {
 
-	/** The Constant serialVersionUID. */
-	private static final long	serialVersionUID	= 1L;
-	private String				cause;
+    /** The Constant serialVersionUID. */
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * Instantiates a new remote operation cancel message.
-	 */
-	public RemoteOperationCancelMessage() {
-		super();
-	}
+    private String cause;
 
-	public RemoteOperationCancelMessage(String cause) {
-		super();
-		this.cause = cause;
-	}
+    /**
+     * Instantiates a new remote operation cancel message.
+     */
+    public RemoteOperationCancelMessage() {
+        super();
+    }
 
-	public String getCause() {
-		return this.cause;
-	}
+    public RemoteOperationCancelMessage(String cause) {
+        super();
+        this.cause = cause;
+    }
 
-	public void setCause(String cause) {
-		this.cause = cause;
-	}
+    public String getCause() {
+        return this.cause;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return ReflectionToStringBuilder.toString(this);
-	}
+    public void setCause(String cause) {
+        this.cause = cause;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return ReflectionToStringBuilder.toString(this);
+    }
 
 }

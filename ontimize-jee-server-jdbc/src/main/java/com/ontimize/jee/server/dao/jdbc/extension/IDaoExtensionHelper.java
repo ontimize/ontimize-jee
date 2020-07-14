@@ -7,14 +7,12 @@ import com.ontimize.jee.server.dao.jdbc.setup.JdbcEntitySetupType;
  */
 public interface IDaoExtensionHelper {
 
-	/**
-	 * Look for extension files, and load it
-	 *
-	 * @param ontimizeJdbcDaoSupport
-	 *
-	 * @param path
-	 * @param pathToPlaceHolder
-	 */
-	JdbcEntitySetupType checkDaoExtensions(JdbcEntitySetupType baseSetup, String path, String pathToPlaceHolder);
+    /**
+     * Look for extension files, and load it
+     * @param ontimizeJdbcDaoSupport
+     * @param path
+     * @param pathToPlaceHolder
+     */
+    JdbcEntitySetupType checkDaoExtensions(JdbcEntitySetupType baseSetup, String path, String pathToPlaceHolder);
 
 }

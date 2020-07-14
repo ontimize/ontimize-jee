@@ -10,12 +10,12 @@ import com.ontimize.db.EntityResult;
  */
 public interface IRemoteConfigurationService {
 
-	public EntityResult remoteConfigurationQuery(Map<?, ?> keysValues, List<String> attributes);
+    public EntityResult remoteConfigurationQuery(Map<?, ?> keysValues, List<String> attributes);
 
-	public EntityResult remoteConfigurationInsert(Map<?, ?> attributesValues);
+    public EntityResult remoteConfigurationInsert(Map<?, ?> attributesValues);
 
-	public EntityResult remoteConfigurationUpdate(Map<?, ?> attributesValues, Map<?, ?> keysValues);
+    public EntityResult remoteConfigurationUpdate(Map<?, ?> attributesValues, Map<?, ?> keysValues);
 
-	public EntityResult remoteConfigurationDelete(Map<?, ?> keysValues);
+    public EntityResult remoteConfigurationDelete(Map<?, ?> keysValues);
 
 }

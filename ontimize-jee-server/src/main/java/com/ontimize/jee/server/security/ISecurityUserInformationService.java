@@ -9,10 +9,10 @@ import com.ontimize.jee.common.services.user.UserInformation;
 
 public interface ISecurityUserInformationService extends UserDetailsService {
 
-	public static final String BEAN_NAME = "databaseUserInformationService";
+    public static final String BEAN_NAME = "databaseUserInformationService";
 
-	public List<UserInformation> getAllUserInformation() throws OntimizeJEEException;
+    public List<UserInformation> getAllUserInformation() throws OntimizeJEEException;
 
-	public List<String> getAllUserInformationLogin() throws OntimizeJEEException;
+    public List<String> getAllUserInformationLogin() throws OntimizeJEEException;
 
 }

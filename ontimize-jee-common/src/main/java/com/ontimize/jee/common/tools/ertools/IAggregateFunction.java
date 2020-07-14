@@ -7,10 +7,10 @@ import com.ontimize.db.EntityResult;
 
 public interface IAggregateFunction<T extends IPartialAggregateValue> {
 
-	Map<String, Object> computeAggregatedGroupValue(T partialValue);
+    Map<String, Object> computeAggregatedGroupValue(T partialValue);
 
-	T onNewGroupRecord(T partialValue, EntityResult res, int idx);
+    T onNewGroupRecord(T partialValue, EntityResult res, int idx);
 
-	List<String> getAggregatedColumnNames();
+    List<String> getAggregatedColumnNames();
 
 }

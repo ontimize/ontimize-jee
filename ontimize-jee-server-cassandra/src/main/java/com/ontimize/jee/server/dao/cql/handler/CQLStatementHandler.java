@@ -10,8 +10,10 @@ import com.ontimize.jee.server.dao.cql.CQLStatement;
 
 public interface CQLStatementHandler {
 
-	public void resultSetToEntityResult(ResultSet resultSet, EntityResult entityResult, List<String> columnNames) throws Exception;
+    public void resultSetToEntityResult(ResultSet resultSet, EntityResult entityResult, List<String> columnNames)
+            throws Exception;
 
-	public CQLStatement createSelectQuery(String table, List<?> requestedColumns, Map<?, ?> conditions, List<String> wildcards, List<SQLOrder> columnSorting);
+    public CQLStatement createSelectQuery(String table, List<?> requestedColumns, Map<?, ?> conditions,
+            List<String> wildcards, List<SQLOrder> columnSorting);
 
 }

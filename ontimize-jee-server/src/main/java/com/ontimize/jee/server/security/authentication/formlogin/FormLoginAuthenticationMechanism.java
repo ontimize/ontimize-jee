@@ -16,113 +16,120 @@ import com.ontimize.jee.server.security.authentication.IAuthenticationMechanism;
 
 public class FormLoginAuthenticationMechanism implements IAuthenticationMechanism {
 
-	public static final String	SPRING_SECURITY_FORM_USERNAME_KEY	= "username";
-	public static final String	SPRING_SECURITY_FORM_PASSWORD_KEY	= "password";
+    public static final String SPRING_SECURITY_FORM_USERNAME_KEY = "username";
 
-	private String				usernameParameter					= FormLoginAuthenticationMechanism.SPRING_SECURITY_FORM_USERNAME_KEY;
-	private String				passwordParameter					= FormLoginAuthenticationMechanism.SPRING_SECURITY_FORM_PASSWORD_KEY;
-	private boolean				postOnly							= true;
-	private RequestMatcher		loginRequestMatcher					= new AntPathRequestMatcher("/**/login", "POST");
+    public static final String SPRING_SECURITY_FORM_PASSWORD_KEY = "password";
 
-	@Override
-	public AuthenticationResult authenticate(HttpServletRequest request, HttpServletResponse response, AuthenticationManager authenticationManager,
-			UserDetailsService userDetailsService) {
-		if (!this.loginRequestMatcher.matches(request)) {
-			return null;
-		}
+    private String usernameParameter = FormLoginAuthenticationMechanism.SPRING_SECURITY_FORM_USERNAME_KEY;
 
-		if (this.postOnly && !"POST".equals(request.getMethod())) {
-			throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
-		}
+    private String passwordParameter = FormLoginAuthenticationMechanism.SPRING_SECURITY_FORM_PASSWORD_KEY;
 
-		String username = this.obtainUsername(request);
-		String password = this.obtainPassword(request);
+    private boolean postOnly = true;
 
-		if (username == null) {
-			username = "";
-		}
+    private RequestMatcher loginRequestMatcher = new AntPathRequestMatcher("/**/login", "POST");
 
-		if (password == null) {
-			password = "";
-		}
+    @Override
+    public AuthenticationResult authenticate(HttpServletRequest request, HttpServletResponse response,
+            AuthenticationManager authenticationManager,
+            UserDetailsService userDetailsService) {
+        if (!this.loginRequestMatcher.matches(request)) {
+            return null;
+        }
 
-		username = username.trim();
+        if (this.postOnly && !"POST".equals(request.getMethod())) {
+            throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
+        }
 
-		UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(username, password);
+        String username = this.obtainUsername(request);
+        String password = this.obtainPassword(request);
 
-		return new AuthenticationResult(true, authRequest);
-	}
+        if (username == null) {
+            username = "";
+        }
 
-	/**
-	 * Enables subclasses to override the composition of the password, such as by including additional values and a separator. <p> This might be used for example if a
-	 * postcode/zipcode was required in addition to the password. A delimiter such as a pipe (|) should be used to separate the password and extended value(s). The
-	 * <code>AuthenticationDao</code> will need to generate the expected password in a corresponding manner. </p>
-	 *
-	 * @param request
-	 *            so that request attributes can be retrieved
-	 *
-	 * @return the password that will be presented in the <code>Authentication</code> request token to the <code>AuthenticationManager</code>
-	 */
-	protected String obtainPassword(HttpServletRequest request) {
-		return request.getParameter(this.passwordParameter);
-	}
+        if (password == null) {
+            password = "";
+        }
 
-	/**
-	 * Enables subclasses to override the composition of the username, such as by including additional values and a separator.
-	 *
-	 * @param request
-	 *            so that request attributes can be retrieved
-	 *
-	 * @return the username that will be presented in the <code>Authentication</code> request token to the <code>AuthenticationManager</code>
-	 */
-	protected String obtainUsername(HttpServletRequest request) {
-		return request.getParameter(this.usernameParameter);
-	}
+        username = username.trim();
 
-	/**
-	 * Sets the parameter name which will be used to obtain the username from the login request.
-	 *
-	 * @param usernameParameter
-	 *            the parameter name. Defaults to "username".
-	 */
-	public void setUsernameParameter(String usernameParameter) {
-		Assert.hasText(usernameParameter, "Username parameter must not be empty or null");
-		this.usernameParameter = usernameParameter;
-	}
+        UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(username, password);
 
-	/**
-	 * Sets the parameter name which will be used to obtain the password from the login request..
-	 *
-	 * @param passwordParameter
-	 *            the parameter name. Defaults to "password".
-	 */
-	public void setPasswordParameter(String passwordParameter) {
-		Assert.hasText(passwordParameter, "Password parameter must not be empty or null");
-		this.passwordParameter = passwordParameter;
-	}
+        return new AuthenticationResult(true, authRequest);
+    }
 
-	/**
-	 * Defines whether only HTTP POST requests will be allowed by this filter. If set to true, and an authentication request is received which is not a POST request, an exception
-	 * will be raised immediately and authentication will not be attempted. The <tt>unsuccessfulAuthentication()</tt> method will be called as if handling a failed authentication.
-	 * <p> Defaults to <tt>true</tt> but may be overridden by subclasses.
-	 */
-	public void setPostOnly(boolean postOnly) {
-		this.postOnly = postOnly;
-	}
+    /**
+     * Enables subclasses to override the composition of the password, such as by including additional
+     * values and a separator.
+     * <p>
+     * This might be used for example if a postcode/zipcode was required in addition to the password. A
+     * delimiter such as a pipe (|) should be used to separate the password and extended value(s). The
+     * <code>AuthenticationDao</code> will need to generate the expected password in a corresponding
+     * manner.
+     * </p>
+     * @param request so that request attributes can be retrieved
+     * @return the password that will be presented in the <code>Authentication</code> request token to
+     *         the <code>AuthenticationManager</code>
+     */
+    protected String obtainPassword(HttpServletRequest request) {
+        return request.getParameter(this.passwordParameter);
+    }
 
-	public final String getUsernameParameter() {
-		return this.usernameParameter;
-	}
+    /**
+     * Enables subclasses to override the composition of the username, such as by including additional
+     * values and a separator.
+     * @param request so that request attributes can be retrieved
+     * @return the username that will be presented in the <code>Authentication</code> request token to
+     *         the <code>AuthenticationManager</code>
+     */
+    protected String obtainUsername(HttpServletRequest request) {
+        return request.getParameter(this.usernameParameter);
+    }
 
-	public final String getPasswordParameter() {
-		return this.passwordParameter;
-	}
+    /**
+     * Sets the parameter name which will be used to obtain the username from the login request.
+     * @param usernameParameter the parameter name. Defaults to "username".
+     */
+    public void setUsernameParameter(String usernameParameter) {
+        Assert.hasText(usernameParameter, "Username parameter must not be empty or null");
+        this.usernameParameter = usernameParameter;
+    }
 
-	public void setLoginRequestMatcher(RequestMatcher loginRequestMatcher) {
-		this.loginRequestMatcher = loginRequestMatcher;
-	}
+    /**
+     * Sets the parameter name which will be used to obtain the password from the login request..
+     * @param passwordParameter the parameter name. Defaults to "password".
+     */
+    public void setPasswordParameter(String passwordParameter) {
+        Assert.hasText(passwordParameter, "Password parameter must not be empty or null");
+        this.passwordParameter = passwordParameter;
+    }
 
-	public RequestMatcher getLoginRequestMatcher() {
-		return this.loginRequestMatcher;
-	}
+    /**
+     * Defines whether only HTTP POST requests will be allowed by this filter. If set to true, and an
+     * authentication request is received which is not a POST request, an exception will be raised
+     * immediately and authentication will not be attempted. The <tt>unsuccessfulAuthentication()</tt>
+     * method will be called as if handling a failed authentication.
+     * <p>
+     * Defaults to <tt>true</tt> but may be overridden by subclasses.
+     */
+    public void setPostOnly(boolean postOnly) {
+        this.postOnly = postOnly;
+    }
+
+    public final String getUsernameParameter() {
+        return this.usernameParameter;
+    }
+
+    public final String getPasswordParameter() {
+        return this.passwordParameter;
+    }
+
+    public void setLoginRequestMatcher(RequestMatcher loginRequestMatcher) {
+        this.loginRequestMatcher = loginRequestMatcher;
+    }
+
+    public RequestMatcher getLoginRequestMatcher() {
+        return this.loginRequestMatcher;
+    }
+
 }

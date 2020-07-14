@@ -16,59 +16,58 @@ import com.ontimize.jee.server.dao.cql.handler.CQLStatementHandler;
  */
 public class EntityResultResultSetExtractor implements ResultSetExtractor<EntityResult> {
 
-	/** The sql handler. */
-	private final CQLStatementHandler				cqlHandler;
-	private final CassandraQueryTemplateInformation	queryTemplateInformation;
-	private final List<String>						attributes;
+    /** The sql handler. */
+    private final CQLStatementHandler cqlHandler;
 
-	/**
-	 * Instantiates a new entity result result set extractor.
-	 *
-	 * @param sqlHandler
-	 *            the sql handler
-	 * @param list
-	 */
-	public EntityResultResultSetExtractor(final CQLStatementHandler cqlHandler, final CassandraQueryTemplateInformation queryTemplateInformation, final List<String> attributes) {
-		super();
-		this.cqlHandler = cqlHandler;
-		this.queryTemplateInformation = queryTemplateInformation;
-		this.attributes = attributes;
-	}
+    private final CassandraQueryTemplateInformation queryTemplateInformation;
 
-	/**
-	 * Instantiates a new entity result result set extractor.
-	 *
-	 * @param sqlHandler
-	 *            the sql handler
-	 * @param list
-	 */
-	public EntityResultResultSetExtractor(CQLStatementHandler cqlHandler, CassandraQueryTemplateInformation queryTemplateInformation) {
-		this(cqlHandler, queryTemplateInformation, null);
-	}
+    private final List<String> attributes;
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.cassandra.core.ResultSetExtractor#extractData(java.sql .ResultSet)
-	 */
-	@Override
-	public EntityResult extractData(ResultSet rs) throws DriverException, DataAccessException {
-		EntityResult er = new EntityResult(EntityResult.OPERATION_SUCCESSFUL, EntityResult.DATA_RESULT);
-		try {
-			this.cqlHandler.resultSetToEntityResult(rs, er, this.attributes);
-		} catch (Exception e) {
-			throw new DataRetrievalFailureException(null, e);
-		}
-		return er;
-	}
+    /**
+     * Instantiates a new entity result result set extractor.
+     * @param sqlHandler the sql handler
+     * @param list
+     */
+    public EntityResultResultSetExtractor(final CQLStatementHandler cqlHandler,
+            final CassandraQueryTemplateInformation queryTemplateInformation, final List<String> attributes) {
+        super();
+        this.cqlHandler = cqlHandler;
+        this.queryTemplateInformation = queryTemplateInformation;
+        this.attributes = attributes;
+    }
 
-	/**
-	 * Gets the query template information.
-	 *
-	 * @return the query template information
-	 */
-	public CassandraQueryTemplateInformation getCassandraQueryTemplateInformation() {
-		return this.queryTemplateInformation;
-	}
+    /**
+     * Instantiates a new entity result result set extractor.
+     * @param sqlHandler the sql handler
+     * @param list
+     */
+    public EntityResultResultSetExtractor(CQLStatementHandler cqlHandler,
+            CassandraQueryTemplateInformation queryTemplateInformation) {
+        this(cqlHandler, queryTemplateInformation, null);
+    }
 
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.springframework.cassandra.core.ResultSetExtractor#extractData(java.sql .ResultSet)
+     */
+    @Override
+    public EntityResult extractData(ResultSet rs) throws DriverException, DataAccessException {
+        EntityResult er = new EntityResult(EntityResult.OPERATION_SUCCESSFUL, EntityResult.DATA_RESULT);
+        try {
+            this.cqlHandler.resultSetToEntityResult(rs, er, this.attributes);
+        } catch (Exception e) {
+            throw new DataRetrievalFailureException(null, e);
+        }
+        return er;
+    }
+
+    /**
+     * Gets the query template information.
+     * @return the query template information
+     */
+    public CassandraQueryTemplateInformation getCassandraQueryTemplateInformation() {
+        return this.queryTemplateInformation;
+    }
 
 }

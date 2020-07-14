@@ -7,28 +7,24 @@ import java.util.Collection;
  */
 public interface ISecurityAuthorizator {
 
-	/**
-	 * Devuelve true si alguno de los reoles del usuario tiene el permiso.
-	 *
-	 * @param permissionName
-	 *            the permission name
-	 * @param userRoles
-	 *            the user roles
-	 * @return true, if successful
-	 */
-	boolean hasPermission(String permissionName, Collection<String> userRoles);
+    /**
+     * Devuelve true si alguno de los reoles del usuario tiene el permiso.
+     * @param permissionName the permission name
+     * @param userRoles the user roles
+     * @return true, if successful
+     */
+    boolean hasPermission(String permissionName, Collection<String> userRoles);
 
-	/**
-	 * Gets the role.
-	 *
-	 * @param roleName
-	 *            the role name
-	 * @return the role
-	 */
-	Role getRole(String roleName);
+    /**
+     * Gets the role.
+     * @param roleName the role name
+     * @return the role
+     */
+    Role getRole(String roleName);
 
-	/**
-	 * Refresh roles.
-	 */
-	void invalidateCache();
+    /**
+     * Refresh roles.
+     */
+    void invalidateCache();
+
 }

@@ -10,208 +10,196 @@ import java.util.Map;
  */
 public final class ReplaceTokensFilterReader extends AbstractBaseFilterReader {
 
-	/** Default "begin token" character. */
-	private static final char			DEFAULT_IGNORE_TOKEN	= '$';
-	/** Default "begin token" character. */
-	private static final char			DEFAULT_BEGIN_TOKEN		= '{';
+    /** Default "begin token" character. */
+    private static final char DEFAULT_IGNORE_TOKEN = '$';
 
-	/** Default "end token" character. */
-	private static final char			DEFAULT_END_TOKEN		= '}';
+    /** Default "begin token" character. */
+    private static final char DEFAULT_BEGIN_TOKEN = '{';
 
-	/** Data to be used before reading from stream again */
-	private String						queuedData				= null;
+    /** Default "end token" character. */
+    private static final char DEFAULT_END_TOKEN = '}';
 
-	/** replacement test from a token */
-	private String						replaceData				= null;
+    /** Data to be used before reading from stream again */
+    private String queuedData = null;
 
-	/** Index into replacement data */
-	private int							replaceIndex			= -1;
+    /** replacement test from a token */
+    private String replaceData = null;
 
-	/** Index into queue data */
-	private int							queueIndex				= -1;
+    /** Index into replacement data */
+    private int replaceIndex = -1;
 
-	/** Hashtable to hold the replacee-replacer pairs (String to String). */
-	private final Map<String, String>	hash;
+    /** Index into queue data */
+    private int queueIndex = -1;
 
-	/** Character marking the beginning of a token. */
-	private char						beginToken				= ReplaceTokensFilterReader.DEFAULT_BEGIN_TOKEN;
+    /** Hashtable to hold the replacee-replacer pairs (String to String). */
+    private final Map<String, String> hash;
 
-	/** Character marking the end of a token. */
-	private char						endToken				= ReplaceTokensFilterReader.DEFAULT_END_TOKEN;
-	/** Character marking the ignore token. */
-	private final char					ignoreToken				= ReplaceTokensFilterReader.DEFAULT_IGNORE_TOKEN;
+    /** Character marking the beginning of a token. */
+    private char beginToken = ReplaceTokensFilterReader.DEFAULT_BEGIN_TOKEN;
 
-	/**
-	 * Creates a new filtered reader.
-	 *
-	 * @param in
-	 *            A Reader object providing the underlying stream. Must not be <code>null</code>.
-	 */
-	public ReplaceTokensFilterReader(final Reader in, Map<String, String> hash) {
-		super(in);
-		this.hash = hash;
-	}
+    /** Character marking the end of a token. */
+    private char endToken = ReplaceTokensFilterReader.DEFAULT_END_TOKEN;
 
-	private int getNextChar() throws IOException {
-		if (this.queueIndex != -1) {
-			final int ch = this.queuedData.charAt(this.queueIndex++);
-			if (this.queueIndex >= this.queuedData.length()) {
-				this.queueIndex = -1;
-			}
-			return ch;
-		}
+    /** Character marking the ignore token. */
+    private final char ignoreToken = ReplaceTokensFilterReader.DEFAULT_IGNORE_TOKEN;
 
-		return this.in.read();
-	}
+    /**
+     * Creates a new filtered reader.
+     * @param in A Reader object providing the underlying stream. Must not be <code>null</code>.
+     */
+    public ReplaceTokensFilterReader(final Reader in, Map<String, String> hash) {
+        super(in);
+        this.hash = hash;
+    }
 
-	/**
-	 * Returns the next character in the filtered stream, replacing tokens from the original stream.
-	 *
-	 * @return the next character in the resulting stream, or -1 if the end of the resulting stream has been reached
-	 *
-	 * @exception IOException
-	 *                if the underlying stream throws an IOException during reading
-	 */
-	@Override
-	public int read() throws IOException {
-		if (this.replaceIndex != -1) {
-			final int ch = this.replaceData.charAt(this.replaceIndex++);
-			if (this.replaceIndex >= this.replaceData.length()) {
-				this.replaceIndex = -1;
-			}
-			return ch;
-		}
+    private int getNextChar() throws IOException {
+        if (this.queueIndex != -1) {
+            final int ch = this.queuedData.charAt(this.queueIndex++);
+            if (this.queueIndex >= this.queuedData.length()) {
+                this.queueIndex = -1;
+            }
+            return ch;
+        }
 
-		int ch = this.getNextChar();
-		if (ch == this.ignoreToken) {
-			ch = this.getNextChar();
-		}
+        return this.in.read();
+    }
 
-		if (ch == this.beginToken) {
-			final StringBuilder key = new StringBuilder("");
-			do {
-				ch = this.getNextChar();
-				if (ch != -1) {
-					key.append((char) ch);
-				} else {
-					break;
-				}
-			} while (ch != this.endToken);
+    /**
+     * Returns the next character in the filtered stream, replacing tokens from the original stream.
+     * @return the next character in the resulting stream, or -1 if the end of the resulting stream has
+     *         been reached
+     * @exception IOException if the underlying stream throws an IOException during reading
+     */
+    @Override
+    public int read() throws IOException {
+        if (this.replaceIndex != -1) {
+            final int ch = this.replaceData.charAt(this.replaceIndex++);
+            if (this.replaceIndex >= this.replaceData.length()) {
+                this.replaceIndex = -1;
+            }
+            return ch;
+        }
 
-			if (ch == -1) {
-				if ((this.queuedData == null) || (this.queueIndex == -1)) {
-					this.queuedData = key.toString();
-				} else {
-					this.queuedData = key.toString() + this.queuedData.substring(this.queueIndex);
-				}
-				if (this.queuedData.length() > 0) {
-					this.queueIndex = 0;
-				} else {
-					this.queueIndex = -1;
-				}
-				return this.beginToken;
-			} else {
-				key.setLength(key.length() - 1);
+        int ch = this.getNextChar();
+        if (ch == this.ignoreToken) {
+            ch = this.getNextChar();
+        }
 
-				final String replaceWith = this.hash.get(key.toString());
-				if (replaceWith != null) {
-					if (replaceWith.length() > 0) {
-						this.replaceData = replaceWith;
-						this.replaceIndex = 0;
-					}
-					return this.read();
-				} else {
-					String newData = key.toString() + this.endToken;
-					if ((this.queuedData == null) || (this.queueIndex == -1)) {
-						this.queuedData = newData;
-					} else {
-						this.queuedData = newData + this.queuedData.substring(this.queueIndex);
-					}
-					this.queueIndex = 0;
-					return this.beginToken;
-				}
-			}
-		}
-		return ch;
-	}
+        if (ch == this.beginToken) {
+            final StringBuilder key = new StringBuilder("");
+            do {
+                ch = this.getNextChar();
+                if (ch != -1) {
+                    key.append((char) ch);
+                } else {
+                    break;
+                }
+            } while (ch != this.endToken);
 
-	/**
-	 * Sets the "begin token" character.
-	 *
-	 * @param beginToken
-	 *            the character used to denote the beginning of a token
-	 */
-	public void setBeginToken(final char beginToken) {
-		this.beginToken = beginToken;
-	}
+            if (ch == -1) {
+                if ((this.queuedData == null) || (this.queueIndex == -1)) {
+                    this.queuedData = key.toString();
+                } else {
+                    this.queuedData = key.toString() + this.queuedData.substring(this.queueIndex);
+                }
+                if (this.queuedData.length() > 0) {
+                    this.queueIndex = 0;
+                } else {
+                    this.queueIndex = -1;
+                }
+                return this.beginToken;
+            } else {
+                key.setLength(key.length() - 1);
 
-	/**
-	 * Sets the "end token" character.
-	 *
-	 * @param endToken
-	 *            the character used to denote the end of a token
-	 */
-	public void setEndToken(final char endToken) {
-		this.endToken = endToken;
-	}
+                final String replaceWith = this.hash.get(key.toString());
+                if (replaceWith != null) {
+                    if (replaceWith.length() > 0) {
+                        this.replaceData = replaceWith;
+                        this.replaceIndex = 0;
+                    }
+                    return this.read();
+                } else {
+                    String newData = key.toString() + this.endToken;
+                    if ((this.queuedData == null) || (this.queueIndex == -1)) {
+                        this.queuedData = newData;
+                    } else {
+                        this.queuedData = newData + this.queuedData.substring(this.queueIndex);
+                    }
+                    this.queueIndex = 0;
+                    return this.beginToken;
+                }
+            }
+        }
+        return ch;
+    }
 
-	/**
-	 * Adds a token element to the map of tokens to replace.
-	 *
-	 * @param token
-	 *            The token to add to the map of replacements. Must not be <code>null</code>.
-	 */
-	public void addConfiguredToken(final Token token) {
-		this.hash.put(token.getKey(), token.getValue());
-	}
+    /**
+     * Sets the "begin token" character.
+     * @param beginToken the character used to denote the beginning of a token
+     */
+    public void setBeginToken(final char beginToken) {
+        this.beginToken = beginToken;
+    }
 
-	/**
-	 * Holds a token
-	 */
-	public static class Token {
+    /**
+     * Sets the "end token" character.
+     * @param endToken the character used to denote the end of a token
+     */
+    public void setEndToken(final char endToken) {
+        this.endToken = endToken;
+    }
 
-		/** Token key */
-		private String	key;
+    /**
+     * Adds a token element to the map of tokens to replace.
+     * @param token The token to add to the map of replacements. Must not be <code>null</code>.
+     */
+    public void addConfiguredToken(final Token token) {
+        this.hash.put(token.getKey(), token.getValue());
+    }
 
-		/** Token value */
-		private String	value;
+    /**
+     * Holds a token
+     */
+    public static class Token {
 
-		/**
-		 * Sets the token key
-		 *
-		 * @param key
-		 *            The key for this token. Must not be <code>null</code>.
-		 */
-		public final void setKey(String key) {
-			this.key = key;
-		}
+        /** Token key */
+        private String key;
 
-		/**
-		 * Sets the token value
-		 *
-		 * @param value
-		 *            The value for this token. Must not be <code>null</code>.
-		 */
-		public final void setValue(String value) {
-			this.value = value;
-		}
+        /** Token value */
+        private String value;
 
-		/**
-		 * Returns the key for this token.
-		 *
-		 * @return the key for this token
-		 */
-		public final String getKey() {
-			return this.key;
-		}
+        /**
+         * Sets the token key
+         * @param key The key for this token. Must not be <code>null</code>.
+         */
+        public final void setKey(String key) {
+            this.key = key;
+        }
 
-		/**
-		 * Returns the value for this token.
-		 *
-		 * @return the value for this token
-		 */
-		public final String getValue() {
-			return this.value;
-		}
-	}
+        /**
+         * Sets the token value
+         * @param value The value for this token. Must not be <code>null</code>.
+         */
+        public final void setValue(String value) {
+            this.value = value;
+        }
+
+        /**
+         * Returns the key for this token.
+         * @return the key for this token
+         */
+        public final String getKey() {
+            return this.key;
+        }
+
+        /**
+         * Returns the value for this token.
+         * @return the value for this token
+         */
+        public final String getValue() {
+            return this.value;
+        }
+
+    }
+
 }

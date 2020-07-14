@@ -17,18 +17,19 @@ import com.ontimize.jee.common.services.session.ISessionService;
 @Lazy(value = true)
 public class SessionServiceImpl implements ISessionService {
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.ontimize.jee.common.services.session.ISessionService#closeSession()
-	 */
-	@Override
-	public void closeSession() {
-		ServletRequestAttributes sra = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-		HttpServletRequest req = sra.getRequest();
-		HttpSession session = req.getSession(false);
-		if (session != null) {
-			session.invalidate();
-		}
-	}
+    /*
+     * (non-Javadoc)
+     *
+     * @see com.ontimize.jee.common.services.session.ISessionService#closeSession()
+     */
+    @Override
+    public void closeSession() {
+        ServletRequestAttributes sra = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest req = sra.getRequest();
+        HttpSession session = req.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+    }
 
 }

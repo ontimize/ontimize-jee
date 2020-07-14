@@ -27,162 +27,176 @@ import com.ontimize.jee.server.security.CachedUserDetailsService;
 
 public class OntimizeAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
-	private static final Logger										logger						= LoggerFactory.getLogger(OntimizeAuthenticationFilter.class);
-	public static final String										DEFAULT_TOKEN_HEADER		= "X-Auth-Token";
-	private final String											tokenHeader					= OntimizeAuthenticationFilter.DEFAULT_TOKEN_HEADER;
+    private static final Logger logger = LoggerFactory.getLogger(OntimizeAuthenticationFilter.class);
 
-	public static final String										ORIGIN						= "Origin";
+    public static final String DEFAULT_TOKEN_HEADER = "X-Auth-Token";
 
-	protected AuthenticationDetailsSource<HttpServletRequest, ?>	authenticationDetailsSource	= new OntimizeWebAuthenticationDetailsSource();
-	private List<IAuthenticationMechanism>							authenticationMechanismList;
+    private final String tokenHeader = OntimizeAuthenticationFilter.DEFAULT_TOKEN_HEADER;
 
-	private UserCache												userCache;
-	private UserDetailsService										userDetailsService;
-	private boolean													generateJwtHeader;
-	private ISecurityJWTTokenGenerator								tokenGenerator;
+    public static final String ORIGIN = "Origin";
 
-	private UserDetailsService										cachedUserDetailsService;
-	private AuthenticationEntryPoint								authenticationEntryPoint;
+    protected AuthenticationDetailsSource<HttpServletRequest, ?> authenticationDetailsSource = new OntimizeWebAuthenticationDetailsSource();
 
-	public OntimizeAuthenticationFilter() {
-		this("/**");
-	}
+    private List<IAuthenticationMechanism> authenticationMechanismList;
 
-	public OntimizeAuthenticationFilter(String path) {
-		super(path);
-		this.generateJwtHeader = false;
-	}
+    private UserCache userCache;
 
-	@Override
-	public void afterPropertiesSet() {
-		super.afterPropertiesSet();
-		Assert.notNull(this.authenticationEntryPoint, "authenticationEntryPoint property is mandatory");
-		this.cachedUserDetailsService = new CachedUserDetailsService(this.userCache, this.userDetailsService);
-		this.setAuthenticationSuccessHandler(new OntimizeAuthenticationSuccessHandler());
-	}
+    private UserDetailsService userDetailsService;
 
-	@Override
-	protected boolean requiresAuthentication(HttpServletRequest request, HttpServletResponse response) {
-		return true;
-	}
+    private boolean generateJwtHeader;
 
-	@Override
-	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
+    private ISecurityJWTTokenGenerator tokenGenerator;
 
-		HttpServletRequest request = (HttpServletRequest) req;
-		HttpServletResponse response = (HttpServletResponse) res;
+    private UserDetailsService cachedUserDetailsService;
 
-		if (!this.requiresAuthentication(request, response)) {
-			chain.doFilter(request, response);
+    private AuthenticationEntryPoint authenticationEntryPoint;
 
-			return;
-		}
+    public OntimizeAuthenticationFilter() {
+        this("/**");
+    }
 
-		if (OntimizeAuthenticationFilter.logger.isDebugEnabled()) {
-			OntimizeAuthenticationFilter.logger.debug("Request is to process authentication");
-		}
+    public OntimizeAuthenticationFilter(String path) {
+        super(path);
+        this.generateJwtHeader = false;
+    }
 
-		Authentication authResult;
+    @Override
+    public void afterPropertiesSet() {
+        super.afterPropertiesSet();
+        Assert.notNull(this.authenticationEntryPoint, "authenticationEntryPoint property is mandatory");
+        this.cachedUserDetailsService = new CachedUserDetailsService(this.userCache, this.userDetailsService);
+        this.setAuthenticationSuccessHandler(new OntimizeAuthenticationSuccessHandler());
+    }
 
-		try {
-			authResult = this.attemptAuthentication(request, response);
-			if (authResult != null) {
-				this.successfulAuthentication(request, response, chain, authResult);
-			}
-			chain.doFilter(request, response);
-		} catch (InternalAuthenticationServiceException failed) {
-			OntimizeAuthenticationFilter.logger.error("An internal error occurred while trying to authenticate the user.", failed);
-			this.unsuccessfulAuthentication(request, response, failed);
-		} catch (AuthenticationException failed) {
-			// Authentication failed
-			this.unsuccessfulAuthentication(request, response, failed);
-		}
-	}
+    @Override
+    protected boolean requiresAuthentication(HttpServletRequest request, HttpServletResponse response) {
+        return true;
+    }
 
-	@Override
-	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
-		try {
-			AuthenticationResult authenticationResult = null;
-			for (IAuthenticationMechanism authenticationMechanism : this.authenticationMechanismList) {
-				authenticationResult = authenticationMechanism.authenticate(request, response, this.getAuthenticationManager(), this.cachedUserDetailsService);
-				if (authenticationResult != null) {
-					// success authentication create Token
-					// check authentication
-					Authentication authentication = authenticationResult.getAuthentication();
-					if (authentication instanceof AbstractAuthenticationToken) {
-						((AbstractAuthenticationToken) authentication).setDetails(this.authenticationDetailsSource.buildDetails(request));
-					}
-					authentication = this.getAuthenticationManager().authenticate(authentication);
-					if (authenticationResult.isGenerateJWToken()) {
-						this.successfulLogin(request, response, authentication);
-					}
-					return authentication;
-				}
-			}
-		} catch (AuthenticationException authEx) {
-			this.authenticationEntryPoint.commence(request, response, authEx);
-		}
-		return null;
-	}
+    @Override
+    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
+            throws IOException, ServletException {
 
-	protected void successfulLogin(HttpServletRequest request, HttpServletResponse response, Authentication authResult) throws IOException, ServletException {
-		OntimizeAuthenticationFilter.logger.debug("Authentication request success: {}", authResult);
-		if (this.generateJwtHeader) {
-			String token = this.generateToken(request, authResult);
-			response.setHeader(OntimizeAuthenticationFilter.DEFAULT_TOKEN_HEADER, token);
-		}
-	}
+        HttpServletRequest request = (HttpServletRequest) req;
+        HttpServletResponse response = (HttpServletResponse) res;
 
-	protected String generateToken(HttpServletRequest request, Authentication authResult) {
-		return this.tokenGenerator.generateToken(request, authResult);
-	}
+        if (!this.requiresAuthentication(request, response)) {
+            chain.doFilter(request, response);
+
+            return;
+        }
+
+        if (OntimizeAuthenticationFilter.logger.isDebugEnabled()) {
+            OntimizeAuthenticationFilter.logger.debug("Request is to process authentication");
+        }
+
+        Authentication authResult;
+
+        try {
+            authResult = this.attemptAuthentication(request, response);
+            if (authResult != null) {
+                this.successfulAuthentication(request, response, chain, authResult);
+            }
+            chain.doFilter(request, response);
+        } catch (InternalAuthenticationServiceException failed) {
+            OntimizeAuthenticationFilter.logger
+                .error("An internal error occurred while trying to authenticate the user.", failed);
+            this.unsuccessfulAuthentication(request, response, failed);
+        } catch (AuthenticationException failed) {
+            // Authentication failed
+            this.unsuccessfulAuthentication(request, response, failed);
+        }
+    }
+
+    @Override
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
+            throws AuthenticationException, IOException, ServletException {
+        try {
+            AuthenticationResult authenticationResult = null;
+            for (IAuthenticationMechanism authenticationMechanism : this.authenticationMechanismList) {
+                authenticationResult = authenticationMechanism.authenticate(request, response,
+                        this.getAuthenticationManager(), this.cachedUserDetailsService);
+                if (authenticationResult != null) {
+                    // success authentication create Token
+                    // check authentication
+                    Authentication authentication = authenticationResult.getAuthentication();
+                    if (authentication instanceof AbstractAuthenticationToken) {
+                        ((AbstractAuthenticationToken) authentication)
+                            .setDetails(this.authenticationDetailsSource.buildDetails(request));
+                    }
+                    authentication = this.getAuthenticationManager().authenticate(authentication);
+                    if (authenticationResult.isGenerateJWToken()) {
+                        this.successfulLogin(request, response, authentication);
+                    }
+                    return authentication;
+                }
+            }
+        } catch (AuthenticationException authEx) {
+            this.authenticationEntryPoint.commence(request, response, authEx);
+        }
+        return null;
+    }
+
+    protected void successfulLogin(HttpServletRequest request, HttpServletResponse response, Authentication authResult)
+            throws IOException, ServletException {
+        OntimizeAuthenticationFilter.logger.debug("Authentication request success: {}", authResult);
+        if (this.generateJwtHeader) {
+            String token = this.generateToken(request, authResult);
+            response.setHeader(OntimizeAuthenticationFilter.DEFAULT_TOKEN_HEADER, token);
+        }
+    }
+
+    protected String generateToken(HttpServletRequest request, Authentication authResult) {
+        return this.tokenGenerator.generateToken(request, authResult);
+    }
 
 
-	public void setGenerateJwtHeader(boolean generateJwtHeader) {
-		this.generateJwtHeader = generateJwtHeader;
-	}
+    public void setGenerateJwtHeader(boolean generateJwtHeader) {
+        this.generateJwtHeader = generateJwtHeader;
+    }
 
-	public boolean isGenerateJwtHeader() {
-		return this.generateJwtHeader;
-	}
+    public boolean isGenerateJwtHeader() {
+        return this.generateJwtHeader;
+    }
 
-	public void setUserDetailsService(UserDetailsService userDetailsService) {
-		this.userDetailsService = userDetailsService;
-	}
+    public void setUserDetailsService(UserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
 
-	public UserDetailsService getUserDetailsService() {
-		return this.userDetailsService;
-	}
+    public UserDetailsService getUserDetailsService() {
+        return this.userDetailsService;
+    }
 
-	public UserCache getUserCache() {
-		return this.userCache;
-	}
+    public UserCache getUserCache() {
+        return this.userCache;
+    }
 
-	public void setUserCache(UserCache userCache) {
-		this.userCache = userCache;
-	}
+    public void setUserCache(UserCache userCache) {
+        this.userCache = userCache;
+    }
 
-	public void setAuthenticationMechanismList(List<IAuthenticationMechanism> authenticationMechanismList) {
-		this.authenticationMechanismList = authenticationMechanismList;
-	}
+    public void setAuthenticationMechanismList(List<IAuthenticationMechanism> authenticationMechanismList) {
+        this.authenticationMechanismList = authenticationMechanismList;
+    }
 
-	public List<IAuthenticationMechanism> getAuthenticationMechanismList() {
-		return this.authenticationMechanismList;
-	}
+    public List<IAuthenticationMechanism> getAuthenticationMechanismList() {
+        return this.authenticationMechanismList;
+    }
 
-	public AuthenticationEntryPoint getAuthenticationEntryPoint() {
-		return this.authenticationEntryPoint;
-	}
+    public AuthenticationEntryPoint getAuthenticationEntryPoint() {
+        return this.authenticationEntryPoint;
+    }
 
-	public void setAuthenticationEntryPoint(AuthenticationEntryPoint authenticationEntryPoint) {
-		this.authenticationEntryPoint = authenticationEntryPoint;
-	}
+    public void setAuthenticationEntryPoint(AuthenticationEntryPoint authenticationEntryPoint) {
+        this.authenticationEntryPoint = authenticationEntryPoint;
+    }
 
-	public void setTokenGenerator(ISecurityJWTTokenGenerator tokenGenerator) {
-		this.tokenGenerator = tokenGenerator;
-	}
+    public void setTokenGenerator(ISecurityJWTTokenGenerator tokenGenerator) {
+        this.tokenGenerator = tokenGenerator;
+    }
 
-	public ISecurityJWTTokenGenerator getTokenGenerator() {
-		return this.tokenGenerator;
-	}
+    public ISecurityJWTTokenGenerator getTokenGenerator() {
+        return this.tokenGenerator;
+    }
+
 }

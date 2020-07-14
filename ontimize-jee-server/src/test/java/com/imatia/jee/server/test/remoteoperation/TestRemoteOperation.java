@@ -8,40 +8,41 @@ import com.ontimize.jee.server.services.remoteoperation.AbstractRemoteOperation;
 
 public class TestRemoteOperation extends AbstractRemoteOperation {
 
-	private static final Logger	logger		= LoggerFactory.getLogger(TestRemoteOperation.class);
-	private boolean				cancelled	= false;
+    private static final Logger logger = LoggerFactory.getLogger(TestRemoteOperation.class);
 
-	@Override
-	public void init(Object parameters) {
-		// Do nothing
-	}
+    private boolean cancelled = false;
 
-	@Override
-	public Object onCustomMessageReceived(CallbackWrapperMessage msg) {
-		TestRemoteOperation.logger.warn("custom message received");
-		return null;
-	}
+    @Override
+    public void init(Object parameters) {
+        // Do nothing
+    }
 
-	@Override
-	public void onCancelReceived() {
-		this.cancelled = true;
-	}
+    @Override
+    public Object onCustomMessageReceived(CallbackWrapperMessage msg) {
+        TestRemoteOperation.logger.warn("custom message received");
+        return null;
+    }
 
-	@Override
-	public Object execute() {
-		for (int i = 0; i < 10; i++) {
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException error) {
-				TestRemoteOperation.logger.error(null, error);
-			}
-			if (this.cancelled) {
-				TestRemoteOperation.logger.error("Task cancelled");
-				return null;
-			}
-			this.operationStep(i, 10, 0, "test iteration " + i, null);
-		}
-		return null;
-	}
+    @Override
+    public void onCancelReceived() {
+        this.cancelled = true;
+    }
+
+    @Override
+    public Object execute() {
+        for (int i = 0; i < 10; i++) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException error) {
+                TestRemoteOperation.logger.error(null, error);
+            }
+            if (this.cancelled) {
+                TestRemoteOperation.logger.error("Task cancelled");
+                return null;
+            }
+            this.operationStep(i, 10, 0, "test iteration " + i, null);
+        }
+        return null;
+    }
 
 }

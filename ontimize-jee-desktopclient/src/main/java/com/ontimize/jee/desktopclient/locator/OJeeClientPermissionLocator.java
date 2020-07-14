@@ -80,43 +80,63 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Clase abstracta que define el comportamiento que deben tener los ClientPermissionLocator contra un servidor JEE.
+ * Clase abstracta que define el comportamiento que deben tener los ClientPermissionLocator contra
+ * un servidor JEE.
  *
  * @author joaquin.romero
  */
 public class OJeeClientPermissionLocator implements SecureEntityReferenceLocator, ConnectionOptimizer,
-    XMLClientProvider, UtilReferenceLocator, ClientPermissionManager, RemoteApplicationPreferenceReferencer,
-    ClientReferenceLocator, LOk {
+        XMLClientProvider, UtilReferenceLocator, ClientPermissionManager, RemoteApplicationPreferenceReferencer,
+        ClientReferenceLocator, LOk {
 
     private static final Logger logger = LoggerFactory.getLogger(OJeeClientPermissionLocator.class);
+
     private static final String REMOTE_LOCATOR_INVOCATION_HANDLER = "remoteLocatorInvocationHandler";
+
     public static final String CHECK_SERVER_MESSAGES_PERIOD = "CheckServerMessagePeriod";
+
     public static final String REMOTE_REFERENCE_LOCATOR_NAME = "RemoteLocatorName";
+
     public static final String CLIENT_PERMISSION_COLUMN = "ClientPermissionColumn";
 
     private static String REMOTE_LOCATOR_NAME_PROPERTY = "com.ontimize.locator.ReferenceLocator.RemoteLocatorName";
+
     protected String referenceLocatorServerName = "";
+
     protected String clientPermissionsColumn = "ClientPermissions";
 
     private boolean localLocator;
+
     protected int messagesCheckTime = -1;
+
     protected int chatCheckTime = 2000;
 
     protected List<ISessionListener> sessionListeners;
+
     protected UserInformation userInformation;
+
     private boolean startSession = false;
+
     protected int userId = -1;
 
     private HessianSessionLocatorInvocationDelegate sessionLocatorInvocationDelegate = new HessianSessionLocatorInvocationDelegate();
+
     private ConnectionOptimizerInvocationDelegate connectionOptimizerInvocationDelegate = new ConnectionOptimizerInvocationDelegate();
+
     private XMLClientProviderInvocationDelegate xmlClientProviderInvocationDelegate = new XMLClientProviderInvocationDelegate();
+
     private UtilInvocationDelegate utilInvocationDelegate = new UtilInvocationDelegate();
+
     private ClientPermissionInvocationDelegate clientPermissionInvocationDelegate = new ClientPermissionInvocationDelegate();
+
     private RemoteApplicationPreferenceReferencerDelegate remoteApplicationPreferenceReferencerDelegate = new RemoteApplicationPreferenceReferencerDelegate();
+
     private ClientReferenceLocatorDelegate clientReferenceLocatorDelegate = new ClientReferenceLocatorDelegate();
 
     protected JDialog chatWindow = null;
+
     protected JButton b = new JButton("Send");
+
     protected JTextArea text = new JTextArea(40, 5) {
 
         @Override
@@ -129,7 +149,9 @@ public class OJeeClientPermissionLocator implements SecureEntityReferenceLocator
     };
 
     protected JScrollPane s = new JScrollPane(this.chatTextPane);
+
     protected SimpleAttributeSet textAttribute = new SimpleAttributeSet();
+
     JTextPane chatTextPane = new JTextPane() {
 
         Dimension d = new Dimension(300, 500);
@@ -146,11 +168,11 @@ public class OJeeClientPermissionLocator implements SecureEntityReferenceLocator
         this.sessionListeners = new ArrayList<>();
 
         InvocationHandler handler = BeansFactory.getBean(OJeeClientPermissionLocator.REMOTE_LOCATOR_INVOCATION_HANDLER,
-            InvocationHandler.class);
+                InvocationHandler.class);
         if (handler == null) {
             handler = ReflectionTools.newInstance(
-                (String) params.get(OJeeClientPermissionLocator.REMOTE_LOCATOR_INVOCATION_HANDLER),
-                InvocationHandler.class);
+                    (String) params.get(OJeeClientPermissionLocator.REMOTE_LOCATOR_INVOCATION_HANDLER),
+                    InvocationHandler.class);
         }
     }
 
@@ -165,10 +187,10 @@ public class OJeeClientPermissionLocator implements SecureEntityReferenceLocator
             } catch (NoSuchBeanDefinitionException ex) {
                 OJeeClientPermissionLocator.logger.trace(null, ex);
                 BeansFactory.registerBeanDefinition("loginProvider",
-                    new AnnotatedGenericBeanDefinition(OntimizeLoginProvider.class));
+                        new AnnotatedGenericBeanDefinition(OntimizeLoginProvider.class));
                 // yes, duplicate line. seems spring bug... review when possible
                 BeansFactory.registerBeanDefinition("loginProvider",
-                    new AnnotatedGenericBeanDefinition(OntimizeLoginProvider.class));
+                        new AnnotatedGenericBeanDefinition(OntimizeLoginProvider.class));
                 bean = BeansFactory.getBean(ILoginProvider.class);
             }
             String url = System.getProperty("com.ontimize.services.baseUrl");
@@ -244,7 +266,7 @@ public class OJeeClientPermissionLocator implements SecureEntityReferenceLocator
 
     private void configureClientPermissionColumn(Map<String, Object> params) {
         Object col = ApplicationManager.getParameterValue(OJeeClientPermissionLocator.CLIENT_PERMISSION_COLUMN,
-            (Hashtable) params);
+                (Hashtable) params);
         if (col != null) {
             this.clientPermissionsColumn = col.toString();
         }
@@ -258,14 +280,14 @@ public class OJeeClientPermissionLocator implements SecureEntityReferenceLocator
         } else {
             this.referenceLocatorServerName = "";
             OJeeClientPermissionLocator.logger.error("'{}' parameter not found",
-                OJeeClientPermissionLocator.REMOTE_REFERENCE_LOCATOR_NAME);
+                    OJeeClientPermissionLocator.REMOTE_REFERENCE_LOCATOR_NAME);
         }
 
         String sRemoteProperty = System.getProperty(OJeeClientPermissionLocator.REMOTE_LOCATOR_NAME_PROPERTY);
         if ((sRemoteProperty != null) && (!this.localLocator)) {
             this.referenceLocatorServerName = sRemoteProperty;
             OJeeClientPermissionLocator.logger.info("Using '{}'.",
-                OJeeClientPermissionLocator.REMOTE_LOCATOR_NAME_PROPERTY);
+                    OJeeClientPermissionLocator.REMOTE_LOCATOR_NAME_PROPERTY);
         }
     }
 
@@ -280,7 +302,7 @@ public class OJeeClientPermissionLocator implements SecureEntityReferenceLocator
                 }
             } catch (Exception e) {
                 OJeeClientPermissionLocator.logger.error(
-                    "'" + OJeeClientPermissionLocator.CHECK_SERVER_MESSAGES_PERIOD + "' parameter error.", e);
+                        "'" + OJeeClientPermissionLocator.CHECK_SERVER_MESSAGES_PERIOD + "' parameter error.", e);
             }
         }
     }
@@ -310,7 +332,6 @@ public class OJeeClientPermissionLocator implements SecureEntityReferenceLocator
     public boolean hasSession(String user, int id) throws Exception {
         return this.sessionLocatorInvocationDelegate.hasSession(user, id);
     }
-
 
 
     @Override
@@ -597,28 +618,31 @@ public class OJeeClientPermissionLocator implements SecureEntityReferenceLocator
 
             final ReferenceComboDataField tUser = new ReferenceComboDataField(filter);
             tUser.setResourceBundle(
-                ApplicationManager.getApplication() != null ? ApplicationManager.getApplication().getResourceBundle()
-                    : null);
+                    ApplicationManager.getApplication() != null
+                            ? ApplicationManager.getApplication().getResourceBundle()
+                            : null);
             tUser.setAdvancedQueryMode(true);
 
             tUser.setReferenceLocator(this);
 
             southPanel.add(tUser,
-                new GridBagConstraints(0, 0, 1, 1, 1, 0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-                    new Insets(0, 0, 0, 0), 0, 0));
+                    new GridBagConstraints(0, 0, 1, 1, 1, 0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+                            new Insets(0, 0, 0, 0), 0, 0));
             southPanel.add(new JScrollPane(this.text),
-                new GridBagConstraints(0, 1, 2, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                    new Insets(0, 0, 0, 0), 0, 0));
+                    new GridBagConstraints(0, 1, 2, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                            new Insets(0, 0, 0, 0), 0, 0));
 
             southPanel.add(this.b,
-                new GridBagConstraints(1, 0, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.VERTICAL,
-                    new Insets(0, 0, 0, 0), 0, 0));
-            this.chatWindow.getContentPane().add(southPanel,
-                new GridBagConstraints(0, 1, 1, 1, 0, 0.1, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                    new Insets(0, 0, 0, 0), 0, 0));
-            this.chatWindow.getContentPane().add(this.s,
-                new GridBagConstraints(0, 0, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                    new Insets(0, 0, 0, 0), 0, 0));
+                    new GridBagConstraints(1, 0, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.VERTICAL,
+                            new Insets(0, 0, 0, 0), 0, 0));
+            this.chatWindow.getContentPane()
+                .add(southPanel,
+                        new GridBagConstraints(0, 1, 1, 1, 0, 0.1, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                                new Insets(0, 0, 0, 0), 0, 0));
+            this.chatWindow.getContentPane()
+                .add(this.s,
+                        new GridBagConstraints(0, 0, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                                new Insets(0, 0, 0, 0), 0, 0));
             this.chatWindow.pack();
 
             this.b.addActionListener(new ActionListener() {
@@ -626,11 +650,12 @@ public class OJeeClientPermissionLocator implements SecureEntityReferenceLocator
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     try {
-                        if ((OJeeClientPermissionLocator.this.text.getText() != null) && (
-                            OJeeClientPermissionLocator.this.text.getText().length() > 0) && !tUser.isEmpty()) {
+                        if ((OJeeClientPermissionLocator.this.text.getText() != null)
+                                && (OJeeClientPermissionLocator.this.text.getText().length() > 0) && !tUser.isEmpty()) {
                             String m = OJeeClientPermissionLocator.this.text.getText();
                             try {
-                                StyledDocument doc = (StyledDocument) OJeeClientPermissionLocator.this.chatTextPane.getDocument();
+                                StyledDocument doc = (StyledDocument) OJeeClientPermissionLocator.this.chatTextPane
+                                    .getDocument();
                                 doc.insertString(doc.getLength(), "\n>> " + m, null);
                                 OJeeClientPermissionLocator.this.text.setText("");
                                 OJeeClientPermissionLocator.this.s.getVerticalScrollBar()
@@ -648,11 +673,13 @@ public class OJeeClientPermissionLocator implements SecureEntityReferenceLocator
                                     for (int i = 0; i < ((Vector) oValue).size(); i++) {
                                         Object v = ((Vector) oValue).get(i);
                                         OJeeClientPermissionLocator.this
-                                            .sendMessage(m, (String) v, OJeeClientPermissionLocator.this.getSessionId());
+                                            .sendMessage(m, (String) v,
+                                                    OJeeClientPermissionLocator.this.getSessionId());
                                     }
                                 } else if (oValue instanceof String) {
                                     OJeeClientPermissionLocator.this
-                                        .sendMessage(m, (String) oValue, OJeeClientPermissionLocator.this.getSessionId());
+                                        .sendMessage(m, (String) oValue,
+                                                OJeeClientPermissionLocator.this.getSessionId());
                                 }
                             } else {
                                 OJeeClientPermissionLocator.this
@@ -663,9 +690,10 @@ public class OJeeClientPermissionLocator implements SecureEntityReferenceLocator
                     } catch (Exception ex) {
                         OJeeClientPermissionLocator.logger.error(null, ex);
                         MessageDialog
-                            .showMessage(OJeeClientPermissionLocator.this.chatWindow, ex.getMessage(), JOptionPane.ERROR_MESSAGE,
-                                ApplicationManager.getApplication() != null ? ApplicationManager.getApplication()
-                                    .getResourceBundle() : null);
+                            .showMessage(OJeeClientPermissionLocator.this.chatWindow, ex.getMessage(),
+                                    JOptionPane.ERROR_MESSAGE,
+                                    ApplicationManager.getApplication() != null ? ApplicationManager.getApplication()
+                                        .getResourceBundle() : null);
                     }
                 }
             });
@@ -696,7 +724,7 @@ public class OJeeClientPermissionLocator implements SecureEntityReferenceLocator
 
     @Override
     public Object getReference(String s) throws Exception {
-        //TODO Using in local mode
+        // TODO Using in local mode
         return null;
     }
 
@@ -707,7 +735,7 @@ public class OJeeClientPermissionLocator implements SecureEntityReferenceLocator
 
     @Override
     public void addModuleMemoryEntity(String s, List<String> list) {
-        //TODO
+        // TODO
     }
 
     @Override
@@ -717,7 +745,7 @@ public class OJeeClientPermissionLocator implements SecureEntityReferenceLocator
 
     @Override
     public boolean isAllowCertificateLogin() {
-        //TODO implementar certifacate
+        // TODO implementar certifacate
         return false;
     }
 
@@ -750,4 +778,5 @@ public class OJeeClientPermissionLocator implements SecureEntityReferenceLocator
     public Object getLInfoObject() throws Exception {
         return null;
     }
+
 }

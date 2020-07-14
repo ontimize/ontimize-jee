@@ -9,52 +9,49 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
  */
 public class RemoteOperationErrorMessage implements Serializable {
 
-	/** The Constant serialVersionUID. */
-	private static final long	serialVersionUID	= 1L;
-	/** The error. */
-	private Throwable			cause;
+    /** The Constant serialVersionUID. */
+    private static final long serialVersionUID = 1L;
 
-	public RemoteOperationErrorMessage() {
-		super();
-	}
+    /** The error. */
+    private Throwable cause;
 
-	/**
-	 * Instantiates a new remote operation error message.
-	 *
-	 * @param cause
-	 *            the cause
-	 */
-	public RemoteOperationErrorMessage(Throwable cause) {
-		super();
-		this.cause = cause;
-	}
+    public RemoteOperationErrorMessage() {
+        super();
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return ReflectionToStringBuilder.toString(this);
-	}
+    /**
+     * Instantiates a new remote operation error message.
+     * @param cause the cause
+     */
+    public RemoteOperationErrorMessage(Throwable cause) {
+        super();
+        this.cause = cause;
+    }
 
-	/**
-	 * Gets the cause.
-	 *
-	 * @return the cause
-	 */
-	public Throwable getCause() {
-		return this.cause;
-	}
+    /*
+     * (non-Javadoc)
+     *
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return ReflectionToStringBuilder.toString(this);
+    }
 
-	/**
-	 * Sets the cause.
-	 *
-	 * @param cause
-	 *            the new cause
-	 */
-	public void setCause(Throwable cause) {
-		this.cause = cause;
-	}
+    /**
+     * Gets the cause.
+     * @return the cause
+     */
+    public Throwable getCause() {
+        return this.cause;
+    }
+
+    /**
+     * Sets the cause.
+     * @param cause the new cause
+     */
+    public void setCause(Throwable cause) {
+        this.cause = cause;
+    }
 
 }

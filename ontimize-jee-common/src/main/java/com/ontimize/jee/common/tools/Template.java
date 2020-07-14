@@ -14,170 +14,148 @@ import org.slf4j.LoggerFactory;
  */
 public class Template {
 
-	/** The Constant logger. */
-	private static final Logger	logger		= LoggerFactory.getLogger(Template.class);
+    /** The Constant logger. */
+    private static final Logger logger = LoggerFactory.getLogger(Template.class);
 
-	/** The template. */
-	private final StringBuilder	template	= new StringBuilder();
+    /** The template. */
+    private final StringBuilder template = new StringBuilder();
 
-	/**
-	 * The Constructor.
-	 *
-	 * @param is
-	 *            the is
-	 */
-	public Template(InputStream is) {
-		this(is, null);
-	}
+    /**
+     * The Constructor.
+     * @param is the is
+     */
+    public Template(InputStream is) {
+        this(is, null);
+    }
 
-	/**
-	 * The Constructor.
-	 *
-	 * @param is
-	 *            the is
-	 * @param charsetName
-	 *            the charset name
-	 */
-	public Template(InputStream is, String charsetName) {
-		super();
-		this.loadTemplate(is, charsetName);
-	}
+    /**
+     * The Constructor.
+     * @param is the is
+     * @param charsetName the charset name
+     */
+    public Template(InputStream is, String charsetName) {
+        super();
+        this.loadTemplate(is, charsetName);
+    }
 
-	/**
-	 * The Constructor.
-	 *
-	 * @param classPath
-	 *            the class path
-	 */
-	public Template(String classPath) {
-		this(classPath, null);
-	}
+    /**
+     * The Constructor.
+     * @param classPath the class path
+     */
+    public Template(String classPath) {
+        this(classPath, null);
+    }
 
-	/**
-	 * The Constructor.
-	 *
-	 * @param classPath
-	 *            the class path
-	 * @param charsetName
-	 *            the charset name
-	 */
-	public Template(String classPath, String charsetName) {
-		try {
-			InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(classPath);
-			try {
-				this.loadTemplate(is, charsetName);
-			} finally {
-				if (is != null) {
-					is.close();
-				}
-			}
-		} catch (Exception ex) {
-			throw new RuntimeException(ex);
-		}
-	}
+    /**
+     * The Constructor.
+     * @param classPath the class path
+     * @param charsetName the charset name
+     */
+    public Template(String classPath, String charsetName) {
+        try {
+            InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(classPath);
+            try {
+                this.loadTemplate(is, charsetName);
+            } finally {
+                if (is != null) {
+                    is.close();
+                }
+            }
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
 
-	/**
-	 * Load template.
-	 *
-	 * @param is
-	 *            the is
-	 */
-	protected void loadTemplate(InputStream is) {
-		this.loadTemplate(is, null);
-	}
+    /**
+     * Load template.
+     * @param is the is
+     */
+    protected void loadTemplate(InputStream is) {
+        this.loadTemplate(is, null);
+    }
 
-	/**
-	 * Load template.
-	 *
-	 * @param is
-	 *            the is
-	 * @param charsetName
-	 *            the charsetName
-	 */
-	protected void loadTemplate(InputStream is, String charsetName) {
-		InputStreamReader isr = null;
-		try {
-			isr = !StringTools.isEmpty(charsetName) ? new InputStreamReader(is, charsetName) : new InputStreamReader(is);
-			char[] buffer = new char[1024];
-			int readed = 0;
-			while ((readed = isr.read(buffer)) != -1) {
-				this.template.append(buffer, 0, readed);
-			}
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		} finally {
-			if (isr != null) {
-				try {
-					isr.close();
-				} catch (IOException e) {
-					Template.logger.error(null, e);
-				}
-			}
-		}
-	}
+    /**
+     * Load template.
+     * @param is the is
+     * @param charsetName the charsetName
+     */
+    protected void loadTemplate(InputStream is, String charsetName) {
+        InputStreamReader isr = null;
+        try {
+            isr = !StringTools.isEmpty(charsetName) ? new InputStreamReader(is, charsetName)
+                    : new InputStreamReader(is);
+            char[] buffer = new char[1024];
+            int readed = 0;
+            while ((readed = isr.read(buffer)) != -1) {
+                this.template.append(buffer, 0, readed);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (isr != null) {
+                try {
+                    isr.close();
+                } catch (IOException e) {
+                    Template.logger.error(null, e);
+                }
+            }
+        }
+    }
 
-	/**
-	 * Fill template.
-	 *
-	 * @param mValues
-	 *            the m values
-	 * @return the string
-	 */
-	public String fillTemplate(Map<String, ?> mValues) {
-		if ((mValues == null) || mValues.isEmpty()) {
-			return this.template.toString();
-		}
-		StringBuilder sb = new StringBuilder(this.template);
-		for (Entry<String, ?> entry : mValues.entrySet()) {
-			this.replace(sb, entry.getKey(), entry.getValue() == null ? "" : String.valueOf(entry.getValue()));
-		}
-		return sb.toString();
-	}
+    /**
+     * Fill template.
+     * @param mValues the m values
+     * @return the string
+     */
+    public String fillTemplate(Map<String, ?> mValues) {
+        if ((mValues == null) || mValues.isEmpty()) {
+            return this.template.toString();
+        }
+        StringBuilder sb = new StringBuilder(this.template);
+        for (Entry<String, ?> entry : mValues.entrySet()) {
+            this.replace(sb, entry.getKey(), entry.getValue() == null ? "" : String.valueOf(entry.getValue()));
+        }
+        return sb.toString();
+    }
 
-	/**
-	 * Fill template.
-	 *
-	 * @param pairs
-	 *            the pairs
-	 * @return the string
-	 */
-	public String fillTemplate(String... pairs) {
-		if (pairs == null) {
-			return this.template.toString();
-		}
-		CheckingTools.failIf((pairs.length % 2) != 0, "Template pairs length must be even");
-		StringBuilder sb = new StringBuilder(this.template);
-		for (int i = 0; i < pairs.length; i += 2) {
-			this.replace(sb, pairs[i], pairs[i + 1]);
-		}
-		return sb.toString();
-	}
+    /**
+     * Fill template.
+     * @param pairs the pairs
+     * @return the string
+     */
+    public String fillTemplate(String... pairs) {
+        if (pairs == null) {
+            return this.template.toString();
+        }
+        CheckingTools.failIf((pairs.length % 2) != 0, "Template pairs length must be even");
+        StringBuilder sb = new StringBuilder(this.template);
+        for (int i = 0; i < pairs.length; i += 2) {
+            this.replace(sb, pairs[i], pairs[i + 1]);
+        }
+        return sb.toString();
+    }
 
-	/**
-	 * Replace.
-	 *
-	 * @param sb
-	 *            the sb
-	 * @param key
-	 *            the key
-	 * @param value
-	 *            the value
-	 */
-	private void replace(StringBuilder sb, String key, String value) {
-		value = value == null ? "" : value;
-		int idx = 0;
-		while ((idx = sb.indexOf(key, idx)) >= 0) {
-			sb.replace(idx, idx + key.length(), value);
-			idx += key.length();
-		}
-	}
+    /**
+     * Replace.
+     * @param sb the sb
+     * @param key the key
+     * @param value the value
+     */
+    private void replace(StringBuilder sb, String key, String value) {
+        value = value == null ? "" : value;
+        int idx = 0;
+        while ((idx = sb.indexOf(key, idx)) >= 0) {
+            sb.replace(idx, idx + key.length(), value);
+            idx += key.length();
+        }
+    }
 
-	/**
-	 * Gets the template.
-	 *
-	 * @return the template
-	 */
-	public String getTemplate() {
-		return this.template.toString();
-	}
+    /**
+     * Gets the template.
+     * @return the template
+     */
+    public String getTemplate() {
+        return this.template.toString();
+    }
+
 }

@@ -1,16 +1,27 @@
 /*
- * Copyright (c) 2001-2008 Caucho Technology, Inc. All rights reserved. The Apache Software License, Version 1.1 Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met: 1. Redistributions of source code must retain the above copyright notice, this list of conditions and
- * the following disclaimer. 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
- * and/or other materials provided with the distribution. 3. The end-user documentation included with the redistribution, if any, must include the following acknowlegement: "This
- * product includes software developed by the Caucho Technology (http://www.caucho.com/)." Alternately, this acknowlegement may appear in the software itself, if and wherever such
- * third-party acknowlegements normally appear. 4. The names "Burlap", "Resin", and "Caucho" must not be used to endorse or promote products derived from this software without
- * prior written permission. For written permission, please contact info@caucho.com. 5. Products derived from this software may not be called "Resin" nor may "Resin" appear in
- * their names without prior written permission of Caucho Technology. THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL CAUCHO TECHNOLOGY OR ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
- * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
- * BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * Copyright (c) 2001-2008 Caucho Technology, Inc. All rights reserved. The Apache Software License,
+ * Version 1.1 Redistribution and use in source and binary forms, with or without modification, are
+ * permitted provided that the following conditions are met: 1. Redistributions of source code must
+ * retain the above copyright notice, this list of conditions and the following disclaimer. 2.
+ * Redistributions in binary form must reproduce the above copyright notice, this list of conditions
+ * and the following disclaimer in the documentation and/or other materials provided with the
+ * distribution. 3. The end-user documentation included with the redistribution, if any, must
+ * include the following acknowlegement: "This product includes software developed by the Caucho
+ * Technology (http://www.caucho.com/)." Alternately, this acknowlegement may appear in the software
+ * itself, if and wherever such third-party acknowlegements normally appear. 4. The names "Burlap",
+ * "Resin", and "Caucho" must not be used to endorse or promote products derived from this software
+ * without prior written permission. For written permission, please contact info@caucho.com. 5.
+ * Products derived from this software may not be called "Resin" nor may "Resin" appear in their
+ * names without prior written permission of Caucho Technology. THIS SOFTWARE IS PROVIDED ``AS IS''
+ * AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL CAUCHO
+ * TECHNOLOGY OR ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+ * GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
+ * OF SUCH DAMAGE.
+ *
  * @author Scott Ferguson
  */
 
@@ -33,200 +44,206 @@ import org.slf4j.LoggerFactory;
  */
 public class Hessian2StreamingInput {
 
-	private static final Logger			log	= LoggerFactory.getLogger(Hessian2StreamingInput.class);
-	private final StreamingInputStream	_is;
-	private final Hessian2Input			_in;
+    private static final Logger log = LoggerFactory.getLogger(Hessian2StreamingInput.class);
 
-	/**
-	 * Creates a new Hessian input stream, initialized with an underlying input stream.
-	 *
-	 * @param is
-	 *            the underlying output stream.
-	 */
-	public Hessian2StreamingInput(InputStream is) {
-		this._is = new StreamingInputStream(is);
-		this._in = new Hessian2Input(this._is);
-	}
+    private final StreamingInputStream _is;
 
-	public void setSerializerFactory(SerializerFactory factory) {
-		this._in.setSerializerFactory(factory);
-	}
+    private final Hessian2Input _in;
 
-	public boolean isDataAvailable() {
-		StreamingInputStream is = this._is;
+    /**
+     * Creates a new Hessian input stream, initialized with an underlying input stream.
+     * @param is the underlying output stream.
+     */
+    public Hessian2StreamingInput(InputStream is) {
+        this._is = new StreamingInputStream(is);
+        this._in = new Hessian2Input(this._is);
+    }
 
-		return (is != null) && is.isDataAvailable();
-	}
+    public void setSerializerFactory(SerializerFactory factory) {
+        this._in.setSerializerFactory(factory);
+    }
 
-	public Hessian2Input startPacket() throws IOException {
-		if (this._is.startPacket()) {
-			this._in.resetReferences();
-			this._in.resetBuffer(); // XXX:
-			return this._in;
-		} else {
-			return null;
-		}
-	}
+    public boolean isDataAvailable() {
+        StreamingInputStream is = this._is;
 
-	public void endPacket() throws IOException {
-		this._is.endPacket();
-		this._in.resetBuffer(); // XXX:
-	}
+        return (is != null) && is.isDataAvailable();
+    }
 
-	public Hessian2Input getHessianInput() {
-		return this._in;
-	}
+    public Hessian2Input startPacket() throws IOException {
+        if (this._is.startPacket()) {
+            this._in.resetReferences();
+            this._in.resetBuffer(); // XXX:
+            return this._in;
+        } else {
+            return null;
+        }
+    }
 
-	/**
-	 * Read the next object
-	 */
-	public Object readObject() throws IOException {
-		this._is.startPacket();
+    public void endPacket() throws IOException {
+        this._is.endPacket();
+        this._in.resetBuffer(); // XXX:
+    }
 
-		Object obj = this._in.readStreamingObject();
+    public Hessian2Input getHessianInput() {
+        return this._in;
+    }
 
-		this._is.endPacket();
+    /**
+     * Read the next object
+     */
+    public Object readObject() throws IOException {
+        this._is.startPacket();
 
-		return obj;
-	}
+        Object obj = this._in.readStreamingObject();
 
-	/**
-	 * Close the output.
-	 */
-	public void close() throws IOException {
-		this._in.close();
-	}
+        this._is.endPacket();
 
-	static class StreamingInputStream extends InputStream {
+        return obj;
+    }
 
-		private final InputStream	_is;
+    /**
+     * Close the output.
+     */
+    public void close() throws IOException {
+        this._in.close();
+    }
 
-		private long				_length;
-		private boolean				_isPacketEnd;
+    static class StreamingInputStream extends InputStream {
 
-		StreamingInputStream(InputStream is) {
-			this._is = is;
-		}
+        private final InputStream _is;
 
-		public boolean isDataAvailable() {
-			try {
-				return (this._is != null) && (this._is.available() > 0);
-			} catch (IOException e) {
-				Hessian2StreamingInput.log.trace(e.toString(), e);
+        private long _length;
 
-				return true;
-			}
-		}
+        private boolean _isPacketEnd;
 
-		public boolean startPacket() throws IOException {
-			// skip zero-length packets
-			do {
-				this._isPacketEnd = false;
-			} while ((this._length = this.readChunkLength(this._is)) == 0);
+        StreamingInputStream(InputStream is) {
+            this._is = is;
+        }
 
-			return this._length > 0;
-		}
+        public boolean isDataAvailable() {
+            try {
+                return (this._is != null) && (this._is.available() > 0);
+            } catch (IOException e) {
+                Hessian2StreamingInput.log.trace(e.toString(), e);
 
-		public void endPacket() throws IOException {
-			while (!this._isPacketEnd) {
-				if (this._length <= 0) {
-					this._length = this.readChunkLength(this._is);
-				}
+                return true;
+            }
+        }
 
-				if (this._length > 0) {
-					this._is.skip(this._length);
-					this._length = 0;
-				}
-			}
+        public boolean startPacket() throws IOException {
+            // skip zero-length packets
+            do {
+                this._isPacketEnd = false;
+            } while ((this._length = this.readChunkLength(this._is)) == 0);
 
-			if (this._length > 0) {
-				this._is.skip(this._length);
-				this._length = 0;
-			}
-		}
+            return this._length > 0;
+        }
 
-		@Override
-		public int read() throws IOException {
-			InputStream is = this._is;
+        public void endPacket() throws IOException {
+            while (!this._isPacketEnd) {
+                if (this._length <= 0) {
+                    this._length = this.readChunkLength(this._is);
+                }
 
-			if (this._length == 0) {
-				if (this._isPacketEnd) {
-					return -1;
-				}
+                if (this._length > 0) {
+                    this._is.skip(this._length);
+                    this._length = 0;
+                }
+            }
 
-				this._length = this.readChunkLength(is);
+            if (this._length > 0) {
+                this._is.skip(this._length);
+                this._length = 0;
+            }
+        }
 
-				if (this._length <= 0) {
-					return -1;
-				}
-			}
+        @Override
+        public int read() throws IOException {
+            InputStream is = this._is;
 
-			this._length--;
+            if (this._length == 0) {
+                if (this._isPacketEnd) {
+                    return -1;
+                }
 
-			return is.read();
-		}
+                this._length = this.readChunkLength(is);
 
-		@Override
-		public int read(byte[] buffer, int offset, int length) throws IOException {
-			InputStream is = this._is;
+                if (this._length <= 0) {
+                    return -1;
+                }
+            }
 
-			if (this._length <= 0) {
-				if (this._isPacketEnd) {
-					return -1;
-				}
+            this._length--;
 
-				this._length = this.readChunkLength(is);
+            return is.read();
+        }
 
-				if (this._length <= 0) {
-					return -1;
-				}
-			}
+        @Override
+        public int read(byte[] buffer, int offset, int length) throws IOException {
+            InputStream is = this._is;
 
-			int sublen = (int) this._length;
-			if (length < sublen) {
-				sublen = length;
-			}
+            if (this._length <= 0) {
+                if (this._isPacketEnd) {
+                    return -1;
+                }
 
-			sublen = is.read(buffer, offset, sublen);
+                this._length = this.readChunkLength(is);
 
-			if (sublen < 0) {
-				return -1;
-			}
+                if (this._length <= 0) {
+                    return -1;
+                }
+            }
 
-			this._length -= sublen;
+            int sublen = (int) this._length;
+            if (length < sublen) {
+                sublen = length;
+            }
 
-			return sublen;
-		}
+            sublen = is.read(buffer, offset, sublen);
 
-		private long readChunkLength(InputStream is) throws IOException {
-			if (this._isPacketEnd) {
-				return -1;
-			}
+            if (sublen < 0) {
+                return -1;
+            }
 
-			long length = 0;
+            this._length -= sublen;
 
-			int code = is.read();
+            return sublen;
+        }
 
-			if (code < 0) {
-				this._isPacketEnd = true;
-				return -1;
-			}
+        private long readChunkLength(InputStream is) throws IOException {
+            if (this._isPacketEnd) {
+                return -1;
+            }
 
-			this._isPacketEnd = (code & 0x80) == 0;
+            long length = 0;
 
-			int len = is.read() & 0x7f;
+            int code = is.read();
 
-			if (len < 0x7e) {
-				length = len;
-			} else if (len == 0x7e) {
-				length = ((is.read() & 0xff) << 8) + (is.read() & 0xff);
-			} else {
-				length = (((long) (is.read() & 0xff)) << 56) + (((long) (is.read() & 0xff)) << 48) + (((long) (is.read() & 0xff)) << 40) + (((long) (is
-						.read() & 0xff)) << 32) + (((long) (is.read() & 0xff)) << 24) + (((long) (is.read() & 0xff)) << 16) + (((long) (is.read() & 0xff)) << 8) + (is
-								.read() & 0xff);
-			}
+            if (code < 0) {
+                this._isPacketEnd = true;
+                return -1;
+            }
 
-			return length;
-		}
-	}
+            this._isPacketEnd = (code & 0x80) == 0;
+
+            int len = is.read() & 0x7f;
+
+            if (len < 0x7e) {
+                length = len;
+            } else if (len == 0x7e) {
+                length = ((is.read() & 0xff) << 8) + (is.read() & 0xff);
+            } else {
+                length = (((long) (is.read() & 0xff)) << 56) + (((long) (is.read() & 0xff)) << 48)
+                        + (((long) (is.read() & 0xff)) << 40) + (((long) (is
+                            .read() & 0xff)) << 32)
+                        + (((long) (is.read() & 0xff)) << 24) + (((long) (is.read() & 0xff)) << 16)
+                        + (((long) (is.read() & 0xff)) << 8) + (is
+                            .read() & 0xff);
+            }
+
+            return length;
+        }
+
+    }
+
 }

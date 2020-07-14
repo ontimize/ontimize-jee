@@ -27,58 +27,60 @@ import com.ontimize.jee.server.session.StatisticsMapSessionRepository;
 @Lazy(value = true)
 public class SessionHelper implements ApplicationContextAware {
 
-	private static final Logger		LOG					= LoggerFactory.getLogger(SessionHelper.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SessionHelper.class);
 
-	private static final String		REDIS_KEY_PREFIX	= "spring-security-sessions:";
+    private static final String REDIS_KEY_PREFIX = "spring-security-sessions:";
 
-	@Autowired(required = false)
-	private SessionRepository<?>	sessionRepo;
+    @Autowired(required = false)
+    private SessionRepository<?> sessionRepo;
 
-	private ApplicationContext		applicationContext;
+    private ApplicationContext applicationContext;
 
-	public Collection<SessionDto> getActiveSessions() throws OntimizeJEEException {
-		if (this.sessionRepo == null) {
-			return Collections.EMPTY_LIST;
-		}
-		Collection<SessionDto> res = new ArrayList<>();
-		if (this.sessionRepo instanceof StatisticsMapSessionRepository) {
-			Collection<String> sessionList = ((StatisticsMapSessionRepository) this.sessionRepo).getActiveSessions();
-			for (String sesId : sessionList) {
-				ExpiringSession session = (ExpiringSession) this.sessionRepo.getSession(sesId);
-				if (session != null) {
-					res.add(this.toDto(session));
-				}
-			}
-		} else if (this.sessionRepo instanceof RedisOperationsSessionRepository) {
-			RedisOperations<String, Object> redisOps = this.applicationContext.getBean(RedisOperations.class);
-			Set<String> keys = redisOps.keys(SessionHelper.REDIS_KEY_PREFIX + "*");
-			SessionHelper.LOG.info("Number of active sessions: " + keys.size());
-			for (String key : keys) {
-				String id = key.substring(SessionHelper.REDIS_KEY_PREFIX.length());
-				ExpiringSession session = (ExpiringSession) this.sessionRepo.getSession(id);
-				if (session != null) {
-					res.add(this.toDto(session));
-				}
-			}
-		} else {
-			throw new OntimizeJEEException("Unknow session repository " + this.sessionRepo);
-		}
-		return res;
+    public Collection<SessionDto> getActiveSessions() throws OntimizeJEEException {
+        if (this.sessionRepo == null) {
+            return Collections.EMPTY_LIST;
+        }
+        Collection<SessionDto> res = new ArrayList<>();
+        if (this.sessionRepo instanceof StatisticsMapSessionRepository) {
+            Collection<String> sessionList = ((StatisticsMapSessionRepository) this.sessionRepo).getActiveSessions();
+            for (String sesId : sessionList) {
+                ExpiringSession session = (ExpiringSession) this.sessionRepo.getSession(sesId);
+                if (session != null) {
+                    res.add(this.toDto(session));
+                }
+            }
+        } else if (this.sessionRepo instanceof RedisOperationsSessionRepository) {
+            RedisOperations<String, Object> redisOps = this.applicationContext.getBean(RedisOperations.class);
+            Set<String> keys = redisOps.keys(SessionHelper.REDIS_KEY_PREFIX + "*");
+            SessionHelper.LOG.info("Number of active sessions: " + keys.size());
+            for (String key : keys) {
+                String id = key.substring(SessionHelper.REDIS_KEY_PREFIX.length());
+                ExpiringSession session = (ExpiringSession) this.sessionRepo.getSession(id);
+                if (session != null) {
+                    res.add(this.toDto(session));
+                }
+            }
+        } else {
+            throw new OntimizeJEEException("Unknow session repository " + this.sessionRepo);
+        }
+        return res;
 
-	}
+    }
 
-	private SessionDto toDto(ExpiringSession session) {
-		HashMap<String, Object> sessionAttrs = new HashMap<>(session.getAttributeNames().size());
-		for (String attrName : session.getAttributeNames()) {
-			Object attrValue = session.getAttribute(attrName);
-			sessionAttrs.put(attrName, attrValue);
-		}
+    private SessionDto toDto(ExpiringSession session) {
+        HashMap<String, Object> sessionAttrs = new HashMap<>(session.getAttributeNames().size());
+        for (String attrName : session.getAttributeNames()) {
+            Object attrValue = session.getAttribute(attrName);
+            sessionAttrs.put(attrName, attrValue);
+        }
 
-		return new SessionDto(session.getId(), sessionAttrs, session.getLastAccessedTime(), session.getCreationTime(), session.getMaxInactiveIntervalInSeconds());
-	}
+        return new SessionDto(session.getId(), sessionAttrs, session.getLastAccessedTime(), session.getCreationTime(),
+                session.getMaxInactiveIntervalInSeconds());
+    }
 
-	@Override
-	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-		this.applicationContext = applicationContext;
-	}
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+    }
+
 }

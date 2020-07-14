@@ -29,75 +29,78 @@ import com.ontimize.jee.desktopclient.spring.BeansFactory;
  */
 public class IMSession extends BasicInteractionManager {
 
-	private static final Logger			logger	= LoggerFactory.getLogger(IMSession.class);
+    private static final Logger logger = LoggerFactory.getLogger(IMSession.class);
 
-	@FormComponent(attr = "RESULTS")
-	protected Table						tResults;
+    @FormComponent(attr = "RESULTS")
+    protected Table tResults;
 
-	@FormComponent(attr = "B_REQUEST")
-	protected Button					bRequest;
+    @FormComponent(attr = "B_REQUEST")
+    protected Button bRequest;
 
-	private IServerManagementService	serverManagement;
+    private IServerManagementService serverManagement;
 
-	public IMSession() {
-		super();
-	}
+    public IMSession() {
+        super();
+    }
 
-	@Override
-	public void registerInteractionManager(Form f, IFormManager gf) {
-		super.registerInteractionManager(f, gf);
-		this.managedForm.setFormTitle("Session statistics");
-		this.bRequest.addActionListener(new RefreshSessionStatisticsListener());
-		this.serverManagement = BeansFactory.getBean(IServerManagementService.class);
-	}
+    @Override
+    public void registerInteractionManager(Form f, IFormManager gf) {
+        super.registerInteractionManager(f, gf);
+        this.managedForm.setFormTitle("Session statistics");
+        this.bRequest.addActionListener(new RefreshSessionStatisticsListener());
+        this.serverManagement = BeansFactory.getBean(IServerManagementService.class);
+    }
 
-	protected Collection<SessionDto> getActiveSessions() throws Exception {
-		this.ensureServerManagement();
-		return this.serverManagement.getActiveSessions();
-	}
+    protected Collection<SessionDto> getActiveSessions() throws Exception {
+        this.ensureServerManagement();
+        return this.serverManagement.getActiveSessions();
+    }
 
-	protected void ensureServerManagement() {
-		if (this.serverManagement == null) {
-			throw new OntimizeJEERuntimeException("No server management reference");
-		}
-	}
+    protected void ensureServerManagement() {
+        if (this.serverManagement == null) {
+            throw new OntimizeJEERuntimeException("No server management reference");
+        }
+    }
 
-	public class RefreshSessionStatisticsListener implements ActionListener {
+    public class RefreshSessionStatisticsListener implements ActionListener {
 
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			new Thread(new Runnable() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            new Thread(new Runnable() {
 
-				@Override
-				public void run() {
-					try {
-						EntityResult res = new EntityResult();
-						EntityResultTools.initEntityResult(res, Arrays.asList("USER", "IP", "BEGINDATE", "ENDDATE", "EXPIRATIONTIME"));
-						Collection<SessionDto> sessions = IMSession.this.getActiveSessions();
-						if (!sessions.isEmpty()) {
+                @Override
+                public void run() {
+                    try {
+                        EntityResult res = new EntityResult();
+                        EntityResultTools.initEntityResult(res,
+                                Arrays.asList("USER", "IP", "BEGINDATE", "ENDDATE", "EXPIRATIONTIME"));
+                        Collection<SessionDto> sessions = IMSession.this.getActiveSessions();
+                        if (!sessions.isEmpty()) {
 
-							Iterator<SessionDto> sessionIter = sessions.iterator();
-							while (sessionIter.hasNext()) {
-								SessionDto nextSession = sessionIter.next();
+                            Iterator<SessionDto> sessionIter = sessions.iterator();
+                            while (sessionIter.hasNext()) {
+                                SessionDto nextSession = sessionIter.next();
 
-								String id = nextSession.getId();
-								long beginDate = nextSession.getCreationTime();
-								long lastAccessedTime = nextSession.getLastAccessedTime();
-								int maxInactiveIntervalInSeconds = nextSession.getMaxInactiveIntervalInSeconds();
+                                String id = nextSession.getId();
+                                long beginDate = nextSession.getCreationTime();
+                                long lastAccessedTime = nextSession.getLastAccessedTime();
+                                int maxInactiveIntervalInSeconds = nextSession.getMaxInactiveIntervalInSeconds();
 
-								Object attribute = nextSession.getAttribute("SPRING_SECURITY_SAVED_REQUEST");
-								res.addRecord(EntityResultTools.keysvalues("USER", id, "IP", attribute != null ? attribute : "", "BEGINDATE", new Date(beginDate), "ENDDATE",
-										new Date(lastAccessedTime), "EXPIRATIONTIME", maxInactiveIntervalInSeconds));
-							}
-							IMSession.this.tResults.setValue(res);
-						}
-					} catch (Exception ex) {
-						IMSession.logger.trace(null, ex);
-						MessageDialog.showErrorMessage(IMSession.this.managedForm.getJDialog(), ex.getMessage());
-					}
-				}
-			}).start();
-		}
-	}
+                                Object attribute = nextSession.getAttribute("SPRING_SECURITY_SAVED_REQUEST");
+                                res.addRecord(EntityResultTools.keysvalues("USER", id, "IP",
+                                        attribute != null ? attribute : "", "BEGINDATE", new Date(beginDate), "ENDDATE",
+                                        new Date(lastAccessedTime), "EXPIRATIONTIME", maxInactiveIntervalInSeconds));
+                            }
+                            IMSession.this.tResults.setValue(res);
+                        }
+                    } catch (Exception ex) {
+                        IMSession.logger.trace(null, ex);
+                        MessageDialog.showErrorMessage(IMSession.this.managedForm.getJDialog(), ex.getMessage());
+                    }
+                }
+            }).start();
+        }
+
+    }
 
 }

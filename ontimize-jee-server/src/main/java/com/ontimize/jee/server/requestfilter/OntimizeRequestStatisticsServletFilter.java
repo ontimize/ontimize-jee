@@ -28,103 +28,117 @@ import com.caucho.services.server.ServiceContext;
 import com.ontimize.jee.common.services.servermanagement.IServerManagementService;
 
 /**
- *
  * @author <a href=""></a>
  *
  */
 public class OntimizeRequestStatisticsServletFilter implements Filter {
 
-	static Logger								logger		= LoggerFactory.getLogger(OntimizeRequestStatisticsServletFilter.class);
+    static Logger logger = LoggerFactory.getLogger(OntimizeRequestStatisticsServletFilter.class);
 
-	private static final int					DELAY		= 5000;
-	private final ScheduledThreadPoolExecutor	executor	= new ScheduledThreadPoolExecutor(1);
+    private static final int DELAY = 5000;
 
-	private IServerManagementService			service;
+    private final ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void destroy() {
-		// do nothing
-	}
+    private IServerManagementService service;
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain filterChain) throws IOException, ServletException {
-		request.getServletContext().getSessionCookieConfig();
-		if (request instanceof HttpServletRequest) {
-			boolean success = false;
-			HttpServletRequest httpRequest = (HttpServletRequest) request;
-			long time = System.currentTimeMillis();
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void destroy() {
+        // do nothing
+    }
 
-			// initialize the service context
-			ServiceContext.begin(request, response, httpRequest.getPathInfo(), "0");
-			try {
-				filterChain.doFilter(request, response);
-				success = true;
-			} catch (Exception e) {
-				OntimizeRequestStatisticsServletFilter.logger.error(null, e);
-				throw e;
-			} finally {
-				time = System.currentTimeMillis() - time;
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain filterChain)
+            throws IOException, ServletException {
+        request.getServletContext().getSessionCookieConfig();
+        if (request instanceof HttpServletRequest) {
+            boolean success = false;
+            HttpServletRequest httpRequest = (HttpServletRequest) request;
+            long time = System.currentTimeMillis();
 
-				String method = (String) ServiceContext.getContext().getHeader("Method");
-				Object headerValues = ServiceContext.getContext().getHeader("Values");
-				String serviceException = null;
-				if (!success) {
-					serviceException = (String) ServiceContext.getContext().getHeader("ServiceException");
-				}
-				Principal userPrincipal = httpRequest.getUserPrincipal();
+            // initialize the service context
+            ServiceContext.begin(request, response, httpRequest.getPathInfo(), "0");
+            try {
+                filterChain.doFilter(request, response);
+                success = true;
+            } catch (Exception e) {
+                OntimizeRequestStatisticsServletFilter.logger.error(null, e);
+                throw e;
+            } finally {
+                time = System.currentTimeMillis() - time;
 
-				this.executor.schedule(new RequestStatisticsRunnable(httpRequest.getPathInfo(), method, headerValues, userPrincipal != null ? userPrincipal.getName() : null,
-				        new Date(), time, serviceException), OntimizeRequestStatisticsServletFilter.DELAY, TimeUnit.MILLISECONDS);
+                String method = (String) ServiceContext.getContext().getHeader("Method");
+                Object headerValues = ServiceContext.getContext().getHeader("Values");
+                String serviceException = null;
+                if (!success) {
+                    serviceException = (String) ServiceContext.getContext().getHeader("ServiceException");
+                }
+                Principal userPrincipal = httpRequest.getUserPrincipal();
 
-				OntimizeRequestStatisticsServletFilter.logger.debug("[FULL TIME] Processing time: " + time + " ms");
-			}
-		}
-	}
+                this.executor.schedule(
+                        new RequestStatisticsRunnable(httpRequest.getPathInfo(), method, headerValues,
+                                userPrincipal != null ? userPrincipal.getName() : null,
+                                new Date(), time, serviceException),
+                        OntimizeRequestStatisticsServletFilter.DELAY, TimeUnit.MILLISECONDS);
 
-	protected class RequestStatisticsRunnable implements Runnable {
+                OntimizeRequestStatisticsServletFilter.logger.debug("[FULL TIME] Processing time: " + time + " ms");
+            }
+        }
+    }
 
-		private final String	serviceName;
-		private final String	methodName;
-		private final Object	params;
-		private final String	user;
-		private final String	exception;
-		private final long		timeExecution;
-		private final Date		date;
+    protected class RequestStatisticsRunnable implements Runnable {
 
-		public RequestStatisticsRunnable(String serviceName, String methodName, Object params, String user, Date date, long timeExecution, String exception) {
-			this.serviceName = serviceName;
-			this.methodName = methodName;
-			this.params = params;
-			this.user = user;
-			this.date = date;
-			this.timeExecution = timeExecution;
-			this.exception = exception;
-		}
+        private final String serviceName;
 
-		@Override
-		public void run() {
-			try {
-				OntimizeRequestStatisticsServletFilter.this.service.setServiceStatistics(this.serviceName, this.methodName, this.params, this.user, this.date, this.timeExecution,
-				        this.exception);
-			} catch (Exception ex) {
-				OntimizeRequestStatisticsServletFilter.logger.error(null, ex);
-			}
-		}
-	}
+        private final String methodName;
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void init(final FilterConfig arg0) throws ServletException {
-		// do nothing
-		this.service = WebApplicationContextUtils.getWebApplicationContext(arg0.getServletContext()).getBean(IServerManagementService.class);
-	}
+        private final Object params;
+
+        private final String user;
+
+        private final String exception;
+
+        private final long timeExecution;
+
+        private final Date date;
+
+        public RequestStatisticsRunnable(String serviceName, String methodName, Object params, String user, Date date,
+                long timeExecution, String exception) {
+            this.serviceName = serviceName;
+            this.methodName = methodName;
+            this.params = params;
+            this.user = user;
+            this.date = date;
+            this.timeExecution = timeExecution;
+            this.exception = exception;
+        }
+
+        @Override
+        public void run() {
+            try {
+                OntimizeRequestStatisticsServletFilter.this.service.setServiceStatistics(this.serviceName,
+                        this.methodName, this.params, this.user, this.date, this.timeExecution,
+                        this.exception);
+            } catch (Exception ex) {
+                OntimizeRequestStatisticsServletFilter.logger.error(null, ex);
+            }
+        }
+
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void init(final FilterConfig arg0) throws ServletException {
+        // do nothing
+        this.service = WebApplicationContextUtils.getWebApplicationContext(arg0.getServletContext())
+            .getBean(IServerManagementService.class);
+    }
 
 }

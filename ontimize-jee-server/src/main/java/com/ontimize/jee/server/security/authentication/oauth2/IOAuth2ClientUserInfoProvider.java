@@ -7,9 +7,10 @@ import java.util.Map;
  */
 public interface IOAuth2ClientUserInfoProvider {
 
-	/**
-	 * @param token
-	 * @return
-	 */
-	Map<String, Object> getUserInfoFromProvider(String token, OAuth2ClientProperties oAuth2ClientProperties);
+    /**
+     * @param token
+     * @return
+     */
+    Map<String, Object> getUserInfoFromProvider(String token, OAuth2ClientProperties oAuth2ClientProperties);
+
 }

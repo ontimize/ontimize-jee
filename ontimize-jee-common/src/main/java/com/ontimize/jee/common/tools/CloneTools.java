@@ -16,35 +16,37 @@ import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
  */
 public final class CloneTools {
 
-	private static final Logger logger = LoggerFactory.getLogger(CloneTools.class);
+    private static final Logger logger = LoggerFactory.getLogger(CloneTools.class);
 
-	/**
-	 * This class should not be instantiated.
-	 */
-	private CloneTools() {}
+    /**
+     * This class should not be instantiated.
+     */
+    private CloneTools() {
+    }
 
-	public static Object clone(final Object obj) throws OntimizeJEERuntimeException {
-		if (obj == null) {
-			return null;
-		}
-		try {
-			if (obj instanceof Cloneable) {
-				return ReflectionTools.invoke(obj, "clone");
-			}
-		} catch (Exception ex) {
-			CloneTools.logger.debug("could not call clone method, trying serialization", ex);
-			// do nothing
-		}
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		try {
-			ObjectOutputStream os = new ObjectOutputStream(baos);
-			os.writeObject(obj);
-			os.close();
-			ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(baos.toByteArray()));
-			return ois.readObject();
+    public static Object clone(final Object obj) throws OntimizeJEERuntimeException {
+        if (obj == null) {
+            return null;
+        }
+        try {
+            if (obj instanceof Cloneable) {
+                return ReflectionTools.invoke(obj, "clone");
+            }
+        } catch (Exception ex) {
+            CloneTools.logger.debug("could not call clone method, trying serialization", ex);
+            // do nothing
+        }
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try {
+            ObjectOutputStream os = new ObjectOutputStream(baos);
+            os.writeObject(obj);
+            os.close();
+            ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(baos.toByteArray()));
+            return ois.readObject();
 
-		} catch (Exception e) {
-			throw new OntimizeJEERuntimeException(e);
-		}
-	}
+        } catch (Exception e) {
+            throw new OntimizeJEERuntimeException(e);
+        }
+    }
+
 }

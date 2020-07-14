@@ -8,12 +8,13 @@ package com.ontimize.jee.common.tools;
  */
 public enum MessageType {
 
-	/** The information. */
-	INFORMATION,
-	/** The warning. */
-	WARNING,
-	/** The error. */
-	ERROR,
-	/** The question. */
-	QUESTION
+    /** The information. */
+    INFORMATION,
+    /** The warning. */
+    WARNING,
+    /** The error. */
+    ERROR,
+    /** The question. */
+    QUESTION
+
 }

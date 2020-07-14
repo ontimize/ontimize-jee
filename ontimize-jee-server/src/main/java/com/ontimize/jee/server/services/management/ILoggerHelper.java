@@ -7,10 +7,10 @@ import com.ontimize.db.EntityResult;
 
 public interface ILoggerHelper {
 
-	InputStream openLogStream() throws IOException;
+    InputStream openLogStream() throws IOException;
 
-	EntityResult getLogFiles() throws Exception;
+    EntityResult getLogFiles() throws Exception;
 
-	InputStream getLogFileContent(String fileName) throws Exception;
+    InputStream getLogFileContent(String fileName) throws Exception;
 
 }

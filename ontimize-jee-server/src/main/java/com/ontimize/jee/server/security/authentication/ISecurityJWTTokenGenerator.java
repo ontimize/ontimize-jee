@@ -7,7 +7,9 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.security.core.Authentication;
 
 public interface ISecurityJWTTokenGenerator {
-	String generateToken(HttpServletRequest request, Authentication authResult);
 
-	String generateToken(Map<String, Object> claims);
+    String generateToken(HttpServletRequest request, Authentication authResult);
+
+    String generateToken(Map<String, Object> claims);
+
 }

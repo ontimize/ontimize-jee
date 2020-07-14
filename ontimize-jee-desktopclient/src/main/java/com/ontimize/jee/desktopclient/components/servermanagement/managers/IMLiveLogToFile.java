@@ -34,83 +34,90 @@ import com.ontimize.jee.desktopclient.components.servermanagement.window.filecho
  */
 public class IMLiveLogToFile extends BasicInteractionManager {
 
-	private static final Logger		logger	= LoggerFactory.getLogger(IMLiveLogToFile.class);
+    private static final Logger logger = LoggerFactory.getLogger(IMLiveLogToFile.class);
 
-	@FormComponent(attr = "FILECHOOSER")
-	protected Row					rowFileChooser;
+    @FormComponent(attr = "FILECHOOSER")
+    protected Row rowFileChooser;
 
-	protected EmbeddedJFileChooser	fileChooser;
-	protected final Form			liveLogConsole;
+    protected EmbeddedJFileChooser fileChooser;
 
-	public IMLiveLogToFile(Form liveLogConsole) {
-		super();
-		this.liveLogConsole = liveLogConsole;
-	}
+    protected final Form liveLogConsole;
 
-	@Override
-	public void registerInteractionManager(Form f, IFormManager gf) {
-		super.registerInteractionManager(f, gf);
-		this.managedForm.setFormTitle("Live log to file");
+    public IMLiveLogToFile(Form liveLogConsole) {
+        super();
+        this.liveLogConsole = liveLogConsole;
+    }
 
-		this.fileChooser = new EmbeddedJFileChooser(EmbeddedJFileChooser.MODE.BOTH, new LiveLogToFileListener());
-		this.fileChooser.setFileFilter(new FileNameExtensionFilter("LOG FILES", "log"));
-		this.rowFileChooser.add(new JScrollPane(this.fileChooser),
-				new GridBagConstraints(0, 1, 3, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(2, 2, 2, 2), 0, 0));
-	}
+    @Override
+    public void registerInteractionManager(Form f, IFormManager gf) {
+        super.registerInteractionManager(f, gf);
+        this.managedForm.setFormTitle("Live log to file");
 
-	public class LiveLogToFileListener implements IEmbeddedJFileChooser {
+        this.fileChooser = new EmbeddedJFileChooser(EmbeddedJFileChooser.MODE.BOTH, new LiveLogToFileListener());
+        this.fileChooser.setFileFilter(new FileNameExtensionFilter("LOG FILES", "log"));
+        this.rowFileChooser.add(new JScrollPane(this.fileChooser),
+                new GridBagConstraints(0, 1, 3, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                        new Insets(2, 2, 2, 2), 0, 0));
+    }
 
-		@Override
-		public void setPathFileChooser(final String path) {
-			new Thread(new Runnable() {
+    public class LiveLogToFileListener implements IEmbeddedJFileChooser {
 
-				String finalPath;
+        @Override
+        public void setPathFileChooser(final String path) {
+            new Thread(new Runnable() {
 
-				@Override
-				public void run() {
-					this.finalPath = path;
-					// Check extension
-					if (!"log".equalsIgnoreCase(FilenameUtils.getExtension(path))) {
-						// filename is NO OK as-is
-						this.finalPath = this.finalPath + ".log";
-					}
+                String finalPath;
 
-					// Save file
-					MemoDataField console = (MemoDataField) IMLiveLogToFile.this.liveLogConsole.getElementReference("CONSOLE");
-					String text = (String) console.getValue();
-					if (text != null) {
-						InputStream stream = null;
-						try {
-							stream = new ByteArrayInputStream(text.getBytes());
-							IOUtils.copy(stream, Files.newOutputStream(Paths.get(this.finalPath)));
-						} catch (IOException e) {
-							IMLiveLogToFile.logger.trace(null, e);
-							MessageDialog.showErrorMessage(SwingUtilities.getWindowAncestor(IMLiveLogToFile.this.managedForm), e.getMessage());
-						} finally {
-							if (stream != null) {
-								try {
-									stream.close();
-								} catch (IOException e) {
-									IMLiveLogToFile.logger.trace(null, e);
-									MessageDialog.showErrorMessage(SwingUtilities.getWindowAncestor(IMLiveLogToFile.this.managedForm), e.getMessage());
-								}
-							}
-						}
-						File file = new File(this.finalPath);
-						try {
-							if (file.exists()) {
-								if (Desktop.isDesktopSupported()) {
-									Desktop.getDesktop().open(file);
-								}
-							}
-						} catch (IOException e) {
-							IMLiveLogToFile.logger.error(null, e);
-						}
-						IMLiveLogToFile.this.fileChooser.rescanCurrentDirectory();
-					}
-				}
-			}).start();
-		}
-	}
+                @Override
+                public void run() {
+                    this.finalPath = path;
+                    // Check extension
+                    if (!"log".equalsIgnoreCase(FilenameUtils.getExtension(path))) {
+                        // filename is NO OK as-is
+                        this.finalPath = this.finalPath + ".log";
+                    }
+
+                    // Save file
+                    MemoDataField console = (MemoDataField) IMLiveLogToFile.this.liveLogConsole
+                        .getElementReference("CONSOLE");
+                    String text = (String) console.getValue();
+                    if (text != null) {
+                        InputStream stream = null;
+                        try {
+                            stream = new ByteArrayInputStream(text.getBytes());
+                            IOUtils.copy(stream, Files.newOutputStream(Paths.get(this.finalPath)));
+                        } catch (IOException e) {
+                            IMLiveLogToFile.logger.trace(null, e);
+                            MessageDialog.showErrorMessage(
+                                    SwingUtilities.getWindowAncestor(IMLiveLogToFile.this.managedForm), e.getMessage());
+                        } finally {
+                            if (stream != null) {
+                                try {
+                                    stream.close();
+                                } catch (IOException e) {
+                                    IMLiveLogToFile.logger.trace(null, e);
+                                    MessageDialog.showErrorMessage(
+                                            SwingUtilities.getWindowAncestor(IMLiveLogToFile.this.managedForm),
+                                            e.getMessage());
+                                }
+                            }
+                        }
+                        File file = new File(this.finalPath);
+                        try {
+                            if (file.exists()) {
+                                if (Desktop.isDesktopSupported()) {
+                                    Desktop.getDesktop().open(file);
+                                }
+                            }
+                        } catch (IOException e) {
+                            IMLiveLogToFile.logger.error(null, e);
+                        }
+                        IMLiveLogToFile.this.fileChooser.rescanCurrentDirectory();
+                    }
+                }
+            }).start();
+        }
+
+    }
 
 }

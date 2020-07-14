@@ -5,25 +5,23 @@ package com.ontimize.jee.common.tools;
  */
 public final class ThreadTools {
 
-	/**
-	 * Instantiates a new thread tools.
-	 */
-	private ThreadTools() {
-		super();
-	}
+    /**
+     * Instantiates a new thread tools.
+     */
+    private ThreadTools() {
+        super();
+    }
 
-	/**
-	 * Sleep.
-	 *
-	 * @param time
-	 *            the time
-	 */
-	public static void sleep(long time) {
-		try {
-			Thread.sleep(time);
-		} catch (InterruptedException e) {
-			// do nothing
-		}
-	}
+    /**
+     * Sleep.
+     * @param time the time
+     */
+    public static void sleep(long time) {
+        try {
+            Thread.sleep(time);
+        } catch (InterruptedException e) {
+            // do nothing
+        }
+    }
 
 }

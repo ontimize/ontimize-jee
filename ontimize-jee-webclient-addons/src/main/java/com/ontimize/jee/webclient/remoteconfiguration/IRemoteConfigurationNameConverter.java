@@ -5,10 +5,10 @@ package com.ontimize.jee.webclient.remoteconfiguration;
  */
 public interface IRemoteConfigurationNameConverter {
 
-	public String getUserColumn();
+    public String getUserColumn();
 
-	public String getAppColumn();
+    public String getAppColumn();
 
-	public String getConfigurationColumn();
+    public String getConfigurationColumn();
 
 }

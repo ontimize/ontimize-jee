@@ -13,19 +13,22 @@ import org.springframework.stereotype.Component;
 @Lazy(value = true)
 public class SpringApplicationContext implements ApplicationContextAware {
 
-	/** The context. */
-	private static ApplicationContext context;
+    /** The context. */
+    private static ApplicationContext context;
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.context.ApplicationContextAware#setApplicationContext (org.springframework.context.ApplicationContext)
-	 */
-	@Override
-	public void setApplicationContext(final ApplicationContext context) throws BeansException {
-		SpringApplicationContext.context = context;
-	}
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.springframework.context.ApplicationContextAware#setApplicationContext
+     * (org.springframework.context.ApplicationContext)
+     */
+    @Override
+    public void setApplicationContext(final ApplicationContext context) throws BeansException {
+        SpringApplicationContext.context = context;
+    }
 
-	public static ApplicationContext getContext() {
-		return SpringApplicationContext.context;
-	}
+    public static ApplicationContext getContext() {
+        return SpringApplicationContext.context;
+    }
+
 }

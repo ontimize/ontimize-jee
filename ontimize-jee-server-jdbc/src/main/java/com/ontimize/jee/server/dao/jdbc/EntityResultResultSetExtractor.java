@@ -19,67 +19,67 @@ import com.ontimize.jee.common.tools.Chronometer;
  */
 public class EntityResultResultSetExtractor implements ResultSetExtractor<EntityResult> {
 
-	/** The CONSTANT logger */
-	private static final Logger				logger	= LoggerFactory.getLogger(EntityResultResultSetExtractor.class);
+    /** The CONSTANT logger */
+    private static final Logger logger = LoggerFactory.getLogger(EntityResultResultSetExtractor.class);
 
-	/** The sql handler. */
-	private final SQLStatementHandler		sqlHandler;
-	private final QueryTemplateInformation	queryTemplateInformation;
-	private final List<?>					attributes;
+    /** The sql handler. */
+    private final SQLStatementHandler sqlHandler;
 
-	/**
-	 * Instantiates a new entity result result set extractor.
-	 *
-	 * @param sqlHandler
-	 *            the sql handler
-	 * @param list
-	 */
-	public EntityResultResultSetExtractor(final SQLStatementHandler sqlHandler, final QueryTemplateInformation queryTemplateInformation, final List<?> attributes) {
-		super();
-		this.sqlHandler = sqlHandler;
-		this.queryTemplateInformation = queryTemplateInformation;
-		this.attributes = attributes;
-	}
+    private final QueryTemplateInformation queryTemplateInformation;
 
-	/**
-	 * Instantiates a new entity result result set extractor.
-	 *
-	 * @param sqlHandler
-	 *            the sql handler
-	 * @param list
-	 */
-	public EntityResultResultSetExtractor(SQLStatementHandler sqlHandler, QueryTemplateInformation queryTemplateInformation) {
-		this(sqlHandler, queryTemplateInformation, null);
-	}
+    private final List<?> attributes;
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.jdbc.core.ResultSetExtractor#extractData(java.sql .ResultSet)
-	 */
-	@Override
-	public EntityResult extractData(ResultSet rs) throws SQLException, DataAccessException {
-		Chronometer chrono = new Chronometer().start();
-		EntityResult er = new EntityResult(EntityResult.OPERATION_SUCCESSFUL, EntityResult.DATA_RESULT);
-		try {
-			EntityResultResultSetExtractor.logger.trace("ResultSet fetchSize=" + rs.getFetchSize());
-			this.sqlHandler.resultSetToEntityResult(rs, er, this.attributes);
-		} catch (SQLException e) {
-			throw e;
-		} catch (Exception e) {
-			throw new DataRetrievalFailureException(null, e);
-		} finally {
-			EntityResultResultSetExtractor.logger.trace("Time consumed in extractData= {} ms", chrono.stopMs());
-		}
-		return er;
-	}
+    /**
+     * Instantiates a new entity result result set extractor.
+     * @param sqlHandler the sql handler
+     * @param list
+     */
+    public EntityResultResultSetExtractor(final SQLStatementHandler sqlHandler,
+            final QueryTemplateInformation queryTemplateInformation, final List<?> attributes) {
+        super();
+        this.sqlHandler = sqlHandler;
+        this.queryTemplateInformation = queryTemplateInformation;
+        this.attributes = attributes;
+    }
 
-	/**
-	 * Gets the query template information.
-	 *
-	 * @return the query template information
-	 */
-	public QueryTemplateInformation getQueryTemplateInformation() {
-		return this.queryTemplateInformation;
-	}
+    /**
+     * Instantiates a new entity result result set extractor.
+     * @param sqlHandler the sql handler
+     * @param list
+     */
+    public EntityResultResultSetExtractor(SQLStatementHandler sqlHandler,
+            QueryTemplateInformation queryTemplateInformation) {
+        this(sqlHandler, queryTemplateInformation, null);
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.springframework.jdbc.core.ResultSetExtractor#extractData(java.sql .ResultSet)
+     */
+    @Override
+    public EntityResult extractData(ResultSet rs) throws SQLException, DataAccessException {
+        Chronometer chrono = new Chronometer().start();
+        EntityResult er = new EntityResult(EntityResult.OPERATION_SUCCESSFUL, EntityResult.DATA_RESULT);
+        try {
+            EntityResultResultSetExtractor.logger.trace("ResultSet fetchSize=" + rs.getFetchSize());
+            this.sqlHandler.resultSetToEntityResult(rs, er, this.attributes);
+        } catch (SQLException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new DataRetrievalFailureException(null, e);
+        } finally {
+            EntityResultResultSetExtractor.logger.trace("Time consumed in extractData= {} ms", chrono.stopMs());
+        }
+        return er;
+    }
+
+    /**
+     * Gets the query template information.
+     * @return the query template information
+     */
+    public QueryTemplateInformation getQueryTemplateInformation() {
+        return this.queryTemplateInformation;
+    }
 
 }

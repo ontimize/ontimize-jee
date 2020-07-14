@@ -14,122 +14,116 @@ import com.ontimize.jee.server.dao.IOntimizeDaoSupport;
 
 public class FormProviderEngine implements IFormProviderService, InitializingBean {
 
-	private String formProviderIdColumn = "";
-	private String formProviderFormNameColumn = "";
-	private String formProviderFormXMLColumn = "";
-	private IOntimizeDaoSupport daoFormProvider;
+    private String formProviderIdColumn = "";
 
-	@Override
-	public String getXMLForm(String form) throws Exception {
+    private String formProviderFormNameColumn = "";
 
-		Map<String, String> filter = new HashMap<String, String>();
+    private String formProviderFormXMLColumn = "";
 
-		if ((form != null) && !this.formProviderFormNameColumn.isEmpty() && !this.formProviderFormXMLColumn.isEmpty()) {
-			filter.put(this.formProviderFormNameColumn, form);
-			EntityResult toret = this.daoFormProvider.query(filter, Arrays.asList(new String[] { this.formProviderFormXMLColumn }), (List<String>) null, (String) null);
+    private IOntimizeDaoSupport daoFormProvider;
 
-			if ((toret.getCode() == EntityResult.OPERATION_WRONG) || (toret.calculateRecordNumber() > 1)) {
-				throw new Exception("ERROR_RETRIEVING_A_FORM_FROM_DATABASE");
-			}
+    @Override
+    public String getXMLForm(String form) throws Exception {
 
-			if (toret.isEmpty()) {
-				return null;
-			}
+        Map<String, String> filter = new HashMap<String, String>();
 
-			return toret.getRecordValues(0).get(this.formProviderFormXMLColumn).toString();
-		}
+        if ((form != null) && !this.formProviderFormNameColumn.isEmpty() && !this.formProviderFormXMLColumn.isEmpty()) {
+            filter.put(this.formProviderFormNameColumn, form);
+            EntityResult toret = this.daoFormProvider.query(filter,
+                    Arrays.asList(new String[] { this.formProviderFormXMLColumn }), (List<String>) null, (String) null);
 
-		return null;
-	}
+            if ((toret.getCode() == EntityResult.OPERATION_WRONG) || (toret.calculateRecordNumber() > 1)) {
+                throw new Exception("ERROR_RETRIEVING_A_FORM_FROM_DATABASE");
+            }
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
-	 */
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		CheckingTools.failIfEmptyString(this.formProviderIdColumn, "The identifier column does not exist in the database for the form provider table.");
-		CheckingTools.failIfEmptyString(this.formProviderFormNameColumn, "The form name column does not exist in the database for the form provider table.");
-		CheckingTools.failIfEmptyString(this.formProviderFormXMLColumn, "The xml of form column does not exist in the database for the form provider table.");
-		CheckingTools.failIfNull(this.daoFormProvider, "There is no class defined for the form provider dao.");
-	}
+            if (toret.isEmpty()) {
+                return null;
+            }
 
-	/**
-	 * Get form provider dao
-	 *
-	 * @return the Form Provider Dao
-	 */
-	public IOntimizeDaoSupport getDaoFormProvider() {
-		return this.daoFormProvider;
-	}
+            return toret.getRecordValues(0).get(this.formProviderFormXMLColumn).toString();
+        }
 
-	/**
-	 * Set the form provider
-	 *
-	 * @param daoFormProvider
-	 *            {@link IOntimizeDaoSupport} Form provider to set
-	 */
-	public void setDaoFormProvider(IOntimizeDaoSupport daoFormProvider) {
-		this.daoFormProvider = daoFormProvider;
-	}
+        return null;
+    }
 
-	/**
-	 * Gets the id column of the form provider
-	 *
-	 * @return {@link String} The id column of the id provider
-	 */
-	public String getFormProviderIdColumn() {
-		return this.formProviderIdColumn;
-	}
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
+     */
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        CheckingTools.failIfEmptyString(this.formProviderIdColumn,
+                "The identifier column does not exist in the database for the form provider table.");
+        CheckingTools.failIfEmptyString(this.formProviderFormNameColumn,
+                "The form name column does not exist in the database for the form provider table.");
+        CheckingTools.failIfEmptyString(this.formProviderFormXMLColumn,
+                "The xml of form column does not exist in the database for the form provider table.");
+        CheckingTools.failIfNull(this.daoFormProvider, "There is no class defined for the form provider dao.");
+    }
 
-	/**
-	 * Sets the id column of the form provider
-	 *
-	 * @param formProviderIdColumn
-	 *            {@link String} The id column of the form provider
-	 */
-	public void setFormProviderIdColumn(String formProviderIdColumn) {
-		this.formProviderIdColumn = formProviderIdColumn;
-	}
+    /**
+     * Get form provider dao
+     * @return the Form Provider Dao
+     */
+    public IOntimizeDaoSupport getDaoFormProvider() {
+        return this.daoFormProvider;
+    }
 
-	/**
-	 * Gets the form name column of the form provider
-	 *
-	 * @return {@link String} The form name column of the form provider
-	 */
-	public String getFormProviderFormNameColumn() {
-		return this.formProviderFormNameColumn;
-	}
+    /**
+     * Set the form provider
+     * @param daoFormProvider {@link IOntimizeDaoSupport} Form provider to set
+     */
+    public void setDaoFormProvider(IOntimizeDaoSupport daoFormProvider) {
+        this.daoFormProvider = daoFormProvider;
+    }
 
-	/**
-	 * Sets the form name column of the form provider
-	 *
-	 * @param formProviderFormNameColumn
-	 *            {@link String} The form name column of the form provider
-	 */
-	public void setFormProviderFormNameColumn(String formProviderFormNameColumn) {
-		this.formProviderFormNameColumn = formProviderFormNameColumn;
-	}
+    /**
+     * Gets the id column of the form provider
+     * @return {@link String} The id column of the id provider
+     */
+    public String getFormProviderIdColumn() {
+        return this.formProviderIdColumn;
+    }
 
-	/**
-	 * Gets the form xml column of the form provider
-	 *
-	 * @return {@link String} the form xml column of the form provider
-	 */
-	public String getFormProviderFormXMLColumn() {
-		return this.formProviderFormXMLColumn;
-	}
+    /**
+     * Sets the id column of the form provider
+     * @param formProviderIdColumn {@link String} The id column of the form provider
+     */
+    public void setFormProviderIdColumn(String formProviderIdColumn) {
+        this.formProviderIdColumn = formProviderIdColumn;
+    }
 
-	/**
-	 * Sets the form xml column of the form provider
-	 *
-	 * @param formProviderFormXMLColumn
-	 *            {@link String} The form xml column of the form provider
-	 */
-	public void setFormProviderFormXMLColumn(String formProviderFormXMLColumn) {
-		this.formProviderFormXMLColumn = formProviderFormXMLColumn;
-	}
+    /**
+     * Gets the form name column of the form provider
+     * @return {@link String} The form name column of the form provider
+     */
+    public String getFormProviderFormNameColumn() {
+        return this.formProviderFormNameColumn;
+    }
+
+    /**
+     * Sets the form name column of the form provider
+     * @param formProviderFormNameColumn {@link String} The form name column of the form provider
+     */
+    public void setFormProviderFormNameColumn(String formProviderFormNameColumn) {
+        this.formProviderFormNameColumn = formProviderFormNameColumn;
+    }
+
+    /**
+     * Gets the form xml column of the form provider
+     * @return {@link String} the form xml column of the form provider
+     */
+    public String getFormProviderFormXMLColumn() {
+        return this.formProviderFormXMLColumn;
+    }
+
+    /**
+     * Sets the form xml column of the form provider
+     * @param formProviderFormXMLColumn {@link String} The form xml column of the form provider
+     */
+    public void setFormProviderFormXMLColumn(String formProviderFormXMLColumn) {
+        this.formProviderFormXMLColumn = formProviderFormXMLColumn;
+    }
 
 }

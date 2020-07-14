@@ -7,27 +7,28 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 public class CachedUserDetailsService implements UserDetailsService {
 
-	private final UserCache				userCache;
-	private final UserDetailsService	userDetailsService;
+    private final UserCache userCache;
 
-	public CachedUserDetailsService(UserCache userCache, UserDetailsService userDetailsService) {
-		super();
-		this.userCache = userCache;
-		this.userDetailsService = userDetailsService;
-	}
+    private final UserDetailsService userDetailsService;
 
-	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		UserDetails user = this.userCache == null ? null : this.userCache.getUserFromCache(username);
-		if (user == null) {
-			user = this.userDetailsService.loadUserByUsername(username);
-			if (user != null) {
-				this.userCache.putUserInCache(user);
-			} else {
-				throw new UsernameNotFoundException("User not found");
-			}
-		}
-		return user;
-	}
+    public CachedUserDetailsService(UserCache userCache, UserDetailsService userDetailsService) {
+        super();
+        this.userCache = userCache;
+        this.userDetailsService = userDetailsService;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        UserDetails user = this.userCache == null ? null : this.userCache.getUserFromCache(username);
+        if (user == null) {
+            user = this.userDetailsService.loadUserByUsername(username);
+            if (user != null) {
+                this.userCache.putUserInCache(user);
+            } else {
+                throw new UsernameNotFoundException("User not found");
+            }
+        }
+        return user;
+    }
 
 }

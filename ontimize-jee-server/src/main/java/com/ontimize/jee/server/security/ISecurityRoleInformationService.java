@@ -7,13 +7,11 @@ import com.ontimize.jee.server.security.authorization.Role;
  */
 public interface ISecurityRoleInformationService {
 
-	/**
-	 * Load role.
-	 *
-	 * @param roleName
-	 *            the role name
-	 * @return the role
-	 */
-	Role loadRole(String roleName);
+    /**
+     * Load role.
+     * @param roleName the role name
+     * @return the role
+     */
+    Role loadRole(String roleName);
 
 }

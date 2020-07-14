@@ -8,54 +8,57 @@ import javax.swing.JPanel;
 
 public class SliderBar extends JPanel {
 
-	// The preferred initial width of the slider bar
-	private static int		PREFERRED_WIDTH	= 300;
+    // The preferred initial width of the slider bar
+    private static int PREFERRED_WIDTH = 300;
 
-	// box layout to contain slider bar sections arranged vertically
-	private final BoxLayout	boxLayout		= new BoxLayout(this, BoxLayout.Y_AXIS);
+    // box layout to contain slider bar sections arranged vertically
+    private final BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
 
-	// the currently expanded section
-	private SlideBarSection	currentSection	= null;
+    // the currently expanded section
+    private SlideBarSection currentSection = null;
 
-	SlideBarMode			thisMode;
+    SlideBarMode thisMode;
 
-	boolean					showArrow;
-	boolean					animate			= false;
+    boolean showArrow;
 
-	public SliderBar(SlideBarMode mode, boolean showArrow, int preferredWidth, boolean animate) {
-		this.showArrow = showArrow;
-		this.thisMode = mode;
-		this.animate = animate;
-		this.setCursor(new Cursor(Cursor.HAND_CURSOR));
-		this.setLayout(this.boxLayout);
-		this.setPreferredSize(new Dimension(preferredWidth, this.getPreferredSize().height));
-		this.setFocusable(false);
-		this.revalidate();
-	}
+    boolean animate = false;
 
-	public void addSection(SlideBarSection newSection) {
-		this.add(newSection);
-		newSection.collapse(false);
-	}
+    public SliderBar(SlideBarMode mode, boolean showArrow, int preferredWidth, boolean animate) {
+        this.showArrow = showArrow;
+        this.thisMode = mode;
+        this.animate = animate;
+        this.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        this.setLayout(this.boxLayout);
+        this.setPreferredSize(new Dimension(preferredWidth, this.getPreferredSize().height));
+        this.setFocusable(false);
+        this.revalidate();
+    }
 
-	public boolean isCurrentExpandedSection(SlideBarSection section) {
-		return (section != null) && (this.currentSection != null) && section.equals(this.currentSection);
-	}
+    public void addSection(SlideBarSection newSection) {
+        this.add(newSection);
+        newSection.collapse(false);
+    }
 
-	public SlideBarMode getMode() {
-		return this.thisMode;
-	}
+    public boolean isCurrentExpandedSection(SlideBarSection section) {
+        return (section != null) && (this.currentSection != null) && section.equals(this.currentSection);
+    }
 
-	public SlideBarSection getCurrentSection() {
-		return this.currentSection;
-	}
+    public SlideBarMode getMode() {
+        return this.thisMode;
+    }
 
-	public void setCurrentSection(SlideBarSection section) {
-		this.currentSection = section;
-	}
+    public SlideBarSection getCurrentSection() {
+        return this.currentSection;
+    }
 
-	public enum SlideBarMode {
-		TOP_LEVEL, INNER_LEVEL;
-	}
+    public void setCurrentSection(SlideBarSection section) {
+        this.currentSection = section;
+    }
+
+    public enum SlideBarMode {
+
+        TOP_LEVEL, INNER_LEVEL;
+
+    }
 
 }

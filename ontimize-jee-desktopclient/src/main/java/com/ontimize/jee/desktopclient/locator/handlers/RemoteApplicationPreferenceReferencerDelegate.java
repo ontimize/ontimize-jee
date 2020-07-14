@@ -14,26 +14,31 @@ import com.ontimize.jee.desktopclient.locator.preferences.RemoteApplicationPrefe
 /**
  * The Class RemoteApplicationPreferenceReferencerDelegate.
  */
-public class RemoteApplicationPreferenceReferencerDelegate extends AbstractInvocationDelegate implements RemoteApplicationPreferenceReferencer {
+public class RemoteApplicationPreferenceReferencerDelegate extends AbstractInvocationDelegate
+        implements RemoteApplicationPreferenceReferencer {
 
-	/** The preferences manager. */
-	private RemoteApplicationPreferences preferencesManager;
+    /** The preferences manager. */
+    private RemoteApplicationPreferences preferencesManager;
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.ontimize.gui.preferences.RemoteApplicationPreferenceReferencer#getRemoteApplicationPreferences(int)
-	 */
-	@Override
-	public RemoteApplicationPreferences getRemoteApplicationPreferences(int sessionId) throws Exception {
-		if (this.preferencesManager == null) {
-			Class<?>[] interfacesExtending = ReflectionTools.getInterfacesExtending(RemoteApplicationPreferences.class);
-			List<Class<?>> interfaces = new ArrayList<>(Arrays.asList(interfacesExtending));
-			interfaces.add(RemoteApplicationPreferences.class);
-			interfacesExtending = interfaces.toArray(new Class<?>[0]);
+    /*
+     * (non-Javadoc)
+     *
+     * @see com.ontimize.gui.preferences.RemoteApplicationPreferenceReferencer#
+     * getRemoteApplicationPreferences(int)
+     */
+    @Override
+    public RemoteApplicationPreferences getRemoteApplicationPreferences(int sessionId) throws Exception {
+        if (this.preferencesManager == null) {
+            Class<?>[] interfacesExtending = ReflectionTools.getInterfacesExtending(RemoteApplicationPreferences.class);
+            List<Class<?>> interfaces = new ArrayList<>(Arrays.asList(interfacesExtending));
+            interfaces.add(RemoteApplicationPreferences.class);
+            interfacesExtending = interfaces.toArray(new Class<?>[0]);
 
-			this.preferencesManager = (RemoteApplicationPreferences) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), interfacesExtending,
-			        new RemoteApplicationPreferencesInvocationHandler());
-		}
-		return this.preferencesManager;
-	}
+            this.preferencesManager = (RemoteApplicationPreferences) Proxy.newProxyInstance(
+                    Thread.currentThread().getContextClassLoader(), interfacesExtending,
+                    new RemoteApplicationPreferencesInvocationHandler());
+        }
+        return this.preferencesManager;
+    }
+
 }

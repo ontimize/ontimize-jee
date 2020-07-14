@@ -66,4 +66,5 @@ public class ClientReferenceLocatorDelegate extends AbstractInvocationDelegate i
     public boolean isAllowCertificateLogin() {
         return false;
     }
+
 }

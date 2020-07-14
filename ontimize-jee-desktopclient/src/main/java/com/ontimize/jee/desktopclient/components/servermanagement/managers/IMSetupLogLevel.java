@@ -32,88 +32,92 @@ import com.ontimize.util.logging.LevelCellRenderer;
  */
 public class IMSetupLogLevel extends BasicInteractionManager {
 
-	private static final Logger			logger	= LoggerFactory.getLogger(IMSetupLogLevel.class);
+    private static final Logger logger = LoggerFactory.getLogger(IMSetupLogLevel.class);
 
-	@FormComponent(attr = "B_REFRESH")
-	protected Button					bRefresh;
-	@FormComponent(attr = "RESULTS")
-	protected Row						rowTable;
+    @FormComponent(attr = "B_REFRESH")
+    protected Button bRefresh;
 
-	@FormComponent(attr = "DETAILS")
-	protected Table						table;
+    @FormComponent(attr = "RESULTS")
+    protected Row rowTable;
 
-	protected IServerManagementService	serverManagement;
+    @FormComponent(attr = "DETAILS")
+    protected Table table;
 
-	public IMSetupLogLevel() {
-		super();
-	}
+    protected IServerManagementService serverManagement;
 
-	@Override
-	public void registerInteractionManager(Form f, IFormManager gf) {
-		super.registerInteractionManager(f, gf);
-		this.managedForm.setFormTitle("Setup log level");
-		this.serverManagement = BeansFactory.getBean(IServerManagementService.class);
+    public IMSetupLogLevel() {
+        super();
+    }
 
-		this.table.getJTable().setDefaultEditor(Level.class, new LevelCellEditor());
-		this.table.getJTable().setDefaultRenderer(Level.class, new LevelCellRenderer());
-		this.table.setRowNumberColumnVisible(false);
+    @Override
+    public void registerInteractionManager(Form f, IFormManager gf) {
+        super.registerInteractionManager(f, gf);
+        this.managedForm.setFormTitle("Setup log level");
+        this.serverManagement = BeansFactory.getBean(IServerManagementService.class);
 
-		Enumeration<TableColumn> columns = this.table.getJTable().getColumnModel().getColumns();
-		while (columns.hasMoreElements()) {
-			TableColumn tableColumn = columns.nextElement();
-			String headerValue = (String) tableColumn.getHeaderValue();
-			if ("Logger".equals(headerValue)) {
-				tableColumn.setMinWidth(350);
-			} else if ("Level".equals(headerValue)) {
-				tableColumn.setMinWidth(60);
-			} else if (!"ROW_NUMBERS_COLUMN".equals(headerValue)) {
-				tableColumn.setMinWidth(50);
-			}
-		}
+        this.table.getJTable().setDefaultEditor(Level.class, new LevelCellEditor());
+        this.table.getJTable().setDefaultRenderer(Level.class, new LevelCellRenderer());
+        this.table.setRowNumberColumnVisible(false);
 
-		this.bRefresh.addActionListener(new RefreshSetupLogLevelListener(this.table));
-	}
+        Enumeration<TableColumn> columns = this.table.getJTable().getColumnModel().getColumns();
+        while (columns.hasMoreElements()) {
+            TableColumn tableColumn = columns.nextElement();
+            String headerValue = (String) tableColumn.getHeaderValue();
+            if ("Logger".equals(headerValue)) {
+                tableColumn.setMinWidth(350);
+            } else if ("Level".equals(headerValue)) {
+                tableColumn.setMinWidth(60);
+            } else if (!"ROW_NUMBERS_COLUMN".equals(headerValue)) {
+                tableColumn.setMinWidth(50);
+            }
+        }
 
-	public class RefreshSetupLogLevelListener implements ActionListener {
+        this.bRefresh.addActionListener(new RefreshSetupLogLevelListener(this.table));
+    }
 
-		private final Table table;
+    public class RefreshSetupLogLevelListener implements ActionListener {
 
-		public RefreshSetupLogLevelListener(Table table) {
-			super();
-			this.table = table;
-		}
+        private final Table table;
 
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			new Thread(new Runnable() {
+        public RefreshSetupLogLevelListener(Table table) {
+            super();
+            this.table = table;
+        }
 
-				@Override
-				public void run() {
-					List<OntimizeJEELogger> loggers = RefreshSetupLogLevelListener.this.getLoggerList();
-					RefreshSetupLogLevelListener.this.table.setValue(this.convertListToER(loggers));
-				}
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            new Thread(new Runnable() {
 
-				private Object convertListToER(List<OntimizeJEELogger> loggers) {
-					EntityResult res = new EntityResult(RefreshSetupLogLevelListener.this.table.getAttributeList());
-					if (loggers != null) {
-						for (OntimizeJEELogger oJEELogger : loggers) {
-							EntityResultTools.fastAddRecord(res, EntityResultTools.keysvalues("OntimizeLogger", oJEELogger));
-						}
-					}
-					return res;
-				}
-			}).start();
-		}
+                @Override
+                public void run() {
+                    List<OntimizeJEELogger> loggers = RefreshSetupLogLevelListener.this.getLoggerList();
+                    RefreshSetupLogLevelListener.this.table.setValue(this.convertListToER(loggers));
+                }
 
-		protected List<OntimizeJEELogger> getLoggerList() {
-			if (IMSetupLogLevel.this.serverManagement != null) {
-				try {
-					return IMSetupLogLevel.this.serverManagement.getLoggerList();
-				} catch (Exception e) {
-					IMSetupLogLevel.logger.error("getLoggerList exception", e);
-				}
-			}
-			return new ArrayList<>();
-		}
-	}
+                private Object convertListToER(List<OntimizeJEELogger> loggers) {
+                    EntityResult res = new EntityResult(RefreshSetupLogLevelListener.this.table.getAttributeList());
+                    if (loggers != null) {
+                        for (OntimizeJEELogger oJEELogger : loggers) {
+                            EntityResultTools.fastAddRecord(res,
+                                    EntityResultTools.keysvalues("OntimizeLogger", oJEELogger));
+                        }
+                    }
+                    return res;
+                }
+            }).start();
+        }
+
+        protected List<OntimizeJEELogger> getLoggerList() {
+            if (IMSetupLogLevel.this.serverManagement != null) {
+                try {
+                    return IMSetupLogLevel.this.serverManagement.getLoggerList();
+                } catch (Exception e) {
+                    IMSetupLogLevel.logger.error("getLoggerList exception", e);
+                }
+            }
+            return new ArrayList<>();
+        }
+
+    }
+
 }

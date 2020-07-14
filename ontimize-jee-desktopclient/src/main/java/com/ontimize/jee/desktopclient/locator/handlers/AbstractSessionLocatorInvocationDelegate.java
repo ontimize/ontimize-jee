@@ -19,41 +19,41 @@ import com.ontimize.locator.SecureEntityReferenceLocator;
 /**
  * The Class SessionLocatorInvocationDelegate.
  */
-public abstract class AbstractSessionLocatorInvocationDelegate extends AbstractInvocationDelegate implements SecureEntityReferenceLocator {
+public abstract class AbstractSessionLocatorInvocationDelegate extends AbstractInvocationDelegate
+        implements SecureEntityReferenceLocator {
 
-	private static final Logger logger = LoggerFactory.getLogger(AbstractSessionLocatorInvocationDelegate.class);
+    private static final Logger logger = LoggerFactory.getLogger(AbstractSessionLocatorInvocationDelegate.class);
 
-	@Override
-	public int startSession(String user, String password, ClientWatch client) throws Exception {
-		return 1;
-	}
+    @Override
+    public int startSession(String user, String password, ClientWatch client) throws Exception {
+        return 1;
+    }
 
-	@Override
-	public int getSessionId() throws Exception {
-		return 1;
-	}
+    @Override
+    public int getSessionId() throws Exception {
+        return 1;
+    }
 
-	@Override
-	public void endSession(int id) throws Exception {
-		try {
-			BeansFactory.getBean(ISessionService.class).closeSession();
-		} catch (NoSuchBeanDefinitionException error) {
-			AbstractSessionLocatorInvocationDelegate.logger.info("No session service found", error);
-		}
-	}
+    @Override
+    public void endSession(int id) throws Exception {
+        try {
+            BeansFactory.getBean(ISessionService.class).closeSession();
+        } catch (NoSuchBeanDefinitionException error) {
+            AbstractSessionLocatorInvocationDelegate.logger.info("No session service found", error);
+        }
+    }
 
-	@Override
-	public boolean hasSession(String user, int id) throws Exception {
-		return true;
-	}
+    @Override
+    public boolean hasSession(String user, int id) throws Exception {
+        return true;
+    }
 
-	/**
-	 * Get ontimize entity interfaces.
-	 *
-	 * @return the ontimize entity interfaces
-	 */
-	protected Class<?>[] getOntimizeEntityInterfaces() {
-		return new Class<?>[] { Entity.class, AdvancedEntity.class, DirectSQLQueryEntity.class };
-	}
+    /**
+     * Get ontimize entity interfaces.
+     * @return the ontimize entity interfaces
+     */
+    protected Class<?>[] getOntimizeEntityInterfaces() {
+        return new Class<?>[] { Entity.class, AdvancedEntity.class, DirectSQLQueryEntity.class };
+    }
 
 }

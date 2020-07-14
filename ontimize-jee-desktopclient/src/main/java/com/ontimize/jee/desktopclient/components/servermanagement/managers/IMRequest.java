@@ -22,65 +22,70 @@ import com.ontimize.jee.desktopclient.spring.BeansFactory;
  */
 public class IMRequest extends BasicInteractionManager {
 
-	@FormComponent(attr = "DETAILS")
-	protected Table						tDetails;
-	@FormComponent(attr = "RESULTS")
-	protected Table						tResults;
+    @FormComponent(attr = "DETAILS")
+    protected Table tDetails;
 
-	@FormComponent(attr = "BEFORE_DATE")
-	protected DateDataField				beforeDate;
-	@FormComponent(attr = "AFTER_DATE")
-	protected DateDataField				afterDate;
+    @FormComponent(attr = "RESULTS")
+    protected Table tResults;
 
-	@FormComponent(attr = "B_QUERY")
-	protected Button					bQuery;
-	@FormComponent(attr = "B_REQUEST")
-	protected Button					bRequest;
+    @FormComponent(attr = "BEFORE_DATE")
+    protected DateDataField beforeDate;
 
-	private IServerManagementService	serverManagement;
+    @FormComponent(attr = "AFTER_DATE")
+    protected DateDataField afterDate;
 
-	public IMRequest() {
-		super();
-	}
+    @FormComponent(attr = "B_QUERY")
+    protected Button bQuery;
 
-	@Override
-	public void registerInteractionManager(Form f, IFormManager gf) {
-		super.registerInteractionManager(f, gf);
-		this.managedForm.setFormTitle("Request statistics");
-		this.serverManagement = BeansFactory.getBean(IServerManagementService.class);
-		if (this.tResults != null) {
-			this.tResults.setValue(this.serverManagement.getStatistics());
-		}
-		if (this.bRequest != null) {
-			this.bRequest.addActionListener(new ActionListener() {
+    @FormComponent(attr = "B_REQUEST")
+    protected Button bRequest;
 
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					int selectedRow = IMRequest.this.tResults.getSelectedRow();
-					if (selectedRow != -1) {
-						Hashtable selectedRowData = IMRequest.this.tResults.getSelectedRowData();
-						String serviceName = ((Vector<String>) selectedRowData.get("SERVICE_NAME")).get(0);
-						String methodName = ((Vector<String>) selectedRowData.get("METHOD_NAME")).get(0);
-						IMRequest.this.tDetails.setValue(IMRequest.this.serverManagement.getServiceStatistics(serviceName, methodName,
-						        (Date) IMRequest.this.beforeDate.getDateValue(), (Date) IMRequest.this.afterDate.getValue()));
-					} else {
-						MessageDialog.showErrorMessage(IMRequest.this.managedForm.getJDialog(), "E_SELECTED_METHOD");
-					}
-				}
-			});
-		}
-		if (this.bQuery != null) {
-			this.bQuery.addActionListener(new ActionListener() {
+    private IServerManagementService serverManagement;
 
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					if (IMRequest.this.tResults != null) {
-						IMRequest.this.tResults.setValue(IMRequest.this.serverManagement.getStatistics());
-					}
-				}
-			});
-		}
+    public IMRequest() {
+        super();
+    }
 
-	}
+    @Override
+    public void registerInteractionManager(Form f, IFormManager gf) {
+        super.registerInteractionManager(f, gf);
+        this.managedForm.setFormTitle("Request statistics");
+        this.serverManagement = BeansFactory.getBean(IServerManagementService.class);
+        if (this.tResults != null) {
+            this.tResults.setValue(this.serverManagement.getStatistics());
+        }
+        if (this.bRequest != null) {
+            this.bRequest.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    int selectedRow = IMRequest.this.tResults.getSelectedRow();
+                    if (selectedRow != -1) {
+                        Hashtable selectedRowData = IMRequest.this.tResults.getSelectedRowData();
+                        String serviceName = ((Vector<String>) selectedRowData.get("SERVICE_NAME")).get(0);
+                        String methodName = ((Vector<String>) selectedRowData.get("METHOD_NAME")).get(0);
+                        IMRequest.this.tDetails
+                            .setValue(IMRequest.this.serverManagement.getServiceStatistics(serviceName, methodName,
+                                    (Date) IMRequest.this.beforeDate.getDateValue(),
+                                    (Date) IMRequest.this.afterDate.getValue()));
+                    } else {
+                        MessageDialog.showErrorMessage(IMRequest.this.managedForm.getJDialog(), "E_SELECTED_METHOD");
+                    }
+                }
+            });
+        }
+        if (this.bQuery != null) {
+            this.bQuery.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (IMRequest.this.tResults != null) {
+                        IMRequest.this.tResults.setValue(IMRequest.this.serverManagement.getStatistics());
+                    }
+                }
+            });
+        }
+
+    }
 
 }

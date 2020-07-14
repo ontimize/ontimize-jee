@@ -14,16 +14,18 @@ import com.ontimize.jee.server.spring.namespace.CorsBeanDefinitionParser;
 
 public class OntimizeJeeCorsFilter extends CorsFilter implements ApplicationContextAware {
 
-	public OntimizeJeeCorsFilter() {
-		super(new UrlBasedCorsConfigurationSource());
-	}
+    public OntimizeJeeCorsFilter() {
+        super(new UrlBasedCorsConfigurationSource());
+    }
 
-	@Override
-	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-		LinkedHashMap<String, CorsConfiguration> bean = applicationContext.getBean(CorsBeanDefinitionParser.CORS_CONFIGURATION_BEAN_NAME, LinkedHashMap.class);
-		UrlBasedCorsConfigurationSource configSource = (UrlBasedCorsConfigurationSource) ReflectionTools.getFieldValue(this, "configSource");
-		configSource.setAlwaysUseFullPath(true);
-		configSource.setCorsConfigurations(bean);
-	}
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        LinkedHashMap<String, CorsConfiguration> bean = applicationContext
+            .getBean(CorsBeanDefinitionParser.CORS_CONFIGURATION_BEAN_NAME, LinkedHashMap.class);
+        UrlBasedCorsConfigurationSource configSource = (UrlBasedCorsConfigurationSource) ReflectionTools
+            .getFieldValue(this, "configSource");
+        configSource.setAlwaysUseFullPath(true);
+        configSource.setCorsConfigurations(bean);
+    }
 
 }

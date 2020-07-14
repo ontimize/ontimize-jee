@@ -20,99 +20,107 @@ import com.ontimize.jee.server.security.authorization.AutoRefreshRoleProvider;
  * Cache to store user information.
  */
 public class AutoRefreshMemoryUserCache implements UserCache {
-	/** The CONSTANT logger */
-	private static final Logger	logger	= LoggerFactory.getLogger(AutoRefreshRoleProvider.class);
 
-	/**
-	 * The application context (autowired).
-	 */
-	@Autowired
-	private ApplicationContext	context;
+    /** The CONSTANT logger */
+    private static final Logger logger = LoggerFactory.getLogger(AutoRefreshRoleProvider.class);
 
-	@Autowired
-	private UserDetailsService			userDetailService;
+    /**
+     * The application context (autowired).
+     */
+    @Autowired
+    private ApplicationContext context;
 
-	/**
-	 * The delay to wait between refresh invocations;
-	 */
-	protected long				delay;
+    @Autowired
+    private UserDetailsService userDetailService;
 
-	/**
-	 * The cache.
-	 */
-	protected Map<String, UserDetails>	cache;
+    /**
+     * The delay to wait between refresh invocations;
+     */
+    protected long delay;
 
-	/**
-	 * Instantiates a new memory user cache.
-	 */
-	public AutoRefreshMemoryUserCache() {
-		this(0);
-	}
+    /**
+     * The cache.
+     */
+    protected Map<String, UserDetails> cache;
 
-	/**
-	 * Instantiates a new memory user cache.
-	 *
-	 * @param delayMs
-	 *            the delay in ms
-	 */
-	public AutoRefreshMemoryUserCache(long delayMs) {
-		super();
-		this.cache = new HashMap<String, UserDetails>();
-		this.delay = delayMs;
-	}
+    /**
+     * Instantiates a new memory user cache.
+     */
+    public AutoRefreshMemoryUserCache() {
+        this(0);
+    }
 
-	/* (non-Javadoc)
-	 * @see org.springframework.security.core.userdetails.UserCache#getUserFromCache(java.lang.String)
-	 */
-	@Override
-	public UserDetails getUserFromCache(String username) {
-		UserDetails userDetails = this.cache.get(username);
-		if (userDetails == null) {
-			userDetails = this.loadUserAndCache(username);
-		}
-		return userDetails;
-	}
+    /**
+     * Instantiates a new memory user cache.
+     * @param delayMs the delay in ms
+     */
+    public AutoRefreshMemoryUserCache(long delayMs) {
+        super();
+        this.cache = new HashMap<String, UserDetails>();
+        this.delay = delayMs;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.springframework.security.core.userdetails.UserCache#putUserInCache(org.springframework.security.core.userdetails.UserDetails)
-	 */
-	@Override
-	public void putUserInCache(UserDetails user) {
-		this.cache.put(user.getUsername(), user);
-	}
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.springframework.security.core.userdetails.UserCache#getUserFromCache(java.lang.String)
+     */
+    @Override
+    public UserDetails getUserFromCache(String username) {
+        UserDetails userDetails = this.cache.get(username);
+        if (userDetails == null) {
+            userDetails = this.loadUserAndCache(username);
+        }
+        return userDetails;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.springframework.security.core.userdetails.UserCache#removeUserFromCache(java.lang.String)
-	 */
-	@Override
-	public void removeUserFromCache(String username) {
-		this.cache.remove(username);
-	}
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.springframework.security.core.userdetails.UserCache#putUserInCache(org.springframework.
+     * security.core.userdetails.UserDetails)
+     */
+    @Override
+    public void putUserInCache(UserDetails user) {
+        this.cache.put(user.getUsername(), user);
+    }
 
-	protected UserDetails loadUserAndCache(String username) {
-		UserDetails userDetails = this.userDetailService.loadUserByUsername(username);
-		this.putUserInCache(userDetails);
-		return userDetails;
-	}
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * org.springframework.security.core.userdetails.UserCache#removeUserFromCache(java.lang.String)
+     */
+    @Override
+    public void removeUserFromCache(String username) {
+        this.cache.remove(username);
+    }
+
+    protected UserDetails loadUserAndCache(String username) {
+        UserDetails userDetails = this.userDetailService.loadUserByUsername(username);
+        this.putUserInCache(userDetails);
+        return userDetails;
+    }
 
 
-	/**
-	 * Scheduled task to auto "refresh" roles configuration
-	 */
-	@Scheduled(fixedDelay = 10000)
-	public void scheduleFixedDelayTask() {
-		if (this.delay > 0) {
-			try {
-				Thread.sleep(this.delay);
-			} catch (InterruptedException err) {
-				AutoRefreshMemoryUserCache.logger.trace("Wait ignored");
-			}
-		}
-		AutoRefreshMemoryUserCache.logger.trace("User refresh scheduled task starts.");
-		List<String> refreshUsers = new ArrayList<>(this.cache.keySet());
-		for (String userName : refreshUsers) {
-			this.loadUserAndCache(userName);
-		}
-		AutoRefreshMemoryUserCache.logger.trace("Role refresh scheduled task ends.");
-	}
+    /**
+     * Scheduled task to auto "refresh" roles configuration
+     */
+    @Scheduled(fixedDelay = 10000)
+    public void scheduleFixedDelayTask() {
+        if (this.delay > 0) {
+            try {
+                Thread.sleep(this.delay);
+            } catch (InterruptedException err) {
+                AutoRefreshMemoryUserCache.logger.trace("Wait ignored");
+            }
+        }
+        AutoRefreshMemoryUserCache.logger.trace("User refresh scheduled task starts.");
+        List<String> refreshUsers = new ArrayList<>(this.cache.keySet());
+        for (String userName : refreshUsers) {
+            this.loadUserAndCache(userName);
+        }
+        AutoRefreshMemoryUserCache.logger.trace("Role refresh scheduled task ends.");
+    }
+
 }

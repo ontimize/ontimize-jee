@@ -10,28 +10,26 @@ import org.slf4j.LoggerFactory;
  */
 public class SwingTools {
 
-	private static final Logger logger = LoggerFactory.getLogger(SwingTools.class);
+    private static final Logger logger = LoggerFactory.getLogger(SwingTools.class);
 
-	/**
-	 * Invoke in ed th.
-	 *
-	 * @param runnable
-	 *            the runnable
-	 */
-	public static void invokeInEDTh(Runnable runnable) {
-		if (SwingUtilities.isEventDispatchThread()) {
-			runnable.run();
-		} else {
-			try {
-				SwingUtilities.invokeAndWait(runnable);
-			} catch (Exception exception) {
-				SwingTools.logger.error("SwingUtils.invokeInEDTh: Exception using InvokeAndWait.", exception);
-			}
-		}
-	}
+    /**
+     * Invoke in ed th.
+     * @param runnable the runnable
+     */
+    public static void invokeInEDTh(Runnable runnable) {
+        if (SwingUtilities.isEventDispatchThread()) {
+            runnable.run();
+        } else {
+            try {
+                SwingUtilities.invokeAndWait(runnable);
+            } catch (Exception exception) {
+                SwingTools.logger.error("SwingUtils.invokeInEDTh: Exception using InvokeAndWait.", exception);
+            }
+        }
+    }
 
-	public static void invokeInEDThLater(Runnable runnable) {
-		SwingUtilities.invokeLater(runnable);
-	}
+    public static void invokeInEDThLater(Runnable runnable) {
+        SwingUtilities.invokeLater(runnable);
+    }
 
 }

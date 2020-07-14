@@ -11,71 +11,75 @@ import com.ontimize.jee.common.jackson.OntimizeMapper;
 
 public class CallbackWrapperMessage {
 
-	private Integer	type;
-	private String	subtype;
-	private String	message;
+    private Integer type;
 
-	public CallbackWrapperMessage() {
-		super();
-	}
+    private String subtype;
 
-	public CallbackWrapperMessage(Integer type, String subtype, Object toSerialize) {
-		super();
-		this.type = type;
-		this.subtype = subtype;
-		this.setMessage(toSerialize);
-	}
+    private String message;
 
-	public void setMessage(String message) {
-		this.message = message;
-	}
+    public CallbackWrapperMessage() {
+        super();
+    }
 
-	public void setMessage(Object toSerialize) {
-		try {
-			this.message = new OntimizeMapper().writeValueAsString(toSerialize);
-		} catch (JsonProcessingException error) {
-			throw new OntimizeJEERuntimeException(error);
-		}
-	}
+    public CallbackWrapperMessage(Integer type, String subtype, Object toSerialize) {
+        super();
+        this.type = type;
+        this.subtype = subtype;
+        this.setMessage(toSerialize);
+    }
 
-	public void setType(Integer type) {
-		this.type = type;
-	}
+    public void setMessage(String message) {
+        this.message = message;
+    }
 
-	public Integer getType() {
-		return this.type;
-	}
+    public void setMessage(Object toSerialize) {
+        try {
+            this.message = new OntimizeMapper().writeValueAsString(toSerialize);
+        } catch (JsonProcessingException error) {
+            throw new OntimizeJEERuntimeException(error);
+        }
+    }
 
-	public void setSubtype(String subtype) {
-		this.subtype = subtype;
-	}
+    public void setType(Integer type) {
+        this.type = type;
+    }
 
-	public String getSubtype() {
-		return this.subtype;
-	}
+    public Integer getType() {
+        return this.type;
+    }
 
-	public String getMessage() {
-		return this.message;
-	}
+    public void setSubtype(String subtype) {
+        this.subtype = subtype;
+    }
 
-	public <T> T getMessage(Class<T> cl) {
-		// Deberia hacerse en base al tipo
-		try {
-			String unescapeJson = StringEscapeUtils.unescapeJson(this.message);
-			if (unescapeJson.startsWith("\"") && unescapeJson.endsWith("\"")) {
-				unescapeJson = unescapeJson.substring(1, unescapeJson.length() - 1);
-			}
-			return new OntimizeMapper().readValue(unescapeJson.replaceAll("\n", ""), cl);
-		} catch (Exception error) {
-			throw new OntimizeJEERuntimeException(error);
-		}
-	}
+    public String getSubtype() {
+        return this.subtype;
+    }
 
-	public String serialize() {
-		try {
-			return Base64.getEncoder().encodeToString(new OntimizeMapper().writeValueAsString(this).getBytes(StandardCharsets.ISO_8859_1));
-		} catch (JsonProcessingException error) {
-			throw new OntimizeJEERuntimeException(error);
-		}
-	}
+    public String getMessage() {
+        return this.message;
+    }
+
+    public <T> T getMessage(Class<T> cl) {
+        // Deberia hacerse en base al tipo
+        try {
+            String unescapeJson = StringEscapeUtils.unescapeJson(this.message);
+            if (unescapeJson.startsWith("\"") && unescapeJson.endsWith("\"")) {
+                unescapeJson = unescapeJson.substring(1, unescapeJson.length() - 1);
+            }
+            return new OntimizeMapper().readValue(unescapeJson.replaceAll("\n", ""), cl);
+        } catch (Exception error) {
+            throw new OntimizeJEERuntimeException(error);
+        }
+    }
+
+    public String serialize() {
+        try {
+            return Base64.getEncoder()
+                .encodeToString(new OntimizeMapper().writeValueAsString(this).getBytes(StandardCharsets.ISO_8859_1));
+        } catch (JsonProcessingException error) {
+            throw new OntimizeJEERuntimeException(error);
+        }
+    }
+
 }

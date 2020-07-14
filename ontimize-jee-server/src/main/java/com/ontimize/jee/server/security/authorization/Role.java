@@ -10,98 +10,85 @@ import java.util.Map;
  */
 public class Role {
 
-	/** The server permission. */
-	protected List<String>		serverPermissions;
+    /** The server permission. */
+    protected List<String> serverPermissions;
 
-	/** The client permissions. */
-	protected Map<String, ?>	clientPermissions;
+    /** The client permissions. */
+    protected Map<String, ?> clientPermissions;
 
-	/** The name. */
-	protected String			name;
+    /** The name. */
+    protected String name;
 
-	/**
-	 * Instantiates a new role.
-	 *
-	 * @param name
-	 *            the name
-	 * @param serverPermission
-	 *            the permission
-	 * @param clientPermission
-	 *            the client permission
-	 */
-	public Role(String name, List<String> serverPermission, Map<String, ?> clientPermission) {
-		super();
-		this.name = name;
-		this.serverPermissions = serverPermission;
-		this.clientPermissions = clientPermission;
-		if (this.serverPermissions == null) {
-			this.serverPermissions = new ArrayList<>();
-		}
-		if (this.clientPermissions == null) {
-			// Hashtable en vez de hashmap porque el cliente ontimize no está adaptado
-			this.clientPermissions = new Hashtable<>();
-		}
-	}
+    /**
+     * Instantiates a new role.
+     * @param name the name
+     * @param serverPermission the permission
+     * @param clientPermission the client permission
+     */
+    public Role(String name, List<String> serverPermission, Map<String, ?> clientPermission) {
+        super();
+        this.name = name;
+        this.serverPermissions = serverPermission;
+        this.clientPermissions = clientPermission;
+        if (this.serverPermissions == null) {
+            this.serverPermissions = new ArrayList<>();
+        }
+        if (this.clientPermissions == null) {
+            // Hashtable en vez de hashmap porque el cliente ontimize no está adaptado
+            this.clientPermissions = new Hashtable<>();
+        }
+    }
 
-	/**
-	 * Gets the permission.
-	 *
-	 * @return the permission
-	 */
-	public List<String> getServerPermissions() {
-		return this.serverPermissions;
-	}
+    /**
+     * Gets the permission.
+     * @return the permission
+     */
+    public List<String> getServerPermissions() {
+        return this.serverPermissions;
+    }
 
-	/**
-	 * Adds the permission.
-	 *
-	 * @param permission
-	 *            the permission
-	 */
-	public void addServerPermission(String permission) {
-		this.serverPermissions.add(permission);
-	}
+    /**
+     * Adds the permission.
+     * @param permission the permission
+     */
+    public void addServerPermission(String permission) {
+        this.serverPermissions.add(permission);
+    }
 
-	/**
-	 * Gets the name.
-	 *
-	 * @return the name
-	 */
-	public String getName() {
-		return this.name;
-	}
+    /**
+     * Gets the name.
+     * @return the name
+     */
+    public String getName() {
+        return this.name;
+    }
 
-	/**
-	 * Sets the name.
-	 *
-	 * @param value
-	 *            the new name
-	 */
-	public void setName(String value) {
-		this.name = value;
-	}
+    /**
+     * Sets the name.
+     * @param value the new name
+     */
+    public void setName(String value) {
+        this.name = value;
+    }
 
-	/**
-	 * Checks for permission.
-	 *
-	 * @param permissionName
-	 *            the permission name
-	 * @return true, if successful
-	 */
-	public boolean hasServerPermission(String permissionName) {
-		if (this.serverPermissions == null) {
-			return false;
-		}
-		return this.serverPermissions.contains(permissionName);
-	}
+    /**
+     * Checks for permission.
+     * @param permissionName the permission name
+     * @return true, if successful
+     */
+    public boolean hasServerPermission(String permissionName) {
+        if (this.serverPermissions == null) {
+            return false;
+        }
+        return this.serverPermissions.contains(permissionName);
+    }
 
-	/**
-	 * Gets the client permissions.
-	 *
-	 * @return the client permissions
-	 */
-	public Map<String, ?> getClientPermissions() {
-		return this.clientPermissions;
-	}
+    /**
+     * Gets the client permissions.
+     * @return the client permissions
+     */
+    public Map<String, ?> getClientPermissions() {
+        return this.clientPermissions;
+    }
 
 }

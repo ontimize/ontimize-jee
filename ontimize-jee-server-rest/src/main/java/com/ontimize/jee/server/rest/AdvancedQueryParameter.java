@@ -10,36 +10,37 @@ import com.ontimize.db.SQLStatementBuilder.SQLOrder;
 @XmlRootElement
 public class AdvancedQueryParameter extends QueryParameter {
 
-	@XmlElement(name = "pagesize")
-	protected int				pageSize	= -1;
+    @XmlElement(name = "pagesize")
+    protected int pageSize = -1;
 
-	@XmlElement
-	protected int				offset		= -1;
+    @XmlElement
+    protected int offset = -1;
 
-	@XmlElement
-	protected List<SQLOrder>	orderBy;
+    @XmlElement
+    protected List<SQLOrder> orderBy;
 
-	public int getPageSize() {
-		return this.pageSize;
-	}
+    public int getPageSize() {
+        return this.pageSize;
+    }
 
-	public void setPageSize(int pageSize) {
-		this.pageSize = pageSize;
-	}
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
+    }
 
-	public int getOffset() {
-		return this.offset;
-	}
+    public int getOffset() {
+        return this.offset;
+    }
 
-	public void setOffset(int offset) {
-		this.offset = offset;
-	}
+    public void setOffset(int offset) {
+        this.offset = offset;
+    }
 
-	public List<SQLOrder> getOrderBy() {
-		return this.orderBy;
-	}
+    public List<SQLOrder> getOrderBy() {
+        return this.orderBy;
+    }
 
-	public void setOrderBy(List<SQLOrder> orderBy) {
-		this.orderBy = orderBy;
-	}
+    public void setOrderBy(List<SQLOrder> orderBy) {
+        this.orderBy = orderBy;
+    }
+
 }

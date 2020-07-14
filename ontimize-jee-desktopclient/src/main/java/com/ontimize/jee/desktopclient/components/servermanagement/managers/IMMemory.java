@@ -33,65 +33,70 @@ import com.ontimize.jee.desktopclient.spring.BeansFactory;
  */
 public class IMMemory extends BasicInteractionManager {
 
-	private static final Logger			logger	= LoggerFactory.getLogger(IMMemory.class);
+    private static final Logger logger = LoggerFactory.getLogger(IMMemory.class);
 
-	@FormComponent(attr = "FILECHOOSER")
-	protected Row						rowFileChooser;
+    @FormComponent(attr = "FILECHOOSER")
+    protected Row rowFileChooser;
 
-	protected EmbeddedJFileChooser		fileChooser;
+    protected EmbeddedJFileChooser fileChooser;
 
-	protected IServerManagementService	serverManagement;
+    protected IServerManagementService serverManagement;
 
-	public IMMemory() {
-		super();
-	}
+    public IMMemory() {
+        super();
+    }
 
-	@Override
-	public void registerInteractionManager(Form f, IFormManager gf) {
-		super.registerInteractionManager(f, gf);
-		this.managedForm.setFormTitle("Memory dump");
+    @Override
+    public void registerInteractionManager(Form f, IFormManager gf) {
+        super.registerInteractionManager(f, gf);
+        this.managedForm.setFormTitle("Memory dump");
 
-		this.fileChooser = new EmbeddedJFileChooser(EmbeddedJFileChooser.MODE.BOTH, new MemoryToFileListener());
-		this.fileChooser.setFileFilter(new FileNameExtensionFilter("BIN FILES", "bin"));
-		this.rowFileChooser.add(new JScrollPane(this.fileChooser),
-				new GridBagConstraints(0, 1, 3, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(2, 2, 2, 2), 0, 0));
+        this.fileChooser = new EmbeddedJFileChooser(EmbeddedJFileChooser.MODE.BOTH, new MemoryToFileListener());
+        this.fileChooser.setFileFilter(new FileNameExtensionFilter("BIN FILES", "bin"));
+        this.rowFileChooser.add(new JScrollPane(this.fileChooser),
+                new GridBagConstraints(0, 1, 3, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                        new Insets(2, 2, 2, 2), 0, 0));
 
-		this.serverManagement = BeansFactory.getBean(IServerManagementService.class);
-	}
+        this.serverManagement = BeansFactory.getBean(IServerManagementService.class);
+    }
 
-	public class MemoryToFileListener implements IEmbeddedJFileChooser {
+    public class MemoryToFileListener implements IEmbeddedJFileChooser {
 
-		@Override
-		public void setPathFileChooser(String path) {
-			// Check extension
-			if (!"bin".equalsIgnoreCase(FilenameUtils.getExtension(path))) {
-				// filename is NO OK as-is
-				path = path + ".bin";
-			}
-			// Save file
-			InputStream heapDumpIs = null;
-			try {
-				heapDumpIs = IMMemory.this.serverManagement.createHeapDump();
-				IOUtils.copy(heapDumpIs, Files.newOutputStream(Paths.get(path)));
-			} catch (OntimizeJEEException e) {
-				IMMemory.logger.trace(null, e);
-				MessageDialog.showErrorMessage(SwingUtilities.getWindowAncestor(IMMemory.this.managedForm), e.getMessage());
-			} catch (IOException e) {
-				IMMemory.logger.trace(null, e);
-				MessageDialog.showErrorMessage(SwingUtilities.getWindowAncestor(IMMemory.this.managedForm), e.getMessage());
-			} finally {
-				if (heapDumpIs != null) {
-					try {
-						heapDumpIs.close();
-					} catch (IOException e) {
-						IMMemory.logger.trace(null, e);
-						MessageDialog.showErrorMessage(SwingUtilities.getWindowAncestor(IMMemory.this.managedForm), e.getMessage());
-					}
-				}
-			}
-			// It doesn't try to open it
-			IMMemory.this.fileChooser.rescanCurrentDirectory();
-		}
-	}
+        @Override
+        public void setPathFileChooser(String path) {
+            // Check extension
+            if (!"bin".equalsIgnoreCase(FilenameUtils.getExtension(path))) {
+                // filename is NO OK as-is
+                path = path + ".bin";
+            }
+            // Save file
+            InputStream heapDumpIs = null;
+            try {
+                heapDumpIs = IMMemory.this.serverManagement.createHeapDump();
+                IOUtils.copy(heapDumpIs, Files.newOutputStream(Paths.get(path)));
+            } catch (OntimizeJEEException e) {
+                IMMemory.logger.trace(null, e);
+                MessageDialog.showErrorMessage(SwingUtilities.getWindowAncestor(IMMemory.this.managedForm),
+                        e.getMessage());
+            } catch (IOException e) {
+                IMMemory.logger.trace(null, e);
+                MessageDialog.showErrorMessage(SwingUtilities.getWindowAncestor(IMMemory.this.managedForm),
+                        e.getMessage());
+            } finally {
+                if (heapDumpIs != null) {
+                    try {
+                        heapDumpIs.close();
+                    } catch (IOException e) {
+                        IMMemory.logger.trace(null, e);
+                        MessageDialog.showErrorMessage(SwingUtilities.getWindowAncestor(IMMemory.this.managedForm),
+                                e.getMessage());
+                    }
+                }
+            }
+            // It doesn't try to open it
+            IMMemory.this.fileChooser.rescanCurrentDirectory();
+        }
+
+    }
 
 }

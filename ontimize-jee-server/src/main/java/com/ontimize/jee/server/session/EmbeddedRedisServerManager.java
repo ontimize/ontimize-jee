@@ -8,40 +8,44 @@ import org.springframework.context.Lifecycle;
  */
 public class EmbeddedRedisServerManager implements InitializingBean, Lifecycle {
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
-	 */
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		// Do nothing
-	}
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
+     */
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        // Do nothing
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.context.Lifecycle#start()
-	 */
-	@Override
-	public void start() {
-		// Do nothing
-	}
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.springframework.context.Lifecycle#start()
+     */
+    @Override
+    public void start() {
+        // Do nothing
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.context.Lifecycle#stop()
-	 */
-	@Override
-	public void stop() {
-		// Do nothing
-	}
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.springframework.context.Lifecycle#stop()
+     */
+    @Override
+    public void stop() {
+        // Do nothing
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.context.Lifecycle#isRunning()
-	 */
-	@Override
-	public boolean isRunning() {
-		return false;
-	}
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.springframework.context.Lifecycle#isRunning()
+     */
+    @Override
+    public boolean isRunning() {
+        return false;
+    }
 
 }

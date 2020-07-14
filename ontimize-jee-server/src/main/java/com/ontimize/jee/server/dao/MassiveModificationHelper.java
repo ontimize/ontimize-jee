@@ -34,197 +34,207 @@ import com.ontimize.jee.server.dao.One2OneDaoHelper.OneToOneSubDao;
 @Lazy(true)
 public class MassiveModificationHelper implements ApplicationContextAware, IMassiveModificationHelper {
 
-	/** The application context. */
-	protected ApplicationContext applicationContext;
+    /** The application context. */
+    protected ApplicationContext applicationContext;
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.context.ApplicationContextAware#setApplicationContext (org.springframework.context.ApplicationContext)
-	 */
-	@Override
-	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-		this.applicationContext = applicationContext;
-	}
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.springframework.context.ApplicationContextAware#setApplicationContext
+     * (org.springframework.context.ApplicationContext)
+     */
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+    }
 
-	/**
-	 * Gets the application context.
-	 *
-	 * @return the application context
-	 */
-	public ApplicationContext getApplicationContext() {
-		return this.applicationContext;
-	}
+    /**
+     * Gets the application context.
+     * @return the application context
+     */
+    public ApplicationContext getApplicationContext() {
+        return this.applicationContext;
+    }
 
-	@Override
-	public EntityResult query(DefaultOntimizeDaoHelper daoHelper, IOntimizeDaoSupport dao, String pkColumn, Map<?, ?> keysValues, List<?> attributes) {
-		return this.query(daoHelper, dao, pkColumn, keysValues, attributes, "default");
-	}
+    @Override
+    public EntityResult query(DefaultOntimizeDaoHelper daoHelper, IOntimizeDaoSupport dao, String pkColumn,
+            Map<?, ?> keysValues, List<?> attributes) {
+        return this.query(daoHelper, dao, pkColumn, keysValues, attributes, "default");
+    }
 
-	@Override
-	public EntityResult query(DefaultOntimizeDaoHelper daoHelper, IOntimizeDaoSupport dao, String pkColumn, Map<?, ?> keysValues, List<?> attributes, String queryId) {
-		if (keysValues.containsKey(pkColumn) && (keysValues.get(pkColumn) instanceof int[])) {
+    @Override
+    public EntityResult query(DefaultOntimizeDaoHelper daoHelper, IOntimizeDaoSupport dao, String pkColumn,
+            Map<?, ?> keysValues, List<?> attributes, String queryId) {
+        if (keysValues.containsKey(pkColumn) && (keysValues.get(pkColumn) instanceof int[])) {
 
-			// TODO first approximation we obviate TableAttribute
-			List<Object> finalAttributes = new ArrayList<>();
-			for (Iterator<Object> iter = (Iterator<Object>) attributes.listIterator(); iter.hasNext();) {
-				Object attribute = iter.next();
-				if (!(attribute instanceof TableAttribute)) {
-					finalAttributes.add(attribute);
-				}
-			}
+            // TODO first approximation we obviate TableAttribute
+            List<Object> finalAttributes = new ArrayList<>();
+            for (Iterator<Object> iter = (Iterator<Object>) attributes.listIterator(); iter.hasNext();) {
+                Object attribute = iter.next();
+                if (!(attribute instanceof TableAttribute)) {
+                    finalAttributes.add(attribute);
+                }
+            }
 
-			EntityResult query = this.getQuery(daoHelper, dao, pkColumn, keysValues, finalAttributes, queryId);
-			if (query.calculateRecordNumber() > 0) {
-				return this.compareData(pkColumn, keysValues, finalAttributes, query);
-			}
-		}
-		return daoHelper.query(dao, keysValues, attributes, queryId);
-	}
+            EntityResult query = this.getQuery(daoHelper, dao, pkColumn, keysValues, finalAttributes, queryId);
+            if (query.calculateRecordNumber() > 0) {
+                return this.compareData(pkColumn, keysValues, finalAttributes, query);
+            }
+        }
+        return daoHelper.query(dao, keysValues, attributes, queryId);
+    }
 
-	public EntityResult compareData(String pkColumn, Map<?, ?> keysValues, List<?> attributes, EntityResult query) {
-		EntityResult resFinal = new EntityResult(query.getRecordValues(0));
-		EntityResult resMassiveMod = (EntityResult) resFinal.clone();
-		attributes.remove(pkColumn);
-		attributes.remove(IMassiveModificationHelper.MASSIVE_MODIFICATION_UNIQUE_IDENTIFIER);
+    public EntityResult compareData(String pkColumn, Map<?, ?> keysValues, List<?> attributes, EntityResult query) {
+        EntityResult resFinal = new EntityResult(query.getRecordValues(0));
+        EntityResult resMassiveMod = (EntityResult) resFinal.clone();
+        attributes.remove(pkColumn);
+        attributes.remove(IMassiveModificationHelper.MASSIVE_MODIFICATION_UNIQUE_IDENTIFIER);
 
-		List<TableAttribute> tableAttrs = new ArrayList<>();
-		for (Object attribute : attributes) {
-			if (attribute instanceof TableAttribute) {
-				tableAttrs.add((TableAttribute) attribute);
-			} else {
-				Vector<Object> values = (Vector<Object>) query.get(attribute);
-				boolean isEquals = true;
-				if ((values != null) && !values.isEmpty()) {
-					Object lastValue = values.get(0);
-					for (Object value : values) {
-						try {
-							ObjectTools.isEquals(value, lastValue);
-							lastValue = value;
-						} catch (Exception e) {
-							isEquals = false;
-							break;
-						}
-					}
-					Vector<? extends Object> value = isEquals ? new Vector<>(Arrays.asList(lastValue)) : new Vector<>(Arrays.asList(new NullValue()));
-					MapTools.safePut(resFinal, attribute, value);
-					MapTools.safePut(resMassiveMod, attribute, values);// debug mode
-				}
-			}
-		}
-		for (TableAttribute tableAttr : tableAttrs) {
-			Vector<EntityResult> vValues = (Vector<EntityResult>) query.get(tableAttr);
-			EntityResult doUnionAll = EntityResultTools.doUnionAll(vValues.toArray(new EntityResult[vValues.size()]));
-			EntityResult doRemoveDuplicates = EntityResultTools.doRemoveDuplicates(doUnionAll);
-			MapTools.safePut(resFinal, tableAttr, doRemoveDuplicates);
-		}
+        List<TableAttribute> tableAttrs = new ArrayList<>();
+        for (Object attribute : attributes) {
+            if (attribute instanceof TableAttribute) {
+                tableAttrs.add((TableAttribute) attribute);
+            } else {
+                Vector<Object> values = (Vector<Object>) query.get(attribute);
+                boolean isEquals = true;
+                if ((values != null) && !values.isEmpty()) {
+                    Object lastValue = values.get(0);
+                    for (Object value : values) {
+                        try {
+                            ObjectTools.isEquals(value, lastValue);
+                            lastValue = value;
+                        } catch (Exception e) {
+                            isEquals = false;
+                            break;
+                        }
+                    }
+                    Vector<? extends Object> value = isEquals ? new Vector<>(Arrays.asList(lastValue))
+                            : new Vector<>(Arrays.asList(new NullValue()));
+                    MapTools.safePut(resFinal, attribute, value);
+                    MapTools.safePut(resMassiveMod, attribute, values);// debug mode
+                }
+            }
+        }
+        for (TableAttribute tableAttr : tableAttrs) {
+            Vector<EntityResult> vValues = (Vector<EntityResult>) query.get(tableAttr);
+            EntityResult doUnionAll = EntityResultTools.doUnionAll(vValues.toArray(new EntityResult[vValues.size()]));
+            EntityResult doRemoveDuplicates = EntityResultTools.doRemoveDuplicates(doUnionAll);
+            MapTools.safePut(resFinal, tableAttr, doRemoveDuplicates);
+        }
 
-		MapTools.safePut(resFinal, pkColumn, keysValues.get(pkColumn));
-		MapTools.safePut(resMassiveMod, pkColumn, keysValues.get(pkColumn));
-		MapTools.safePut(resFinal, IMassiveModificationHelper.MASSIVE_MODIFICATION_UNIQUE_IDENTIFIER, resMassiveMod);
-		return resFinal;
-	}
+        MapTools.safePut(resFinal, pkColumn, keysValues.get(pkColumn));
+        MapTools.safePut(resMassiveMod, pkColumn, keysValues.get(pkColumn));
+        MapTools.safePut(resFinal, IMassiveModificationHelper.MASSIVE_MODIFICATION_UNIQUE_IDENTIFIER, resMassiveMod);
+        return resFinal;
+    }
 
-	@Override
-	public EntityResult update(DefaultOntimizeDaoHelper daoHelper, IOntimizeDaoSupport dao, String pkColumn, Map<?, ?> attributesValues, Map<?, ?> keysValues)
-	        throws OntimizeJEERuntimeException {
-		if (keysValues.containsKey(pkColumn) && (keysValues.get(pkColumn) instanceof int[])) {
-			int[] ids = (int[]) keysValues.get(pkColumn);
-			for (int id : ids) {
-				HashMap<String, Object> keys = new HashMap<>();
-				keys.put(pkColumn, id);
-				daoHelper.update(dao, attributesValues, keys);
-			}
-			return new EntityResult();
-		}
-		return daoHelper.update(dao, attributesValues, keysValues);
-	}
+    @Override
+    public EntityResult update(DefaultOntimizeDaoHelper daoHelper, IOntimizeDaoSupport dao, String pkColumn,
+            Map<?, ?> attributesValues, Map<?, ?> keysValues)
+            throws OntimizeJEERuntimeException {
+        if (keysValues.containsKey(pkColumn) && (keysValues.get(pkColumn) instanceof int[])) {
+            int[] ids = (int[]) keysValues.get(pkColumn);
+            for (int id : ids) {
+                HashMap<String, Object> keys = new HashMap<>();
+                keys.put(pkColumn, id);
+                daoHelper.update(dao, attributesValues, keys);
+            }
+            return new EntityResult();
+        }
+        return daoHelper.update(dao, attributesValues, keysValues);
+    }
 
-	@Override
-	public EntityResult update(DefaultOntimizeDaoHelper daoHelper, One2OneDaoHelper one2oneHelper, IOntimizeDaoSupport mainDao, String pkColumn, List<OneToOneSubDao> secondaryDaos,
-	        Map<?, ?> attributesValues, Map<?, ?> keysValues, One2OneType type) throws OntimizeJEERuntimeException {
-		if (keysValues.containsKey(pkColumn) && (keysValues.get(pkColumn) instanceof int[])) {
-			int[] ids = (int[]) keysValues.get(pkColumn);
-			for (int id : ids) {
-				HashMap<Object, Object> keys = new HashMap<>();
-				keys.put(pkColumn, id);
-				one2oneHelper.update(daoHelper, mainDao, secondaryDaos, attributesValues, keys, type);
-			}
-			return new EntityResult();
-		}
-		return one2oneHelper.update(daoHelper, mainDao, secondaryDaos, attributesValues, keysValues, type);
-	}
+    @Override
+    public EntityResult update(DefaultOntimizeDaoHelper daoHelper, One2OneDaoHelper one2oneHelper,
+            IOntimizeDaoSupport mainDao, String pkColumn, List<OneToOneSubDao> secondaryDaos,
+            Map<?, ?> attributesValues, Map<?, ?> keysValues, One2OneType type) throws OntimizeJEERuntimeException {
+        if (keysValues.containsKey(pkColumn) && (keysValues.get(pkColumn) instanceof int[])) {
+            int[] ids = (int[]) keysValues.get(pkColumn);
+            for (int id : ids) {
+                HashMap<Object, Object> keys = new HashMap<>();
+                keys.put(pkColumn, id);
+                one2oneHelper.update(daoHelper, mainDao, secondaryDaos, attributesValues, keys, type);
+            }
+            return new EntityResult();
+        }
+        return one2oneHelper.update(daoHelper, mainDao, secondaryDaos, attributesValues, keysValues, type);
+    }
 
-	public EntityResult getQuery(DefaultOntimizeDaoHelper daoHelper, IOntimizeDaoSupport dao, String pkColumn, Map<?, ?> keysValues, List<?> attributes) {
-		return this.getQuery(daoHelper, dao, pkColumn, keysValues, attributes, "default");
-	}
+    public EntityResult getQuery(DefaultOntimizeDaoHelper daoHelper, IOntimizeDaoSupport dao, String pkColumn,
+            Map<?, ?> keysValues, List<?> attributes) {
+        return this.getQuery(daoHelper, dao, pkColumn, keysValues, attributes, "default");
+    }
 
-	public EntityResult getQuery(DefaultOntimizeDaoHelper daoHelper, IOntimizeDaoSupport dao, String pkColumn, Map<?, ?> keysValues, List<?> attributes, String queryId) {
-		int[] ids = (int[]) keysValues.get(pkColumn);
-		List<Integer> list = new ArrayList<>();
-		for (int i = 0; i <= (ids.length - 1); i++) {
-			list.add(ids[i]);
-		}
-		SearchValue searchValue = new SearchValue(SearchValue.IN, list);
-		HashMap<String, Object> keys = new HashMap<>();
-		keys.put(pkColumn, searchValue);
+    public EntityResult getQuery(DefaultOntimizeDaoHelper daoHelper, IOntimizeDaoSupport dao, String pkColumn,
+            Map<?, ?> keysValues, List<?> attributes, String queryId) {
+        int[] ids = (int[]) keysValues.get(pkColumn);
+        List<Integer> list = new ArrayList<>();
+        for (int i = 0; i <= (ids.length - 1); i++) {
+            list.add(ids[i]);
+        }
+        SearchValue searchValue = new SearchValue(SearchValue.IN, list);
+        HashMap<String, Object> keys = new HashMap<>();
+        keys.put(pkColumn, searchValue);
 
-		return daoHelper.query(dao, keys, attributes, queryId);
-	}
+        return daoHelper.query(dao, keys, attributes, queryId);
+    }
 
-	@Override
-	public EntityResult insert(DefaultOntimizeDaoHelper daoHelper, IOntimizeDaoSupport dao, String vKeysColumn, String pkColumn, Map<?, ?> attributesValues) {
-		if (attributesValues.containsKey(vKeysColumn) && (attributesValues.get(vKeysColumn) instanceof int[])) {
-			int[] ids = (int[]) attributesValues.get(vKeysColumn);
-			Vector pks = new Vector<>();
-			for (int id : ids) {
-				HashMap<Object, Object> keys = new HashMap<>();
-				keys.putAll(attributesValues);
-				keys.put(vKeysColumn, id);
-				EntityResult update = daoHelper.insert(dao, keys);
-				pks.add(update.get(pkColumn));
-			}
-			Hashtable hash = new Hashtable<>();
-			hash.put(pkColumn, pks);
-			return new EntityResult(hash);
-		}
-		return daoHelper.insert(dao, attributesValues);
-	}
+    @Override
+    public EntityResult insert(DefaultOntimizeDaoHelper daoHelper, IOntimizeDaoSupport dao, String vKeysColumn,
+            String pkColumn, Map<?, ?> attributesValues) {
+        if (attributesValues.containsKey(vKeysColumn) && (attributesValues.get(vKeysColumn) instanceof int[])) {
+            int[] ids = (int[]) attributesValues.get(vKeysColumn);
+            Vector pks = new Vector<>();
+            for (int id : ids) {
+                HashMap<Object, Object> keys = new HashMap<>();
+                keys.putAll(attributesValues);
+                keys.put(vKeysColumn, id);
+                EntityResult update = daoHelper.insert(dao, keys);
+                pks.add(update.get(pkColumn));
+            }
+            Hashtable hash = new Hashtable<>();
+            hash.put(pkColumn, pks);
+            return new EntityResult(hash);
+        }
+        return daoHelper.insert(dao, attributesValues);
+    }
 
-	@Override
-	public EntityResult insert(DefaultOntimizeDaoHelper daoHelper, One2OneDaoHelper one2oneHelper, IOntimizeDaoSupport mainDao, String pkColumn, List<OneToOneSubDao> secondaryDaos,
-	        Map<?, ?> attributesValues, One2OneType type) throws OntimizeJEERuntimeException {
-		if (attributesValues.containsKey(pkColumn) && (attributesValues.get(pkColumn) instanceof int[])) {
-			int[] ids = (int[]) attributesValues.get(pkColumn);
-			attributesValues.remove(pkColumn);
-			for (int id : ids) {
-				MapTools.safePut((Map<Object, Object>) attributesValues, pkColumn, id);
-				one2oneHelper.insert(daoHelper, mainDao, secondaryDaos, attributesValues, type);
-			}
-			return new EntityResult();
-		}
-		return one2oneHelper.insert(daoHelper, mainDao, secondaryDaos, attributesValues, type);
-	}
+    @Override
+    public EntityResult insert(DefaultOntimizeDaoHelper daoHelper, One2OneDaoHelper one2oneHelper,
+            IOntimizeDaoSupport mainDao, String pkColumn, List<OneToOneSubDao> secondaryDaos,
+            Map<?, ?> attributesValues, One2OneType type) throws OntimizeJEERuntimeException {
+        if (attributesValues.containsKey(pkColumn) && (attributesValues.get(pkColumn) instanceof int[])) {
+            int[] ids = (int[]) attributesValues.get(pkColumn);
+            attributesValues.remove(pkColumn);
+            for (int id : ids) {
+                MapTools.safePut((Map<Object, Object>) attributesValues, pkColumn, id);
+                one2oneHelper.insert(daoHelper, mainDao, secondaryDaos, attributesValues, type);
+            }
+            return new EntityResult();
+        }
+        return one2oneHelper.insert(daoHelper, mainDao, secondaryDaos, attributesValues, type);
+    }
 
-	@Override
-	public boolean isMassiveModification(Object key, Map<?, ?> keysValues) {
-		return (keysValues != null) && keysValues.containsKey(key) && (keysValues.get(key) instanceof int[]);
-	}
+    @Override
+    public boolean isMassiveModification(Object key, Map<?, ?> keysValues) {
+        return (keysValues != null) && keysValues.containsKey(key) && (keysValues.get(key) instanceof int[]);
+    }
 
-	public static String getStringAttr(Object attribute) {
-		if (attribute instanceof String) {
-			return (String) attribute;
-		} else if (attribute instanceof ReferenceFieldAttribute) {
-			return ((ReferenceFieldAttribute) attribute).getAttr();
-		} else if (attribute instanceof TableAttribute) {
-			return ((TableAttribute) attribute).getEntity();
-		} else if (attribute instanceof MultipleTableAttribute) {
-			return ((MultipleTableAttribute) attribute).getAttribute().toString();
-		} else if (attribute instanceof MultipleReferenceDataFieldAttribute) {
-			return ((MultipleReferenceDataFieldAttribute) attribute).getAttr();
-		} else if (attribute instanceof EntityFunctionAttribute) {
-			return ((EntityFunctionAttribute) attribute).getAttr();
-		}
-		return attribute.toString();
-	}
+    public static String getStringAttr(Object attribute) {
+        if (attribute instanceof String) {
+            return (String) attribute;
+        } else if (attribute instanceof ReferenceFieldAttribute) {
+            return ((ReferenceFieldAttribute) attribute).getAttr();
+        } else if (attribute instanceof TableAttribute) {
+            return ((TableAttribute) attribute).getEntity();
+        } else if (attribute instanceof MultipleTableAttribute) {
+            return ((MultipleTableAttribute) attribute).getAttribute().toString();
+        } else if (attribute instanceof MultipleReferenceDataFieldAttribute) {
+            return ((MultipleReferenceDataFieldAttribute) attribute).getAttr();
+        } else if (attribute instanceof EntityFunctionAttribute) {
+            return ((EntityFunctionAttribute) attribute).getAttr();
+        }
+        return attribute.toString();
+    }
 
 }

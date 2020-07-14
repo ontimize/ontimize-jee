@@ -11,8 +11,11 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 
 public class OntimizeAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
-	@Override
-	public void onAuthenticationSuccess(HttpServletRequest arg0, HttpServletResponse arg1, Authentication arg2) throws IOException, ServletException {
-		// We do not need to do anything extra on REST authentication success, because there is no page to redirect to
-	}
+    @Override
+    public void onAuthenticationSuccess(HttpServletRequest arg0, HttpServletResponse arg1, Authentication arg2)
+            throws IOException, ServletException {
+        // We do not need to do anything extra on REST authentication success, because there is no page to
+        // redirect to
+    }
+
 }

@@ -11,24 +11,25 @@ import com.ontimize.jee.server.configuration.OntimizeConfiguration;
 @Lazy(value = true)
 public class RemoteOperationManager implements InitializingBean {
 
-	@Autowired
-	private OntimizeConfiguration ontimizeConfiguration;
+    @Autowired
+    private OntimizeConfiguration ontimizeConfiguration;
 
-	public RemoteOperationManager() {
-		super();
-	}
+    public RemoteOperationManager() {
+        super();
+    }
 
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		// el propio engine se registra como escuchador de websocket y atiende directamente las peticiones
-		this.ontimizeConfiguration.getRemoteOperationConfiguration().getRemoteOpereationEngine();
-	}
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        // el propio engine se registra como escuchador de websocket y atiende directamente las peticiones
+        this.ontimizeConfiguration.getRemoteOperationConfiguration().getRemoteOpereationEngine();
+    }
 
-	public OntimizeConfiguration getOntimizeConfiguration() {
-		return this.ontimizeConfiguration;
-	}
+    public OntimizeConfiguration getOntimizeConfiguration() {
+        return this.ontimizeConfiguration;
+    }
 
-	public void setOntimizeConfiguration(OntimizeConfiguration ontimizeConfiguration) {
-		this.ontimizeConfiguration = ontimizeConfiguration;
-	}
+    public void setOntimizeConfiguration(OntimizeConfiguration ontimizeConfiguration) {
+        this.ontimizeConfiguration = ontimizeConfiguration;
+    }
+
 }

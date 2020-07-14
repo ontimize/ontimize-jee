@@ -7,41 +7,34 @@ import com.ontimize.jee.common.callback.CallbackWrapperMessage;
  */
 public interface IRemoteOperation extends Runnable {
 
-	/**
-	 * Inits the operation.
-	 *
-	 * @param parameters
-	 *            the parameters
-	 */
-	void init(Object parameters);
+    /**
+     * Inits the operation.
+     * @param parameters the parameters
+     */
+    void init(Object parameters);
 
-	/**
-	 * Sets the listener.
-	 *
-	 * @param listener
-	 *            the new listener
-	 */
-	void setListener(IRemoteOperationListener listener);
+    /**
+     * Sets the listener.
+     * @param listener the new listener
+     */
+    void setListener(IRemoteOperationListener listener);
 
-	/**
-	 * On custom message received.
-	 *
-	 * @param msg
-	 *            the msg
-	 * @return the object
-	 */
-	Object onCustomMessageReceived(CallbackWrapperMessage msg);
+    /**
+     * On custom message received.
+     * @param msg the msg
+     * @return the object
+     */
+    Object onCustomMessageReceived(CallbackWrapperMessage msg);
 
-	/**
-	 * On cancel received.
-	 */
-	void onCancelReceived();
+    /**
+     * On cancel received.
+     */
+    void onCancelReceived();
 
-	/**
-	 * The main task logic must be implemented here
-	 *
-	 * @return the object
-	 */
-	Object execute();
+    /**
+     * The main task logic must be implemented here
+     * @return the object
+     */
+    Object execute();
 
 }

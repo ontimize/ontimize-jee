@@ -11,31 +11,29 @@ import java.util.List;
  */
 public final class DataConversorsUtil {
 
-	private static List<DataConversor<Object, Object>> conversors = new ArrayList<>();
+    private static List<DataConversor<Object, Object>> conversors = new ArrayList<>();
 
-	public static List<DataConversor<Object, Object>> getConversors() {
-		return DataConversorsUtil.conversors;
-	}
+    public static List<DataConversor<Object, Object>> getConversors() {
+        return DataConversorsUtil.conversors;
+    }
 
-	public static void setConversors(List<DataConversor<Object, Object>> conversors) {
-		DataConversorsUtil.conversors = conversors;
-	}
+    public static void setConversors(List<DataConversor<Object, Object>> conversors) {
+        DataConversorsUtil.conversors = conversors;
+    }
 
-	/**
-	 * Convert.
-	 *
-	 * @param input
-	 *            the input
-	 * @param toClass
-	 *            the to class
-	 * @return the object
-	 */
-	public static Object convert(Object input, Class<?> toClass) {
-		for (DataConversor<Object, Object> dc : DataConversorsUtil.conversors) {
-			if (dc.canHandleConversion(input, (Class<Object>) toClass)) {
-				return dc.convert(input, (Class<Object>) toClass);
-			}
-		}
-		return input;
-	}
+    /**
+     * Convert.
+     * @param input the input
+     * @param toClass the to class
+     * @return the object
+     */
+    public static Object convert(Object input, Class<?> toClass) {
+        for (DataConversor<Object, Object> dc : DataConversorsUtil.conversors) {
+            if (dc.canHandleConversion(input, (Class<Object>) toClass)) {
+                return dc.convert(input, (Class<Object>) toClass);
+            }
+        }
+        return input;
+    }
+
 }

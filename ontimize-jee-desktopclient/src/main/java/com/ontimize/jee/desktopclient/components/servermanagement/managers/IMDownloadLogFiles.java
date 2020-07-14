@@ -33,119 +33,126 @@ import com.ontimize.jee.desktopclient.spring.BeansFactory;
  */
 public class IMDownloadLogFiles extends BasicInteractionManager {
 
-	private static final Logger			logger	= LoggerFactory.getLogger(IMDownloadLogFiles.class);
+    private static final Logger logger = LoggerFactory.getLogger(IMDownloadLogFiles.class);
 
-	@FormComponent(attr = "B_REFRESH")
-	protected Button					bRefresh;
-	@FormComponent(attr = "B_DOWNLOAD")
-	protected Button					bDownload;
+    @FormComponent(attr = "B_REFRESH")
+    protected Button bRefresh;
 
-	@FormComponent(attr = "LOGFILES")
-	protected Table						tLogFiles;
+    @FormComponent(attr = "B_DOWNLOAD")
+    protected Button bDownload;
 
-	private IServerManagementService	serverManagement;
-	private JFileChooser				chooser;
+    @FormComponent(attr = "LOGFILES")
+    protected Table tLogFiles;
 
-	public IMDownloadLogFiles() {
-		super();
-	}
+    private IServerManagementService serverManagement;
 
-	@Override
-	public void registerInteractionManager(Form f, IFormManager gf) {
-		super.registerInteractionManager(f, gf);
-		this.managedForm.setFormTitle("Download log files");
-		this.bRefresh.addActionListener(new RefreshDownloadLogFilesListener());
-		this.bDownload.addActionListener(new DownloadLogFileListener());
-		this.serverManagement = BeansFactory.getBean(IServerManagementService.class);
-	}
+    private JFileChooser chooser;
 
-	@Override
-	public void setQueryInsertMode() {
-		super.setQueryInsertMode();
-		this.managedForm.enableButtons();
-		this.managedForm.enableDataFields();
-	}
+    public IMDownloadLogFiles() {
+        super();
+    }
 
-	private File getTargetFile() {
-		if (this.chooser == null) {
-			this.chooser = new JFileChooser();
-		}
-		this.chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		int returnVal = this.chooser.showSaveDialog(this.bRefresh);
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			return this.chooser.getSelectedFile();
-		}
-		return null;
-	}
+    @Override
+    public void registerInteractionManager(Form f, IFormManager gf) {
+        super.registerInteractionManager(f, gf);
+        this.managedForm.setFormTitle("Download log files");
+        this.bRefresh.addActionListener(new RefreshDownloadLogFilesListener());
+        this.bDownload.addActionListener(new DownloadLogFileListener());
+        this.serverManagement = BeansFactory.getBean(IServerManagementService.class);
+    }
 
-	protected EntityResult getLogFiles() throws Exception {
-		this.ensureServerManagement();
-		return this.serverManagement.getLogFiles();
-	}
+    @Override
+    public void setQueryInsertMode() {
+        super.setQueryInsertMode();
+        this.managedForm.enableButtons();
+        this.managedForm.enableDataFields();
+    }
 
-	protected InputStream getLogger(String fileName) throws Exception {
-		this.ensureServerManagement();
-		return this.serverManagement.getLogFileContent(fileName);
-	}
+    private File getTargetFile() {
+        if (this.chooser == null) {
+            this.chooser = new JFileChooser();
+        }
+        this.chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        int returnVal = this.chooser.showSaveDialog(this.bRefresh);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            return this.chooser.getSelectedFile();
+        }
+        return null;
+    }
 
-	protected void ensureServerManagement() {
-		if (this.serverManagement == null) {
-			throw new OntimizeJEERuntimeException("No server management reference");
-		}
-	}
+    protected EntityResult getLogFiles() throws Exception {
+        this.ensureServerManagement();
+        return this.serverManagement.getLogFiles();
+    }
 
-	public class RefreshDownloadLogFilesListener implements ActionListener {
+    protected InputStream getLogger(String fileName) throws Exception {
+        this.ensureServerManagement();
+        return this.serverManagement.getLogFileContent(fileName);
+    }
 
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			new Thread(new Runnable() {
+    protected void ensureServerManagement() {
+        if (this.serverManagement == null) {
+            throw new OntimizeJEERuntimeException("No server management reference");
+        }
+    }
 
-				@Override
-				public void run() {
-					try {
-						EntityResult res = IMDownloadLogFiles.this.getLogFiles();
-						IMDownloadLogFiles.this.tLogFiles.setValue(res);
-					} catch (Exception ex) {
-						IMDownloadLogFiles.logger.trace(null, ex);
-						MessageDialog.showErrorMessage(IMDownloadLogFiles.this.managedForm.getJDialog(), ex.getMessage());
-					}
-				}
-			}).start();
-		}
-	}
+    public class RefreshDownloadLogFilesListener implements ActionListener {
 
-	public class DownloadLogFileListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            new Thread(new Runnable() {
 
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        EntityResult res = IMDownloadLogFiles.this.getLogFiles();
+                        IMDownloadLogFiles.this.tLogFiles.setValue(res);
+                    } catch (Exception ex) {
+                        IMDownloadLogFiles.logger.trace(null, ex);
+                        MessageDialog.showErrorMessage(IMDownloadLogFiles.this.managedForm.getJDialog(),
+                                ex.getMessage());
+                    }
+                }
+            }).start();
+        }
 
-				@Override
-				public void run() {
-					try {
-						if (IMDownloadLogFiles.this.tLogFiles.getSelectedRowsNumber() != 1) {
-							throw new Exception("Debes seleccionar una fila");
-						}
-						File folder = IMDownloadLogFiles.this.getTargetFile();
-						if (folder == null) {
-							return;
-						}
-						String fileName = ((List<String>) IMDownloadLogFiles.this.tLogFiles.getSelectedRowData().get("FILE_NAME")).get(0);
-						InputStream is = IMDownloadLogFiles.this.getLogger(fileName);
-						ZipInputStream zip = new ZipInputStream(is);
-						ZipEntry nextEntry = zip.getNextEntry();
-						File file = new File(folder, nextEntry.getName());
-						try (FileOutputStream fos = new FileOutputStream(file)) {
-							StreamUtils.copy(zip, fos);
-						}
-						Desktop.getDesktop().open(file);
-					} catch (Exception ex) {
-						IMDownloadLogFiles.logger.error(null, ex);
-						MessageDialog.showErrorMessage(IMDownloadLogFiles.this.managedForm.getJDialog(), ex.getMessage());
-					}
-				}
-			}).start();
-		}
-	}
+    }
+
+    public class DownloadLogFileListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            new Thread(new Runnable() {
+
+                @Override
+                public void run() {
+                    try {
+                        if (IMDownloadLogFiles.this.tLogFiles.getSelectedRowsNumber() != 1) {
+                            throw new Exception("Debes seleccionar una fila");
+                        }
+                        File folder = IMDownloadLogFiles.this.getTargetFile();
+                        if (folder == null) {
+                            return;
+                        }
+                        String fileName = ((List<String>) IMDownloadLogFiles.this.tLogFiles.getSelectedRowData()
+                            .get("FILE_NAME")).get(0);
+                        InputStream is = IMDownloadLogFiles.this.getLogger(fileName);
+                        ZipInputStream zip = new ZipInputStream(is);
+                        ZipEntry nextEntry = zip.getNextEntry();
+                        File file = new File(folder, nextEntry.getName());
+                        try (FileOutputStream fos = new FileOutputStream(file)) {
+                            StreamUtils.copy(zip, fos);
+                        }
+                        Desktop.getDesktop().open(file);
+                    } catch (Exception ex) {
+                        IMDownloadLogFiles.logger.error(null, ex);
+                        MessageDialog.showErrorMessage(IMDownloadLogFiles.this.managedForm.getJDialog(),
+                                ex.getMessage());
+                    }
+                }
+            }).start();
+        }
+
+    }
 
 }
