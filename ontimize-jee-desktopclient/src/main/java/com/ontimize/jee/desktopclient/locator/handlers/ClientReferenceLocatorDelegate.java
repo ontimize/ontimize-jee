@@ -8,9 +8,6 @@ import com.ontimize.locator.ClientReferenceLocator;
 import com.ontimize.locator.InitialContext;
 import org.apache.commons.collections.map.HashedMap;
 
-/**
- * @author <a href="changeme@ext.inditex.com">faustino.lage</a>
- */
 public class ClientReferenceLocatorDelegate extends AbstractInvocationDelegate implements ClientReferenceLocator {
 
     @Override
