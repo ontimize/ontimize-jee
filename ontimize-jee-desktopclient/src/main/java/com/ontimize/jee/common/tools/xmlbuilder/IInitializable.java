@@ -1,7 +1,5 @@
 /**
  * Initializable.java 18-abr-2013
- *
- * Copyright 2013 INDITEX. Departamento de Sistemas
  */
 package com.ontimize.jee.common.tools.xmlbuilder;
 
