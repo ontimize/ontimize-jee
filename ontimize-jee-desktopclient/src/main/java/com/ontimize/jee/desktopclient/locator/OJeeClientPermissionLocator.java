@@ -766,12 +766,12 @@ public class OJeeClientPermissionLocator implements SecureEntityReferenceLocator
 
     @Override
     public String getLValue(String s) throws Exception {
-        return "OK";
+        return null;
     }
 
     @Override
     public String getLContent() throws Exception {
-        return "OK";
+        return null;
     }
 
     @Override
