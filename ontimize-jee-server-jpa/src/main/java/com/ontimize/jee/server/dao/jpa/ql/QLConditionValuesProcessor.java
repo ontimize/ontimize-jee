@@ -11,29 +11,24 @@ import java.util.Map;
  */
 public interface QLConditionValuesProcessor {
 
-	/**
-	 * Sets the value to ql literal processor.
-	 *
-	 * @param valueToQLProcessor
-	 *            the new value to ql processor
-	 */
-	void setValueToQLLiteralProcessor(ValueToQLLiteralProcessor valueToQLProcessor);
+    /**
+     * Sets the value to ql literal processor.
+     * @param valueToQLProcessor the new value to ql processor
+     */
+    void setValueToQLLiteralProcessor(ValueToQLLiteralProcessor valueToQLProcessor);
 
-	/**
-	 * Gets the value to ql literal processor.
-	 *
-	 * @return the value to ql literal processor
-	 */
-	ValueToQLLiteralProcessor getValueToQLLiteralProcessor();
+    /**
+     * Gets the value to ql literal processor.
+     * @return the value to ql literal processor
+     */
+    ValueToQLLiteralProcessor getValueToQLLiteralProcessor();
 
-	/**
-	 * Creates the query conditions.
-	 *
-	 * @param conditions
-	 *            the conditions
-	 * @param wildcards
-	 *            the wildcards which conditions do are allowed to have wildcards
-	 * @return the string
-	 */
-	String createQueryConditions(Map<?, ?> conditions, List<String> wildcards);
+    /**
+     * Creates the query conditions.
+     * @param conditions the conditions
+     * @param wildcards the wildcards which conditions do are allowed to have wildcards
+     * @return the string
+     */
+    String createQueryConditions(Map<?, ?> conditions, List<String> wildcards);
+
 }

@@ -10,33 +10,37 @@ import com.ontimize.gui.Form;
 
 public interface LevelManager {
 
-	// available params
-	String	PARENTFORM			= "parentform";
-	String	SECTIONS			= "sections";
-	String	BUTTONS				= "buttons";
-	String	PATH_MANAGER_CLASS	= "pathmanagerclass";
+    // available params
+    String PARENTFORM = "parentform";
 
-	Level getLevel(String id);
+    String SECTIONS = "sections";
 
-	Level getFirstLevel();
+    String BUTTONS = "buttons";
 
-	void show(String levelId);
+    String PATH_MANAGER_CLASS = "pathmanagerclass";
 
-	Form getParentForm();
+    Level getLevel(String id);
 
-	void openFormInMainTab(Level sourceLevel, int mode);
+    Level getFirstLevel();
 
-	void openFormInTab(Level sourceLevel, int mode);
+    void show(String levelId);
 
-	void add(Level level);
+    Form getParentForm();
 
-	JComponent getGUIComponent();
+    void openFormInMainTab(Level sourceLevel, int mode);
 
-	void setResourceBundle(ResourceBundle resources);
+    void openFormInTab(Level sourceLevel, int mode);
 
-	ResourceBundle getResourceBundle();
+    void add(Level level);
 
-	void setComponentLocale(Locale locale);
+    JComponent getGUIComponent();
 
-	Collection<?> getTextsToTranslate();
+    void setResourceBundle(ResourceBundle resources);
+
+    ResourceBundle getResourceBundle();
+
+    void setComponentLocale(Locale locale);
+
+    Collection<?> getTextsToTranslate();
+
 }

@@ -15,70 +15,76 @@ import com.ontimize.gui.manager.IFormManager;
  */
 public class IMLiveLogConsole extends BasicInteractionManager {
 
-	@FormComponent(attr = "CONSOLE")
-	protected MemoDataField		console;
+    @FormComponent(attr = "CONSOLE")
+    protected MemoDataField console;
 
-	@FormComponent(attr = "B_START")
-	protected Button			bStart;
-	@FormComponent(attr = "B_STOP")
-	protected Button			bStop;
+    @FormComponent(attr = "B_START")
+    protected Button bStart;
 
-	public IMLiveLogConsole() {
-		super();
-	}
+    @FormComponent(attr = "B_STOP")
+    protected Button bStop;
 
-	@Override
-	public void registerInteractionManager(Form f, IFormManager gf) {
-		super.registerInteractionManager(f, gf);
-		this.managedForm.setFormTitle("Live log console");
-		LiveLogConsoleListener liveLogConsoleListener = new LiveLogConsoleListener(this.console, this.bStart, this.bStop);
-		liveLogConsoleListener.install();
-	}
+    public IMLiveLogConsole() {
+        super();
+    }
 
-	public static class LiveLogConsoleListener implements ActionListener {
+    @Override
+    public void registerInteractionManager(Form f, IFormManager gf) {
+        super.registerInteractionManager(f, gf);
+        this.managedForm.setFormTitle("Live log console");
+        LiveLogConsoleListener liveLogConsoleListener = new LiveLogConsoleListener(this.console, this.bStart,
+                this.bStop);
+        liveLogConsoleListener.install();
+    }
 
-		private enum LiveLogConsoleActionCommands {
-			start, stop
-		};
+    public static class LiveLogConsoleListener implements ActionListener {
 
-		private LiveLogConsoleActionCommands	actionCommand;
-		private final MemoDataField				console;
+        private enum LiveLogConsoleActionCommands {
 
-		public LiveLogConsoleListener(MemoDataField console, Button startButton, Button stopButton) {
-			super();
-			this.console = console;
-			startButton.addActionListener(this);
-			stopButton.addActionListener(this);
-		}
+            start, stop
 
-		public void install() {
-			// Do nothing
-		}
+        };
 
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			this.actionCommand = LiveLogConsoleActionCommands.valueOf(e.getActionCommand());
-			new Thread(new Runnable() {
+        private LiveLogConsoleActionCommands actionCommand;
 
-				@Override
-				public void run() {
-					// FIXME: Acceder al servicio
-					switch (LiveLogConsoleListener.this.actionCommand) {
-						case start:
-							// Start live log
-							LiveLogConsoleListener.this.console.setValue("START - Falta por hacer el servicio");
-							// console.....
-							break;
-						case stop:
-							// Stop live log
-							LiveLogConsoleListener.this.console.setValue("STOP - Falta por hacer el servicio");
-							break;
-						default:
-							break;
-					}
-				}
-			}).start();
-		}
-	}
+        private final MemoDataField console;
+
+        public LiveLogConsoleListener(MemoDataField console, Button startButton, Button stopButton) {
+            super();
+            this.console = console;
+            startButton.addActionListener(this);
+            stopButton.addActionListener(this);
+        }
+
+        public void install() {
+            // Do nothing
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            this.actionCommand = LiveLogConsoleActionCommands.valueOf(e.getActionCommand());
+            new Thread(new Runnable() {
+
+                @Override
+                public void run() {
+                    // FIXME: Acceder al servicio
+                    switch (LiveLogConsoleListener.this.actionCommand) {
+                        case start:
+                            // Start live log
+                            LiveLogConsoleListener.this.console.setValue("START - Falta por hacer el servicio");
+                            // console.....
+                            break;
+                        case stop:
+                            // Stop live log
+                            LiveLogConsoleListener.this.console.setValue("STOP - Falta por hacer el servicio");
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }).start();
+        }
+
+    }
 
 }

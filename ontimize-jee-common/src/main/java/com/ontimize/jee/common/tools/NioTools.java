@@ -9,28 +9,29 @@ import java.nio.file.attribute.BasicFileAttributes;
 
 public final class NioTools {
 
-	private NioTools() {
-		super();
-	}
+    private NioTools() {
+        super();
+    }
 
-	public static void deleteFolder(Path directory) throws IOException {
-		if (!Files.exists(directory)) {
-			return;
-		}
-		Files.walkFileTree(directory, new SimpleFileVisitor<Path>() {
+    public static void deleteFolder(Path directory) throws IOException {
+        if (!Files.exists(directory)) {
+            return;
+        }
+        Files.walkFileTree(directory, new SimpleFileVisitor<Path>() {
 
-			@Override
-			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-				Files.delete(file);
-				return FileVisitResult.CONTINUE;
-			}
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                Files.delete(file);
+                return FileVisitResult.CONTINUE;
+            }
 
-			@Override
-			public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-				Files.delete(dir);
-				return FileVisitResult.CONTINUE;
-			}
+            @Override
+            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                Files.delete(dir);
+                return FileVisitResult.CONTINUE;
+            }
 
-		});
-	}
+        });
+    }
+
 }

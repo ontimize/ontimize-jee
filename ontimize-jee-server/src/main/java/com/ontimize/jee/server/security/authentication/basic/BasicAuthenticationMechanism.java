@@ -19,61 +19,62 @@ import com.ontimize.jee.server.security.authentication.IAuthenticationMechanism;
 
 public class BasicAuthenticationMechanism implements IAuthenticationMechanism {
 
-	private static final Logger	logger				= LoggerFactory.getLogger(BasicAuthenticationMechanism.class);
-	private String				credentialsCharset	= "UTF-8";
+    private static final Logger logger = LoggerFactory.getLogger(BasicAuthenticationMechanism.class);
 
-	@Override
-	public AuthenticationResult authenticate(HttpServletRequest request, HttpServletResponse response, AuthenticationManager authenticationManager,
-	        UserDetailsService userDetailsService) {
-		String header = request.getHeader("Authorization");
+    private String credentialsCharset = "UTF-8";
 
-		if ((header == null) || !header.startsWith("Basic ")) {
-			return null;
-		}
+    @Override
+    public AuthenticationResult authenticate(HttpServletRequest request, HttpServletResponse response,
+            AuthenticationManager authenticationManager,
+            UserDetailsService userDetailsService) {
+        String header = request.getHeader("Authorization");
 
-		String[] tokens = this.extractAndDecodeHeader(header, request);
-		assert tokens.length == 2;
+        if ((header == null) || !header.startsWith("Basic ")) {
+            return null;
+        }
 
-		String username = tokens[0];
+        String[] tokens = this.extractAndDecodeHeader(header, request);
+        assert tokens.length == 2;
 
-		BasicAuthenticationMechanism.logger.debug("Basic Authentication Authorization header found for user '{}'", username);
+        String username = tokens[0];
 
-		return new AuthenticationResult(true, new UsernamePasswordAuthenticationToken(username, tokens[1]));
-	}
+        BasicAuthenticationMechanism.logger.debug("Basic Authentication Authorization header found for user '{}'",
+                username);
 
-	/**
-	 * Decodes the header into a username and password.
-	 *
-	 * @throws BadCredentialsException
-	 *             if the Basic header is not present or is not valid Base64
-	 */
-	private String[] extractAndDecodeHeader(String header, HttpServletRequest request) {
+        return new AuthenticationResult(true, new UsernamePasswordAuthenticationToken(username, tokens[1]));
+    }
 
-		try {
-			byte[] base64Token = header.substring(6).getBytes("UTF-8");
-			byte[] decoded;
-			decoded = Base64.decode(base64Token);
+    /**
+     * Decodes the header into a username and password.
+     * @throws BadCredentialsException if the Basic header is not present or is not valid Base64
+     */
+    private String[] extractAndDecodeHeader(String header, HttpServletRequest request) {
 
-			String token = new String(decoded, this.getCredentialsCharset(request));
+        try {
+            byte[] base64Token = header.substring(6).getBytes("UTF-8");
+            byte[] decoded;
+            decoded = Base64.decode(base64Token);
 
-			int delim = token.indexOf(":");
+            String token = new String(decoded, this.getCredentialsCharset(request));
 
-			if (delim == -1) {
-				throw new BadCredentialsException("Invalid basic authentication token");
-			}
-			return new String[] { token.substring(0, delim), token.substring(delim + 1) };
-		} catch (IllegalArgumentException | UnsupportedEncodingException error) {
-			throw new BadCredentialsException("Failed to decode basic authentication token", error);
-		}
-	}
+            int delim = token.indexOf(":");
 
-	public void setCredentialsCharset(String credentialsCharset) {
-		Assert.hasText(credentialsCharset, "credentialsCharset cannot be null or empty");
-		this.credentialsCharset = credentialsCharset;
-	}
+            if (delim == -1) {
+                throw new BadCredentialsException("Invalid basic authentication token");
+            }
+            return new String[] { token.substring(0, delim), token.substring(delim + 1) };
+        } catch (IllegalArgumentException | UnsupportedEncodingException error) {
+            throw new BadCredentialsException("Failed to decode basic authentication token", error);
+        }
+    }
 
-	protected String getCredentialsCharset(HttpServletRequest httpRequest) {
-		return this.credentialsCharset;
-	}
+    public void setCredentialsCharset(String credentialsCharset) {
+        Assert.hasText(credentialsCharset, "credentialsCharset cannot be null or empty");
+        this.credentialsCharset = credentialsCharset;
+    }
+
+    protected String getCredentialsCharset(HttpServletRequest httpRequest) {
+        return this.credentialsCharset;
+    }
 
 }

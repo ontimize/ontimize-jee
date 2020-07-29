@@ -16,42 +16,35 @@ import java.util.Map;
  */
 public class ServiceContext {
 
-	/** The context. */
-	private final Map<String, Object> context = Collections.synchronizedMap(new HashMap<String, Object>());
+    /** The context. */
+    private final Map<String, Object> context = Collections.synchronizedMap(new HashMap<String, Object>());
 
-	/**
-	 * Gets the context property.
-	 *
-	 * @param <T>
-	 *            the generic type
-	 * @param key
-	 *            the key
-	 * @return the context property
-	 */
-	@SuppressWarnings("unchecked")
-	public <T> T getContextProperty(final String key) {
-		return (T) this.context.get(key);
-	}
+    /**
+     * Gets the context property.
+     * @param <T> the generic type
+     * @param key the key
+     * @return the context property
+     */
+    @SuppressWarnings("unchecked")
+    public <T> T getContextProperty(final String key) {
+        return (T) this.context.get(key);
+    }
 
-	/**
-	 * Sets the context property.
-	 *
-	 * @param <T>
-	 *            the generic type
-	 * @param key
-	 *            the key
-	 * @param value
-	 *            the value
-	 */
-	public <T> void setContextProperty(final String key, final T value) {
-		this.context.put(key, value);
-	}
+    /**
+     * Sets the context property.
+     * @param <T> the generic type
+     * @param key the key
+     * @param value the value
+     */
+    public <T> void setContextProperty(final String key, final T value) {
+        this.context.put(key, value);
+    }
 
-	/**
-	 * Reset.
-	 */
-	public void reset() {
-		this.context.clear();
-	}
+    /**
+     * Reset.
+     */
+    public void reset() {
+        this.context.clear();
+    }
 
 }

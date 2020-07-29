@@ -14,16 +14,13 @@ import com.ontimize.jee.server.dao.jpa.common.rowmapper.exceptions.RowMapperExce
  */
 public interface IDbObjectToJavaObjectConverter {
 
-	/**
-	 * Convert.
-	 *
-	 * @param input
-	 *            input
-	 * @param toType
-	 *            to type
-	 * @return the object
-	 * @throws RowMapperException
-	 *             de row mapper exception
-	 */
-	Object convert(Object input, Class<?> toType) throws RowMapperException;
+    /**
+     * Convert.
+     * @param input input
+     * @param toType to type
+     * @return the object
+     * @throws RowMapperException de row mapper exception
+     */
+    Object convert(Object input, Class<?> toType) throws RowMapperException;
+
 }

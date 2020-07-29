@@ -5,16 +5,16 @@ package com.ontimize.jee.server.security.authorization;
  */
 public interface IRoleProvider {
 
-	/**
-	 * Returns the role configuration for given role name.
-	 *
-	 * @param roleName
-	 * @return
-	 */
-	Role getRole(String roleName);
+    /**
+     * Returns the role configuration for given role name.
+     * @param roleName
+     * @return
+     */
+    Role getRole(String roleName);
 
-	/**
-	 * Ensures to clean the current roles cache.
-	 */
-	void invalidateCache();
+    /**
+     * Ensures to clean the current roles cache.
+     */
+    void invalidateCache();
+
 }

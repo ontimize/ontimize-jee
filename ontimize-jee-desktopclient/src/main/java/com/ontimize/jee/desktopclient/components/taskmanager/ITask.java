@@ -7,93 +7,84 @@ import java.util.Observable;
  */
 public interface ITask {
 
-	/**
-	 * Gets the name.
-	 *
-	 * @return the name
-	 */
-	String getName();
+    /**
+     * Gets the name.
+     * @return the name
+     */
+    String getName();
 
-	/**
-	 * The description.
-	 *
-	 * @return the description
-	 */
-	String getDescription();
+    /**
+     * The description.
+     * @return the description
+     */
+    String getDescription();
 
-	/**
-	 * Gets the size.
-	 *
-	 * @return the size
-	 */
-	Number getSize();
+    /**
+     * Gets the size.
+     * @return the size
+     */
+    Number getSize();
 
-	/**
-	 * Gets the progress.
-	 *
-	 * @return the progress
-	 */
-	Number getProgress();
+    /**
+     * Gets the progress.
+     * @return the progress
+     */
+    Number getProgress();
 
-	/**
-	 * Gets the status.
-	 *
-	 * @return the status
-	 */
-	TaskStatus getStatus();
+    /**
+     * Gets the status.
+     * @return the status
+     */
+    TaskStatus getStatus();
 
-	/**
-	 * Pause.
-	 */
-	void pause();
+    /**
+     * Pause.
+     */
+    void pause();
 
-	/**
-	 * Resume.
-	 */
-	void resume();
+    /**
+     * Resume.
+     */
+    void resume();
 
-	/**
-	 * Cancel.
-	 */
-	void cancel();
+    /**
+     * Cancel.
+     */
+    void cancel();
 
-	/**
-	 * Gets the observable.
-	 *
-	 * @return the observable
-	 */
-	Observable getObservable();
+    /**
+     * Gets the observable.
+     * @return the observable
+     */
+    Observable getObservable();
 
-	/**
-	 * On task clicked.
-	 */
-	void onTaskClicked();
+    /**
+     * On task clicked.
+     */
+    void onTaskClicked();
 
-	/**
-	 * Checks if is finished.
-	 *
-	 * @return true, if is finished
-	 */
-	boolean isFinished();
+    /**
+     * Checks if is finished.
+     * @return true, if is finished
+     */
+    boolean isFinished();
 
-	/**
-	 * Checks if is pausable.
-	 *
-	 * @return true, if is pausable
-	 */
-	boolean isPausable();
+    /**
+     * Checks if is pausable.
+     * @return true, if is pausable
+     */
+    boolean isPausable();
 
-	/**
-	 * Checks if is cancellable.
-	 *
-	 * @return true, if is cancellable
-	 */
-	boolean isCancellable();
+    /**
+     * Checks if is cancellable.
+     * @return true, if is cancellable
+     */
+    boolean isCancellable();
 
-	/**
-	 * Checks for result details.
-	 *
-	 * @return true, if successful
-	 */
-	boolean hasResultDetails();
+    /**
+     * Checks for result details.
+     * @return true, if successful
+     */
+    boolean hasResultDetails();
+
 }

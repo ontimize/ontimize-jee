@@ -33,116 +33,125 @@ import com.ontimize.jee.server.rest.ORestController;
 
 public abstract class OExportRestController<S, T extends IExportService> extends ORestController<S> {
 
-	/** The logger. */
-	private static final Logger logger = LoggerFactory.getLogger(OExportRestController.class);
+    /** The logger. */
+    private static final Logger logger = LoggerFactory.getLogger(OExportRestController.class);
 
-	public static final String EXPORT = "Export";
+    public static final String EXPORT = "Export";
 
-	@Autowired
-	private T exportService;
+    @Autowired
+    private T exportService;
 
-	@GetMapping(value = "/{extension}/{id}")
-	public void downloadFile(@PathVariable(name = "extension", required = true) final String fileExtension,
-			@PathVariable(name = "id", required = true) final String fileId, HttpServletResponse response) {
-		InputStream fis = null;
-		try {
-			File tmpDir = new File(System.getProperty("java.io.tmpdir"));
-			File[] matchingfiles = tmpDir.listFiles(new FilenameFilter() {
+    /**
+     * Returns the export service.
+     * @return
+     */
+    public T getExportService() {
+        return this.exportService;
+    }
 
-				@Override
-				public boolean accept(File dir, String name) {
-					return name.startsWith(fileId) && name.endsWith(fileExtension);
-				}
+    @GetMapping(value = "/{extension}/{id}")
+    public void downloadFile(@PathVariable(name = "extension", required = true) final String fileExtension,
+            @PathVariable(name = "id", required = true) final String fileId, HttpServletResponse response) {
+        InputStream fis = null;
+        try {
+            File tmpDir = new File(System.getProperty("java.io.tmpdir"));
+            File[] matchingfiles = tmpDir.listFiles(new FilenameFilter() {
 
-			});
+                @Override
+                public boolean accept(File dir, String name) {
+                    return name.startsWith(fileId) && name.endsWith(fileExtension);
+                }
 
-			if (matchingfiles.length == 1 && matchingfiles[0].exists()) {
-				File file = matchingfiles[0];
-				response.setHeader("Content-Type", "application/octet-stream");
-				response.setHeader("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"");
-				response.setContentLengthLong(file.length());
-				fis = new BufferedInputStream(new FileInputStream(file));
-				FileCopyUtils.copy(fis, response.getOutputStream());
-			} else {
-				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-			}
-		} catch (IOException e) {
-			logger.error("{}", e.getMessage(), e);
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		} finally {
-			if (fis != null) {
-				try {
-					fis.close();
-				} catch (IOException e) {
-					logger.error("{}", e.getMessage(), e);
-				}
-			}
-		}
-	}
+            });
 
-	@PostMapping(value = "/{name}/{extension}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<EntityResult> export(@PathVariable("name") String name,
-			@PathVariable("extension") String extension, @RequestBody ExportParameter exportParam) throws Exception {
-		OExportRestController.logger.debug("Invoked /{}/{}", name, extension);
-		CheckingTools.failIf(this.getService() == null, NullPointerException.class, "Service is null");
-		try {
-			StringBuilder buffer = new StringBuilder();
-			buffer.append(name).append(ORestController.QUERY);
+            if (matchingfiles.length == 1 && matchingfiles[0].exists()) {
+                File file = matchingfiles[0];
+                response.setHeader("Content-Type", "application/octet-stream");
+                response.setHeader("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"");
+                response.setContentLengthLong(file.length());
+                fis = new BufferedInputStream(new FileInputStream(file));
+                FileCopyUtils.copy(fis, response.getOutputStream());
+            } else {
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            }
+        } catch (IOException e) {
+            logger.error("{}", e.getMessage(), e);
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        } finally {
+            if (fis != null) {
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    logger.error("{}", e.getMessage(), e);
+                }
+            }
+        }
+    }
 
-			Map<?, ?> kvQueryParameter = exportParam.getFilter();
-			List<?> avQueryParameter = exportParam.getColumns();
-			Map<?, ?> columnNames = exportParam.getColumnNames();
-			Hashtable<String, Integer> sqlTypes = new Hashtable<>();
-			sqlTypes.putAll(exportParam.getSqlTypes());
+    @PostMapping(value = "/{name}/{extension}", consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<EntityResult> export(@PathVariable("name") String name,
+            @PathVariable("extension") String extension, @RequestBody ExportParameter exportParam) throws Exception {
+        OExportRestController.logger.debug("Invoked /{}/{}", name, extension);
+        CheckingTools.failIf(this.getService() == null, NullPointerException.class, "Service is null");
+        try {
+            StringBuilder buffer = new StringBuilder();
+            buffer.append(name).append(ORestController.QUERY);
 
-			Map<Object, Object> keysValues = this.createKeysValues(kvQueryParameter, sqlTypes);
-			List<Object> attributesValues = this.createAttributesValues(avQueryParameter, sqlTypes);
+            Map<?, ?> kvQueryParameter = exportParam.getFilter();
+            List<?> avQueryParameter = exportParam.getColumns();
+            Map<?, ?> columnNames = exportParam.getColumnNames();
+            Hashtable<String, Integer> sqlTypes = new Hashtable<>();
+            sqlTypes.putAll(exportParam.getSqlTypes());
 
-			EntityResult er = (EntityResult) ReflectionTools.invoke(this.getService(), buffer.toString(), keysValues,
-					attributesValues);
-			er = this.replaceEntityResultColumnNames(er, sqlTypes, avQueryParameter, columnNames);
+            Map<Object, Object> keysValues = this.createKeysValues(kvQueryParameter, sqlTypes);
+            List<Object> attributesValues = this.createAttributesValues(avQueryParameter, sqlTypes);
 
-			StringBuilder exportMethod = new StringBuilder();
-			exportMethod.append(extension).append(OExportRestController.EXPORT);
+            EntityResult er = (EntityResult) ReflectionTools.invoke(this.getService(), buffer.toString(), keysValues,
+                    attributesValues);
+            er = this.replaceEntityResultColumnNames(er, sqlTypes, avQueryParameter, columnNames);
 
-			File xslxFile = (File) ReflectionTools.invoke(this.exportService, exportMethod.toString(), er,
-					new ArrayList<>(exportParam.getColumnNames().values()));
-			Hashtable<String, Object> erResult = new Hashtable<>();
-			String filename = xslxFile.getName();
-			erResult.put(extension + "Id", filename.substring(0, filename.indexOf('.')));
-			EntityResult result = new EntityResult(EntityResult.OPERATION_SUCCESSFUL, EntityResult.NODATA_RESULT);
-			result.addRecord(erResult);
-			return new ResponseEntity<>(result, HttpStatus.OK);
-		} catch (Exception e) {
-			return this.processError(e);
-		}
-	}
+            StringBuilder exportMethod = new StringBuilder();
+            exportMethod.append(extension).append(OExportRestController.EXPORT);
 
-	protected EntityResult replaceEntityResultColumnNames(EntityResult data, Map<?, ?> sqlTypes, List<?> columns,
-			Map<?, ?> columnNames) {
-		List<?> columnNamesArray = new ArrayList<>(columnNames.values());
+            File xslxFile = (File) ReflectionTools.invoke(this.exportService, exportMethod.toString(), er,
+                    new ArrayList<>(exportParam.getColumnNames().values()));
+            Hashtable<String, Object> erResult = new Hashtable<>();
+            String filename = xslxFile.getName();
+            erResult.put(extension + "Id", filename.substring(0, filename.indexOf('.')));
+            EntityResult result = new EntityResult(EntityResult.OPERATION_SUCCESSFUL, EntityResult.NODATA_RESULT);
+            result.addRecord(erResult);
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (Exception e) {
+            return this.processError(e);
+        }
+    }
 
-		// Create EntityResult with column names
-		EntityResult er = new EntityResult(columnNamesArray);
-		er.setColumnOrder(columnNamesArray);
-		er.setColumnSQLTypes((Hashtable) sqlTypes);
+    protected EntityResult replaceEntityResultColumnNames(EntityResult data, Map<?, ?> sqlTypes, List<?> columns,
+            Map<?, ?> columnNames) {
+        List<?> columnNamesArray = new ArrayList<>(columnNames.values());
 
-		// Add data to EntityResult
-		int index = 0;
-		for (int i = 0; i < data.calculateRecordNumber(); i++) {
-			Hashtable rowData = data.getRecordValues(i);
-			Hashtable<Object, Object> record = new Hashtable<>();
-			for (Object key : columns) {
-				if (rowData.get(key) != null) {
-					record.put(columnNames.get(key), rowData.get(key));
-				} else {
-					record.put(columnNames.get(key), new NullValue());
-				}
-			}
-			er.addRecord(record, index++);
-		}
+        // Create EntityResult with column names
+        EntityResult er = new EntityResult(columnNamesArray);
+        er.setColumnOrder(columnNamesArray);
+        er.setColumnSQLTypes((Hashtable) sqlTypes);
 
-		return er;
-	}
+        // Add data to EntityResult
+        int index = 0;
+        for (int i = 0; i < data.calculateRecordNumber(); i++) {
+            Hashtable rowData = data.getRecordValues(i);
+            Hashtable<Object, Object> record = new Hashtable<>();
+            for (Object key : columns) {
+                if (rowData.get(key) != null) {
+                    record.put(columnNames.get(key), rowData.get(key));
+                } else {
+                    record.put(columnNames.get(key), new NullValue());
+                }
+            }
+            er.addRecord(record, index++);
+        }
+
+        return er;
+    }
 
 }

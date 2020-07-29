@@ -10,26 +10,27 @@ import com.ontimize.jee.desktopclient.test.AbstractIdentifiedOntimizeTest;
 
 public class SessionTest extends AbstractIdentifiedOntimizeTest {
 
-	private static final Logger logger = LoggerFactory.getLogger(SessionTest.class);
+    private static final Logger logger = LoggerFactory.getLogger(SessionTest.class);
 
-	public static void main(String[] args) {
-		try {
-			new SessionTest().prepareTest(args);
-		} catch (Exception error) {
-			SessionTest.logger.error(null, error);
-		}
-	}
+    public static void main(String[] args) {
+        try {
+            new SessionTest().prepareTest(args);
+        } catch (Exception error) {
+            SessionTest.logger.error(null, error);
+        }
+    }
 
-	@Override
-	protected void doTest() {
+    @Override
+    protected void doTest() {
 
-		IUserInformationService service = this.createService(IUserInformationService.class, "/userinformationservice");
-		UserInformation userInformation = service.getUserInformation();
-		System.out.println(userInformation);
+        IUserInformationService service = this.createService(IUserInformationService.class, "/userinformationservice");
+        UserInformation userInformation = service.getUserInformation();
+        System.out.println(userInformation);
 
-		ISessionService serviceSession = this.createService(ISessionService.class, "/sessionService");
-		serviceSession.closeSession();
+        ISessionService serviceSession = this.createService(ISessionService.class, "/sessionService");
+        serviceSession.closeSession();
 
-		System.out.println("Finalizado");
-	}
+        System.out.println("Finalizado");
+    }
+
 }

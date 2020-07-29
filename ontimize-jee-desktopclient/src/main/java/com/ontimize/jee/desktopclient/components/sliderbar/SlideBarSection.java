@@ -25,324 +25,325 @@ import com.ontimize.jee.desktopclient.components.sliderbar.SliderBar.SlideBarMod
 
 public class SlideBarSection extends JPanel {
 
-	public int					minComponentHeight	= 40;
-	public int					minComponentWidth	= 350;
+    public int minComponentHeight = 40;
 
-	public JPanel				titlePanel			= new JPanel();
+    public int minComponentWidth = 350;
 
-	private final SliderBar		sliderBarOwner;
+    public JPanel titlePanel = new JPanel();
 
-	private final JComponent	contentPane;						// sliderbar section's content
+    private final SliderBar sliderBarOwner;
 
-	private final ArrowPanel	arrowPanel;
+    private final JComponent contentPane; // sliderbar section's content
 
-	private int					calculatedHeight;
+    private final ArrowPanel arrowPanel;
 
-	/**
-	 * Construct a new sliderbar section with the specified owner and model.
-	 *
-	 * @param owner
-	 *            - SliderBar
-	 * @param model
-	 */
-	public SlideBarSection(SliderBar owner, String text, JComponent component, Icon icon) {
-		if (owner.thisMode == SliderBar.SlideBarMode.INNER_LEVEL) {
-			this.minComponentHeight = 30;
-		} else {
-			this.minComponentHeight = 40;
-		}
-		this.contentPane = component;
-		this.sliderBarOwner = owner;
-		this.titlePanel.addMouseListener(new MouseAdapter() {
+    private int calculatedHeight;
 
-			@Override
-			public void mouseReleased(MouseEvent e) {
+    /**
+     * Construct a new sliderbar section with the specified owner and model.
+     * @param owner - SliderBar
+     * @param model
+     */
+    public SlideBarSection(SliderBar owner, String text, JComponent component, Icon icon) {
+        if (owner.thisMode == SliderBar.SlideBarMode.INNER_LEVEL) {
+            this.minComponentHeight = 30;
+        } else {
+            this.minComponentHeight = 40;
+        }
+        this.contentPane = component;
+        this.sliderBarOwner = owner;
+        this.titlePanel.addMouseListener(new MouseAdapter() {
 
-				if (SlideBarSection.this != SlideBarSection.this.sliderBarOwner.getCurrentSection()) {
-					if (SlideBarSection.this.sliderBarOwner.getCurrentSection() != null) {
-						SlideBarSection.this.sliderBarOwner.getCurrentSection().collapse(true);
-					}
+            @Override
+            public void mouseReleased(MouseEvent e) {
 
-					SlideBarSection.this.expand(); // expand this!
-				} else {
-					SlideBarSection.this.collapse(true);
-				}
-			}
-		});
+                if (SlideBarSection.this != SlideBarSection.this.sliderBarOwner.getCurrentSection()) {
+                    if (SlideBarSection.this.sliderBarOwner.getCurrentSection() != null) {
+                        SlideBarSection.this.sliderBarOwner.getCurrentSection().collapse(true);
+                    }
 
-		// absolute layout
-		this.setLayout(new BorderLayout());
+                    SlideBarSection.this.expand(); // expand this!
+                } else {
+                    SlideBarSection.this.collapse(true);
+                }
+            }
+        });
 
-		this.add(this.titlePanel, BorderLayout.NORTH);
+        // absolute layout
+        this.setLayout(new BorderLayout());
 
-		JLabel sliderbarLabel = new JLabel(text);
-		sliderbarLabel.setBorder(BorderFactory.createEmptyBorder(2, 8, 2, 2));
-		this.titlePanel.setLayout(new BorderLayout());
-		this.titlePanel.setPreferredSize(new Dimension(this.getPreferredSize().width, this.minComponentHeight));
-		this.titlePanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+        this.add(this.titlePanel, BorderLayout.NORTH);
 
-		this.arrowPanel = new ArrowPanel(SwingConstants.EAST);
-		this.arrowPanel.setPreferredSize(new Dimension(40, 40));
+        JLabel sliderbarLabel = new JLabel(text);
+        sliderbarLabel.setBorder(BorderFactory.createEmptyBorder(2, 8, 2, 2));
+        this.titlePanel.setLayout(new BorderLayout());
+        this.titlePanel.setPreferredSize(new Dimension(this.getPreferredSize().width, this.minComponentHeight));
+        this.titlePanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
 
-		if (this.sliderBarOwner.showArrow) {
-			// add into tab panel the arrow and labels.
-			this.titlePanel.add(this.arrowPanel, BorderLayout.EAST);
-		}
+        this.arrowPanel = new ArrowPanel(SwingConstants.EAST);
+        this.arrowPanel.setPreferredSize(new Dimension(40, 40));
 
-		this.titlePanel.add(new JLabel(icon), BorderLayout.WEST);
-		this.titlePanel.add(sliderbarLabel);
-		this.setMinimumSize(new Dimension(this.minComponentWidth, this.minComponentHeight));
+        if (this.sliderBarOwner.showArrow) {
+            // add into tab panel the arrow and labels.
+            this.titlePanel.add(this.arrowPanel, BorderLayout.EAST);
+        }
 
-		this.add(component, BorderLayout.CENTER);
-		this.revalidate();
-	}
+        this.titlePanel.add(new JLabel(icon), BorderLayout.WEST);
+        this.titlePanel.add(sliderbarLabel);
+        this.setMinimumSize(new Dimension(this.minComponentWidth, this.minComponentHeight));
 
-	public void expand() {
-		this.sliderBarOwner.setCurrentSection(this);
-		this.arrowPanel.changeDirection(SwingConstants.SOUTH);
-		this.arrowPanel.updateUI();
+        this.add(component, BorderLayout.CENTER);
+        this.revalidate();
+    }
 
-		this.calculatedHeight = -1;
-		this.calculatedHeight = this.sliderBarOwner.getSize().height;
+    public void expand() {
+        this.sliderBarOwner.setCurrentSection(this);
+        this.arrowPanel.changeDirection(SwingConstants.SOUTH);
+        this.arrowPanel.updateUI();
 
-		if (this.sliderBarOwner.animate) {
-			/**
-			 * ANIMATION BIT
-			 */
-			SlideBarAnimation anim = new SlideBarAnimation(this, 200);
+        this.calculatedHeight = -1;
+        this.calculatedHeight = this.sliderBarOwner.getSize().height;
 
-			anim.setStartValue(this.minComponentHeight);
-			anim.setEndValue(this.calculatedHeight);
-			anim.start();
-		} else {
-			if (this.sliderBarOwner.thisMode == SlideBarMode.INNER_LEVEL) {
-				this.calculatedHeight = 1000;
+        if (this.sliderBarOwner.animate) {
+            /**
+             * ANIMATION BIT
+             */
+            SlideBarAnimation anim = new SlideBarAnimation(this, 200);
 
-				Dimension d = new Dimension(Integer.MAX_VALUE, this.calculatedHeight);
-				this.setMaximumSize(d);
-				this.sliderBarOwner.setPreferredSize(d);
-				this.contentPane.setVisible(true);
-				this.revalidate();
-			} else {
-				this.setMaximumSize(new Dimension(Integer.MAX_VALUE, this.calculatedHeight));
-				this.contentPane.setVisible(true);
-				this.revalidate();
-			}
-		}
-	}
+            anim.setStartValue(this.minComponentHeight);
+            anim.setEndValue(this.calculatedHeight);
+            anim.start();
+        } else {
+            if (this.sliderBarOwner.thisMode == SlideBarMode.INNER_LEVEL) {
+                this.calculatedHeight = 1000;
 
-	public void collapse(boolean animate) {
-		// remove reference
-		if (this.sliderBarOwner.getCurrentSection() == SlideBarSection.this) {
-			this.sliderBarOwner.setCurrentSection(null);
-		}
+                Dimension d = new Dimension(Integer.MAX_VALUE, this.calculatedHeight);
+                this.setMaximumSize(d);
+                this.sliderBarOwner.setPreferredSize(d);
+                this.contentPane.setVisible(true);
+                this.revalidate();
+            } else {
+                this.setMaximumSize(new Dimension(Integer.MAX_VALUE, this.calculatedHeight));
+                this.contentPane.setVisible(true);
+                this.revalidate();
+            }
+        }
+    }
 
-		this.arrowPanel.changeDirection(SwingConstants.EAST);
-		this.arrowPanel.updateUI();
+    public void collapse(boolean animate) {
+        // remove reference
+        if (this.sliderBarOwner.getCurrentSection() == SlideBarSection.this) {
+            this.sliderBarOwner.setCurrentSection(null);
+        }
 
-		if (animate && this.sliderBarOwner.animate) {
-			SlideBarAnimation anim = new SlideBarAnimation(this, 200);
+        this.arrowPanel.changeDirection(SwingConstants.EAST);
+        this.arrowPanel.updateUI();
 
-			anim.setStartValue(this.calculatedHeight);
-			anim.setEndValue(this.minComponentHeight);
-			anim.start();
-		} else {
-			if (this.sliderBarOwner.thisMode == SlideBarMode.INNER_LEVEL) {
-				this.setMaximumSize(new Dimension(Integer.MAX_VALUE, this.titlePanel.getPreferredSize().height));
-				this.contentPane.setVisible(false);
-				this.revalidate();
+        if (animate && this.sliderBarOwner.animate) {
+            SlideBarAnimation anim = new SlideBarAnimation(this, 200);
 
-			} else {
-				this.setMaximumSize(new Dimension(Integer.MAX_VALUE, this.titlePanel.getPreferredSize().height));
-				this.contentPane.setVisible(false);
-				this.revalidate();
-			}
-		}
-	}
+            anim.setStartValue(this.calculatedHeight);
+            anim.setEndValue(this.minComponentHeight);
+            anim.start();
+        } else {
+            if (this.sliderBarOwner.thisMode == SlideBarMode.INNER_LEVEL) {
+                this.setMaximumSize(new Dimension(Integer.MAX_VALUE, this.titlePanel.getPreferredSize().height));
+                this.contentPane.setVisible(false);
+                this.revalidate();
 
-	@Override
-	public Dimension getMinimumSize() {
-		return new Dimension(this.minComponentWidth, this.minComponentHeight);
-	}
+            } else {
+                this.setMaximumSize(new Dimension(Integer.MAX_VALUE, this.titlePanel.getPreferredSize().height));
+                this.contentPane.setVisible(false);
+                this.revalidate();
+            }
+        }
+    }
 
-	@Override
-	public Dimension getPreferredSize() {
-		return new Dimension(this.minComponentWidth, this.minComponentHeight);
-	}
+    @Override
+    public Dimension getMinimumSize() {
+        return new Dimension(this.minComponentWidth, this.minComponentHeight);
+    }
 
-	public class ArrowPanel extends JPanel implements SwingConstants {
+    @Override
+    public Dimension getPreferredSize() {
+        return new Dimension(this.minComponentWidth, this.minComponentHeight);
+    }
 
-		protected int		direction;
+    public class ArrowPanel extends JPanel implements SwingConstants {
 
-		private final Color	shadow;
-		private final Color	darkShadow;
-		private final Color	highlight;
+        protected int direction;
 
-		public ArrowPanel(int direction) {
-			this(direction, UIManager.getColor("control"), UIManager.getColor("controlShadow"), UIManager.getColor("controlDkShadow"), UIManager.getColor("controlLtHighlight"));
-		}
+        private final Color shadow;
 
-		public ArrowPanel(int direction, Color background, Color shadow, Color darkShadow, Color highlight) {
-			super();
-			this.setRequestFocusEnabled(false);
-			this.setDirection(direction);
-			this.setBackground(background);
-			this.shadow = shadow;
-			this.darkShadow = darkShadow;
-			this.highlight = highlight;
-		}
+        private final Color darkShadow;
 
-		/**
-		 * Returns the direction of the arrow.
-		 *
-		 * @param direction
-		 *            the direction of the arrow; one of {@code SwingConstants.NORTH}, {@code SwingConstants.SOUTH}, {@code SwingConstants.EAST} or {@code SwingConstants.WEST}
-		 */
-		public int getDirection() {
-			return this.direction;
-		}
+        private final Color highlight;
 
-		/**
-		 * Sets the direction of the arrow.
-		 *
-		 * @param direction
-		 *            the direction of the arrow; one of of {@code SwingConstants.NORTH}, {@code SwingConstants.SOUTH}, {@code SwingConstants.EAST} or {@code SwingConstants.WEST}
-		 */
-		public void setDirection(int dir) {
-			this.direction = dir;
-		}
+        public ArrowPanel(int direction) {
+            this(direction, UIManager.getColor("control"), UIManager.getColor("controlShadow"),
+                    UIManager.getColor("controlDkShadow"), UIManager.getColor("controlLtHighlight"));
+        }
 
-		@Override
-		public void paint(Graphics g) {
-			Color origColor;
-			int w, h, size;
+        public ArrowPanel(int direction, Color background, Color shadow, Color darkShadow, Color highlight) {
+            super();
+            this.setRequestFocusEnabled(false);
+            this.setDirection(direction);
+            this.setBackground(background);
+            this.shadow = shadow;
+            this.darkShadow = darkShadow;
+            this.highlight = highlight;
+        }
 
-			w = this.getSize().width;
-			h = this.getSize().height;
-			origColor = g.getColor();
+        /**
+         * Returns the direction of the arrow.
+         * @param direction the direction of the arrow; one of {@code SwingConstants.NORTH},
+         *        {@code SwingConstants.SOUTH}, {@code SwingConstants.EAST} or {@code SwingConstants.WEST}
+         */
+        public int getDirection() {
+            return this.direction;
+        }
 
-			g.setColor(this.getBackground());
-			g.fillRect(1, 1, w - 2, h - 2);
+        /**
+         * Sets the direction of the arrow.
+         * @param direction the direction of the arrow; one of of {@code SwingConstants.NORTH},
+         *        {@code SwingConstants.SOUTH}, {@code SwingConstants.EAST} or {@code SwingConstants.WEST}
+         */
+        public void setDirection(int dir) {
+            this.direction = dir;
+        }
 
-			// If there's no room to draw arrow, bail
-			if ((h < 5) || (w < 5)) {
-				g.setColor(origColor);
-				return;
-			}
+        @Override
+        public void paint(Graphics g) {
+            Color origColor;
+            int w, h, size;
 
-			// Draw the arrow
-			size = Math.min((h - 4) / 3, (w - 4) / 3);
-			size = Math.max(size, 2);
-			this.paintTriangle(g, (w - size) / 2, (h - size) / 2, size, this.direction, false);
+            w = this.getSize().width;
+            h = this.getSize().height;
+            origColor = g.getColor();
 
-			g.setColor(origColor);
-		}
+            g.setColor(this.getBackground());
+            g.fillRect(1, 1, w - 2, h - 2);
 
-		/**
-		 * Paints a triangle.
-		 */
-		public void paintTriangle(Graphics g, int x, int y, int size, int direction, boolean isEnabled) {
-			Color oldColor = g.getColor();
-			int mid, i, j;
+            // If there's no room to draw arrow, bail
+            if ((h < 5) || (w < 5)) {
+                g.setColor(origColor);
+                return;
+            }
 
-			j = 0;
-			size = Math.max(size, 2);
-			mid = (size / 2) - 1;
+            // Draw the arrow
+            size = Math.min((h - 4) / 3, (w - 4) / 3);
+            size = Math.max(size, 2);
+            this.paintTriangle(g, (w - size) / 2, (h - size) / 2, size, this.direction, false);
 
-			g.translate(x, y);
-			if (isEnabled) {
-				g.setColor(this.darkShadow);
-			} else {
-				g.setColor(this.shadow);
-			}
+            g.setColor(origColor);
+        }
 
-			switch (direction) {
-				case NORTH:
-					this.paintTriangleNorth(g, size, isEnabled, mid);
-					break;
-				case SOUTH:
-					this.paintTriangleSouth(g, size, isEnabled, mid, j);
-					break;
-				case WEST:
-					this.paintTriangleWest(g, size, isEnabled, mid);
-					break;
-				case EAST:
-					this.paintTriangleEast(g, size, isEnabled, mid, j);
-					break;
-			}
-			g.translate(-x, -y);
-			g.setColor(oldColor);
-		}
+        /**
+         * Paints a triangle.
+         */
+        public void paintTriangle(Graphics g, int x, int y, int size, int direction, boolean isEnabled) {
+            Color oldColor = g.getColor();
+            int mid, i, j;
 
-		private void paintTriangleEast(Graphics g, int size, boolean isEnabled, int mid, int j) {
-			int i;
-			if (!isEnabled) {
-				g.translate(1, 1);
-				g.setColor(this.highlight);
-				for (i = size - 1; i >= 0; i--) {
-					g.drawLine(j, mid - i, j, mid + i);
-					j++;
-				}
-				g.translate(-1, -1);
-				g.setColor(this.shadow);
-			}
+            j = 0;
+            size = Math.max(size, 2);
+            mid = (size / 2) - 1;
 
-			j = 0;
-			for (i = size - 1; i >= 0; i--) {
-				g.drawLine(j, mid - i, j, mid + i);
-				j++;
-			}
-		}
+            g.translate(x, y);
+            if (isEnabled) {
+                g.setColor(this.darkShadow);
+            } else {
+                g.setColor(this.shadow);
+            }
 
-		private void paintTriangleWest(Graphics g, int size, boolean isEnabled, int mid) {
-			int i;
-			for (i = 0; i < size; i++) {
-				g.drawLine(i, mid - i, i, mid + i);
-			}
-			if (!isEnabled) {
-				g.setColor(this.highlight);
-				g.drawLine(i, (mid - i) + 2, i, mid + i);
-			}
-		}
+            switch (direction) {
+                case NORTH:
+                    this.paintTriangleNorth(g, size, isEnabled, mid);
+                    break;
+                case SOUTH:
+                    this.paintTriangleSouth(g, size, isEnabled, mid, j);
+                    break;
+                case WEST:
+                    this.paintTriangleWest(g, size, isEnabled, mid);
+                    break;
+                case EAST:
+                    this.paintTriangleEast(g, size, isEnabled, mid, j);
+                    break;
+            }
+            g.translate(-x, -y);
+            g.setColor(oldColor);
+        }
 
-		private void paintTriangleSouth(Graphics g, int size, boolean isEnabled, int mid, int j) {
-			int i;
-			if (!isEnabled) {
-				g.translate(1, 1);
-				g.setColor(this.highlight);
-				for (i = size - 1; i >= 0; i--) {
-					g.drawLine(mid - i, j, mid + i, j);
-					j++;
-				}
-				g.translate(-1, -1);
-				g.setColor(this.shadow);
-			}
+        private void paintTriangleEast(Graphics g, int size, boolean isEnabled, int mid, int j) {
+            int i;
+            if (!isEnabled) {
+                g.translate(1, 1);
+                g.setColor(this.highlight);
+                for (i = size - 1; i >= 0; i--) {
+                    g.drawLine(j, mid - i, j, mid + i);
+                    j++;
+                }
+                g.translate(-1, -1);
+                g.setColor(this.shadow);
+            }
 
-			j = 0;
-			for (i = size - 1; i >= 0; i--) {
-				g.drawLine(mid - i, j, mid + i, j);
-				j++;
-			}
-		}
+            j = 0;
+            for (i = size - 1; i >= 0; i--) {
+                g.drawLine(j, mid - i, j, mid + i);
+                j++;
+            }
+        }
 
-		private void paintTriangleNorth(Graphics g, int size, boolean isEnabled, int mid) {
-			int i;
-			for (i = 0; i < size; i++) {
-				g.drawLine(mid - i, i, mid + i, i);
-			}
-			if (!isEnabled) {
-				g.setColor(this.highlight);
-				g.drawLine((mid - i) + 2, i, mid + i, i);
-			}
-		}
+        private void paintTriangleWest(Graphics g, int size, boolean isEnabled, int mid) {
+            int i;
+            for (i = 0; i < size; i++) {
+                g.drawLine(i, mid - i, i, mid + i);
+            }
+            if (!isEnabled) {
+                g.setColor(this.highlight);
+                g.drawLine(i, (mid - i) + 2, i, mid + i);
+            }
+        }
 
-		public void changeDirection(int d) {
-			this.setDirection(d);
-		}
-	}
+        private void paintTriangleSouth(Graphics g, int size, boolean isEnabled, int mid, int j) {
+            int i;
+            if (!isEnabled) {
+                g.translate(1, 1);
+                g.setColor(this.highlight);
+                for (i = size - 1; i >= 0; i--) {
+                    g.drawLine(mid - i, j, mid + i, j);
+                    j++;
+                }
+                g.translate(-1, -1);
+                g.setColor(this.shadow);
+            }
 
-	public JComponent getContentPane() {
-		return this.contentPane;
-	}
+            j = 0;
+            for (i = size - 1; i >= 0; i--) {
+                g.drawLine(mid - i, j, mid + i, j);
+                j++;
+            }
+        }
+
+        private void paintTriangleNorth(Graphics g, int size, boolean isEnabled, int mid) {
+            int i;
+            for (i = 0; i < size; i++) {
+                g.drawLine(mid - i, i, mid + i, i);
+            }
+            if (!isEnabled) {
+                g.setColor(this.highlight);
+                g.drawLine((mid - i) + 2, i, mid + i, i);
+            }
+        }
+
+        public void changeDirection(int d) {
+            this.setDirection(d);
+        }
+
+    }
+
+    public JComponent getContentPane() {
+        return this.contentPane;
+    }
 
 }

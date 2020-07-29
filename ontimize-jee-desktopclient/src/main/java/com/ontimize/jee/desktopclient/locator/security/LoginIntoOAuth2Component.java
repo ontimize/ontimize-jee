@@ -28,114 +28,118 @@ import javafx.scene.web.WebView;
 
 public class LoginIntoOAuth2Component extends Row {
 
-	private static final Logger	logger	= LoggerFactory.getLogger(LoginIntoOAuth2Component.class);
-	private WebView				webView;
-	private JFXPanel			fxPanel;
+    private static final Logger logger = LoggerFactory.getLogger(LoginIntoOAuth2Component.class);
 
-	/**
-	 * Instantiates a new ExpressionDataField.
-	 *
-	 * @param parameters
-	 *            the parameters
-	 */
-	public LoginIntoOAuth2Component(Hashtable parameters) {
-		super(parameters);
-		this.createFxPanel();
-		this.setOpaque(true);
-		this.setBackground(Color.yellow);
-	}
+    private WebView webView;
 
-	private void createFxPanel() {
-		this.fxPanel = new JFXPanel();
-		this.fxPanel.setOpaque(true);
-		this.fxPanel.setBackground(Color.red);
-		this.setLayout(new BorderLayout());
-		this.add(this.fxPanel, BorderLayout.CENTER);
-		synchronized (this.fxPanel) {
+    private JFXPanel fxPanel;
 
-			Platform.runLater(new Runnable() {
+    /**
+     * Instantiates a new ExpressionDataField.
+     * @param parameters the parameters
+     */
+    public LoginIntoOAuth2Component(Hashtable parameters) {
+        super(parameters);
+        this.createFxPanel();
+        this.setOpaque(true);
+        this.setBackground(Color.yellow);
+    }
 
-				@Override
-				public void run() {
-					LoginIntoOAuth2Component.this.fxPanel.setScene(LoginIntoOAuth2Component.this.createBasicScene());
-					synchronized (LoginIntoOAuth2Component.this.fxPanel) {
-						LoginIntoOAuth2Component.this.fxPanel.notify();
-					}
-				}
-			});
-			try {
-				this.fxPanel.wait();
-			} catch (InterruptedException e) {
-				// do nothing
-			}
-		}
-	}
+    private void createFxPanel() {
+        this.fxPanel = new JFXPanel();
+        this.fxPanel.setOpaque(true);
+        this.fxPanel.setBackground(Color.red);
+        this.setLayout(new BorderLayout());
+        this.add(this.fxPanel, BorderLayout.CENTER);
+        synchronized (this.fxPanel) {
 
-	private Scene createBasicScene() {
-		this.webView = new WebView();
-		this.webView.setId("webViewPanel");
+            Platform.runLater(new Runnable() {
 
-		BorderPane borderPane = new BorderPane();
-		borderPane.setCenter(this.webView);
-		return new Scene(borderPane, 10, 10);
-	}
+                @Override
+                public void run() {
+                    LoginIntoOAuth2Component.this.fxPanel.setScene(LoginIntoOAuth2Component.this.createBasicScene());
+                    synchronized (LoginIntoOAuth2Component.this.fxPanel) {
+                        LoginIntoOAuth2Component.this.fxPanel.notify();
+                    }
+                }
+            });
+            try {
+                this.fxPanel.wait();
+            } catch (InterruptedException e) {
+                // do nothing
+            }
+        }
+    }
 
-	@Override
-	public Object getConstraints(LayoutManager parentLayout) {
-		Object constraints = super.getConstraints(parentLayout);
-		if (constraints instanceof GridBagConstraints) {
-			return new GridBagConstraints(-1, -1, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0);
-		}
-		return constraints;
-	}
+    private Scene createBasicScene() {
+        this.webView = new WebView();
+        this.webView.setId("webViewPanel");
 
-	@Override
-	public void setEnabled(boolean enabled) {
-		super.setEnabled(enabled);
-		if (this.webView != null) {
-			this.webView.setDisable(!enabled);
-		}
-	}
+        BorderPane borderPane = new BorderPane();
+        borderPane.setCenter(this.webView);
+        return new Scene(borderPane, 10, 10);
+    }
 
-	public void showLoginScreen(final String url, final ObjectWrapper<String> wrapper) {
-		try {
-			final String redirect = LoginIntoOAuth2Component.splitQuery(new URI(url)).get("redirect_uri");
-			Platform.runLater(new Runnable() {
+    @Override
+    public Object getConstraints(LayoutManager parentLayout) {
+        Object constraints = super.getConstraints(parentLayout);
+        if (constraints instanceof GridBagConstraints) {
+            return new GridBagConstraints(-1, -1, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                    new Insets(0, 0, 0, 0), 0, 0);
+        }
+        return constraints;
+    }
 
-				@Override
-				public void run() {
-					LoginIntoOAuth2Component.this.webView.getEngine().load(url);
-				}
-			});
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        if (this.webView != null) {
+            this.webView.setDisable(!enabled);
+        }
+    }
 
-			if (redirect != null) {
-				this.webView.getEngine().locationProperty().addListener(new ChangeListener<String>() {
+    public void showLoginScreen(final String url, final ObjectWrapper<String> wrapper) {
+        try {
+            final String redirect = LoginIntoOAuth2Component.splitQuery(new URI(url)).get("redirect_uri");
+            Platform.runLater(new Runnable() {
 
-					@Override
-					public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-						if ((newValue != null) && newValue.startsWith(redirect)) {
-							if (wrapper != null) {
-								LoginIntoOAuth2Component.this.webView.getEngine().getLoadWorker().cancel();
-								wrapper.setValue(newValue);
-							}
-						}
-					}
-				});
-			}
+                @Override
+                public void run() {
+                    LoginIntoOAuth2Component.this.webView.getEngine().load(url);
+                }
+            });
 
-		} catch (Exception ex) {
-			LoginIntoOAuth2Component.logger.error("Error loading login screen", ex);
-		}
-	}
+            if (redirect != null) {
+                this.webView.getEngine().locationProperty().addListener(new ChangeListener<String>() {
 
-	public static Map<String, String> splitQuery(URI url) throws UnsupportedEncodingException {
-		Map<String, String> query_pairs = new LinkedHashMap<>();
-		String query = url.getQuery();
-		String[] pairs = query.split("&");
-		for (String pair : pairs) {
-			int idx = pair.indexOf("=");
-			query_pairs.put(URLDecoder.decode(pair.substring(0, idx), "UTF-8"), URLDecoder.decode(pair.substring(idx + 1), "UTF-8"));
-		}
-		return query_pairs;
-	}
+                    @Override
+                    public void changed(ObservableValue<? extends String> observable, String oldValue,
+                            String newValue) {
+                        if ((newValue != null) && newValue.startsWith(redirect)) {
+                            if (wrapper != null) {
+                                LoginIntoOAuth2Component.this.webView.getEngine().getLoadWorker().cancel();
+                                wrapper.setValue(newValue);
+                            }
+                        }
+                    }
+                });
+            }
+
+        } catch (Exception ex) {
+            LoginIntoOAuth2Component.logger.error("Error loading login screen", ex);
+        }
+    }
+
+    public static Map<String, String> splitQuery(URI url) throws UnsupportedEncodingException {
+        Map<String, String> query_pairs = new LinkedHashMap<>();
+        String query = url.getQuery();
+        String[] pairs = query.split("&");
+        for (String pair : pairs) {
+            int idx = pair.indexOf("=");
+            query_pairs.put(URLDecoder.decode(pair.substring(0, idx), "UTF-8"),
+                    URLDecoder.decode(pair.substring(idx + 1), "UTF-8"));
+        }
+        return query_pairs;
+    }
+
 }

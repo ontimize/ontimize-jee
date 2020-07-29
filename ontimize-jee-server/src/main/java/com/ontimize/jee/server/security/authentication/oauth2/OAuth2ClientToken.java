@@ -8,133 +8,135 @@ import org.springframework.security.core.GrantedAuthority;
 
 public class OAuth2ClientToken extends AbstractAuthenticationToken {
 
-	private static final long	serialVersionUID	= 1L;
+    private static final long serialVersionUID = 1L;
 
-	private Serializable		credential			= null;
-	private Serializable		principal			= null;
-	private String				redirectUri			= null;
+    private Serializable credential = null;
 
-	/**
-	 * @param credential
-	 */
-	public OAuth2ClientToken(Serializable credential) {
-		super(null);
-		this.credential = credential;
-		this.setAuthenticated(false);
-	}
+    private Serializable principal = null;
 
-	/**
-	 *
-	 * @param principal
-	 * @param credential
-	 * @param authorities
-	 */
-	public OAuth2ClientToken(Serializable principal, Serializable credential, Collection<? extends GrantedAuthority> authorities) {
-		super(authorities);
-		this.credential = credential;
-		this.principal = principal;
+    private String redirectUri = null;
 
-		this.setAuthenticated(true);
-	}
+    /**
+     * @param credential
+     */
+    public OAuth2ClientToken(Serializable credential) {
+        super(null);
+        this.credential = credential;
+        this.setAuthenticated(false);
+    }
 
-	/**
-	 * @return
-	 */
-	@Override
-	public Object getCredentials() {
-		return this.credential;
-	}
+    /**
+     * @param principal
+     * @param credential
+     * @param authorities
+     */
+    public OAuth2ClientToken(Serializable principal, Serializable credential,
+            Collection<? extends GrantedAuthority> authorities) {
+        super(authorities);
+        this.credential = credential;
+        this.principal = principal;
 
-	/**
-	 * @return
-	 */
-	@Override
-	public Object getPrincipal() {
-		return this.principal;
-	}
+        this.setAuthenticated(true);
+    }
 
-	/**
-	 * @return
-	 */
-	public String getRedirectUri() {
-		return this.redirectUri;
-	}
+    /**
+     * @return
+     */
+    @Override
+    public Object getCredentials() {
+        return this.credential;
+    }
 
-	/**
-	 * @param redirectUri
-	 */
-	public void setRedirectUri(String redirectUri) {
-		this.redirectUri = redirectUri;
-	}
+    /**
+     * @return
+     */
+    @Override
+    public Object getPrincipal() {
+        return this.principal;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (!(obj instanceof OAuth2ClientToken)) {
-			return false;
-		}
+    /**
+     * @return
+     */
+    public String getRedirectUri() {
+        return this.redirectUri;
+    }
 
-		OAuth2ClientToken test = (OAuth2ClientToken) obj;
+    /**
+     * @param redirectUri
+     */
+    public void setRedirectUri(String redirectUri) {
+        this.redirectUri = redirectUri;
+    }
 
-		if (!this.getAuthorities().equals(test.getAuthorities())) {
-			return false;
-		}
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof OAuth2ClientToken)) {
+            return false;
+        }
 
-		if ((this.getDetails() == null) && (test.getDetails() != null)) {
-			return false;
-		}
+        OAuth2ClientToken test = (OAuth2ClientToken) obj;
 
-		if ((this.getDetails() != null) && (test.getDetails() == null)) {
-			return false;
-		}
+        if (!this.getAuthorities().equals(test.getAuthorities())) {
+            return false;
+        }
 
-		if ((this.getDetails() != null) && !this.getDetails().equals(test.getDetails())) {
-			return false;
-		}
+        if ((this.getDetails() == null) && (test.getDetails() != null)) {
+            return false;
+        }
 
-		if ((this.getCredentials() == null) && (test.getCredentials() != null)) {
-			return false;
-		}
+        if ((this.getDetails() != null) && (test.getDetails() == null)) {
+            return false;
+        }
 
-		if ((this.getCredentials() != null) && !this.getCredentials().equals(test.getCredentials())) {
-			return false;
-		}
+        if ((this.getDetails() != null) && !this.getDetails().equals(test.getDetails())) {
+            return false;
+        }
 
-		if ((this.getPrincipal() == null) && (test.getPrincipal() != null)) {
-			return false;
-		}
+        if ((this.getCredentials() == null) && (test.getCredentials() != null)) {
+            return false;
+        }
 
-		if ((this.getPrincipal() != null) && !this.getPrincipal().equals(test.getPrincipal())) {
-			return false;
-		}
+        if ((this.getCredentials() != null) && !this.getCredentials().equals(test.getCredentials())) {
+            return false;
+        }
 
-		return this.isAuthenticated() == test.isAuthenticated();
-	}
+        if ((this.getPrincipal() == null) && (test.getPrincipal() != null)) {
+            return false;
+        }
 
-	@Override
-	public int hashCode() {
-		int code = 31;
+        if ((this.getPrincipal() != null) && !this.getPrincipal().equals(test.getPrincipal())) {
+            return false;
+        }
 
-		for (GrantedAuthority authority : this.getAuthorities()) {
-			code ^= authority.hashCode();
-		}
+        return this.isAuthenticated() == test.isAuthenticated();
+    }
 
-		if (this.getPrincipal() != null) {
-			code ^= this.getPrincipal().hashCode();
-		}
+    @Override
+    public int hashCode() {
+        int code = 31;
 
-		if (this.getCredentials() != null) {
-			code ^= this.getCredentials().hashCode();
-		}
+        for (GrantedAuthority authority : this.getAuthorities()) {
+            code ^= authority.hashCode();
+        }
 
-		if (this.getDetails() != null) {
-			code ^= this.getDetails().hashCode();
-		}
+        if (this.getPrincipal() != null) {
+            code ^= this.getPrincipal().hashCode();
+        }
 
-		if (this.isAuthenticated()) {
-			code ^= -37;
-		}
+        if (this.getCredentials() != null) {
+            code ^= this.getCredentials().hashCode();
+        }
 
-		return code;
-	}
+        if (this.getDetails() != null) {
+            code ^= this.getDetails().hashCode();
+        }
+
+        if (this.isAuthenticated()) {
+            code ^= -37;
+        }
+
+        return code;
+    }
 
 }

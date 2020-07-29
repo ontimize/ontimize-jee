@@ -1,16 +1,27 @@
 /*
- * Copyright (c) 2001-2008 Caucho Technology, Inc. All rights reserved. The Apache Software License, Version 1.1 Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met: 1. Redistributions of source code must retain the above copyright notice, this list of conditions and
- * the following disclaimer. 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
- * and/or other materials provided with the distribution. 3. The end-user documentation included with the redistribution, if any, must include the following acknowlegement: "This
- * product includes software developed by the Caucho Technology (http://www.caucho.com/)." Alternately, this acknowlegement may appear in the software itself, if and wherever such
- * third-party acknowlegements normally appear. 4. The names "Burlap", "Resin", and "Caucho" must not be used to endorse or promote products derived from this software without
- * prior written permission. For written permission, please contact info@caucho.com. 5. Products derived from this software may not be called "Resin" nor may "Resin" appear in
- * their names without prior written permission of Caucho Technology. THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL CAUCHO TECHNOLOGY OR ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
- * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
- * BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * Copyright (c) 2001-2008 Caucho Technology, Inc. All rights reserved. The Apache Software License,
+ * Version 1.1 Redistribution and use in source and binary forms, with or without modification, are
+ * permitted provided that the following conditions are met: 1. Redistributions of source code must
+ * retain the above copyright notice, this list of conditions and the following disclaimer. 2.
+ * Redistributions in binary form must reproduce the above copyright notice, this list of conditions
+ * and the following disclaimer in the documentation and/or other materials provided with the
+ * distribution. 3. The end-user documentation included with the redistribution, if any, must
+ * include the following acknowlegement: "This product includes software developed by the Caucho
+ * Technology (http://www.caucho.com/)." Alternately, this acknowlegement may appear in the software
+ * itself, if and wherever such third-party acknowlegements normally appear. 4. The names "Burlap",
+ * "Resin", and "Caucho" must not be used to endorse or promote products derived from this software
+ * without prior written permission. For written permission, please contact info@caucho.com. 5.
+ * Products derived from this software may not be called "Resin" nor may "Resin" appear in their
+ * names without prior written permission of Caucho Technology. THIS SOFTWARE IS PROVIDED ``AS IS''
+ * AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL CAUCHO
+ * TECHNOLOGY OR ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+ * GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
+ * OF SUCH DAMAGE.
+ *
  * @author Scott Ferguson
  */
 
@@ -34,239 +45,245 @@ import com.caucho.hessian.io.IOExceptionWrapper;
  */
 public class BeanDeserializer extends AbstractMapDeserializer {
 
-	private static final Logger				logger	= LoggerFactory.getLogger(BeanDeserializer.class);
-	private final Class<?>					type;
-	private final HashMap<String, Method>	methodMap;
-	private final Method					readResolve;
-	private Constructor<?>					constructor;
-	private Object[]						constructorArgs;
+    private static final Logger logger = LoggerFactory.getLogger(BeanDeserializer.class);
 
-	public BeanDeserializer(Class<?> cl) {
-		this.type = cl;
-		this.methodMap = this.getMethodMap(cl);
+    private final Class<?> type;
 
-		this.readResolve = this.getReadResolve(cl);
+    private final HashMap<String, Method> methodMap;
 
-		Constructor<?>[] constructors = cl.getConstructors();
-		int bestLength = Integer.MAX_VALUE;
+    private final Method readResolve;
 
-		for (int i = 0; i < constructors.length; i++) {
-			if (constructors[i].getParameterTypes().length < bestLength) {
-				this.constructor = constructors[i];
-				bestLength = this.constructor.getParameterTypes().length;
-			}
-		}
+    private Constructor<?> constructor;
 
-		if (this.constructor != null) {
-			this.constructor.setAccessible(true);
-			Class<?>[] params = this.constructor.getParameterTypes();
-			this.constructorArgs = new Object[params.length];
-			for (int i = 0; i < params.length; i++) {
-				this.constructorArgs[i] = BeanDeserializer.getParamArg(params[i]);
-			}
-		}
-	}
+    private Object[] constructorArgs;
 
-	@Override
-	public Class<?> getType() {
-		return this.type;
-	}
+    public BeanDeserializer(Class<?> cl) {
+        this.type = cl;
+        this.methodMap = this.getMethodMap(cl);
 
-	@Override
-	public Object readMap(AbstractHessianInput in) throws IOException {
-		try {
-			Object obj = this.instantiate();
+        this.readResolve = this.getReadResolve(cl);
 
-			return this.readMap(in, obj);
-		} catch (IOException e) {
-			throw e;
-		} catch (Exception e) {
-			throw new IOExceptionWrapper(e);
-		}
-	}
+        Constructor<?>[] constructors = cl.getConstructors();
+        int bestLength = Integer.MAX_VALUE;
 
-	public Object readMap(AbstractHessianInput in, Object obj) throws IOException {
-		try {
-			int ref = in.addRef(obj);
+        for (int i = 0; i < constructors.length; i++) {
+            if (constructors[i].getParameterTypes().length < bestLength) {
+                this.constructor = constructors[i];
+                bestLength = this.constructor.getParameterTypes().length;
+            }
+        }
 
-			while (!in.isEnd()) {
-				Object key = in.readObject();
+        if (this.constructor != null) {
+            this.constructor.setAccessible(true);
+            Class<?>[] params = this.constructor.getParameterTypes();
+            this.constructorArgs = new Object[params.length];
+            for (int i = 0; i < params.length; i++) {
+                this.constructorArgs[i] = BeanDeserializer.getParamArg(params[i]);
+            }
+        }
+    }
 
-				Method method = this.methodMap.get(key);
+    @Override
+    public Class<?> getType() {
+        return this.type;
+    }
 
-				if (method != null) {
-					Object value = in.readObject(method.getParameterTypes()[0]);
+    @Override
+    public Object readMap(AbstractHessianInput in) throws IOException {
+        try {
+            Object obj = this.instantiate();
 
-					method.invoke(obj, new Object[] { value });
-				} else {
-					Object value = in.readObject();
-				}
-			}
+            return this.readMap(in, obj);
+        } catch (IOException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new IOExceptionWrapper(e);
+        }
+    }
 
-			in.readMapEnd();
+    public Object readMap(AbstractHessianInput in, Object obj) throws IOException {
+        try {
+            int ref = in.addRef(obj);
 
-			Object resolve = this.resolve(obj);
+            while (!in.isEnd()) {
+                Object key = in.readObject();
 
-			if (obj != resolve) {
-				in.setRef(ref, resolve);
-			}
+                Method method = this.methodMap.get(key);
 
-			return resolve;
-		} catch (IOException e) {
-			throw e;
-		} catch (Exception e) {
-			throw new IOExceptionWrapper(e);
-		}
-	}
+                if (method != null) {
+                    Object value = in.readObject(method.getParameterTypes()[0]);
 
-	private Object resolve(Object obj) {
-		// if there's a readResolve method, call it
-		try {
-			if (this.readResolve != null) {
-				return this.readResolve.invoke(obj, new Object[0]);
-			}
-		} catch (Exception e) {
-			BeanDeserializer.logger.trace(null, e);
-		}
+                    method.invoke(obj, new Object[] { value });
+                } else {
+                    Object value = in.readObject();
+                }
+            }
 
-		return obj;
-	}
+            in.readMapEnd();
 
-	protected Object instantiate() throws Exception {
-		return this.constructor.newInstance(this.constructorArgs);
-	}
+            Object resolve = this.resolve(obj);
 
-	/**
-	 * Returns the readResolve method
-	 */
-	protected Method getReadResolve(Class<?> cl) {
-		for (; cl != null; cl = cl.getSuperclass()) {
-			Method[] methods = cl.getDeclaredMethods();
+            if (obj != resolve) {
+                in.setRef(ref, resolve);
+            }
 
-			for (int i = 0; i < methods.length; i++) {
-				Method method = methods[i];
+            return resolve;
+        } catch (IOException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new IOExceptionWrapper(e);
+        }
+    }
 
-				if ("readResolve".equals(method.getName()) && (method.getParameterTypes().length == 0)) {
-					return method;
-				}
-			}
-		}
+    private Object resolve(Object obj) {
+        // if there's a readResolve method, call it
+        try {
+            if (this.readResolve != null) {
+                return this.readResolve.invoke(obj, new Object[0]);
+            }
+        } catch (Exception e) {
+            BeanDeserializer.logger.trace(null, e);
+        }
 
-		return null;
-	}
+        return obj;
+    }
 
-	/**
-	 * Creates a map of the classes fields.
-	 */
-	protected HashMap<String, Method> getMethodMap(Class<?> cl) {
-		HashMap<String, Method> methodMap = new HashMap<>();
+    protected Object instantiate() throws Exception {
+        return this.constructor.newInstance(this.constructorArgs);
+    }
 
-		for (; cl != null; cl = cl.getSuperclass()) {
-			Method[] methods = cl.getDeclaredMethods();
+    /**
+     * Returns the readResolve method
+     */
+    protected Method getReadResolve(Class<?> cl) {
+        for (; cl != null; cl = cl.getSuperclass()) {
+            Method[] methods = cl.getDeclaredMethods();
 
-			for (int i = 0; i < methods.length; i++) {
-				Method method = methods[i];
+            for (int i = 0; i < methods.length; i++) {
+                Method method = methods[i];
 
-				if (Modifier.isStatic(method.getModifiers())) {
-					continue;
-				}
+                if ("readResolve".equals(method.getName()) && (method.getParameterTypes().length == 0)) {
+                    return method;
+                }
+            }
+        }
 
-				String name = method.getName();
+        return null;
+    }
 
-				if (!name.startsWith("set")) {
-					continue;
-				}
+    /**
+     * Creates a map of the classes fields.
+     */
+    protected HashMap<String, Method> getMethodMap(Class<?> cl) {
+        HashMap<String, Method> methodMap = new HashMap<>();
 
-				Class<?>[] paramTypes = method.getParameterTypes();
-				if (paramTypes.length != 1) {
-					continue;
-				}
+        for (; cl != null; cl = cl.getSuperclass()) {
+            Method[] methods = cl.getDeclaredMethods();
 
-				if (!method.getReturnType().equals(void.class)) {
-					continue;
-				}
+            for (int i = 0; i < methods.length; i++) {
+                Method method = methods[i];
 
-				if (this.findGetter(methods, name, paramTypes[0]) == null) {
-					continue;
-				}
+                if (Modifier.isStatic(method.getModifiers())) {
+                    continue;
+                }
 
-				// XXX: could parameterize the handler to only deal with public
-				try {
-					method.setAccessible(true);
-				} catch (Exception e) {
-					BeanDeserializer.logger.error(null, e);
-				}
+                String name = method.getName();
 
-				name = name.substring(3);
+                if (!name.startsWith("set")) {
+                    continue;
+                }
 
-				int j = 0;
-				for (; (j < name.length()) && Character.isUpperCase(name.charAt(j)); j++) {
-				}
+                Class<?>[] paramTypes = method.getParameterTypes();
+                if (paramTypes.length != 1) {
+                    continue;
+                }
 
-				if (j == 1) {
-					name = name.substring(0, j).toLowerCase(Locale.ENGLISH) + name.substring(j);
-				} else if (j > 1) {
-					name = name.substring(0, j - 1).toLowerCase(Locale.ENGLISH) + name.substring(j - 1);
-				}
+                if (!method.getReturnType().equals(void.class)) {
+                    continue;
+                }
 
-				methodMap.put(name, method);
-			}
-		}
+                if (this.findGetter(methods, name, paramTypes[0]) == null) {
+                    continue;
+                }
 
-		return methodMap;
-	}
+                // XXX: could parameterize the handler to only deal with public
+                try {
+                    method.setAccessible(true);
+                } catch (Exception e) {
+                    BeanDeserializer.logger.error(null, e);
+                }
 
-	/**
-	 * Finds any matching setter.
-	 */
-	private Method findGetter(Method[] methods, String setterName, Class<?> arg) {
-		String getterName = "get" + setterName.substring(3);
+                name = name.substring(3);
 
-		for (int i = 0; i < methods.length; i++) {
-			Method method = methods[i];
+                int j = 0;
+                for (; (j < name.length()) && Character.isUpperCase(name.charAt(j)); j++) {
+                }
 
-			if (!method.getName().equals(getterName)) {
-				continue;
-			}
+                if (j == 1) {
+                    name = name.substring(0, j).toLowerCase(Locale.ENGLISH) + name.substring(j);
+                } else if (j > 1) {
+                    name = name.substring(0, j - 1).toLowerCase(Locale.ENGLISH) + name.substring(j - 1);
+                }
 
-			if (!method.getReturnType().equals(arg)) {
-				continue;
-			}
+                methodMap.put(name, method);
+            }
+        }
 
-			Class<?>[] params = method.getParameterTypes();
+        return methodMap;
+    }
 
-			if (params.length == 0) {
-				return method;
-			}
-		}
+    /**
+     * Finds any matching setter.
+     */
+    private Method findGetter(Method[] methods, String setterName, Class<?> arg) {
+        String getterName = "get" + setterName.substring(3);
 
-		return null;
-	}
+        for (int i = 0; i < methods.length; i++) {
+            Method method = methods[i];
 
-	/**
-	 * Creates a map of the classes fields.
-	 */
-	protected static Object getParamArg(Class<?> cl) {
-		if (!cl.isPrimitive()) {
-			return null;
-		} else if (boolean.class.equals(cl)) {
-			return Boolean.FALSE;
-		} else if (byte.class.equals(cl)) {
-			return Byte.valueOf((byte) 0);
-		} else if (short.class.equals(cl)) {
-			return Short.valueOf((short) 0);
-		} else if (char.class.equals(cl)) {
-			return Character.valueOf((char) 0);
-		} else if (int.class.equals(cl)) {
-			return Integer.valueOf(0);
-		} else if (long.class.equals(cl)) {
-			return Long.valueOf(0);
-		} else if (float.class.equals(cl)) {
-			return Double.valueOf(0);
-		} else if (double.class.equals(cl)) {
-			return Double.valueOf(0);
-		} else {
-			throw new UnsupportedOperationException();
-		}
-	}
+            if (!method.getName().equals(getterName)) {
+                continue;
+            }
+
+            if (!method.getReturnType().equals(arg)) {
+                continue;
+            }
+
+            Class<?>[] params = method.getParameterTypes();
+
+            if (params.length == 0) {
+                return method;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Creates a map of the classes fields.
+     */
+    protected static Object getParamArg(Class<?> cl) {
+        if (!cl.isPrimitive()) {
+            return null;
+        } else if (boolean.class.equals(cl)) {
+            return Boolean.FALSE;
+        } else if (byte.class.equals(cl)) {
+            return Byte.valueOf((byte) 0);
+        } else if (short.class.equals(cl)) {
+            return Short.valueOf((short) 0);
+        } else if (char.class.equals(cl)) {
+            return Character.valueOf((char) 0);
+        } else if (int.class.equals(cl)) {
+            return Integer.valueOf(0);
+        } else if (long.class.equals(cl)) {
+            return Long.valueOf(0);
+        } else if (float.class.equals(cl)) {
+            return Double.valueOf(0);
+        } else if (double.class.equals(cl)) {
+            return Double.valueOf(0);
+        } else {
+            throw new UnsupportedOperationException();
+        }
+    }
+
 }

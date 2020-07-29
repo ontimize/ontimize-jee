@@ -3,28 +3,29 @@ package com.ontimize.jee.common.tools.ertools;
 import java.util.Arrays;
 import java.util.List;
 
-public  abstract class AbstractAggregateFunction<T extends IPartialAggregateValue> implements IAggregateFunction<T> {
+public abstract class AbstractAggregateFunction<T extends IPartialAggregateValue> implements IAggregateFunction<T> {
 
-	private final String	opColumn;
-	private final String	resultColumn;
+    private final String opColumn;
 
-	public AbstractAggregateFunction(String opColumnName, String resultColumnName) {
-		super();
-		this.opColumn = opColumnName;
-		this.resultColumn = resultColumnName;
-	}
+    private final String resultColumn;
 
-	public String getOpColumn() {
-		return this.opColumn;
-	}
+    public AbstractAggregateFunction(String opColumnName, String resultColumnName) {
+        super();
+        this.opColumn = opColumnName;
+        this.resultColumn = resultColumnName;
+    }
 
-	public String getResultColumn() {
-		return this.resultColumn;
-	}
+    public String getOpColumn() {
+        return this.opColumn;
+    }
 
-	@Override
-	public List<String> getAggregatedColumnNames() {
-		return Arrays.asList(new String[] { this.resultColumn });
-	}
+    public String getResultColumn() {
+        return this.resultColumn;
+    }
+
+    @Override
+    public List<String> getAggregatedColumnNames() {
+        return Arrays.asList(new String[] { this.resultColumn });
+    }
 
 }

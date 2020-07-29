@@ -19,126 +19,139 @@ import com.ontimize.jee.desktopclient.spring.BeansFactory;
 /**
  * The Class RemoteApplicationPreferencesInvocationHandler.
  */
-public class RemoteApplicationPreferencesInvocationHandler extends AbstractInvocationDelegate implements RemoteApplicationPreferences {
+public class RemoteApplicationPreferencesInvocationHandler extends AbstractInvocationDelegate
+        implements RemoteApplicationPreferences {
 
-	private static final Logger						logger				= LoggerFactory.getLogger(RemoteApplicationPreferencesInvocationHandler.class);
-	/** The Constant serialVersionUID. */
-	private static final long						serialVersionUID	= 1L;
+    private static final Logger logger = LoggerFactory.getLogger(RemoteApplicationPreferencesInvocationHandler.class);
 
-	/** The preferences service. */
-	private IRemoteApplicationPreferencesService	preferencesService	= null;
+    /** The Constant serialVersionUID. */
+    private static final long serialVersionUID = 1L;
 
-	private final BlockingQueue<Operation>			queue;
+    /** The preferences service. */
+    private IRemoteApplicationPreferencesService preferencesService = null;
 
-	private final Thread							consummerThread;
+    private final BlockingQueue<Operation> queue;
 
-	public RemoteApplicationPreferencesInvocationHandler() {
-		super();
-		this.queue = new LinkedBlockingQueue<>();
-		this.consummerThread = new Thread("RemoteApplicationPreferences-Thread") {
+    private final Thread consummerThread;
 
-			@Override
-			public void run() {
+    public RemoteApplicationPreferencesInvocationHandler() {
+        super();
+        this.queue = new LinkedBlockingQueue<>();
+        this.consummerThread = new Thread("RemoteApplicationPreferences-Thread") {
 
-				while (true) {
-					try {
-						Operation op = RemoteApplicationPreferencesInvocationHandler.this.queue.take();
-						ReflectionTools.invoke(RemoteApplicationPreferencesInvocationHandler.this.getRemotePreferencesService(), op.getMethod(), op.getParameters());
-					} catch (Exception error) {
-						RemoteApplicationPreferencesInvocationHandler.logger.error(null, error);
-					}
-				}
-			};
-		};
-		this.consummerThread.start();
-	}
+            @Override
+            public void run() {
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.ontimize.gui.preferences.RemoteApplicationPreferences#getRemotePreference(int, java.lang.String, java.lang.String)
-	 */
-	@Override
-	public String getRemotePreference(int sessionId, String user, String preferenceName) throws Exception {
-		if (user == null) {
-			return this.getRemotePreferencesService().getDefaultPreference(preferenceName);
-		} else {
-			return this.getRemotePreferencesService().getPreference(preferenceName);
-		}
-	}
+                while (true) {
+                    try {
+                        Operation op = RemoteApplicationPreferencesInvocationHandler.this.queue.take();
+                        ReflectionTools.invoke(
+                                RemoteApplicationPreferencesInvocationHandler.this.getRemotePreferencesService(),
+                                op.getMethod(), op.getParameters());
+                    } catch (Exception error) {
+                        RemoteApplicationPreferencesInvocationHandler.logger.error(null, error);
+                    }
+                }
+            };
+        };
+        this.consummerThread.start();
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.ontimize.gui.preferences.RemoteApplicationPreferences#setRemotePreference(int, java.lang.String, java.lang.String, java.lang.String)
-	 */
-	@Override
-	public void setRemotePreference(int sessionId, String user, String preferenceName, String value) throws Exception {
-		if (user == null) {
-			this.queue.put(new Operation("setDefaultPreference", new Object[] { preferenceName, value }));
-		} else {
-			this.queue.put(new Operation("setPreference", new Object[] { preferenceName, value }));
-		}
-	}
+    /*
+     * (non-Javadoc)
+     *
+     * @see com.ontimize.gui.preferences.RemoteApplicationPreferences#getRemotePreference(int,
+     * java.lang.String, java.lang.String)
+     */
+    @Override
+    public String getRemotePreference(int sessionId, String user, String preferenceName) throws Exception {
+        if (user == null) {
+            return this.getRemotePreferencesService().getDefaultPreference(preferenceName);
+        } else {
+            return this.getRemotePreferencesService().getPreference(preferenceName);
+        }
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.ontimize.gui.preferences.RemoteApplicationPreferences#saveRemotePreferences(int)
-	 */
-	@Override
-	public void saveRemotePreferences(int sessionId) throws Exception {
-		if (!this.isLogged()) {
-			return;
-		}
-		this.getRemotePreferencesService().savePreferences();
-	}
+    /*
+     * (non-Javadoc)
+     *
+     * @see com.ontimize.gui.preferences.RemoteApplicationPreferences#setRemotePreference(int,
+     * java.lang.String, java.lang.String, java.lang.String)
+     */
+    @Override
+    public void setRemotePreference(int sessionId, String user, String preferenceName, String value) throws Exception {
+        if (user == null) {
+            this.queue.put(new Operation("setDefaultPreference", new Object[] { preferenceName, value }));
+        } else {
+            this.queue.put(new Operation("setPreference", new Object[] { preferenceName, value }));
+        }
+    }
 
-	private boolean isLogged() {
-		return ((OJeeClientPermissionLocator) ApplicationManager.getApplication().getReferenceLocator()).getUserInformation() != null;
-	}
+    /*
+     * (non-Javadoc)
+     *
+     * @see com.ontimize.gui.preferences.RemoteApplicationPreferences#saveRemotePreferences(int)
+     */
+    @Override
+    public void saveRemotePreferences(int sessionId) throws Exception {
+        if (!this.isLogged()) {
+            return;
+        }
+        this.getRemotePreferencesService().savePreferences();
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.ontimize.gui.preferences.RemoteApplicationPreferences#loadRemotePreferences(int)
-	 */
-	@Override
-	public void loadRemotePreferences(int sessionId) throws Exception {
-		if (!this.isLogged()) {
-			return;
-		}
-		this.getRemotePreferencesService().loadPreferences();
-	}
+    private boolean isLogged() {
+        return ((OJeeClientPermissionLocator) ApplicationManager.getApplication().getReferenceLocator())
+            .getUserInformation() != null;
+    }
 
-	/**
-	 * Gets the remote preferences service.
-	 *
-	 * @return the remote preferences service
-	 */
-	protected IRemoteApplicationPreferencesService getRemotePreferencesService() {
-		if (this.preferencesService == null) {
-			this.preferencesService = BeansFactory.getBean(IRemoteApplicationPreferencesService.class);
-		}
-		if (this.preferencesService == null) {
-			throw new OntimizeJEERuntimeException(I18NNaming.E_REMOTE_PREFERENCES_SERVICE_NOT_FOUND);
-		}
-		return this.preferencesService;
-	}
+    /*
+     * (non-Javadoc)
+     *
+     * @see com.ontimize.gui.preferences.RemoteApplicationPreferences#loadRemotePreferences(int)
+     */
+    @Override
+    public void loadRemotePreferences(int sessionId) throws Exception {
+        if (!this.isLogged()) {
+            return;
+        }
+        this.getRemotePreferencesService().loadPreferences();
+    }
 
-	private static class Operation {
+    /**
+     * Gets the remote preferences service.
+     * @return the remote preferences service
+     */
+    protected IRemoteApplicationPreferencesService getRemotePreferencesService() {
+        if (this.preferencesService == null) {
+            this.preferencesService = BeansFactory.getBean(IRemoteApplicationPreferencesService.class);
+        }
+        if (this.preferencesService == null) {
+            throw new OntimizeJEERuntimeException(I18NNaming.E_REMOTE_PREFERENCES_SERVICE_NOT_FOUND);
+        }
+        return this.preferencesService;
+    }
 
-		private final String	method;
-		private final Object[]	parameters;
+    private static class Operation {
 
-		public Operation(String method, Object[] parameters) {
-			super();
-			this.method = method;
-			this.parameters = parameters;
-		}
+        private final String method;
 
-		public String getMethod() {
-			return this.method;
-		}
+        private final Object[] parameters;
 
-		public Object[] getParameters() {
-			return this.parameters;
-		}
-	}
+        public Operation(String method, Object[] parameters) {
+            super();
+            this.method = method;
+            this.parameters = parameters;
+        }
+
+        public String getMethod() {
+            return this.method;
+        }
+
+        public Object[] getParameters() {
+            return this.parameters;
+        }
+
+    }
+
 }

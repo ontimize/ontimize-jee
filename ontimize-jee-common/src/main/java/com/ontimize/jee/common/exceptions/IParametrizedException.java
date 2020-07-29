@@ -7,39 +7,34 @@ import com.ontimize.jee.common.tools.MessageType;
  */
 public interface IParametrizedException {
 
-	/**
-	 * Checks if is message blocking.
-	 *
-	 * @return true, if is message blocking
-	 */
-	boolean isMessageBlocking();
+    /**
+     * Checks if is message blocking.
+     * @return true, if is message blocking
+     */
+    boolean isMessageBlocking();
 
-	/**
-	 * Checks if is silent.
-	 *
-	 * @return true, if is silent
-	 */
-	boolean isSilent();
+    /**
+     * Checks if is silent.
+     * @return true, if is silent
+     */
+    boolean isSilent();
 
-	/**
-	 * Gets the msg parameters.
-	 *
-	 * @return the msg parameters
-	 */
-	Object[] getMessageParameters();
+    /**
+     * Gets the msg parameters.
+     * @return the msg parameters
+     */
+    Object[] getMessageParameters();
 
-	/**
-	 * Gets the message.
-	 *
-	 * @return the message
-	 */
-	String getMessage();
+    /**
+     * Gets the message.
+     * @return the message
+     */
+    String getMessage();
 
-	/**
-	 * Gets the message type.
-	 *
-	 * @return the message type
-	 */
-	MessageType getMessageType();
+    /**
+     * Gets the message type.
+     * @return the message type
+     */
+    MessageType getMessageType();
 
 }

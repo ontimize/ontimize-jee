@@ -12,12 +12,10 @@ package com.ontimize.jee.server.requestfilter;
  */
 public interface IOntimizeRequestHeaderProcessor {
 
-	/**
-	 * Process header.
-	 *
-	 * @param requestHeaderProvider
-	 *            the request header provider
-	 */
-	void processHeader(final RequestHeaderProvider requestHeaderProvider);
+    /**
+     * Process header.
+     * @param requestHeaderProvider the request header provider
+     */
+    void processHeader(final RequestHeaderProvider requestHeaderProvider);
 
 }

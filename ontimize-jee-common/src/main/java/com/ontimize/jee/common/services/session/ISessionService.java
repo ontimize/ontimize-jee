@@ -5,8 +5,9 @@ package com.ontimize.jee.common.services.session;
  */
 public interface ISessionService {
 
-	/**
-	 * Close session.
-	 */
-	void closeSession();
+    /**
+     * Close session.
+     */
+    void closeSession();
+
 }

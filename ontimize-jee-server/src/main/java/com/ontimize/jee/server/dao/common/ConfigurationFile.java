@@ -14,17 +14,16 @@ import java.lang.annotation.Target;
 @Documented
 public @interface ConfigurationFile {
 
-	/**
-	 * The value indicate the path to the configuration file.
-	 *
-	 * @return the configuration file path
-	 */
-	String configurationFile();
+    /**
+     * The value indicate the path to the configuration file.
+     * @return the configuration file path
+     */
+    String configurationFile();
 
-	/**
-	 * The placeholder indicate the path to the placeholder file for replacement.
-	 *
-	 * @return the configuration file path
-	 */
-	String configurationFilePlaceholder() default "";
+    /**
+     * The placeholder indicate the path to the placeholder file for replacement.
+     * @return the configuration file path
+     */
+    String configurationFilePlaceholder() default "";
+
 }

@@ -19,17 +19,18 @@ import com.ontimize.jee.server.dao.jpa.common.rowmapper.IJavaObjectToDbObjectCon
  */
 public class BaseJavaObjectToDbObjectConverter implements IJavaObjectToDbObjectConverter {
 
-	private static String CLOB_TYPE = "CLOB";
+    private static String CLOB_TYPE = "CLOB";
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Object convert(final Object input, final String toDbType) {
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Object convert(final Object input, final String toDbType) {
 
-		if ((input instanceof String) && toDbType.equalsIgnoreCase(BaseJavaObjectToDbObjectConverter.CLOB_TYPE)) {
-			return new SqlParameterValue(Types.CLOB, new SqlLobValue((String) input));
-		}
-		return input;
-	}
+        if ((input instanceof String) && toDbType.equalsIgnoreCase(BaseJavaObjectToDbObjectConverter.CLOB_TYPE)) {
+            return new SqlParameterValue(Types.CLOB, new SqlLobValue((String) input));
+        }
+        return input;
+    }
+
 }

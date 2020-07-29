@@ -12,33 +12,34 @@ import com.ontimize.jee.desktopclient.components.taskmanager.TaskStatus;
 
 public class TaskManagerTest {
 
-	private static final Logger logger = LoggerFactory.getLogger(TaskManagerTest.class);
+    private static final Logger logger = LoggerFactory.getLogger(TaskManagerTest.class);
 
-	public TaskManagerTest() {}
+    public TaskManagerTest() {
+    }
 
-	public static void main(String[] args) {
-		ExecutorService executor = Executors.newSingleThreadExecutor();
-		final DefaultTask taskInfo = new DefaultTask("Mi tarea");
-		TaskManagerGUI.getInstance().addTask(taskInfo);
+    public static void main(String[] args) {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        final DefaultTask taskInfo = new DefaultTask("Mi tarea");
+        TaskManagerGUI.getInstance().addTask(taskInfo);
 
-		Runnable myTask = new Runnable() {
+        Runnable myTask = new Runnable() {
 
-			@Override
-			public void run() {
-				for (int i = 0; i < 100; i++) {
-					try {
-						Thread.sleep(100);
-					} catch (InterruptedException error) {
-						TaskManagerTest.logger.error(null, error);
-					}
-					taskInfo.updateProgress(i / 100.0, TaskStatus.RUNNING);
-				}
-				taskInfo.updateProgress(1, TaskStatus.COMPLETED);
-			}
-		};
+            @Override
+            public void run() {
+                for (int i = 0; i < 100; i++) {
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException error) {
+                        TaskManagerTest.logger.error(null, error);
+                    }
+                    taskInfo.updateProgress(i / 100.0, TaskStatus.RUNNING);
+                }
+                taskInfo.updateProgress(1, TaskStatus.COMPLETED);
+            }
+        };
 
-		executor.execute(myTask);
+        executor.execute(myTask);
 
-	}
+    }
 
 }

@@ -9,167 +9,185 @@ import org.springframework.util.Assert;
 
 public class OAuth2ClientProperties implements InitializingBean {
 
-	// Mandatory
-	private String				userAuthorizationUri	= null;
-	private Map<String, String>	additionalAuthParams	= null;
-	private URI					redirectUri				= null;
-	private String				accessTokenUri			= null;
-	private String				clientId				= null;
-	private String				clientSecret			= null;
-	private String				userInfoUri				= null;
-	private Map<String, String>	additionalInfoParams	= null;
+    // Mandatory
+    private String userAuthorizationUri = null;
 
-	// Optional, defaults set here
-	private String				accessTokenName			= "access_token";
-	private final String		clientSecretParamName	= "client_secret";
-	private String				clientIdParamName		= "client_id";
-	private final String		grantTypeParamName		= "grant_type";
-	private String				grantType				= "authorization_code";
-	private String				redirectUriParamName	= "redirect_uri";
-	private final String		responseTypeParamName	= "response_type";
-	private final String		responseType			= "code";
-	private final String		stateParamName			= "state";
-	private final String		codeParamName			= "code";
-	private String				userIdName				= "email";
+    private Map<String, String> additionalAuthParams = null;
 
-	/**
-	 * @throws Exception
-	 */
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		Assert.notNull(this.userAuthorizationUri, "The userAuthorisationUri must be set");
-		Assert.notNull(this.redirectUri, "The redirectUri must be set");
-		Assert.notNull(this.accessTokenUri, "The accessTokenUri must be set");
-		Assert.notNull(this.clientId, "The clientId must be set");
-		Assert.notNull(this.clientSecret, "The clientSecret must be set");
-		Assert.notNull(this.userInfoUri, "The userInfoUri must be set");
-	}
+    private URI redirectUri = null;
 
-	public String getUserAuthorizationUri() {
-		return this.userAuthorizationUri;
-	}
+    private String accessTokenUri = null;
 
-	public void setUserAuthorizationUri(String userAuthorizationUri) {
-		this.userAuthorizationUri = userAuthorizationUri;
-	}
+    private String clientId = null;
 
-	public Map<String, String> getAdditionalAuthParams() {
-		return this.additionalAuthParams;
-	}
+    private String clientSecret = null;
 
-	public void setAdditionalAuthParams(Map<String, String> additionalAuthParams) {
-		this.additionalAuthParams = additionalAuthParams;
-	}
+    private String userInfoUri = null;
 
-	public URI getRedirectUri() {
-		return this.redirectUri;
-	}
+    private Map<String, String> additionalInfoParams = null;
 
-	public void setRedirectUri(String redirectUri) throws URISyntaxException {
-		this.redirectUri = new URI(redirectUri);
-	}
+    // Optional, defaults set here
+    private String accessTokenName = "access_token";
 
-	public String getAccessTokenUri() {
-		return this.accessTokenUri;
-	}
+    private final String clientSecretParamName = "client_secret";
 
-	public void setAccessTokenUri(String accessTokenUri) {
-		this.accessTokenUri = accessTokenUri;
-	}
+    private String clientIdParamName = "client_id";
 
-	public String getClientId() {
-		return this.clientId;
-	}
+    private final String grantTypeParamName = "grant_type";
 
-	public void setClientId(String clientId) {
-		this.clientId = clientId;
-	}
+    private String grantType = "authorization_code";
 
-	public String getClientSecret() {
-		return this.clientSecret;
-	}
+    private String redirectUriParamName = "redirect_uri";
 
-	public void setClientSecret(String clientSecret) {
-		this.clientSecret = clientSecret;
-	}
+    private final String responseTypeParamName = "response_type";
 
-	public String getAccessTokenName() {
-		return this.accessTokenName;
-	}
+    private final String responseType = "code";
 
-	public void setAccessTokenName(String accessTokenName) {
-		this.accessTokenName = accessTokenName;
-	}
+    private final String stateParamName = "state";
 
-	public String getClientIdParamName() {
-		return this.clientIdParamName;
-	}
+    private final String codeParamName = "code";
 
-	public void setClientIdParamName(String clientIdParamName) {
-		this.clientIdParamName = clientIdParamName;
-	}
+    private String userIdName = "email";
 
-	public String getGrantTypeParamName() {
-		return this.grantTypeParamName;
-	}
+    /**
+     * @throws Exception
+     */
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        Assert.notNull(this.userAuthorizationUri, "The userAuthorisationUri must be set");
+        Assert.notNull(this.redirectUri, "The redirectUri must be set");
+        Assert.notNull(this.accessTokenUri, "The accessTokenUri must be set");
+        Assert.notNull(this.clientId, "The clientId must be set");
+        Assert.notNull(this.clientSecret, "The clientSecret must be set");
+        Assert.notNull(this.userInfoUri, "The userInfoUri must be set");
+    }
 
-	public String getGrantType() {
-		return this.grantType;
-	}
+    public String getUserAuthorizationUri() {
+        return this.userAuthorizationUri;
+    }
 
-	public void setGrantType(String grantType) {
-		this.grantType = grantType;
-	}
+    public void setUserAuthorizationUri(String userAuthorizationUri) {
+        this.userAuthorizationUri = userAuthorizationUri;
+    }
 
-	public String getRedirectUriParamName() {
-		return this.redirectUriParamName;
-	}
+    public Map<String, String> getAdditionalAuthParams() {
+        return this.additionalAuthParams;
+    }
 
-	public void setRedirectUriParamName(String redirectUriParamName) {
-		this.redirectUriParamName = redirectUriParamName;
-	}
+    public void setAdditionalAuthParams(Map<String, String> additionalAuthParams) {
+        this.additionalAuthParams = additionalAuthParams;
+    }
 
-	public String getResponseTypeParamName() {
-		return this.responseTypeParamName;
-	}
+    public URI getRedirectUri() {
+        return this.redirectUri;
+    }
 
-	public String getResponseType() {
-		return this.responseType;
-	}
+    public void setRedirectUri(String redirectUri) throws URISyntaxException {
+        this.redirectUri = new URI(redirectUri);
+    }
 
-	public String getStateParamName() {
-		return this.stateParamName;
-	}
+    public String getAccessTokenUri() {
+        return this.accessTokenUri;
+    }
 
-	public String getCodeParamName() {
-		return this.codeParamName;
-	}
+    public void setAccessTokenUri(String accessTokenUri) {
+        this.accessTokenUri = accessTokenUri;
+    }
 
-	public String getClientSecretParamName() {
-		return this.clientSecretParamName;
-	}
+    public String getClientId() {
+        return this.clientId;
+    }
 
-	public String getUserInfoUri() {
-		return this.userInfoUri;
-	}
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
 
-	public void setUserInfoUri(String userInfoUri) {
-		this.userInfoUri = userInfoUri;
-	}
+    public String getClientSecret() {
+        return this.clientSecret;
+    }
 
-	public Map<String, String> getAdditionalInfoParams() {
-		return this.additionalInfoParams;
-	}
+    public void setClientSecret(String clientSecret) {
+        this.clientSecret = clientSecret;
+    }
 
-	public void setAdditionalInfoParams(Map<String, String> additionalInfoParams) {
-		this.additionalInfoParams = additionalInfoParams;
-	}
+    public String getAccessTokenName() {
+        return this.accessTokenName;
+    }
 
-	public String getUserIdName() {
-		return this.userIdName;
-	}
+    public void setAccessTokenName(String accessTokenName) {
+        this.accessTokenName = accessTokenName;
+    }
 
-	public void setUserIdName(String userIdName) {
-		this.userIdName = userIdName;
-	}
+    public String getClientIdParamName() {
+        return this.clientIdParamName;
+    }
+
+    public void setClientIdParamName(String clientIdParamName) {
+        this.clientIdParamName = clientIdParamName;
+    }
+
+    public String getGrantTypeParamName() {
+        return this.grantTypeParamName;
+    }
+
+    public String getGrantType() {
+        return this.grantType;
+    }
+
+    public void setGrantType(String grantType) {
+        this.grantType = grantType;
+    }
+
+    public String getRedirectUriParamName() {
+        return this.redirectUriParamName;
+    }
+
+    public void setRedirectUriParamName(String redirectUriParamName) {
+        this.redirectUriParamName = redirectUriParamName;
+    }
+
+    public String getResponseTypeParamName() {
+        return this.responseTypeParamName;
+    }
+
+    public String getResponseType() {
+        return this.responseType;
+    }
+
+    public String getStateParamName() {
+        return this.stateParamName;
+    }
+
+    public String getCodeParamName() {
+        return this.codeParamName;
+    }
+
+    public String getClientSecretParamName() {
+        return this.clientSecretParamName;
+    }
+
+    public String getUserInfoUri() {
+        return this.userInfoUri;
+    }
+
+    public void setUserInfoUri(String userInfoUri) {
+        this.userInfoUri = userInfoUri;
+    }
+
+    public Map<String, String> getAdditionalInfoParams() {
+        return this.additionalInfoParams;
+    }
+
+    public void setAdditionalInfoParams(Map<String, String> additionalInfoParams) {
+        this.additionalInfoParams = additionalInfoParams;
+    }
+
+    public String getUserIdName() {
+        return this.userIdName;
+    }
+
+    public void setUserIdName(String userIdName) {
+        this.userIdName = userIdName;
+    }
+
 }

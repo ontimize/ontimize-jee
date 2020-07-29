@@ -10,24 +10,23 @@ import com.ontimize.jee.server.security.ISecurityRoleInformationService;
  */
 public class DefaultRoleProvider extends AbstractRoleProvider {
 
-	/**
-	 * The application context.
-	 */
-	private ApplicationContext			context;
+    /**
+     * The application context.
+     */
+    private ApplicationContext context;
 
-	/**
-	 * Instantiates a new role permissions.
-	 *
-	 * @param roles
-	 *            the roles
-	 */
-	public DefaultRoleProvider(ApplicationContext context) {
-		super();
-		this.context = context;
-	}
+    /**
+     * Instantiates a new role permissions.
+     * @param roles the roles
+     */
+    public DefaultRoleProvider(ApplicationContext context) {
+        super();
+        this.context = context;
+    }
 
-	@Override
-	protected ISecurityRoleInformationService getRoleService() {
-		return this.context.getBean(OntimizeConfiguration.class).getSecurityConfiguration().getRoleInformationService();
-	}
+    @Override
+    protected ISecurityRoleInformationService getRoleService() {
+        return this.context.getBean(OntimizeConfiguration.class).getSecurityConfiguration().getRoleInformationService();
+    }
+
 }

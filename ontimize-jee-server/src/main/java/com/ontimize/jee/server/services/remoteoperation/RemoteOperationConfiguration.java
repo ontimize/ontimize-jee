@@ -15,59 +15,58 @@ import org.springframework.context.ConfigurableApplicationContext;
  */
 public class RemoteOperationConfiguration {
 
-	private static final Logger			logger	= LoggerFactory.getLogger(RemoteOperationConfiguration.class);
+    private static final Logger logger = LoggerFactory.getLogger(RemoteOperationConfiguration.class);
 
-	/** The remote operation manager. */
-	protected IRemoteOperationEngine	remoteOperationEngine;
+    /** The remote operation manager. */
+    protected IRemoteOperationEngine remoteOperationEngine;
 
-	/** The max parallel threads. */
-	protected int						maxParallelThreads;
+    /** The max parallel threads. */
+    protected int maxParallelThreads;
 
-	@Autowired
-	private ApplicationContext			applicationContext;
+    @Autowired
+    private ApplicationContext applicationContext;
 
-	// private ConfigurableListableBeanFactory beanFactory;
+    // private ConfigurableListableBeanFactory beanFactory;
 
-	/**
-	 * Gets the remote opereation manager.
-	 *
-	 * @return the remote opereation manager
-	 */
-	public IRemoteOperationEngine getRemoteOpereationEngine() {
-		if (this.remoteOperationEngine == null) {
-			try {
-				this.remoteOperationEngine = this.applicationContext.getBean(IRemoteOperationEngine.class);
-			} catch (NoSuchBeanDefinitionException error) {
-				RemoteOperationConfiguration.logger.debug("no bean definition found, using default", error);
-				BeanDefinition definition = new RootBeanDefinition(DefaultRemoteOperationEngine.class);
-				DefaultListableBeanFactory registry = (DefaultListableBeanFactory) ((ConfigurableApplicationContext) this.applicationContext).getBeanFactory();
-				// lo correcto para obtener el registry seria implementar BeanDefinitionRegistryPostProcessor pero no se invocan los metodos
+    /**
+     * Gets the remote opereation manager.
+     * @return the remote opereation manager
+     */
+    public IRemoteOperationEngine getRemoteOpereationEngine() {
+        if (this.remoteOperationEngine == null) {
+            try {
+                this.remoteOperationEngine = this.applicationContext.getBean(IRemoteOperationEngine.class);
+            } catch (NoSuchBeanDefinitionException error) {
+                RemoteOperationConfiguration.logger.debug("no bean definition found, using default", error);
+                BeanDefinition definition = new RootBeanDefinition(DefaultRemoteOperationEngine.class);
+                DefaultListableBeanFactory registry = (DefaultListableBeanFactory) ((ConfigurableApplicationContext) this.applicationContext)
+                    .getBeanFactory();
+                // lo correcto para obtener el registry seria implementar BeanDefinitionRegistryPostProcessor pero
+                // no se invocan los metodos
 
-				registry.registerBeanDefinition("remoteOperationEngine", definition);
-			}
-			this.remoteOperationEngine = this.applicationContext.getBean("remoteOperationEngine", IRemoteOperationEngine.class);
-			this.remoteOperationEngine.setMaxRunningThreadNumber(this.getMaxParallelThreads());
-		}
-		return this.remoteOperationEngine;
-	}
+                registry.registerBeanDefinition("remoteOperationEngine", definition);
+            }
+            this.remoteOperationEngine = this.applicationContext.getBean("remoteOperationEngine",
+                    IRemoteOperationEngine.class);
+            this.remoteOperationEngine.setMaxRunningThreadNumber(this.getMaxParallelThreads());
+        }
+        return this.remoteOperationEngine;
+    }
 
-	/**
-	 * Gets the max parallel threads.
-	 *
-	 * @return the max parallel threads
-	 */
-	public int getMaxParallelThreads() {
-		return this.maxParallelThreads;
-	}
+    /**
+     * Gets the max parallel threads.
+     * @return the max parallel threads
+     */
+    public int getMaxParallelThreads() {
+        return this.maxParallelThreads;
+    }
 
-	/**
-	 * Sets the max parallel threads.
-	 *
-	 * @param maxParallelThreads
-	 *            the new max parallel threads
-	 */
-	public void setMaxParallelThreads(int maxParallelThreads) {
-		this.maxParallelThreads = maxParallelThreads;
-	}
+    /**
+     * Sets the max parallel threads.
+     * @param maxParallelThreads the new max parallel threads
+     */
+    public void setMaxParallelThreads(int maxParallelThreads) {
+        this.maxParallelThreads = maxParallelThreads;
+    }
 
 }

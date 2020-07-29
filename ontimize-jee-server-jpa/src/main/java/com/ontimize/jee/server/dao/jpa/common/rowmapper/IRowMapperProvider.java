@@ -14,33 +14,24 @@ import com.ontimize.jee.server.dao.jpa.common.MappingInfo;
  */
 public interface IRowMapperProvider {
 
-	/**
-	 * Obtiene row mapper.
-	 *
-	 * @param <T>
-	 *            tipo generico
-	 * @param mappingInfo
-	 *            the mapping info
-	 * @param entityClass
-	 *            entity class
-	 * @return row mapper
-	 */
-	<T> IRowMapper<T> getRowMapper(MappingInfo mappingInfo, Class<T> entityClass);
+    /**
+     * Obtiene row mapper.
+     * @param <T> tipo generico
+     * @param mappingInfo the mapping info
+     * @param entityClass entity class
+     * @return row mapper
+     */
+    <T> IRowMapper<T> getRowMapper(MappingInfo mappingInfo, Class<T> entityClass);
 
-	/**
-	 * Obtiene row mapper.
-	 *
-	 * @param <S>
-	 *            tipo generico
-	 * @param <T>
-	 *            tipo generico
-	 * @param mappingInfo
-	 *            the mapping info
-	 * @param entityClass
-	 *            entity class
-	 * @param returnTypeClass
-	 *            return type class
-	 * @return row mapper
-	 */
-	<S, T> IRowMapper<T> getRowMapper(MappingInfo mappingInfo, Class<S> entityClass, Class<T> returnTypeClass);
+    /**
+     * Obtiene row mapper.
+     * @param <S> tipo generico
+     * @param <T> tipo generico
+     * @param mappingInfo the mapping info
+     * @param entityClass entity class
+     * @param returnTypeClass return type class
+     * @return row mapper
+     */
+    <S, T> IRowMapper<T> getRowMapper(MappingInfo mappingInfo, Class<S> entityClass, Class<T> returnTypeClass);
+
 }

@@ -6,12 +6,12 @@ import java.util.ResourceBundle;
 
 public interface PathManager {
 
-	void showPath(List<Level> pathLevels);
+    void showPath(List<Level> pathLevels);
 
-	void setLevelManager(LevelManager levelManager);
+    void setLevelManager(LevelManager levelManager);
 
-	Component createGUIComponent();
+    Component createGUIComponent();
 
-	void setResourceBundle(ResourceBundle resourceBundle);
+    void setResourceBundle(ResourceBundle resourceBundle);
 
 }

@@ -10,33 +10,34 @@ import com.ontimize.jee.desktopclient.spring.BeansFactory;
 
 public class ServerManagementAction extends AbstractAction {
 
-	private static ServerManagementWindow	managementWindow	= null;
+    private static ServerManagementWindow managementWindow = null;
 
-	IServerManagementService				serverManagement	= BeansFactory.getBean(IServerManagementService.class);
+    IServerManagementService serverManagement = BeansFactory.getBean(IServerManagementService.class);
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if (ServerManagementAction.isApplicationManagerWindowVisible()) {
-			// Do nothing
-		} else {
-			// Login Window
-			ServerManagementAction.setApplicationManagerWindowVisible(true);
-		}
-	}
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (ServerManagementAction.isApplicationManagerWindowVisible()) {
+            // Do nothing
+        } else {
+            // Login Window
+            ServerManagementAction.setApplicationManagerWindowVisible(true);
+        }
+    }
 
-	private static void setApplicationManagerWindowVisible(boolean visible) {
-		ServerManagementAction.ensureApplicationMonitor();
-		ServerManagementAction.managementWindow.setVisible(visible);
-	}
+    private static void setApplicationManagerWindowVisible(boolean visible) {
+        ServerManagementAction.ensureApplicationMonitor();
+        ServerManagementAction.managementWindow.setVisible(visible);
+    }
 
-	private static void ensureApplicationMonitor() {
-		if (ServerManagementAction.managementWindow == null) {
-			ServerManagementAction.managementWindow = new ServerManagementWindow();
-		}
-	}
+    private static void ensureApplicationMonitor() {
+        if (ServerManagementAction.managementWindow == null) {
+            ServerManagementAction.managementWindow = new ServerManagementWindow();
+        }
+    }
 
-	private static boolean isApplicationManagerWindowVisible() {
-		ServerManagementAction.ensureApplicationMonitor();
-		return ServerManagementAction.managementWindow.isVisible();
-	}
+    private static boolean isApplicationManagerWindowVisible() {
+        ServerManagementAction.ensureApplicationMonitor();
+        return ServerManagementAction.managementWindow.isVisible();
+    }
+
 }

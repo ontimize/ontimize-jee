@@ -26,98 +26,103 @@ import com.ontimize.jee.common.tools.ParseUtilsExtended;
 
 public class EntityResultDeserializer extends StdDeserializer<EntityResult> {
 
-	public static final String	CODE_KEY		= "code";
-	public static final String	MESSAGE_KEY		= "message";
-	public static final String	DATA_KEY		= "data";
-	public static final String	SQL_TYPES_KEY	= "sqlTypes";
+    public static final String CODE_KEY = "code";
 
-	protected EntityResultDeserializer() {
-		super(EntityResult.class);
-	}
+    public static final String MESSAGE_KEY = "message";
 
-	@Override
-	public EntityResult deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JsonProcessingException {
-		if (jp.getCurrentToken() != JsonToken.START_OBJECT) {
-			throw JsonMappingException.from(jp, "Current token not START_OBJECT (needed to deserialize), but encountered " + jp.getCurrentToken());
-		}
+    public static final String DATA_KEY = "data";
 
-		JsonNode node = jp.getCodec().readTree(jp);
+    public static final String SQL_TYPES_KEY = "sqlTypes";
 
-		int code = (Integer) node.get(EntityResultDeserializer.CODE_KEY).numberValue();
-		String message = node.get(EntityResultDeserializer.MESSAGE_KEY).asText();
+    protected EntityResultDeserializer() {
+        super(EntityResult.class);
+    }
 
-		Map<?, ?> sqlTypes = new Hashtable<String, Object>();
-		JsonNode sqlTypesNode = node.get(EntityResultDeserializer.SQL_TYPES_KEY);
-		if (!sqlTypesNode.isNull()) {
-			sqlTypes = this.deserializeSqlTypes((ObjectNode) node.get(EntityResultDeserializer.SQL_TYPES_KEY));
-		}
+    @Override
+    public EntityResult deserialize(JsonParser jp, DeserializationContext ctxt)
+            throws IOException, JsonProcessingException {
+        if (jp.getCurrentToken() != JsonToken.START_OBJECT) {
+            throw JsonMappingException.from(jp,
+                    "Current token not START_OBJECT (needed to deserialize), but encountered " + jp.getCurrentToken());
+        }
 
-		JsonNode dataNode = node.get(EntityResultDeserializer.DATA_KEY);
-		Set<String> columns = new LinkedHashSet<>();
-		List<Hashtable<String, Object>> records = new ArrayList<>();
-		Map<String, Object> rawData = new HashMap<>();
-		if (dataNode.isArray()) {
-			ArrayNode arrayNode = (ArrayNode) node.withArray(EntityResultDeserializer.DATA_KEY);
-			for (int i = 0; i < arrayNode.size(); i++) {
-				Hashtable<String, Object> record = this.deserializeObject((ObjectNode) arrayNode.get(i), sqlTypes);
-				columns.addAll(record.keySet());
-				records.add(record);
-			}
-		} else if (dataNode.isObject()) {
-			rawData = this.deserializeObject((ObjectNode) dataNode, sqlTypes);
-		}
+        JsonNode node = jp.getCodec().readTree(jp);
 
-		EntityResult er = new EntityResult(Arrays.asList(columns.toArray()));
-		for (Hashtable<String, Object> record : records) {
-			er.addRecord(record);
-		}
-		er.putAll(rawData);
-		er.setCode(code);
-		er.setMessage(message);
-		er.setColumnSQLTypes((Hashtable) sqlTypes);
-		return er;
-	}
+        int code = (Integer) node.get(EntityResultDeserializer.CODE_KEY).numberValue();
+        String message = node.get(EntityResultDeserializer.MESSAGE_KEY).asText();
 
-	public Map<?, ?> deserializeSqlTypes(ObjectNode node) {
-		Hashtable<String, Object> result = new Hashtable<>();
-		Iterator<String> ite = node.fieldNames();
-		while (ite.hasNext()) {
-			String key = ite.next();
-			int value = node.get(key).asInt();
-			result.put(key, value);
-		}
-		return result;
-	}
+        Map<?, ?> sqlTypes = new Hashtable<String, Object>();
+        JsonNode sqlTypesNode = node.get(EntityResultDeserializer.SQL_TYPES_KEY);
+        if (!sqlTypesNode.isNull()) {
+            sqlTypes = this.deserializeSqlTypes((ObjectNode) node.get(EntityResultDeserializer.SQL_TYPES_KEY));
+        }
 
-	public Hashtable<String, Object> deserializeObject(ObjectNode node, Map<?, ?> sqlTypes) {
-		Hashtable<String, Object> result = new Hashtable<>();
-		Iterator<String> ite = node.fieldNames();
-		while (ite.hasNext()) {
-			String key = ite.next();
-			JsonNode valueNode = node.get(key);
-			int sqlType = ((sqlTypes != null) && sqlTypes.containsKey(key)) ? (Integer) sqlTypes.get(key) : Types.OTHER;
-			Object value = this.deserializeValue(valueNode, sqlType);
-			result.put(key, value);
-		}
-		return result;
-	}
+        JsonNode dataNode = node.get(EntityResultDeserializer.DATA_KEY);
+        Set<String> columns = new LinkedHashSet<>();
+        List<Hashtable<String, Object>> records = new ArrayList<>();
+        Map<String, Object> rawData = new HashMap<>();
+        if (dataNode.isArray()) {
+            ArrayNode arrayNode = (ArrayNode) node.withArray(EntityResultDeserializer.DATA_KEY);
+            for (int i = 0; i < arrayNode.size(); i++) {
+                Hashtable<String, Object> record = this.deserializeObject((ObjectNode) arrayNode.get(i), sqlTypes);
+                columns.addAll(record.keySet());
+                records.add(record);
+            }
+        } else if (dataNode.isObject()) {
+            rawData = this.deserializeObject((ObjectNode) dataNode, sqlTypes);
+        }
 
-	public Object deserializeValue(JsonNode node, int sqlType) {
-		Object value;
-		switch (node.getNodeType()) {
-			case STRING:
-				value = node.asText();
-				break;
-			case NUMBER:
-				value = node.numberValue();
-				break;
-			case BOOLEAN:
-				value = node.asBoolean();
-			default:
-				value = node.toString();
-				break;
-		}
-		return ParseUtilsExtended.getValueForSQLType(value, sqlType);
-	}
+        EntityResult er = new EntityResult(Arrays.asList(columns.toArray()));
+        for (Hashtable<String, Object> record : records) {
+            er.addRecord(record);
+        }
+        er.putAll(rawData);
+        er.setCode(code);
+        er.setMessage(message);
+        er.setColumnSQLTypes((Hashtable) sqlTypes);
+        return er;
+    }
+
+    public Map<?, ?> deserializeSqlTypes(ObjectNode node) {
+        Hashtable<String, Object> result = new Hashtable<>();
+        Iterator<String> ite = node.fieldNames();
+        while (ite.hasNext()) {
+            String key = ite.next();
+            int value = node.get(key).asInt();
+            result.put(key, value);
+        }
+        return result;
+    }
+
+    public Hashtable<String, Object> deserializeObject(ObjectNode node, Map<?, ?> sqlTypes) {
+        Hashtable<String, Object> result = new Hashtable<>();
+        Iterator<String> ite = node.fieldNames();
+        while (ite.hasNext()) {
+            String key = ite.next();
+            JsonNode valueNode = node.get(key);
+            int sqlType = ((sqlTypes != null) && sqlTypes.containsKey(key)) ? (Integer) sqlTypes.get(key) : Types.OTHER;
+            Object value = this.deserializeValue(valueNode, sqlType);
+            result.put(key, value);
+        }
+        return result;
+    }
+
+    public Object deserializeValue(JsonNode node, int sqlType) {
+        Object value;
+        switch (node.getNodeType()) {
+            case STRING:
+                value = node.asText();
+                break;
+            case NUMBER:
+                value = node.numberValue();
+                break;
+            case BOOLEAN:
+                value = node.asBoolean();
+            default:
+                value = node.toString();
+                break;
+        }
+        return ParseUtilsExtended.getValueForSQLType(value, sqlType);
+    }
 
 }

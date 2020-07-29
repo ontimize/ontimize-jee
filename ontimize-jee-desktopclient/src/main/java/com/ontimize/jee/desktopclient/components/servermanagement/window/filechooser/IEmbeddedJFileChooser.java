@@ -2,5 +2,6 @@ package com.ontimize.jee.desktopclient.components.servermanagement.window.filech
 
 public interface IEmbeddedJFileChooser {
 
-	void setPathFileChooser(String path);
+    void setPathFileChooser(String path);
+
 }

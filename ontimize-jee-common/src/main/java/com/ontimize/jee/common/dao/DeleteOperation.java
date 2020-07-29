@@ -7,45 +7,40 @@ import java.util.Map;
  */
 public class DeleteOperation implements IOperation {
 
-	/** The filter. */
-	private Map<?, ?> filter;
+    /** The filter. */
+    private Map<?, ?> filter;
 
-	/**
-	 * Instantiates a new delete operation.
-	 *
-	 * @param filter
-	 *            the filter
-	 */
-	public DeleteOperation(Map<?, ?> filter) {
-		super();
-		this.filter = filter;
-	}
+    /**
+     * Instantiates a new delete operation.
+     * @param filter the filter
+     */
+    public DeleteOperation(Map<?, ?> filter) {
+        super();
+        this.filter = filter;
+    }
 
-	/**
-	 * Instantiates a new delete operation.
-	 *
-	 */
-	public DeleteOperation() {
-		super();
-	}
+    /**
+     * Instantiates a new delete operation.
+     *
+     */
+    public DeleteOperation() {
+        super();
+    }
 
-	/**
-	 * Gets the filter.
-	 *
-	 * @return the filter
-	 */
-	public Map<?, ?> getFilter() {
-		return this.filter;
-	}
+    /**
+     * Gets the filter.
+     * @return the filter
+     */
+    public Map<?, ?> getFilter() {
+        return this.filter;
+    }
 
-	/**
-	 * Sets the filter.
-	 *
-	 * @param filter
-	 *            the filter
-	 */
-	public void setFilter(Map<?, ?> filter) {
-		this.filter = filter;
-	}
+    /**
+     * Sets the filter.
+     * @param filter the filter
+     */
+    public void setFilter(Map<?, ?> filter) {
+        this.filter = filter;
+    }
 
 }

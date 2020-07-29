@@ -44,271 +44,276 @@ import ch.qos.logback.core.OutputStreamAppender;
 @Lazy(value = true)
 public class LogbackLoggerHelper implements ILoggerHelper {
 
-	private static final Logger	logger			= LoggerFactory.getLogger(LogbackLoggerHelper.class);
+    private static final Logger logger = LoggerFactory.getLogger(LogbackLoggerHelper.class);
 
-	/** The Constant LAYOUT_PATTERN. */
-	private static final String	LAYOUT_PATTERN	= "[%-5level] %d{dd/MM/yyyy HH:mm:ss.SSS} [%thread] %logger{5}: %msg%n";
+    /** The Constant LAYOUT_PATTERN. */
+    private static final String LAYOUT_PATTERN = "[%-5level] %d{dd/MM/yyyy HH:mm:ss.SSS} [%thread] %logger{5}: %msg%n";
 
-	/**
-	 * Query log.
-	 *
-	 * @param response
-	 *            the response
-	 * @throws IOException
-	 */
-	public InputStream openLogStream() throws IOException {
-		final CustomPipedInputStream in = new CustomPipedInputStream();
-		final PipedOutputStream out = new PipedOutputStream(in);
-		synchronized (out) {
-			final CustomOutputStreamAppender appender = this.registerAppender(in, out);
+    /**
+     * Query log.
+     * @param response the response
+     * @throws IOException
+     */
+    public InputStream openLogStream() throws IOException {
+        final CustomPipedInputStream in = new CustomPipedInputStream();
+        final PipedOutputStream out = new PipedOutputStream(in);
+        synchronized (out) {
+            final CustomOutputStreamAppender appender = this.registerAppender(in, out);
 
-			new Thread(new Runnable() {
+            new Thread(new Runnable() {
 
-				@Override
-				public void run() {
-					synchronized (out) {
-						try {
-							out.wait();
-						} catch (InterruptedException e1) {
-							LogbackLoggerHelper.logger.trace(null, e1);
-						}
-						LogbackLoggerHelper.logger.debug("unregistering remote logger");
-						LogbackLoggerHelper.this.unregisterAppender(appender);
-						try {
-							in.close();
-							out.close();
-						} catch (IOException e) {
-							LogbackLoggerHelper.logger.error(null, e);
-						}
-					}
+                @Override
+                public void run() {
+                    synchronized (out) {
+                        try {
+                            out.wait();
+                        } catch (InterruptedException e1) {
+                            LogbackLoggerHelper.logger.trace(null, e1);
+                        }
+                        LogbackLoggerHelper.logger.debug("unregistering remote logger");
+                        LogbackLoggerHelper.this.unregisterAppender(appender);
+                        try {
+                            in.close();
+                            out.close();
+                        } catch (IOException e) {
+                            LogbackLoggerHelper.logger.error(null, e);
+                        }
+                    }
 
-				}
-			}, "Thread-close log stream").start();
-		}
-		return in;
-	}
+                }
+            }, "Thread-close log stream").start();
+        }
+        return in;
+    }
 
-	/**
-	 * Unregister appender.
-	 *
-	 * @param appender
-	 *            the appender
-	 */
-	private void unregisterAppender(CustomOutputStreamAppender appender) {
-		if (appender != null) {
-			ch.qos.logback.classic.Logger logger = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
-			logger.detachAppender(appender);
-			appender.stop();
-		}
-	}
+    /**
+     * Unregister appender.
+     * @param appender the appender
+     */
+    private void unregisterAppender(CustomOutputStreamAppender appender) {
+        if (appender != null) {
+            ch.qos.logback.classic.Logger logger = (ch.qos.logback.classic.Logger) LoggerFactory
+                .getLogger(Logger.ROOT_LOGGER_NAME);
+            logger.detachAppender(appender);
+            appender.stop();
+        }
+    }
 
-	/**
-	 * Register appender.
-	 *
-	 * @param os
-	 *            the os
-	 * @return the custom output stream appender
-	 * @throws IOException
-	 */
-	private CustomOutputStreamAppender registerAppender(final CustomPipedInputStream inPipe, final OutputStream os) throws IOException {
-		Logger logger = LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
-		if (logger instanceof ch.qos.logback.classic.Logger) {
-			ch.qos.logback.classic.Logger logbackLogger = (ch.qos.logback.classic.Logger) logger;
-			CustomOutputStreamAppender outputStreamAppender = new CustomOutputStreamAppender();
-			OutputStream wrapperOutputStream = new OutputStream() {
+    /**
+     * Register appender.
+     * @param os the os
+     * @return the custom output stream appender
+     * @throws IOException
+     */
+    private CustomOutputStreamAppender registerAppender(final CustomPipedInputStream inPipe, final OutputStream os)
+            throws IOException {
+        Logger logger = LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+        if (logger instanceof ch.qos.logback.classic.Logger) {
+            ch.qos.logback.classic.Logger logbackLogger = (ch.qos.logback.classic.Logger) logger;
+            CustomOutputStreamAppender outputStreamAppender = new CustomOutputStreamAppender();
+            OutputStream wrapperOutputStream = new OutputStream() {
 
-				TimeLimiter	limiter		= new TimeLimiter();
-				boolean		hasError	= false;
+                TimeLimiter limiter = new TimeLimiter();
 
-				@Override
-				public void write(final int b) throws IOException {
-					if (this.hasError) {
-						return;
-					}
-					try {
-						if (inPipe.isDead()) {
-							throw new IOException("in pipe dead");
-						}
-						this.limiter.callWithTimeout(new Callable<Void>() {
+                boolean hasError = false;
 
-							@Override
-							public Void call() throws Exception {
-								os.write(b);
-								return null;
-							}
-						}, 2, TimeUnit.SECONDS);
-					} catch (Exception ex) {
-						LogbackLoggerHelper.logger.trace(null, ex);
-						this.hasError = true;
-						try {
-							LogbackLoggerHelper.logger.info("detected error in log stream");
-							synchronized (os) {
-								os.notify();
-								try {
-									os.close();
-									inPipe.close();
-								} catch (Exception err) {
-									LogbackLoggerHelper.logger.trace(null, err);
-								}
-							}
-						} finally {
-							this.limiter.shutdown();
-						}
-					}
-				}
+                @Override
+                public void write(final int b) throws IOException {
+                    if (this.hasError) {
+                        return;
+                    }
+                    try {
+                        if (inPipe.isDead()) {
+                            throw new IOException("in pipe dead");
+                        }
+                        this.limiter.callWithTimeout(new Callable<Void>() {
 
-			};
-			outputStreamAppender.setOutputStream(wrapperOutputStream);
-			PatternLayout layout = new PatternLayout();
-			layout.setPattern(LogbackLoggerHelper.LAYOUT_PATTERN);
-			layout.setContext(logbackLogger.getLoggerContext());
-			layout.start();
-			outputStreamAppender.setContext(logbackLogger.getLoggerContext());
-			logbackLogger.addAppender(outputStreamAppender);
-			outputStreamAppender.start();
-			logger.error("hola");
-			return outputStreamAppender;
-		}
-		throw new OntimizeJEERuntimeException("No logback instance found");
-	}
+                            @Override
+                            public Void call() throws Exception {
+                                os.write(b);
+                                return null;
+                            }
+                        }, 2, TimeUnit.SECONDS);
+                    } catch (Exception ex) {
+                        LogbackLoggerHelper.logger.trace(null, ex);
+                        this.hasError = true;
+                        try {
+                            LogbackLoggerHelper.logger.info("detected error in log stream");
+                            synchronized (os) {
+                                os.notify();
+                                try {
+                                    os.close();
+                                    inPipe.close();
+                                } catch (Exception err) {
+                                    LogbackLoggerHelper.logger.trace(null, err);
+                                }
+                            }
+                        } finally {
+                            this.limiter.shutdown();
+                        }
+                    }
+                }
 
-	public EntityResult getLogFiles() throws Exception {
-		Path folder = this.getLogFolder();
-		if (folder == null) {
-			return new EntityResult(EntityResult.OPERATION_SUCCESSFUL_SHOW_MESSAGE, EntityResult.NODATA_RESULT, "No hay ficheros que mostrar");
-		}
-		final EntityResult res = new EntityResult();
-		this.initEntityResult(res, Arrays.asList(new String[] { "FILE_NAME", "FILE_SIZE" }), 0);
-		Files.walkFileTree(folder, new java.nio.file.SimpleFileVisitor<Path>() {
+            };
+            outputStreamAppender.setOutputStream(wrapperOutputStream);
+            PatternLayout layout = new PatternLayout();
+            layout.setPattern(LogbackLoggerHelper.LAYOUT_PATTERN);
+            layout.setContext(logbackLogger.getLoggerContext());
+            layout.start();
+            outputStreamAppender.setContext(logbackLogger.getLoggerContext());
+            logbackLogger.addAppender(outputStreamAppender);
+            outputStreamAppender.start();
+            logger.error("hola");
+            return outputStreamAppender;
+        }
+        throw new OntimizeJEERuntimeException("No logback instance found");
+    }
 
-			@Override
-			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-				res.addRecord((Hashtable) LogbackLoggerHelper.this.keysvalues("FILE_NAME", file.toString(), "FILE_SIZE", Files.size(file)));
-				return FileVisitResult.CONTINUE;
-			}
-		});
-		return res;
-	}
+    public EntityResult getLogFiles() throws Exception {
+        Path folder = this.getLogFolder();
+        if (folder == null) {
+            return new EntityResult(EntityResult.OPERATION_SUCCESSFUL_SHOW_MESSAGE, EntityResult.NODATA_RESULT,
+                    "No hay ficheros que mostrar");
+        }
+        final EntityResult res = new EntityResult();
+        this.initEntityResult(res, Arrays.asList(new String[] { "FILE_NAME", "FILE_SIZE" }), 0);
+        Files.walkFileTree(folder, new java.nio.file.SimpleFileVisitor<Path>() {
 
-	private void initEntityResult(EntityResult res, List<?> columns, int length) {
-		for (Object col : columns) {
-			res.put(col, new Vector<>(length > 0 ? length : 10));
-		}
-	}
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                res.addRecord((Hashtable) LogbackLoggerHelper.this.keysvalues("FILE_NAME", file.toString(), "FILE_SIZE",
+                        Files.size(file)));
+                return FileVisitResult.CONTINUE;
+            }
+        });
+        return res;
+    }
 
-	private Map<Object, Object> keysvalues(Object... objects) {
-		if (objects == null) {
-			return new Hashtable<>();
-		}
-		if ((objects.length % 2) != 0) {
-			throw new RuntimeException("Review filters, it is mandatory to set dual <key><value>.");
-		}
-		for (Object o : objects) {
-			if (o == null) {
-				throw new RuntimeException("Review filters, it is not acceptable null <key> or null <value>.");
-			}
-		}
+    private void initEntityResult(EntityResult res, List<?> columns, int length) {
+        for (Object col : columns) {
+            res.put(col, new Vector<>(length > 0 ? length : 10));
+        }
+    }
 
-		Map<Object, Object> res = new Hashtable<>();
-		int i = 0;
-		while (i < objects.length) {
-			res.put(objects[i++], objects[i++]);
-		}
-		return res;
-	}
+    private Map<Object, Object> keysvalues(Object... objects) {
+        if (objects == null) {
+            return new Hashtable<>();
+        }
+        if ((objects.length % 2) != 0) {
+            throw new RuntimeException("Review filters, it is mandatory to set dual <key><value>.");
+        }
+        for (Object o : objects) {
+            if (o == null) {
+                throw new RuntimeException("Review filters, it is not acceptable null <key> or null <value>.");
+            }
+        }
 
-	private Path getLogFolder() {
-		LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
-		for (ch.qos.logback.classic.Logger logger : context.getLoggerList()) {
-			for (Iterator<Appender<ILoggingEvent>> index = logger.iteratorForAppenders(); index.hasNext();) {
-				Appender<ILoggingEvent> appender = index.next();
-				if (appender instanceof FileAppender) {
-					FileAppender<?> fAppender = (FileAppender<?>) appender;
-					Path file = Paths.get(fAppender.getFile());
-					Path folder = file.getParent();
-					return folder;
-				}
-			}
-		}
-		return null;
-	}
+        Map<Object, Object> res = new Hashtable<>();
+        int i = 0;
+        while (i < objects.length) {
+            res.put(objects[i++], objects[i++]);
+        }
+        return res;
+    }
 
-	public InputStream getLogFileContent(String fileName) throws Exception {
-		Path folder = this.getLogFolder();
-		final Path file = folder.resolve(fileName);
-		if (!Files.exists(file)) {
-			throw new OntimizeJEEException("File not found");
-		}
-		final PipedInputStream pis = new PipedInputStream();
-		final PipedOutputStream pos = new PipedOutputStream(pis);
-		new Thread(new Runnable() {
+    private Path getLogFolder() {
+        LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
+        for (ch.qos.logback.classic.Logger logger : context.getLoggerList()) {
+            for (Iterator<Appender<ILoggingEvent>> index = logger.iteratorForAppenders(); index.hasNext();) {
+                Appender<ILoggingEvent> appender = index.next();
+                if (appender instanceof FileAppender) {
+                    FileAppender<?> fAppender = (FileAppender<?>) appender;
+                    Path file = Paths.get(fAppender.getFile());
+                    Path folder = file.getParent();
+                    return folder;
+                }
+            }
+        }
+        return null;
+    }
 
-			@Override
-			public void run() {
-				try (ZipOutputStream zos = new ZipOutputStream(pos)) {
-					zos.putNextEntry(new ZipEntry(file.getFileName().toString()));
-					StreamUtils.copy(Files.newInputStream(file), zos);
-					zos.closeEntry();
-				} catch (IOException e) {
-					LogbackLoggerHelper.logger.error(null, e);
-				}
-			}
-		}, "LoggerHelper copy stream").start();
+    public InputStream getLogFileContent(String fileName) throws Exception {
+        Path folder = this.getLogFolder();
+        final Path file = folder.resolve(fileName);
+        if (!Files.exists(file)) {
+            throw new OntimizeJEEException("File not found");
+        }
+        final PipedInputStream pis = new PipedInputStream();
+        final PipedOutputStream pos = new PipedOutputStream(pis);
+        new Thread(new Runnable() {
 
-		return pis;
-	}
+            @Override
+            public void run() {
+                try (ZipOutputStream zos = new ZipOutputStream(pos)) {
+                    zos.putNextEntry(new ZipEntry(file.getFileName().toString()));
+                    StreamUtils.copy(Files.newInputStream(file), zos);
+                    zos.closeEntry();
+                } catch (IOException e) {
+                    LogbackLoggerHelper.logger.error(null, e);
+                }
+            }
+        }, "LoggerHelper copy stream").start();
 
-	/**
-	 * The Class CustomOutputStreamAppender.
-	 */
-	protected static class CustomOutputStreamAppender extends OutputStreamAppender<ILoggingEvent> {
+        return pis;
+    }
 
-		/**
-		 * Instantiates a new custom output stream appender.
-		 */
-		public CustomOutputStreamAppender() {
-			super();
-			this.setEncoder(new CustomPatternLayoutEncoder());
-		}
-	}
+    /**
+     * The Class CustomOutputStreamAppender.
+     */
+    protected static class CustomOutputStreamAppender extends OutputStreamAppender<ILoggingEvent> {
 
-	/**
-	 * The Class CustomPatternLayoutEncoder.
-	 */
-	protected static class CustomPatternLayoutEncoder extends PatternLayoutEncoder {
+        /**
+         * Instantiates a new custom output stream appender.
+         */
+        public CustomOutputStreamAppender() {
+            super();
+            this.setEncoder(new CustomPatternLayoutEncoder());
+        }
 
-		/**
-		 * Instantiates a new custom pattern layout encoder.
-		 */
-		public CustomPatternLayoutEncoder() {
-			super();
-			this.layout = new PatternLayout();
-			((PatternLayout) this.layout).setPattern(LogbackLoggerHelper.LAYOUT_PATTERN);
-			this.layout.start();
-			this.setPattern(LogbackLoggerHelper.LAYOUT_PATTERN);
-		}
+    }
 
-	}
+    /**
+     * The Class CustomPatternLayoutEncoder.
+     */
+    protected static class CustomPatternLayoutEncoder extends PatternLayoutEncoder {
 
-	protected static class CustomPipedInputStream extends PipedInputStream {
+        /**
+         * Instantiates a new custom pattern layout encoder.
+         */
+        public CustomPatternLayoutEncoder() {
+            super();
+            this.layout = new PatternLayout();
+            ((PatternLayout) this.layout).setPattern(LogbackLoggerHelper.LAYOUT_PATTERN);
+            this.layout.start();
+            this.setPattern(LogbackLoggerHelper.LAYOUT_PATTERN);
+        }
 
-		private static final long	DEAD_TIME	= 5000;
-		private long				lastRead	= System.currentTimeMillis();
-		private boolean				reading		= false;
+    }
 
-		@Override
-		public synchronized int read() throws IOException {
-			try {
-				this.reading = true;
-				this.lastRead = System.currentTimeMillis();
-				return super.read();
-			} finally {
-				this.reading = false;
-			}
-		}
+    protected static class CustomPipedInputStream extends PipedInputStream {
 
-		public boolean isDead() {
-			return !this.reading && (this.lastRead > 0) && ((System.currentTimeMillis() - this.lastRead) > CustomPipedInputStream.DEAD_TIME);
-		}
-	}
+        private static final long DEAD_TIME = 5000;
+
+        private long lastRead = System.currentTimeMillis();
+
+        private boolean reading = false;
+
+        @Override
+        public synchronized int read() throws IOException {
+            try {
+                this.reading = true;
+                this.lastRead = System.currentTimeMillis();
+                return super.read();
+            } finally {
+                this.reading = false;
+            }
+        }
+
+        public boolean isDead() {
+            return !this.reading && (this.lastRead > 0)
+                    && ((System.currentTimeMillis() - this.lastRead) > CustomPipedInputStream.DEAD_TIME);
+        }
+
+    }
+
 }

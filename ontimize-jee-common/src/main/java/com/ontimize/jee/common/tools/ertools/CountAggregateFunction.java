@@ -8,33 +8,38 @@ import com.ontimize.db.EntityResult;
 import com.ontimize.jee.common.tools.ertools.CountAggregateFunction.CountPartialAggregateValue;
 
 public class CountAggregateFunction extends AbstractAggregateFunction<CountPartialAggregateValue> {
-	public static class CountPartialAggregateValue implements IPartialAggregateValue {
-		int			count	= 0;
-	}
 
-	public CountAggregateFunction(String toSumColumnName, String aggregateColumnName) {
-		super(toSumColumnName, aggregateColumnName == null ? (toSumColumnName + "_COUNT") : aggregateColumnName);
-	}
+    public static class CountPartialAggregateValue implements IPartialAggregateValue {
 
-	@Override
-	public Map<String, Object> computeAggregatedGroupValue(CountPartialAggregateValue partialValue) {
-		Map<String, Object> res = new HashMap<>();
-		res.put(this.getResultColumn(), partialValue == null ? null : partialValue.count);
-		return res;
-	}
+        int count = 0;
 
-	@Override
-	public CountPartialAggregateValue onNewGroupRecord(CountPartialAggregateValue partialValue, EntityResult res, int idx) {
-		if (partialValue == null) {
-			partialValue = new CountPartialAggregateValue();
-		}
-		List<?> val = (List<?>) res.get(this.getOpColumn());
-		if (val != null) {
-			Object nb = val.get(idx);
-			if (nb != null) {
-				partialValue.count++;
-			}
-		}
-		return partialValue;
-	}
+    }
+
+    public CountAggregateFunction(String toSumColumnName, String aggregateColumnName) {
+        super(toSumColumnName, aggregateColumnName == null ? (toSumColumnName + "_COUNT") : aggregateColumnName);
+    }
+
+    @Override
+    public Map<String, Object> computeAggregatedGroupValue(CountPartialAggregateValue partialValue) {
+        Map<String, Object> res = new HashMap<>();
+        res.put(this.getResultColumn(), partialValue == null ? null : partialValue.count);
+        return res;
+    }
+
+    @Override
+    public CountPartialAggregateValue onNewGroupRecord(CountPartialAggregateValue partialValue, EntityResult res,
+            int idx) {
+        if (partialValue == null) {
+            partialValue = new CountPartialAggregateValue();
+        }
+        List<?> val = (List<?>) res.get(this.getOpColumn());
+        if (val != null) {
+            Object nb = val.get(idx);
+            if (nb != null) {
+                partialValue.count++;
+            }
+        }
+        return partialValue;
+    }
+
 }

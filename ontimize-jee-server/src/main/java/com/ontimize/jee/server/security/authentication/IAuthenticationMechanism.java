@@ -8,5 +8,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 public interface IAuthenticationMechanism {
 
-	AuthenticationResult authenticate(HttpServletRequest request, HttpServletResponse response, AuthenticationManager authenticationManager, UserDetailsService userDetailsService);
+    AuthenticationResult authenticate(HttpServletRequest request, HttpServletResponse response,
+            AuthenticationManager authenticationManager, UserDetailsService userDetailsService);
+
 }

@@ -14,26 +14,23 @@ import java.util.List;
  */
 public class OntimizeRequestHeaderProcessorFilters {
 
-	/** The header processors. */
-	private List<IOntimizeRequestHeaderProcessor> headerProcessors;
+    /** The header processors. */
+    private List<IOntimizeRequestHeaderProcessor> headerProcessors;
 
-	/**
-	 * Gets the header processors.
-	 *
-	 * @return the header processors
-	 */
-	public List<IOntimizeRequestHeaderProcessor> getHeaderProcessors() {
-		return this.headerProcessors;
-	}
+    /**
+     * Gets the header processors.
+     * @return the header processors
+     */
+    public List<IOntimizeRequestHeaderProcessor> getHeaderProcessors() {
+        return this.headerProcessors;
+    }
 
-	/**
-	 * Sets the header processors.
-	 *
-	 * @param headerProcessors
-	 *            the new header processors
-	 */
-	public void setHeaderProcessors(List<IOntimizeRequestHeaderProcessor> headerProcessors) {
-		this.headerProcessors = headerProcessors;
-	}
+    /**
+     * Sets the header processors.
+     * @param headerProcessors the new header processors
+     */
+    public void setHeaderProcessors(List<IOntimizeRequestHeaderProcessor> headerProcessors) {
+        this.headerProcessors = headerProcessors;
+    }
 
 }

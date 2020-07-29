@@ -21,47 +21,48 @@ import com.ontimize.jee.desktopclient.spring.BeansFactory;
  */
 public class IMServerManager extends BasicInteractionManager {
 
-	private static final Logger			logger	= LoggerFactory.getLogger(IMServerManager.class);
+    private static final Logger logger = LoggerFactory.getLogger(IMServerManager.class);
 
-	@FormComponent(attr = "reloadDaos")
-	protected Button					reloadDaos;
+    @FormComponent(attr = "reloadDaos")
+    protected Button reloadDaos;
 
-	protected IServerManagementService	serverManagement;
+    protected IServerManagementService serverManagement;
 
-	public IMServerManager() {
-		super();
-	}
+    public IMServerManager() {
+        super();
+    }
 
-	@Override
-	public void registerInteractionManager(Form f, IFormManager gf) {
-		super.registerInteractionManager(f, gf);
-		this.managedForm.setFormTitle("Server management");
-		this.reloadDaos.addActionListener(new ReloadDaosActionListener());
-		this.serverManagement = BeansFactory.getBean(IServerManagementService.class);
-	}
+    @Override
+    public void registerInteractionManager(Form f, IFormManager gf) {
+        super.registerInteractionManager(f, gf);
+        this.managedForm.setFormTitle("Server management");
+        this.reloadDaos.addActionListener(new ReloadDaosActionListener());
+        this.serverManagement = BeansFactory.getBean(IServerManagementService.class);
+    }
 
-	public class ReloadDaosActionListener implements ActionListener {
+    public class ReloadDaosActionListener implements ActionListener {
 
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			new OSwingWorker<Void, Void>() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            new OSwingWorker<Void, Void>() {
 
-				@Override
-				protected Void doInBackground() throws Exception {
-					IMServerManager.this.serverManagement.reloadDaos();
-					return null;
-				}
+                @Override
+                protected Void doInBackground() throws Exception {
+                    IMServerManager.this.serverManagement.reloadDaos();
+                    return null;
+                }
 
-				@Override
-				protected void done() {
-					try {
-						this.uget();
-					} catch (Exception ex) {
-						MessageManager.getMessageManager().showExceptionMessage(ex, IMServerManager.logger);
-					}
-				}
-			}.execute();
-		}
-	}
+                @Override
+                protected void done() {
+                    try {
+                        this.uget();
+                    } catch (Exception ex) {
+                        MessageManager.getMessageManager().showExceptionMessage(ex, IMServerManager.logger);
+                    }
+                }
+            }.execute();
+        }
+
+    }
 
 }

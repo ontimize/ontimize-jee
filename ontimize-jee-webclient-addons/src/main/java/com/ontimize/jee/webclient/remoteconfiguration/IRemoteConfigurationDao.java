@@ -7,8 +7,10 @@ import com.ontimize.jee.server.dao.IOntimizeDaoSupport;
  */
 public interface IRemoteConfigurationDao extends IOntimizeDaoSupport {
 
-	public static final String	DEFAULT_COLUMN_USER		= "USER_";
-	public static final String	DEFAULT_COLUMN_APP		= "APP_UUID";
-	public static final String	DEFAULT_COLUMN_CONFIG	= "CONFIGURATION";
-	
+    public static final String DEFAULT_COLUMN_USER = "USER_";
+
+    public static final String DEFAULT_COLUMN_APP = "APP_UUID";
+
+    public static final String DEFAULT_COLUMN_CONFIG = "CONFIGURATION";
+
 }

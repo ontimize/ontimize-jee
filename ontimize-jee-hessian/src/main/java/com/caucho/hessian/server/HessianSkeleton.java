@@ -1,16 +1,27 @@
 /*
- * Copyright (c) 2001-2009 Caucho Technology, Inc. All rights reserved. The Apache Software License, Version 1.1 Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met: 1. Redistributions of source code must retain the above copyright notice, this list of conditions and
- * the following disclaimer. 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
- * and/or other materials provided with the distribution. 3. The end-user documentation included with the redistribution, if any, must include the following acknowlegement: "This
- * product includes software developed by the Caucho Technology (http://www.caucho.com/)." Alternately, this acknowlegement may appear in the software itself, if and wherever such
- * third-party acknowlegements normally appear. 4. The names "Hessian", "Resin", and "Caucho" must not be used to endorse or promote products derived from this software without
- * prior written permission. For written permission, please contact info@caucho.com. 5. Products derived from this software may not be called "Resin" nor may "Resin" appear in
- * their names without prior written permission of Caucho Technology. THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL CAUCHO TECHNOLOGY OR ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
- * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
- * BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * Copyright (c) 2001-2009 Caucho Technology, Inc. All rights reserved. The Apache Software License,
+ * Version 1.1 Redistribution and use in source and binary forms, with or without modification, are
+ * permitted provided that the following conditions are met: 1. Redistributions of source code must
+ * retain the above copyright notice, this list of conditions and the following disclaimer. 2.
+ * Redistributions in binary form must reproduce the above copyright notice, this list of conditions
+ * and the following disclaimer in the documentation and/or other materials provided with the
+ * distribution. 3. The end-user documentation included with the redistribution, if any, must
+ * include the following acknowlegement: "This product includes software developed by the Caucho
+ * Technology (http://www.caucho.com/)." Alternately, this acknowlegement may appear in the software
+ * itself, if and wherever such third-party acknowlegements normally appear. 4. The names "Hessian",
+ * "Resin", and "Caucho" must not be used to endorse or promote products derived from this software
+ * without prior written permission. For written permission, please contact info@caucho.com. 5.
+ * Products derived from this software may not be called "Resin" nor may "Resin" appear in their
+ * names without prior written permission of Caucho Technology. THIS SOFTWARE IS PROVIDED ``AS IS''
+ * AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL CAUCHO
+ * TECHNOLOGY OR ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+ * GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
+ * OF SUCH DAMAGE.
+ *
  * @author Scott Ferguson
  */
 
@@ -39,282 +50,268 @@ import com.caucho.services.server.ServiceContext;
  */
 public class HessianSkeleton extends AbstractSkeleton {
 
-	private static final Logger			log				= LoggerFactory.getLogger(HessianSkeleton.class);
+    private static final Logger log = LoggerFactory.getLogger(HessianSkeleton.class);
 
-	private boolean						isDebug;
+    private boolean isDebug;
 
-	private final HessianInputFactory	inputFactory	= new HessianInputFactory();
-	private HessianFactory				hessianFactory	= new HessianFactory();
+    private final HessianInputFactory inputFactory = new HessianInputFactory();
 
-	private Object						service;
+    private HessianFactory hessianFactory = new HessianFactory();
 
-	private IExceptionTranslator		exceptionTranslator;
+    private Object service;
 
-	/**
-	 * Create a new hessian skeleton.
-	 *
-	 * @param service
-	 *            the underlying service object.
-	 * @param apiClass
-	 *            the API interface
-	 */
-	public HessianSkeleton(Object service, Class<?> apiClass, IExceptionTranslator exceptionTranslator) {
-		super(apiClass);
-		this.exceptionTranslator = exceptionTranslator;
-		if (service == null) {
-			service = this;
-		}
+    private IExceptionTranslator exceptionTranslator;
 
-		this.service = service;
+    /**
+     * Create a new hessian skeleton.
+     * @param service the underlying service object.
+     * @param apiClass the API interface
+     */
+    public HessianSkeleton(Object service, Class<?> apiClass, IExceptionTranslator exceptionTranslator) {
+        super(apiClass);
+        this.exceptionTranslator = exceptionTranslator;
+        if (service == null) {
+            service = this;
+        }
 
-		if (!apiClass.isAssignableFrom(service.getClass())) {
-			throw new IllegalArgumentException("Service " + service + " must be an instance of " + apiClass.getName());
-		}
-		this.exceptionTranslator = exceptionTranslator;
-	}
+        this.service = service;
 
-	/**
-	 * Create a new hessian skeleton.
-	 *
-	 * @param service
-	 *            the underlying service object.
-	 * @param apiClass
-	 *            the API interface
-	 */
-	public HessianSkeleton(Class<?> apiClass, IExceptionTranslator exceptionTranslator) {
-		super(apiClass);
+        if (!apiClass.isAssignableFrom(service.getClass())) {
+            throw new IllegalArgumentException("Service " + service + " must be an instance of " + apiClass.getName());
+        }
+        this.exceptionTranslator = exceptionTranslator;
+    }
 
-	}
+    /**
+     * Create a new hessian skeleton.
+     * @param service the underlying service object.
+     * @param apiClass the API interface
+     */
+    public HessianSkeleton(Class<?> apiClass, IExceptionTranslator exceptionTranslator) {
+        super(apiClass);
 
-	public void setDebug(boolean isDebug) {
-		this.isDebug = isDebug;
-	}
+    }
 
-	public boolean isDebug() {
-		return this.isDebug;
-	}
+    public void setDebug(boolean isDebug) {
+        this.isDebug = isDebug;
+    }
 
-	public void setHessianFactory(HessianFactory factory) {
-		this.hessianFactory = factory;
-	}
+    public boolean isDebug() {
+        return this.isDebug;
+    }
 
-	/**
-	 * Invoke the object with the request from the input stream.
-	 *
-	 * @param in
-	 *            the Hessian input stream
-	 * @param out
-	 *            the Hessian output stream
-	 */
-	public void invoke(InputStream is, OutputStream os) throws Exception {
-		this.invoke(is, os, null);
-	}
+    public void setHessianFactory(HessianFactory factory) {
+        this.hessianFactory = factory;
+    }
 
-	/**
-	 * Invoke the object with the request from the input stream.
-	 *
-	 * @param in
-	 *            the Hessian input stream
-	 * @param out
-	 *            the Hessian output stream
-	 */
-	public void invoke(InputStream is, OutputStream os, SerializerFactory serializerFactory) throws Exception {
-		boolean isDebug = false;
+    /**
+     * Invoke the object with the request from the input stream.
+     * @param in the Hessian input stream
+     * @param out the Hessian output stream
+     */
+    public void invoke(InputStream is, OutputStream os) throws Exception {
+        this.invoke(is, os, null);
+    }
 
-		HessianInputFactory.HeaderType header = this.inputFactory.readHeader(is);
+    /**
+     * Invoke the object with the request from the input stream.
+     * @param in the Hessian input stream
+     * @param out the Hessian output stream
+     */
+    public void invoke(InputStream is, OutputStream os, SerializerFactory serializerFactory) throws Exception {
+        boolean isDebug = false;
 
-		AbstractHessianInput in;
-		AbstractHessianOutput out;
+        HessianInputFactory.HeaderType header = this.inputFactory.readHeader(is);
 
-		switch (header) {
-			case CALL_1_REPLY_1:
-			case CALL_1_REPLY_2:
-				throw new IOException("Invalid protocol version");
-			case HESSIAN_2:
-				in = this.hessianFactory.createHessian2Input(is);
-				in.readCall();
-				out = this.hessianFactory.createHessian2Output(os);
-				break;
+        AbstractHessianInput in;
+        AbstractHessianOutput out;
 
-			default:
-				throw new IllegalStateException(header + " is an unknown Hessian call");
-		}
+        switch (header) {
+            case CALL_1_REPLY_1:
+            case CALL_1_REPLY_2:
+                throw new IOException("Invalid protocol version");
+            case HESSIAN_2:
+                in = this.hessianFactory.createHessian2Input(is);
+                in.readCall();
+                out = this.hessianFactory.createHessian2Output(os);
+                break;
 
-		if (serializerFactory != null) {
-			in.setSerializerFactory(serializerFactory);
-			out.setSerializerFactory(serializerFactory);
-		}
+            default:
+                throw new IllegalStateException(header + " is an unknown Hessian call");
+        }
 
-		try {
-			this.invoke(this.service, in, out);
-		} finally {
-			in.close();
-			out.close();
+        if (serializerFactory != null) {
+            in.setSerializerFactory(serializerFactory);
+            out.setSerializerFactory(serializerFactory);
+        }
 
-			if (isDebug) {
-				os.close();
-			}
-		}
-	}
+        try {
+            this.invoke(this.service, in, out);
+        } finally {
+            in.close();
+            out.close();
 
-	/**
-	 * Invoke the object with the request from the input stream.
-	 *
-	 * @param in
-	 *            the Hessian input stream
-	 * @param out
-	 *            the Hessian output stream
-	 */
-	public void invoke(AbstractHessianInput in, AbstractHessianOutput out) throws Exception {
-		this.invoke(this.service, in, out);
-	}
+            if (isDebug) {
+                os.close();
+            }
+        }
+    }
 
-	/**
-	 * Invoke the object with the request from the input stream.
-	 *
-	 * @param in
-	 *            the Hessian input stream
-	 * @param out
-	 *            the Hessian output stream
-	 */
-	public void invoke(Object service, AbstractHessianInput in, AbstractHessianOutput out) throws Exception {
-		ServiceContext context = ServiceContext.getContext();
+    /**
+     * Invoke the object with the request from the input stream.
+     * @param in the Hessian input stream
+     * @param out the Hessian output stream
+     */
+    public void invoke(AbstractHessianInput in, AbstractHessianOutput out) throws Exception {
+        this.invoke(this.service, in, out);
+    }
 
-		// backward compatibility for some frameworks that don't read
-		// the call type first
-		in.skipOptionalCall();
+    /**
+     * Invoke the object with the request from the input stream.
+     * @param in the Hessian input stream
+     * @param out the Hessian output stream
+     */
+    public void invoke(Object service, AbstractHessianInput in, AbstractHessianOutput out) throws Exception {
+        ServiceContext context = ServiceContext.getContext();
 
-		// Hessian 1.0 backward compatibility
-		String header;
-		while ((header = in.readHeader()) != null) {
-			Object value = in.readObject();
+        // backward compatibility for some frameworks that don't read
+        // the call type first
+        in.skipOptionalCall();
 
-			context.addHeader(header, value);
-		}
+        // Hessian 1.0 backward compatibility
+        String header;
+        while ((header = in.readHeader()) != null) {
+            Object value = in.readObject();
 
-		String methodName = in.readMethod();
-		int argLength = in.readMethodArgLength();
+            context.addHeader(header, value);
+        }
 
-		Method method;
+        String methodName = in.readMethod();
+        int argLength = in.readMethodArgLength();
 
-		method = this.getMethod(methodName + "__" + argLength);
+        Method method;
 
-		if (method == null) {
-			method = this.getMethod(methodName);
-		}
+        method = this.getMethod(methodName + "__" + argLength);
 
-		if (method != null) {
-		} else if ("_hessian_getAttribute".equals(methodName)) {
-			String attrName = in.readString();
-			in.completeCall();
+        if (method == null) {
+            method = this.getMethod(methodName);
+        }
 
-			String value = null;
+        if (method != null) {
+        } else if ("_hessian_getAttribute".equals(methodName)) {
+            String attrName = in.readString();
+            in.completeCall();
 
-			if ("java.api.class".equals(attrName)) {
-				value = this.getAPIClassName();
-			} else if ("java.home.class".equals(attrName)) {
-				value = this.getHomeClassName();
-			} else if ("java.object.class".equals(attrName)) {
-				value = this.getObjectClassName();
-			}
+            String value = null;
 
-			out.writeReply(value);
-			out.close();
-			return;
-		} else {
-			out.writeFault("NoSuchMethodException", this.escapeMessage("The service has no method named: " + in.getMethod()), null);
-			out.close();
-			return;
-		}
+            if ("java.api.class".equals(attrName)) {
+                value = this.getAPIClassName();
+            } else if ("java.home.class".equals(attrName)) {
+                value = this.getHomeClassName();
+            } else if ("java.object.class".equals(attrName)) {
+                value = this.getObjectClassName();
+            }
 
-		Class<?>[] args = method.getParameterTypes();
+            out.writeReply(value);
+            out.close();
+            return;
+        } else {
+            out.writeFault("NoSuchMethodException",
+                    this.escapeMessage("The service has no method named: " + in.getMethod()), null);
+            out.close();
+            return;
+        }
 
-		if ((argLength != args.length) && (argLength >= 0)) {
-			out.writeFault("NoSuchMethod", this.escapeMessage("method " + method + " argument length mismatch, received length=" + argLength), null);
-			out.close();
-			return;
-		}
+        Class<?>[] args = method.getParameterTypes();
 
-		Object[] values = new Object[args.length];
+        if ((argLength != args.length) && (argLength >= 0)) {
+            out.writeFault("NoSuchMethod",
+                    this.escapeMessage("method " + method + " argument length mismatch, received length=" + argLength),
+                    null);
+            out.close();
+            return;
+        }
 
-		for (int i = 0; i < args.length; i++) {
-			// XXX: needs Marshal object
-			values[i] = in.readObject(args[i]);
-		}
+        Object[] values = new Object[args.length];
 
-		Object result = null;
+        for (int i = 0; i < args.length; i++) {
+            // XXX: needs Marshal object
+            values[i] = in.readObject(args[i]);
+        }
 
-		boolean success = false;
-		String escapeMessage = null;
-		try {
-			result = method.invoke(service, values);
-			success = true;
-		} catch (Exception e) {
-			Throwable e1 = e;
-			if (e1 instanceof InvocationTargetException) {
-				e1 = ((InvocationTargetException) e).getTargetException();
-			}
+        Object result = null;
 
-			HessianSkeleton.log.info("{} {} ", this, e1.toString(), e1);
+        boolean success = false;
+        String escapeMessage = null;
+        try {
+            result = method.invoke(service, values);
+            success = true;
+        } catch (Exception e) {
+            Throwable e1 = e;
+            if (e1 instanceof InvocationTargetException) {
+                e1 = ((InvocationTargetException) e).getTargetException();
+            }
 
-			if (this.exceptionTranslator != null) {
-				e1 = this.exceptionTranslator.translateException(e1);
-			}
+            HessianSkeleton.log.info("{} {} ", this, e1.toString(), e1);
 
-			escapeMessage = this.escapeMessage(e1.getMessage());
-			out.writeFault("ServiceException", escapeMessage, e1);
-			out.close();
-			return;
-		} finally {
-			if (context != null) {
-				context.addHeader("Method", method.getName());
-				context.addHeader("Values", values);
-				if (!success) {
-					ServiceContext.getContext().addHeader("ServiceException", escapeMessage);
-				}
-			}
-		}
+            if (this.exceptionTranslator != null) {
+                e1 = this.exceptionTranslator.translateException(e1);
+            }
 
-		// The complete call needs to be after the invoke to handle a
-		// trailing InputStream
-		in.completeCall();
+            escapeMessage = this.escapeMessage(e1.getMessage());
+            out.writeFault("ServiceException", escapeMessage, e1);
+            out.close();
+            return;
+        } finally {
+            if (context != null) {
+                context.addHeader("Method", method.getName());
+                context.addHeader("Values", values);
+                if (!success) {
+                    ServiceContext.getContext().addHeader("ServiceException", escapeMessage);
+                }
+            }
+        }
 
-		out.writeReply(result);
+        // The complete call needs to be after the invoke to handle a
+        // trailing InputStream
+        in.completeCall();
 
-		out.close();
-	}
+        out.writeReply(result);
 
-	private String escapeMessage(String msg) {
-		if (msg == null) {
-			return null;
-		}
+        out.close();
+    }
 
-		StringBuilder sb = new StringBuilder();
+    private String escapeMessage(String msg) {
+        if (msg == null) {
+            return null;
+        }
 
-		int length = msg.length();
-		for (int i = 0; i < length; i++) {
-			char ch = msg.charAt(i);
+        StringBuilder sb = new StringBuilder();
 
-			switch (ch) {
-				case '<':
-					sb.append("&lt;");
-					break;
-				case '>':
-					sb.append("&gt;");
-					break;
-				case 0x0:
-					sb.append("&#00;");
-					break;
-				case '&':
-					sb.append("&amp;");
-					break;
-				default:
-					sb.append(ch);
-					break;
-			}
-		}
+        int length = msg.length();
+        for (int i = 0; i < length; i++) {
+            char ch = msg.charAt(i);
 
-		return sb.toString();
-	}
+            switch (ch) {
+                case '<':
+                    sb.append("&lt;");
+                    break;
+                case '>':
+                    sb.append("&gt;");
+                    break;
+                case 0x0:
+                    sb.append("&#00;");
+                    break;
+                case '&':
+                    sb.append("&amp;");
+                    break;
+                default:
+                    sb.append(ch);
+                    break;
+            }
+        }
+
+        return sb.toString();
+    }
 
 }

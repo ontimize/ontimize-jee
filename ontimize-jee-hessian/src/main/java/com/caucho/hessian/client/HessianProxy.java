@@ -1,16 +1,27 @@
 /*
- * The Apache Software License, Version 1.1 Copyright (c) 2001-2004 Caucho Technology, Inc. All rights reserved. Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met: 1. Redistributions of source code must retain the above copyright notice, this list of conditions and
- * the following disclaimer. 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
- * and/or other materials provided with the distribution. 3. The end-user documentation included with the redistribution, if any, must include the following acknowlegement: "This
- * product includes software developed by the Caucho Technology (http://www.caucho.com/)." Alternately, this acknowlegement may appear in the software itself, if and wherever such
- * third-party acknowlegements normally appear. 4. The names "Hessian", "Resin", and "Caucho" must not be used to endorse or promote products derived from this software without
- * prior written permission. For written permission, please contact info@caucho.com. 5. Products derived from this software may not be called "Resin" nor may "Resin" appear in
- * their names without prior written permission of Caucho Technology. THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL CAUCHO TECHNOLOGY OR ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
- * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
- * BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * The Apache Software License, Version 1.1 Copyright (c) 2001-2004 Caucho Technology, Inc. All
+ * rights reserved. Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met: 1. Redistributions of source code
+ * must retain the above copyright notice, this list of conditions and the following disclaimer. 2.
+ * Redistributions in binary form must reproduce the above copyright notice, this list of conditions
+ * and the following disclaimer in the documentation and/or other materials provided with the
+ * distribution. 3. The end-user documentation included with the redistribution, if any, must
+ * include the following acknowlegement: "This product includes software developed by the Caucho
+ * Technology (http://www.caucho.com/)." Alternately, this acknowlegement may appear in the software
+ * itself, if and wherever such third-party acknowlegements normally appear. 4. The names "Hessian",
+ * "Resin", and "Caucho" must not be used to endorse or promote products derived from this software
+ * without prior written permission. For written permission, please contact info@caucho.com. 5.
+ * Products derived from this software may not be called "Resin" nor may "Resin" appear in their
+ * names without prior written permission of Caucho Technology. THIS SOFTWARE IS PROVIDED ``AS IS''
+ * AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL CAUCHO
+ * TECHNOLOGY OR ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+ * GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
+ * OF SUCH DAMAGE.
+ *
  * @author Scott Ferguson
  */
 
@@ -39,332 +50,337 @@ import com.caucho.hessian.io.HessianRemote;
 import com.caucho.services.server.AbstractSkeleton;
 
 /**
- * Proxy implementation for Hessian clients. Applications will generally use HessianProxyFactory to create proxy clients.
+ * Proxy implementation for Hessian clients. Applications will generally use HessianProxyFactory to
+ * create proxy clients.
  */
 public class HessianProxy implements InvocationHandler, Serializable {
 
-	private static final Logger					logger				= LoggerFactory.getLogger(HessianProxy.class);
+    private static final Logger logger = LoggerFactory.getLogger(HessianProxy.class);
 
-	private static final long					serialVersionUID	= 1L;
-	protected HessianProxyFactory				factory;
+    private static final long serialVersionUID = 1L;
 
-	private final WeakHashMap<Method, String>	mangleMap			= new WeakHashMap<>();
+    protected HessianProxyFactory factory;
 
-	private final Class<?>						type;
-	private final URI							url;
+    private final WeakHashMap<Method, String> mangleMap = new WeakHashMap<>();
 
-	/**
-	 * Protected constructor for subclassing
-	 */
-	public HessianProxy(URI url, HessianProxyFactory factory) {
-		this(url, factory, null);
-	}
+    private final Class<?> type;
 
-	/**
-	 * Protected constructor for subclassing
-	 */
-	public HessianProxy(URI url, HessianProxyFactory factory, Class<?> type) {
-		this.factory = factory;
-		this.url = url;
-		this.type = type;
-	}
+    private final URI url;
 
-	/**
-	 * Returns the proxy's URL.
-	 */
-	public URI getURL() {
-		return this.url;
-	}
+    /**
+     * Protected constructor for subclassing
+     */
+    public HessianProxy(URI url, HessianProxyFactory factory) {
+        this(url, factory, null);
+    }
 
-	protected HessianProxyFactory getFactory() {
-		return this.factory;
-	}
+    /**
+     * Protected constructor for subclassing
+     */
+    public HessianProxy(URI url, HessianProxyFactory factory, Class<?> type) {
+        this.factory = factory;
+        this.url = url;
+        this.type = type;
+    }
 
-	/**
-	 * Handles the object invocation.
-	 *
-	 * @param proxy
-	 *            the proxy object to invoke
-	 * @param method
-	 *            the method to call
-	 * @param args
-	 *            the arguments to the proxy object
-	 */
-	@Override
-	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-		String mangleName;
+    /**
+     * Returns the proxy's URL.
+     */
+    public URI getURL() {
+        return this.url;
+    }
 
-		synchronized (this.mangleMap) {
-			mangleName = this.mangleMap.get(method);
-		}
+    protected HessianProxyFactory getFactory() {
+        return this.factory;
+    }
 
-		if (mangleName == null) {
-			Object res = this.invokeSpecialCases(proxy, method, args);
-			if (res != null) {
-				return res;
-			}
+    /**
+     * Handles the object invocation.
+     * @param proxy the proxy object to invoke
+     * @param method the method to call
+     * @param args the arguments to the proxy object
+     */
+    @Override
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        String mangleName;
 
-			if (!this.factory.isOverloadEnabled()) {
-				mangleName = method.getName();
-			} else {
-				mangleName = this.mangleName(method);
-			}
+        synchronized (this.mangleMap) {
+            mangleName = this.mangleMap.get(method);
+        }
 
-			synchronized (this.mangleMap) {
-				this.mangleMap.put(method, mangleName);
-			}
-		}
+        if (mangleName == null) {
+            Object res = this.invokeSpecialCases(proxy, method, args);
+            if (res != null) {
+                return res;
+            }
 
-		InputStream is = null;
-		HessianConnection conn = null;
+            if (!this.factory.isOverloadEnabled()) {
+                mangleName = method.getName();
+            } else {
+                mangleName = this.mangleName(method);
+            }
 
-		try {
-			HessianProxy.logger.trace("Hessian[{}] calling {}", this.url, mangleName);
-			conn = this.sendRequest(mangleName, args);
-			is = this.getInputStream(conn);
-			AbstractHessianInput in;
+            synchronized (this.mangleMap) {
+                this.mangleMap.put(method, mangleName);
+            }
+        }
 
-			int code = is.read();
+        InputStream is = null;
+        HessianConnection conn = null;
 
-			if (code != 'H') {
-				throw new HessianProtocolException("'" + (char) code + "' is an unknown code");
-			}
-			int major = is.read();
-			int minor = is.read();
-			HessianProxy.logger.debug("Major: {} , Minor: {}", major, minor);
-			in = this.factory.getHessian2Input(is);
+        try {
+            HessianProxy.logger.trace("Hessian[{}] calling {}", this.url, mangleName);
+            conn = this.sendRequest(mangleName, args);
+            is = this.getInputStream(conn);
+            AbstractHessianInput in;
 
-			Object value = in.readReply(method.getReturnType());
-			if (value instanceof InputStream) {
-				is = null;
-				conn = null;
-			}
-			return value;
-		} catch (HessianProtocolException e) {
-			throw new HessianRuntimeException(e);
-		} finally {
-			try {
-				if (is != null) {
-					is.close();
-				}
-			} catch (Exception e) {
-				HessianProxy.logger.trace(e.toString(), e);
-			}
+            int code = is.read();
 
-			try {
-				if (conn != null) {
-					conn.close();
-				}
-			} catch (Exception e) {
-				HessianProxy.logger.trace(e.toString(), e);
-			}
-		}
-	}
+            if (code != 'H') {
+                throw new HessianProtocolException("'" + (char) code + "' is an unknown code");
+            }
+            int major = is.read();
+            int minor = is.read();
+            HessianProxy.logger.debug("Major: {} , Minor: {}", major, minor);
+            in = this.factory.getHessian2Input(is);
 
-	protected Object invokeSpecialCases(Object proxy, Method method, Object[] args) {
-		String methodName = method.getName();
-		Class<?>[] params = method.getParameterTypes();
+            Object value = in.readReply(method.getReturnType());
+            if (value instanceof InputStream) {
+                is = null;
+                conn = null;
+            }
+            return value;
+        } catch (HessianProtocolException e) {
+            throw new HessianRuntimeException(e);
+        } finally {
+            try {
+                if (is != null) {
+                    is.close();
+                }
+            } catch (Exception e) {
+                HessianProxy.logger.trace(e.toString(), e);
+            }
 
-		// equals and hashCode are special cased
-		if ("equals".equals(methodName) && (params.length == 1) && params[0].equals(Object.class)) {
-			Object value = args[0];
-			if ((value == null) || !Proxy.isProxyClass(value.getClass())) {
-				return Boolean.FALSE;
-			}
-			Object proxyHandler = Proxy.getInvocationHandler(value);
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+                HessianProxy.logger.trace(e.toString(), e);
+            }
+        }
+    }
 
-			if (!(proxyHandler instanceof HessianProxy)) {
-				return Boolean.FALSE;
-			}
-			HessianProxy handler = (HessianProxy) proxyHandler;
-			return Boolean.valueOf(this.getURL().equals(handler.getURL()));
-		} else if (methodName.equals("hashCode") && (params.length == 0)) {
-			return new Integer(this.url.hashCode());
-		} else if (methodName.equals("getHessianType")) {
-			return proxy.getClass().getInterfaces()[0].getName();
-		} else if (methodName.equals("getHessianURL")) {
-			return this.url.toString();
-		} else if (methodName.equals("toString") && (params.length == 0)) {
-			return "HessianProxy[" + this.url + "]";
-		}
-		return null;
-	}
+    protected Object invokeSpecialCases(Object proxy, Method method, Object[] args) {
+        String methodName = method.getName();
+        Class<?>[] params = method.getParameterTypes();
 
-	protected InputStream getInputStream(HessianConnection conn) throws IOException {
-		InputStream is = conn.getInputStream();
+        // equals and hashCode are special cased
+        if ("equals".equals(methodName) && (params.length == 1) && params[0].equals(Object.class)) {
+            Object value = args[0];
+            if ((value == null) || !Proxy.isProxyClass(value.getClass())) {
+                return Boolean.FALSE;
+            }
+            Object proxyHandler = Proxy.getInvocationHandler(value);
 
-		if ("deflate".equals(conn.getContentEncoding())) {
-			is = new InflaterInputStream(is, new Inflater(true));
-		}
+            if (!(proxyHandler instanceof HessianProxy)) {
+                return Boolean.FALSE;
+            }
+            HessianProxy handler = (HessianProxy) proxyHandler;
+            return Boolean.valueOf(this.getURL().equals(handler.getURL()));
+        } else if (methodName.equals("hashCode") && (params.length == 0)) {
+            return new Integer(this.url.hashCode());
+        } else if (methodName.equals("getHessianType")) {
+            return proxy.getClass().getInterfaces()[0].getName();
+        } else if (methodName.equals("getHessianURL")) {
+            return this.url.toString();
+        } else if (methodName.equals("toString") && (params.length == 0)) {
+            return "HessianProxy[" + this.url + "]";
+        }
+        return null;
+    }
 
-		return is;
-	}
+    protected InputStream getInputStream(HessianConnection conn) throws IOException {
+        InputStream is = conn.getInputStream();
 
-	protected String mangleName(Method method) {
-		Class<?>[] param = method.getParameterTypes();
+        if ("deflate".equals(conn.getContentEncoding())) {
+            is = new InflaterInputStream(is, new Inflater(true));
+        }
 
-		if ((param == null) || (param.length == 0)) {
-			return method.getName();
-		}
-		return AbstractSkeleton.mangleName(method, false);
-	}
+        return is;
+    }
 
-	/**
-	 * Sends the HTTP request to the Hessian connection.
-	 */
-	protected HessianConnection sendRequest(String methodName, Object[] args) throws IOException {
-		HessianConnection conn = null;
+    protected String mangleName(Method method) {
+        Class<?>[] param = method.getParameterTypes();
 
-		conn = this.factory.getConnectionFactory().open(this.url);
-		boolean isValid = false;
+        if ((param == null) || (param.length == 0)) {
+            return method.getName();
+        }
+        return AbstractSkeleton.mangleName(method, false);
+    }
 
-		try {
-			this.addRequestHeaders(conn);
+    /**
+     * Sends the HTTP request to the Hessian connection.
+     */
+    protected HessianConnection sendRequest(String methodName, Object[] args) throws IOException {
+        HessianConnection conn = null;
 
-			OutputStream os = null;
+        conn = this.factory.getConnectionFactory().open(this.url);
+        boolean isValid = false;
 
-			try {
-				os = conn.getOutputStream();
-			} catch (Exception e) {
-				throw new HessianRuntimeException(e);
-			}
+        try {
+            this.addRequestHeaders(conn);
 
-			AbstractHessianOutput out = this.factory.getHessianOutput(os);
+            OutputStream os = null;
 
-			out.call(methodName, args);
-			out.flush();
+            try {
+                os = conn.getOutputStream();
+            } catch (Exception e) {
+                throw new HessianRuntimeException(e);
+            }
 
-			conn.sendRequest();
+            AbstractHessianOutput out = this.factory.getHessianOutput(os);
 
-			isValid = true;
+            out.call(methodName, args);
+            out.flush();
 
-			return conn;
-		} finally {
-			if (!isValid && (conn != null)) {
-				conn.close();
-			}
-		}
-	}
+            conn.sendRequest();
+
+            isValid = true;
+
+            return conn;
+        } finally {
+            if (!isValid && (conn != null)) {
+                conn.close();
+            }
+        }
+    }
 
 
-	/**
-	 * Method that allows subclasses to add request headers such as cookies. Default implementation is empty.
-	 */
-	protected void addRequestHeaders(HessianConnection conn) {
-		conn.addHeader("Content-Type", "x-application/hessian");
-		conn.addHeader("Accept-Encoding", "deflate");
+    /**
+     * Method that allows subclasses to add request headers such as cookies. Default implementation is
+     * empty.
+     */
+    protected void addRequestHeaders(HessianConnection conn) {
+        conn.addHeader("Content-Type", "x-application/hessian");
+        conn.addHeader("Accept-Encoding", "deflate");
 
-		String basicAuth = this.factory.getBasicAuth();
+        String basicAuth = this.factory.getBasicAuth();
 
-		if (basicAuth != null) {
-			conn.addHeader("Authorization", basicAuth);
-		}
-	}
+        if (basicAuth != null) {
+            conn.addHeader("Authorization", basicAuth);
+        }
+    }
 
-	public WeakHashMap<Method, String> getMangleMap() {
-		return this.mangleMap;
-	}
+    public WeakHashMap<Method, String> getMangleMap() {
+        return this.mangleMap;
+    }
 
-	/**
-	 * Method that allows subclasses to parse response headers such as cookies. Default implementation is empty.
-	 *
-	 * @param conn
-	 */
-	protected void parseResponseHeaders(URLConnection conn) {}
+    /**
+     * Method that allows subclasses to parse response headers such as cookies. Default implementation
+     * is empty.
+     * @param conn
+     */
+    protected void parseResponseHeaders(URLConnection conn) {
+    }
 
-	public Object writeReplace() {
-		return new HessianRemote(this.type.getName(), this.url.toString());
-	}
+    public Object writeReplace() {
+        return new HessianRemote(this.type.getName(), this.url.toString());
+    }
 
-	static class ResultInputStream extends InputStream {
+    static class ResultInputStream extends InputStream {
 
-		private HessianConnection		_conn;
-		private InputStream				_connIs;
-		private AbstractHessianInput	_in;
-		private InputStream				_hessianIs;
+        private HessianConnection _conn;
 
-		ResultInputStream(HessianConnection conn, InputStream is, AbstractHessianInput in, InputStream hessianIs) {
-			this._conn = conn;
-			this._connIs = is;
-			this._in = in;
-			this._hessianIs = hessianIs;
-		}
+        private InputStream _connIs;
 
-		@Override
-		public int read() throws IOException {
-			if (this._hessianIs != null) {
-				int value = this._hessianIs.read();
+        private AbstractHessianInput _in;
 
-				if (value < 0) {
-					this.close();
-				}
+        private InputStream _hessianIs;
 
-				return value;
-			}
-			return -1;
-		}
+        ResultInputStream(HessianConnection conn, InputStream is, AbstractHessianInput in, InputStream hessianIs) {
+            this._conn = conn;
+            this._connIs = is;
+            this._in = in;
+            this._hessianIs = hessianIs;
+        }
 
-		@Override
-		public int read(byte[] buffer, int offset, int length) throws IOException {
-			if (this._hessianIs != null) {
-				int value = this._hessianIs.read(buffer, offset, length);
+        @Override
+        public int read() throws IOException {
+            if (this._hessianIs != null) {
+                int value = this._hessianIs.read();
 
-				if (value < 0) {
-					this.close();
-				}
+                if (value < 0) {
+                    this.close();
+                }
 
-				return value;
-			}
-			return -1;
-		}
+                return value;
+            }
+            return -1;
+        }
 
-		@Override
-		public void close() throws IOException {
-			HessianConnection conn = this._conn;
-			this._conn = null;
+        @Override
+        public int read(byte[] buffer, int offset, int length) throws IOException {
+            if (this._hessianIs != null) {
+                int value = this._hessianIs.read(buffer, offset, length);
 
-			InputStream connIs = this._connIs;
-			this._connIs = null;
+                if (value < 0) {
+                    this.close();
+                }
 
-			AbstractHessianInput in = this._in;
-			this._in = null;
+                return value;
+            }
+            return -1;
+        }
 
-			InputStream hessianIs = this._hessianIs;
-			this._hessianIs = null;
+        @Override
+        public void close() throws IOException {
+            HessianConnection conn = this._conn;
+            this._conn = null;
 
-			try {
-				if (hessianIs != null) {
-					hessianIs.close();
-				}
-			} catch (Exception e) {
-				HessianProxy.logger.trace(e.toString(), e);
-			}
+            InputStream connIs = this._connIs;
+            this._connIs = null;
 
-			try {
-				if (in != null) {
-					in.completeReply();
-					in.close();
-				}
-			} catch (Exception e) {
-				HessianProxy.logger.trace(e.toString(), e);
-			}
+            AbstractHessianInput in = this._in;
+            this._in = null;
 
-			try {
-				if (connIs != null) {
-					connIs.close();
-				}
-			} catch (Exception e) {
-				HessianProxy.logger.trace(e.toString(), e);
-			}
+            InputStream hessianIs = this._hessianIs;
+            this._hessianIs = null;
 
-			try {
-				if (conn != null) {
-					conn.close();
-				}
-			} catch (Exception e) {
-				HessianProxy.logger.trace(e.toString(), e);
-			}
-		}
-	}
+            try {
+                if (hessianIs != null) {
+                    hessianIs.close();
+                }
+            } catch (Exception e) {
+                HessianProxy.logger.trace(e.toString(), e);
+            }
+
+            try {
+                if (in != null) {
+                    in.completeReply();
+                    in.close();
+                }
+            } catch (Exception e) {
+                HessianProxy.logger.trace(e.toString(), e);
+            }
+
+            try {
+                if (connIs != null) {
+                    connIs.close();
+                }
+            } catch (Exception e) {
+                HessianProxy.logger.trace(e.toString(), e);
+            }
+
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+                HessianProxy.logger.trace(e.toString(), e);
+            }
+        }
+
+    }
 
 }

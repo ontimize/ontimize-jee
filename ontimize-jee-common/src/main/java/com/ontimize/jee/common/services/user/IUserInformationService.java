@@ -13,10 +13,10 @@ package com.ontimize.jee.common.services.user;
  */
 public interface IUserInformationService {
 
-	/**
-	 * Obtiene la información del usuario con la que está trabajando el servidor.
-	 *
-	 * @return user server information
-	 */
-	UserInformation getUserInformation();
+    /**
+     * Obtiene la información del usuario con la que está trabajando el servidor.
+     * @return user server information
+     */
+    UserInformation getUserInformation();
+
 }

@@ -14,7 +14,7 @@ local.properties
 .settings/
 .loadpath
 .recommenders
-
+*/.gitignore
 # External tool builders
 .externalToolBuilders/
 

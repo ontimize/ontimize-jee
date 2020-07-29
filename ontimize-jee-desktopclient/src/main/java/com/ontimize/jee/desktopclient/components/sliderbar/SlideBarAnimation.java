@@ -11,144 +11,147 @@ import org.slf4j.LoggerFactory;
 
 public class SlideBarAnimation implements ActionListener {
 
-	private static final Logger	logger			= LoggerFactory.getLogger(SlideBarAnimation.class);
+    private static final Logger logger = LoggerFactory.getLogger(SlideBarAnimation.class);
 
-	// start value (typically in pixels)
-	protected int				startValue		= 0;
-	// end value (typically in pixels)
-	protected int				endValue		= 0;
-	// duration over which the animation takes place
-	protected long				durationMillis	= 0;
+    // start value (typically in pixels)
+    protected int startValue = 0;
 
-	// a value (difference of start and end values) that corresponds to value per millisecond
-	protected double			valuePerMilli	= 0.0;
+    // end value (typically in pixels)
+    protected int endValue = 0;
 
-	// The ctm of the last performed animation operation
-	protected long				startMillis;
-	protected Timer				timer;
-	protected double			value			= 0;
+    // duration over which the animation takes place
+    protected long durationMillis = 0;
 
-	private SlideBarSection		sliderBarSection;
+    // a value (difference of start and end values) that corresponds to value per millisecond
+    protected double valuePerMilli = 0.0;
 
-	/**
-	 * Constructor where you specify <i>time</i> between the two pixel values.
-	 *
-	 * @param startValue
-	 * @param endValue
-	 * @param durationMillis
-	 */
-	public SlideBarAnimation(int startValue, int endValue, int durationMillis) {
-		this.startValue = startValue;
-		this.endValue = endValue;
-		this.durationMillis = durationMillis;
+    // The ctm of the last performed animation operation
+    protected long startMillis;
 
-		// create the value per millis.
-		this.valuePerMilli = (double) (endValue - startValue) / (double) durationMillis;
-	}
+    protected Timer timer;
 
-	/**
-	 * Constructor where you specify <i>value/ms</i> between the two pixel values.
-	 *
-	 * @param startValue
-	 * @param endValue
-	 * @param durationMillis
-	 */
-	public SlideBarAnimation(int startValue, int endValue, double valuePerMilli) {
-		this.startValue = startValue;
-		this.endValue = endValue;
-		this.valuePerMilli = valuePerMilli;
-	}
+    protected double value = 0;
 
-	public SlideBarAnimation(int durationMs) {
-		this.durationMillis = durationMs;
-	}
+    private SlideBarSection sliderBarSection;
 
-	public SlideBarAnimation(SlideBarSection sliderbarSection, int durationMs) {
-		this(durationMs);
-		this.sliderBarSection = sliderbarSection;
-	}
+    /**
+     * Constructor where you specify <i>time</i> between the two pixel values.
+     * @param startValue
+     * @param endValue
+     * @param durationMillis
+     */
+    public SlideBarAnimation(int startValue, int endValue, int durationMillis) {
+        this.startValue = startValue;
+        this.endValue = endValue;
+        this.durationMillis = durationMillis;
 
-	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		// get ctm
-		long ctm = System.currentTimeMillis();
+        // create the value per millis.
+        this.valuePerMilli = (double) (endValue - startValue) / (double) durationMillis;
+    }
 
-		// get difference of this ctm with the last ctm
-		double millisPassed = ctm - this.startMillis;
+    /**
+     * Constructor where you specify <i>value/ms</i> between the two pixel values.
+     * @param startValue
+     * @param endValue
+     * @param durationMillis
+     */
+    public SlideBarAnimation(int startValue, int endValue, double valuePerMilli) {
+        this.startValue = startValue;
+        this.endValue = endValue;
+        this.valuePerMilli = valuePerMilli;
+    }
 
-		/**
-		 * This may be 0 if millisPassed is small enough
-		 */
-		double i = millisPassed * this.valuePerMilli;
-		if (Double.compare(i, 0.0d) == 0) {
-			SlideBarAnimation.logger.debug("WARNING: Animation is incrementing by zero... potential infinite loop");
-		}
+    public SlideBarAnimation(int durationMs) {
+        this.durationMillis = durationMs;
+    }
 
-		this.value += i;
+    public SlideBarAnimation(SlideBarSection sliderbarSection, int durationMs) {
+        this(durationMs);
+        this.sliderBarSection = sliderbarSection;
+    }
 
-		// replace old ctm with new one.
-		this.startMillis = ctm;
+    @Override
+    public void actionPerformed(ActionEvent arg0) {
+        // get ctm
+        long ctm = System.currentTimeMillis();
 
-		if ((this.startValue < this.endValue) && (this.value >= this.endValue)) {
-			this.value = Math.min(this.value, this.endValue);
-			this.render((int) this.value);
-			this.stop();
-		} else if ((this.startValue > this.endValue) && (this.value <= this.endValue)) {
-			this.value = Math.max(this.value, this.endValue);
-			this.render((int) this.value);
-			this.stop();
-		} else {
-			this.render((int) this.value);
-		}
-	}
+        // get difference of this ctm with the last ctm
+        double millisPassed = ctm - this.startMillis;
 
-	public void start() {
-		this.startMillis = System.currentTimeMillis();
-		this.value = this.startValue;
-		this.timer = new Timer(50, this);
-		this.starting();
-		this.timer.restart();
-	}
+        /**
+         * This may be 0 if millisPassed is small enough
+         */
+        double i = millisPassed * this.valuePerMilli;
+        if (Double.compare(i, 0.0d) == 0) {
+            SlideBarAnimation.logger.debug("WARNING: Animation is incrementing by zero... potential infinite loop");
+        }
 
-	public void stop() {
-		this.timer.stop();
-		this.stopped();
-	}
+        this.value += i;
 
-	public int getEndValue() {
-		return this.endValue;
-	}
+        // replace old ctm with new one.
+        this.startMillis = ctm;
 
-	public void setEndValue(int endValue) {
-		this.endValue = endValue;
-		if (this.durationMillis > 0) {
-			this.valuePerMilli = (double) (endValue - this.startValue) / (double) this.durationMillis;
-		}
-	}
+        if ((this.startValue < this.endValue) && (this.value >= this.endValue)) {
+            this.value = Math.min(this.value, this.endValue);
+            this.render((int) this.value);
+            this.stop();
+        } else if ((this.startValue > this.endValue) && (this.value <= this.endValue)) {
+            this.value = Math.max(this.value, this.endValue);
+            this.render((int) this.value);
+            this.stop();
+        } else {
+            this.render((int) this.value);
+        }
+    }
 
-	public int getStartValue() {
-		return this.startValue;
-	}
+    public void start() {
+        this.startMillis = System.currentTimeMillis();
+        this.value = this.startValue;
+        this.timer = new Timer(50, this);
+        this.starting();
+        this.timer.restart();
+    }
 
-	public void setStartValue(int startValue) {
-		this.startValue = startValue;
-		if (this.durationMillis > 0) {
-			this.valuePerMilli = (double) (this.endValue - startValue) / (double) this.durationMillis;
-		}
-	}
+    public void stop() {
+        this.timer.stop();
+        this.stopped();
+    }
 
-	public void starting() {
-		this.sliderBarSection.getContentPane().setVisible(true);
-	}
+    public int getEndValue() {
+        return this.endValue;
+    }
 
-	protected void render(int value) {
-		this.sliderBarSection.setMaximumSize(new Dimension(Integer.MAX_VALUE, value));
-		this.sliderBarSection.getContentPane().setVisible(true);
-		this.sliderBarSection.revalidate();
-	}
+    public void setEndValue(int endValue) {
+        this.endValue = endValue;
+        if (this.durationMillis > 0) {
+            this.valuePerMilli = (double) (endValue - this.startValue) / (double) this.durationMillis;
+        }
+    }
 
-	public void stopped() {
-		this.sliderBarSection.getContentPane().setVisible(true);
-		this.sliderBarSection.revalidate();
-	}
+    public int getStartValue() {
+        return this.startValue;
+    }
+
+    public void setStartValue(int startValue) {
+        this.startValue = startValue;
+        if (this.durationMillis > 0) {
+            this.valuePerMilli = (double) (this.endValue - startValue) / (double) this.durationMillis;
+        }
+    }
+
+    public void starting() {
+        this.sliderBarSection.getContentPane().setVisible(true);
+    }
+
+    protected void render(int value) {
+        this.sliderBarSection.setMaximumSize(new Dimension(Integer.MAX_VALUE, value));
+        this.sliderBarSection.getContentPane().setVisible(true);
+        this.sliderBarSection.revalidate();
+    }
+
+    public void stopped() {
+        this.sliderBarSection.getContentPane().setVisible(true);
+        this.sliderBarSection.revalidate();
+    }
+
 }

@@ -31,236 +31,254 @@ import com.ontimize.gui.field.TextDataField;
 
 public class EmbeddedJFileChooser extends JPanel {
 
-	private static final Logger				logger	= LoggerFactory.getLogger(EmbeddedJFileChooser.class);
+    private static final Logger logger = LoggerFactory.getLogger(EmbeddedJFileChooser.class);
 
-	protected final TextDataField			fileName;
-	protected final Button					bSave, bOpen;
-	protected final CustomJFileChooser		fileChooser;
+    protected final TextDataField fileName;
 
-	protected final MODE					mode;
-	protected final IEmbeddedJFileChooser	listener;
+    protected final Button bSave, bOpen;
 
-	public static enum MODE {
-		OPEN, SAVE, BOTH
-	}
+    protected final CustomJFileChooser fileChooser;
 
-	public EmbeddedJFileChooser(MODE mode, IEmbeddedJFileChooser listener) {
-		super();
-		this.mode = mode;
-		this.listener = listener;
-		this.setLayout(new GridBagLayout());
-		this.fileName = this.createFileNameField();
-		this.bSave = (Button) this.createSaveButtonComp();
-		this.bOpen = (Button) this.createOpenButtonComp();
-		this.fileChooser = new CustomJFileChooser();
+    protected final MODE mode;
 
-		this.add(this.fileChooser, new GridBagConstraints(0, 0, 3, 1, 10, 10, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(2, 2, 2, 2), 0, 0));
+    protected final IEmbeddedJFileChooser listener;
 
-		switch (this.mode) {
-			case OPEN:
-				this.add(this.bOpen, new GridBagConstraints(2, 2, 1, 1, 0, 0, GridBagConstraints.EAST, GridBagConstraints.LINE_END, new Insets(2, 2, 2, 2), 0, 0));
-				break;
-			case SAVE:
-				this.add(this.fileName, new GridBagConstraints(0, 1, 3, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(2, 2, 2, 2), 0, 0));
-				this.add(this.bSave, new GridBagConstraints(2, 2, 1, 1, 0, 0, GridBagConstraints.EAST, GridBagConstraints.LINE_END, new Insets(2, 2, 2, 2), 0, 0));
-				break;
-			default:
-				this.add(this.fileName, new GridBagConstraints(0, 1, 3, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(2, 2, 2, 2), 0, 0));
-				this.add(this.createRowButtonsComp(this.bOpen, this.bSave),
-						new GridBagConstraints(2, 2, 1, 1, 0, 0, GridBagConstraints.EAST, GridBagConstraints.LINE_END, new Insets(2, 2, 2, 2), 0, 0));
-				break;
-		}
-		this.addPropertyChangeListener(new PropertyChangeListener() {
+    public static enum MODE {
 
-			@Override
-			public void propertyChange(PropertyChangeEvent evt) {
-				// file selected listener to update fileName TextDataField
-				if (JFileChooser.SELECTED_FILE_CHANGED_PROPERTY.equals(evt.getPropertyName())) {
-					File file = (File) evt.getNewValue();
-					if (file != null) {
-						EmbeddedJFileChooser.this.fileName.setValue(file.getName());
-					}
-				}
-			}
-		});
-		this.bOpen.addActionListener(new OpenFileEmbbededListener());
-		this.bSave.addActionListener(new SaveFileEmbbededListener());
-	}
+        OPEN, SAVE, BOTH
 
-	public void setFileFilter(FileNameExtensionFilter fileNameExtensionFilter) {
-		this.fileChooser.setFileFilter(fileNameExtensionFilter);
-	}
+    }
 
-	public void rescanCurrentDirectory() {
-		this.fileChooser.rescanCurrentDirectory();
-	}
+    public EmbeddedJFileChooser(MODE mode, IEmbeddedJFileChooser listener) {
+        super();
+        this.mode = mode;
+        this.listener = listener;
+        this.setLayout(new GridBagLayout());
+        this.fileName = this.createFileNameField();
+        this.bSave = (Button) this.createSaveButtonComp();
+        this.bOpen = (Button) this.createOpenButtonComp();
+        this.fileChooser = new CustomJFileChooser();
 
-	private Component createRowButtonsComp(Button... buttons) {
-		Hashtable<Object, Object> parameters = new Hashtable<>();
-		parameters.clear();
-		Row row = new Row(parameters);
-		for (int i = 0; i <= (buttons.length - 1); i++) {
-			row.add(buttons[i]);
-		}
+        this.add(this.fileChooser, new GridBagConstraints(0, 0, 3, 1, 10, 10, GridBagConstraints.CENTER,
+                GridBagConstraints.BOTH, new Insets(2, 2, 2, 2), 0, 0));
 
-		parameters.clear();
-		parameters.put("expand", "no");
-		Column column = new Column(parameters);
+        switch (this.mode) {
+            case OPEN:
+                this.add(this.bOpen, new GridBagConstraints(2, 2, 1, 1, 0, 0, GridBagConstraints.EAST,
+                        GridBagConstraints.LINE_END, new Insets(2, 2, 2, 2), 0, 0));
+                break;
+            case SAVE:
+                this.add(this.fileName, new GridBagConstraints(0, 1, 3, 1, 0, 0, GridBagConstraints.CENTER,
+                        GridBagConstraints.BOTH, new Insets(2, 2, 2, 2), 0, 0));
+                this.add(this.bSave, new GridBagConstraints(2, 2, 1, 1, 0, 0, GridBagConstraints.EAST,
+                        GridBagConstraints.LINE_END, new Insets(2, 2, 2, 2), 0, 0));
+                break;
+            default:
+                this.add(this.fileName, new GridBagConstraints(0, 1, 3, 1, 0, 0, GridBagConstraints.CENTER,
+                        GridBagConstraints.BOTH, new Insets(2, 2, 2, 2), 0, 0));
+                this.add(this.createRowButtonsComp(this.bOpen, this.bSave),
+                        new GridBagConstraints(2, 2, 1, 1, 0, 0, GridBagConstraints.EAST, GridBagConstraints.LINE_END,
+                                new Insets(2, 2, 2, 2), 0, 0));
+                break;
+        }
+        this.addPropertyChangeListener(new PropertyChangeListener() {
 
-		column.add(row);
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                // file selected listener to update fileName TextDataField
+                if (JFileChooser.SELECTED_FILE_CHANGED_PROPERTY.equals(evt.getPropertyName())) {
+                    File file = (File) evt.getNewValue();
+                    if (file != null) {
+                        EmbeddedJFileChooser.this.fileName.setValue(file.getName());
+                    }
+                }
+            }
+        });
+        this.bOpen.addActionListener(new OpenFileEmbbededListener());
+        this.bSave.addActionListener(new SaveFileEmbbededListener());
+    }
 
-		parameters.clear();
-		parameters.put("expand", "yes");
-		Column column2 = new Column(parameters);
+    public void setFileFilter(FileNameExtensionFilter fileNameExtensionFilter) {
+        this.fileChooser.setFileFilter(fileNameExtensionFilter);
+    }
 
-		parameters.clear();
-		parameters.put("expand", "no");
-		Row row2 = new Row(parameters);
+    public void rescanCurrentDirectory() {
+        this.fileChooser.rescanCurrentDirectory();
+    }
 
-		row2.add(column2);
-		row2.add(column);
+    private Component createRowButtonsComp(Button... buttons) {
+        Hashtable<Object, Object> parameters = new Hashtable<>();
+        parameters.clear();
+        Row row = new Row(parameters);
+        for (int i = 0; i <= (buttons.length - 1); i++) {
+            row.add(buttons[i]);
+        }
 
-		return row2;
-	}
+        parameters.clear();
+        parameters.put("expand", "no");
+        Column column = new Column(parameters);
 
-	private Component createSaveButtonComp() {
-		Hashtable<Object, Object> parameters = new Hashtable<>();
-		parameters.clear();
-		parameters.put("align", "left");
-		parameters.put("attr", "B_SAVE");
-		parameters.put("text", ResourceBundle.getBundle("ontimize-jee-i18n.bundle").getString("B_SAVE"));
-		return new Button(parameters);
-	}
+        column.add(row);
 
-	private Component createOpenButtonComp() {
-		Hashtable<Object, Object> parameters = new Hashtable<>();
-		parameters.clear();
-		parameters.put("align", "left");
-		parameters.put("attr", "B_OPEN");
-		parameters.put("text", ResourceBundle.getBundle("ontimize-jee-i18n.bundle").getString("B_OPEN"));
-		return new Button(parameters);
-	}
+        parameters.clear();
+        parameters.put("expand", "yes");
+        Column column2 = new Column(parameters);
 
-	private TextDataField createFileNameField() {
-		Hashtable<Object, Object> parameters = new Hashtable<>();
-		parameters.put("align", "left");
-		parameters.put("attr", "FILE_NAME");
-		parameters.put("dim", "text");
-		parameters.put("enabled", "yes");
-		parameters.put("labelvisible", "yes");
-		parameters.put("labelposition", "top");
-		parameters.put("text", ResourceBundle.getBundle("ontimize-jee-i18n.bundle").getString("FILE_NAME"));
-		return new TextDataField(parameters);
-	}
+        parameters.clear();
+        parameters.put("expand", "no");
+        Row row2 = new Row(parameters);
 
-	/******************
-	 * AUXILIAR CLASSES
-	 */
+        row2.add(column2);
+        row2.add(column);
 
-	public class OpenFileEmbbededListener implements ActionListener {
+        return row2;
+    }
 
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			new Thread(new Runnable() {
+    private Component createSaveButtonComp() {
+        Hashtable<Object, Object> parameters = new Hashtable<>();
+        parameters.clear();
+        parameters.put("align", "left");
+        parameters.put("attr", "B_SAVE");
+        parameters.put("text", ResourceBundle.getBundle("ontimize-jee-i18n.bundle").getString("B_SAVE"));
+        return new Button(parameters);
+    }
 
-				@Override
-				public void run() {
-					File selectedFile = EmbeddedJFileChooser.this.fileChooser.getSelectedFile();
-					if (selectedFile != null) {
-						try {
-							if (selectedFile.exists()) {
-								if (Desktop.isDesktopSupported()) {
-									Desktop.getDesktop().open(selectedFile);
-								}
-							}
-						} catch (IOException e) {
-							EmbeddedJFileChooser.logger.error(null, e);
-						}
-					}
+    private Component createOpenButtonComp() {
+        Hashtable<Object, Object> parameters = new Hashtable<>();
+        parameters.clear();
+        parameters.put("align", "left");
+        parameters.put("attr", "B_OPEN");
+        parameters.put("text", ResourceBundle.getBundle("ontimize-jee-i18n.bundle").getString("B_OPEN"));
+        return new Button(parameters);
+    }
 
-				}
-			}).start();
-		}
-	}
+    private TextDataField createFileNameField() {
+        Hashtable<Object, Object> parameters = new Hashtable<>();
+        parameters.put("align", "left");
+        parameters.put("attr", "FILE_NAME");
+        parameters.put("dim", "text");
+        parameters.put("enabled", "yes");
+        parameters.put("labelvisible", "yes");
+        parameters.put("labelposition", "top");
+        parameters.put("text", ResourceBundle.getBundle("ontimize-jee-i18n.bundle").getString("FILE_NAME"));
+        return new TextDataField(parameters);
+    }
 
-	public class SaveFileEmbbededListener implements ActionListener {
+    /******************
+     * AUXILIAR CLASSES
+     */
 
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			new Thread(new Runnable() {
+    public class OpenFileEmbbededListener implements ActionListener {
 
-				@Override
-				public void run() {
-					File currentDirectory = EmbeddedJFileChooser.this.fileChooser.getCurrentDirectory();
-					File selectedFile = EmbeddedJFileChooser.this.fileChooser.getSelectedFile();
-					String fileName = (String) EmbeddedJFileChooser.this.fileName.getValue();
-					// Check empty fileName
-					if (fileName == null) {
-						MessageDialog.showErrorMessage(SwingUtilities.getWindowAncestor(EmbeddedJFileChooser.this.fileChooser), "E_EMPTY_FILENAME");
-					} else {
-						// Check Overwrite
-						if (selectedFile != null) {
-							if (selectedFile.getName().equals(fileName)) {
-								boolean showQuestionMessage = MessageDialog.showQuestionMessage(EmbeddedJFileChooser.this.fileChooser, "Q_OVERWRITE_FILE");
-								if (!showQuestionMessage) {
-									return;
-								}
-							}
-						}
-						if (EmbeddedJFileChooser.this.listener != null) {
-							EmbeddedJFileChooser.this.listener.setPathFileChooser(currentDirectory.getAbsolutePath() + "\\" + fileName);
-						}
-					}
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            new Thread(new Runnable() {
 
-				}
-			}).start();
-		}
-	}
+                @Override
+                public void run() {
+                    File selectedFile = EmbeddedJFileChooser.this.fileChooser.getSelectedFile();
+                    if (selectedFile != null) {
+                        try {
+                            if (selectedFile.exists()) {
+                                if (Desktop.isDesktopSupported()) {
+                                    Desktop.getDesktop().open(selectedFile);
+                                }
+                            }
+                        } catch (IOException e) {
+                            EmbeddedJFileChooser.logger.error(null, e);
+                        }
+                    }
 
-	public class CustomJFileChooser extends JFileChooser {
+                }
+            }).start();
+        }
 
-		public CustomJFileChooser() {
-			super();
-			this.setFileSelectionMode(JFileChooser.FILES_ONLY);
-			this.setControlButtonsAreShown(false);
-			this.setFileHidingEnabled(false);
-			this.disableTextComponents(this);
-			this.addPropertyChangeListener(new PropertyChangeListener() {
+    }
 
-				@Override
-				public void propertyChange(PropertyChangeEvent evt) {
-					// file selected listener to update fileName TextDataField
-					if (JFileChooser.SELECTED_FILE_CHANGED_PROPERTY.equals(evt.getPropertyName())) {
-						File file = (File) evt.getNewValue();
-						if (file != null) {
-							EmbeddedJFileChooser.this.fileName.setValue(file.getName());
-						}
-					}
-				}
-			});
-		}
+    public class SaveFileEmbbededListener implements ActionListener {
 
-		private void disableTextComponents(Container parent) {
-			Component[] c = parent.getComponents();
-			for (int j = 0; j < c.length; j++) {
-				String unpack = this.unpack(c[j]);
-				if ("SynthFileChooserUIImpl$3".equals(unpack) || "SynthFileChooserUIImpl$AlignedLabel".equals(unpack)) {
-					c[j].getParent().setVisible(false);
-				}
-				if (((Container) c[j]).getComponentCount() > 0) {
-					this.disableTextComponents((Container) c[j]);
-				}
-			}
-		}
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            new Thread(new Runnable() {
 
-		private String unpack(Component c) {
-			String s = c.getClass().getName();
-			int dot = s.lastIndexOf(".");
-			if (dot != -1) {
-				s = s.substring(dot + 1);
-			}
-			return s;
-		}
-	}
+                @Override
+                public void run() {
+                    File currentDirectory = EmbeddedJFileChooser.this.fileChooser.getCurrentDirectory();
+                    File selectedFile = EmbeddedJFileChooser.this.fileChooser.getSelectedFile();
+                    String fileName = (String) EmbeddedJFileChooser.this.fileName.getValue();
+                    // Check empty fileName
+                    if (fileName == null) {
+                        MessageDialog.showErrorMessage(
+                                SwingUtilities.getWindowAncestor(EmbeddedJFileChooser.this.fileChooser),
+                                "E_EMPTY_FILENAME");
+                    } else {
+                        // Check Overwrite
+                        if (selectedFile != null) {
+                            if (selectedFile.getName().equals(fileName)) {
+                                boolean showQuestionMessage = MessageDialog
+                                    .showQuestionMessage(EmbeddedJFileChooser.this.fileChooser, "Q_OVERWRITE_FILE");
+                                if (!showQuestionMessage) {
+                                    return;
+                                }
+                            }
+                        }
+                        if (EmbeddedJFileChooser.this.listener != null) {
+                            EmbeddedJFileChooser.this.listener
+                                .setPathFileChooser(currentDirectory.getAbsolutePath() + "\\" + fileName);
+                        }
+                    }
+
+                }
+            }).start();
+        }
+
+    }
+
+    public class CustomJFileChooser extends JFileChooser {
+
+        public CustomJFileChooser() {
+            super();
+            this.setFileSelectionMode(JFileChooser.FILES_ONLY);
+            this.setControlButtonsAreShown(false);
+            this.setFileHidingEnabled(false);
+            this.disableTextComponents(this);
+            this.addPropertyChangeListener(new PropertyChangeListener() {
+
+                @Override
+                public void propertyChange(PropertyChangeEvent evt) {
+                    // file selected listener to update fileName TextDataField
+                    if (JFileChooser.SELECTED_FILE_CHANGED_PROPERTY.equals(evt.getPropertyName())) {
+                        File file = (File) evt.getNewValue();
+                        if (file != null) {
+                            EmbeddedJFileChooser.this.fileName.setValue(file.getName());
+                        }
+                    }
+                }
+            });
+        }
+
+        private void disableTextComponents(Container parent) {
+            Component[] c = parent.getComponents();
+            for (int j = 0; j < c.length; j++) {
+                String unpack = this.unpack(c[j]);
+                if ("SynthFileChooserUIImpl$3".equals(unpack) || "SynthFileChooserUIImpl$AlignedLabel".equals(unpack)) {
+                    c[j].getParent().setVisible(false);
+                }
+                if (((Container) c[j]).getComponentCount() > 0) {
+                    this.disableTextComponents((Container) c[j]);
+                }
+            }
+        }
+
+        private String unpack(Component c) {
+            String s = c.getClass().getName();
+            int dot = s.lastIndexOf(".");
+            if (dot != -1) {
+                s = s.substring(dot + 1);
+            }
+            return s;
+        }
+
+    }
 
 }

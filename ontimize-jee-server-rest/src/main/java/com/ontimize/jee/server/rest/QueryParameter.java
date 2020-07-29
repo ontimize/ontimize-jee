@@ -11,38 +11,39 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class QueryParameter implements Serializable {
 
-	private static final long			serialVersionUID	= 1L;
+    private static final long serialVersionUID = 1L;
 
-	@XmlElement
-	protected List<Object>				columns;
+    @XmlElement
+    protected List<Object> columns;
 
-	@XmlElement
-	protected Map<Object, Object>		filter;
+    @XmlElement
+    protected Map<Object, Object> filter;
 
-	@XmlElement
-	protected HashMap<Object, Object>	sqltypes;
+    @XmlElement
+    protected HashMap<Object, Object> sqltypes;
 
-	public Map<Object, Object> getFilter() {
-		return this.filter;
-	}
+    public Map<Object, Object> getFilter() {
+        return this.filter;
+    }
 
-	public void setKv(Map<Object, Object> filter) {
-		this.filter = filter;
-	}
+    public void setKv(Map<Object, Object> filter) {
+        this.filter = filter;
+    }
 
-	public List<Object> getColumns() {
-		return this.columns;
-	}
+    public List<Object> getColumns() {
+        return this.columns;
+    }
 
-	public void setColumns(List<Object> columns) {
-		this.columns = columns;
-	}
+    public void setColumns(List<Object> columns) {
+        this.columns = columns;
+    }
 
-	public HashMap<Object, Object> getSqltypes() {
-		return this.sqltypes;
-	}
+    public HashMap<Object, Object> getSqltypes() {
+        return this.sqltypes;
+    }
 
-	public void setSqltypes(HashMap<Object, Object> sqltypes) {
-		this.sqltypes = sqltypes;
-	}
+    public void setSqltypes(HashMap<Object, Object> sqltypes) {
+        this.sqltypes = sqltypes;
+    }
+
 }

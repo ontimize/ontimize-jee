@@ -8,49 +8,51 @@ import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
 public class OntimizeWebAuthenticationDetails extends WebAuthenticationDetails {
 
-	private static final long	serialVersionUID	= 1L;
+    private static final long serialVersionUID = 1L;
 
-	private final String		scheme;
-	private final String		host;
-	private final int			port;
-	private final String		contextPath;
+    private final String scheme;
 
-	/**
-	 *
-	 * @param request
-	 */
-	public OntimizeWebAuthenticationDetails(HttpServletRequest request) {
-		super(request);
-		this.scheme = request.getScheme();
-		this.host = request.getServerName();
-		this.port = request.getServerPort();
-		this.contextPath = request.getContextPath();
-	}
+    private final String host;
 
-	public String getScheme() {
-		return this.scheme;
-	}
+    private final int port;
 
-	public String getHost() {
-		return this.host;
-	}
+    private final String contextPath;
 
-	public int getPort() {
-		return this.port;
-	}
+    /**
+     * @param request
+     */
+    public OntimizeWebAuthenticationDetails(HttpServletRequest request) {
+        super(request);
+        this.scheme = request.getScheme();
+        this.host = request.getServerName();
+        this.port = request.getServerPort();
+        this.contextPath = request.getContextPath();
+    }
 
-	public String getContextPath() {
-		return this.contextPath;
-	}
+    public String getScheme() {
+        return this.scheme;
+    }
 
-	@Override
-	public boolean equals(Object o) {
-		return EqualsBuilder.reflectionEquals(this, o);
-	}
+    public String getHost() {
+        return this.host;
+    }
 
-	@Override
-	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
-	}
+    public int getPort() {
+        return this.port;
+    }
+
+    public String getContextPath() {
+        return this.contextPath;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return EqualsBuilder.reflectionEquals(this, o);
+    }
+
+    @Override
+    public int hashCode() {
+        return HashCodeBuilder.reflectionHashCode(this);
+    }
 
 }

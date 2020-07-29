@@ -18,120 +18,112 @@ import com.ontimize.util.logging.Level;
  */
 public interface IServerManagementService {
 
-	/**
-	 * Open log stream.
-	 *
-	 * @return the input stream
-	 * @throws OntimizeJEEException
-	 *             the ontimize jee exception
-	 */
-	InputStream openLogStream() throws OntimizeJEEException;
+    /**
+     * Open log stream.
+     * @return the input stream
+     * @throws OntimizeJEEException the ontimize jee exception
+     */
+    InputStream openLogStream() throws OntimizeJEEException;
 
-	/**
-	 * Creates the heap dump.
-	 *
-	 * @return the input stream
-	 * @throws OntimizeJEEException
-	 *             the ontimize jee exception
-	 */
-	InputStream createHeapDump() throws OntimizeJEEException;
+    /**
+     * Creates the heap dump.
+     * @return the input stream
+     * @throws OntimizeJEEException the ontimize jee exception
+     */
+    InputStream createHeapDump() throws OntimizeJEEException;
 
-	/**
-	 * Creates the thread dump.
-	 *
-	 * @return the string
-	 * @throws OntimizeJEEException
-	 *             the ontimize jee exception
-	 */
-	String createThreadDump() throws OntimizeJEEException;
+    /**
+     * Creates the thread dump.
+     * @return the string
+     * @throws OntimizeJEEException the ontimize jee exception
+     */
+    String createThreadDump() throws OntimizeJEEException;
 
-	/**
-	 * Execute sql.
-	 *
-	 * @param sql
-	 *            the sql
-	 * @param dataSourceName
-	 *            the data source name
-	 * @return the entity result
-	 */
-	EntityResult executeSql(final String sql, final String dataSourceName);
+    /**
+     * Execute sql.
+     * @param sql the sql
+     * @param dataSourceName the data source name
+     * @return the entity result
+     */
+    EntityResult executeSql(final String sql, final String dataSourceName);
 
-	/**
-	 * Gets the available data sources.
-	 *
-	 * @return the available data sources
-	 */
-	List<String> getAvailableDataSources();
+    /**
+     * Gets the available data sources.
+     * @return the available data sources
+     */
+    List<String> getAvailableDataSources();
 
-	List<OntimizeJEELogger> getLoggerList() throws Exception;
+    List<OntimizeJEELogger> getLoggerList() throws Exception;
 
-	Logger getLogger(String name) throws Exception;
+    Logger getLogger(String name) throws Exception;
 
-	Level getLevel(OntimizeJEELogger logger) throws Exception;
+    Level getLevel(OntimizeJEELogger logger) throws Exception;
 
-	void setLevel(OntimizeJEELogger logger) throws Exception;
+    void setLevel(OntimizeJEELogger logger) throws Exception;
 
-	public static class OntimizeJEELogger implements Serializable {
+    public static class OntimizeJEELogger implements Serializable {
 
-		private int		id;
-		private String		loggerName;
-		private Level		loggerLevel;
+        private int id;
 
-		public OntimizeJEELogger() {}
+        private String loggerName;
 
-		public OntimizeJEELogger(int id, String name, Level level) {
-			this.id = id;
-			this.setLoggerName(name);
-			this.setLoggerLevel(level);
-		}
+        private Level loggerLevel;
 
-		public Level getLoggerLevel() {
-			return this.loggerLevel;
-		}
+        public OntimizeJEELogger() {
+        }
 
-		public String getLoggerName() {
-			return this.loggerName;
-		}
+        public OntimizeJEELogger(int id, String name, Level level) {
+            this.id = id;
+            this.setLoggerName(name);
+            this.setLoggerLevel(level);
+        }
 
-		public void setLoggerLevel(Level loggerLevel) {
-			this.loggerLevel = loggerLevel;
-		}
+        public Level getLoggerLevel() {
+            return this.loggerLevel;
+        }
 
-		public void setLoggerName(String loggerName) {
-			this.loggerName = loggerName;
-		}
+        public String getLoggerName() {
+            return this.loggerName;
+        }
 
-		public int getId() {
-			return this.id;
-		}
+        public void setLoggerLevel(Level loggerLevel) {
+            this.loggerLevel = loggerLevel;
+        }
 
-		public void setId(int id) {
-			this.id = id;
-		}
+        public void setLoggerName(String loggerName) {
+            this.loggerName = loggerName;
+        }
 
-	}
+        public int getId() {
+            return this.id;
+        }
 
-	EntityResult getLogFiles() throws Exception;
+        public void setId(int id) {
+            this.id = id;
+        }
 
-	InputStream getLogFileContent(String fileName) throws Exception;
+    }
 
-	/**
-	 * Gets the active sessions.
-	 *
-	 * @return the active sessions
-	 * @throws OntimizeJEEException
-	 *             the ontimize jee exception
-	 */
-	Collection<SessionDto> getActiveSessions() throws OntimizeJEEException;
+    EntityResult getLogFiles() throws Exception;
 
-	EntityResult getStatistics();
+    InputStream getLogFileContent(String fileName) throws Exception;
 
-	EntityResult getServiceStatistics(String serviceName, String methodName, Date dateBefore, Date dateAfter);
+    /**
+     * Gets the active sessions.
+     * @return the active sessions
+     * @throws OntimizeJEEException the ontimize jee exception
+     */
+    Collection<SessionDto> getActiveSessions() throws OntimizeJEEException;
 
-	void setServiceStatistics(String serviceName, String methodName, Object params, String user, Date date, long timeExecution, String exception);
+    EntityResult getStatistics();
 
-	EntityResult deleteStatistics(int days);
+    EntityResult getServiceStatistics(String serviceName, String methodName, Date dateBefore, Date dateAfter);
 
-	void reloadDaos();
+    void setServiceStatistics(String serviceName, String methodName, Object params, String user, Date date,
+            long timeExecution, String exception);
+
+    EntityResult deleteStatistics(int days);
+
+    void reloadDaos();
 
 }

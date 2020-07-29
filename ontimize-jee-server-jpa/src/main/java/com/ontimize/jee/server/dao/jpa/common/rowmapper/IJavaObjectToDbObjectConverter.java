@@ -12,14 +12,12 @@ package com.ontimize.jee.server.dao.jpa.common.rowmapper;
  */
 public interface IJavaObjectToDbObjectConverter {
 
-	/**
-	 * Convert.
-	 *
-	 * @param input
-	 *            input
-	 * @param toDbType
-	 *            to db type
-	 * @return the object
-	 */
-	Object convert(Object input, String toDbType);
+    /**
+     * Convert.
+     * @param input input
+     * @param toDbType to db type
+     * @return the object
+     */
+    Object convert(Object input, String toDbType);
+
 }

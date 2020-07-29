@@ -20,91 +20,111 @@ import org.springframework.util.Assert;
 
 public class OAuth2ClientEntryPoint implements AuthenticationEntryPoint, InitializingBean {
 
-	private static final Logger		log							= LoggerFactory.getLogger(OAuth2ClientEntryPoint.class);
-	private static final int		STATE_RANDOM_STRING_LENGTH	= 10;
+    private static final Logger log = LoggerFactory.getLogger(OAuth2ClientEntryPoint.class);
 
-	private String					typeName					= "Bearer";
+    private static final int STATE_RANDOM_STRING_LENGTH = 10;
 
-	private String					realmName					= "oauth";
+    private String typeName = "Bearer";
 
-	private OAuth2ClientProperties	oAuth2ClientProperties		= null;
+    private String realmName = "oauth";
 
-	public void setRealmName(String realmName) {
-		this.realmName = realmName;
-	}
+    private OAuth2ClientProperties oAuth2ClientProperties = null;
 
-	public void setTypeName(String typeName) {
-		this.typeName = typeName;
-	}
+    public void setRealmName(String realmName) {
+        this.realmName = realmName;
+    }
 
-	@Override
-	public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
+    }
 
-		String state = RandomStringUtils.randomAlphanumeric(OAuth2ClientEntryPoint.STATE_RANDOM_STRING_LENGTH);
-		HttpSession session = request.getSession(false);
-		if (session != null) {
-			session.setAttribute(this.oAuth2ClientProperties.getStateParamName(), state);
-		}
+    @Override
+    public void commence(HttpServletRequest request, HttpServletResponse response,
+            AuthenticationException authException) throws IOException, ServletException {
 
-		StringBuilder authorizationUri = new StringBuilder().append(this.oAuth2ClientProperties.getUserAuthorizationUri()).append("?")
-		        .append(this.oAuth2ClientProperties.getClientIdParamName()).append("=").append(this.oAuth2ClientProperties.getClientId()).append("&")
-		        .append(this.oAuth2ClientProperties.getRedirectUriParamName()).append("=").append(this.redirectUriUsing(request).toString()).append("&")
-		        .append(this.oAuth2ClientProperties.getResponseTypeParamName()).append("=").append(this.oAuth2ClientProperties.getResponseType()).append("&")
-		        .append(this.oAuth2ClientProperties.getStateParamName()).append("=").append(state);
+        String state = RandomStringUtils.randomAlphanumeric(OAuth2ClientEntryPoint.STATE_RANDOM_STRING_LENGTH);
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.setAttribute(this.oAuth2ClientProperties.getStateParamName(), state);
+        }
 
-		authorizationUri.append(this.constructAdditionalAuthParameters(this.oAuth2ClientProperties.getAdditionalAuthParams()));
+        StringBuilder authorizationUri = new StringBuilder()
+            .append(this.oAuth2ClientProperties.getUserAuthorizationUri())
+            .append("?")
+            .append(this.oAuth2ClientProperties.getClientIdParamName())
+            .append("=")
+            .append(this.oAuth2ClientProperties.getClientId())
+            .append("&")
+            .append(this.oAuth2ClientProperties.getRedirectUriParamName())
+            .append("=")
+            .append(this.redirectUriUsing(request).toString())
+            .append("&")
+            .append(this.oAuth2ClientProperties.getResponseTypeParamName())
+            .append("=")
+            .append(this.oAuth2ClientProperties.getResponseType())
+            .append("&")
+            .append(this.oAuth2ClientProperties.getStateParamName())
+            .append("=")
+            .append(state);
 
-		String url = authorizationUri.toString();
+        authorizationUri
+            .append(this.constructAdditionalAuthParameters(this.oAuth2ClientProperties.getAdditionalAuthParams()));
 
-		OAuth2ClientEntryPoint.log.debug("authorizationUrl : {}", url);
+        String url = authorizationUri.toString();
 
-		StringBuilder builder = new StringBuilder();
-		builder.append(this.typeName + " ");
-		builder.append("realm=\"" + this.realmName + "\"");
-		response.addHeader("WWW-Authenticate", builder.toString());
+        OAuth2ClientEntryPoint.log.debug("authorizationUrl : {}", url);
 
-		response.sendRedirect(url);
-	}
+        StringBuilder builder = new StringBuilder();
+        builder.append(this.typeName + " ");
+        builder.append("realm=\"" + this.realmName + "\"");
+        response.addHeader("WWW-Authenticate", builder.toString());
 
-	protected StringBuilder constructAdditionalAuthParameters(Map<String, String> additionalParameters) {
-		StringBuilder result = new StringBuilder();
+        response.sendRedirect(url);
+    }
 
-		if ((additionalParameters != null) && !additionalParameters.isEmpty()) {
-			for (Map.Entry<String, String> entry : additionalParameters.entrySet()) {
-				result.append("&").append(entry.getKey()).append("=").append(entry.getValue());
-			}
-		}
+    protected StringBuilder constructAdditionalAuthParameters(Map<String, String> additionalParameters) {
+        StringBuilder result = new StringBuilder();
 
-		return result;
-	}
+        if ((additionalParameters != null) && !additionalParameters.isEmpty()) {
+            for (Map.Entry<String, String> entry : additionalParameters.entrySet()) {
+                result.append("&").append(entry.getKey()).append("=").append(entry.getValue());
+            }
+        }
 
-	private URI redirectUriUsing(HttpServletRequest request) {
-		URI redirect;
+        return result;
+    }
 
-		URI redirectUri = this.oAuth2ClientProperties.getRedirectUri();
-		if (!redirectUri.isAbsolute()) {
-			redirect = UriBuilder.fromPath(request.getContextPath()).path(redirectUri.toString()).scheme(request.getScheme()).host(request.getServerName())
-			        .port(request.getServerPort()).build();
-		} else {
-			redirect = redirectUri;
-		}
+    private URI redirectUriUsing(HttpServletRequest request) {
+        URI redirect;
 
-		return redirect;
-	}
+        URI redirectUri = this.oAuth2ClientProperties.getRedirectUri();
+        if (!redirectUri.isAbsolute()) {
+            redirect = UriBuilder.fromPath(request.getContextPath())
+                .path(redirectUri.toString())
+                .scheme(request.getScheme())
+                .host(request.getServerName())
+                .port(request.getServerPort())
+                .build();
+        } else {
+            redirect = redirectUri;
+        }
 
-	/**
-	 * @throws Exception
-	 */
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		Assert.notNull(this.oAuth2ClientProperties, "oAuth2ClientProperties must be set");
-	}
+        return redirect;
+    }
 
-	/**
-	 *
-	 * @param oAuth2ClientProperties
-	 */
-	public void setoAuth2ClientProperties(OAuth2ClientProperties oAuth2ClientProperties) {
-		this.oAuth2ClientProperties = oAuth2ClientProperties;
-	}
+    /**
+     * @throws Exception
+     */
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        Assert.notNull(this.oAuth2ClientProperties, "oAuth2ClientProperties must be set");
+    }
+
+    /**
+     * @param oAuth2ClientProperties
+     */
+    public void setoAuth2ClientProperties(OAuth2ClientProperties oAuth2ClientProperties) {
+        this.oAuth2ClientProperties = oAuth2ClientProperties;
+    }
+
 }

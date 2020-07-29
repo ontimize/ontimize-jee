@@ -25,52 +25,53 @@ import com.ontimize.jee.common.tools.ConcatTools;
  */
 public class ApplicationHttp403ForbiddenEntryPoint extends Http403ForbiddenEntryPoint {
 
-	private static final org.slf4j.Logger	logger	= LoggerFactory.getLogger(ApplicationHttp403ForbiddenEntryPoint.class);
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ApplicationHttp403ForbiddenEntryPoint.class);
 
-	private String							validApplicationRoles;
+    private String validApplicationRoles;
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void commence(final HttpServletRequest request, final HttpServletResponse response, final AuthenticationException arg2) throws IOException, ServletException {
-		ApplicationHttp403ForbiddenEntryPoint.logger.error(null, arg2);
-		if (ApplicationHttp403ForbiddenEntryPoint.logger.isDebugEnabled()) {
-			ApplicationHttp403ForbiddenEntryPoint.logger.debug("Pre-authenticated entry point called. Rejecting access");
-		}
-		final HttpServletResponse httpResponse = response;
-		httpResponse.sendError(403, "Access Denied");
-		ApplicationHttp403ForbiddenEntryPoint.logger.error("Filtro de preautenticacion de spring da error 403: ", arg2);
-		if (this.validApplicationRoles == null) {
-			ApplicationHttp403ForbiddenEntryPoint.logger.debug("Not valid application roles defined to check here");
-		} else {
-			final String[] split = this.validApplicationRoles.split(",");
-			for (final String s : split) {
-				if (s != null) {
-					if (request.isUserInRole(s)) {
-						ApplicationHttp403ForbiddenEntryPoint.logger.info(ConcatTools.concat("usuario '", request.getUserPrincipal().getName(), "' tiene el rol '", s, "'"));
-					}
-				}
-			}
-		}
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void commence(final HttpServletRequest request, final HttpServletResponse response,
+            final AuthenticationException arg2) throws IOException, ServletException {
+        ApplicationHttp403ForbiddenEntryPoint.logger.error(null, arg2);
+        if (ApplicationHttp403ForbiddenEntryPoint.logger.isDebugEnabled()) {
+            ApplicationHttp403ForbiddenEntryPoint.logger
+                .debug("Pre-authenticated entry point called. Rejecting access");
+        }
+        final HttpServletResponse httpResponse = response;
+        httpResponse.sendError(403, "Access Denied");
+        ApplicationHttp403ForbiddenEntryPoint.logger.error("Filtro de preautenticacion de spring da error 403: ", arg2);
+        if (this.validApplicationRoles == null) {
+            ApplicationHttp403ForbiddenEntryPoint.logger.debug("Not valid application roles defined to check here");
+        } else {
+            final String[] split = this.validApplicationRoles.split(",");
+            for (final String s : split) {
+                if (s != null) {
+                    if (request.isUserInRole(s)) {
+                        ApplicationHttp403ForbiddenEntryPoint.logger.info(ConcatTools.concat("usuario '",
+                                request.getUserPrincipal().getName(), "' tiene el rol '", s, "'"));
+                    }
+                }
+            }
+        }
+    }
 
-	/**
-	 * Obtiene valid application roles.
-	 *
-	 * @return valid application roles
-	 */
-	public String getValidApplicationRoles() {
-		return this.validApplicationRoles;
-	}
+    /**
+     * Obtiene valid application roles.
+     * @return valid application roles
+     */
+    public String getValidApplicationRoles() {
+        return this.validApplicationRoles;
+    }
 
-	/**
-	 * Establece valid application roles.
-	 *
-	 * @param validApplicationRoles
-	 *            nuevo valid application roles
-	 */
-	public void setValidApplicationRoles(final String validApplicationRoles) {
-		this.validApplicationRoles = validApplicationRoles;
-	}
+    /**
+     * Establece valid application roles.
+     * @param validApplicationRoles nuevo valid application roles
+     */
+    public void setValidApplicationRoles(final String validApplicationRoles) {
+        this.validApplicationRoles = validApplicationRoles;
+    }
+
 }

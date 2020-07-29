@@ -14,48 +14,46 @@ import com.ontimize.jee.server.configuration.OntimizeConfiguration;
 @Service("FormProviderService")
 public class FormProviderServiceImpl implements IFormProviderService, ApplicationContextAware {
 
-	/** The engine. */
-	private IFormProviderService engine;
+    /** The engine. */
+    private IFormProviderService engine;
 
-	/**
-	 * The Constructor.
-	 */
-	public FormProviderServiceImpl() {
-		super();
-	}
+    /**
+     * The Constructor.
+     */
+    public FormProviderServiceImpl() {
+        super();
+    }
 
-	@Secured({ PermissionsProviderSecured.SECURED })
-	@Transactional(rollbackFor = Exception.class)
-	@Override
-	public String getXMLForm(String form) throws Exception {
-		return this.getEngine().getXMLForm(form);
-	}
+    @Secured({ PermissionsProviderSecured.SECURED })
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public String getXMLForm(String form) throws Exception {
+        return this.getEngine().getXMLForm(form);
+    }
 
-	/**
-	 * Gets the {@link IFormProviderService} engine
-	 *
-	 * @return the {@link IFormProviderService} engine
-	 */
-	public IFormProviderService getEngine() {
-		return this.engine;
-	}
+    /**
+     * Gets the {@link IFormProviderService} engine
+     * @return the {@link IFormProviderService} engine
+     */
+    public IFormProviderService getEngine() {
+        return this.engine;
+    }
 
-	/**
-	 * Sets the engine
-	 *
-	 * @param engine
-	 *            {@link IFormProviderService} the engine
-	 */
-	public void setEngine(IFormProviderService engine) {
-		this.engine = engine;
-	}
+    /**
+     * Sets the engine
+     * @param engine {@link IFormProviderService} the engine
+     */
+    public void setEngine(IFormProviderService engine) {
+        this.engine = engine;
+    }
 
-	/**
-	 * @see org.springframework.context.ApplicationContextAware#setApplicationContext(org.springframework.context.ApplicationContext)
-	 */
-	@Override
-	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-		this.setEngine(applicationContext.getBean(OntimizeConfiguration.class).getFormProviderConfiguration().getEngine());
-	}
+    /**
+     * @see org.springframework.context.ApplicationContextAware#setApplicationContext(org.springframework.context.ApplicationContext)
+     */
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.setEngine(
+                applicationContext.getBean(OntimizeConfiguration.class).getFormProviderConfiguration().getEngine());
+    }
 
 }

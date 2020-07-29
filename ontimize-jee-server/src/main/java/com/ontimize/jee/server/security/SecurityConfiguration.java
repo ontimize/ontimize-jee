@@ -7,77 +7,76 @@ import com.ontimize.jee.server.security.authorization.ISecurityAuthorizator;
  */
 public class SecurityConfiguration {
 
-	/** The authorizators. */
-	private ISecurityAuthorizator				authorizator;
-	private ISecurityUserInformationService		userInformationService;
-	private ISecurityUserRoleInformationService	userRoleInformationService;
-	private ISecurityRoleInformationService		roleInformationService;
+    /** The authorizators. */
+    private ISecurityAuthorizator authorizator;
 
-	/**
-	 * Instantiates a new security configuration.
-	 */
-	public SecurityConfiguration() {
-		super();
-	}
+    private ISecurityUserInformationService userInformationService;
 
-	/**
-	 * @return the authorizator
-	 */
-	public ISecurityAuthorizator getAuthorizator() {
-		return this.authorizator;
-	}
+    private ISecurityUserRoleInformationService userRoleInformationService;
 
-	/**
-	 * @param authorizator
-	 *            the authorizator to set
-	 */
-	public void setAuthorizator(ISecurityAuthorizator authorizator) {
-		this.authorizator = authorizator;
-	}
+    private ISecurityRoleInformationService roleInformationService;
 
-	/**
-	 * @return the userInformationService
-	 */
-	public ISecurityUserInformationService getUserInformationService() {
-		return this.userInformationService;
-	}
+    /**
+     * Instantiates a new security configuration.
+     */
+    public SecurityConfiguration() {
+        super();
+    }
 
-	/**
-	 * @param userInformationService
-	 *            the userInformationService to set
-	 */
-	public void setUserInformationService(ISecurityUserInformationService userInformationService) {
-		this.userInformationService = userInformationService;
-	}
+    /**
+     * @return the authorizator
+     */
+    public ISecurityAuthorizator getAuthorizator() {
+        return this.authorizator;
+    }
 
-	/**
-	 * @return the userRoleInformationService
-	 */
-	public ISecurityUserRoleInformationService getUserRoleInformationService() {
-		return this.userRoleInformationService;
-	}
+    /**
+     * @param authorizator the authorizator to set
+     */
+    public void setAuthorizator(ISecurityAuthorizator authorizator) {
+        this.authorizator = authorizator;
+    }
 
-	/**
-	 * @param userRoleInformationService
-	 *            the userRoleInformationService to set
-	 */
-	public void setUserRoleInformationService(ISecurityUserRoleInformationService userRoleInformationService) {
-		this.userRoleInformationService = userRoleInformationService;
-	}
+    /**
+     * @return the userInformationService
+     */
+    public ISecurityUserInformationService getUserInformationService() {
+        return this.userInformationService;
+    }
 
-	/**
-	 * @return the roleInformationService
-	 */
-	public ISecurityRoleInformationService getRoleInformationService() {
-		return this.roleInformationService;
-	}
+    /**
+     * @param userInformationService the userInformationService to set
+     */
+    public void setUserInformationService(ISecurityUserInformationService userInformationService) {
+        this.userInformationService = userInformationService;
+    }
 
-	/**
-	 * @param roleInformationService
-	 *            the roleInformationService to set
-	 */
-	public void setRoleInformationService(ISecurityRoleInformationService roleInformationService) {
-		this.roleInformationService = roleInformationService;
-	}
+    /**
+     * @return the userRoleInformationService
+     */
+    public ISecurityUserRoleInformationService getUserRoleInformationService() {
+        return this.userRoleInformationService;
+    }
+
+    /**
+     * @param userRoleInformationService the userRoleInformationService to set
+     */
+    public void setUserRoleInformationService(ISecurityUserRoleInformationService userRoleInformationService) {
+        this.userRoleInformationService = userRoleInformationService;
+    }
+
+    /**
+     * @return the roleInformationService
+     */
+    public ISecurityRoleInformationService getRoleInformationService() {
+        return this.roleInformationService;
+    }
+
+    /**
+     * @param roleInformationService the roleInformationService to set
+     */
+    public void setRoleInformationService(ISecurityRoleInformationService roleInformationService) {
+        this.roleInformationService = roleInformationService;
+    }
 
 }

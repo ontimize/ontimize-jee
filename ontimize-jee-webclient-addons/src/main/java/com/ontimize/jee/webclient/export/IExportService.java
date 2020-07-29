@@ -7,10 +7,10 @@ import com.ontimize.db.EntityResult;
 
 public interface IExportService {
 
-	public File xlsxExport(EntityResult data, List<String> columns) throws Exception;
+    public File xlsxExport(EntityResult data, List<String> columns) throws Exception;
 
-	public File htmlExport(EntityResult data, List<String> columns) throws Exception;
+    public File htmlExport(EntityResult data, List<String> columns) throws Exception;
 
-	public File pdfExport(EntityResult data, List<String> columns) throws Exception;
+    public File pdfExport(EntityResult data, List<String> columns) throws Exception;
 
 }

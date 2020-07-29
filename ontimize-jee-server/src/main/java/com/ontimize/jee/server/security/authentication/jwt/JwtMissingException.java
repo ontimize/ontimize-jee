@@ -4,7 +4,8 @@ import org.springframework.security.authentication.AuthenticationServiceExceptio
 
 public class JwtMissingException extends AuthenticationServiceException {
 
-	public JwtMissingException(String msg) {
-		super(msg);
-	}
+    public JwtMissingException(String msg) {
+        super(msg);
+    }
+
 }

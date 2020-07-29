@@ -40,194 +40,185 @@ import com.ontimize.jee.common.tools.SafeCasting;
  */
 public class OntimizeHessianHttpClientConnection extends AbstractHessianConnection {
 
-	/** The logger. */
-	private static final Logger			logger	= LoggerFactory.getLogger(OntimizeHessianHttpClientConnection.class);
+    /** The logger. */
+    private static final Logger logger = LoggerFactory.getLogger(OntimizeHessianHttpClientConnection.class);
 
-	static ThreadPoolExecutor			POOL	= new ThreadPoolExecutor(50, 50, 5, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(100));
+    static ThreadPoolExecutor POOL = new ThreadPoolExecutor(50, 50, 5, TimeUnit.SECONDS,
+            new ArrayBlockingQueue<Runnable>(100));
 
-	/** The _conn. */
-	private final CloseableHttpClient	client;
+    /** The _conn. */
+    private final CloseableHttpClient client;
 
-	/** The _status code. */
-	private HttpStatus					statusCode;
+    /** The _status code. */
+    private HttpStatus statusCode;
 
-	/** The _status message. */
-	private String						statusMessage;
-	private final HttpPost				request;
-	private Future<HttpResponse>		futureResponse;
+    /** The _status message. */
+    private String statusMessage;
 
-	/**
-	 * Instantiates a new custom hessian url connection.
-	 *
-	 * @param url
-	 *            the url
-	 * @param context
-	 * @param conn
-	 *            the conn
-	 */
-	OntimizeHessianHttpClientConnection(final HttpPost request, final CloseableHttpClient client) {
-		super();
-		this.request = request;
-		this.client = client;
-	}
+    private final HttpPost request;
 
-	/**
-	 * Adds a HTTP header.
-	 *
-	 * @param key
-	 *            the key
-	 * @param value
-	 *            the value
-	 */
-	@Override
-	public void addHeader(final String key, final String value) {
-		this.request.addHeader(key, value);
-	}
+    private Future<HttpResponse> futureResponse;
 
-	/**
-	 * Returns the output stream for the request.
-	 *
-	 * @return the output stream
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
-	 */
-	@Override
-	public OutputStream getOutputStream() throws IOException {
-		PipedInputStream snk = new PipedInputStream();
-		PipedOutputStream os = new PipedOutputStream(snk);
-		this.request.setEntity(new InputStreamEntity(snk, ContentType.create("x-application/hessian")));
-		this.futureResponse = OntimizeHessianHttpClientConnection.POOL.submit(new Callable<HttpResponse>() {
+    /**
+     * Instantiates a new custom hessian url connection.
+     * @param url the url
+     * @param context
+     * @param conn the conn
+     */
+    OntimizeHessianHttpClientConnection(final HttpPost request, final CloseableHttpClient client) {
+        super();
+        this.request = request;
+        this.client = client;
+    }
 
-			@Override
-			public HttpResponse call() throws Exception {
-				return OntimizeHessianHttpClientConnection.this.client.execute(OntimizeHessianHttpClientConnection.this.request);
-			}
-		});
-		return os;
-	}
+    /**
+     * Adds a HTTP header.
+     * @param key the key
+     * @param value the value
+     */
+    @Override
+    public void addHeader(final String key, final String value) {
+        this.request.addHeader(key, value);
+    }
 
-	/**
-	 * Sends the request.
-	 *
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
-	 */
-	@Override
-	public void sendRequest() throws IOException {
+    /**
+     * Returns the output stream for the request.
+     * @return the output stream
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    @Override
+    public OutputStream getOutputStream() throws IOException {
+        PipedInputStream snk = new PipedInputStream();
+        PipedOutputStream os = new PipedOutputStream(snk);
+        this.request.setEntity(new InputStreamEntity(snk, ContentType.create("x-application/hessian")));
+        this.futureResponse = OntimizeHessianHttpClientConnection.POOL.submit(new Callable<HttpResponse>() {
 
-		this.statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
+            @Override
+            public HttpResponse call() throws Exception {
+                return OntimizeHessianHttpClientConnection.this.client
+                    .execute(OntimizeHessianHttpClientConnection.this.request);
+            }
+        });
+        return os;
+    }
 
-		HttpResponse response;
-		try {
-			response = this.futureResponse.get();
-		} catch (Exception error) {
-			throw new IOException(error);
-		}
-		try {
-			this.statusCode = HttpStatus.valueOf(response.getStatusLine().getStatusCode());
-		} catch (Exception e) {
-			OntimizeHessianHttpClientConnection.logger.debug(e.getMessage(), e);
-		}
+    /**
+     * Sends the request.
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    @Override
+    public void sendRequest() throws IOException {
 
-		// try {
-		// OntimizeHessianHttpClientSessionProcessorFactory.getHttpProcessor().process(response, this.context);
-		// } catch (HttpException error) {
-		// OntimizeHessianHttpClientConnection.logger.error(null, error);
-		// }
+        this.statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
 
-		// this.parseResponseHeaders(httpConn);
+        HttpResponse response;
+        try {
+            response = this.futureResponse.get();
+        } catch (Exception error) {
+            throw new IOException(error);
+        }
+        try {
+            this.statusCode = HttpStatus.valueOf(response.getStatusLine().getStatusCode());
+        } catch (Exception e) {
+            OntimizeHessianHttpClientConnection.logger.debug(e.getMessage(), e);
+        }
 
-		InputStream is = null;
+        // try {
+        // OntimizeHessianHttpClientSessionProcessorFactory.getHttpProcessor().process(response,
+        // this.context);
+        // } catch (HttpException error) {
+        // OntimizeHessianHttpClientConnection.logger.error(null, error);
+        // }
 
-		switch (this.statusCode) {
-			case OK:
-				break;
+        // this.parseResponseHeaders(httpConn);
 
-			case FORBIDDEN:
-			case UNAUTHORIZED:
-				throw new InvalidCredentialsException(I18NNaming.E_AUTH_PASSWORD_NOT_MATCH);
-			case FOUND:// oauth2 authentication
-				throw new InvalidCredentialsException(I18NNaming.E_AUTH_PASSWORD_NOT_MATCH);
-			default:
-				StringBuilder sb = new StringBuilder();
-				int ch;
+        InputStream is = null;
 
-				try {
-					is = response.getEntity().getContent();
+        switch (this.statusCode) {
+            case OK:
+                break;
 
-					if (is != null) {
-						while ((ch = is.read()) >= 0) {
-							sb.append(SafeCasting.intToChar(ch));
-						}
+            case FORBIDDEN:
+            case UNAUTHORIZED:
+                throw new InvalidCredentialsException(I18NNaming.E_AUTH_PASSWORD_NOT_MATCH);
+            case FOUND:// oauth2 authentication
+                throw new InvalidCredentialsException(I18NNaming.E_AUTH_PASSWORD_NOT_MATCH);
+            default:
+                StringBuilder sb = new StringBuilder();
+                int ch;
 
-						is.close();
-					}
+                try {
+                    is = response.getEntity().getContent();
 
-					this.statusMessage = sb.toString();
-				} catch (FileNotFoundException e) {
-					throw new HessianConnectionException("HessianProxy cannot connect to '" + this.request.getURI(), e);
-				} catch (IOException e) {
-					if (is == null) {
-						throw new HessianConnectionException(this.statusCode + ": " + e, e);
-					}
-					throw new HessianConnectionException(this.statusCode + ": " + sb, e);
-				}
+                    if (is != null) {
+                        while ((ch = is.read()) >= 0) {
+                            sb.append(SafeCasting.intToChar(ch));
+                        }
 
-				if (is != null) {
-					is.close();
-				}
+                        is.close();
+                    }
 
-				throw new HessianConnectionException(this.statusCode + ": " + sb.toString());
-		}
+                    this.statusMessage = sb.toString();
+                } catch (FileNotFoundException e) {
+                    throw new HessianConnectionException("HessianProxy cannot connect to '" + this.request.getURI(), e);
+                } catch (IOException e) {
+                    if (is == null) {
+                        throw new HessianConnectionException(this.statusCode + ": " + e, e);
+                    }
+                    throw new HessianConnectionException(this.statusCode + ": " + sb, e);
+                }
 
-	}
+                if (is != null) {
+                    is.close();
+                }
 
-	/**
-	 * Returns the status code.
-	 *
-	 * @return the status code
-	 */
-	@Override
-	public int getStatusCode() {
-		return this.statusCode.value();
-	}
+                throw new HessianConnectionException(this.statusCode + ": " + sb.toString());
+        }
 
-	/**
-	 * Returns the status string.
-	 *
-	 * @return the status message
-	 */
-	@Override
-	public String getStatusMessage() {
-		return this.statusMessage;
-	}
+    }
 
-	/**
-	 * Returns the InputStream to the result.
-	 *
-	 * @return the input stream
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
-	 */
-	@Override
-	public InputStream getInputStream() throws IOException {
-		try {
-			return this.futureResponse.get().getEntity().getContent();
-		} catch (Exception error) {
-			throw new IOException(error);
-		}
-	}
+    /**
+     * Returns the status code.
+     * @return the status code
+     */
+    @Override
+    public int getStatusCode() {
+        return this.statusCode.value();
+    }
 
-	/**
-	 * Close/free the connection.
-	 */
-	@Override
-	public void close() {
-		try {
-			this.client.close();
-		} catch (IOException error) {
-			OntimizeHessianHttpClientConnection.logger.error(null, error);
-		}
-	}
+    /**
+     * Returns the status string.
+     * @return the status message
+     */
+    @Override
+    public String getStatusMessage() {
+        return this.statusMessage;
+    }
+
+    /**
+     * Returns the InputStream to the result.
+     * @return the input stream
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    @Override
+    public InputStream getInputStream() throws IOException {
+        try {
+            return this.futureResponse.get().getEntity().getContent();
+        } catch (Exception error) {
+            throw new IOException(error);
+        }
+    }
+
+    /**
+     * Close/free the connection.
+     */
+    @Override
+    public void close() {
+        try {
+            this.client.close();
+        } catch (IOException error) {
+            OntimizeHessianHttpClientConnection.logger.error(null, error);
+        }
+    }
 
 }

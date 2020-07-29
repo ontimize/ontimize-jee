@@ -14,27 +14,30 @@ import com.ontimize.jee.common.tools.FileTools;
  */
 public class ByteSizeTableCellRenderer extends CellRenderer {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * Instantiates a new byte size table cell renderer.
-	 */
-	public ByteSizeTableCellRenderer() {
-		super();
-	}
+    /**
+     * Instantiates a new byte size table cell renderer.
+     */
+    public ByteSizeTableCellRenderer() {
+        super();
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.ontimize.gui.table.CellRenderer#getTableCellRendererComponent(javax.swing.JTable, java.lang.Object, boolean, boolean, int, int)
-	 */
-	@Override
-	public Component getTableCellRendererComponent(JTable table, Object value, boolean selected, boolean hasFocus, int row, int column) {
-		Component comp = super.getTableCellRendererComponent(table, null, selected, hasFocus, row, column);
-		if ((value != null) && (value instanceof Number)) {
-			((JLabel) comp).setText(FileTools.readableFileSize(((Number) value).longValue()));
-			((JLabel) comp).setHorizontalAlignment(SwingConstants.RIGHT);
-		}
-		return comp;
-	}
+    /*
+     * (non-Javadoc)
+     *
+     * @see com.ontimize.gui.table.CellRenderer#getTableCellRendererComponent(javax.swing.JTable,
+     * java.lang.Object, boolean, boolean, int, int)
+     */
+    @Override
+    public Component getTableCellRendererComponent(JTable table, Object value, boolean selected, boolean hasFocus,
+            int row, int column) {
+        Component comp = super.getTableCellRendererComponent(table, null, selected, hasFocus, row, column);
+        if ((value != null) && (value instanceof Number)) {
+            ((JLabel) comp).setText(FileTools.readableFileSize(((Number) value).longValue()));
+            ((JLabel) comp).setHorizontalAlignment(SwingConstants.RIGHT);
+        }
+        return comp;
+    }
 
 }

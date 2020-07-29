@@ -12,34 +12,37 @@ import com.ontimize.db.SQLStatementBuilder.SQLOrder;
 
 public class SQLOrderDeserializer extends StdDeserializer<SQLOrder> {
 
-	public static final String	COLUMN_KEY		= "columnName";
-	public static final String	ASCENDENT_KEY	= "ascendent";
+    public static final String COLUMN_KEY = "columnName";
 
-	public SQLOrderDeserializer() {
-		super(SQLOrder.class);
-	}
+    public static final String ASCENDENT_KEY = "ascendent";
 
-	@Override
-	public SQLOrder deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JsonProcessingException {
-		if (jp.getCurrentToken() != JsonToken.START_OBJECT) {
-			throw JsonMappingException.from(jp, "Current token not START_OBJECT (needed to deserialize), but encountered " + jp.getCurrentToken());
-		}
+    public SQLOrderDeserializer() {
+        super(SQLOrder.class);
+    }
 
-		String column = null;
-		boolean ascendent = false;
+    @Override
+    public SQLOrder deserialize(JsonParser jp, DeserializationContext ctxt)
+            throws IOException, JsonProcessingException {
+        if (jp.getCurrentToken() != JsonToken.START_OBJECT) {
+            throw JsonMappingException.from(jp,
+                    "Current token not START_OBJECT (needed to deserialize), but encountered " + jp.getCurrentToken());
+        }
 
-		while (jp.nextToken() != JsonToken.END_OBJECT) {
-			String key = jp.getCurrentName();
-			jp.nextToken();
-			if (SQLOrderDeserializer.COLUMN_KEY.equals(key)) {
-				column = jp.getValueAsString();
-			} else if (SQLOrderDeserializer.ASCENDENT_KEY.equals(key)) {
-				ascendent = jp.getBooleanValue();
-			}
-		}
+        String column = null;
+        boolean ascendent = false;
 
-		SQLOrder sqlOrder = new SQLOrder(column, ascendent);
-		return sqlOrder;
-	}
+        while (jp.nextToken() != JsonToken.END_OBJECT) {
+            String key = jp.getCurrentName();
+            jp.nextToken();
+            if (SQLOrderDeserializer.COLUMN_KEY.equals(key)) {
+                column = jp.getValueAsString();
+            } else if (SQLOrderDeserializer.ASCENDENT_KEY.equals(key)) {
+                ascendent = jp.getBooleanValue();
+            }
+        }
+
+        SQLOrder sqlOrder = new SQLOrder(column, ascendent);
+        return sqlOrder;
+    }
 
 }

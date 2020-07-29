@@ -35,153 +35,147 @@ import com.ontimize.jee.common.session.StaticHeaderAttributesProvider;
  */
 public class OntimizeHessianProxyFactory extends HessianProxyFactory implements ApplicationContextAware {
 
-	private static final Logger			logger	= LoggerFactory.getLogger(OntimizeHessianProxyFactory.class);
+    private static final Logger logger = LoggerFactory.getLogger(OntimizeHessianProxyFactory.class);
 
-	/** The header attributes provider. */
-	private HeaderAttributesProvider	headerAttributesProvider;
-	private ApplicationContext			applicationContext;
-	private ILoginProvider				loginProvider;
+    /** The header attributes provider. */
+    private HeaderAttributesProvider headerAttributesProvider;
 
-	/**
-	 * Instantiates a new custom spnego hessian proxy factory.
-	 */
-	public OntimizeHessianProxyFactory() {
-		super();
-		this.headerAttributesProvider = new StaticHeaderAttributesProvider();
-		// this.setDebug(true);
-	}
+    private ApplicationContext applicationContext;
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected HessianConnectionFactory createHessianConnectionFactory() {
-		return new OntimizeHessianHttpClientConnectionFactory();
-	}
+    private ILoginProvider loginProvider;
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.caucho.hessian.client.HessianProxyFactory#getHessianOutput(java.io.OutputStream)
-	 */
-	@Override
-	public AbstractHessianOutput getHessianOutput(final OutputStream os) {
-		return super.getHessianOutput(os);
-	}
+    /**
+     * Instantiates a new custom spnego hessian proxy factory.
+     */
+    public OntimizeHessianProxyFactory() {
+        super();
+        this.headerAttributesProvider = new StaticHeaderAttributesProvider();
+        // this.setDebug(true);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void setUser(String user) {
-		if ("".equals(user)) {
-			return;
-		}
-		super.setUser(user);
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected HessianConnectionFactory createHessianConnectionFactory() {
+        return new OntimizeHessianHttpClientConnectionFactory();
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void setPassword(String password) {
-		if ("".equals(password)) {
-			return;
-		}
-		super.setPassword(password);
-	}
+    /*
+     * (non-Javadoc)
+     *
+     * @see com.caucho.hessian.client.HessianProxyFactory#getHessianOutput(java.io.OutputStream)
+     */
+    @Override
+    public AbstractHessianOutput getHessianOutput(final OutputStream os) {
+        return super.getHessianOutput(os);
+    }
 
-	/**
-	 * Sets the header attributes provider.
-	 *
-	 * @param headerAttributesProvider
-	 *            the new header attributes provider
-	 */
-	public void setHeaderAttributesProvider(HeaderAttributesProvider headerAttributesProvider) {
-		this.headerAttributesProvider = headerAttributesProvider;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setUser(String user) {
+        if ("".equals(user)) {
+            return;
+        }
+        super.setUser(user);
+    }
 
-	/**
-	 * Creates a new proxy with the specified URL. The returned object is a proxy with the interface specified by api.
-	 *
-	 * <pre>
-	 *  String url = "http://localhost:8080/ejb/hello"); HelloHome hello = (HelloHome) factory.create(HelloHome.class, url);
-	 * </pre>
-	 *
-	 * @param api
-	 *            the interface the proxy class needs to implement
-	 * @param url
-	 *            the URL where the client object is located.
-	 * @param loader
-	 *            the loader
-	 * @return a proxy to the object with the specified interface.
-	 */
-	@Override
-	public Object create(Class<?> api, URI url, ClassLoader loader) {
-		if (api == null) {
-			throw new NullPointerException("api must not be null for HessianProxyFactory.create()");
-		}
-		InvocationHandler handler = null;
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setPassword(String password) {
+        if ("".equals(password)) {
+            return;
+        }
+        super.setPassword(password);
+    }
 
-		handler = new OntimizeHessianProxy(url, this, api);
+    /**
+     * Sets the header attributes provider.
+     * @param headerAttributesProvider the new header attributes provider
+     */
+    public void setHeaderAttributesProvider(HeaderAttributesProvider headerAttributesProvider) {
+        this.headerAttributesProvider = headerAttributesProvider;
+    }
 
-		return Proxy.newProxyInstance(loader, new Class[] { api, HessianRemoteObject.class }, handler);
-	}
+    /**
+     * Creates a new proxy with the specified URL. The returned object is a proxy with the interface
+     * specified by api.
+     *
+     * <pre>
+     *  String url = "http://localhost:8080/ejb/hello"); HelloHome hello = (HelloHome) factory.create(HelloHome.class, url);
+     * </pre>
+     *
+     * @param api the interface the proxy class needs to implement
+     * @param url the URL where the client object is located.
+     * @param loader the loader
+     * @return a proxy to the object with the specified interface.
+     */
+    @Override
+    public Object create(Class<?> api, URI url, ClassLoader loader) {
+        if (api == null) {
+            throw new NullPointerException("api must not be null for HessianProxyFactory.create()");
+        }
+        InvocationHandler handler = null;
 
-	/**
-	 * Adds the header attribute.
-	 *
-	 * @param headerAttribute
-	 *            the header attribute
-	 */
-	public void addHeaderAttribute(HeaderAttribute headerAttribute) {
-		this.headerAttributesProvider.addHeaderAttribute(headerAttribute);
-	}
+        handler = new OntimizeHessianProxy(url, this, api);
 
-	/**
-	 * Removes the header attribute.
-	 *
-	 * @param headerAttribute
-	 *            the header attribute
-	 * @return true, if successful
-	 */
-	public boolean removeHeaderAttribute(HeaderAttribute headerAttribute) {
-		return this.headerAttributesProvider.removeHeaderAttribute(headerAttribute);
-	}
+        return Proxy.newProxyInstance(loader, new Class[] { api, HessianRemoteObject.class }, handler);
+    }
 
-	/**
-	 * Gets the header attributes provider.
-	 *
-	 * @return the header attributes provider
-	 */
-	public HeaderAttributesProvider getHeaderAttributesProvider() {
-		return this.headerAttributesProvider;
-	}
+    /**
+     * Adds the header attribute.
+     * @param headerAttribute the header attribute
+     */
+    public void addHeaderAttribute(HeaderAttribute headerAttribute) {
+        this.headerAttributesProvider.addHeaderAttribute(headerAttribute);
+    }
 
-	@Override
-	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-		this.applicationContext = applicationContext;
-	}
+    /**
+     * Removes the header attribute.
+     * @param headerAttribute the header attribute
+     * @return true, if successful
+     */
+    public boolean removeHeaderAttribute(HeaderAttribute headerAttribute) {
+        return this.headerAttributesProvider.removeHeaderAttribute(headerAttribute);
+    }
 
-	public ApplicationContext getApplicationContext() {
-		return this.applicationContext;
-	}
+    /**
+     * Gets the header attributes provider.
+     * @return the header attributes provider
+     */
+    public HeaderAttributesProvider getHeaderAttributesProvider() {
+        return this.headerAttributesProvider;
+    }
 
-	public void setLoginProvider(ILoginProvider loginProvider) {
-		this.loginProvider = loginProvider;
-	}
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+    }
 
-	public ILoginProvider getLoginProvider() {
-		if (this.loginProvider != null) {
-			return this.loginProvider;
-		}
-		if (this.getApplicationContext() != null) {
-			try {
-				return this.getApplicationContext().getBean(ILoginProvider.class);
-			} catch (NoSuchBeanDefinitionException nofound) {
-				OntimizeHessianProxyFactory.logger.warn("No IloginProvider bean for negociate", nofound);
-			}
-		}
-		return null;
-	}
+    public ApplicationContext getApplicationContext() {
+        return this.applicationContext;
+    }
+
+    public void setLoginProvider(ILoginProvider loginProvider) {
+        this.loginProvider = loginProvider;
+    }
+
+    public ILoginProvider getLoginProvider() {
+        if (this.loginProvider != null) {
+            return this.loginProvider;
+        }
+        if (this.getApplicationContext() != null) {
+            try {
+                return this.getApplicationContext().getBean(ILoginProvider.class);
+            } catch (NoSuchBeanDefinitionException nofound) {
+                OntimizeHessianProxyFactory.logger.warn("No IloginProvider bean for negociate", nofound);
+            }
+        }
+        return null;
+    }
 
 }

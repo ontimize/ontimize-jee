@@ -8,95 +8,103 @@ import org.springframework.aop.ClassFilter;
 
 public class PackageClassFilter implements ClassFilter {
 
-	private String			packagePrefix;
-	private Pattern			packagePrefixPtrn;
-	private List<String>	packagePrefixes;
-	private List<Pattern>	packagePrefixPtrns;
+    private String packagePrefix;
 
-	private String			classRegexp;
-	private Pattern			classRegexpPtrn;
-	private List<String>	classRegexps;
-	private List<Pattern>	classRegexpPtrns;
+    private Pattern packagePrefixPtrn;
 
-	@Override
-	public boolean matches(final Class<?> clazz) {
-		Package p = clazz.getPackage();
-		String pkName = "";
-		if (p != null) {
-			pkName = p.getName();
-		}
+    private List<String> packagePrefixes;
 
-		boolean matchPkg = false;
-		if ((this.packagePrefix != null) && (this.packagePrefixPtrn != null) && this.packagePrefixPtrn.matcher(pkName).matches()) {
-			matchPkg = true;
-		}
-		if (!matchPkg && (this.packagePrefixes != null) && (this.packagePrefixPtrns != null)) {
-			for (final Pattern ppp : this.packagePrefixPtrns) {
-				if ((ppp != null) && ppp.matcher(pkName).matches()) {
-					matchPkg = true;
-				}
-			}
-		}
+    private List<Pattern> packagePrefixPtrns;
 
-		if (matchPkg) {
-			return (this.classRegexp == null) || this.evalClassName(clazz.getCanonicalName().replace(pkName, ""));
-		} else if ((this.packagePrefix == null) && (this.packagePrefixes == null) && (this.classRegexp != null)) {
-			return this.evalClassName(clazz.getCanonicalName().replace(pkName, ""));
-		}
+    private String classRegexp;
 
-		return false;
-	}
+    private Pattern classRegexpPtrn;
 
-	private boolean evalClassName(final String clName) {
-		boolean matchPkg = false;
-		if ((this.classRegexp != null) && (this.classRegexpPtrn != null) && this.classRegexpPtrn.matcher(clName).matches()) {
-			matchPkg = true;
-		}
-		if (!matchPkg && (this.classRegexps != null) && (this.classRegexpPtrns != null)) {
-			for (final Pattern ppp : this.classRegexpPtrns) {
-				if ((ppp != null) && ppp.matcher(clName).matches()) {
-					matchPkg = true;
-				}
-			}
-		}
-		if (matchPkg || ((this.classRegexp == null) && (this.classRegexps == null))) {
-			matchPkg = true;
-		}
-		return false;
-	}
+    private List<String> classRegexps;
 
-	public void setPackageRegexp(final String packageRegexp) {
-		this.packagePrefix = packageRegexp;
-		this.packagePrefixPtrn = Pattern.compile(packageRegexp);
-	}
+    private List<Pattern> classRegexpPtrns;
 
-	public void setPackageRegexps(final List<String> packageRegexps) {
-		this.packagePrefixes = packageRegexps;
-		if (packageRegexps != null) {
-			this.packagePrefixPtrns = new ArrayList<>();
-			for (final String regexp : packageRegexps) {
-				this.packagePrefixPtrns.add(Pattern.compile(regexp));
-			}
-		} else {
-			this.packagePrefixPtrns = null;
-		}
-	}
+    @Override
+    public boolean matches(final Class<?> clazz) {
+        Package p = clazz.getPackage();
+        String pkName = "";
+        if (p != null) {
+            pkName = p.getName();
+        }
 
-	public void setClassRegexp(final String classRegexp) {
-		this.classRegexp = classRegexp;
-		this.classRegexpPtrn = Pattern.compile(classRegexp);
-	}
+        boolean matchPkg = false;
+        if ((this.packagePrefix != null) && (this.packagePrefixPtrn != null)
+                && this.packagePrefixPtrn.matcher(pkName).matches()) {
+            matchPkg = true;
+        }
+        if (!matchPkg && (this.packagePrefixes != null) && (this.packagePrefixPtrns != null)) {
+            for (final Pattern ppp : this.packagePrefixPtrns) {
+                if ((ppp != null) && ppp.matcher(pkName).matches()) {
+                    matchPkg = true;
+                }
+            }
+        }
 
-	public void setClassRegexps(final List<String> classRegexps) {
-		this.classRegexps = classRegexps;
-		if (classRegexps != null) {
-			this.classRegexpPtrns = new ArrayList<>();
-			for (final String regexp : classRegexps) {
-				this.classRegexpPtrns.add(Pattern.compile(regexp));
-			}
-		} else {
-			this.classRegexpPtrns = null;
-		}
-	}
+        if (matchPkg) {
+            return (this.classRegexp == null) || this.evalClassName(clazz.getCanonicalName().replace(pkName, ""));
+        } else if ((this.packagePrefix == null) && (this.packagePrefixes == null) && (this.classRegexp != null)) {
+            return this.evalClassName(clazz.getCanonicalName().replace(pkName, ""));
+        }
+
+        return false;
+    }
+
+    private boolean evalClassName(final String clName) {
+        boolean matchPkg = false;
+        if ((this.classRegexp != null) && (this.classRegexpPtrn != null)
+                && this.classRegexpPtrn.matcher(clName).matches()) {
+            matchPkg = true;
+        }
+        if (!matchPkg && (this.classRegexps != null) && (this.classRegexpPtrns != null)) {
+            for (final Pattern ppp : this.classRegexpPtrns) {
+                if ((ppp != null) && ppp.matcher(clName).matches()) {
+                    matchPkg = true;
+                }
+            }
+        }
+        if (matchPkg || ((this.classRegexp == null) && (this.classRegexps == null))) {
+            matchPkg = true;
+        }
+        return false;
+    }
+
+    public void setPackageRegexp(final String packageRegexp) {
+        this.packagePrefix = packageRegexp;
+        this.packagePrefixPtrn = Pattern.compile(packageRegexp);
+    }
+
+    public void setPackageRegexps(final List<String> packageRegexps) {
+        this.packagePrefixes = packageRegexps;
+        if (packageRegexps != null) {
+            this.packagePrefixPtrns = new ArrayList<>();
+            for (final String regexp : packageRegexps) {
+                this.packagePrefixPtrns.add(Pattern.compile(regexp));
+            }
+        } else {
+            this.packagePrefixPtrns = null;
+        }
+    }
+
+    public void setClassRegexp(final String classRegexp) {
+        this.classRegexp = classRegexp;
+        this.classRegexpPtrn = Pattern.compile(classRegexp);
+    }
+
+    public void setClassRegexps(final List<String> classRegexps) {
+        this.classRegexps = classRegexps;
+        if (classRegexps != null) {
+            this.classRegexpPtrns = new ArrayList<>();
+            for (final String regexp : classRegexps) {
+                this.classRegexpPtrns.add(Pattern.compile(regexp));
+            }
+        } else {
+            this.classRegexpPtrns = null;
+        }
+    }
 
 }

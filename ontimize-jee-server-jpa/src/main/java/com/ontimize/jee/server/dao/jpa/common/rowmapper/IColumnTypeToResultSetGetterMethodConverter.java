@@ -12,12 +12,11 @@ package com.ontimize.jee.server.dao.jpa.common.rowmapper;
  */
 public interface IColumnTypeToResultSetGetterMethodConverter {
 
-	/**
-	 * Obtiene result set getter method from db column type.
-	 *
-	 * @param dbColumnType
-	 *            db column type
-	 * @return result set getter method from db column type
-	 */
-	String getResultSetGetterMethodFromDBColumnType(String dbColumnType);
+    /**
+     * Obtiene result set getter method from db column type.
+     * @param dbColumnType db column type
+     * @return result set getter method from db column type
+     */
+    String getResultSetGetterMethodFromDBColumnType(String dbColumnType);
+
 }

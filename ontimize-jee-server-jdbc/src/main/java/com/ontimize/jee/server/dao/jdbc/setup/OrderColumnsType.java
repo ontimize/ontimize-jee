@@ -1,8 +1,10 @@
 //
-// Este archivo ha sido generado por la arquitectura JavaTM para la implantación de la referencia de enlace (JAXB) XML v2.2.8-b130911.1802 
-// Visite <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// Todas las modificaciones realizadas en este archivo se perderán si se vuelve a compilar el esquema de origen. 
-// Generado el: 2018.09.11 a las 05:39:50 PM CEST 
+// Este archivo ha sido generado por la arquitectura JavaTM para la implantación de la referencia de
+// enlace (JAXB) XML v2.2.8-b130911.1802
+// Visite <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a>
+// Todas las modificaciones realizadas en este archivo se perderán si se vuelve a compilar el
+// esquema de origen.
+// Generado el: 2018.09.11 a las 05:39:50 PM CEST
 //
 
 
@@ -17,10 +19,12 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Clase Java para OrderColumnsType complex type.
- * 
- * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
- * 
+ * <p>
+ * Clase Java para OrderColumnsType complex type.
+ *
+ * <p>
+ * El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
+ *
  * <pre>
  * &lt;complexType name="OrderColumnsType">
  *   &lt;complexContent>
@@ -32,12 +36,12 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
+ *
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "OrderColumnsType", propOrder = {
-    "orderColumn"
+        "orderColumn"
 })
 public class OrderColumnsType {
 
@@ -46,25 +50,24 @@ public class OrderColumnsType {
 
     /**
      * Gets the value of the orderColumn property.
-     * 
+     *
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the orderColumn property.
-     * 
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any
+     * modification you make to the returned list will be present inside the JAXB object. This is why
+     * there is not a <CODE>set</CODE> method for the orderColumn property.
+     *
      * <p>
      * For example, to add a new item, do as follows:
+     *
      * <pre>
-     *    getOrderColumn().add(newItem);
+     * getOrderColumn().add(newItem);
      * </pre>
-     * 
-     * 
+     *
+     *
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link OrderColumnType }
-     * 
-     * 
+     * Objects of the following type(s) are allowed in the list {@link OrderColumnType }
+     *
+     *
      */
     public List<OrderColumnType> getOrderColumn() {
         if (orderColumn == null) {

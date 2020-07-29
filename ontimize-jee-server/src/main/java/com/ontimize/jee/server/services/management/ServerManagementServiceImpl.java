@@ -38,194 +38,200 @@ import com.ontimize.util.logging.LogManagerFactory;
 @Service("ServerManagementService")
 @Lazy(value = true)
 public class ServerManagementServiceImpl implements ApplicationContextAware, IServerManagementService {
-	private static final Logger				logger	= LoggerFactory.getLogger(ServerManagementServiceImpl.class);
-	@Autowired
-	private ILoggerHelper					loggerHelper;
-	@Autowired
-	private HeapDumperHelper				heapDumpHelper;
-	@Autowired
-	private ThreadDumperHelper				threadDumpHelper;
-	@Autowired
-	private RequestStatisticsHelper			requestStatisticsHelper;
 
-	@Autowired(required = false)
-	private SessionHelper					sessionHelper;
+    private static final Logger logger = LoggerFactory.getLogger(ServerManagementServiceImpl.class);
 
-	@Autowired(required = false)
-	private DeleteRequestStatisticsHistory	deleteThread;
+    @Autowired
+    private ILoggerHelper loggerHelper;
 
-	private ApplicationContext				applicationContext;
+    @Autowired
+    private HeapDumperHelper heapDumpHelper;
 
-	public ServerManagementServiceImpl() {
-		super();
-	}
+    @Autowired
+    private ThreadDumperHelper threadDumpHelper;
 
-	@Override
-	@Secured({ PermissionsProviderSecured.SECURED })
-	public InputStream openLogStream() throws OntimizeJEEException {
-		try {
-			return this.loggerHelper.openLogStream();
-		} catch (IOException error) {
-			throw new OntimizeJEEException(error);
-		}
-	}
+    @Autowired
+    private RequestStatisticsHelper requestStatisticsHelper;
 
-	@Override
-	@Secured({ PermissionsProviderSecured.SECURED })
-	public InputStream createHeapDump() throws OntimizeJEEException {
-		try {
-			Path dumpHeap = this.heapDumpHelper.dumpHeap(true);
-			dumpHeap.toFile().deleteOnExit();
-			return Files.newInputStream(dumpHeap);
-		} catch (IOException error) {
-			throw new OntimizeJEEException(error);
-		}
-	}
+    @Autowired(required = false)
+    private SessionHelper sessionHelper;
 
-	@Override
-	@Secured({ PermissionsProviderSecured.SECURED })
-	public String createThreadDump() throws OntimizeJEEException {
-		try {
-			return this.threadDumpHelper.dumpThreads();
-		} catch (IOException error) {
-			throw new OntimizeJEEException(error);
-		}
-	}
+    @Autowired(required = false)
+    private DeleteRequestStatisticsHistory deleteThread;
 
-	@Override
-	@Secured({ PermissionsProviderSecured.SECURED })
-	public EntityResult executeSql(final String sql, final String dataSourceName) {
-		/*
-		 * JdbcTemplate template = new JdbcTemplate(); DataSource dataSource =
-		 * this.applicationContext.getBean(dataSourceName, DataSource.class);
-		 * final SQLStatementHandler sqlStatementHandler =
-		 * this.applicationContext.getBean(SQLStatementHandler.class);
-		 * template.setDataSource(dataSource); return template.execute(new
-		 * StatementCallback<EntityResult>() {
-		 *
-		 * @Override public EntityResult doInStatement(Statement stmt) throws
-		 * SQLException, DataAccessException { if (stmt.execute(sql)) {
-		 * ResultSet rs = stmt.getResultSet(); EntityResult res = new
-		 * EntityResult(); try { sqlStatementHandler.resultSetToEntityResult(rs,
-		 * res, null); } catch (Exception error) { throw new
-		 * DataRetrievalFailureException(error.getMessage(), error); } return
-		 * res; } return new EntityResult(EntityResult.OPERATION_SUCCESSFUL,
-		 * EntityResult.NODATA_RESULT, "Operación realizada. " +
-		 * stmt.getUpdateCount() + " filas modificadas"); } });
-		 */
-		throw new OntimizeJEERuntimeException("NOT_IMPLEMENTED");
-	}
+    private ApplicationContext applicationContext;
 
-	@Override
-	@Secured({ PermissionsProviderSecured.SECURED })
-	public List<String> getAvailableDataSources() {
-		Map<String, DataSource> beansOfType = this.applicationContext.getBeansOfType(DataSource.class, false, true);
-		return new ArrayList<>(beansOfType.keySet());
-	}
+    public ServerManagementServiceImpl() {
+        super();
+    }
 
-	@Override
-	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-		this.applicationContext = applicationContext;
-	}
+    @Override
+    @Secured({ PermissionsProviderSecured.SECURED })
+    public InputStream openLogStream() throws OntimizeJEEException {
+        try {
+            return this.loggerHelper.openLogStream();
+        } catch (IOException error) {
+            throw new OntimizeJEEException(error);
+        }
+    }
 
-	@Override
-	@Secured({ PermissionsProviderSecured.SECURED })
-	public List<OntimizeJEELogger> getLoggerList() throws Exception {
-		List<OntimizeJEELogger> loggerListFinal = new ArrayList<>();
-		ILogManager managerLog = LogManagerFactory.getLogManager();
-		List<Logger> loggerList = managerLog.getLoggerList();
-		if ((loggerList != null) && !loggerList.isEmpty()) {
-			for (Logger logger : loggerList) {
-				String name = logger.getName();
-				Level level = managerLog.getLevel(logger);
-				loggerListFinal.add(new OntimizeJEELogger(loggerList.indexOf(logger), name, level));
-			}
-		}
-		return loggerListFinal;
-	}
+    @Override
+    @Secured({ PermissionsProviderSecured.SECURED })
+    public InputStream createHeapDump() throws OntimizeJEEException {
+        try {
+            Path dumpHeap = this.heapDumpHelper.dumpHeap(true);
+            dumpHeap.toFile().deleteOnExit();
+            return Files.newInputStream(dumpHeap);
+        } catch (IOException error) {
+            throw new OntimizeJEEException(error);
+        }
+    }
 
-	@Override
-	@Secured({ PermissionsProviderSecured.SECURED })
-	public Logger getLogger(String name) throws Exception {
-		return LogManagerFactory.getLogManager().getLogger(name);
-	}
+    @Override
+    @Secured({ PermissionsProviderSecured.SECURED })
+    public String createThreadDump() throws OntimizeJEEException {
+        try {
+            return this.threadDumpHelper.dumpThreads();
+        } catch (IOException error) {
+            throw new OntimizeJEEException(error);
+        }
+    }
 
-	@Override
-	@Secured({ PermissionsProviderSecured.SECURED })
-	public Level getLevel(OntimizeJEELogger logger) throws Exception {
-		ILogManager managerLog = LogManagerFactory.getLogManager();
-		List<Logger> loggerList = managerLog.getLoggerList();
-		return managerLog.getLevel(loggerList.get(logger.getId()));
-	}
+    @Override
+    @Secured({ PermissionsProviderSecured.SECURED })
+    public EntityResult executeSql(final String sql, final String dataSourceName) {
+        /*
+         * JdbcTemplate template = new JdbcTemplate(); DataSource dataSource =
+         * this.applicationContext.getBean(dataSourceName, DataSource.class); final SQLStatementHandler
+         * sqlStatementHandler = this.applicationContext.getBean(SQLStatementHandler.class);
+         * template.setDataSource(dataSource); return template.execute(new StatementCallback<EntityResult>()
+         * {
+         *
+         * @Override public EntityResult doInStatement(Statement stmt) throws SQLException,
+         * DataAccessException { if (stmt.execute(sql)) { ResultSet rs = stmt.getResultSet(); EntityResult
+         * res = new EntityResult(); try { sqlStatementHandler.resultSetToEntityResult(rs, res, null); }
+         * catch (Exception error) { throw new DataRetrievalFailureException(error.getMessage(), error); }
+         * return res; } return new EntityResult(EntityResult.OPERATION_SUCCESSFUL,
+         * EntityResult.NODATA_RESULT, "Operación realizada. " + stmt.getUpdateCount() +
+         * " filas modificadas"); } });
+         */
+        throw new OntimizeJEERuntimeException("NOT_IMPLEMENTED");
+    }
 
-	@Override
-	@Secured({ PermissionsProviderSecured.SECURED })
-	public void setLevel(OntimizeJEELogger logger) throws Exception {
-		ILogManager managerLog = LogManagerFactory.getLogManager();
-		List<Logger> loggerList = managerLog.getLoggerList();
-		managerLog.setLevel(loggerList.get(logger.getId()), logger.getLoggerLevel());
-	}
+    @Override
+    @Secured({ PermissionsProviderSecured.SECURED })
+    public List<String> getAvailableDataSources() {
+        Map<String, DataSource> beansOfType = this.applicationContext.getBeansOfType(DataSource.class, false, true);
+        return new ArrayList<>(beansOfType.keySet());
+    }
 
-	@Override
-	@Secured({ PermissionsProviderSecured.SECURED })
-	public EntityResult getLogFiles() throws Exception {
-		return this.loggerHelper.getLogFiles();
-	}
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+    }
 
-	@Override
-	@Secured({ PermissionsProviderSecured.SECURED })
-	public InputStream getLogFileContent(String fileName) throws Exception {
-		return this.loggerHelper.getLogFileContent(fileName);
-	}
+    @Override
+    @Secured({ PermissionsProviderSecured.SECURED })
+    public List<OntimizeJEELogger> getLoggerList() throws Exception {
+        List<OntimizeJEELogger> loggerListFinal = new ArrayList<>();
+        ILogManager managerLog = LogManagerFactory.getLogManager();
+        List<Logger> loggerList = managerLog.getLoggerList();
+        if ((loggerList != null) && !loggerList.isEmpty()) {
+            for (Logger logger : loggerList) {
+                String name = logger.getName();
+                Level level = managerLog.getLevel(logger);
+                loggerListFinal.add(new OntimizeJEELogger(loggerList.indexOf(logger), name, level));
+            }
+        }
+        return loggerListFinal;
+    }
 
-	@Override
-	@Secured({ PermissionsProviderSecured.SECURED })
-	public Collection<SessionDto> getActiveSessions() throws OntimizeJEEException {
-		if (this.sessionHelper == null) {
-			return Collections.emptyList();
-		}
-		return this.sessionHelper.getActiveSessions();
-	}
+    @Override
+    @Secured({ PermissionsProviderSecured.SECURED })
+    public Logger getLogger(String name) throws Exception {
+        return LogManagerFactory.getLogManager().getLogger(name);
+    }
 
-	@Override
-	public void setServiceStatistics(String serviceName, String methodName, Object params, String user, Date date, long timeExecution, String exception) {
-		if (this.deleteThread != null) {
-			synchronized (this.deleteThread) {
-				if (!this.deleteThread.isRunning()) {
-					this.deleteThread.start();
-				}
-			}
-		}
-		this.requestStatisticsHelper.insertRequestStatistics(serviceName, methodName, params, user, date, timeExecution, exception);
-	}
+    @Override
+    @Secured({ PermissionsProviderSecured.SECURED })
+    public Level getLevel(OntimizeJEELogger logger) throws Exception {
+        ILogManager managerLog = LogManagerFactory.getLogManager();
+        List<Logger> loggerList = managerLog.getLoggerList();
+        return managerLog.getLevel(loggerList.get(logger.getId()));
+    }
 
-	@Override
-	@Secured({ PermissionsProviderSecured.SECURED })
-	public EntityResult getStatistics() {
-		return this.requestStatisticsHelper.queryRequestStatistics();
-	}
+    @Override
+    @Secured({ PermissionsProviderSecured.SECURED })
+    public void setLevel(OntimizeJEELogger logger) throws Exception {
+        ILogManager managerLog = LogManagerFactory.getLogManager();
+        List<Logger> loggerList = managerLog.getLoggerList();
+        managerLog.setLevel(loggerList.get(logger.getId()), logger.getLoggerLevel());
+    }
 
-	@Override
-	@Secured({ PermissionsProviderSecured.SECURED })
-	public EntityResult getServiceStatistics(String serviceName, String methodName, Date dateBefore, Date dateAfter) {
-		return this.requestStatisticsHelper.queryRequestStatistics(serviceName, methodName, dateBefore, dateAfter);
-	}
+    @Override
+    @Secured({ PermissionsProviderSecured.SECURED })
+    public EntityResult getLogFiles() throws Exception {
+        return this.loggerHelper.getLogFiles();
+    }
 
-	@Override
-	public EntityResult deleteStatistics(int days) {
-		return this.requestStatisticsHelper.deleteRequestStatistics(days);
-	}
+    @Override
+    @Secured({ PermissionsProviderSecured.SECURED })
+    public InputStream getLogFileContent(String fileName) throws Exception {
+        return this.loggerHelper.getLogFileContent(fileName);
+    }
 
-	@Override
-	public void reloadDaos() {
-		Map<String, IOntimizeDaoSupport> beans = BeanFactoryUtils.beansOfTypeIncludingAncestors(this.applicationContext, IOntimizeDaoSupport.class);
-		for (IOntimizeDaoSupport dao : beans.values()) {
-			try {
-				dao.reload();
-			} catch (Exception e) {
-				ServerManagementServiceImpl.logger.error("Error reload dao: ", dao != null ? dao.getClass() : "nullDao", e);
-			}
-		}
-	}
+    @Override
+    @Secured({ PermissionsProviderSecured.SECURED })
+    public Collection<SessionDto> getActiveSessions() throws OntimizeJEEException {
+        if (this.sessionHelper == null) {
+            return Collections.emptyList();
+        }
+        return this.sessionHelper.getActiveSessions();
+    }
+
+    @Override
+    public void setServiceStatistics(String serviceName, String methodName, Object params, String user, Date date,
+            long timeExecution, String exception) {
+        if (this.deleteThread != null) {
+            synchronized (this.deleteThread) {
+                if (!this.deleteThread.isRunning()) {
+                    this.deleteThread.start();
+                }
+            }
+        }
+        this.requestStatisticsHelper.insertRequestStatistics(serviceName, methodName, params, user, date, timeExecution,
+                exception);
+    }
+
+    @Override
+    @Secured({ PermissionsProviderSecured.SECURED })
+    public EntityResult getStatistics() {
+        return this.requestStatisticsHelper.queryRequestStatistics();
+    }
+
+    @Override
+    @Secured({ PermissionsProviderSecured.SECURED })
+    public EntityResult getServiceStatistics(String serviceName, String methodName, Date dateBefore, Date dateAfter) {
+        return this.requestStatisticsHelper.queryRequestStatistics(serviceName, methodName, dateBefore, dateAfter);
+    }
+
+    @Override
+    public EntityResult deleteStatistics(int days) {
+        return this.requestStatisticsHelper.deleteRequestStatistics(days);
+    }
+
+    @Override
+    public void reloadDaos() {
+        Map<String, IOntimizeDaoSupport> beans = BeanFactoryUtils.beansOfTypeIncludingAncestors(this.applicationContext,
+                IOntimizeDaoSupport.class);
+        for (IOntimizeDaoSupport dao : beans.values()) {
+            try {
+                dao.reload();
+            } catch (Exception e) {
+                ServerManagementServiceImpl.logger.error("Error reload dao: ", dao != null ? dao.getClass() : "nullDao",
+                        e);
+            }
+        }
+    }
 
 }
