@@ -48,6 +48,13 @@ public abstract class ExcelExportRestController<S, T extends IExcelExportService
 	public ExcelExportRestController() {
 
 	}
+	
+	/**
+	 * Receives the reference to the temporary file and creates it
+	 * @param fileExtension The file extension
+	 * @param fileId Id of the tempfile
+	 * @param response authentication response
+	 */
 
 	@GetMapping({ "/{extension}/{id}" })
 	public void downloadFile(@PathVariable(name = "extension", required = true) final String fileExtension,
@@ -88,6 +95,13 @@ public abstract class ExcelExportRestController<S, T extends IExcelExportService
 
 	}
 
+	
+	/**
+	 * Receive the query parameters, create the file and call the service
+	 * @param exportParam The query parameters
+	 * @return Returns the EntityResult of the file
+	 * @throws Exception
+	 */
 	@PostMapping(value = { "/export" }, consumes = { "application/json" }, produces = { "application/json" })
 	public ResponseEntity<EntityResult> exportQuery(@RequestBody ExportQueryParameters exportParam)
 
