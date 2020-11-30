@@ -1,4 +1,4 @@
-package com.ontimize.jee.webclient.excelexport;
+package com.ontimize.jee.webclient.excelexport.base;
 
 import java.util.Map;
 
