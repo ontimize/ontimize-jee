@@ -14,8 +14,9 @@ import com.ontimize.jee.webclient.export.IExportService;
  * @author <a href="antonio.vazquez@imatia.com">Antonio Vázquez Araújo</a>
  */
 public interface IExcelExportService extends IExportService {
-    	
-	File queryParameters(EntityResult data, List<String> orderColumns, Map<Object, Object> keysValues, List<Object> attributesValues) throws OntimizeJEERuntimeException, IOException;
+
+	File queryParameters(EntityResult data, List<String> orderColumns, Map<Object, Object> keysValues,
+			List<Object> attributesValues, int pageSize, boolean advQuery, int offSet)
+			throws OntimizeJEERuntimeException, IOException;
 
 }
-

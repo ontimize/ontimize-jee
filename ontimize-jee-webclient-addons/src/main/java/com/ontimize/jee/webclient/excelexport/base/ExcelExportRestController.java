@@ -17,7 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.FileCopyUtils;
@@ -127,7 +126,8 @@ public abstract class ExcelExportRestController<S, T extends IExcelExportService
 			ExcelExportService exportService = new ExcelExportService();
 			File xslxFile = exportService.queryParameters(entityResult, new ArrayList(),
 					this.createKeysValues(kvQueryParameter, hSqlTypes),
-					this.createAttributesValues(avQueryParameter, hSqlTypes));
+					this.createAttributesValues(avQueryParameter, hSqlTypes),
+					exportParam.getPageSize(), exportParam.isAdvQuery(), exportParam.getOffset());
 
 			Hashtable<String, Object> erResult = new Hashtable();
 

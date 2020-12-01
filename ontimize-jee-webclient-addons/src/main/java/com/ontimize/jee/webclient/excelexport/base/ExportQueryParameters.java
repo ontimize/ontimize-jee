@@ -7,6 +7,7 @@ public class ExportQueryParameters extends BaseExcelExportParameters{
 	private QueryParameter queryParam;
 	private String dao;
 	private String service;
+	private boolean advQuery;
 	
 	
 
@@ -14,11 +15,12 @@ public class ExportQueryParameters extends BaseExcelExportParameters{
 		super();
 	}
 
-	public ExportQueryParameters(QueryParameter queryParam, String dao, String service) {
+	public ExportQueryParameters(QueryParameter queryParam, String dao, String service, boolean advQuery) {
 		super();
 		this.queryParam = queryParam;
 		this.dao = dao;
 		this.service = service;
+		this.advQuery = advQuery;
 	}
 
 	public QueryParameter getQueryParam() {
@@ -44,6 +46,13 @@ public class ExportQueryParameters extends BaseExcelExportParameters{
 	public void setService(String service) {
 		this.service = service;
 	}
-	
-	
+
+	public boolean isAdvQuery() {
+		return advQuery;
+	}
+
+	public void setAdvQuery(boolean advQuery) {
+		this.advQuery = advQuery;
+	}
+
 }
