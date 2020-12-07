@@ -19,9 +19,12 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import com.ontimize.db.AdvancedEntityResult;
@@ -79,11 +82,11 @@ import com.ontimize.jee.webclient.excelexport.util.ExportOptions;
  * @author <a href="antonio.vazquez@imatia.com">Antonio Vazquez Araujo</a>
  */
 @Service("ExcelExportService")
-@Configuration
-public class ExcelExportService implements IExcelExportService {
+public class ExcelExportService implements IExcelExportService, ApplicationContextAware {
 
 	private static final Logger logger = LoggerFactory.getLogger(ExcelExportService.class);
-
+	private ApplicationContext appContext;
+	
 	/**
 	 * Method that generates the data provider
 	 * @param service          The query service.
@@ -610,13 +613,12 @@ public class ExcelExportService implements IExcelExportService {
 			// DataProvider
 			StringBuffer buffer = new StringBuffer();
 			buffer.append(entityResult.get("dao")).append(ORestController.QUERY);
-			ApplicationContext context = new ClassPathXmlApplicationContext("spring-config-base.xml");
 
 			List<SQLOrder> orderBy = new ArrayList<SQLOrder>();
 			orderBy.add(new SQLOrder("NAME"));
 
 			ExcelExportDataProvider dataProvider = generateDataProvider(
-					context.getBean(String.valueOf(entityResult.get("service"))),
+					appContext.getBean(String.valueOf(entityResult.get("service"))),
 					(QueryParameter) entityResult.get("queryParameters"), buffer.toString(), keysValues,
 					attributesValues, columnProvider.getBodyColumns(), pageSize, orderBy, advQuery, offSet);
 
@@ -668,5 +670,14 @@ public class ExcelExportService implements IExcelExportService {
 
 	private SheetNameProvider createDefaultSheetNameProvider() {
 		return new DefaultSheetNameProvider();
+	}
+
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+		this.appContext = applicationContext;	
+	}
+
+	public ApplicationContext getContext() {
+		return appContext;
 	}
 }

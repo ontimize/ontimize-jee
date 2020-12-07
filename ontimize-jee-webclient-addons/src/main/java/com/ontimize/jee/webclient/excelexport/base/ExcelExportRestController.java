@@ -94,7 +94,6 @@ public abstract class ExcelExportRestController<S, T extends IExcelExportService
 
 	}
 
-	
 	/**
 	 * Receive the query parameters, create the file and call the service
 	 * @param exportParam The query parameters
@@ -123,7 +122,6 @@ public abstract class ExcelExportRestController<S, T extends IExcelExportService
 			List<?> avQueryParameter = exportParam.getQueryParam().getColumns();
 			HashMap<?, ?> hSqlTypes = exportParam.getQueryParam().getSqltypes();
 
-			ExcelExportService exportService = new ExcelExportService();
 			File xslxFile = exportService.queryParameters(entityResult, new ArrayList(),
 					this.createKeysValues(kvQueryParameter, hSqlTypes),
 					this.createAttributesValues(avQueryParameter, hSqlTypes),
