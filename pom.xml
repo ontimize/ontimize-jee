@@ -223,11 +223,13 @@
 	<dependencyManagement>
 		<dependencies>
 			<!-- Project dependencies -->
-			<dependency>
-				<groupId>com.ontimize.jee</groupId>
-				<artifactId>ontimize-jee-desktopclient</artifactId>
-				<version>${project.version}</version>
-			</dependency>
+<!--
+                        <dependency>
+                            <groupId>com.ontimize.jee</groupId>
+                            <artifactId>ontimize-jee-desktopclient</artifactId>
+                            <version>${project.version}</version>
+                        </dependency>
+ -->
 			<dependency>
 				<groupId>com.ontimize.jee</groupId>
 				<artifactId>ontimize-jee-common</artifactId>
@@ -699,7 +701,7 @@
 		<module>ontimize-jee-common</module>
 		<module>ontimize-jee-server</module>
 		<module>ontimize-jee-hessian</module>
-		<module>ontimize-jee-desktopclient</module>
+<!--	<module>ontimize-jee-desktopclient</module> -->
 		<module>ontimize-jee-server-rest</module>
 		<module>ontimize-jee-server-jpa</module>
 		<module>ontimize-jee-server-jdbc</module>
