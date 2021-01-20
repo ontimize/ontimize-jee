@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Hashtable;
+import java.util.Map;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -98,7 +98,7 @@ public class ParseUtilsExtended extends ParseTools {
         if ((textToParse == null) || "".equals(textToParse)) {
             return defaultValue;
         }
-        Map<String, String> res = new Hashtable<>();
+        Map<String, String> res = new HashMap<>();
         String[] split = textToParse.split(Pattern.quote(";"));
         for (String part : split) {
             String[] mids = part.split(Pattern.quote(":"));
@@ -350,13 +350,13 @@ public class ParseUtilsExtended extends ParseTools {
         return sb.toString();
     }
 
-    public static Hashtable getParametersPreffixed(Hashtable<Object, Object> parameters, String preffix) {
+    public static Map getParametersPreffixed(Map<Object, Object> parameters, String preffix) {
         return ParseUtilsExtended.getParametersPreffixed(parameters, preffix, true);
     }
 
-    public static Hashtable getParametersPreffixed(Hashtable<Object, Object> parameters, String preffix,
-            Hashtable otherParams) {
-        Hashtable parametersPreffixed = ParseUtilsExtended.getParametersPreffixed(parameters, preffix, false);
+    public static Map getParametersPreffixed(Map<Object, Object> parameters, String preffix,
+            Map otherParams) {
+        Map parametersPreffixed = ParseUtilsExtended.getParametersPreffixed(parameters, preffix, false);
 
         if (otherParams != null) {
             for (Object key : otherParams.keySet()) {
@@ -374,9 +374,9 @@ public class ParseUtilsExtended extends ParseTools {
         return parametersPreffixed;
     }
 
-    public static Hashtable getParametersPreffixed(Hashtable<Object, Object> parameters, String preffix,
+    public static Map getParametersPreffixed(Map<Object, Object> parameters, String preffix,
             boolean includeGenerics) {
-        Hashtable params = new Hashtable<>();
+        Map params = new HashMap<>();
         for (Entry<Object, Object> entry : parameters.entrySet()) {
             String param = entry.getKey().toString();
             if (param.startsWith(preffix)) {

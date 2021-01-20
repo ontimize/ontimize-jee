@@ -5,7 +5,7 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Hashtable;
+import java.util.Map;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -51,7 +51,7 @@ public class EntityResultDeserializer extends StdDeserializer<EntityResult> {
         int code = (Integer) node.get(EntityResultDeserializer.CODE_KEY).numberValue();
         String message = node.get(EntityResultDeserializer.MESSAGE_KEY).asText();
 
-        Map<?, ?> sqlTypes = new Hashtable<String, Object>();
+        Map<?, ?> sqlTypes = new HashMap<String, Object>();
         JsonNode sqlTypesNode = node.get(EntityResultDeserializer.SQL_TYPES_KEY);
         if (!sqlTypesNode.isNull()) {
             sqlTypes = this.deserializeSqlTypes((ObjectNode) node.get(EntityResultDeserializer.SQL_TYPES_KEY));
@@ -59,12 +59,12 @@ public class EntityResultDeserializer extends StdDeserializer<EntityResult> {
 
         JsonNode dataNode = node.get(EntityResultDeserializer.DATA_KEY);
         Set<String> columns = new LinkedHashSet<>();
-        List<Hashtable<String, Object>> records = new ArrayList<>();
+        List<Map<String, Object>> records = new ArrayList<>();
         Map<String, Object> rawData = new HashMap<>();
         if (dataNode.isArray()) {
             ArrayNode arrayNode = (ArrayNode) node.withArray(EntityResultDeserializer.DATA_KEY);
             for (int i = 0; i < arrayNode.size(); i++) {
-                Hashtable<String, Object> record = this.deserializeObject((ObjectNode) arrayNode.get(i), sqlTypes);
+                Map<String, Object> record = this.deserializeObject((ObjectNode) arrayNode.get(i), sqlTypes);
                 columns.addAll(record.keySet());
                 records.add(record);
             }
@@ -73,18 +73,18 @@ public class EntityResultDeserializer extends StdDeserializer<EntityResult> {
         }
 
         EntityResult er = new EntityResult(Arrays.asList(columns.toArray()));
-        for (Hashtable<String, Object> record : records) {
+        for (Map<String, Object> record : records) {
             er.addRecord(record);
         }
         er.putAll(rawData);
         er.setCode(code);
         er.setMessage(message);
-        er.setColumnSQLTypes((Hashtable) sqlTypes);
+        er.setColumnSQLTypes((Map) sqlTypes);
         return er;
     }
 
     public Map<?, ?> deserializeSqlTypes(ObjectNode node) {
-        Hashtable<String, Object> result = new Hashtable<>();
+        Map<String, Object> result = new HashMap<>();
         Iterator<String> ite = node.fieldNames();
         while (ite.hasNext()) {
             String key = ite.next();
@@ -94,8 +94,8 @@ public class EntityResultDeserializer extends StdDeserializer<EntityResult> {
         return result;
     }
 
-    public Hashtable<String, Object> deserializeObject(ObjectNode node, Map<?, ?> sqlTypes) {
-        Hashtable<String, Object> result = new Hashtable<>();
+    public Map<String, Object> deserializeObject(ObjectNode node, Map<?, ?> sqlTypes) {
+        Map<String, Object> result = new HashMap<>();
         Iterator<String> ite = node.fieldNames();
         while (ite.hasNext()) {
             String key = ite.next();

@@ -2,7 +2,7 @@ package com.ontimize.jee.common.jackson;
 
 import java.io.IOException;
 import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.Map;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -41,13 +41,13 @@ public class EntityResultSerializer extends StdSerializer<EntityResult> {
             // EntityResult has values
             for (int i = 0; i < number; i++) {
 
-                Hashtable record = value.getRecordValues(i);
+                Map record = value.getRecordValues(i);
                 jgen.writeObject(record);
             }
             jgen.writeEndArray();
         } else {
             // Check if EntityResult is the result of one insertion
-            Hashtable<String, Object> data = new Hashtable<>();
+            Map<String, Object> data = new HashMap<>();
             Enumeration<Object> keys = value.keys();
 
             while (keys.hasMoreElements()) {
@@ -61,7 +61,7 @@ public class EntityResultSerializer extends StdSerializer<EntityResult> {
         }
 
         jgen.writeFieldName(EntityResultSerializer.SQL_TYPES_KEY);
-        Hashtable sqlTypes = value.getColumnSQLTypes();
+        Map sqlTypes = value.getColumnSQLTypes();
         jgen.writeObject(sqlTypes);
         jgen.writeEndObject();
     }

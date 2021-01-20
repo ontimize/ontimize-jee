@@ -41,7 +41,7 @@ public interface ISharePreferencesService {
      * This list is necessary to fill the list of users when an element is shared or updated in
      * {@link FormAddUserSharedReference} or {@link FormUpdateSharedReference} .
      * @param sessionId
-     * @return Vector<String> with all user list
+     * @return List<String> with all user list
      * @throws OntimizeJEEException
      */
     public List<String> getUserList() throws OntimizeJEEException;

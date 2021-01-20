@@ -40,7 +40,7 @@ public interface II18nService {
     Map<String, ResourceBundle> getBundles(List<String> baseNames, Locale locale) throws OntimizeJEERuntimeException;
 
     /**
-     * Get a hashtable with all the available bundles in the database for the specified locale.
+     * Get a Map with all the available bundles in the database for the specified locale.
      * @param locale the locale
      * @return The keys of the object are Strings with the bundle class name (for example
      *         com.ontimize.gui.i18m.bundle) and each value is the ResourceBundle object

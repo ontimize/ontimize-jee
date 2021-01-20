@@ -7,7 +7,7 @@ import java.lang.reflect.Member;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
+import java.util.Map;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -82,7 +82,7 @@ public class OntimizeSerializerFactory extends AbstractSerializerFactory {
     }
 
     /**
-     * Serializer for classes extending {@link HashMap} or {@link Hashtable}. Lo que hacemos es no
+     * Serializer for classes extending {@link HashMap} or {@link Map}. Lo que hacemos es no
      * permitir explorar las propiedades de la parte del Map (igual que hace el map serializer) y crear
      * una variable ficticia para meter el contenido del map.
      *
@@ -99,7 +99,7 @@ public class OntimizeSerializerFactory extends AbstractSerializerFactory {
             ArrayList<Field> compoundFields = new ArrayList<>();
 
             for (Class<?> theClass = cl; theClass != null; theClass = theClass.getSuperclass()) {
-                if (theClass.equals(Hashtable.class) || theClass.equals(HashMap.class)) {
+                if (theClass.equals(Map.class) || theClass.equals(HashMap.class)) {
                     break;
                 }
                 Field[] fields = theClass.getDeclaredFields();
@@ -125,7 +125,7 @@ public class OntimizeSerializerFactory extends AbstractSerializerFactory {
 
             Object ob = ReflectionTools.newInstance("java.lang.reflect.ReflectAccess");
             Field field = (Field) ReflectionTools.invoke(ob, "newField", cl,
-                    OntimizeSerializerFactory.INNER_ONTIMIZE_MAP, Hashtable.class, Member.PUBLIC, 0, "", null);
+                    OntimizeSerializerFactory.INNER_ONTIMIZE_MAP, Map.class, Member.PUBLIC, 0, "", null);
             compoundFields.add(field);
 
             ArrayList<Field> fields = new ArrayList<>();
@@ -174,7 +174,7 @@ public class OntimizeSerializerFactory extends AbstractSerializerFactory {
     }
 
     /**
-     * Deserializer for classes extending {@link HashMap} or {@link Hashtable}
+     * Deserializer for classes extending {@link HashMap} or {@link Map}
      *
      */
     public static class MapExtendedClassDeserializer extends JavaDeserializer {

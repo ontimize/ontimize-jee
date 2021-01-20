@@ -8,12 +8,12 @@ import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
+import java.util.Map;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.Vector;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -88,12 +88,12 @@ public final class EntityResultTools extends com.ontimize.db.EntityResultTools {
     public static EntityResult doJoin(EntityResult a, EntityResult b, String[] columnKeysA, String[] columnKeysB,
             JoinType joinType) {
         EntityResult res = new EntityResult();
-        Vector<Object> resColumnsA = new Vector<>(a.keySet());
+        List<Object> resColumnsA = new ArrayList<>(a.keySet());
         EntityResultTools.ensureCols(resColumnsA, columnKeysA);
-        Vector<Object> resColumnsB = new Vector<>(b.keySet());
+        List<Object> resColumnsB = new ArrayList<>(b.keySet());
         EntityResultTools.ensureCols(resColumnsB, columnKeysB);
-        Vector<Object> resColumns = new Vector<>();
-        Vector<Object> resColumnsCommon = new Vector<>();
+        List<Object> resColumns = new ArrayList<>();
+        List<Object> resColumnsCommon = new ArrayList<>();
         resColumns.addAll(resColumnsA);
         for (int i = 0; i < resColumnsB.size(); i++) {
             Object col = resColumnsB.get(i);
@@ -114,7 +114,7 @@ public final class EntityResultTools extends com.ontimize.db.EntityResultTools {
         } else {
             int rcount = a.calculateRecordNumber();
             for (int i = 0; i < rcount; i++) {
-                Hashtable<Object, Object> row = a.getRecordValues(i);
+                Map<Object, Object> row = a.getRecordValues(i);
                 EntityResultTools.doJoinForTable(res, resColumns, resColumnsA, resColumnsB, resColumnsCommon, row, b,
                         columnKeysA, columnKeysB, joinType.equals(JoinType.INNER));
             }
@@ -125,7 +125,7 @@ public final class EntityResultTools extends com.ontimize.db.EntityResultTools {
         if (res.get(columnKeysA[0]) == null) {
             return res;
         }
-        if (((Vector) res.get(columnKeysA[0])).size() == 0) {
+        if (((List) res.get(columnKeysA[0])).size() == 0) {
             return new EntityResult();
         } else {
             return res;
@@ -137,7 +137,7 @@ public final class EntityResultTools extends com.ontimize.db.EntityResultTools {
      * @param resColumns the res columns
      * @param cols the cols
      */
-    private static void ensureCols(Vector<Object> resColumns, String... cols) {
+    private static void ensureCols(List<Object> resColumns, String... cols) {
         for (String c : cols) {
             if (!resColumns.contains(c)) {
                 resColumns.add(c);
@@ -161,8 +161,8 @@ public final class EntityResultTools extends com.ontimize.db.EntityResultTools {
      * @return the entity result
      */
     private static EntityResult doFastJoin(EntityResult a, EntityResult b, String keyNameA, String keyNameB,
-            JoinType joinType, EntityResult res, Vector<Object> resColumnsA,
-            Vector<Object> resColumnsB, Vector<Object> resColumns, Vector<Object> resColumnsCommon) {
+            JoinType joinType, EntityResult res, List<Object> resColumnsA,
+            List<Object> resColumnsB, List<Object> resColumns, List<Object> resColumnsCommon) {
 
         Object[] keysSortedA = null;
         int[] indexesA = null;
@@ -175,7 +175,7 @@ public final class EntityResultTools extends com.ontimize.db.EntityResultTools {
                     return a;
                 }
             }
-            keysSortedA = ((Vector) a.get(keyNameA)).toArray();
+            keysSortedA = ((List) a.get(keyNameA)).toArray();
             indexesA = FastQSortAlgorithm.sort(keysSortedA);
         } else {
             keysSortedA = new Object[0];
@@ -185,7 +185,7 @@ public final class EntityResultTools extends com.ontimize.db.EntityResultTools {
         Object[] keysSortedB = null;
         int[] indexesB = null;
         if (!b.isEmpty()) {
-            keysSortedB = ((Vector) b.get(keyNameB)).toArray();
+            keysSortedB = ((List) b.get(keyNameB)).toArray();
             indexesB = FastQSortAlgorithm.sort(keysSortedB);
         } else {
             keysSortedB = new Object[0];
@@ -206,18 +206,18 @@ public final class EntityResultTools extends com.ontimize.db.EntityResultTools {
                             // FOUND
                             for (Object col : resColumnsA) {
                                 try {
-                                    ((Vector) res.get(col)).add(resIndex, ((Vector) a.get(col)).get(indexesA[i]));
+                                    ((List) res.get(col)).add(resIndex, ((List) a.get(col)).get(indexesA[i]));
                                 } catch (Exception e) {
                                     EntityResultTools.logger.error(null, e);
                                 }
                             }
                             for (Object col : resColumnsB) {
-                                ((Vector) res.get(col)).add(resIndex,
-                                        ((Vector) b.get(col)).get(indexesB[searchIndexB]));
+                                ((List) res.get(col)).add(resIndex,
+                                        ((List) b.get(col)).get(indexesB[searchIndexB]));
                             }
                             for (Object col : resColumnsCommon) {
-                                ((Vector) res.get(col)).add(resIndex,
-                                        ((Vector) b.get(col)).get(indexesB[searchIndexB]));
+                                ((List) res.get(col)).add(resIndex,
+                                        ((List) b.get(col)).get(indexesB[searchIndexB]));
                             }
                             resIndex++;
                         } else if (compareResult < 0) {
@@ -233,13 +233,13 @@ public final class EntityResultTools extends com.ontimize.db.EntityResultTools {
             // If left join remain A
             if ((found == 0) && joinType.equals(JoinType.LEFT)) {
                 for (Object col : resColumnsA) {
-                    ((Vector) res.get(col)).add(resIndex, ((Vector) a.get(col)).get(indexesA[i]));
+                    ((List) res.get(col)).add(resIndex, ((List) a.get(col)).get(indexesA[i]));
                 }
                 for (Object col : resColumnsCommon) {
-                    ((Vector) res.get(col)).add(resIndex, ((Vector) a.get(col)).get(indexesA[i]));
+                    ((List) res.get(col)).add(resIndex, ((List) a.get(col)).get(indexesA[i]));
                 }
                 for (Object col : resColumnsB) {
-                    ((Vector) res.get(col)).add(resIndex, null);
+                    ((List) res.get(col)).add(resIndex, null);
                 }
                 resIndex++;
             } else if ((found > 0) && (searchIndexB == keysSortedB.length) && (i < (indexesA.length - 1))
@@ -263,42 +263,42 @@ public final class EntityResultTools extends com.ontimize.db.EntityResultTools {
      * @param columnKeysB the column keys b
      * @param onlyInnerJoin the only inner join
      */
-    private static void doJoinForTable(EntityResult res, Vector<Object> resColumns, Vector<Object> resColumnsA,
-            Vector<Object> resColumnsB, Vector<Object> resColumnsCommon,
-            Hashtable<Object, Object> rowA, EntityResult b, String[] columnKeysA, String[] columnKeysB,
+    private static void doJoinForTable(EntityResult res, List<Object> resColumns, List<Object> resColumnsA,
+            List<Object> resColumnsB, List<Object> resColumnsCommon,
+            Map<Object, Object> rowA, EntityResult b, String[] columnKeysA, String[] columnKeysB,
             boolean onlyInnerJoin) {
         int rcount = b.calculateRecordNumber();
         boolean match = false;
         int index = res.calculateRecordNumber();
         for (int i = 0; i < rcount; i++) {
-            Hashtable<Object, Object> testRow = b.getRecordValues(i);
+            Map<Object, Object> testRow = b.getRecordValues(i);
             if (EntityResultTools.check(rowA, testRow, columnKeysA, columnKeysB)) {
                 match = true;
                 for (Object col : resColumnsA) {
                     try {
-                        ((Vector) res.get(col)).add(index, rowA.get(col));
+                        ((List) res.get(col)).add(index, rowA.get(col));
                     } catch (Exception e) {
                         EntityResultTools.logger.error(null, e);
                     }
                 }
                 for (Object col : resColumnsB) {
-                    ((Vector) res.get(col)).add(index, testRow.get(col));
+                    ((List) res.get(col)).add(index, testRow.get(col));
                 }
                 for (Object col : resColumnsCommon) {
-                    ((Vector) res.get(col)).add(index, testRow.get(col));
+                    ((List) res.get(col)).add(index, testRow.get(col));
                 }
                 index++;
             }
         }
         if (!match && !onlyInnerJoin) {
             for (Object col : resColumnsA) {
-                ((Vector) res.get(col)).add(index, rowA.get(col));
+                ((List) res.get(col)).add(index, rowA.get(col));
             }
             for (Object col : resColumnsCommon) {
-                ((Vector) res.get(col)).add(index, rowA.get(col));
+                ((List) res.get(col)).add(index, rowA.get(col));
             }
             for (Object col : resColumnsB) {
-                ((Vector) res.get(col)).add(index, null);
+                ((List) res.get(col)).add(index, null);
             }
         }
     }
@@ -311,7 +311,7 @@ public final class EntityResultTools extends com.ontimize.db.EntityResultTools {
      * @param columnKeysB the column keys b
      * @return true, if successful
      */
-    public static boolean check(Hashtable<Object, Object> ha, Hashtable<Object, Object> hb, String[] columnKeysA,
+    public static boolean check(Map<Object, Object> ha, Map<Object, Object> hb, String[] columnKeysA,
             String[] columnKeysB) {
         for (int i = 0; i < columnKeysA.length; i++) {
             Object oa = ha.get(columnKeysA[i]);
@@ -333,7 +333,7 @@ public final class EntityResultTools extends com.ontimize.db.EntityResultTools {
      */
     public static void initEntityResult(EntityResult res, List<?> columns, int length) {
         for (Object col : columns) {
-            res.put(col, new Vector<>(length > 0 ? length : 10));
+            res.put(col, new ArrayList<>(length > 0 ? length : 10));
         }
     }
 
@@ -393,7 +393,7 @@ public final class EntityResultTools extends com.ontimize.db.EntityResultTools {
         }
 
         EntityResult res = new EntityResult();
-        Vector<Object> resultColumns = new Vector<Object>(Arrays.asList(groupColumns));
+        List<Object> resultColumns = new ArrayList<Object>(Arrays.asList(groupColumns));
         for (Group group : groups) {
             resultColumns.addAll(group.getAggregatedColumnNames());
         }
@@ -458,14 +458,14 @@ public final class EntityResultTools extends com.ontimize.db.EntityResultTools {
         if (a.calculateRecordNumber() < 2) {
             return a;
         }
-        Object[] keysSorted = ((Vector) a.get(col)).toArray();
+        Object[] keysSorted = ((List) a.get(col)).toArray();
         int[] indexes = FastQSortAlgorithm.sort(keysSorted);
-        Vector cols = new Vector(a.keySet());
+        List cols = new ArrayList(a.keySet());
         EntityResult res = new EntityResult();
         EntityResultTools.initEntityResult(res, cols, indexes.length);
         for (Object key : cols) {
-            Vector vOrig = (Vector) a.get(key);
-            Vector vDest = (Vector) res.get(key);
+            List vOrig = (List) a.get(key);
+            List vDest = (List) res.get(key);
             for (int i = 0; i < indexes.length; i++) {
                 vDest.add(i, vOrig.get(indexes[i]));
             }
@@ -492,7 +492,7 @@ public final class EntityResultTools extends com.ontimize.db.EntityResultTools {
         sb.append(StringTools.WEOL);
         for (int i = 0; i < numR; i++) {
             for (Object key : keySet) {
-                sb.append(((Vector) res.get(key)).get(i)).append(StringTools.TAB);
+                sb.append(((List) res.get(key)).get(i)).append(StringTools.TAB);
             }
             sb.append(StringTools.WEOL);
         }
@@ -521,7 +521,7 @@ public final class EntityResultTools extends com.ontimize.db.EntityResultTools {
             sb.append("\r\n");
 
             for (int i = 0; i < nregs; i++) {
-                Hashtable recordValues = er.getRecordValues(i);
+                Map recordValues = er.getRecordValues(i);
                 for (Object key : keyList) {
                     sb.append(recordValues.get(key)).append("\t");
                 }
@@ -560,11 +560,11 @@ public final class EntityResultTools extends com.ontimize.db.EntityResultTools {
             numregs[i] = vRes[i].calculateRecordNumber();
         }
         for (Object ob : columnList) {
-            Vector<Object> vtotal = (Vector<Object>) res.get(ob);
+            List<Object> vtotal = (List<Object>) res.get(ob);
             int curIndex = 0;
             for (int i = 0; i < vRes.length; i++) {
                 EntityResult er = vRes[i];
-                Vector<Object> vpart = (Vector<Object>) er.get(ob);
+                List<Object> vpart = (List<Object>) er.get(ob);
                 if (vpart == null) {
                     Object[] tmp = new Object[numregs[i]];
                     Arrays.fill(tmp, null);
@@ -599,7 +599,7 @@ public final class EntityResultTools extends com.ontimize.db.EntityResultTools {
 
         int num = doUnionAll.calculateRecordNumber();
         for (int i = 0; i < num; i++) {
-            Hashtable currentValues = doUnionAll.getRecordValues(i);
+            Map currentValues = doUnionAll.getRecordValues(i);
             if (!EntityResultTools.checkRecordExists(newResult, currentValues, columnList)) {
                 EntityResultTools.fastAddRecord(newResult, doUnionAll, i);
             }
@@ -607,14 +607,14 @@ public final class EntityResultTools extends com.ontimize.db.EntityResultTools {
         return newResult;
     }
 
-    private static boolean checkRecordExists(EntityResult newResult, Hashtable currentValues, List<Object> columnList) {
+    private static boolean checkRecordExists(EntityResult newResult, Map currentValues, List<Object> columnList) {
         EntityResult dofilter = EntityResultTools.dofilter(newResult, currentValues);
 
         // Moreover is required to check for this fields that sattisfy filter if is exactly the same value
         // in all columns
         // because if currentvalues hasn`t some value in some column, will be not applied filter
         for (int i = 0; i < dofilter.calculateRecordNumber(); i++) {
-            Hashtable filterValues = dofilter.getRecordValues(i);
+            Map filterValues = dofilter.getRecordValues(i);
 
             boolean match = true;
             for (Object col : columnList) {
@@ -659,11 +659,11 @@ public final class EntityResultTools extends com.ontimize.db.EntityResultTools {
      * @param keysValues the keys values
      * @return the entity result
      */
-    public static EntityResult dofilter(EntityResult er, Hashtable<?, ?> keysValues) {
+    public static EntityResult dofilter(EntityResult er, Map<?, ?> keysValues) {
         return EntityResultTools.dofilter(er, keysValues, false);
     }
 
-    public static EntityResult dofilter(EntityResult er, Hashtable<?, ?> keysValues, boolean remove) {
+    public static EntityResult dofilter(EntityResult er, Map<?, ?> keysValues, boolean remove) {
         EntityResult res = new EntityResult();
         res.setCode(EntityResult.OPERATION_SUCCESSFUL);
         res.setCompressionThreshold(er.getCompressionThreshold());
@@ -714,16 +714,16 @@ public final class EntityResultTools extends com.ontimize.db.EntityResultTools {
      * @param keysValues the keys values
      * @return true, if successful
      */
-    private static boolean checkFilter(EntityResult er, int index, Hashtable<?, ?> keysValues) {
+    private static boolean checkFilter(EntityResult er, int index, Map<?, ?> keysValues) {
         if (keysValues == null) {
             return true;
         }
-        Enumeration<?> keys = keysValues.keys();
+        Enumeration<?> keys = Collections.enumeration(keysValues.keySet());
         boolean isOk = true;
         while (keys.hasMoreElements() && isOk) {
             Object filterKey = keys.nextElement();
             Object filterValue = keysValues.get(filterKey);
-            Object test = ((Vector) er.get(filterKey)).get(index);
+            Object test = ((List) er.get(filterKey)).get(index);
 
             if (filterValue instanceof SearchValue) {
                 SearchValue sv = (SearchValue) filterValue;
@@ -756,11 +756,11 @@ public final class EntityResultTools extends com.ontimize.db.EntityResultTools {
                         break;
                     case SearchValue.IN:
                     case SearchValue.OR:
-                        Vector v = (Vector) sv.getValue();
+                        List v = (List) sv.getValue();
                         isOk = v.contains(test);
                         break;
                     case SearchValue.NOT_IN:
-                        v = (Vector) sv.getValue();
+                        v = (List) sv.getValue();
                         isOk = !v.contains(test);
                         break;
                     case SearchValue.LESS:
@@ -829,7 +829,7 @@ public final class EntityResultTools extends com.ontimize.db.EntityResultTools {
         int nreg = er.calculateRecordNumber();
         Object[] array = new Object[nreg];
         Arrays.fill(array, columnDefaultValue);
-        er.put(columnKey, new Vector(Arrays.asList(array)));
+        er.put(columnKey, new ArrayList(Arrays.asList(array)));
     }
 
     /**
@@ -838,7 +838,7 @@ public final class EntityResultTools extends com.ontimize.db.EntityResultTools {
      * @param updater the updater
      * @param criteria the criteria
      */
-    public static void update(EntityResult er, IRowUpdater updater, Hashtable<?, ?> criteria) {
+    public static void update(EntityResult er, IRowUpdater updater, Map<?, ?> criteria) {
         if (er == null) {
             return;
         }
@@ -859,14 +859,14 @@ public final class EntityResultTools extends com.ontimize.db.EntityResultTools {
      * @param newValue the new value
      */
     public static void replaceValue(EntityResult rs, String columnName, Object valueToReplace, Object newValue) {
-        Vector testVector = (Vector) rs.get(columnName);
-        if (testVector != null) {
-            for (int i = 0; i < testVector.size(); i++) {
-                Object test = testVector.get(i);
+        List testList = (List) rs.get(columnName);
+        if (testList != null) {
+            for (int i = 0; i < testList.size(); i++) {
+                Object test = testList.get(i);
                 if ((test == null) && (valueToReplace == null)) {
-                    testVector.set(i, newValue);
+                    testList.set(i, newValue);
                 } else if ((test != null) && test.equals(valueToReplace)) {
-                    testVector.set(i, newValue);
+                    testList.set(i, newValue);
                 }
             }
         }
@@ -906,7 +906,7 @@ public final class EntityResultTools extends com.ontimize.db.EntityResultTools {
             return null;
         }
 
-        Vector<Object> vThousands = new Vector<>();
+        List<Object> vThousands = new ArrayList<>();
         BasicExpression be = null;
         int counter = 0;
         for (Object item : listValues) {
@@ -920,7 +920,7 @@ public final class EntityResultTools extends com.ontimize.db.EntityResultTools {
                     be = new BasicExpression(be, BasicOperator.OR_OP, be1);
                 }
                 counter = 0;
-                vThousands = new Vector<>();
+                vThousands = new ArrayList<>();
             }
         }
         if (!vThousands.isEmpty()) {
@@ -938,10 +938,10 @@ public final class EntityResultTools extends com.ontimize.db.EntityResultTools {
      * Metodo auxiliar para crear rapidamente un registro en base a las claves y los valores.
      * @param keys the keys
      * @param values the values
-     * @return the hashtable
+     * @return the Map
      */
-    public static Hashtable<String, Object> createRecord(String[] keys, Object[] values) {
-        Hashtable<String, Object> record = new Hashtable<>();
+    public static Map<String, Object> createRecord(String[] keys, Object[] values) {
+        Map<String, Object> record = new HashMap<>();
 
         for (int i = 0; i < keys.length; i++) {
             if ((values[i] != null) && (keys[i] != null)) {
@@ -966,11 +966,11 @@ public final class EntityResultTools extends com.ontimize.db.EntityResultTools {
 
     }
 
-    public static Vector<String> attributes(String... attributes) {
+    public static List<String> attributes(String... attributes) {
         if ((attributes == null) || (attributes.length == 0)) {
-            return new Vector<>();
+            return new ArrayList<>();
         }
-        return new Vector(Arrays.asList(attributes));
+        return new ArrayList(Arrays.asList(attributes));
     }
 
     /**
@@ -981,15 +981,15 @@ public final class EntityResultTools extends com.ontimize.db.EntityResultTools {
      * @param objects
      * @return
      */
-    public static Hashtable<Object, Object> keysvalues(Object... objects) {
+    public static Map<Object, Object> keysvalues(Object... objects) {
         if (objects == null) {
-            return new Hashtable<>();
+            return new HashMap<>();
         }
         if ((objects.length % 2) != 0) {
             throw new RuntimeException("Review filters, it is mandatory to set dual <key><value>.");
         }
 
-        Hashtable<Object, Object> res = new Hashtable<>();
+        Map<Object, Object> res = new HashMap<>();
         int i = 0;
         while (i < objects.length) {
             Object key = objects[i++];
@@ -1015,7 +1015,7 @@ public final class EntityResultTools extends com.ontimize.db.EntityResultTools {
         for (int i = 0; i < nInRegs; i++) {
             Map<?, ?> row = in.getRecordValues(i);
             if (!EntityResultTools.containsRow(res, nResRegs, row)) {
-                res.addRecord((Hashtable) row);
+                res.addRecord((Map) row);
                 nResRegs++;
             }
         }
@@ -1140,7 +1140,7 @@ public final class EntityResultTools extends com.ontimize.db.EntityResultTools {
         if ((er == null) || (pivotColumn == null) || (operation == null)) {
             return res;
         }
-        HashSet<Object> setPivotColumn = new HashSet<>((Vector) er.get(pivotColumn));
+        HashSet<Object> setPivotColumn = new HashSet<>((List) er.get(pivotColumn));
         List<String> resColumns = new ArrayList<>();
         resColumns.addAll(Arrays.asList(setPivotColumn.toArray(new String[] {})));
         resColumns.addAll(otherColumns);

@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Vector;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import com.ontimize.db.SQLStatementBuilder.BasicExpression;
@@ -227,7 +227,7 @@ public final class BasicExpressionTools {
                 if ((fromDate != null) && (toDate != null)) {
                     fieldExpr = BasicExpressionTools.convertSearchValue(basicField,
                             new SearchValue(SearchValue.BETWEEN,
-                                    new Vector<>(Arrays.asList(new Object[] { fromDate, toDate }))));
+                                    new ArrayList<>(Arrays.asList(new Object[] { fromDate, toDate }))));
                 } else if (fromDate != null) {
                     fieldExpr = BasicExpressionTools.convertSearchValue(basicField,
                             new SearchValue(SearchValue.MORE_EQUAL, fromDate));
