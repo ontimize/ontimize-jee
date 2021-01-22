@@ -9,7 +9,7 @@ package com.ontimize.jee.server.security;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Hashtable;
+import java.util.Map;
 import java.util.List;
 import java.util.Map;
 
@@ -79,7 +79,7 @@ public class DatabaseRoleInformationService implements ISecurityRoleInformationS
         }
         CheckingTools.failIf(res.calculateRecordNumber() > 1, "Multiple results for role");
         final List<?> clientPermissions = (List<?>) res.get(this.clientPermissionColumn);
-        Map<String, ?> clientPermission = new Hashtable<>();
+        Map<String, ?> clientPermission = new HashMap<>();
         try {
             final String plainClientPermission = (String) clientPermissions.get(0);
             if (plainClientPermission != null) {

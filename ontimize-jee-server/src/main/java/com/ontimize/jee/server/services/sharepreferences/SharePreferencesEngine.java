@@ -3,10 +3,10 @@ package com.ontimize.jee.server.services.sharepreferences;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Hashtable;
+import java.util.Map;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
+import java.util.List;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -368,7 +368,7 @@ public class SharePreferencesEngine implements ISharePreferencesService, Initial
         for (String target : targetNameToDelete) {
             Map<String, String> hDeleteTargetKey = new HashMap<>();
             hDeleteTargetKey.put(this.getShareTargetUserColumn(), target);
-            int i = erTarget.getRecordIndex(new Hashtable<String, String>(hDeleteTargetKey));
+            int i = erTarget.getRecordIndex(new HashMap<String, String>(hDeleteTargetKey));
             int idTarget = (Integer) erTarget.getRecordValues(i).get(this.getShareTargetKeyColumn());
             EntityResult res = this.deleteTargetSharedItem(idTarget);
             if (res.getCode() == EntityResult.OPERATION_WRONG) {
@@ -430,7 +430,7 @@ public class SharePreferencesEngine implements ISharePreferencesService, Initial
                 attributesSharedElement);
 
         @SuppressWarnings("unchecked")
-        List<Object> keyList = Collections.list(((Vector<Object>) eRToRetTarget.get(keyColumn)).elements());
+        List<Object> keyList = Collections.list(((List<Object>) eRToRetTarget.get(keyColumn)).elements());
         BasicExpression bexp = new BasicExpression(new BasicField(keyColumn), BasicOperator.IN_OP, keyList);
         Map<String, Object> keyTargetValues = new HashMap<>();
         keyTargetValues.put(SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY, bexp);
@@ -483,7 +483,7 @@ public class SharePreferencesEngine implements ISharePreferencesService, Initial
                 attributesSharedElementTarget);
         if ((erTargetList.getCode() != EntityResult.OPERATION_WRONG) && (erTargetList.calculateRecordNumber() > 0)) {
             @SuppressWarnings({ "unchecked", "rawtypes" })
-            List<String> vTargetkey = Collections.list(((Vector) erTargetList.get(keyColumn)).elements());
+            List<String> vTargetkey = Collections.list(((List) erTargetList.get(keyColumn)).elements());
             BasicExpression bexp = new BasicExpression(new BasicField(keyColumn), BasicOperator.IN_OP, vTargetkey);
             List<String> attributesSharedElement = new ArrayList<>();
             attributesSharedElement.add(this.getShareKeyColumn());
@@ -506,7 +506,7 @@ public class SharePreferencesEngine implements ISharePreferencesService, Initial
                 Map<String, Object> hTargetkey = new HashMap<>();
                 hTargetkey.put(keyColumn, idShare);
                 @SuppressWarnings({ "rawtypes", "unchecked" })
-                int j = erTargetList.getRecordIndex(new Hashtable(hTargetkey));
+                int j = erTargetList.getRecordIndex(new HashMap(hTargetkey));
                 @SuppressWarnings("unchecked")
                 Map<String, Object> erTargetValue = erTargetList.getRecordValues(j);
                 mapToRet.put(IShareRemoteReference.SHARE_TARGET_KEY_STRING, erTargetValue.get(keyTargetColumn));

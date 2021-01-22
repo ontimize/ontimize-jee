@@ -204,7 +204,7 @@ public abstract class AbstractQLConditionValuesProcessor implements QLConditionV
      */
     protected StringBuilder appendOrClause(final String oKey, final SearchValue oValue, final boolean encloseColumnName,
             StringBuilder sbStringQueryInner) {
-        // If it is OR, then value is a vector with
+        // If it is OR, then value is a List with
         // objects
         final Object oSearchValue = oValue.getValue();
         if ((oSearchValue instanceof List) && !((List<?>) oSearchValue).isEmpty()) {
@@ -258,7 +258,7 @@ public abstract class AbstractQLConditionValuesProcessor implements QLConditionV
     private StringBuilder appendInAndExistsClause(final String oKey, final Object oSearchValue, String condition,
             final boolean encloseColumnName,
             StringBuilder sbStringQueryInner) {
-        // If it is IN, then value is a vector with
+        // If it is IN, then value is a List with
         // Objects
         if (oSearchValue instanceof List) {
             if (!((List<?>) oSearchValue).isEmpty()) {

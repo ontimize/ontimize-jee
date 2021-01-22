@@ -2,7 +2,7 @@ package com.ontimize.jee.server.dao.common.attributedispatcher;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Vector;
+import java.util.List;
 
 import org.springframework.context.ApplicationContext;
 
@@ -29,12 +29,12 @@ public class ReferenceFieldAttributeDispatcher extends AbstractAttributeDispatch
             ApplicationContext applicationContext) {
         // Fist of all reference data fields
         String cod = oAttribute.getCod();
-        Vector<?> cols = oAttribute.getCols();
+        List<?> cols = oAttribute.getCols();
         String entityName = oAttribute.getEntity();
         String attr = oAttribute.getAttr();
-        Vector<?> attrs = (Vector<?>) result.get(attr);
+        List<?> attrs = (List<?>) result.get(attr);
 
-        Vector<EntityResult> vResults = new Vector<>();
+        List<EntityResult> vResults = new ArrayList<>();
         if ((attrs != null) && (attrs.size() > 0)) {
             for (int j = 0; j < attrs.size(); j++) {
                 Object oAttrValue = attrs.get(j);

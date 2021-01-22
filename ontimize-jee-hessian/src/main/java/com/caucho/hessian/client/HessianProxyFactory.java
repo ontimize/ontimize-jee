@@ -33,7 +33,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Hashtable;
+import java.util.Map;
 
 import javax.naming.Context;
 import javax.naming.Name;
@@ -406,7 +406,7 @@ public class HessianProxyFactory implements ServiceProxyFactory, ObjectFactory {
      * JNDI object factory so the proxy can be used as a resource.
      */
     @Override
-    public Object getObjectInstance(Object obj, Name name, Context nameCtx, Hashtable<?, ?> environment)
+    public Object getObjectInstance(Object obj, Name name, Context nameCtx, Map<?, ?> environment)
             throws Exception {
         Reference ref = (Reference) obj;
 

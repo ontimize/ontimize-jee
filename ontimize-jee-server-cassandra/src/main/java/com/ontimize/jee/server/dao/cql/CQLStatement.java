@@ -26,7 +26,7 @@ public class CQLStatement {
     }
 
     /**
-     * Returns a vector of the required values for SQL Statement
+     * Returns a List of the required values for SQL Statement
      * @return the required values or null
      */
     public List getValues() {
@@ -34,7 +34,7 @@ public class CQLStatement {
     }
 
     /**
-     * Add a values vector at beginning of values vector for SQL Statement
+     * Add a values List at beginning of values List for SQL Statement
      * @param values
      */
     public void addValues(List values) {

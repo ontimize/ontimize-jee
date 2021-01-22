@@ -3,9 +3,9 @@ package com.ontimize.jee.server.services.management;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Hashtable;
+import java.util.Map;
 import java.util.List;
-import java.util.Vector;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +42,7 @@ public class RequestStatisticsHelper {
             long timeExecution, String exception) {
         try {
             // new ScheduledThreadPoolExecutor(corePoolSize)
-            Hashtable<Object, Object> attributesValues = new Hashtable<>();
+            Map<Object, Object> attributesValues = new HashMap<>();
             MapTools.safePut(attributesValues, "SERVICE_NAME", serviceName);
             MapTools.safePut(attributesValues, "METHOD_NAME", methodName);
             MapTools.safePut(attributesValues, "USER_NAME", user);
@@ -56,11 +56,11 @@ public class RequestStatisticsHelper {
                 Object[] values = (Object[]) params;
                 if (values.length != 0) {
                     for (Object value : values) {
-                        // if (value instanceof Vector<?>) {
-                        // Vector<?> vector = (Vector<?>) value;
+                        // if (value instanceof List<?>) {
+                        // List<?> List = (List<?>) value;
                         // sbParams.append(value.getClass());
-                        // for (Object vValue : vector) {
-                        // sbParams.append(vValue.toString() + (vector.indexOf(vValue) != (vector.size() - 1) ? "," :
+                        // for (Object vValue : List) {
+                        // sbParams.append(vValue.toString() + (List.indexOf(vValue) != (List.size() - 1) ? "," :
                         // ""));
                         // }
                         // } else {
@@ -86,7 +86,7 @@ public class RequestStatisticsHelper {
     }
 
     public EntityResult queryRequestStatistics() {
-        Hashtable<String, Object> keysValues = new Hashtable<>();
+        Map<String, Object> keysValues = new HashMap<>();
         List<String> attributes = new ArrayList<>();
         attributes.add("SERVICE_NAME");
         attributes.add("METHOD_NAME");
@@ -105,7 +105,7 @@ public class RequestStatisticsHelper {
     }
 
     public EntityResult queryRequestStatistics(String serviceName, String methodName, Date dateBefore, Date dateAfter) {
-        Hashtable<String, Object> keysValues = new Hashtable<>();
+        Map<String, Object> keysValues = new HashMap<>();
         keysValues.put("SERVICE_NAME", serviceName);
         keysValues.put("METHOD_NAME", methodName);
         List<String> attributes = new ArrayList<>();
@@ -150,7 +150,7 @@ public class RequestStatisticsHelper {
 
     public EntityResult deleteRequestStatistics(int days) {
         // Build filter
-        Hashtable<Object, Object> keysValues = new Hashtable<>();// Filter by date
+        Map<Object, Object> keysValues = new HashMap<>();// Filter by date
         Calendar calendar = Calendar.getInstance(); // this would default to now
         calendar.add(Calendar.DAY_OF_MONTH, -days);
         keysValues.put("EXECUTION_DATE", new SearchValue(SearchValue.LESS_EQUAL, calendar.getTime()));
@@ -159,7 +159,7 @@ public class RequestStatisticsHelper {
         if ((this.daoHelper != null) && (this.requestStatisticsDao != null)) {
             List<String> attributes = new ArrayList<>();
             attributes.add("ID_REQUEST_STATISTICS");
-            Vector<Number> keysToDelete = (Vector<Number>) this.daoHelper
+            List<Number> keysToDelete = (List<Number>) this.daoHelper
                 .query(this.requestStatisticsDao, keysValues, attributes)
                 .get("ID_REQUEST_STATISTICS");
 

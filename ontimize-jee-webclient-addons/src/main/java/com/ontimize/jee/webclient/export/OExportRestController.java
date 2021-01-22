@@ -7,7 +7,7 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.Map;
 import java.util.List;
 import java.util.Map;
 
@@ -101,7 +101,7 @@ public abstract class OExportRestController<S, T extends IExportService> extends
             Map<?, ?> kvQueryParameter = exportParam.getFilter();
             List<?> avQueryParameter = exportParam.getColumns();
             Map<?, ?> columnNames = exportParam.getColumnNames();
-            Hashtable<String, Integer> sqlTypes = new Hashtable<>();
+            Map<String, Integer> sqlTypes = new HashMap<>();
             sqlTypes.putAll(exportParam.getSqlTypes());
 
             Map<Object, Object> keysValues = this.createKeysValues(kvQueryParameter, sqlTypes);
@@ -116,7 +116,7 @@ public abstract class OExportRestController<S, T extends IExportService> extends
 
             File xslxFile = (File) ReflectionTools.invoke(this.exportService, exportMethod.toString(), er,
                     new ArrayList<>(exportParam.getColumnNames().values()));
-            Hashtable<String, Object> erResult = new Hashtable<>();
+            Map<String, Object> erResult = new HashMap<>();
             String filename = xslxFile.getName();
             erResult.put(extension + "Id", filename.substring(0, filename.indexOf('.')));
             EntityResult result = new EntityResult(EntityResult.OPERATION_SUCCESSFUL, EntityResult.NODATA_RESULT);
@@ -134,13 +134,13 @@ public abstract class OExportRestController<S, T extends IExportService> extends
         // Create EntityResult with column names
         EntityResult er = new EntityResult(columnNamesArray);
         er.setColumnOrder(columnNamesArray);
-        er.setColumnSQLTypes((Hashtable) sqlTypes);
+        er.setColumnSQLTypes((Map) sqlTypes);
 
         // Add data to EntityResult
         int index = 0;
         for (int i = 0; i < data.calculateRecordNumber(); i++) {
-            Hashtable rowData = data.getRecordValues(i);
-            Hashtable<Object, Object> record = new Hashtable<>();
+            Map rowData = data.getRecordValues(i);
+            Map<Object, Object> record = new HashMap<>();
             for (Object key : columns) {
                 if (rowData.get(key) != null) {
                     record.put(columnNames.get(key), rowData.get(key));

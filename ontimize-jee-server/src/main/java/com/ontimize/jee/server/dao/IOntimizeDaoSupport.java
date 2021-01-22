@@ -17,7 +17,7 @@ public interface IOntimizeDaoSupport {
      * defines which attributes (or columns if data is obtained from a database) must be recovered, and
      * <code>keysValues</code> specifies which set of records must be recovered.
      * <p>
-     * @param keysValues a Hashtable specifying conditions that must comply the set of records returned.
+     * @param keysValues a Map specifying conditions that must comply the set of records returned.
      *        Cannot be null.
      * @param attributes a list of columns or attributes that must be recovered for each record
      *        returned. Cannot be null. If empty, all attributes should be returned.
@@ -41,7 +41,7 @@ public interface IOntimizeDaoSupport {
      * <code>attributes</code> defines which attributes (or columns if data is obtained from a database)
      * must be recovered, and <code>keysValues</code> specifies which set of records must be recovered.
      * <p>
-     * @param keysValues a Hashtable specifying conditions that must comply the set of records returned.
+     * @param keysValues a Map specifying conditions that must comply the set of records returned.
      *        Cannot be null.
      * @param attributes a list of columns or attributes that must be recovered for each record
      *        returned. Cannot be null. If empty, all attributes should be returned.
@@ -62,7 +62,7 @@ public interface IOntimizeDaoSupport {
      * This method must implement a standard insert operation with the data contained in
      * <code>attributesValues</code> parameter.<br>
      * <p>
-     * @param attributesValues a Hashtable specifying pairs of key-value corresponding to the attribute
+     * @param attributesValues a Map specifying pairs of key-value corresponding to the attribute
      *        (or column of a table in a database) and the value that must be stored.
      * @return a EntityResult. This result will have an error code if error has ocurred.
      */

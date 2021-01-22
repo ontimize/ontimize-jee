@@ -1,9 +1,9 @@
 package com.ontimize.jee.server.dao;
 
-import java.util.Hashtable;
+import java.util.Map;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -210,7 +210,7 @@ public class One2OneDaoHelper implements ApplicationContextAware {
                             }
                         } else if (this.checkColumns(subDao.getDao(), attributesValues, subDao.getNotEnoughColumns())) {
                             this.checkRequiredColumns(attributesValues, subDao.getRequiredColumns(), true);
-                            Map<Object, Object> values = new Hashtable<>();
+                            Map<Object, Object> values = new HashMap<>();
                             values.putAll(attributesValues);
                             values.putAll(keysValues);
                             EntityResult resInsertSecondary = this.insertSubDao(daoHelper, values, subDao);
@@ -319,7 +319,7 @@ public class One2OneDaoHelper implements ApplicationContextAware {
 
     protected EntityResult updateSubDao(DefaultOntimizeDaoHelper daoHelper, Map<?, ?> attributesValues,
             OneToOneSubDao subDao, Object keyValue) {
-        Hashtable<Object, Object> kv2 = EntityResultTools.keysvalues(subDao.getKeySecondary(), keyValue);
+        Map<Object, Object> kv2 = EntityResultTools.keysvalues(subDao.getKeySecondary(), keyValue);
         if (subDao.getListener() != null) {
             subDao.getListener().preUpdate(subDao.getDao(), attributesValues, kv2);
         }
@@ -343,7 +343,7 @@ public class One2OneDaoHelper implements ApplicationContextAware {
         } else {
             EntityResult resQuery = daoHelper.query(mainDao, keysValues, EntityResultTools.attributes(joinKeyPrimary));
             CheckingTools.checkValidEntityResult(resQuery, "E_QUERYING_KEYS_IN_MAIN_DAO", true, true, new Object[] {});
-            secondaryKey = ((Vector) resQuery.get(joinKeySecondary)).get(0);
+            secondaryKey = ((List) resQuery.get(joinKeySecondary)).get(0);
         }
         return secondaryKey;
         // if (secondaryKey == null) {
@@ -470,9 +470,9 @@ public class One2OneDaoHelper implements ApplicationContextAware {
 
         void postDelete(IOntimizeDaoSupport dao, Map<?, ?> values, EntityResult resDelete);
 
-        void preUpdate(IOntimizeDaoSupport dao, Map<?, ?> av, Hashtable<Object, Object> kv);
+        void preUpdate(IOntimizeDaoSupport dao, Map<?, ?> av, Map<Object, Object> kv);
 
-        void postUpdate(IOntimizeDaoSupport dao, Map<?, ?> av, Hashtable<Object, Object> kv, EntityResult resUpdate);
+        void postUpdate(IOntimizeDaoSupport dao, Map<?, ?> av, Map<Object, Object> kv, EntityResult resUpdate);
 
     }
 
@@ -495,11 +495,11 @@ public class One2OneDaoHelper implements ApplicationContextAware {
         }
 
         @Override
-        public void preUpdate(IOntimizeDaoSupport dao, Map<?, ?> av, Hashtable<Object, Object> kv) {
+        public void preUpdate(IOntimizeDaoSupport dao, Map<?, ?> av, Map<Object, Object> kv) {
         }
 
         @Override
-        public void postUpdate(IOntimizeDaoSupport dao, Map<?, ?> av, Hashtable<Object, Object> kv,
+        public void postUpdate(IOntimizeDaoSupport dao, Map<?, ?> av, Map<Object, Object> kv,
                 EntityResult resUpdate) {
         }
 

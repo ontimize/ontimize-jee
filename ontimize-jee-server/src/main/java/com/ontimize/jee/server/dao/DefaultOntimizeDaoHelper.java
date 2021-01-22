@@ -3,7 +3,7 @@ package com.ontimize.jee.server.dao;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Hashtable;
+import java.util.Map;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -360,13 +360,13 @@ public class DefaultOntimizeDaoHelper implements IOntimizeDaoHelper, Application
     }
 
     /**
-     * Processes all the MultipleTableAttribute contained in the Vector <code>list</code>. All other
-     * objects are added to the resulting Vector with no changes. The MultipleTableAttribute objects are
+     * Processes all the MultipleTableAttribute contained in the List <code>list</code>. All other
+     * objects are added to the resulting List with no changes. The MultipleTableAttribute objects are
      * replaced by their attribute plus a list of ExtendedTableAttribute objects corresponding to the
      * keys of the MultipleTableAttribute object.
      * @param list the list
      * @param processedMultipleAttributes the processed multiple attributes
-     * @return a new Vector with the processed objects.
+     * @return a new ArrayList with the processed objects.
      */
     protected List<?> processMultipleTableAttribute(List<?> list, List<Object> processedMultipleAttributes) {
         List<Object> vOutput = new ArrayList<>();
@@ -393,9 +393,9 @@ public class DefaultOntimizeDaoHelper implements IOntimizeDaoHelper, Application
      * Processes MultipleReferenceDataFieldAttribute objects contained in <code>list</code>.
      * <p>
      * For each MultipleReferenceDataFieldAttribute found, the objects in
-     * MultipleReferenceDataFieldAttribute.getCods() are added to the resulting Vector
+     * MultipleReferenceDataFieldAttribute.getCods() are added to the resulting List
      * @param list the list
-     * @return the processed list as a new Vector
+     * @return the processed list as a new ArrayList
      */
     public List<?> processMultipleAttributeKey(List<?> list) {
         List<Object> destination = new ArrayList<>();
@@ -419,7 +419,7 @@ public class DefaultOntimizeDaoHelper implements IOntimizeDaoHelper, Application
 
     /**
      * This method performs a query for each object of any of the following types contained in the
-     * Vector <code>attributes</code>:
+     * List <code>attributes</code>:
      * <ul>
      * <li>ReferenceFieldAttribute</li>
      * <li>TableAttribute</li>
@@ -499,7 +499,7 @@ public class DefaultOntimizeDaoHelper implements IOntimizeDaoHelper, Application
             MultipleTableAttribute aD = (MultipleTableAttribute) processedMultipleAttributes.get(i);
             List<TableMultipleValue> vData = new ArrayList<>(0);
             for (int j = 0; j < result.calculateRecordNumber(); j++) {
-                Hashtable<?, ?> hCurrent = result.getRecordValues(j);
+                Map<?, ?> hCurrent = result.getRecordValues(j);
                 TableMultipleValue vMT = new TableMultipleValue(hCurrent.get(aD.getAttribute()));
                 Enumeration<?> enu = aD.keys();
                 while (enu.hasMoreElements()) {

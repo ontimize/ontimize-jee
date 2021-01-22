@@ -1,10 +1,10 @@
 package com.ontimize.jee.server.dao.common.attributedispatcher;
 
 import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.Map;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
+import java.util.List;
 
 import org.springframework.context.ApplicationContext;
 
@@ -29,12 +29,12 @@ public class MultipleReferenceDataFieldAttributeDispatcher
 
         String entityName = multipleAttr.getEntity();
 
-        Vector<MultipleValue> vResults = new Vector<>();
+        List<MultipleValue> vResults = new ArrayList<>();
         for (int j = 0; j < result.calculateRecordNumber(); j++) {
-            Hashtable<?, ?> hPrevious = result.getRecordValues(j);
+            Map<?, ?> hPrevious = result.getRecordValues(j);
             // Keys and request columns must be selected
 
-            Hashtable<Object, Object> hKeysValues = new Hashtable<>();
+            Map<Object, Object> hKeysValues = new HashMap<>();
             List<Object> v = new ArrayList<>(multipleAttr.getCols());
             v.addAll(lK);
 
@@ -55,7 +55,7 @@ public class MultipleReferenceDataFieldAttributeDispatcher
             }
 
             if ((res != null) && (res.calculateRecordNumber() > 0)) {
-                Hashtable<Object, Object> h = res.getRecordValues(0);
+                Map<Object, Object> h = res.getRecordValues(0);
                 for (int k = 0; k < lK.size(); k++) {
                     h.put(lCd.get(k), h.get(lK.get(k)));
                 }

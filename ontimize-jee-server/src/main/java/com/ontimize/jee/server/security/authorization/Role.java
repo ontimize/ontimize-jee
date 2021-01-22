@@ -1,7 +1,7 @@
 package com.ontimize.jee.server.security.authorization;
 
 import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.Map;
 import java.util.List;
 import java.util.Map;
 
@@ -34,8 +34,8 @@ public class Role {
             this.serverPermissions = new ArrayList<>();
         }
         if (this.clientPermissions == null) {
-            // Hashtable en vez de hashmap porque el cliente ontimize no está adaptado
-            this.clientPermissions = new Hashtable<>();
+            // Map en vez de hashmap porque el cliente ontimize no está adaptado
+            this.clientPermissions = new HashMap<>();
         }
     }
 

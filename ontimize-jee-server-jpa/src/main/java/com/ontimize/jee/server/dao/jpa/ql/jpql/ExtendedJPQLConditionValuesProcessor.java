@@ -66,7 +66,7 @@ public class ExtendedJPQLConditionValuesProcessor extends DefaultJPQLConditionVa
     }
 
     /**
-     * Creates the condition string from a expression and stores required values in a vector.
+     * Creates the condition string from a expression and stores required values in a List.
      * @param expression a class that implements <code>Expression<code> interface
      * &#64;param values
      *            a list where the required values for the condition are stored
@@ -83,7 +83,7 @@ public class ExtendedJPQLConditionValuesProcessor extends DefaultJPQLConditionVa
 
     /**
      * Creates the condition string from a expression. The condition string is stored in the
-     * <code>StringBuilder</code> param and the required values in a <code>Vector</code> param
+     * <code>StringBuilder</code> param and the required values in a <code>List</code> param
      * @param expression a class that implements <code>Expression<code> interface
      * &#64;param values
      *            a list where the required values for the condition are stored
@@ -169,7 +169,7 @@ public class ExtendedJPQLConditionValuesProcessor extends DefaultJPQLConditionVa
      * Creates the condition string for a SQL Statement.
      * @param conditions a condition list
      * @param wildcards column list that can use wildcards
-     * @param values vector where the value of each processed conditions is stored
+     * @param values List where the value of each processed conditions is stored
      * @return
      */
 

@@ -3,7 +3,7 @@ package com.ontimize.jee.server.services.i18n;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Hashtable;
+import java.util.Map;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -103,7 +103,7 @@ public class DatabaseI18nEngine implements II18nService, InitializingBean {
     @Override
     public Map<String, ResourceBundle> getAllResourceBundles(Locale locale) throws OntimizeJEERuntimeException {
         DatabaseBundleDescriptor[] availableBundles = this.getAvailableBundles();
-        Map<String, ResourceBundle> result = new Hashtable<>();
+        Map<String, ResourceBundle> result = new HashMap<>();
         for (DatabaseBundleDescriptor bundleDescriptor : availableBundles) {
             ResourceBundle bundle = this.getBundle(bundleDescriptor, locale);
             if (bundle != null) {
@@ -122,7 +122,7 @@ public class DatabaseI18nEngine implements II18nService, InitializingBean {
     @Override
     public Map<String, ResourceBundle> getBundles(List<String> baseNames, Locale locale)
             throws OntimizeJEERuntimeException {
-        Map<String, ResourceBundle> result = new Hashtable<>();
+        Map<String, ResourceBundle> result = new HashMap<>();
 
         for (String baseName : baseNames) {
             ResourceBundle bundle = this.getBundle(baseName, locale);
@@ -258,7 +258,7 @@ public class DatabaseI18nEngine implements II18nService, InitializingBean {
         DatabaseBundleDescriptor[] availableBundlesArray = this.getAvailableBundles();
         List<DatabaseBundleDescriptor> availableBundles = new ArrayList<>(Arrays.asList(availableBundlesArray));
 
-        Hashtable filter = new Hashtable();
+        Map filter = new HashMap();
         for (int i = 0; i < bundleValues.size(); i++) {
 
             BundleValue bv = bundleValues.get(i);
@@ -292,7 +292,7 @@ public class DatabaseI18nEngine implements II18nService, InitializingBean {
             List<?> keys = (List<?>) resBundleValues.get(this.bundleValuesTextKeyColumn);
             List<?> translations = (List<?>) resBundleValues.get(localeColumn);
             if ((keys != null) && (translations != null)) {
-                Hashtable<String, Object> data = new Hashtable<>();
+                Map<String, Object> data = new HashMap<>();
                 for (int i = 0; i < keys.size(); i++) {
                     if ((keys.get(i) != null) && (translations.get(i) != null)) {
                         data.put((String) keys.get(i), (String) translations.get(i));
@@ -311,7 +311,7 @@ public class DatabaseI18nEngine implements II18nService, InitializingBean {
      * @return the entity result
      */
     protected EntityResult queryBundleValues(Object bundleId, String languageColumn) {
-        Map<String, Object> filter = new Hashtable<>();
+        Map<String, Object> filter = new HashMap<>();
         if (bundleId != null) {
             filter.put(this.bundleKeyColumn, bundleId);
         } else {
@@ -384,7 +384,7 @@ public class DatabaseI18nEngine implements II18nService, InitializingBean {
             if (tokensAt.size() > 2) {
                 tokensAt.set(2, tokensAt.get(2).toString().toLowerCase());
             }
-            return ParseTools.vectorToStringSeparateBy(tokensAt, "_");
+            return ParseTools.ListToStringSeparateBy(tokensAt, "_");
         }
         return null;
     }

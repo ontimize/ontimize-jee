@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Hashtable;
+import java.util.Map;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -29,7 +29,7 @@ public class ExportService implements IExportService {
 
         File xlsxFile = File.createTempFile(String.valueOf(System.currentTimeMillis()), ".xlsx");
 
-        xlsExporter.createXLS(data, xlsxFile, null, new Hashtable<>(), columns, true, true, false);
+        xlsExporter.createXLS(data, xlsxFile, null, new HashMap<>(), columns, true, true, false);
 
         return xlsxFile;
     }
@@ -48,7 +48,7 @@ public class ExportService implements IExportService {
         }
 
         for (int j = 0; j < data.calculateRecordNumber(); j++) {
-            Hashtable record = data.getRecordValues(j);
+            Map record = data.getRecordValues(j);
             StringBuilder sbRow = new StringBuilder("<TR>");
             for (int i = 0; i < columns.size(); i++) {
                 Object sText = record.get(columns.get(i));
@@ -94,7 +94,7 @@ public class ExportService implements IExportService {
         }
         table.setHeaderRows(1);
         for (int i = 0; i < data.calculateRecordNumber(); i++) {
-            Hashtable record = data.getRecordValues(i);
+            Map record = data.getRecordValues(i);
             for (int j = 0; j < columns.size(); j++) {
                 String sText = record.get(columns.get(j)).toString();
                 PdfPCell cell = new PdfPCell(new Phrase(sText));

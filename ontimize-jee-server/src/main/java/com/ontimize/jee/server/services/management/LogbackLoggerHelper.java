@@ -11,11 +11,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Arrays;
-import java.util.Hashtable;
+import java.util.Map;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 import java.util.zip.ZipEntry;
@@ -181,7 +181,7 @@ public class LogbackLoggerHelper implements ILoggerHelper {
 
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                res.addRecord((Hashtable) LogbackLoggerHelper.this.keysvalues("FILE_NAME", file.toString(), "FILE_SIZE",
+                res.addRecord((Map) LogbackLoggerHelper.this.keysvalues("FILE_NAME", file.toString(), "FILE_SIZE",
                         Files.size(file)));
                 return FileVisitResult.CONTINUE;
             }
@@ -191,13 +191,13 @@ public class LogbackLoggerHelper implements ILoggerHelper {
 
     private void initEntityResult(EntityResult res, List<?> columns, int length) {
         for (Object col : columns) {
-            res.put(col, new Vector<>(length > 0 ? length : 10));
+            res.put(col, new ArrayList<>(length > 0 ? length : 10));
         }
     }
 
     private Map<Object, Object> keysvalues(Object... objects) {
         if (objects == null) {
-            return new Hashtable<>();
+            return new HashMap<>();
         }
         if ((objects.length % 2) != 0) {
             throw new RuntimeException("Review filters, it is mandatory to set dual <key><value>.");
@@ -208,7 +208,7 @@ public class LogbackLoggerHelper implements ILoggerHelper {
             }
         }
 
-        Map<Object, Object> res = new Hashtable<>();
+        Map<Object, Object> res = new HashMap<>();
         int i = 0;
         while (i < objects.length) {
             res.put(objects[i++], objects[i++]);

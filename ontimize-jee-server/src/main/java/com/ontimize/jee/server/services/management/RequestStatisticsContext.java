@@ -1,7 +1,7 @@
 package com.ontimize.jee.server.services.management;
 
 import java.util.Arrays;
-import java.util.Hashtable;
+import java.util.Map;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -48,11 +48,11 @@ public class RequestStatisticsContext {
         return RequestStatisticsContext.instance;
     }
 
-    public void addRequest(Hashtable<Object, Object> attributesValues) {
+    public void addRequest(Map<Object, Object> attributesValues) {
         this.rs.addRecord(attributesValues);
     }
 
-    public EntityResult getRequest(Hashtable<String, Object> keysValues, List<String> attributes, boolean statistics) {
+    public EntityResult getRequest(Map<String, Object> keysValues, List<String> attributes, boolean statistics) {
         EntityResult dofilter = EntityResultTools.dofilter(this.rs, keysValues);
         if (statistics) {
             try {
