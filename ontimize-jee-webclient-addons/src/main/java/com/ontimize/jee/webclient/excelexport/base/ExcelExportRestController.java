@@ -47,64 +47,21 @@ public abstract class ExcelExportRestController<S, T extends IExcelExportService
 	public ExcelExportRestController() {
 
 	}
-	
-	/**
-	 * Receives the reference to the temporary file and creates it
-	 * @param fileExtension The file extension
-	 * @param fileId Id of the tempfile
-	 * @param response authentication response
-	 */
-
-	@GetMapping({ "/{extension}/{id}" })
-	public void downloadFile(@PathVariable(name = "extension", required = true) final String fileExtension,
-			@PathVariable(name = "id", required = true) final String fileId, HttpServletResponse response) {
-
-		BufferedInputStream inputStream = null;
-
-		try {
-			File tmpDir = new File(System.getProperty("java.io.tmpdir"));
-			File[] matchingfiles = tmpDir.listFiles(new FilenameFilter() {
-				public boolean accept(File dir, String name) {
-					return name.startsWith(fileId) && name.endsWith(fileExtension);
-				}
-			});
-			if (matchingfiles.length == 1 && matchingfiles[0].exists()) {
-				File file = matchingfiles[0];
-				response.setHeader("Content-Type", "application/octet-stream");
-				response.setHeader("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"");
-//                response.setContentLengthLong(file.length());
-				inputStream = new BufferedInputStream(new FileInputStream(file));
-				FileCopyUtils.copy(inputStream, response.getOutputStream());
-			} else {
-				response.setStatus(404);
-			}
-		} catch (IOException e) {
-			logger.error("{}", e.getMessage(), e);
-			response.setStatus(500);
-		} finally {
-			if (inputStream != null) {
-				try {
-					inputStream.close();
-				} catch (IOException e) {
-					logger.error("{}", e.getMessage(), e);
-				}
-			}
-
-		}
-
-	}
 
 	/**
-	 * Receive the query parameters, create the file and call the service
+	 * Receive the query parameters, creates the temporal file and call the service
 	 * @param exportParam The query parameters
-	 * @return Returns the EntityResult of the file
+	 * @param fileExtension The extension of the file to export
+	 * @param response The HTTP response
 	 * @throws Exception
 	 */
-	@PostMapping(value = { "/export" }, consumes = { "application/json" }, produces = { "application/json" })
-	public ResponseEntity<EntityResult> exportQuery(@RequestBody ExportQueryParameters exportParam)
-
+	@PostMapping(value = { "/{extension}/export" }, consumes = { "application/json" }, produces = { "application/json" })
+	public void exportQuery(@PathVariable(name = "extension", required = true) final String fileExtension,
+			@RequestBody ExportQueryParameters exportParam, HttpServletResponse response)
 			throws Exception {
 		logger.debug("Invoked /{}", exportParam);
+		
+		BufferedInputStream inputStream = null;
 		try {
 			
 			EntityResult entityResult = new EntityResult();
@@ -122,23 +79,19 @@ public abstract class ExcelExportRestController<S, T extends IExcelExportService
 			List<?> avQueryParameter = exportParam.getQueryParam().getColumns();
 			HashMap<?, ?> hSqlTypes = exportParam.getQueryParam().getSqltypes();
 
-			File xslxFile = exportService.queryParameters(entityResult, new ArrayList(),
+			File xlsxFile = exportService.queryParameters(entityResult, new ArrayList(),
 					this.createKeysValues(kvQueryParameter, hSqlTypes),
 					this.createAttributesValues(avQueryParameter, hSqlTypes),
 					exportParam.getPageSize(), exportParam.isAdvQuery(), exportParam.getOffset());
 
-			Hashtable<String, Object> erResult = new Hashtable();
+			response.setHeader("Content-Type", "application/octet-stream");
+			response.setHeader("Content-Disposition", "attachment; filename=\"" + xlsxFile.getName() + "\"");
 
-			String filename = xslxFile.getName();
+			inputStream = new BufferedInputStream(new FileInputStream(xlsxFile));
+			FileCopyUtils.copy(inputStream, response.getOutputStream());
 
-			erResult.put("xlsx" + "Id", filename.substring(0, filename.indexOf('.')));
-			EntityResult result = new EntityResult(0, 1);
-			result.addRecord(erResult);
-
-			return new ResponseEntity(result, HttpStatus.OK);
 		} catch (Exception e) {
-			return this.processError(e);
+			response.setStatus(500);
 		}
-
 	}
 }
