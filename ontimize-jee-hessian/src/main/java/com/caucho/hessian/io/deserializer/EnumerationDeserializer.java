@@ -28,7 +28,7 @@
 package com.caucho.hessian.io.deserializer;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Vector;
 
 import com.caucho.hessian.io.AbstractHessianInput;
 
@@ -49,7 +49,7 @@ public class EnumerationDeserializer extends AbstractListDeserializer {
 
     @Override
     public Object readList(AbstractHessianInput in, int length) throws IOException {
-        List<Object> list = new ArrayList<>();
+        Vector<Object> list = new Vector<>();
 
         in.addRef(list);
 
