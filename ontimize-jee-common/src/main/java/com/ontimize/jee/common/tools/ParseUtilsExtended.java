@@ -5,15 +5,9 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Map;
-import java.util.List;
+import java.util.*;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.ResourceBundle;
-import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 
 import javax.swing.Icon;
@@ -382,7 +376,7 @@ public class ParseUtilsExtended extends ParseTools {
             if (param.startsWith(preffix)) {
                 MapTools.safePut(params, entry.getKey().toString().substring(preffix.length()), entry.getValue(),
                         false);
-            } else if (!param.contains(".") && includeGenerics) {
+            } else if (!(param.contains(".")) && includeGenerics) {
                 MapTools.safePut(params, entry.getKey(), entry.getValue(), true);
             }
         }

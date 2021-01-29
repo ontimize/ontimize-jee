@@ -70,17 +70,13 @@ public class Log4j2LoggerHelper implements ILoggerHelper {
         }
         final PipedInputStream pis = new PipedInputStream();
         final PipedOutputStream pos = new PipedOutputStream(pis);
-        new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                try (ZipOutputStream zos = new ZipOutputStream(pos)) {
-                    zos.putNextEntry(new ZipEntry(file.getFileName().toString()));
-                    StreamUtils.copy(Files.newInputStream(file), zos);
-                    zos.closeEntry();
-                } catch (IOException e) {
-                    Log4j2LoggerHelper.logger.error(null, e);
-                }
+        new Thread(() -> {
+            try (ZipOutputStream zos = new ZipOutputStream(pos)) {
+                zos.putNextEntry(new ZipEntry(file.getFileName().toString()));
+                StreamUtils.copy(Files.newInputStream(file), zos);
+                zos.closeEntry();
+            } catch (IOException e) {
+                Log4j2LoggerHelper.logger.error(null, e);
             }
         }, "LoggerHelper copy stream").start();
 

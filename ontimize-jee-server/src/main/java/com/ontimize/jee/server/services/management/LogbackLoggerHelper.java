@@ -51,8 +51,7 @@ public class LogbackLoggerHelper implements ILoggerHelper {
 
     /**
      * Query log.
-     * @param response the response
-     * @throws IOException
+     *  @throws IOException
      */
     public InputStream openLogStream() throws IOException {
         final CustomPipedInputStream in = new CustomPipedInputStream();
@@ -60,27 +59,23 @@ public class LogbackLoggerHelper implements ILoggerHelper {
         synchronized (out) {
             final CustomOutputStreamAppender appender = this.registerAppender(in, out);
 
-            new Thread(new Runnable() {
-
-                @Override
-                public void run() {
-                    synchronized (out) {
-                        try {
-                            out.wait();
-                        } catch (InterruptedException e1) {
-                            LogbackLoggerHelper.logger.trace(null, e1);
-                        }
-                        LogbackLoggerHelper.logger.debug("unregistering remote logger");
-                        LogbackLoggerHelper.this.unregisterAppender(appender);
-                        try {
-                            in.close();
-                            out.close();
-                        } catch (IOException e) {
-                            LogbackLoggerHelper.logger.error(null, e);
-                        }
+            new Thread(() -> {
+                synchronized (out) {
+                    try {
+                        out.wait();
+                    } catch (InterruptedException e1) {
+                        LogbackLoggerHelper.logger.trace(null, e1);
                     }
-
+                    LogbackLoggerHelper.logger.debug("unregistering remote logger");
+                    LogbackLoggerHelper.this.unregisterAppender(appender);
+                    try {
+                        in.close();
+                        out.close();
+                    } catch (IOException e) {
+                        LogbackLoggerHelper.logger.error(null, e);
+                    }
                 }
+
             }, "Thread-close log stream").start();
         }
         return in;
