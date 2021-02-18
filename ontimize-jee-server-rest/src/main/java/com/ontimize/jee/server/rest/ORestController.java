@@ -76,7 +76,8 @@ public abstract class ORestController<S> {
             return new ResponseEntity<>(eR, HttpStatus.OK);
         } catch (Exception error) {
             ORestController.logger.error(null, error);
-            EntityResult entityResult = new EntityResultMapImpl(EntityResult.OPERATION_WRONG, EntityResult.BEST_COMPRESSION);
+            EntityResult entityResult = new EntityResultMapImpl(EntityResult.OPERATION_WRONG,
+                    EntityResult.BEST_COMPRESSION);
             entityResult.setMessage(error.getMessage());
             return new ResponseEntity<>(entityResult, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -193,7 +194,8 @@ public abstract class ORestController<S> {
 
     protected ResponseEntity<EntityResult> processError(Exception error) {
         ORestController.logger.error("{}", error.getMessage(), error);
-        EntityResult entityResult = new EntityResultMapImpl(EntityResult.OPERATION_WRONG, EntityResult.BEST_COMPRESSION);
+        EntityResult entityResult = new EntityResultMapImpl(EntityResult.OPERATION_WRONG,
+                EntityResult.BEST_COMPRESSION);
         entityResult.setMessage(this.getErrorMessage(error));
         return new ResponseEntity<>(entityResult, HttpStatus.INTERNAL_SERVER_ERROR);
     }

@@ -54,7 +54,7 @@ public class LogbackLoggerHelper implements ILoggerHelper {
 
     /**
      * Query log.
-     *  @throws IOException
+     * @throws IOException
      */
     public InputStream openLogStream() throws IOException {
         final CustomPipedInputStream in = new CustomPipedInputStream();

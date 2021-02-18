@@ -380,7 +380,8 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
                 stSQL = this.getStatementHandler()
                     .createSelectQuery(this.getSchemaTable(), new ArrayList<>(vValidAttributes),
                             new HashMap<>(kvValidKeysValues), new ArrayList<>(),
-                            new ArrayList<>(sort == null ? Collections.emptyList() : sort), pageableInfo.getRecordNumber(),
+                            new ArrayList<>(sort == null ? Collections.emptyList() : sort),
+                            pageableInfo.getRecordNumber(),
                             pageableInfo.getStartIndex());
             } else {
                 stSQL = this.getStatementHandler()
@@ -1010,9 +1011,9 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
     }
 
     /**
-     * Processes all the MultipleTableAttribute contained as keys ih the Map <code>av</code>. All
-     * other objects are added to the resulting List with no changes. The MultipleTableAttribute
-     * objects are replaced by their attribute.
+     * Processes all the MultipleTableAttribute contained as keys ih the Map <code>av</code>. All other
+     * objects are added to the resulting List with no changes. The MultipleTableAttribute objects are
+     * replaced by their attribute.
      * @param av the av
      * @return a new HashMap with the processed objects.
      */
@@ -1033,8 +1034,8 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
     /**
      * Processes the ReferenceFieldAttribute objects contained in <code>keysValues</code>.
      * <p>
-     * Returns a Map containing all the objects contained in the argument <code>keysValues</code>
-     * except in the case of keys that are ReferenceFieldAttribute objects, which are replaced by
+     * Returns a Map containing all the objects contained in the argument <code>keysValues</code> except
+     * in the case of keys that are ReferenceFieldAttribute objects, which are replaced by
      * ((ReferenceFieldAttribute)object).getAttr()
      * <p>
      * @param keysValues the keysValues to process

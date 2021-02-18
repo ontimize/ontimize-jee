@@ -91,7 +91,7 @@ public final class EntityResultTools extends com.ontimize.dto.EntityResultTools 
      */
     public static EntityResult doJoin(EntityResult a, EntityResult b, String[] columnKeysA, String[] columnKeysB,
             JoinType joinType) {
-        EntityResult res = new EntityResultMapImpl();//todo review on new implementations
+        EntityResult res = new EntityResultMapImpl();// todo review on new implementations
         List<Object> resColumnsA = new ArrayList<>(a.keySet());
         EntityResultTools.ensureCols(resColumnsA, columnKeysA);
         List<Object> resColumnsB = new ArrayList<>(b.keySet());

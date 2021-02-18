@@ -62,8 +62,8 @@ public interface IOntimizeDaoSupport {
      * This method must implement a standard insert operation with the data contained in
      * <code>attributesValues</code> parameter.<br>
      * <p>
-     * @param attributesValues a Map specifying pairs of key-value corresponding to the attribute
-     *        (or column of a table in a database) and the value that must be stored.
+     * @param attributesValues a Map specifying pairs of key-value corresponding to the attribute (or
+     *        column of a table in a database) and the value that must be stored.
      * @return a EntityResult. This result will have an error code if error has ocurred.
      */
     EntityResult insert(Map<?, ?> attributesValues);

@@ -299,7 +299,7 @@ public class DatabaseI18nEngine implements II18nService, InitializingBean {
                         data.put((String) keys.get(i), (String) translations.get(i));
                     }
                 }
-                return new TmpDatabaseResourceBundle((EntityResultMapImpl)data, locale);
+                return new TmpDatabaseResourceBundle((EntityResultMapImpl) data, locale);
             }
         }
         return null;

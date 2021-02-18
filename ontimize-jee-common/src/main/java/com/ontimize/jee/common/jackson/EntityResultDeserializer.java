@@ -74,7 +74,8 @@ public class EntityResultDeserializer extends StdDeserializer<EntityResult> {
             rawData = this.deserializeObject((ObjectNode) dataNode, sqlTypes);
         }
 
-        EntityResult er = new EntityResultMapImpl(Arrays.asList(columns.toArray()));//todo review on new implementations
+        EntityResult er = new EntityResultMapImpl(Arrays.asList(columns.toArray()));// todo review on new
+                                                                                    // implementations
         for (Map<String, Object> record : records) {
             er.addRecord(record);
         }

@@ -83,9 +83,9 @@ public class OntimizeSerializerFactory extends AbstractSerializerFactory {
     }
 
     /**
-     * Serializer for classes extending {@link HashMap} or {@link Map}. Lo que hacemos es no
-     * permitir explorar las propiedades de la parte del Map (igual que hace el map serializer) y crear
-     * una variable ficticia para meter el contenido del map.
+     * Serializer for classes extending {@link HashMap} or {@link Map}. Lo que hacemos es no permitir
+     * explorar las propiedades de la parte del Map (igual que hace el map serializer) y crear una
+     * variable ficticia para meter el contenido del map.
      *
      */
     public static class MapExtendedClassSerializer extends JavaSerializer {

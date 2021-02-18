@@ -170,7 +170,8 @@ public class One2OneDaoHelper implements ApplicationContextAware {
             List<OneToOneSubDao> secondaryDaos, Map<?, ?> attributesValues,
             Map<?, ?> keysValues, One2OneType type) throws OntimizeJEERuntimeException {
         try {
-            EntityResult result = new EntityResultMapImpl(EntityResult.OPERATION_SUCCESSFUL, EntityResult.NODATA_RESULT);
+            EntityResult result = new EntityResultMapImpl(EntityResult.OPERATION_SUCCESSFUL,
+                    EntityResult.NODATA_RESULT);
             boolean opDone = false;
             Exception someError = null;
             // Checks formodifications in main dao
@@ -198,7 +199,7 @@ public class One2OneDaoHelper implements ApplicationContextAware {
                                         keyValue);
                                 CheckingTools.checkValidEntityResult(resUpdateSecond, "E_UPDATING_SEOCONDARY_DAO");
                                 if (resUpdateSecond != null) {
-                                    result.putAll((EntityResultMapImpl)resUpdateSecond);
+                                    result.putAll((EntityResultMapImpl) resUpdateSecond);
                                 }
                                 opDone = true;
                             } catch (Exception sqlError) {
@@ -226,7 +227,7 @@ public class One2OneDaoHelper implements ApplicationContextAware {
                                 CheckingTools.checkValidEntityResult(resUpdateMain, "E_UPDATING_MAIN_DAO");
                             }
                             if (resInsertSecondary != null) {
-                                result.putAll((EntityResultMapImpl)resInsertSecondary);
+                                result.putAll((EntityResultMapImpl) resInsertSecondary);
                             }
                             opDone = true;
                         }

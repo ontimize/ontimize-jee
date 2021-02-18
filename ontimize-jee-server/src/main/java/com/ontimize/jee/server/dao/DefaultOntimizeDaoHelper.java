@@ -239,9 +239,9 @@ public class DefaultOntimizeDaoHelper implements IOntimizeDaoHelper, Application
 
         EntityResult resGeneratedKeys = dao.insert(avToInsert);
 
-        EntityResult resOtherEntities = this.propagateToOtherEntities((EntityResultMapImpl)resGeneratedKeys,
+        EntityResult resOtherEntities = this.propagateToOtherEntities((EntityResultMapImpl) resGeneratedKeys,
                 avToInsert, avToPropagate);
-        resOtherEntities.putAll((EntityResultMapImpl)resGeneratedKeys);
+        resOtherEntities.putAll((EntityResultMapImpl) resGeneratedKeys);
         return resOtherEntities;
     }
 
@@ -270,15 +270,15 @@ public class DefaultOntimizeDaoHelper implements IOntimizeDaoHelper, Application
                             .getValue();
                         Map<?, ?> generatedValues = null;
                         if (operation instanceof InsertOperation) {
-                            generatedValues = (EntityResultMapImpl)dispatcher.processInsertAttribute(entry.getKey(),
+                            generatedValues = (EntityResultMapImpl) dispatcher.processInsertAttribute(entry.getKey(),
                                     (InsertOperation) operation, generatedValuesInParentEntity,
                                     attributesValuesReceivedInParentEntity, this.applicationContext);
                         } else if (operation instanceof UpdateOperation) {
-                            generatedValues = (EntityResultMapImpl)dispatcher.processUpdateAttribute(entry.getKey(),
+                            generatedValues = (EntityResultMapImpl) dispatcher.processUpdateAttribute(entry.getKey(),
                                     (UpdateOperation) operation, generatedValuesInParentEntity,
                                     attributesValuesReceivedInParentEntity, this.applicationContext);
                         } else if (operation instanceof DeleteOperation) {
-                            generatedValues = (EntityResultMapImpl)dispatcher.processDeleteAttribute(entry.getKey(),
+                            generatedValues = (EntityResultMapImpl) dispatcher.processDeleteAttribute(entry.getKey(),
                                     (DeleteOperation) operation, generatedValuesInParentEntity,
                                     attributesValuesReceivedInParentEntity, this.applicationContext);
                         }
@@ -335,7 +335,7 @@ public class DefaultOntimizeDaoHelper implements IOntimizeDaoHelper, Application
         }
 
         avUpdate.putAll(keysValues);
-        this.propagateToOtherEntities((EntityResultMapImpl)updateResult, avUpdate, avToPropagate);
+        this.propagateToOtherEntities((EntityResultMapImpl) updateResult, avUpdate, avToPropagate);
 
         return updateResult;
     }
@@ -420,8 +420,8 @@ public class DefaultOntimizeDaoHelper implements IOntimizeDaoHelper, Application
     }
 
     /**
-     * This method performs a query for each object of any of the following types contained in the
-     * List <code>attributes</code>:
+     * This method performs a query for each object of any of the following types contained in the List
+     * <code>attributes</code>:
      * <ul>
      * <li>ReferenceFieldAttribute</li>
      * <li>TableAttribute</li>
