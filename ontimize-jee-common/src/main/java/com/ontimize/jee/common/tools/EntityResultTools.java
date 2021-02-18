@@ -19,12 +19,14 @@ import java.util.regex.Pattern;
 
 import javax.swing.table.TableModel;
 
+import com.ontimize.dto.EntityResult;
+import com.ontimize.dto.EntityResultMapImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 
-import com.ontimize.db.EntityResult;
+
 import com.ontimize.db.SQLStatementBuilder.BasicExpression;
 import com.ontimize.db.SQLStatementBuilder.BasicField;
 import com.ontimize.db.SQLStatementBuilder.BasicOperator;
@@ -39,7 +41,7 @@ import com.ontimize.jee.common.tools.ertools.IPartialAggregateValue;
 /**
  * Clase de utilidades para EntityResult.
  */
-public final class EntityResultTools extends com.ontimize.db.EntityResultTools {
+public final class EntityResultTools extends com.ontimize.dto.EntityResultTools {
 
     private static final Logger logger = LoggerFactory.getLogger(EntityResultTools.class);
 
@@ -89,7 +91,7 @@ public final class EntityResultTools extends com.ontimize.db.EntityResultTools {
      */
     public static EntityResult doJoin(EntityResult a, EntityResult b, String[] columnKeysA, String[] columnKeysB,
             JoinType joinType) {
-        EntityResult res = new EntityResult();
+        EntityResult res = new EntityResultMapImpl();//todo review on new implementations
         List<Object> resColumnsA = new ArrayList<>(a.keySet());
         EntityResultTools.ensureCols(resColumnsA, columnKeysA);
         List<Object> resColumnsB = new ArrayList<>(b.keySet());
@@ -128,7 +130,7 @@ public final class EntityResultTools extends com.ontimize.db.EntityResultTools {
             return res;
         }
         if (((List) res.get(columnKeysA[0])).size() == 0) {
-            return new EntityResult();
+            return new EntityResultMapImpl();
         } else {
             return res;
         }
@@ -172,7 +174,7 @@ public final class EntityResultTools extends com.ontimize.db.EntityResultTools {
             if (a.get(keyNameA) == null) {
                 // No viene la clave --> no hay join
                 if (JoinType.INNER == joinType) {
-                    return new EntityResult();
+                    return new EntityResultMapImpl();
                 } else {
                     return a;
                 }
@@ -394,7 +396,7 @@ public final class EntityResultTools extends com.ontimize.db.EntityResultTools {
             group.onNewGroupRecord(er, i);
         }
 
-        EntityResult res = new EntityResult();
+        EntityResult res = new EntityResultMapImpl();
         List<Object> resultColumns = new ArrayList<Object>(Arrays.asList(groupColumns));
         for (Group group : groups) {
             resultColumns.addAll(group.getAggregatedColumnNames());
@@ -463,7 +465,7 @@ public final class EntityResultTools extends com.ontimize.db.EntityResultTools {
         Object[] keysSorted = ((List) a.get(col)).toArray();
         int[] indexes = FastQSortAlgorithm.sort(keysSorted);
         List cols = new ArrayList(a.keySet());
-        EntityResult res = new EntityResult();
+        EntityResult res = new EntityResultMapImpl();
         EntityResultTools.initEntityResult(res, cols, indexes.length);
         for (Object key : cols) {
             List vOrig = (List) a.get(key);
@@ -542,12 +544,12 @@ public final class EntityResultTools extends com.ontimize.db.EntityResultTools {
      */
     public static EntityResult doUnionAll(EntityResult... vRes) {
         if ((vRes == null) || (vRes.length == 0)) {
-            EntityResult res = new EntityResult();
+            EntityResult res = new EntityResultMapImpl();
             res.setCode(EntityResult.OPERATION_WRONG);
             return res;
         }
 
-        EntityResult res = new EntityResult();
+        EntityResult res = new EntityResultMapImpl();
         res.setCode(EntityResult.OPERATION_SUCCESSFUL);
         res.setCompressionThreshold(vRes[0].getCompressionThreshold());
         res.setType(EntityResult.DATA_RESULT);
@@ -591,7 +593,7 @@ public final class EntityResultTools extends com.ontimize.db.EntityResultTools {
         EntityResult doUnionAll = EntityResultTools.doUnionAll(vRes);
 
         // Now clean duplicated entries
-        EntityResult newResult = new EntityResult();
+        EntityResult newResult = new EntityResultMapImpl();
         newResult.setCode(EntityResult.OPERATION_SUCCESSFUL);
         newResult.setCompressionThreshold(vRes[0].getCompressionThreshold());
         newResult.setType(EntityResult.DATA_RESULT);
@@ -666,7 +668,7 @@ public final class EntityResultTools extends com.ontimize.db.EntityResultTools {
     }
 
     public static EntityResult dofilter(EntityResult er, Map<?, ?> keysValues, boolean remove) {
-        EntityResult res = new EntityResult();
+        EntityResult res = new EntityResultMapImpl();
         res.setCode(EntityResult.OPERATION_SUCCESSFUL);
         res.setCompressionThreshold(er.getCompressionThreshold());
         res.setType(EntityResult.DATA_RESULT);
@@ -1010,7 +1012,7 @@ public final class EntityResultTools extends com.ontimize.db.EntityResultTools {
      * @return the entity result
      */
     public static EntityResult doRemoveDuplicates(EntityResult in) {
-        EntityResult res = new EntityResult();
+        EntityResult res = new EntityResultMapImpl();
         EntityResultTools.initEntityResult(res, new ArrayList(in.keySet()));
         int nInRegs = in.calculateRecordNumber();
         int nResRegs = 0;
@@ -1138,7 +1140,7 @@ public final class EntityResultTools extends com.ontimize.db.EntityResultTools {
 
     public static EntityResult pivot(EntityResult er, String pivotColumn, List<String> otherColumns,
             IAggregateFunction operation) throws Exception {
-        EntityResult res = new EntityResult();
+        EntityResult res = new EntityResultMapImpl();
         if ((er == null) || (pivotColumn == null) || (operation == null)) {
             return res;
         }

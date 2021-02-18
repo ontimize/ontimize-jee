@@ -1,6 +1,7 @@
 package com.ontimize.jee.common.tools;
 
-import com.ontimize.db.EntityResult;
+
+import com.ontimize.dto.EntityResult;
 import com.ontimize.jee.common.exceptions.OntimizeJEEException;
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
 

@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.ontimize.jee</groupId>
 	<artifactId>ontimize-jee</artifactId>
-	<version>8.0.0-SNAPSHOT</version>
+	<version>5.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<url>http://www.ontimize.com/</url>
 	<organization>
@@ -173,10 +173,11 @@
 						</execution>
 					</executions>
 				</plugin>
-				<!-- Imatia javaformat plugin
+				<!-- Imatia javaformat plugin -->
 				<plugin>
 					<groupId>com.imatia.javaformat</groupId>
 					<artifactId>imatia-javaformat-maven-plugin</artifactId>
+					<version>1.0.1</version>
 					<executions>
 						<execution>
 							<id>imatia-javaformat</id>
@@ -187,7 +188,7 @@
 							</goals>
 						</execution>
 					</executions>
-				</plugin>-->
+				</plugin>
 			</plugins>
 		</pluginManagement>
 		<plugins>
@@ -196,16 +197,19 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
 			</plugin>
+			<!--		<plugin>
+                    <groupId>com.imatia.javaformat</groupId>
+                        <artifactId>imatia-javaformat-maven-plugin</artifactId>
+                    </plugin> -->
+                </plugins>
+            </build>
 
-		</plugins>
-	</build>
-
-	<profiles>
-		<profile>
-			<id>generate-version</id>
-			<build>
-				<plugins>
-					<!-- Source -->
+            <profiles>
+                <profile>
+                    <id>generate-version</id>
+                    <build>
+                        <plugins>
+                            <!-- Source -->
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-source-plugin</artifactId>
@@ -701,12 +705,12 @@
 		<module>ontimize-jee-common</module>
 		<module>ontimize-jee-server</module>
 		<module>ontimize-jee-hessian</module>
-<!--	<module>ontimize-jee-desktopclient</module> -->
+    <!--<module>ontimize-jee-desktopclient</module> -->
 		<module>ontimize-jee-server-rest</module>
-		<module>ontimize-jee-server-jpa</module>
-		<module>ontimize-jee-server-jdbc</module>
-		<module>ontimize-jee-server-cassandra</module>
-		<module>ontimize-jee-server-logic</module>
-		<module>ontimize-jee-webclient-addons</module>
+	<!--<module>ontimize-jee-server-jpa</module> -->
+        <module>ontimize-jee-server-jdbc</module>
+	<!--<module>ontimize-jee-server-cassandra</module> -->
+	<!--<module>ontimize-jee-server-logic</module> -->
+	<!--<module>ontimize-jee-webclient-addons</module> -->
 	</modules>
-</project>
+     </project>

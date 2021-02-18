@@ -10,7 +10,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ontimize.db.EntityResult;
+import com.ontimize.dto.EntityResult;
 import com.ontimize.jee.common.exceptions.OntimizeJEEException;
 import com.ontimize.jee.common.security.PermissionsProviderSecured;
 import com.ontimize.jee.common.services.formprovider.IFormProviderService;

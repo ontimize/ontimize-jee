@@ -7,7 +7,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.InitializingBean;
 
-import com.ontimize.db.EntityResult;
+import com.ontimize.dto.EntityResult;
 import com.ontimize.gui.SearchValue;
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
 import com.ontimize.jee.common.tools.CheckingTools;

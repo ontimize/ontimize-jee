@@ -8,7 +8,7 @@ import java.util.List;
 
 import org.springframework.context.ApplicationContext;
 
-import com.ontimize.db.EntityResult;
+import com.ontimize.dto.EntityResult;
 import com.ontimize.db.NullValue;
 import com.ontimize.db.util.DBFunctionName;
 import com.ontimize.gui.field.EntityFunctionAttribute;

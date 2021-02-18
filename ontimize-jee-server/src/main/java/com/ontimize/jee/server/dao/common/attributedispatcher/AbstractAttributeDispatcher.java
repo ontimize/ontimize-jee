@@ -7,7 +7,7 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationContext;
 
-import com.ontimize.db.EntityResult;
+import com.ontimize.dto.EntityResult;
 import com.ontimize.jee.common.services.ServiceTools;
 import com.ontimize.jee.common.tools.ReflectionTools;
 import com.ontimize.jee.server.spring.SpringTools;

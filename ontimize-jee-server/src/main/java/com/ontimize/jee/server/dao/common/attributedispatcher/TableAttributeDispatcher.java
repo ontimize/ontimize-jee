@@ -1,5 +1,6 @@
 package com.ontimize.jee.server.dao.common.attributedispatcher;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 
-import com.ontimize.db.EntityResult;
+import com.ontimize.dto.EntityResult;
 import com.ontimize.gui.table.TableAttribute;
 import com.ontimize.jee.common.dao.DeleteOperation;
 import com.ontimize.jee.common.dao.InsertOperation;

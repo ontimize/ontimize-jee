@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import com.ontimize.dto.EntityResultMapImpl;
 import org.apache.logging.log4j.core.Appender;
 import org.apache.logging.log4j.core.appender.FileAppender;
 import org.apache.logging.log4j.core.appender.RollingFileAppender;
@@ -22,7 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StreamUtils;
 
-import com.ontimize.db.EntityResult;
+import com.ontimize.dto.EntityResult;
 import com.ontimize.jee.common.exceptions.OntimizeJEEException;
 import com.ontimize.jee.common.tools.EntityResultTools;
 import com.ontimize.util.logging.LogManagerFactory;
@@ -46,10 +47,10 @@ public class Log4j2LoggerHelper implements ILoggerHelper {
     public EntityResult getLogFiles() throws Exception {
         Path folder = this.getLogFolder();
         if (folder == null) {
-            return new EntityResult(EntityResult.OPERATION_SUCCESSFUL_SHOW_MESSAGE, EntityResult.NODATA_RESULT,
+            return new EntityResultMapImpl(EntityResult.OPERATION_SUCCESSFUL_SHOW_MESSAGE, EntityResult.NODATA_RESULT,
                     "No hay ficheros que mostrar");
         }
-        final EntityResult res = new EntityResult(Arrays.asList(new String[] { "FILE_NAME", "FILE_SIZE" }));
+        final EntityResult res = new EntityResultMapImpl(Arrays.asList(new String[] { "FILE_NAME", "FILE_SIZE" }));
         Files.walkFileTree(folder, new java.nio.file.SimpleFileVisitor<Path>() {
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {

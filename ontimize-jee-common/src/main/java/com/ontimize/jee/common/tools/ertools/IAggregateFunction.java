@@ -1,9 +1,10 @@
 package com.ontimize.jee.common.tools.ertools;
 
+import com.ontimize.dto.EntityResult;
+
 import java.util.List;
 import java.util.Map;
 
-import com.ontimize.db.EntityResult;
 
 public interface IAggregateFunction<T extends IPartialAggregateValue> {
 

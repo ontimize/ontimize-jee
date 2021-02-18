@@ -9,13 +9,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.List;
 
+import com.ontimize.dto.EntityResultMapImpl;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
-import com.ontimize.db.EntityResult;
+import com.ontimize.dto.EntityResult;
 import com.ontimize.db.NullValue;
 import com.ontimize.gui.SearchValue;
 import com.ontimize.gui.field.EntityFunctionAttribute;
@@ -85,8 +86,8 @@ public class MassiveModificationHelper implements ApplicationContextAware, IMass
     }
 
     public EntityResult compareData(String pkColumn, Map<?, ?> keysValues, List<?> attributes, EntityResult query) {
-        EntityResult resFinal = new EntityResult(query.getRecordValues(0));
-        EntityResult resMassiveMod = (EntityResult) resFinal.clone();
+        EntityResult resFinal = new EntityResultMapImpl((HashMap)query.getRecordValues(0));
+        EntityResult resMassiveMod = (EntityResultMapImpl) resFinal.clone();
         attributes.remove(pkColumn);
         attributes.remove(IMassiveModificationHelper.MASSIVE_MODIFICATION_UNIQUE_IDENTIFIER);
 
@@ -110,8 +111,8 @@ public class MassiveModificationHelper implements ApplicationContextAware, IMass
                     }
                     List<? extends Object> value = isEquals ? new ArrayList<>(Arrays.asList(lastValue))
                             : new ArrayList<>(Arrays.asList(new NullValue()));
-                    MapTools.safePut(resFinal, attribute, value);
-                    MapTools.safePut(resMassiveMod, attribute, values);// debug mode
+                    MapTools.safePut((EntityResultMapImpl)resFinal, attribute, value);
+                    MapTools.safePut((EntityResultMapImpl)resMassiveMod, attribute, values);// debug mode
                 }
             }
         }
@@ -119,12 +120,12 @@ public class MassiveModificationHelper implements ApplicationContextAware, IMass
             List<EntityResult> vValues = (List<EntityResult>) query.get(tableAttr);
             EntityResult doUnionAll = EntityResultTools.doUnionAll(vValues.toArray(new EntityResult[vValues.size()]));
             EntityResult doRemoveDuplicates = EntityResultTools.doRemoveDuplicates(doUnionAll);
-            MapTools.safePut(resFinal, tableAttr, doRemoveDuplicates);
+            MapTools.safePut((EntityResultMapImpl)resFinal, tableAttr, doRemoveDuplicates);
         }
 
-        MapTools.safePut(resFinal, pkColumn, keysValues.get(pkColumn));
-        MapTools.safePut(resMassiveMod, pkColumn, keysValues.get(pkColumn));
-        MapTools.safePut(resFinal, IMassiveModificationHelper.MASSIVE_MODIFICATION_UNIQUE_IDENTIFIER, resMassiveMod);
+        MapTools.safePut((EntityResultMapImpl)resFinal, pkColumn, keysValues.get(pkColumn));
+        MapTools.safePut((EntityResultMapImpl)resMassiveMod, pkColumn, keysValues.get(pkColumn));
+        MapTools.safePut((EntityResultMapImpl)resFinal, IMassiveModificationHelper.MASSIVE_MODIFICATION_UNIQUE_IDENTIFIER, resMassiveMod);
         return resFinal;
     }
 
@@ -139,7 +140,7 @@ public class MassiveModificationHelper implements ApplicationContextAware, IMass
                 keys.put(pkColumn, id);
                 daoHelper.update(dao, attributesValues, keys);
             }
-            return new EntityResult();
+            return new EntityResultMapImpl();
         }
         return daoHelper.update(dao, attributesValues, keysValues);
     }
@@ -155,7 +156,7 @@ public class MassiveModificationHelper implements ApplicationContextAware, IMass
                 keys.put(pkColumn, id);
                 one2oneHelper.update(daoHelper, mainDao, secondaryDaos, attributesValues, keys, type);
             }
-            return new EntityResult();
+            return new EntityResultMapImpl();
         }
         return one2oneHelper.update(daoHelper, mainDao, secondaryDaos, attributesValues, keysValues, type);
     }
@@ -194,7 +195,7 @@ public class MassiveModificationHelper implements ApplicationContextAware, IMass
             }
             Map hash = new HashMap<>();
             hash.put(pkColumn, pks);
-            return new EntityResult(hash);
+            return new EntityResultMapImpl((HashMap)hash);
         }
         return daoHelper.insert(dao, attributesValues);
     }
@@ -210,7 +211,7 @@ public class MassiveModificationHelper implements ApplicationContextAware, IMass
                 MapTools.safePut((Map<Object, Object>) attributesValues, pkColumn, id);
                 one2oneHelper.insert(daoHelper, mainDao, secondaryDaos, attributesValues, type);
             }
-            return new EntityResult();
+            return new EntityResultMapImpl();
         }
         return one2oneHelper.insert(daoHelper, mainDao, secondaryDaos, attributesValues, type);
     }

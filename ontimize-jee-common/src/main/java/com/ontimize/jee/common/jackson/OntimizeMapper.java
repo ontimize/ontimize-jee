@@ -4,8 +4,9 @@ import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.ontimize.db.AdvancedEntityResult;
-import com.ontimize.db.EntityResult;
+
 import com.ontimize.db.SQLStatementBuilder.SQLOrder;
+import com.ontimize.dto.EntityResult;
 
 public class OntimizeMapper extends ObjectMapper {
 

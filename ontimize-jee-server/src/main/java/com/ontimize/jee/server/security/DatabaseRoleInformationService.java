@@ -16,7 +16,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ontimize.db.EntityResult;
+import com.ontimize.dto.EntityResult;
 import com.ontimize.jee.common.tools.CheckingTools;
 import com.ontimize.jee.server.dao.IOntimizeDaoSupport;
 import com.ontimize.jee.server.security.authorization.Role;

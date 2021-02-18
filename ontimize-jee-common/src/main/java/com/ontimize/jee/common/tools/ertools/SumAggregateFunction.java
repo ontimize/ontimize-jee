@@ -5,7 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.ontimize.db.EntityResult;
+
+import com.ontimize.dto.EntityResult;
 import com.ontimize.jee.common.tools.ertools.SumAggregateFunction.SumPartialAggregateValue;
 
 public class SumAggregateFunction extends AbstractAggregateFunction<SumPartialAggregateValue> {

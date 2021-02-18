@@ -1,10 +1,12 @@
 package com.ontimize.jee.server.dao;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 import java.util.Map;
 import java.util.List;
 
+import com.ontimize.dto.EntityResultMapImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -13,7 +15,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
-import com.ontimize.db.EntityResult;
+import com.ontimize.dto.EntityResult;
 import com.ontimize.db.NullValue;
 import com.ontimize.jee.common.exceptions.OntimizeJEEException;
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
@@ -168,7 +170,7 @@ public class One2OneDaoHelper implements ApplicationContextAware {
             List<OneToOneSubDao> secondaryDaos, Map<?, ?> attributesValues,
             Map<?, ?> keysValues, One2OneType type) throws OntimizeJEERuntimeException {
         try {
-            EntityResult result = new EntityResult(EntityResult.OPERATION_SUCCESSFUL, EntityResult.NODATA_RESULT);
+            EntityResult result = new EntityResultMapImpl(EntityResult.OPERATION_SUCCESSFUL, EntityResult.NODATA_RESULT);
             boolean opDone = false;
             Exception someError = null;
             // Checks formodifications in main dao
@@ -196,7 +198,7 @@ public class One2OneDaoHelper implements ApplicationContextAware {
                                         keyValue);
                                 CheckingTools.checkValidEntityResult(resUpdateSecond, "E_UPDATING_SEOCONDARY_DAO");
                                 if (resUpdateSecond != null) {
-                                    result.putAll(resUpdateSecond);
+                                    result.putAll((EntityResultMapImpl)resUpdateSecond);
                                 }
                                 opDone = true;
                             } catch (Exception sqlError) {
@@ -224,7 +226,7 @@ public class One2OneDaoHelper implements ApplicationContextAware {
                                 CheckingTools.checkValidEntityResult(resUpdateMain, "E_UPDATING_MAIN_DAO");
                             }
                             if (resInsertSecondary != null) {
-                                result.putAll(resInsertSecondary);
+                                result.putAll((EntityResultMapImpl)resInsertSecondary);
                             }
                             opDone = true;
                         }

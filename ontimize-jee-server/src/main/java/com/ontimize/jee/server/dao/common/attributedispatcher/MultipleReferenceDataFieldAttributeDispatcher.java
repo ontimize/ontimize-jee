@@ -1,6 +1,7 @@
 package com.ontimize.jee.server.dao.common.attributedispatcher;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 import java.util.Map;
@@ -8,7 +9,7 @@ import java.util.List;
 
 import org.springframework.context.ApplicationContext;
 
-import com.ontimize.db.EntityResult;
+import com.ontimize.dto.EntityResult;
 import com.ontimize.gui.MultipleValue;
 import com.ontimize.gui.field.MultipleReferenceDataFieldAttribute;
 import com.ontimize.jee.common.dao.DeleteOperation;

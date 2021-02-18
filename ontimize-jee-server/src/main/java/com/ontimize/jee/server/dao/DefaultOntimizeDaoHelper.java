@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.ontimize.dto.EntityResultMapImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -18,7 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import com.ontimize.db.AdvancedEntityResult;
-import com.ontimize.db.EntityResult;
+import com.ontimize.dto.EntityResult;
 import com.ontimize.gui.TableMultipleValue;
 import com.ontimize.gui.field.EntityFunctionAttribute;
 import com.ontimize.gui.field.MultipleReferenceDataFieldAttribute;
@@ -238,8 +239,9 @@ public class DefaultOntimizeDaoHelper implements IOntimizeDaoHelper, Application
 
         EntityResult resGeneratedKeys = dao.insert(avToInsert);
 
-        EntityResult resOtherEntities = this.propagateToOtherEntities(resGeneratedKeys, avToInsert, avToPropagate);
-        resOtherEntities.putAll(resGeneratedKeys);
+        EntityResult resOtherEntities = this.propagateToOtherEntities((EntityResultMapImpl)resGeneratedKeys,
+                avToInsert, avToPropagate);
+        resOtherEntities.putAll((EntityResultMapImpl)resGeneratedKeys);
         return resOtherEntities;
     }
 
@@ -252,7 +254,7 @@ public class DefaultOntimizeDaoHelper implements IOntimizeDaoHelper, Application
     public EntityResult propagateToOtherEntities(Map<?, ?> generatedValuesInParentEntity,
             Map<?, ?> attributesValuesReceivedInParentEntity,
             Map<?, ICascadeOperationContainer> attributesValuesToPropagate) {
-        EntityResult result = new EntityResult();
+        EntityResult result = new EntityResultMapImpl();
         for (Entry<?, ICascadeOperationContainer> entry : attributesValuesToPropagate.entrySet()) {
             // El orden de propagación será primero deletes, luego updates y finalmente insert
             List<IOperation> operations = new ArrayList<>();
@@ -268,15 +270,15 @@ public class DefaultOntimizeDaoHelper implements IOntimizeDaoHelper, Application
                             .getValue();
                         Map<?, ?> generatedValues = null;
                         if (operation instanceof InsertOperation) {
-                            generatedValues = dispatcher.processInsertAttribute(entry.getKey(),
+                            generatedValues = (EntityResultMapImpl)dispatcher.processInsertAttribute(entry.getKey(),
                                     (InsertOperation) operation, generatedValuesInParentEntity,
                                     attributesValuesReceivedInParentEntity, this.applicationContext);
                         } else if (operation instanceof UpdateOperation) {
-                            generatedValues = dispatcher.processUpdateAttribute(entry.getKey(),
+                            generatedValues = (EntityResultMapImpl)dispatcher.processUpdateAttribute(entry.getKey(),
                                     (UpdateOperation) operation, generatedValuesInParentEntity,
                                     attributesValuesReceivedInParentEntity, this.applicationContext);
                         } else if (operation instanceof DeleteOperation) {
-                            generatedValues = dispatcher.processDeleteAttribute(entry.getKey(),
+                            generatedValues = (EntityResultMapImpl)dispatcher.processDeleteAttribute(entry.getKey(),
                                     (DeleteOperation) operation, generatedValuesInParentEntity,
                                     attributesValuesReceivedInParentEntity, this.applicationContext);
                         }
@@ -326,14 +328,14 @@ public class DefaultOntimizeDaoHelper implements IOntimizeDaoHelper, Application
         Map<?, ICascadeOperationContainer> avToPropagate = new HashMap<>();
         this.extactPropagableValues(attributesValues, avUpdate, avToPropagate);
 
-        EntityResult updateResult = new EntityResult();
+        EntityResult updateResult = new EntityResultMapImpl();
 
         if (!avUpdate.isEmpty()) {
             updateResult = dao.update(avUpdate, keysValues);
         }
 
         avUpdate.putAll(keysValues);
-        this.propagateToOtherEntities(updateResult, avUpdate, avToPropagate);
+        this.propagateToOtherEntities((EntityResultMapImpl)updateResult, avUpdate, avToPropagate);
 
         return updateResult;
     }

@@ -10,7 +10,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
-import com.ontimize.db.EntityResult;
+import com.ontimize.dto.EntityResult;
 import com.ontimize.db.NullValue;
 import com.ontimize.db.SQLStatementBuilder.BasicExpression;
 import com.ontimize.db.SQLStatementBuilder.BasicField;

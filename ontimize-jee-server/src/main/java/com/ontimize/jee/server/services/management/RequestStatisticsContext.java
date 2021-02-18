@@ -4,10 +4,11 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.List;
 
+import com.ontimize.dto.EntityResultMapImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ontimize.db.EntityResult;
+import com.ontimize.dto.EntityResult;
 import com.ontimize.jee.common.tools.EntityResultTools;
 import com.ontimize.jee.common.tools.ertools.AvgAggregateFunction;
 import com.ontimize.jee.common.tools.ertools.CountAggregateFunction;
@@ -22,7 +23,7 @@ public class RequestStatisticsContext {
 
     private static RequestStatisticsContext instance;
 
-    private EntityResult rs = new EntityResult(
+    private EntityResult rs = new EntityResultMapImpl(
             Arrays.asList("SERVICE_NAME", "METHOD_NAME", "USER_NAME", "METHOD_PARAMS", "EXECUTION_DATE",
                     "EXECUTION_TIME", "SERVICE_EXCEPTION"));
 

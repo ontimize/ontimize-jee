@@ -7,12 +7,14 @@ import java.util.Map;
 import java.util.List;
 import java.util.Map;
 import java.util.List;
+import java.util.Vector;
 
+import com.ontimize.dto.EntityResultMapImpl;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import com.ontimize.db.EntityResult;
+import com.ontimize.dto.EntityResult;
 import com.ontimize.db.SQLStatementBuilder;
 import com.ontimize.db.SQLStatementBuilder.BasicExpression;
 import com.ontimize.db.SQLStatementBuilder.BasicField;
@@ -281,7 +283,7 @@ public class SharePreferencesEngine implements ISharePreferencesService, Initial
 
     @Override
     public EntityResult editTargetSharedElement(int idShare, List<String> targetList) throws OntimizeJEEException {
-        EntityResult toRet = new EntityResult();
+        EntityResult toRet = new EntityResultMapImpl();
 
         if (targetList != null) {
             String keyColumn = this.getShareKeyColumn();
@@ -430,7 +432,7 @@ public class SharePreferencesEngine implements ISharePreferencesService, Initial
                 attributesSharedElement);
 
         @SuppressWarnings("unchecked")
-        List<Object> keyList = Collections.list(((List<Object>) eRToRetTarget.get(keyColumn)).elements());
+        List<Object> keyList = Collections.list(((Vector<Object>) eRToRetTarget.get(keyColumn)).elements());
         BasicExpression bexp = new BasicExpression(new BasicField(keyColumn), BasicOperator.IN_OP, keyList);
         Map<String, Object> keyTargetValues = new HashMap<>();
         keyTargetValues.put(SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY, bexp);
@@ -483,7 +485,7 @@ public class SharePreferencesEngine implements ISharePreferencesService, Initial
                 attributesSharedElementTarget);
         if ((erTargetList.getCode() != EntityResult.OPERATION_WRONG) && (erTargetList.calculateRecordNumber() > 0)) {
             @SuppressWarnings({ "unchecked", "rawtypes" })
-            List<String> vTargetkey = Collections.list(((List) erTargetList.get(keyColumn)).elements());
+            List<String> vTargetkey = Collections.list(((Vector) erTargetList.get(keyColumn)).elements());
             BasicExpression bexp = new BasicExpression(new BasicField(keyColumn), BasicOperator.IN_OP, vTargetkey);
             List<String> attributesSharedElement = new ArrayList<>();
             attributesSharedElement.add(this.getShareKeyColumn());
@@ -705,7 +707,7 @@ public class SharePreferencesEngine implements ISharePreferencesService, Initial
     @Override
     public EntityResult deleteSharedItem(int idShare) throws OntimizeJEEException {
 
-        EntityResult toRet = new EntityResult();
+        EntityResult toRet = new EntityResultMapImpl();
 
         String targetKeyColumn = this.getShareTargetKeyColumn();
 
@@ -744,7 +746,7 @@ public class SharePreferencesEngine implements ISharePreferencesService, Initial
     @Override
     public EntityResult deleteTargetSharedItem(int idShareTarget) throws OntimizeJEEException {
         // Check target element
-        EntityResult toRet = new EntityResult();
+        EntityResult toRet = new EntityResultMapImpl();
 
         String targetKeyColumn = this.getShareTargetKeyColumn();
         String keyColumn = this.getShareKeyColumn();
@@ -817,7 +819,7 @@ public class SharePreferencesEngine implements ISharePreferencesService, Initial
     public EntityResult updateSharedItem(int idShare, String content, String message, String name)
             throws OntimizeJEEException {
 
-        EntityResult toRet = new EntityResult();
+        EntityResult toRet = new EntityResultMapImpl();
 
         String keyColumn = this.getShareKeyColumn();
 

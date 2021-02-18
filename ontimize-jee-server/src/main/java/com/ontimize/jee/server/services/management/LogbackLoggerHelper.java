@@ -10,7 +10,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Iterator;
 import java.util.List;
@@ -21,13 +23,14 @@ import java.util.concurrent.TimeUnit;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import com.ontimize.dto.EntityResultMapImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StreamUtils;
 
-import com.ontimize.db.EntityResult;
+import com.ontimize.dto.EntityResult;
 import com.ontimize.jee.common.exceptions.OntimizeJEEException;
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
 import com.ontimize.jee.common.tools.TimeLimiter;
@@ -167,10 +170,10 @@ public class LogbackLoggerHelper implements ILoggerHelper {
     public EntityResult getLogFiles() throws Exception {
         Path folder = this.getLogFolder();
         if (folder == null) {
-            return new EntityResult(EntityResult.OPERATION_SUCCESSFUL_SHOW_MESSAGE, EntityResult.NODATA_RESULT,
+            return new EntityResultMapImpl(EntityResult.OPERATION_SUCCESSFUL_SHOW_MESSAGE, EntityResult.NODATA_RESULT,
                     "No hay ficheros que mostrar");
         }
-        final EntityResult res = new EntityResult();
+        final EntityResult res = new EntityResultMapImpl();
         this.initEntityResult(res, Arrays.asList(new String[] { "FILE_NAME", "FILE_SIZE" }), 0);
         Files.walkFileTree(folder, new java.nio.file.SimpleFileVisitor<Path>() {
 

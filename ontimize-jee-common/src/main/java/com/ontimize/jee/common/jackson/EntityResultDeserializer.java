@@ -21,7 +21,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.ontimize.db.EntityResult;
+
+import com.ontimize.dto.EntityResult;
+import com.ontimize.dto.EntityResultMapImpl;
 import com.ontimize.jee.common.tools.ParseUtilsExtended;
 
 public class EntityResultDeserializer extends StdDeserializer<EntityResult> {
@@ -72,7 +74,7 @@ public class EntityResultDeserializer extends StdDeserializer<EntityResult> {
             rawData = this.deserializeObject((ObjectNode) dataNode, sqlTypes);
         }
 
-        EntityResult er = new EntityResult(Arrays.asList(columns.toArray()));
+        EntityResult er = new EntityResultMapImpl(Arrays.asList(columns.toArray()));//todo review on new implementations
         for (Map<String, Object> record : records) {
             er.addRecord(record);
         }

@@ -28,6 +28,8 @@ import java.util.List;
 import javax.sql.DataSource;
 import javax.xml.bind.JAXB;
 
+import com.ontimize.dto.EntityResult;
+import com.ontimize.dto.EntityResultMapImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -56,7 +58,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.util.Assert;
 
 import com.ontimize.db.AdvancedEntityResult;
-import com.ontimize.db.EntityResult;
+import com.ontimize.dto.EntityResult;
 import com.ontimize.db.NullValue;
 import com.ontimize.db.SQLStatementBuilder;
 import com.ontimize.db.SQLStatementBuilder.BasicExpression;
@@ -723,7 +725,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
     @Override
     public EntityResult insert(final Map<?, ?> attributesValues) {
         this.checkCompiled();
-        final EntityResult erResult = new EntityResult();
+        final EntityResult erResult = new EntityResultMapImpl();
 
         final Map<?, ?> avWithoutMultipleTableAttributes = this.processMultipleTableAttribute(attributesValues);
         final Map<?, ?> avWithoutReferenceAttributes = this
@@ -814,7 +816,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
     protected EntityResult innerUpdate(final Map<?, ?> attributesValues, final Map<?, ?> keysValues,
             final boolean safe) {
         this.checkCompiled();
-        final EntityResult erResult = new EntityResult();
+        final EntityResult erResult = new EntityResultMapImpl();
 
         // Check the primary keys
         final Map<?, ?> avWithoutMultipleTableAttributes = this.processMultipleTableAttribute(attributesValues);
@@ -905,7 +907,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
      */
     public EntityResult innerDelete(final Map<?, ?> keysValues, final boolean safe) {
         this.checkCompiled();
-        final EntityResult erResult = new EntityResult();
+        final EntityResult erResult = new EntityResultMapImpl();
         Map<?, ?> keysValuesChecked = keysValues;
         if (safe) {
             keysValuesChecked = this.checkDeleteKeys(keysValues);

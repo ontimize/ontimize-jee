@@ -19,7 +19,8 @@ import com.caucho.hessian.io.deserializer.Deserializer;
 import com.caucho.hessian.io.deserializer.JavaDeserializer;
 import com.caucho.hessian.io.serializer.JavaSerializer;
 import com.caucho.hessian.io.serializer.Serializer;
-import com.ontimize.db.EntityResult;
+
+import com.ontimize.dto.EntityResult;
 import com.ontimize.gui.table.TableAttribute;
 import com.ontimize.jee.common.tools.ReflectionTools;
 

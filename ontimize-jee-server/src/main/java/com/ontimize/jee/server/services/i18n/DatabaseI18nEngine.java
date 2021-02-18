@@ -10,9 +10,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.ResourceBundle;
 
+import com.ontimize.dto.EntityResultMapImpl;
 import org.springframework.beans.factory.InitializingBean;
 
-import com.ontimize.db.EntityResult;
+import com.ontimize.dto.EntityResult;
 import com.ontimize.gui.SearchValue;
 import com.ontimize.gui.i18n.DatabaseBundleDescriptor;
 import com.ontimize.gui.i18n.DatabaseBundleValues;
@@ -298,7 +299,7 @@ public class DatabaseI18nEngine implements II18nService, InitializingBean {
                         data.put((String) keys.get(i), (String) translations.get(i));
                     }
                 }
-                return new TmpDatabaseResourceBundle(data, locale);
+                return new TmpDatabaseResourceBundle((EntityResultMapImpl)data, locale);
             }
         }
         return null;

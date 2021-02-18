@@ -4,12 +4,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import com.ontimize.db.AdvancedEntityResultMapImpl;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 
 import com.ontimize.db.AdvancedEntityResult;
-import com.ontimize.db.EntityResult;
+import com.ontimize.dto.EntityResult;
 import com.ontimize.db.handler.SQLStatementHandler;
 
 /**
@@ -61,7 +62,7 @@ public class AdvancedEntityResultResultSetExtractor implements ResultSetExtracto
      */
     @Override
     public AdvancedEntityResult extractData(ResultSet resultSet) throws SQLException, DataAccessException {
-        AdvancedEntityResult entityResult = new AdvancedEntityResult(EntityResult.OPERATION_SUCCESSFUL,
+        AdvancedEntityResult entityResult = new AdvancedEntityResultMapImpl(EntityResult.OPERATION_SUCCESSFUL,
                 EntityResult.DATA_RESULT);
         entityResult.setStartRecordIndex(this.offset);
         try {

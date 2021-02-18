@@ -3,17 +3,19 @@ package com.ontimize.jee.server.services.management;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 import java.util.List;
 
+import com.ontimize.dto.EntityResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
-import com.ontimize.db.EntityResult;
+
 import com.ontimize.gui.SearchValue;
 import com.ontimize.jee.common.tools.DateTools;
 import com.ontimize.jee.common.tools.EntityResultTools;
