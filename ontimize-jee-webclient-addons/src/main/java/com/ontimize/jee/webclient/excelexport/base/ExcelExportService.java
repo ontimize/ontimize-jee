@@ -2,9 +2,11 @@ package com.ontimize.jee.webclient.excelexport.base;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +29,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import com.lowagie.text.Document;
+import com.lowagie.text.Element;
+import com.lowagie.text.PageSize;
+import com.lowagie.text.Phrase;
+import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
 import com.ontimize.db.AdvancedEntityResult;
 import com.ontimize.db.EntityResult;
 import com.ontimize.db.SQLStatementBuilder.SQLOrder;
@@ -57,6 +66,8 @@ import com.ontimize.jee.webclient.excelexport.rule.RowSelectionRuleFactory;
 import com.ontimize.jee.webclient.excelexport.support.BaseExportColumnProvider;
 import com.ontimize.jee.webclient.excelexport.support.DefaultHeadExportColumn;
 import com.ontimize.jee.webclient.excelexport.util.ExportOptions;
+import com.ontimize.util.xls.XLSExporter;
+import com.ontimize.util.xls.XLSExporterFactory;
 
 /**
  * Servicio de exportaciÃ³n en formato Excel. El formato de la entityResult es
@@ -86,9 +97,10 @@ public class ExcelExportService implements IExcelExportService, ApplicationConte
 
 	private static final Logger logger = LoggerFactory.getLogger(ExcelExportService.class);
 	private ApplicationContext appContext;
-	
+
 	/**
 	 * Method that generates the data provider
+	 * 
 	 * @param service          The query service.
 	 * @param queryParameters  Columns and sqltypes.
 	 * @param dao              The query dao.
@@ -151,20 +163,21 @@ public class ExcelExportService implements IExcelExportService, ApplicationConte
 
 			@Override
 			public Object getCellValue(int row, int column) {
-				//devuelve los valores de la query de uno en uno
+				// devuelve los valores de la query de uno en uno
 				if (column >= 0 && column < bodyColumns.size()) {
 					if (advancedQuery) {
 						if (page == -1) {
-							//Query avanzada que devuelve todas las paginas
+							// Query avanzada que devuelve todas las paginas
 							AdvancedEntityResult data = getAdvancedEntityResult(row);
 							List cellValue = (List) data.get(String.valueOf(bodyColumns.get(column).getId()));
-							//Cuando el numero de fila es igual al tamaño de pagina, cambia el offset a la siguiente pagina
+							// Cuando el numero de fila es igual al tamaño de pagina, cambia el offset a la
+							// siguiente pagina
 							int nRow = row % pageSize;
 							if (data != null && nRow < cellValue.size()) {
 								return cellValue.get(nRow);
 							}
 						} else {
-							//Query avanzada que devuelve una pagina especifica
+							// Query avanzada que devuelve una pagina especifica
 							AdvancedEntityResult data = getUniquePage(page);
 							List cellValue = (List) data.get(String.valueOf(bodyColumns.get(column).getId()));
 							if (data != null && row < cellValue.size()) {
@@ -173,7 +186,7 @@ public class ExcelExportService implements IExcelExportService, ApplicationConte
 						}
 
 					} else {
-						//Query simple que devuelve todos los datos
+						// Query simple que devuelve todos los datos
 						EntityResult data = getEntityResult();
 						List cellValue = (List) data.get(String.valueOf(bodyColumns.get(column).getId()));
 						if (data != null && row < cellValue.size()) {
@@ -564,12 +577,12 @@ public class ExcelExportService implements IExcelExportService, ApplicationConte
 		}
 		return style;
 	}
-	
-	//Creamos el fichero temporal y llamamos al creador de providers
+
+	// Creamos el fichero temporal y llamamos al creador de providers
 	@Override
 	public File queryParameters(EntityResult data, List<String> orderColumns, Map<Object, Object> keysValues,
-			List<Object> attributesValues, int pageSize, 
-			boolean advQuery, int offSet) throws OntimizeJEERuntimeException, IOException {
+			List<Object> attributesValues, int pageSize, boolean advQuery, int offSet)
+			throws OntimizeJEERuntimeException, IOException {
 		System.out.println(keysValues);
 
 		File xlsxFile = File.createTempFile(String.valueOf(System.currentTimeMillis()), ".xlsx");
@@ -578,31 +591,106 @@ public class ExcelExportService implements IExcelExportService, ApplicationConte
 
 	}
 
+	@Deprecated
 	@Override
 	public File xlsxExport(EntityResult data, List<String> orderColumns) throws Exception {
-		return null;
+		XLSExporter xlsExporter = XLSExporterFactory.instanceXLSExporter(XLSExporterFactory.POI_3_5);
+
+		File xlsxFile = File.createTempFile(String.valueOf(System.currentTimeMillis()), ".xlsx");
+
+		xlsExporter.createXLS(data, xlsxFile, null, new Hashtable<>(), orderColumns, true, true, false);
+		return xlsxFile;
 	}
 
+	@Deprecated
 	@Override
-	public File htmlExport(EntityResult entityResult, List<String> list) throws Exception {
-		return null;
+	public File htmlExport(EntityResult data, List<String> columns) throws Exception {
+        // Code inspired by getHTMLString method from com.ontimize.gui.table.Table
+        // component
+
+        // Create an String with the table data
+        // Export to HTML:
+        String tagEnd = "</TABLE></BODY></HTML>";
+        StringBuilder sbHeader = new StringBuilder("<HTML><HEAD></HEAD><BODY><TABLE border='1'><TR>");
+        for (int i = 0; i < columns.size(); i++) {
+            sbHeader.append("<TH>" + columns.get(i) + "</TH>");
+        }
+
+        for (int j = 0; j < data.calculateRecordNumber(); j++) {
+            Hashtable record = data.getRecordValues(j);
+            StringBuilder sbRow = new StringBuilder("<TR>");
+            for (int i = 0; i < columns.size(); i++) {
+                Object sText = record.get(columns.get(i));
+                if (sText != null) {
+                    sbRow.append("<TD>");
+                    sbRow.append(sText);
+                    sbRow.append("</TD>");
+                }
+            }
+            sbRow.append("</TR>\n");
+            sbHeader.append(sbRow.toString());
+        }
+
+        String htmlStringValue = sbHeader.toString() + tagEnd;
+
+        File htmlFile = File.createTempFile(String.valueOf(System.currentTimeMillis()), ".html");
+        FileWriter fw = new FileWriter(htmlFile);
+        fw.write(htmlStringValue, 0, htmlStringValue.length());
+        fw.flush();
+        fw.close();
+
+        return htmlFile;
 	}
 
+	@Deprecated
 	@Override
-	public File pdfExport(EntityResult entityResult, List<String> list) throws Exception {
-		return null;
+	public File pdfExport(EntityResult data, List<String> columns) throws Exception {
+        File pdfFile = File.createTempFile(String.valueOf(System.currentTimeMillis()), ".pdf");
+
+        // Create document on landscape mode
+        Document document = new Document(PageSize.A4.rotate());
+        PdfWriter.getInstance(document, new FileOutputStream(pdfFile));
+        document.open();
+
+        // Create table
+        PdfPTable table = new PdfPTable(columns.size());
+        table.setWidthPercentage(100);
+
+        // Add data to table
+        for (int i = 0; i < columns.size(); i++) {
+            PdfPCell cell = new PdfPCell(new Phrase(columns.get(i)));
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.addCell(cell);
+        }
+        table.setHeaderRows(1);
+        for (int i = 0; i < data.calculateRecordNumber(); i++) {
+            Hashtable record = data.getRecordValues(i);
+            for (int j = 0; j < columns.size(); j++) {
+                String sText = record.get(columns.get(j)).toString();
+                PdfPCell cell = new PdfPCell(new Phrase(sText));
+                table.addCell(cell);
+            }
+        }
+
+        // Add table to document and close it
+        document.add(table);
+        document.close();
+
+        return pdfFile;
 	}
 
 	/**
 	 * Create all the providers and generate the book
-	 * @param entityResult The entity result with all data
-	 * @param orderColumns Colums to order the query
-	 * @param xlsxFile The tempfile
-	 * @param keysValues The keys values
+	 * 
+	 * @param entityResult     The entity result with all data
+	 * @param orderColumns     Colums to order the query
+	 * @param xlsxFile         The tempfile
+	 * @param keysValues       The keys values
 	 * @param attributesValues The attributes values
-	 * @param pageSize The size of the page for advanced query
-	 * @param advQuery Boolean to controll if it's a advanced query or not
-	 * @param offSet Integer to especify a page to query. -1 if don't want it
+	 * @param pageSize         The size of the page for advanced query
+	 * @param advQuery         Boolean to controll if it's a advanced query or not
+	 * @param offSet           Integer to especify a page to query. -1 if don't want
+	 *                         it
 	 */
 	public void generateExcel(EntityResult entityResult, List<String> orderColumns, File xlsxFile,
 			Map<Object, Object> keysValues, List<Object> attributesValues, int pageSize, boolean advQuery, int offSet) {
@@ -644,11 +732,12 @@ public class ExcelExportService implements IExcelExportService, ApplicationConte
 
 	/**
 	 * Calls the exporter and send it the providers to build the excel file
-	 * @param columnProvider The column provider
-	 * @param dataProvider The data provider
-	 * @param styleProvider The styles provider
+	 * 
+	 * @param columnProvider    The column provider
+	 * @param dataProvider      The data provider
+	 * @param styleProvider     The styles provider
 	 * @param sheetNameProvider The sheet name provider
-	 * @param exportOptions Is null, it creates it in the BaseExcelExporter
+	 * @param exportOptions     Is null, it creates it in the BaseExcelExporter
 	 * @return
 	 * @throws Exception
 	 */
@@ -674,7 +763,7 @@ public class ExcelExportService implements IExcelExportService, ApplicationConte
 
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-		this.appContext = applicationContext;	
+		this.appContext = applicationContext;
 	}
 
 	public ApplicationContext getContext() {

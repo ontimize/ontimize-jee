@@ -1,24 +1,44 @@
 package com.ontimize.jee.server.rest;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import javax.servlet.http.HttpServletResponse;
+
 import java.util.StringTokenizer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.client.RestTemplate;
 
 import com.caucho.hessian.util.IExceptionTranslator;
 import com.ontimize.db.AdvancedEntityResult;
@@ -28,9 +48,10 @@ import com.ontimize.db.SQLStatementBuilder;
 import com.ontimize.db.SQLStatementBuilder.BasicExpression;
 import com.ontimize.db.SQLStatementBuilder.SQLOrder;
 import com.ontimize.jee.common.jackson.OntimizeMapper;
+import com.ontimize.jee.common.services.user.UserInformation;
 import com.ontimize.jee.common.tools.CheckingTools;
 import com.ontimize.jee.common.tools.ReflectionTools;
-
+import com.ontimize.jee.server.security.authentication.OntimizeWebAuthenticationDetails;
 
 public abstract class ORestController<S> {
 
@@ -53,6 +74,7 @@ public abstract class ORestController<S> {
 
     public abstract S getService();
 
+    
     @Autowired
     OntimizeMapper mapper;
 
@@ -188,7 +210,83 @@ public abstract class ORestController<S> {
             return this.processError(e);
         }
     }
+    
+    @Deprecated
+    @Value("${ontimize.export.url}")
+    private String urlExport;
+    
+    @Deprecated
+    @PostMapping(value = "/{name}/{extension}", consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<EntityResult> exportFile(@PathVariable("name") String name,
+            @PathVariable("extension") String extension, @RequestBody ExportParameter exportParam) throws Exception {
+    	
+    	RestTemplate restTemplate = new RestTemplate();
+    	
+    	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    	OntimizeWebAuthenticationDetails details = (OntimizeWebAuthenticationDetails) auth.getDetails();
+    	UserInformation user = (UserInformation) auth.getPrincipal();
+    	
+    	HttpHeaders headers = new HttpHeaders();
+    	headers.setBasicAuth(user.getUsername(), user.getPassword());
+    	HttpEntity<?> httpEntity = new HttpEntity<Object>(exportParam, headers);
+    	
+    	StringBuilder url = new StringBuilder();
+    	url.append(details.getScheme())
+    		.append("://").append(details.getHost())
+    		.append(":").append(details.getPort())
+    		.append(urlExport+"/").append(name).append("/"+extension).append("/exp");
 
+    	URI uri = new URI(String.valueOf(url));
+
+        Hashtable<String, Object> fileId = restTemplate.postForObject(uri, httpEntity, Hashtable.class);
+        
+        EntityResult eR = new EntityResult(EntityResult.OPERATION_SUCCESSFUL, EntityResult.NODATA_RESULT);
+        eR.addRecord(fileId);
+
+        return new ResponseEntity<>(eR, HttpStatus.OK);
+    }
+    
+	@Deprecated
+    @GetMapping(value = "/{extension}/{id}")
+    public void downloadFile(@PathVariable(name = "extension", required = true) final String fileExtension,
+            @PathVariable(name = "id", required = true) final String fileId, HttpServletResponse response) {
+        InputStream fis = null;
+        try {
+            File tmpDir = new File(System.getProperty("java.io.tmpdir"));
+            File[] matchingfiles = tmpDir.listFiles(new FilenameFilter() {
+
+                @Override
+                public boolean accept(File dir, String name) {
+                    return name.startsWith(fileId) && name.endsWith(fileExtension);
+                }
+
+            });
+
+            if (matchingfiles.length == 1 && matchingfiles[0].exists()) {
+                File file = matchingfiles[0];
+                response.setHeader("Content-Type", "application/octet-stream");
+                response.setHeader("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"");
+                response.setContentLengthLong(file.length());
+                fis = new BufferedInputStream(new FileInputStream(file));
+                FileCopyUtils.copy(fis, response.getOutputStream());
+            } else {
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            }
+        } catch (IOException e) {
+            logger.error("{}", e.getMessage(), e);
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        } finally {
+            if (fis != null) {
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    logger.error("{}", e.getMessage(), e);
+                }
+            }
+        }
+    }
+    
     protected ResponseEntity<EntityResult> processError(Exception error) {
         ORestController.logger.error("{}", error.getMessage(), error);
         EntityResult entityResult = new EntityResult(EntityResult.OPERATION_WRONG, EntityResult.BEST_COMPRESSION);

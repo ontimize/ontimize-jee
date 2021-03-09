@@ -18,5 +18,4 @@ public interface IExcelExportService extends IExportService {
 	File queryParameters(EntityResult data, List<String> orderColumns, Map<Object, Object> keysValues,
 			List<Object> attributesValues, int pageSize, boolean advQuery, int offSet)
 			throws OntimizeJEERuntimeException, IOException;
-
 }

@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.ontimize.jee</groupId>
 		<artifactId>ontimize-jee</artifactId>
-		<version>2.1.3-SNAPSHOT</version>
+		<version>2.1.4-SNAPSHOT</version>
 	</parent>
 	<artifactId>ontimize-jee-server-rest</artifactId>
 
@@ -12,6 +12,12 @@
 		<dependency>
 			<groupId>${projectGroupId}</groupId>
 			<artifactId>ontimize-jee-server</artifactId>
+		</dependency>
+		<!-- Servlet API -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<optional>true</optional>
 		</dependency>
 	</dependencies>
 </project>
