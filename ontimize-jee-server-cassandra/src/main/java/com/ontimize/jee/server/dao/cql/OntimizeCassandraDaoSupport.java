@@ -33,7 +33,7 @@ import com.datastax.driver.core.querybuilder.QueryBuilder;
 import com.datastax.driver.core.querybuilder.Update;
 import com.datastax.driver.core.querybuilder.Update.Assignments;
 import com.ontimize.db.AdvancedEntityResult;
-import com.ontimize.db.EntityResult;
+import com.ontimize.dto.EntityResult;
 import com.ontimize.db.NullValue;
 import com.ontimize.db.SQLStatementBuilder.SQLOrder;
 import com.ontimize.gui.MultipleValue;
@@ -220,7 +220,7 @@ public class OntimizeCassandraDaoSupport implements IOntimizeDaoSupport, Applica
     @Override
     public EntityResult insert(Map<?, ?> attributesValues) {
         this.checkCompiled();
-        final EntityResult erResult = new EntityResult();
+        final EntityResult erResult = new EntityResultMapImpl();
 
         final Map<?, ?> avWithoutMultipleTableAttributes = this.processMultipleTableAttribute(attributesValues);
         final Map<?, ?> avWithoutReferenceAttributes = this
@@ -427,7 +427,7 @@ public class OntimizeCassandraDaoSupport implements IOntimizeDaoSupport, Applica
     @Override
     public EntityResult update(Map<?, ?> attributesValues, Map<?, ?> keysValues) {
         this.checkCompiled();
-        final EntityResult erResult = new EntityResult();
+        final EntityResult erResult = new EntityResultMapImpl();
 
         // Check the primary keys
         final Map<?, ?> avWithoutMultipleTableAttributes = this.processMultipleTableAttribute(attributesValues);

@@ -25,7 +25,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import com.ontimize.db.EntityResult;
+import com.ontimize.dto.EntityResult;
+import com.ontimize.dto.EntityResultMapImpl;
 import com.ontimize.db.NullValue;
 import com.ontimize.jee.common.tools.CheckingTools;
 import com.ontimize.jee.common.tools.ReflectionTools;
@@ -107,7 +108,7 @@ public abstract class OExportRestController<S, T extends IExportService> extends
             Map<Object, Object> keysValues = this.createKeysValues(kvQueryParameter, sqlTypes);
             List<Object> attributesValues = this.createAttributesValues(avQueryParameter, sqlTypes);
 
-            EntityResult er = (EntityResult) ReflectionTools.invoke(this.getService(), buffer.toString(), keysValues,
+            EntityResult er = (EntityResultMapImpl) ReflectionTools.invoke(this.getService(), buffer.toString(), keysValues,
                     attributesValues);
             er = this.replaceEntityResultColumnNames(er, sqlTypes, avQueryParameter, columnNames);
 
@@ -119,7 +120,7 @@ public abstract class OExportRestController<S, T extends IExportService> extends
             Map<String, Object> erResult = new HashMap<>();
             String filename = xslxFile.getName();
             erResult.put(extension + "Id", filename.substring(0, filename.indexOf('.')));
-            EntityResult result = new EntityResult(EntityResult.OPERATION_SUCCESSFUL, EntityResult.NODATA_RESULT);
+            EntityResult result = new EntityResultMapImpl(EntityResult.OPERATION_SUCCESSFUL, EntityResult.NODATA_RESULT);
             result.addRecord(erResult);
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
@@ -132,7 +133,7 @@ public abstract class OExportRestController<S, T extends IExportService> extends
         List<?> columnNamesArray = new ArrayList<>(columnNames.values());
 
         // Create EntityResult with column names
-        EntityResult er = new EntityResult(columnNamesArray);
+        EntityResult er = new EntityResultMapImpl(columnNamesArray);
         er.setColumnOrder(columnNamesArray);
         er.setColumnSQLTypes((Map) sqlTypes);
 

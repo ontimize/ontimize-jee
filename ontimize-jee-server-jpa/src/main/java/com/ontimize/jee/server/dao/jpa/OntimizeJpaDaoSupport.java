@@ -43,7 +43,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 
 import com.ontimize.db.AdvancedEntityResult;
-import com.ontimize.db.EntityResult;
+import com.ontimize.dto.EntityResult;
 import com.ontimize.db.NullValue;
 import com.ontimize.db.SQLStatementBuilder;
 import com.ontimize.db.SQLStatementBuilder.BasicExpression;
@@ -233,7 +233,7 @@ public class OntimizeJpaDaoSupport implements ApplicationContextAware, IOntimize
                     false, adapter);
         } catch (final Exception e) {
             OntimizeJpaDaoSupport.logger.error(e.getMessage(), e);
-            return new EntityResult(EntityResult.OPERATION_WRONG, EntityResult.OPERATION_WRONG, e.getMessage());
+            return new EntityResultMapImpl(EntityResult.OPERATION_WRONG, EntityResult.OPERATION_WRONG, e.getMessage());
         }
     }
 
@@ -334,7 +334,7 @@ public class OntimizeJpaDaoSupport implements ApplicationContextAware, IOntimize
             }
         } else {
             if (EntityResult.class.isAssignableFrom(resultStyleClass)) {
-                EntityResult result = new EntityResult(EntityResult.OPERATION_WRONG, EntityResult.OPERATION_WRONG,
+                EntityResult result = new EntityResultMapImpl(EntityResult.OPERATION_WRONG, EntityResult.OPERATION_WRONG,
                         I18NNaming.MC_ERROR_QUERY_TYPE_NOT_KNOWN);
                 Object[] parameters = { queryId };
                 result.setMessageParameters(parameters);
@@ -350,7 +350,7 @@ public class OntimizeJpaDaoSupport implements ApplicationContextAware, IOntimize
     private <T> T prepareResult(final List<String> validAttributes, Class<T> resultStyleClass,
             Class<?> queryResultClass, Query selectQuery, List<?> totalData) throws Exception {
         if (EntityResult.class.isAssignableFrom(resultStyleClass)) {
-            EntityResult result = null;
+            EntityResultMapImpl result = null;
             if ((totalData != null) && (totalData.size() > 0)) {
 
                 result = OntimizeJpaUtils.transformListToEntityResultBeans(totalData, validAttributes);

@@ -27,7 +27,8 @@ import javax.persistence.metamodel.Type.PersistenceType;
 
 import org.springframework.beans.BeanUtils;
 
-import com.ontimize.db.EntityResult;
+import com.ontimize.dto.EntityResult;
+import com.ontimize.dto.EntityResultMapImpl;
 import com.ontimize.db.NullValue;
 import com.ontimize.jee.common.tools.EntityResultTools;
 import com.ontimize.jee.server.dao.jpa.common.MappingInfo;
@@ -63,7 +64,7 @@ public final class OntimizeJpaUtils {
     public static EntityResult transformListToEntityResultBeans(final List<?> data, List<String> columnList)
             throws Exception {
         if ((data == null) || (data.size() == 0)) {
-            return new EntityResult(EntityResult.OPERATION_SUCCESSFUL_SHOW_MESSAGE, EntityResult.NODATA_RESULT);
+            return new EntityResultMapImpl(EntityResult.OPERATION_SUCCESSFUL_SHOW_MESSAGE, EntityResult.NODATA_RESULT);
         }
 
         if ((columnList == null) || (columnList.size() == 0)) {// Query all fields
@@ -110,7 +111,7 @@ public final class OntimizeJpaUtils {
             columnList.addAll(JPAUtils.getColumnNames(data.getClass()));
         }
 
-        EntityResult result = com.ontimize.db.EntityResultTools.createEmptyEntityResult(columnList);
+        EntityResult result = com.ontimize.dto.EntityResultTools.createEmptyEntityResult(columnList);
 
         for (final String col : columnList) {
             if (col != null) {

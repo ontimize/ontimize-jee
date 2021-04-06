@@ -15,7 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.caucho.hessian.util.IExceptionTranslator;
-import com.ontimize.db.EntityResult;
+import com.ontimize.dto.EntityResult;
+import com.ontimize.dto.EntityResultMapImpl;
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
 import com.ontimize.jee.common.tools.CheckingTools;
 import com.ontimize.jee.server.rest.UpdateParameter;
@@ -34,7 +35,7 @@ public abstract class RemoteConfigurationRestController<T extends IRemoteConfigu
 
     @RequestMapping(path = "/search", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<EntityResult> getUserConfiguration(@RequestBody Map<?, ?> filter) {
+    public ResponseEntity<EntityResul> getUserConfiguration(@RequestBody Map<?, ?> filter) {
         try {
             this.checkRemoteConfigurationParams(filter);
             String configColumn = this.remoteConfigurationNameConverter != null ? this.remoteConfigurationNameConverter
@@ -108,7 +109,7 @@ public abstract class RemoteConfigurationRestController<T extends IRemoteConfigu
 
     protected ResponseEntity<EntityResult> processError(Exception error) {
         RemoteConfigurationRestController.logger.error("{}", error.getMessage(), error);
-        EntityResult entityResult = new EntityResult(EntityResult.OPERATION_WRONG, EntityResult.BEST_COMPRESSION);
+        EntityResult entityResult = new EntityResultMapImpl(EntityResult.OPERATION_WRONG, EntityResult.BEST_COMPRESSION);
         entityResult.setMessage(this.getErrorMessage(error));
         return new ResponseEntity<>(entityResult, HttpStatus.INTERNAL_SERVER_ERROR);
     }

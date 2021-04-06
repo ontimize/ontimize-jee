@@ -3,7 +3,7 @@ package com.ontimize.jee.webclient.export;
 import java.io.File;
 import java.util.List;
 
-import com.ontimize.db.EntityResult;
+import com.ontimize.dto.EntityResult;
 
 public interface IExportService {
 

@@ -8,7 +8,8 @@ import org.springframework.dao.DataRetrievalFailureException;
 
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.exceptions.DriverException;
-import com.ontimize.db.EntityResult;
+import com.ontimize.dto.EntityResult;
+import com.ontimize.dto.EntityResultMapImpl;
 import com.ontimize.jee.server.dao.cql.handler.CQLStatementHandler;
 
 /**
@@ -53,7 +54,7 @@ public class EntityResultResultSetExtractor implements ResultSetExtractor<Entity
      */
     @Override
     public EntityResult extractData(ResultSet rs) throws DriverException, DataAccessException {
-        EntityResult er = new EntityResult(EntityResult.OPERATION_SUCCESSFUL, EntityResult.DATA_RESULT);
+        EntityResult er = new EntityResultMapImpl(EntityResult.OPERATION_SUCCESSFUL, EntityResult.DATA_RESULT);
         try {
             this.cqlHandler.resultSetToEntityResult(rs, er, this.attributes);
         } catch (Exception e) {
