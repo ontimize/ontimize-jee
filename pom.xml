@@ -242,13 +242,13 @@
 				<artifactId>ontimize-jee-server</artifactId>
 				<version>${project.version}</version>
 			</dependency>
- 
+ <!--
 			<dependency>
 				<groupId>com.ontimize.jee</groupId>
 				<artifactId>ontimize-jee-hessian</artifactId>
 				<version>${project.version}</version>
 			</dependency>
- 
+ -->
 			<dependency>
 				<groupId>com.ontimize.jee</groupId>
 				<artifactId>ontimize-jee-server-rest</artifactId>
@@ -268,11 +268,19 @@
 				<artifactId>ontimize-jee-jdbc</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+
+			<dependency>
+				<groupId>com.ontimize.jee</groupId>
+				<artifactId>ontimize-jee-core-common</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<!--
 			<dependency>
 				<groupId>com.ontimize.jee</groupId>
 				<artifactId>ontimize-jee-logic</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+			-->
 			<!-- commons-lang -->
 			<dependency>
 				<groupId>org.apache.commons</groupId>
@@ -542,7 +550,7 @@
 	        <dependency>
 	            <groupId>org.apache.httpcomponents</groupId>
 	            <artifactId>httpclient</artifactId>
-	        </dependency>			
+	        </dependency>
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
 				<artifactId>jackson-core</artifactId>
@@ -559,7 +567,7 @@
 				<version>${jackson.version}</version>
 			</dependency>
 			
-			<!-- HTTP Client used on "common" submodule test-->
+			<!-- HTTP Client used on "common" submodule test
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpclient</artifactId>
@@ -571,7 +579,7 @@
                     </exclusion>
                 </exclusions>
             </dependency>			
-			
+			-->
 		</dependencies>
 	</dependencyManagement>
 
