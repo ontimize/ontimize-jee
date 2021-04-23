@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>com.ontimize.jee</groupId>
 		<artifactId>ontimize-jee</artifactId>
-		<version>5.0.0</version>
+		<version>5.1.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>ontimize-jee-webclient-addons</artifactId>
 
@@ -24,38 +24,40 @@
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>
+			<version>3.9</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
+			<version>3.9</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml-schemas</artifactId>
+			<version>3.9</version>
 			<optional>true</optional>
 		</dependency>
-		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>ooxml-schemas</artifactId>
-			<optional>true</optional>
-		</dependency>
+
 		<dependency>
 			<groupId>dom4j</groupId>
 			<artifactId>dom4j</artifactId>
+			<version>1.6.1</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.lowagie</groupId>
 			<artifactId>itext</artifactId>
+			<version>2.1.7</version>
 			<scope>provided</scope>
 		</dependency>
 
-		<!-- Temporalmente hay que borrar la dependecia con el módulo de exportacion -->
+		<!-- Temporalmente hay que borrar la dependecia con el módulo de exportacion
 		<dependency>
 			<groupId>com.ontimize</groupId>
 			<artifactId>ontimize-core-client</artifactId>
 		</dependency>
+		-->
 	</dependencies>
 </project>

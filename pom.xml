@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.ontimize.jee</groupId>
 	<artifactId>ontimize-jee</artifactId>
-	<version>5.0.2-SNAPSHOT</version>
+	<version>5.1.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<url>http://www.ontimize.com/</url>
 	<organization>
@@ -580,11 +580,12 @@
 		<module>ontimize-jee-server</module>
 		<module>ontimize-jee-server-rest</module>
 		<module>ontimize-jee-server-jdbc</module>
+		<module>ontimize-jee-webclient-addons</module>
+		<module>ontimize-jee-core-common</module>
 	<!--<module>ontimize-jee-hessian</module> -->
     <!--<module>ontimize-jee-desktopclient</module> -->
 	<!--<module>ontimize-jee-server-jpa</module> -->
 	<!--<module>ontimize-jee-server-cassandra</module> -->
 	<!--<module>ontimize-jee-server-logic</module> -->
-	<!--<module>ontimize-jee-webclient-addons</module> -->
 	</modules>
      </project>
