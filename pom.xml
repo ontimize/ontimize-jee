@@ -77,7 +77,7 @@
 		<jasperreports.version>6.2.0</jasperreports.version>
 		<dynamicjasper.version>5.0.7</dynamicjasper.version>
 		<commons-collections.version>4.1</commons-collections.version>
-		<commons-io.version>2.4</commons-io.version>
+		<commons-io.version>2.7</commons-io.version>
 		<mesp.version>1.0.2</mesp.version>
 		<ontimize.version>6.0.6</ontimize.version>
 		<ontimize.plaf.version>1.1.7</ontimize.plaf.version>
