@@ -583,7 +583,7 @@
 		<module>ontimize-jee-server-rest</module>
 		<module>ontimize-jee-server-jdbc</module>
 		<module>ontimize-jee-webclient-addons</module>
-		<module>ontimize-jee-core-common</module>
+	<!--<module>ontimize-jee-core-common</module> -->
 	<!--<module>ontimize-jee-hessian</module> -->
     <!--<module>ontimize-jee-desktopclient</module> -->
 	<!--<module>ontimize-jee-server-jpa</module> -->
