@@ -17,17 +17,19 @@ public class PostgresSQLStatementHandler extends DefaultSQLStatementHandler {
     public static final String OFFSET = " OFFSET ";
 
     @Override
-    public SQLStatementBuilder.SQLStatement createSelectQuery(String table, List requestedColumns, Map conditions, List wildcards,
-                                                              List columnSorting, int recordCount, boolean descending,
-                                                              boolean forceDistinct) {
+    public SQLStatementBuilder.SQLStatement createSelectQuery(String table, List requestedColumns, Map conditions,
+            List wildcards,
+            List columnSorting, int recordCount, boolean descending,
+            boolean forceDistinct) {
         return super.createSelectQuery(table, requestedColumns, conditions, wildcards, columnSorting, recordCount, 0,
                 descending, forceDistinct);
     }
 
     @Override
-    public SQLStatementBuilder.SQLStatement createSelectQuery(String table, List requestedColumns, Map conditions, List wildcards,
-                                                              List columnSorting, int recordCount, int offset,
-                                                              boolean descending, boolean forceDistinct) {
+    public SQLStatementBuilder.SQLStatement createSelectQuery(String table, List requestedColumns, Map conditions,
+            List wildcards,
+            List columnSorting, int recordCount, int offset,
+            boolean descending, boolean forceDistinct) {
         StringBuilder sql = new StringBuilder();
         List vValues = new ArrayList();
         if ((columnSorting != null) && !requestedColumns.isEmpty()) {
@@ -69,13 +71,15 @@ public class PostgresSQLStatementHandler extends DefaultSQLStatementHandler {
     }
 
     @Override
-    public SQLStatementBuilder.SQLStatement createLeftJoinSelectQueryPageable(String mainTable, String subquery, String secondaryTable,
-                                                                              List mainKeys, List secondaryKeys,
-                                                                              List mainTableRequestedColumns, List secondaryTableRequestedColumns, Map mainTableConditions,
-                                                                              Map secondaryTableConditions, List wildcards,
-                                                                              List columnSorting, boolean forceDistinct, boolean descending, int recordNumber, int startIndex) {
+    public SQLStatementBuilder.SQLStatement createLeftJoinSelectQueryPageable(String mainTable, String subquery,
+            String secondaryTable,
+            List mainKeys, List secondaryKeys,
+            List mainTableRequestedColumns, List secondaryTableRequestedColumns, Map mainTableConditions,
+            Map secondaryTableConditions, List wildcards,
+            List columnSorting, boolean forceDistinct, boolean descending, int recordNumber, int startIndex) {
 
-        SQLStatementBuilder.SQLStatement stSQL = this.createLeftJoinSelectQuery(mainTable, subquery, secondaryTable, mainKeys,
+        SQLStatementBuilder.SQLStatement stSQL = this.createLeftJoinSelectQuery(mainTable, subquery, secondaryTable,
+                mainKeys,
                 secondaryKeys, mainTableRequestedColumns, secondaryTableRequestedColumns,
                 mainTableConditions, secondaryTableConditions, wildcards, columnSorting, forceDistinct, descending);
 

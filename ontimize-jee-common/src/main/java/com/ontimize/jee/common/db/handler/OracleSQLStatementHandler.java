@@ -25,9 +25,10 @@ public class OracleSQLStatementHandler extends DefaultSQLStatementHandler {
     }
 
     @Override
-    public SQLStatementBuilder.SQLStatement createSelectQuery(String table, List requestedColumns, Map conditions, List wildcards,
-                                                              List columnSorting, int recordCount, boolean descending,
-                                                              boolean forceDistinct) {
+    public SQLStatementBuilder.SQLStatement createSelectQuery(String table, List requestedColumns, Map conditions,
+            List wildcards,
+            List columnSorting, int recordCount, boolean descending,
+            boolean forceDistinct) {
         StringBuilder sql = new StringBuilder();
         List vValues = new ArrayList();
         if ((columnSorting != null) && !requestedColumns.isEmpty()) {
@@ -122,13 +123,15 @@ public class OracleSQLStatementHandler extends DefaultSQLStatementHandler {
     }
 
     @Override
-    protected SQLStatementBuilder.SQLStatement createLeftJoinSelectQueryPageable(String mainTable, String subquery, String secondaryTable,
-                                                                                 List mainKeys, List secondaryKeys,
-                                                                                 List mainTableRequestedColumns, List secondaryTableRequestedColumns, Map mainTableConditions,
-                                                                                 Map secondaryTableConditions, List wildcards,
-                                                                                 List columnSorting, boolean forceDistinct, boolean descending, int recordCount) {
+    protected SQLStatementBuilder.SQLStatement createLeftJoinSelectQueryPageable(String mainTable, String subquery,
+            String secondaryTable,
+            List mainKeys, List secondaryKeys,
+            List mainTableRequestedColumns, List secondaryTableRequestedColumns, Map mainTableConditions,
+            Map secondaryTableConditions, List wildcards,
+            List columnSorting, boolean forceDistinct, boolean descending, int recordCount) {
         // TODO Auto-generated method stub
-        SQLStatementBuilder.SQLStatement stSQL = super.createLeftJoinSelectQuery(mainTable, subquery, secondaryTable, mainKeys,
+        SQLStatementBuilder.SQLStatement stSQL = super.createLeftJoinSelectQuery(mainTable, subquery, secondaryTable,
+                mainKeys,
                 secondaryKeys, mainTableRequestedColumns,
                 secondaryTableRequestedColumns, mainTableConditions, secondaryTableConditions, wildcards, columnSorting,
                 forceDistinct, descending);

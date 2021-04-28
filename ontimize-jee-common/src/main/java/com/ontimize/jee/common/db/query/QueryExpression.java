@@ -123,11 +123,15 @@ public class QueryExpression implements Serializable {
                 return false;
             }
 
-            return this.expression.getLeftOperand().toString().equals(((SQLStatementBuilder.Expression) e).getLeftOperand().toString())
+            return this.expression.getLeftOperand()
+                .toString()
+                .equals(((SQLStatementBuilder.Expression) e).getLeftOperand().toString())
                     && this.expression.getRightOperand()
                         .toString()
                         .equals(((SQLStatementBuilder.Expression) e).getRightOperand().toString())
-                    && this.expression.getOperator().toString().equals(((SQLStatementBuilder.Expression) e).getOperator().toString());
+                    && this.expression.getOperator()
+                        .toString()
+                        .equals(((SQLStatementBuilder.Expression) e).getOperator().toString());
         } else {
             return false;
         }

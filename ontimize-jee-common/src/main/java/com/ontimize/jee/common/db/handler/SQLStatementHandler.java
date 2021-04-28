@@ -15,75 +15,90 @@ public interface SQLStatementHandler {
 
     public void addSpecialCharacters(char[] c);
 
-    public SQLStatementBuilder.SQLStatement createCountQuery(String table, Map conditions, List wildcards, List countColumns);
+    public SQLStatementBuilder.SQLStatement createCountQuery(String table, Map conditions, List wildcards,
+            List countColumns);
 
     public SQLStatementBuilder.SQLStatement createDeleteQuery(String table, Map keysValues);
 
     public SQLStatementBuilder.SQLStatement createInsertQuery(String table, Map attributes);
 
-    public SQLStatementBuilder.SQLStatement createJoinSelectQuery(String principalTable, String secondaryTable, List principalKeys,
-                                                                  List secondaryKeys, List principalTableRequestedColumns,
-                                                                  List secondaryTableRequestedColumns, Map principalTableConditions,
-                                                                  Map secondaryTableConditions, List wildcards, List columnSorting,
-                                                                  boolean forceDistinct);
+    public SQLStatementBuilder.SQLStatement createJoinSelectQuery(String principalTable, String secondaryTable,
+            List principalKeys,
+            List secondaryKeys, List principalTableRequestedColumns,
+            List secondaryTableRequestedColumns, Map principalTableConditions,
+            Map secondaryTableConditions, List wildcards, List columnSorting,
+            boolean forceDistinct);
 
-    public SQLStatementBuilder.SQLStatement createJoinSelectQuery(String mainTable, String secondaryTable, List mainKeys,
-                                                                  List secondaryKeys, List mainTableRequestedColumns,
-                                                                  List secondaryTableRequestedColumns, Map mainTableConditions, Map secondaryTableConditions,
-                                                                  List wildcards, List columnSorting, boolean forceDistinct,
-                                                                  boolean descending);
+    public SQLStatementBuilder.SQLStatement createJoinSelectQuery(String mainTable, String secondaryTable,
+            List mainKeys,
+            List secondaryKeys, List mainTableRequestedColumns,
+            List secondaryTableRequestedColumns, Map mainTableConditions, Map secondaryTableConditions,
+            List wildcards, List columnSorting, boolean forceDistinct,
+            boolean descending);
 
-    public SQLStatementBuilder.SQLStatement createJoinFromSubselectsQuery(String primaryAlias, String secondaryAlias, String primaryQuery,
-                                                                          String secondaryQuery, List primaryKeys,
-                                                                          List secondaryKeys, List primaryTableRequestedColumns, List secondaryTableRequestedColumns,
-                                                                          Map primaryTableConditions, Map secondaryTableConditions,
-                                                                          List wildcards, List columnSorting, boolean forceDistinct, boolean descending);
+    public SQLStatementBuilder.SQLStatement createJoinFromSubselectsQuery(String primaryAlias, String secondaryAlias,
+            String primaryQuery,
+            String secondaryQuery, List primaryKeys,
+            List secondaryKeys, List primaryTableRequestedColumns, List secondaryTableRequestedColumns,
+            Map primaryTableConditions, Map secondaryTableConditions,
+            List wildcards, List columnSorting, boolean forceDistinct, boolean descending);
 
-    public SQLStatementBuilder.SQLStatement createLeftJoinSelectQuery(String mainTable, String subquery, String secondaryTable,
-                                                                      List mainKeys, List secondaryKeys, List mainTableRequestedColumns,
-                                                                      List secondaryTableRequestedColumns, Map mainTableConditions, Map secondaryTableConditions,
-                                                                      List wildcards, List columnSorting, boolean forceDistinct,
-                                                                      boolean descending);
+    public SQLStatementBuilder.SQLStatement createLeftJoinSelectQuery(String mainTable, String subquery,
+            String secondaryTable,
+            List mainKeys, List secondaryKeys, List mainTableRequestedColumns,
+            List secondaryTableRequestedColumns, Map mainTableConditions, Map secondaryTableConditions,
+            List wildcards, List columnSorting, boolean forceDistinct,
+            boolean descending);
 
-    public SQLStatementBuilder.SQLStatement createLeftJoinSelectQueryPageable(String mainTable, String subquery, String secondaryTable,
-                                                                              List mainKeys, List secondaryKeys,
-                                                                              List mainTableRequestedColumns, List secondaryTableRequestedColumns, Map mainTableConditions,
-                                                                              Map secondaryTableConditions, List wildcards,
-                                                                              List columnSorting, boolean forceDistinct, boolean descending, int recordNumber, int startIndex);
+    public SQLStatementBuilder.SQLStatement createLeftJoinSelectQueryPageable(String mainTable, String subquery,
+            String secondaryTable,
+            List mainKeys, List secondaryKeys,
+            List mainTableRequestedColumns, List secondaryTableRequestedColumns, Map mainTableConditions,
+            Map secondaryTableConditions, List wildcards,
+            List columnSorting, boolean forceDistinct, boolean descending, int recordNumber, int startIndex);
 
     public SQLStatementBuilder.SQLStatement createSelectQuery(String table, List requestedColumns, Map conditions,
-                                                              List wildcards);
+            List wildcards);
 
-    public SQLStatementBuilder.SQLStatement createSelectQuery(String table, List requestedColumns, Map conditions, List wildcards,
-                                                              List columnSorting);
+    public SQLStatementBuilder.SQLStatement createSelectQuery(String table, List requestedColumns, Map conditions,
+            List wildcards,
+            List columnSorting);
 
-    public SQLStatementBuilder.SQLStatement createSelectQuery(String table, List requestedColumns, Map conditions, List wildcards,
-                                                              List columnSorting, boolean descending);
+    public SQLStatementBuilder.SQLStatement createSelectQuery(String table, List requestedColumns, Map conditions,
+            List wildcards,
+            List columnSorting, boolean descending);
 
-    public SQLStatementBuilder.SQLStatement createSelectQuery(String table, List requestedColumns, Map conditions, List wildcards,
-                                                              List columnSorting, boolean descending,
-                                                              boolean forceDistinct);
+    public SQLStatementBuilder.SQLStatement createSelectQuery(String table, List requestedColumns, Map conditions,
+            List wildcards,
+            List columnSorting, boolean descending,
+            boolean forceDistinct);
 
-    public SQLStatementBuilder.SQLStatement createSelectQuery(String table, List requestedColumns, Map conditions, List wildcards,
-                                                              List columnSorting, int recordCount);
+    public SQLStatementBuilder.SQLStatement createSelectQuery(String table, List requestedColumns, Map conditions,
+            List wildcards,
+            List columnSorting, int recordCount);
 
-    public SQLStatementBuilder.SQLStatement createSelectQuery(String table, List requestedColumns, Map conditions, List wildcards,
-                                                              List columnSorting, int recordCount, boolean descending);
+    public SQLStatementBuilder.SQLStatement createSelectQuery(String table, List requestedColumns, Map conditions,
+            List wildcards,
+            List columnSorting, int recordCount, boolean descending);
 
-    public SQLStatementBuilder.SQLStatement createSelectQuery(String table, List requestedColumns, Map conditions, List wildcards,
-                                                              List columnSorting, int recordCount, boolean descending,
-                                                              boolean forceDistinct);
+    public SQLStatementBuilder.SQLStatement createSelectQuery(String table, List requestedColumns, Map conditions,
+            List wildcards,
+            List columnSorting, int recordCount, boolean descending,
+            boolean forceDistinct);
 
-    public SQLStatementBuilder.SQLStatement createSelectQuery(String table, List requestedColumns, Map conditions, List wildcards,
-                                                              List columnSorting, int recordCount, int offset);
+    public SQLStatementBuilder.SQLStatement createSelectQuery(String table, List requestedColumns, Map conditions,
+            List wildcards,
+            List columnSorting, int recordCount, int offset);
 
-    public SQLStatementBuilder.SQLStatement createSelectQuery(String table, List requestedColumns, Map conditions, List wildcards,
-                                                              List columnSorting, int recordCount, int offset,
-                                                              boolean descending);
+    public SQLStatementBuilder.SQLStatement createSelectQuery(String table, List requestedColumns, Map conditions,
+            List wildcards,
+            List columnSorting, int recordCount, int offset,
+            boolean descending);
 
-    public SQLStatementBuilder.SQLStatement createSelectQuery(String table, List requestedColumns, Map conditions, List wildcards,
-                                                              List columnSorting, int recordCount, int offset,
-                                                              boolean descending, boolean forceDistinct);
+    public SQLStatementBuilder.SQLStatement createSelectQuery(String table, List requestedColumns, Map conditions,
+            List wildcards,
+            List columnSorting, int recordCount, int offset,
+            boolean descending, boolean forceDistinct);
 
     public SQLStatementBuilder.SQLStatement createUpdateQuery(String table, Map attributesValues, Map keysValues);
 

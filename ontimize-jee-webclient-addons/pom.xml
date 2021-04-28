@@ -54,7 +54,7 @@
 		</dependency>
         <dependency>
             <groupId>com.ontimize.jee</groupId>
-            <artifactId>ontimize-jee-core-common</artifactId>
+            <artifactId>ontimize-jee-common</artifactId>
         </dependency>
 
 

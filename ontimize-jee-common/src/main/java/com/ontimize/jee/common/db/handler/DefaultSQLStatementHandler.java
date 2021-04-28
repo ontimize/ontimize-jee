@@ -101,7 +101,8 @@ public class DefaultSQLStatementHandler implements SQLStatementHandler {
      */
 
     @Override
-    public SQLStatementBuilder.SQLStatement createCountQuery(String table, Map conditions, List wildcards, List countColumns) {
+    public SQLStatementBuilder.SQLStatement createCountQuery(String table, Map conditions, List wildcards,
+            List countColumns) {
         StringBuilder sql = new StringBuilder();
         List vValues = new ArrayList();
         String sCountQuery = "";
@@ -133,7 +134,7 @@ public class DefaultSQLStatementHandler implements SQLStatementHandler {
      */
     @Override
     public SQLStatementBuilder.SQLStatement createSelectQuery(String table, List requestedColumns, Map conditions,
-                                                              List wildcards) {
+            List wildcards) {
         return this.createSelectQuery(table, requestedColumns, conditions, wildcards, null);
     }
 
@@ -152,8 +153,9 @@ public class DefaultSQLStatementHandler implements SQLStatementHandler {
      */
 
     @Override
-    public SQLStatementBuilder.SQLStatement createSelectQuery(String table, List requestedColumns, Map conditions, List wildcards,
-                                                              List columnSorting, int recordCount) {
+    public SQLStatementBuilder.SQLStatement createSelectQuery(String table, List requestedColumns, Map conditions,
+            List wildcards,
+            List columnSorting, int recordCount) {
         return this.createSelectQuery(table, requestedColumns, conditions, wildcards, columnSorting, recordCount,
                 false);
     }
@@ -174,9 +176,10 @@ public class DefaultSQLStatementHandler implements SQLStatementHandler {
      */
 
     @Override
-    public SQLStatementBuilder.SQLStatement createSelectQuery(String table, List requestedColumns, Map conditions, List wildcards,
-                                                              List columnSorting, int recordCount,
-                                                              boolean descending) {
+    public SQLStatementBuilder.SQLStatement createSelectQuery(String table, List requestedColumns, Map conditions,
+            List wildcards,
+            List columnSorting, int recordCount,
+            boolean descending) {
         return this.createSelectQuery(table, requestedColumns, conditions, wildcards, columnSorting, recordCount,
                 descending, false);
     }
@@ -198,9 +201,10 @@ public class DefaultSQLStatementHandler implements SQLStatementHandler {
      */
 
     @Override
-    public SQLStatementBuilder.SQLStatement createSelectQuery(String table, List requestedColumns, Map conditions, List wildcards,
-                                                              List columnSorting, int recordCount, boolean descending,
-                                                              boolean forceDistinct) {
+    public SQLStatementBuilder.SQLStatement createSelectQuery(String table, List requestedColumns, Map conditions,
+            List wildcards,
+            List columnSorting, int recordCount, boolean descending,
+            boolean forceDistinct) {
         StringBuilder sql = new StringBuilder();
         List vValues = new ArrayList();
         if ((columnSorting != null) && !requestedColumns.isEmpty()) {
@@ -225,24 +229,27 @@ public class DefaultSQLStatementHandler implements SQLStatementHandler {
     }
 
     @Override
-    public SQLStatementBuilder.SQLStatement createSelectQuery(String table, List requestedColumns, Map conditions, List wildcards,
-                                                              List columnSorting, int recordCount, int offset) {
+    public SQLStatementBuilder.SQLStatement createSelectQuery(String table, List requestedColumns, Map conditions,
+            List wildcards,
+            List columnSorting, int recordCount, int offset) {
         return this.createSelectQuery(table, requestedColumns, conditions, wildcards, columnSorting, recordCount,
                 offset, false);
     }
 
     @Override
-    public SQLStatementBuilder.SQLStatement createSelectQuery(String table, List requestedColumns, Map conditions, List wildcards,
-                                                              List columnSorting, int recordCount, int offset,
-                                                              boolean descending) {
+    public SQLStatementBuilder.SQLStatement createSelectQuery(String table, List requestedColumns, Map conditions,
+            List wildcards,
+            List columnSorting, int recordCount, int offset,
+            boolean descending) {
         return this.createSelectQuery(table, requestedColumns, conditions, wildcards, columnSorting, recordCount,
                 offset, descending, false);
     }
 
     @Override
-    public SQLStatementBuilder.SQLStatement createSelectQuery(String table, List requestedColumns, Map conditions, List wildcards,
-                                                              List columnSorting, int recordCount, int offset,
-                                                              boolean descending, boolean forceDistinct) {
+    public SQLStatementBuilder.SQLStatement createSelectQuery(String table, List requestedColumns, Map conditions,
+            List wildcards,
+            List columnSorting, int recordCount, int offset,
+            boolean descending, boolean forceDistinct) {
         return this.createSelectQuery(table, requestedColumns, conditions, wildcards, columnSorting,
                 recordCount + offset, descending, forceDistinct);
     }
@@ -261,8 +268,9 @@ public class DefaultSQLStatementHandler implements SQLStatementHandler {
      */
 
     @Override
-    public SQLStatementBuilder.SQLStatement createSelectQuery(String table, List requestedColumns, Map conditions, List wildcards,
-                                                              List columnSorting) {
+    public SQLStatementBuilder.SQLStatement createSelectQuery(String table, List requestedColumns, Map conditions,
+            List wildcards,
+            List columnSorting) {
         return this.createSelectQuery(table, requestedColumns, conditions, wildcards, columnSorting, false);
     }
 
@@ -281,8 +289,9 @@ public class DefaultSQLStatementHandler implements SQLStatementHandler {
      */
 
     @Override
-    public SQLStatementBuilder.SQLStatement createSelectQuery(String table, List requestedColumns, Map conditions, List wildcards,
-                                                              List columnSorting, boolean descending) {
+    public SQLStatementBuilder.SQLStatement createSelectQuery(String table, List requestedColumns, Map conditions,
+            List wildcards,
+            List columnSorting, boolean descending) {
         return this.createSelectQuery(table, requestedColumns, conditions, wildcards, columnSorting, descending, false);
     }
 
@@ -302,9 +311,10 @@ public class DefaultSQLStatementHandler implements SQLStatementHandler {
      */
 
     @Override
-    public SQLStatementBuilder.SQLStatement createSelectQuery(String table, List requestedColumns, Map conditions, List wildcards,
-                                                              List columnSorting, boolean descending,
-                                                              boolean forceDistinct) {
+    public SQLStatementBuilder.SQLStatement createSelectQuery(String table, List requestedColumns, Map conditions,
+            List wildcards,
+            List columnSorting, boolean descending,
+            boolean forceDistinct) {
         StringBuilder sql = new StringBuilder();
         List vValues = new ArrayList();
 
@@ -978,11 +988,12 @@ public class DefaultSQLStatementHandler implements SQLStatementHandler {
      */
 
     @Override
-    public SQLStatementBuilder.SQLStatement createJoinSelectQuery(String principalTable, String secondaryTable, List principalKeys,
-                                                                  List secondaryKeys, List principalTableRequestedColumns,
-                                                                  List secondaryTableRequestedColumns, Map principalTableConditions,
-                                                                  Map secondaryTableConditions, List wildcards, List columnSorting,
-                                                                  boolean forceDistinct) {
+    public SQLStatementBuilder.SQLStatement createJoinSelectQuery(String principalTable, String secondaryTable,
+            List principalKeys,
+            List secondaryKeys, List principalTableRequestedColumns,
+            List secondaryTableRequestedColumns, Map principalTableConditions,
+            Map secondaryTableConditions, List wildcards, List columnSorting,
+            boolean forceDistinct) {
 
         return this.createJoinSelectQuery(principalTable, secondaryTable, principalKeys, secondaryKeys,
                 principalTableRequestedColumns, secondaryTableRequestedColumns,
@@ -1064,11 +1075,12 @@ public class DefaultSQLStatementHandler implements SQLStatementHandler {
      */
 
     @Override
-    public SQLStatementBuilder.SQLStatement createJoinSelectQuery(String mainTable, String secondaryTable, List mainKeys,
-                                                                  List secondaryKeys, List mainTableRequestedColumns,
-                                                                  List secondaryTableRequestedColumns, Map mainTableConditions, Map secondaryTableConditions,
-                                                                  List wildcards, List columnSorting, boolean forceDistinct,
-                                                                  boolean descending) {
+    public SQLStatementBuilder.SQLStatement createJoinSelectQuery(String mainTable, String secondaryTable,
+            List mainKeys,
+            List secondaryKeys, List mainTableRequestedColumns,
+            List secondaryTableRequestedColumns, Map mainTableConditions, Map secondaryTableConditions,
+            List wildcards, List columnSorting, boolean forceDistinct,
+            boolean descending) {
 
         if (mainKeys.size() != secondaryKeys.size()) {
             throw new IllegalArgumentException("The number of keys of principal and secondary table have to be equals");
@@ -1164,11 +1176,12 @@ public class DefaultSQLStatementHandler implements SQLStatementHandler {
      * @return a <code>SQLStatement</code> class which stores the SQL Statement and the required values
      */
     @Override
-    public SQLStatementBuilder.SQLStatement createJoinFromSubselectsQuery(String primaryAlias, String secondaryAlias, String primaryQuery,
-                                                                          String secondaryQuery, List primaryKeys,
-                                                                          List secondaryKeys, List primaryTableRequestedColumns, List secondaryTableRequestedColumns,
-                                                                          Map primaryTableConditions, Map secondaryTableConditions,
-                                                                          List wildcards, List columnSorting, boolean forceDistinct, boolean descending) {
+    public SQLStatementBuilder.SQLStatement createJoinFromSubselectsQuery(String primaryAlias, String secondaryAlias,
+            String primaryQuery,
+            String secondaryQuery, List primaryKeys,
+            List secondaryKeys, List primaryTableRequestedColumns, List secondaryTableRequestedColumns,
+            Map primaryTableConditions, Map secondaryTableConditions,
+            List wildcards, List columnSorting, boolean forceDistinct, boolean descending) {
 
         if (primaryKeys.size() != secondaryKeys.size()) {
             throw new IllegalArgumentException("The number of keys of principal and secondary table have to be equals");
@@ -1276,22 +1289,24 @@ public class DefaultSQLStatementHandler implements SQLStatementHandler {
      * @return a <code>SQLStatement</code> class which stores the SQL Statement and the required values
      */
     @Override
-    public SQLStatementBuilder.SQLStatement createLeftJoinSelectQueryPageable(String mainTable, String subquery, String secondaryTable,
-                                                                              List mainKeys, List secondaryKeys,
-                                                                              List mainTableRequestedColumns, List secondaryTableRequestedColumns, Map mainTableConditions,
-                                                                              Map secondaryTableConditions, List wildcards,
-                                                                              List columnSorting, boolean forceDistinct, boolean descending, int recordNumber, int startIndex) {
+    public SQLStatementBuilder.SQLStatement createLeftJoinSelectQueryPageable(String mainTable, String subquery,
+            String secondaryTable,
+            List mainKeys, List secondaryKeys,
+            List mainTableRequestedColumns, List secondaryTableRequestedColumns, Map mainTableConditions,
+            Map secondaryTableConditions, List wildcards,
+            List columnSorting, boolean forceDistinct, boolean descending, int recordNumber, int startIndex) {
         return this.createLeftJoinSelectQueryPageable(mainTable, subquery, secondaryTable, mainKeys, secondaryKeys,
                 mainTableRequestedColumns, secondaryTableRequestedColumns,
                 mainTableConditions, secondaryTableConditions, wildcards, columnSorting, forceDistinct, descending,
                 recordNumber + startIndex);
     }
 
-    protected SQLStatementBuilder.SQLStatement createLeftJoinSelectQueryPageable(String mainTable, String subquery, String secondaryTable,
-                                                                                 List mainKeys, List secondaryKeys,
-                                                                                 List mainTableRequestedColumns, List secondaryTableRequestedColumns, Map mainTableConditions,
-                                                                                 Map secondaryTableConditions, List wildcards,
-                                                                                 List columnSorting, boolean forceDistinct, boolean descending, int i) {
+    protected SQLStatementBuilder.SQLStatement createLeftJoinSelectQueryPageable(String mainTable, String subquery,
+            String secondaryTable,
+            List mainKeys, List secondaryKeys,
+            List mainTableRequestedColumns, List secondaryTableRequestedColumns, Map mainTableConditions,
+            Map secondaryTableConditions, List wildcards,
+            List columnSorting, boolean forceDistinct, boolean descending, int i) {
         return this.createLeftJoinSelectQuery(mainTable, subquery, secondaryTable, mainKeys, secondaryKeys,
                 mainTableRequestedColumns, secondaryTableRequestedColumns,
                 mainTableConditions, secondaryTableConditions, wildcards, columnSorting, forceDistinct, descending);
@@ -1323,11 +1338,12 @@ public class DefaultSQLStatementHandler implements SQLStatementHandler {
      * @return a <code>SQLStatement</code> class which stores the SQL Statement and the required values
      */
     @Override
-    public SQLStatementBuilder.SQLStatement createLeftJoinSelectQuery(String mainTable, String subquery, String secondaryTable,
-                                                                      List mainKeys, List secondaryKeys, List mainTableRequestedColumns,
-                                                                      List secondaryTableRequestedColumns, Map mainTableConditions, Map secondaryTableConditions,
-                                                                      List wildcards, List columnSorting, boolean forceDistinct,
-                                                                      boolean descending) {
+    public SQLStatementBuilder.SQLStatement createLeftJoinSelectQuery(String mainTable, String subquery,
+            String secondaryTable,
+            List mainKeys, List secondaryKeys, List mainTableRequestedColumns,
+            List secondaryTableRequestedColumns, Map mainTableConditions, Map secondaryTableConditions,
+            List wildcards, List columnSorting, boolean forceDistinct,
+            boolean descending) {
 
         if (mainKeys.size() != secondaryKeys.size()) {
             throw new IllegalArgumentException("The number of keys of principal and secondary table have to be equals");
