@@ -1,7 +1,7 @@
 package com.ontimize.jee.common.report.store;
 
 import com.ontimize.jee.common.report.ReportResource;
-import com.ontimize.jee.core.common.db.query.QueryExpression;
+import com.ontimize.jee.common.db.query.QueryExpression;
 
 public interface ReportStoreDefinition extends ReportProperties {
 

@@ -1,6 +1,6 @@
 package com.ontimize.jee.common.util.serializer.xml;
 
-import com.ontimize.jee.core.common.gui.SearchValue;
+import com.ontimize.jee.common.gui.SearchValue;
 import com.ontimize.jee.common.util.serializer.xml.adapters.XmlStaticAdapters;
 import org.w3c.dom.Element;
 

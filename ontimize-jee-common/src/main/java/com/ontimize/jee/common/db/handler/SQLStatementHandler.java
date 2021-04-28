@@ -2,7 +2,7 @@ package com.ontimize.jee.common.db.handler;
 
 import com.ontimize.jee.common.db.LocalePair;
 import com.ontimize.jee.common.db.SQLStatementBuilder;
-import com.ontimize.jee.core.common.dto.EntityResult;
+import com.ontimize.jee.common.dto.EntityResult;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

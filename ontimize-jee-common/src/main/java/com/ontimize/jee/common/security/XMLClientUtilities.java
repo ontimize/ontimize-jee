@@ -1,11 +1,11 @@
 package com.ontimize.jee.common.security;
 
-import com.ontimize.jee.core.common.builder.xml.CustomNode;
-import com.ontimize.jee.core.common.util.calendar.TimePeriod;
-import com.ontimize.jee.core.common.util.calendar.TimePeriodOperationParser;
-import com.ontimize.jee.core.common.util.calendar.TimePeriodParser;
-import com.ontimize.jee.core.common.util.calendar.TimePeriodParserManager;
-import com.ontimize.jee.core.common.xml.DocumentTreeModel;
+import com.ontimize.jee.common.builder.CustomNode;
+import com.ontimize.jee.common.util.calendar.TimePeriod;
+import com.ontimize.jee.common.util.calendar.TimePeriodOperationParser;
+import com.ontimize.jee.common.util.calendar.TimePeriodParser;
+import com.ontimize.jee.common.util.calendar.TimePeriodParserManager;
+import com.ontimize.jee.common.xml.DocumentTreeModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;

@@ -1,9 +1,9 @@
 package com.ontimize.jee.common.db;
 
-import com.ontimize.jee.core.common.dto.EntityResult;
-import com.ontimize.jee.core.common.dto.EntityResultMapImpl;
-import com.ontimize.jee.core.common.dto.EntityResultTools;
-import com.ontimize.jee.core.common.locator.EntityReferenceLocator;
+import com.ontimize.jee.common.dto.EntityResult;
+import com.ontimize.jee.common.dto.EntityResultMapImpl;
+import com.ontimize.jee.common.dto.EntityResultTools;
+import com.ontimize.jee.common.locator.EntityReferenceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

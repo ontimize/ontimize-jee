@@ -1,6 +1,6 @@
 package com.ontimize.jee.common.util.multilanguage;
 
-import com.ontimize.jee.core.common.dto.EntityResult;
+import com.ontimize.jee.common.dto.EntityResult;
 
 import java.rmi.Remote;
 import java.util.Map;

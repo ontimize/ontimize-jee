@@ -1,7 +1,7 @@
 package com.ontimize.jee.common.gui;
 
-import com.ontimize.jee.core.common.locator.SessionInfo;
-import com.ontimize.jee.core.common.util.logging.IRemoteLogManager;
+import com.ontimize.jee.common.locator.SessionInfo;
+import com.ontimize.jee.common.util.logging.IRemoteLogManager;
 
 import java.rmi.Remote;
 import java.util.Map;

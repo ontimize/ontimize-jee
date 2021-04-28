@@ -1,7 +1,7 @@
 package com.ontimize.jee.common.dto;
 
-import com.ontimize.jee.core.common.db.CancellableOperationManager;
-import com.ontimize.jee.core.common.gui.field.ReferenceFieldAttribute;
+import com.ontimize.jee.common.db.CancellableOperationManager;
+import com.ontimize.jee.common.gui.field.ReferenceFieldAttribute;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

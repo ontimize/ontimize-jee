@@ -8,7 +8,7 @@ import com.ontimize.jee.common.db.SQLStatementBuilder.ExtendedSQLConditionValues
 import com.ontimize.jee.common.db.SQLStatementBuilder.Field;
 import com.ontimize.jee.common.db.SQLStatementBuilder.Operator;
 import com.ontimize.jee.common.db.query.ParameterField;
-import com.ontimize.jee.core.common.locator.EntityReferenceLocator;
+import com.ontimize.jee.common.locator.EntityReferenceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

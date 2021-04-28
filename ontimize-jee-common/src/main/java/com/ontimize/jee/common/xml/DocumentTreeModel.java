@@ -1,6 +1,6 @@
 package com.ontimize.jee.common.xml;
 
-import com.ontimize.jee.core.common.builder.xml.CustomNode;
+import com.ontimize.jee.common.builder.CustomNode;
 import org.w3c.dom.Node;
 
 import javax.swing.event.TreeModelListener;

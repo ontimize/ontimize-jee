@@ -1,6 +1,6 @@
 package com.ontimize.jee.common.db;
 
-import com.ontimize.jee.core.common.dto.EntityResultMapImpl;
+import com.ontimize.jee.common.dto.EntityResultMapImpl;
 
 public class AdvancedEntityResultMapImpl extends EntityResultMapImpl implements AdvancedEntityResult {
 

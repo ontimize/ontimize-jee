@@ -1,6 +1,6 @@
 package com.ontimize.jee.common.db;
 
-import com.ontimize.jee.core.common.util.remote.BytesBlock;
+import com.ontimize.jee.common.util.remote.BytesBlock;
 
 import java.rmi.Remote;
 import java.util.Map;

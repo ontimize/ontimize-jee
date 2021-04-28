@@ -1,8 +1,8 @@
 package com.ontimize.jee.common.gui;
 
-import com.ontimize.jee.core.common.dto.EntityResult;
-import com.ontimize.jee.core.common.security.PermissionGroupInfo;
-import com.ontimize.jee.core.common.security.PermissionInfo;
+import com.ontimize.jee.common.dto.EntityResult;
+import com.ontimize.jee.common.security.PermissionGroupInfo;
+import com.ontimize.jee.common.security.PermissionInfo;
 
 import java.rmi.Remote;
 import java.util.Map;

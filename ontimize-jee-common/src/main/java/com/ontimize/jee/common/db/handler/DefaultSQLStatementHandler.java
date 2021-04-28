@@ -4,9 +4,9 @@ import com.ontimize.jee.common.db.LocalePair;
 import com.ontimize.jee.common.db.NullValue;
 import com.ontimize.jee.common.db.SQLStatementBuilder;
 import com.ontimize.jee.common.db.util.DBFunctionName;
-import com.ontimize.jee.core.common.dto.EntityResult;
-import com.ontimize.jee.core.common.gui.LongString;
-import com.ontimize.jee.core.common.util.remote.BytesBlock;
+import com.ontimize.jee.common.dto.EntityResult;
+import com.ontimize.jee.common.gui.LongString;
+import com.ontimize.jee.common.util.remote.BytesBlock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

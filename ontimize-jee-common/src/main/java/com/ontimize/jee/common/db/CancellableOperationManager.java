@@ -1,6 +1,6 @@
 package com.ontimize.jee.common.db;
 
-import com.ontimize.jee.core.common.gui.RandomStringGenerator;
+import com.ontimize.jee.common.gui.RandomStringGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

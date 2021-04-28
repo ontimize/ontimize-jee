@@ -1,7 +1,7 @@
 package com.ontimize.jee.common.locator;
 
-import com.ontimize.jee.core.common.db.Entity;
-import com.ontimize.jee.core.common.gui.ClientWatch;
+import com.ontimize.jee.common.db.Entity;
+import com.ontimize.jee.common.gui.ClientWatch;
 
 import java.rmi.Remote;
 

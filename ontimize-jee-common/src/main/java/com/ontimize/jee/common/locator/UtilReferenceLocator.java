@@ -1,13 +1,13 @@
 package com.ontimize.jee.common.locator;
 
-import com.ontimize.jee.core.common.db.Entity;
-import com.ontimize.jee.core.common.dto.EntityResult;
+import com.ontimize.jee.common.db.Entity;
+import com.ontimize.jee.common.dto.EntityResult;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.Map;
 
-import com.ontimize.jee.core.common.util.operation.RemoteOperationManager;
+import com.ontimize.jee.common.util.operation.RemoteOperationManager;
 
 public interface UtilReferenceLocator extends java.rmi.Remote {
 

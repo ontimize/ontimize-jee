@@ -1,6 +1,6 @@
 package com.ontimize.jee.common.gui;
 
-import com.ontimize.jee.core.common.util.remote.BytesBlock;
+import com.ontimize.jee.common.util.remote.BytesBlock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

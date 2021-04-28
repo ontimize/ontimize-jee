@@ -1,6 +1,6 @@
 package com.ontimize.jee.common.db;
 
-import com.ontimize.jee.core.common.dto.EntityResult;
+import com.ontimize.jee.common.dto.EntityResult;
 
 public interface DirectSQLQueryEntity extends Entity {
 

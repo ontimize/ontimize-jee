@@ -1,6 +1,6 @@
 package com.ontimize.jee.common.util.extend;
 
-import com.ontimize.jee.core.common.xml.XMLUtil;
+import com.ontimize.jee.common.xml.XMLUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;

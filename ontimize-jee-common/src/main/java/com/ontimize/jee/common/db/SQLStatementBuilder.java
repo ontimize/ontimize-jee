@@ -7,8 +7,8 @@ import com.ontimize.jee.common.db.handler.OracleSQLStatementHandler;
 import com.ontimize.jee.common.db.handler.PostgresSQLStatementHandler;
 import com.ontimize.jee.common.db.handler.SQLServerSQLStatementHandler;
 import com.ontimize.jee.common.db.handler.SQLStatementHandler;
-import com.ontimize.jee.core.common.gui.SearchValue;
-import com.ontimize.jee.core.common.util.ParseTools;
+import com.ontimize.jee.common.gui.SearchValue;
+import com.ontimize.jee.common.util.ParseTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

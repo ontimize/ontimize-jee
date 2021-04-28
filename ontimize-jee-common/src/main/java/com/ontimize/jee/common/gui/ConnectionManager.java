@@ -1,8 +1,8 @@
 package com.ontimize.jee.common.gui;
 
-import com.ontimize.jee.core.common.dto.EntityResult;
-import com.ontimize.jee.core.common.locator.ClientReferenceLocator;
-import com.ontimize.jee.core.common.locator.EntityReferenceLocator;
+import com.ontimize.jee.common.dto.EntityResult;
+import com.ontimize.jee.common.locator.ClientReferenceLocator;
+import com.ontimize.jee.common.locator.EntityReferenceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

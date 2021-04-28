@@ -1,6 +1,6 @@
 package com.ontimize.jee.common.util.serializer.xml;
 
-import com.ontimize.jee.core.common.db.SQLStatementBuilder.BasicField;
+import com.ontimize.jee.common.db.SQLStatementBuilder.BasicField;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;

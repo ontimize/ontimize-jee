@@ -1,9 +1,9 @@
 package com.ontimize.jee.common.util.serializer.xml;
 
-import com.ontimize.jee.core.common.db.SQLStatementBuilder.BasicExpression;
-import com.ontimize.jee.core.common.db.SQLStatementBuilder.BasicField;
-import com.ontimize.jee.core.common.db.SQLStatementBuilder.BasicOperator;
-import com.ontimize.jee.core.common.gui.SearchValue;
+import com.ontimize.jee.common.db.SQLStatementBuilder.BasicExpression;
+import com.ontimize.jee.common.db.SQLStatementBuilder.BasicField;
+import com.ontimize.jee.common.db.SQLStatementBuilder.BasicOperator;
+import com.ontimize.jee.common.gui.SearchValue;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;

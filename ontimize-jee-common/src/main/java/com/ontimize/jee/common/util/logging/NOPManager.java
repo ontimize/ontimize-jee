@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-// import com.ontimize.jee.core.common.gui.ExtendedServerMonitor;
+// import com.ontimize.jee.common.gui.ExtendedServerMonitor;
 
 public class NOPManager implements ILogManager {
 

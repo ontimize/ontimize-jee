@@ -1,6 +1,6 @@
 package com.ontimize.jee.common.ols.l;
 
-import com.ontimize.jee.core.common.security.License;
+import com.ontimize.jee.common.security.License;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;

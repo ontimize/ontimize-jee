@@ -1,7 +1,7 @@
 package com.ontimize.jee.common.db;
 
 
-import com.ontimize.jee.core.common.dto.EntityResult;
+import com.ontimize.jee.common.dto.EntityResult;
 
 /**
  * Extended <code>EntityResult</code> that adds information about number of records and index of

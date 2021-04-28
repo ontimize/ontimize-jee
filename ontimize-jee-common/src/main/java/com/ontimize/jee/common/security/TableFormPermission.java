@@ -1,6 +1,6 @@
 package com.ontimize.jee.common.security;
 
-import com.ontimize.jee.core.common.util.calendar.TimePeriod;
+import com.ontimize.jee.common.util.calendar.TimePeriod;
 
 /**
  * The class <code>TableFormPermission</code> defines the structure that table permissions must

@@ -1,6 +1,6 @@
 package com.ontimize.jee.common.security;
 
-import com.ontimize.jee.core.common.util.calendar.TimePeriod;
+import com.ontimize.jee.common.util.calendar.TimePeriod;
 
 /**
  * Interface that defines methods for client permission components. It is implemented in class

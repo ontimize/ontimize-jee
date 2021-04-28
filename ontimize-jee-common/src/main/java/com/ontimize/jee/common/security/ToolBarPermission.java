@@ -1,6 +1,6 @@
 package com.ontimize.jee.common.security;
 
-import com.ontimize.jee.core.common.util.calendar.TimePeriod;
+import com.ontimize.jee.common.util.calendar.TimePeriod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
