@@ -1824,7 +1824,7 @@ public class DefaultSQLStatementHandler implements SQLStatementHandler {
         } else if (value instanceof BytesBlock) {
             byte[] bytes = ((BytesBlock) value).getBytes();
             preparedStatement.setBinaryStream(index, new ByteArrayInputStream(bytes), bytes.length);
-        } else if (value instanceof com.ontimize.gui.LongString) {
+        } else if (value instanceof LongString) {
             String sValue = ((LongString) value).getString();
             preparedStatement.setCharacterStream(index, new StringReader(sValue), sValue.length());
         } else if ((value instanceof String) && (((String) value).length() > 255)) {

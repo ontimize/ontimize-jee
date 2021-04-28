@@ -1,5 +1,7 @@
 package com.ontimize.jee.core.common.security;
 
+import com.ontimize.jee.core.common.util.calendar.TimePeriod;
+
 /**
  * Class to define the application permissions.
  *
@@ -12,8 +14,7 @@ public class ApplicationPermission extends AbstractClientPermission {
         this.restricted = restricted;
     }
 
-    public ApplicationPermission(String permissionName, boolean restricted,
-            com.ontimize.util.calendar.TimePeriod period) {
+    public ApplicationPermission(String permissionName, boolean restricted, TimePeriod period) {
         this.name = permissionName;
         this.restricted = restricted;
         this.period = period;

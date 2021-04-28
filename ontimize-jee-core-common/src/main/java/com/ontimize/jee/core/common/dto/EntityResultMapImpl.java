@@ -1,5 +1,6 @@
 package com.ontimize.jee.core.common.dto;
 
+import com.ontimize.jee.core.common.db.CancellableOperationManager;
 import com.ontimize.jee.core.common.gui.field.ReferenceFieldAttribute;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -373,7 +374,7 @@ public class EntityResultMapImpl implements EntityResult, Map {
             long t4 = System.currentTimeMillis();
             while (writedBytes < nBytesToWrite) {
 
-                if (com.ontimize.db.CancellableOperationManager.existCancellationRequest(this.operationId)) {
+                if (CancellableOperationManager.existCancellationRequest(this.operationId)) {
                     logger.info("Serializing operation canceled: {} . Written: {}", this.operationId,
                             writedBytes);
                     throw new IOException("Serializing operation canceled: " + this.operationId);

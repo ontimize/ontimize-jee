@@ -1,5 +1,6 @@
 package com.ontimize.jee.core.common.security;
 
+import com.ontimize.jee.core.common.util.calendar.TimePeriod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,8 +19,7 @@ public class MenuPermission extends AbstractClientPermission {
         this.restricted = restricted;
     }
 
-    public MenuPermission(String permissionName, String componentAttr, boolean restricted,
-            com.ontimize.util.calendar.TimePeriod period) {
+    public MenuPermission(String permissionName, String componentAttr, boolean restricted, TimePeriod period) {
         this(permissionName, componentAttr, restricted);
         try {
             this.period = period;

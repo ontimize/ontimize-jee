@@ -179,7 +179,7 @@ public abstract class XMLClientUtilities {
                         TimePeriod tPeriod = null;
                         try {
                             if (period != null) {
-                                tPeriod = com.ontimize.util.calendar.TimePeriodParserManager.getTimePeriodParser()
+                                tPeriod = TimePeriodParserManager.getTimePeriodParser()
                                     .parse((String) period, l, businessCalendarFile);
                             }
                         } catch (Exception e) {
@@ -251,7 +251,7 @@ public abstract class XMLClientUtilities {
                                     TimePeriod tPeriod = null;
                                     try {
                                         if (period != null) {
-                                            tPeriod = com.ontimize.util.calendar.TimePeriodParserManager
+                                            tPeriod = TimePeriodParserManager
                                                 .getTimePeriodParser()
                                                 .parse((String) period, l, businessCalendarFile);
                                         }
@@ -344,7 +344,7 @@ public abstract class XMLClientUtilities {
                                     TimePeriod tPeriod = null;
                                     try {
                                         if (period != null) {
-                                            tPeriod = com.ontimize.util.calendar.TimePeriodParserManager
+                                            tPeriod = TimePeriodParserManager
                                                 .getTimePeriodParser()
                                                 .parse((String) period, l, businessCalendarFile);
                                         }
@@ -448,7 +448,7 @@ public abstract class XMLClientUtilities {
                                     TimePeriod tPeriod = null;
                                     try {
                                         if (period != null) {
-                                            tPeriod = com.ontimize.util.calendar.TimePeriodParserManager
+                                            tPeriod = TimePeriodParserManager
                                                 .getTimePeriodParser()
                                                 .parse((String) period, l, businessCalendarFile);
                                         }
@@ -539,7 +539,7 @@ public abstract class XMLClientUtilities {
                                     TimePeriod tPeriod = null;
                                     try {
                                         if (period != null) {
-                                            tPeriod = com.ontimize.util.calendar.TimePeriodParserManager
+                                            tPeriod = TimePeriodParserManager
                                                 .getTimePeriodParser()
                                                 .parse((String) period, l, businessCalendarFile);
                                         }

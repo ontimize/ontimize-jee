@@ -1,5 +1,7 @@
 package com.ontimize.jee.core.common.security;
 
+import com.ontimize.jee.core.common.util.calendar.TimePeriod;
+
 /**
  * The class <code>TableFormPermission</code> defines the structure that table permissions must
  * have. For example, these permissions can be used to define the visibility of the table components
@@ -23,7 +25,7 @@ public class TableFormPermission extends FormPermission {
      * @param type the type
      */
     public TableFormPermission(String archiveName, String permissionName, String componentAttr, boolean restricted,
-            com.ontimize.util.calendar.TimePeriod period, String type) {
+            TimePeriod period, String type) {
         super(archiveName, permissionName, componentAttr, restricted, period);
         this.type = type;
     }
@@ -41,7 +43,7 @@ public class TableFormPermission extends FormPermission {
      * @since 5.2077EN-0.2
      */
     public TableFormPermission(String archiveName, String permissionName, String componentAttr, boolean restricted,
-            com.ontimize.util.calendar.TimePeriod period, String type,
+            TimePeriod period, String type,
             String columnName) {
         super(archiveName, permissionName, componentAttr, restricted, period);
         this.type = type;

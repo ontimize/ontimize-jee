@@ -1,5 +1,6 @@
 package com.ontimize.jee.core.common.security;
 
+import com.ontimize.jee.core.common.util.calendar.TimePeriod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +23,7 @@ public class FormPermission extends AbstractClientPermission {
     }
 
     public FormPermission(String fileName, String permissionName, String componentAttr, boolean restricted,
-            com.ontimize.util.calendar.TimePeriod period) {
+            TimePeriod period) {
         this(fileName, permissionName, componentAttr, restricted);
         try {
             this.period = period;

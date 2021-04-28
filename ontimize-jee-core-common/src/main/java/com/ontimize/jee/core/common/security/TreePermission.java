@@ -1,5 +1,7 @@
 package com.ontimize.jee.core.common.security;
 
+import com.ontimize.jee.core.common.util.calendar.TimePeriod;
+
 /**
  * Class that implements permissions for application tree.
  *
@@ -16,8 +18,7 @@ public class TreePermission extends AbstractClientPermission {
         this.restricted = restricted;
     }
 
-    public TreePermission(String tree, String permissionName, String nodeId, boolean restricted,
-            com.ontimize.util.calendar.TimePeriod period) {
+    public TreePermission(String tree, String permissionName, String nodeId, boolean restricted, TimePeriod period) {
         this.tree = tree;
         this.name = permissionName;
         this.attr = nodeId;

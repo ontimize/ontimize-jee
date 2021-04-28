@@ -4,6 +4,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import com.ontimize.jee.core.common.dto.EntityResult;
+import com.ontimize.jee.core.common.dto.EntityResultMapImpl;
+import com.ontimize.jee.server.exceptiontranslator.IExceptionTranslator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.caucho.hessian.util.IExceptionTranslator;
-import com.ontimize.dto.EntityResult;
-import com.ontimize.dto.EntityResultMapImpl;
+
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
 import com.ontimize.jee.common.tools.CheckingTools;
 import com.ontimize.jee.server.rest.UpdateParameter;
@@ -35,13 +36,15 @@ public abstract class RemoteConfigurationRestController<T extends IRemoteConfigu
 
     @RequestMapping(path = "/search", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<EntityResul> getUserConfiguration(@RequestBody Map<?, ?> filter) {
+    public ResponseEntity<EntityResult> getUserConfiguration(@RequestBody Map<?, ?> filter) {
         try {
             this.checkRemoteConfigurationParams(filter);
             String configColumn = this.remoteConfigurationNameConverter != null ? this.remoteConfigurationNameConverter
                 .getConfigurationColumn() : IRemoteConfigurationDao.DEFAULT_COLUMN_CONFIG;
             List<String> attributes = Arrays.asList(configColumn);
-            EntityResult result = this.getService().remoteConfigurationQuery(filter, attributes);
+            EntityResult result = (EntityResult) this.getService()
+                .remoteConfigurationQuery(filter,
+                        attributes);
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception error) {
             return this.processError(error);
@@ -53,7 +56,7 @@ public abstract class RemoteConfigurationRestController<T extends IRemoteConfigu
     public ResponseEntity<EntityResult> createUserConfiguration(@RequestBody Map<?, ?> values) {
         try {
             this.checkRemoteConfigurationParams(values);
-            EntityResult result = this.getService().remoteConfigurationInsert(values);
+            EntityResult result = (EntityResult) this.getService().remoteConfigurationInsert(values);
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
             return this.processError(e);
@@ -72,12 +75,12 @@ public abstract class RemoteConfigurationRestController<T extends IRemoteConfigu
             String configColumn = this.remoteConfigurationNameConverter != null ? this.remoteConfigurationNameConverter
                 .getConfigurationColumn() : IRemoteConfigurationDao.DEFAULT_COLUMN_CONFIG;
             List<String> attributes = Arrays.asList(configColumn);
-            EntityResult result = this.getService().remoteConfigurationQuery(keysValues, attributes);
+            EntityResult result = (EntityResult) this.getService().remoteConfigurationQuery(keysValues, attributes);
             if (EntityResult.OPERATION_WRONG != result.getCode() && result.calculateRecordNumber() == 0) {
                 attributesValues.putAll(keysValues);
-                result = this.getService().remoteConfigurationInsert(attributesValues);
+                result = (EntityResult) this.getService().remoteConfigurationInsert(attributesValues);
             } else {
-                result = this.getService().remoteConfigurationUpdate(attributesValues, keysValues);
+                result = (EntityResult) this.getService().remoteConfigurationUpdate(attributesValues, keysValues);
             }
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
@@ -89,7 +92,7 @@ public abstract class RemoteConfigurationRestController<T extends IRemoteConfigu
     public ResponseEntity<EntityResult> delete(@RequestBody Map<?, ?> values) {
         try {
             this.checkRemoteConfigurationParams(values);
-            EntityResult result = this.getService().remoteConfigurationDelete(values);
+            EntityResult result = (EntityResult) this.getService().remoteConfigurationDelete(values);
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
             return this.processError(e);
@@ -109,7 +112,8 @@ public abstract class RemoteConfigurationRestController<T extends IRemoteConfigu
 
     protected ResponseEntity<EntityResult> processError(Exception error) {
         RemoteConfigurationRestController.logger.error("{}", error.getMessage(), error);
-        EntityResult entityResult = new EntityResultMapImpl(EntityResult.OPERATION_WRONG, EntityResult.BEST_COMPRESSION);
+        EntityResult entityResult = new EntityResultMapImpl(EntityResult.OPERATION_WRONG,
+                EntityResult.BEST_COMPRESSION);
         entityResult.setMessage(this.getErrorMessage(error));
         return new ResponseEntity<>(entityResult, HttpStatus.INTERNAL_SERVER_ERROR);
     }

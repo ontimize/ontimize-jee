@@ -1,5 +1,6 @@
 package com.ontimize.jee.core.common.security;
 
+import com.ontimize.jee.core.common.util.calendar.TimePeriod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,8 +22,7 @@ public class FMPermission extends AbstractClientPermission {
         this.restricted = restricted;
     }
 
-    public FMPermission(String idGF, String permissionName, String formName, boolean restricted,
-            com.ontimize.util.calendar.TimePeriod period) {
+    public FMPermission(String idGF, String permissionName, String formName, boolean restricted, TimePeriod period) {
         this(idGF, permissionName, formName, restricted);
         try {
             this.period = period;

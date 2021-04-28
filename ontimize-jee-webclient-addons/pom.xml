@@ -24,19 +24,19 @@
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>
-			<version>3.9</version>
+			<version>5.0.0</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
-			<version>3.9</version>
+			<version>5.0.0</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml-schemas</artifactId>
-			<version>3.9</version>
+			<version>4.1.2</version>
 			<optional>true</optional>
 		</dependency>
 
@@ -52,12 +52,35 @@
 			<version>2.1.7</version>
 			<scope>provided</scope>
 		</dependency>
+        <dependency>
+            <groupId>com.ontimize.jee</groupId>
+            <artifactId>ontimize-jee-core-common</artifactId>
+        </dependency>
+
+
+		<dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-controls</artifactId>
+			<version>11</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-fxml</artifactId>
+			<version>11</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-collections4</artifactId>
+			<version>4.4</version>
+		</dependency>
+
 
 		<!-- Temporalmente hay que borrar la dependecia con el módulo de exportacion
-		<dependency>
-			<groupId>com.ontimize</groupId>
-			<artifactId>ontimize-core-client</artifactId>
-		</dependency>
-		-->
+        <dependency>
+            <groupId>com.ontimize</groupId>
+            <artifactId>ontimize-core-client</artifactId>
+        </dependency>
+        -->
 	</dependencies>
 </project>

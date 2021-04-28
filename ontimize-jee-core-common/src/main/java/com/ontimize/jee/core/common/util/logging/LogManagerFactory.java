@@ -1,5 +1,7 @@
 package com.ontimize.jee.core.common.util.logging;
 
+import com.ontimize.jee.core.common.util.logging.log4j.Log4jManager;
+import com.ontimize.jee.core.common.util.logging.logback.LogbackManager;
 import org.slf4j.ILoggerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,9 +17,9 @@ public class LogManagerFactory {
             ILoggerFactory currentFactory = LoggerFactory.getILoggerFactory();
 
             if (LogManagerFactory.isLogback(currentFactory)) {
-                LogManagerFactory.logManager = new com.ontimize.util.logging.logback.LogbackManager();
+                LogManagerFactory.logManager = new LogbackManager();
             } else if (LogManagerFactory.isLog4j(currentFactory)) {
-                LogManagerFactory.logManager = new com.ontimize.util.logging.log4j.Log4jManager();
+                LogManagerFactory.logManager = new Log4jManager();
             } else {
                 try {
                     LogManagerFactory.logManager = new NOPManager();

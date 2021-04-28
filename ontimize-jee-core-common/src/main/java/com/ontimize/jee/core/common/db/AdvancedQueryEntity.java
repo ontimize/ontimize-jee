@@ -2,7 +2,7 @@ package com.ontimize.jee.core.common.db;
 
 import java.util.Map;
 
-public interface AdvancedQueryEntity extends com.ontimize.db.Entity {
+public interface AdvancedQueryEntity extends com.ontimize.jee.core.common.db.Entity {
 
     /**
      * Usually this method return a Map {column, type} for the columns specified in the properties file.
