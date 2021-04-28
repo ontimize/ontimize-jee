@@ -4,8 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import com.ontimize.jee.core.common.dto.EntityResult;
-import com.ontimize.jee.core.common.dto.EntityResultMapImpl;
+import com.ontimize.jee.common.dto.EntityResult;
+import com.ontimize.jee.common.dto.EntityResultMapImpl;
 import com.ontimize.jee.server.exceptiontranslator.IExceptionTranslator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

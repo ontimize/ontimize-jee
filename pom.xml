@@ -267,11 +267,6 @@
 				<version>${project.version}</version>
 			</dependency>
 
-			<dependency>
-				<groupId>com.ontimize.jee</groupId>
-				<artifactId>ontimize-jee-core-common</artifactId>
-				<version>${project.version}</version>
-			</dependency>
 			<!--
 			<dependency>
 				<groupId>com.ontimize.jee</groupId>
