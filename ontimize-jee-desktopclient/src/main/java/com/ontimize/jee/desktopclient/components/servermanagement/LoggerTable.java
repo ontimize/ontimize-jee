@@ -6,12 +6,12 @@ import java.util.Vector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ontimize.gui.table.ExtendedTableModel;
-import com.ontimize.gui.table.Table;
+import com.ontimize.jee.common.gui.table.ExtendedTableModel;
+import com.ontimize.jee.common.gui.table.Table;
 import com.ontimize.jee.common.services.servermanagement.IServerManagementService;
 import com.ontimize.jee.common.services.servermanagement.IServerManagementService.OntimizeJEELogger;
 import com.ontimize.jee.desktopclient.spring.BeansFactory;
-import com.ontimize.util.logging.Level;
+import com.ontimize.jee.common.util.logging.Level;
 
 public class LoggerTable extends Table {
 

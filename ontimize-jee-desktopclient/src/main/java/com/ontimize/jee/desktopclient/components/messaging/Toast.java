@@ -20,10 +20,10 @@ import javax.swing.Timer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ontimize.gui.ApplicationManager;
-import com.ontimize.gui.i18n.Internationalization;
+import com.ontimize.jee.common.gui.ApplicationManager;
+import com.ontimize.jee.common.gui.i18n.Internationalization;
 import com.ontimize.jee.desktopclient.components.WindowTools;
-import com.ontimize.util.AWTUtilities;
+import com.ontimize.jee.common.util.AWTUtilities;
 
 /**
  * Muestra información al usuario al estilo del Toast de android. Se muestra una ventana que no

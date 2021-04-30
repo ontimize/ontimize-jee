@@ -10,13 +10,13 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ontimize.dto.EntityResult;
+import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.common.exceptions.OntimizeJEEException;
 import com.ontimize.jee.common.security.PermissionsProviderSecured;
 import com.ontimize.jee.common.services.formprovider.IFormProviderService;
 import com.ontimize.jee.common.services.sharepreferences.ISharePreferencesService;
 import com.ontimize.jee.server.configuration.OntimizeConfiguration;
-import com.ontimize.util.share.SharedElement;
+import com.ontimize.jee.common.util.share.SharedElement;
 
 @Service("SharePreferencesService")
 public class SharePreferencesServiceImpl implements ISharePreferencesService, ApplicationContextAware {

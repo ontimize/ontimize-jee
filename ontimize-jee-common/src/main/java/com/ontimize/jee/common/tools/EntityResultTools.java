@@ -19,20 +19,20 @@ import java.util.regex.Pattern;
 
 import javax.swing.table.TableModel;
 
-import com.ontimize.dto.EntityResult;
-import com.ontimize.dto.EntityResultMapImpl;
+import com.ontimize.jee.common.dto.EntityResult;
+import com.ontimize.jee.common.dto.EntityResultMapImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 
 
-import com.ontimize.db.SQLStatementBuilder.BasicExpression;
-import com.ontimize.db.SQLStatementBuilder.BasicField;
-import com.ontimize.db.SQLStatementBuilder.BasicOperator;
-import com.ontimize.gui.SearchValue;
-import com.ontimize.gui.field.ReferenceFieldAttribute;
-import com.ontimize.gui.table.TableAttribute;
+import com.ontimize.jee.common.db.SQLStatementBuilder.BasicExpression;
+import com.ontimize.jee.common.db.SQLStatementBuilder.BasicField;
+import com.ontimize.jee.common.db.SQLStatementBuilder.BasicOperator;
+import com.ontimize.jee.common.gui.SearchValue;
+import com.ontimize.jee.common.gui.field.ReferenceFieldAttribute;
+import com.ontimize.jee.common.gui.table.TableAttribute;
 import com.ontimize.jee.common.tools.ertools.AbstractAggregateFunction;
 import com.ontimize.jee.common.tools.ertools.Group;
 import com.ontimize.jee.common.tools.ertools.IAggregateFunction;
@@ -41,7 +41,7 @@ import com.ontimize.jee.common.tools.ertools.IPartialAggregateValue;
 /**
  * Clase de utilidades para EntityResult.
  */
-public final class EntityResultTools extends com.ontimize.dto.EntityResultTools {
+public final class EntityResultTools extends com.ontimize.jee.common.dto.EntityResultTools {
 
     private static final Logger logger = LoggerFactory.getLogger(EntityResultTools.class);
 

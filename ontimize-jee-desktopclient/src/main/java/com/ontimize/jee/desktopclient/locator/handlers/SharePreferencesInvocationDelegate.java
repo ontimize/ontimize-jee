@@ -4,13 +4,13 @@ import java.sql.Connection;
 import java.util.HashMap;
 import java.util.List;
 
-import com.ontimize.db.EntityResult;
+import com.ontimize.jee.common.db.EntityResult;
 import com.ontimize.jee.common.services.sharepreferences.ISharePreferencesService;
 import com.ontimize.jee.common.tools.CheckingTools;
 import com.ontimize.jee.common.tools.proxy.AbstractInvocationDelegate;
 import com.ontimize.jee.desktopclient.spring.BeansFactory;
-import com.ontimize.util.share.IShareRemoteReference;
-import com.ontimize.util.share.SharedElement;
+import com.ontimize.jee.common.util.share.IShareRemoteReference;
+import com.ontimize.jee.common.util.share.SharedElement;
 
 public class SharePreferencesInvocationDelegate extends AbstractInvocationDelegate implements IShareRemoteReference {
 

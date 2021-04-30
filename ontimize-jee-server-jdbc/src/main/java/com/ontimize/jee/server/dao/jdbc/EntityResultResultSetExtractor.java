@@ -4,15 +4,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-import com.ontimize.dto.EntityResultMapImpl;
+import com.ontimize.jee.common.dto.EntityResultMapImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 
-import com.ontimize.dto.EntityResult;
-import com.ontimize.db.handler.SQLStatementHandler;
+import com.ontimize.jee.common.dto.EntityResult;
+import com.ontimize.jee.common.db.handler.SQLStatementHandler;
 import com.ontimize.jee.common.tools.Chronometer;
 
 /**

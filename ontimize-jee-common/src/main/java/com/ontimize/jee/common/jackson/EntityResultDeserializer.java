@@ -22,8 +22,8 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import com.ontimize.dto.EntityResult;
-import com.ontimize.dto.EntityResultMapImpl;
+import com.ontimize.jee.common.dto.EntityResult;
+import com.ontimize.jee.common.dto.EntityResultMapImpl;
 import com.ontimize.jee.common.tools.ParseUtilsExtended;
 
 public class EntityResultDeserializer extends StdDeserializer<EntityResult> {

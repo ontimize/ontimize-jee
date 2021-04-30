@@ -24,9 +24,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Service;
 
-import com.ontimize.db.AdvancedEntityResult;
-import com.ontimize.dto.EntityResult;
-import com.ontimize.db.SQLStatementBuilder.SQLOrder;
+import com.ontimize.jee.common.db.AdvancedEntityResult;
+import com.ontimize.jee.common.dto.EntityResult;
+import com.ontimize.jee.common.db.SQLStatementBuilder.SQLOrder;
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
 import com.ontimize.jee.common.tools.ReflectionTools;
 import com.ontimize.jee.server.rest.ORestController;

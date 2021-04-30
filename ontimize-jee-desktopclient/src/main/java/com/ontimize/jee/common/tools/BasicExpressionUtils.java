@@ -11,14 +11,14 @@ import java.util.Set;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import com.ontimize.db.SQLStatementBuilder.BasicExpression;
-import com.ontimize.db.SQLStatementBuilder.BasicField;
-import com.ontimize.db.SQLStatementBuilder.BasicOperator;
-import com.ontimize.db.SQLStatementBuilder.Operator;
-import com.ontimize.gui.Form;
-import com.ontimize.gui.SearchValue;
+import com.ontimize.jee.common.db.SQLStatementBuilder.BasicExpression;
+import com.ontimize.jee.common.db.SQLStatementBuilder.BasicField;
+import com.ontimize.jee.common.db.SQLStatementBuilder.BasicOperator;
+import com.ontimize.jee.common.db.SQLStatementBuilder.Operator;
+import com.ontimize.jee.common.gui.Form;
+import com.ontimize.jee.common.gui.SearchValue;
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
-import com.ontimize.util.ParseTools;
+import com.ontimize.jee.common.util.ParseTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -8,7 +8,7 @@ import org.apache.commons.collections4.iterators.IteratorEnumeration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ontimize.dto.EntityResult;
+import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.server.rest.QueryParameter;
 import com.ontimize.jee.webclient.export.HeadExportColumn;
 import com.ontimize.jee.webclient.export.providers.ExcelExportDataProvider;

@@ -24,16 +24,16 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
-import com.ontimize.dto.EntityResult;
+import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.common.exceptions.OntimizeJEEException;
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
 import com.ontimize.jee.common.security.PermissionsProviderSecured;
 import com.ontimize.jee.common.services.servermanagement.IServerManagementService;
 import com.ontimize.jee.common.session.SessionDto;
 import com.ontimize.jee.server.dao.IOntimizeDaoSupport;
-import com.ontimize.util.logging.ILogManager;
-import com.ontimize.util.logging.Level;
-import com.ontimize.util.logging.LogManagerFactory;
+import com.ontimize.jee.common.util.logging.ILogManager;
+import com.ontimize.jee.common.util.logging.Level;
+import com.ontimize.jee.common.util.logging.LogManagerFactory;
 
 @Service("ServerManagementService")
 @Lazy(value = true)

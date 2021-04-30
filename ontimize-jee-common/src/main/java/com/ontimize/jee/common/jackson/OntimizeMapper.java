@@ -3,10 +3,10 @@ package com.ontimize.jee.common.jackson;
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.ontimize.db.AdvancedEntityResult;
+import com.ontimize.jee.common.db.AdvancedEntityResult;
 
-import com.ontimize.db.SQLStatementBuilder.SQLOrder;
-import com.ontimize.dto.EntityResult;
+import com.ontimize.jee.common.db.SQLStatementBuilder.SQLOrder;
+import com.ontimize.jee.common.dto.EntityResult;
 
 public class OntimizeMapper extends ObjectMapper {
 

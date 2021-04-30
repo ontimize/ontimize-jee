@@ -41,7 +41,7 @@ public interface IDatabaseBundleManager extends Remote {
      * @param l Locale
      * @param sessionId
      * @return The keys of the object are Strings with the bundle class name (for example
-     *         com.ontimize.gui.i18m.bundle) and each value is the ResourceBundle object
+     *         com.ontimize.jee.common.gui.i18m.bundle) and each value is the ResourceBundle object
      * @throws Exception
      */
     public Map getAllResourceBundles(Locale l, int sessionId) throws Exception;

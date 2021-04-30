@@ -21,9 +21,9 @@ import javax.swing.JOptionPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ontimize.gui.ApplicationManager;
-import com.ontimize.gui.Form;
-import com.ontimize.gui.MessageDialog;
+import com.ontimize.jee.common.gui.ApplicationManager;
+import com.ontimize.jee.common.gui.Form;
+import com.ontimize.jee.common.gui.MessageDialog;
 import com.ontimize.jee.common.exceptions.IParametrizedException;
 import com.ontimize.jee.common.tools.MessageType;
 import com.ontimize.jee.common.tools.ObjectWrapper;

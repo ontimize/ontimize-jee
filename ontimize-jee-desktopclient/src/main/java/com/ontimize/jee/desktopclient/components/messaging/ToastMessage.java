@@ -13,7 +13,7 @@ import javax.swing.JPanel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ontimize.gui.ApplicationManager;
+import com.ontimize.jee.common.gui.ApplicationManager;
 import com.ontimize.jee.common.tools.MessageType;
 import com.ontimize.jee.desktopclient.tools.ParseUtilsExtended;
 import com.ontimize.jee.desktopclient.components.WindowTools;

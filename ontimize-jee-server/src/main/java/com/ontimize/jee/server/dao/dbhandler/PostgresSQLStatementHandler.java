@@ -11,9 +11,9 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ontimize.dto.EntityResult;
+import com.ontimize.jee.common.dto.EntityResult;
 
-public class PostgresSQLStatementHandler extends com.ontimize.db.handler.PostgresSQLStatementHandler {
+public class PostgresSQLStatementHandler extends com.ontimize.jee.common.db.handler.PostgresSQLStatementHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(PostgresSQLStatementHandler.class);
 

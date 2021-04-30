@@ -23,11 +23,11 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ontimize.gui.MessageDialog;
-import com.ontimize.gui.button.Button;
-import com.ontimize.gui.container.Column;
-import com.ontimize.gui.container.Row;
-import com.ontimize.gui.field.TextDataField;
+import com.ontimize.jee.common.gui.MessageDialog;
+import com.ontimize.jee.common.gui.button.Button;
+import com.ontimize.jee.common.gui.container.Column;
+import com.ontimize.jee.common.gui.container.Row;
+import com.ontimize.jee.common.gui.field.TextDataField;
 
 public class EmbeddedJFileChooser extends JPanel {
 

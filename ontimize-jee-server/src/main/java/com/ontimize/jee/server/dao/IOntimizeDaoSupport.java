@@ -3,8 +3,8 @@ package com.ontimize.jee.server.dao;
 import java.util.List;
 import java.util.Map;
 
-import com.ontimize.db.AdvancedEntityResult;
-import com.ontimize.dto.EntityResult;
+import com.ontimize.jee.common.db.AdvancedEntityResult;
+import com.ontimize.jee.common.dto.EntityResult;
 
 public interface IOntimizeDaoSupport {
 

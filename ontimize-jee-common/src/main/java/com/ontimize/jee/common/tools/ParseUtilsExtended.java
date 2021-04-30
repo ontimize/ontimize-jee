@@ -19,11 +19,11 @@ import javax.swing.Icon;
 import javax.swing.SwingConstants;
 import javax.xml.bind.DatatypeConverter;
 
-import com.ontimize.util.ParseTools;
+import com.ontimize.jee.common.util.ParseTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ontimize.util.Base64Utils;
+import com.ontimize.jee.common.util.Base64Utils;
 
 /**
  * The Class ParseUtilsExtended.

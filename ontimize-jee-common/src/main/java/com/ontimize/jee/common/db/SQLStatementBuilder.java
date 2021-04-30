@@ -185,7 +185,7 @@ public abstract class SQLStatementBuilder {
 
     static {
         try {
-            String p = System.getProperty("com.ontimize.db.SQLStatementBuilder.DEBUG", "false");
+            String p = System.getProperty("com.ontimize.jee.common.db.SQLStatementBuilder.DEBUG", "false");
             SQLStatementBuilder.DEBUG = ParseTools.parseStringValue(p, false);
         } catch (Exception e) {
             SQLStatementBuilder.logger.trace(null, e);

@@ -99,7 +99,7 @@ public class AbstractClientPermission implements RestrictedClientPermission {
 
     public long getTime() {
         try {
-            Class clazz = Class.forName("com.ontimize.gui.ApplicationManager");
+            Class clazz = Class.forName("com.ontimize.jee.common.gui.ApplicationManager");
             Method method = clazz.getMethod("getTime", new Class[] {});
             long time = (Long) method.invoke(null, new Object[] {});
             return time;

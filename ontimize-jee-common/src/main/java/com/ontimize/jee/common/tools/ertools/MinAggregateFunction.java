@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 
-import com.ontimize.dto.EntityResult;
+import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.common.tools.ertools.MinAggregateFunction.MinPartialAggregateValue;
 
 public class MinAggregateFunction extends AbstractAggregateFunction<MinPartialAggregateValue> {

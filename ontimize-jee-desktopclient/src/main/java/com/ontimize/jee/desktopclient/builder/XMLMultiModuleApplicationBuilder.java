@@ -49,19 +49,19 @@ import com.ontimize.builder.xml.XMLButtonBarBuilder;
 import com.ontimize.builder.xml.XMLFormBuilder;
 import com.ontimize.builder.xml.XMLMenuBuilder;
 import com.ontimize.builder.xml.XMLTreeBuilder;
-import com.ontimize.gui.Application;
-import com.ontimize.gui.MainApplication;
-import com.ontimize.gui.MenuListener;
-import com.ontimize.gui.ToolBarListener;
-import com.ontimize.gui.manager.IFormManager;
-import com.ontimize.gui.manager.ITreeFormManager;
+import com.ontimize.jee.common.gui.Application;
+import com.ontimize.jee.common.gui.MainApplication;
+import com.ontimize.jee.common.gui.MenuListener;
+import com.ontimize.jee.common.gui.ToolBarListener;
+import com.ontimize.jee.common.gui.manager.IFormManager;
+import com.ontimize.jee.common.gui.manager.ITreeFormManager;
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
 import com.ontimize.jee.common.tools.Chronometer;
 import com.ontimize.jee.common.tools.Pair;
 import com.ontimize.jee.desktopclient.components.treetabbedformmanager.ITreeTabbedFormManager;
 import com.ontimize.jee.desktopclient.components.treetabbedformmanager.levelmanager.builder.xml.XMLLevelManagerBuilder;
 import com.ontimize.locator.EntityReferenceLocator;
-import com.ontimize.util.extend.ExtendedXmlParser;
+import com.ontimize.jee.common.util.extend.ExtendedXmlParser;
 
 /**
  * The Class XMLMultiModuleApplicationBuilder. Unifica todos los "clientapplication.xml" en uno
@@ -262,7 +262,7 @@ public class XMLMultiModuleApplicationBuilder extends XMLApplicationBuilder {
 
             Object application = this.instance(rootNode);
             if (!(application instanceof Application)) {
-                throw new OntimizeJEERuntimeException("Error: Root is not a com.ontimize.gui.Application instance");
+                throw new OntimizeJEERuntimeException("Error: Root is not a com.ontimize.jee.common.gui.Application instance");
             }
 
             locator = this.buildLocator(rootNode);

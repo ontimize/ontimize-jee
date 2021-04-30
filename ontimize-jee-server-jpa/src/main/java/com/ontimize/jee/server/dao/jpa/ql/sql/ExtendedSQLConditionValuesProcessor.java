@@ -3,10 +3,10 @@ package com.ontimize.jee.server.dao.jpa.ql.sql;
 import java.util.List;
 import java.util.Map;
 
-import com.ontimize.db.SQLStatementBuilder;
-import com.ontimize.db.SQLStatementBuilder.BasicOperator;
-import com.ontimize.db.SQLStatementBuilder.Expression;
-import com.ontimize.db.SQLStatementBuilder.Field;
+import com.ontimize.jee.common.db.SQLStatementBuilder;
+import com.ontimize.jee.common.db.SQLStatementBuilder.BasicOperator;
+import com.ontimize.jee.common.db.SQLStatementBuilder.Expression;
+import com.ontimize.jee.common.db.SQLStatementBuilder.Field;
 
 public class ExtendedSQLConditionValuesProcessor extends DefaultSQLConditionValuesProcessor {
 

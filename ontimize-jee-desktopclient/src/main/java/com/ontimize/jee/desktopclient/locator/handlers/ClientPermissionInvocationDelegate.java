@@ -2,9 +2,9 @@ package com.ontimize.jee.desktopclient.locator.handlers;
 
 import java.util.Hashtable;
 
-import com.ontimize.db.EntityResult;
+import com.ontimize.jee.common.db.EntityResult;
 import com.ontimize.jee.common.tools.proxy.AbstractInvocationDelegate;
-import com.ontimize.security.ClientPermissionManager;
+import com.ontimize.jee.common.security.ClientPermissionManager;
 
 /**
  * The Class ClientPermissionInvocationDelegate.

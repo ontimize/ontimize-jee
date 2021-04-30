@@ -75,7 +75,7 @@
 		<commons-collections.version>4.4</commons-collections.version>
 		<commons-io.version>2.4</commons-io.version>
 		<mesp.version>1.0.2</mesp.version>
-		<ontimize.version>8.0.1-SNAPSHOT</ontimize.version>
+	<!--	<ontimize.version>8.0.1-SNAPSHOT</ontimize.version> -->
 		<ontimize.plaf.version>1.1.7</ontimize.plaf.version>
 		<ontimize.plaf.color.version>1.4.4</ontimize.plaf.color.version>
 		<zip4j.version>1.3.2</zip4j.version>
@@ -503,7 +503,7 @@
 				<version>3.2.2</version>
 			</dependency>
 
-			<!-- Ontimize -->
+			<!-- Ontimize
 			<dependency>
 				<groupId>com.ontimize</groupId>
 				<artifactId>ontimize-core-client</artifactId>
@@ -514,6 +514,7 @@
 				<artifactId>ontimize-core-common</artifactId>
 				<version>${ontimize.version}</version>
 			</dependency>
+			-->
 			<dependency>
 				<groupId>javax</groupId>
 				<artifactId>javaee-api</artifactId>

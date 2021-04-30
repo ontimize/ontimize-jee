@@ -10,21 +10,21 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.ResourceBundle;
 
-import com.ontimize.dto.EntityResultMapImpl;
+import com.ontimize.jee.common.dto.EntityResultMapImpl;
 import org.springframework.beans.factory.InitializingBean;
 
-import com.ontimize.dto.EntityResult;
-import com.ontimize.gui.SearchValue;
-import com.ontimize.gui.i18n.DatabaseBundleDescriptor;
-import com.ontimize.gui.i18n.DatabaseBundleValues;
-import com.ontimize.gui.i18n.DatabaseBundleValues.BundleValue;
+import com.ontimize.jee.common.dto.EntityResult;
+import com.ontimize.jee.common.gui.SearchValue;
+import com.ontimize.jee.common.gui.i18n.DatabaseBundleDescriptor;
+import com.ontimize.jee.common.gui.i18n.DatabaseBundleValues;
+import com.ontimize.jee.common.gui.i18n.DatabaseBundleValues.BundleValue;
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
 import com.ontimize.jee.common.services.i18n.II18nService;
 import com.ontimize.jee.common.services.i18n.TmpDatabaseResourceBundle;
 import com.ontimize.jee.common.tools.CheckingTools;
 import com.ontimize.jee.server.dao.DaoProperty;
 import com.ontimize.jee.server.dao.IOntimizeDaoSupport;
-import com.ontimize.util.ParseTools;
+import com.ontimize.jee.common.util.ParseTools;
 
 /**
  * The Class DatabaseI18nEngine.
@@ -201,8 +201,9 @@ public class DatabaseI18nEngine implements II18nService, InitializingBean {
     /*
      * (non-Javadoc)
      *
-     * @see com.ontimize.jee.common.services.i18n.II18nService#updateBundleValues(com.ontimize.gui.i18n.
-     * DatabaseBundleValues)
+     * @see
+     * com.ontimize.jee.common.services.i18n.II18nService#updateBundleValues(com.ontimize.jee.common.gui
+     * .i18n. DatabaseBundleValues)
      */
     @Override
     public void updateBundleValues(DatabaseBundleValues dbvalues) throws OntimizeJEERuntimeException {

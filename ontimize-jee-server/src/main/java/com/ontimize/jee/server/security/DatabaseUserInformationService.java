@@ -15,14 +15,14 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import com.ontimize.dto.EntityResult;
+import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.common.exceptions.OntimizeJEEException;
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
 import com.ontimize.jee.common.services.user.UserInformation;
 import com.ontimize.jee.server.configuration.OntimizeConfiguration;
 import com.ontimize.jee.server.dao.IOntimizeDaoSupport;
 import com.ontimize.jee.server.security.authorization.ISecurityAuthorizator;
-import com.ontimize.security.XMLClientUtilities;
+import com.ontimize.jee.common.security.XMLClientUtilities;
 
 /**
  * The Class PermissionsProvider.

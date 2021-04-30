@@ -4,7 +4,7 @@ import java.util.Map;
 
 import org.springframework.context.ApplicationContext;
 
-import com.ontimize.dto.EntityResult;
+import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.common.dao.DeleteOperation;
 import com.ontimize.jee.common.dao.InsertOperation;
 import com.ontimize.jee.common.dao.UpdateOperation;

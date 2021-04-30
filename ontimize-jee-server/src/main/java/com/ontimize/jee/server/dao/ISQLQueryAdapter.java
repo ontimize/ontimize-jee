@@ -3,7 +3,7 @@ package com.ontimize.jee.server.dao;
 import java.util.List;
 import java.util.Map;
 
-import com.ontimize.db.SQLStatementBuilder.SQLStatement;
+import com.ontimize.jee.common.db.SQLStatementBuilder.SQLStatement;
 
 public interface ISQLQueryAdapter {
 

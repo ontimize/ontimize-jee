@@ -8,8 +8,8 @@ import org.springframework.dao.DataRetrievalFailureException;
 
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.exceptions.DriverException;
-import com.ontimize.dto.EntityResult;
-import com.ontimize.dto.EntityResultMapImpl;
+import com.ontimize.jee.common.dto.EntityResult;
+import com.ontimize.jee.common.dto.EntityResultMapImpl;
 import com.ontimize.jee.server.dao.cql.handler.CQLStatementHandler;
 
 /**

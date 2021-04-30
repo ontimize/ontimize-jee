@@ -13,7 +13,7 @@ import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.TableCellRenderer;
 
-import com.ontimize.gui.images.ImageManager;
+import com.ontimize.jee.common.gui.images.ImageManager;
 
 /**
  * This class renders a JProgressBar in a table cell.

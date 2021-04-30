@@ -18,7 +18,7 @@ import org.w3c.dom.Node;
 import com.ontimize.builder.TreeBuilder;
 import com.ontimize.builder.xml.CustomNode;
 import com.ontimize.builder.xml.XMLTreeBuilder;
-import com.ontimize.gui.Form;
+import com.ontimize.jee.common.gui.Form;
 import com.ontimize.jee.desktopclient.components.treetabbedformmanager.levelmanager.DefaultLevel;
 import com.ontimize.jee.desktopclient.components.treetabbedformmanager.levelmanager.DefaultLevelManager;
 import com.ontimize.jee.desktopclient.components.treetabbedformmanager.levelmanager.Level;
@@ -35,7 +35,7 @@ public class XMLLevelManagerBuilder extends XMLInterpreter implements
 
     public static boolean INCLUDE_DEFAULT_LABELS = true;
 
-    protected String defaultPackage = "com.ontimize.gui.";
+    protected String defaultPackage = "com.ontimize.jee.common.gui.";
 
     protected Hashtable equivalenceLabelList = new Hashtable();
 

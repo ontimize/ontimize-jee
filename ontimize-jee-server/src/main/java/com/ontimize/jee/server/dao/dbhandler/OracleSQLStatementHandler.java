@@ -7,7 +7,7 @@ import java.io.InputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class OracleSQLStatementHandler extends com.ontimize.db.handler.OracleSQLStatementHandler {
+public class OracleSQLStatementHandler extends com.ontimize.jee.common.db.handler.OracleSQLStatementHandler {
 
     /** The logger. */
     private static final Logger logger = LoggerFactory.getLogger(OracleSQLStatementHandler.class);

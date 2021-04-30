@@ -13,13 +13,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ontimize.builder.xml.XMLApplicationBuilder;
-import com.ontimize.gui.Application;
-import com.ontimize.gui.ApplicationManager;
-import com.ontimize.gui.FixedFocusManager;
-import com.ontimize.gui.Form;
-import com.ontimize.gui.MessageDialog;
-import com.ontimize.gui.table.Table;
-import com.ontimize.gui.table.TableConfigurationManager;
+import com.ontimize.jee.common.gui.Application;
+import com.ontimize.jee.common.gui.ApplicationManager;
+import com.ontimize.jee.common.gui.FixedFocusManager;
+import com.ontimize.jee.common.gui.Form;
+import com.ontimize.jee.common.gui.MessageDialog;
+import com.ontimize.jee.common.gui.table.Table;
+import com.ontimize.jee.common.gui.table.TableConfigurationManager;
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
 import com.ontimize.jee.desktopclient.spring.BeansFactory;
 import com.ontimize.report.ReportManager;
@@ -158,7 +158,7 @@ public class MultiModuleApplicationLauncher {
             System.exit(-1);
         }
 
-        String lf = System.getProperty("com.ontimize.gui.lafclassname");
+        String lf = System.getProperty("com.ontimize.jee.common.gui.lafclassname");
         if (lf == null) {
             lf = MultiModuleApplicationLauncher.START_LOOK_AND_FEEL;
         }

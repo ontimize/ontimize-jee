@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.ontimize.gui.preferences.RemoteApplicationPreferenceReferencer;
-import com.ontimize.gui.preferences.RemoteApplicationPreferences;
+import com.ontimize.jee.common.gui.preferences.RemoteApplicationPreferenceReferencer;
+import com.ontimize.jee.common.gui.preferences.RemoteApplicationPreferences;
 import com.ontimize.jee.common.tools.ReflectionTools;
 import com.ontimize.jee.common.tools.proxy.AbstractInvocationDelegate;
 import com.ontimize.jee.desktopclient.locator.preferences.RemoteApplicationPreferencesInvocationHandler;
@@ -23,7 +23,7 @@ public class RemoteApplicationPreferenceReferencerDelegate extends AbstractInvoc
     /*
      * (non-Javadoc)
      *
-     * @see com.ontimize.gui.preferences.RemoteApplicationPreferenceReferencer#
+     * @see com.ontimize.jee.common.gui.preferences.RemoteApplicationPreferenceReferencer#
      * getRemoteApplicationPreferences(int)
      */
     @Override

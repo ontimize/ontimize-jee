@@ -20,14 +20,14 @@ import javax.swing.Icon;
 import javax.swing.SwingConstants;
 import javax.xml.bind.DatatypeConverter;
 
-import com.ontimize.gui.ApplicationManager;
-import com.ontimize.gui.images.ImageManager;
+import com.ontimize.jee.common.gui.ApplicationManager;
+import com.ontimize.jee.common.gui.images.ImageManager;
 import com.ontimize.jee.common.tools.MapTools;
 import com.ontimize.jee.common.tools.ObjectTools;
 import com.ontimize.jee.common.tools.ReflectionTools;
-import com.ontimize.util.Base64Utils;
-import com.ontimize.util.ParseTools;
-import com.ontimize.util.ParseUtils;
+import com.ontimize.jee.common.util.Base64Utils;
+import com.ontimize.jee.common.util.ParseTools;
+import com.ontimize.jee.common.util.ParseUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

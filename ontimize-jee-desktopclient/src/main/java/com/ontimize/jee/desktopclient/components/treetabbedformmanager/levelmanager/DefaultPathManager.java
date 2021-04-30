@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-import com.ontimize.gui.field.Label;
-import com.ontimize.util.ParseUtils;
+import com.ontimize.jee.common.gui.field.Label;
+import com.ontimize.jee.common.util.ParseUtils;
 
 public class DefaultPathManager implements PathManager {
 

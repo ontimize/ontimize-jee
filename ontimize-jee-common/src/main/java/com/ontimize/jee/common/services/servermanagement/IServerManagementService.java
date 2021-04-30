@@ -6,13 +6,13 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import com.ontimize.dto.EntityResult;
+import com.ontimize.jee.common.dto.EntityResult;
 import org.slf4j.Logger;
 
 
 import com.ontimize.jee.common.exceptions.OntimizeJEEException;
 import com.ontimize.jee.common.session.SessionDto;
-import com.ontimize.util.logging.Level;
+import com.ontimize.jee.common.util.logging.Level;
 
 /**
  * The Interface IServerManagementService.

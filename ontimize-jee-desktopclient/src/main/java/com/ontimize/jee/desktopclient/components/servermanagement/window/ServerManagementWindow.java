@@ -21,12 +21,12 @@ import javax.swing.event.ListSelectionListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ontimize.gui.Application;
-import com.ontimize.gui.ApplicationManager;
-import com.ontimize.gui.Form;
-import com.ontimize.gui.FormManager;
-import com.ontimize.gui.InteractionManager;
-import com.ontimize.gui.manager.IFormManager;
+import com.ontimize.jee.common.gui.Application;
+import com.ontimize.jee.common.gui.ApplicationManager;
+import com.ontimize.jee.common.gui.Form;
+import com.ontimize.jee.common.gui.FormManager;
+import com.ontimize.jee.common.gui.InteractionManager;
+import com.ontimize.jee.common.gui.manager.IFormManager;
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
 import com.ontimize.jee.common.tools.ReflectionTools;
 import com.ontimize.jee.desktopclient.components.servermanagement.managers.IMDownloadLogFiles;

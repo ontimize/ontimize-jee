@@ -1809,8 +1809,8 @@ public class DefaultSQLStatementHandler implements SQLStatementHandler {
      * <li>setBlob for Blob objects</li>
      * <li>setClob for Clob objects</li>
      * <li>setBinaryStream for BytesBlock objects</li>
-     * <li>setCharacterStream for com.ontimize.gui.LongString</li>
-     * <li>setNull for com.ontimize.db.NullValue</li>
+     * <li>setCharacterStream for com.ontimize.jee.common.gui.LongString</li>
+     * <li>setNull for com.ontimize.jee.common.db.NullValue</li>
      * <li>setObject for all other object</li>
      * </ul>
      * <p>

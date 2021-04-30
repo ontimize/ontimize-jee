@@ -6,7 +6,7 @@ import javax.swing.JProgressBar;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 
-import com.ontimize.gui.table.CellRenderer;
+import com.ontimize.jee.common.gui.table.CellRenderer;
 
 /**
  * This class renders a JProgressBar in a table cell.

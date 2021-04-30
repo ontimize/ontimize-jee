@@ -1,6 +1,6 @@
 package com.ontimize.jee.common.tools.ertools;
 
-import com.ontimize.dto.EntityResult;
+import com.ontimize.jee.common.dto.EntityResult;
 
 import java.util.List;
 import java.util.Map;

@@ -2,9 +2,9 @@ package com.ontimize.jee.desktopclient.components;
 
 import java.util.Hashtable;
 
-import com.ontimize.gui.ValueEvent;
-import com.ontimize.gui.field.ImageDataField;
-import com.ontimize.util.remote.BytesBlock;
+import com.ontimize.jee.common.gui.ValueEvent;
+import com.ontimize.jee.common.gui.field.ImageDataField;
+import com.ontimize.jee.common.util.remote.BytesBlock;
 
 public class ByteArrayImageDataField extends ImageDataField {
 

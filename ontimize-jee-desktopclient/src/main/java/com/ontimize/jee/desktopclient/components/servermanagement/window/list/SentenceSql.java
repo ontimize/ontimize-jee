@@ -6,8 +6,8 @@ package com.ontimize.jee.desktopclient.components.servermanagement.window.list;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ontimize.gui.ApplicationManager;
-import com.ontimize.gui.MainApplication;
+import com.ontimize.jee.common.gui.ApplicationManager;
+import com.ontimize.jee.common.gui.MainApplication;
 
 /**
  * Copiado de Sentence de utilmize

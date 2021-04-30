@@ -3,7 +3,7 @@ package com.ontimize.jee.common.tools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ontimize.gui.SearchValue;
+import com.ontimize.jee.common.gui.SearchValue;
 
 import java.util.ArrayList;
 import java.util.Arrays;

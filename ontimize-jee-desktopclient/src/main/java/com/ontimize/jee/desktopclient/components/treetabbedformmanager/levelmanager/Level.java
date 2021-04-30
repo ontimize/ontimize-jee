@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-import com.ontimize.util.FormatPattern;
+import com.ontimize.jee.common.util.FormatPattern;
 
 public interface Level {
 

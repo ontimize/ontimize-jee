@@ -17,7 +17,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import com.ontimize.gui.field.AbstractFormComponent;
+import com.ontimize.jee.common.gui.field.AbstractFormComponent;
 import com.ontimize.jee.common.tools.ReflectionTools;
 
 /**

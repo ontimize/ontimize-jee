@@ -15,7 +15,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ontimize.gui.container.Row;
+import com.ontimize.jee.common.gui.container.Row;
 import com.ontimize.jee.common.tools.ObjectWrapper;
 
 import javafx.application.Platform;

@@ -2,7 +2,7 @@ package com.ontimize.jee.desktopclient.hessian;
 
 import java.lang.reflect.Proxy;
 
-import com.ontimize.db.Entity;
+import com.ontimize.jee.common.db.Entity;
 import com.ontimize.jee.desktopclient.locator.handlers.AbstractSessionLocatorInvocationDelegate;
 
 /**

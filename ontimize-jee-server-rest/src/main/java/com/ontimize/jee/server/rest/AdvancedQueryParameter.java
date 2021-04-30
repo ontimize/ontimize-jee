@@ -5,7 +5,7 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.ontimize.db.SQLStatementBuilder.SQLOrder;
+import com.ontimize.jee.common.db.SQLStatementBuilder.SQLOrder;
 
 @XmlRootElement
 public class AdvancedQueryParameter extends QueryParameter {

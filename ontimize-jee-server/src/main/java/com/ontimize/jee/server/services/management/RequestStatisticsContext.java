@@ -4,11 +4,11 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.List;
 
-import com.ontimize.dto.EntityResultMapImpl;
+import com.ontimize.jee.common.dto.EntityResultMapImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ontimize.dto.EntityResult;
+import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.common.tools.EntityResultTools;
 import com.ontimize.jee.common.tools.ertools.AvgAggregateFunction;
 import com.ontimize.jee.common.tools.ertools.CountAggregateFunction;

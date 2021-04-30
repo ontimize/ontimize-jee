@@ -7,10 +7,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ontimize.annotation.FormComponent;
-import com.ontimize.gui.BasicInteractionManager;
-import com.ontimize.gui.Form;
-import com.ontimize.gui.button.Button;
-import com.ontimize.gui.manager.IFormManager;
+import com.ontimize.jee.common.gui.BasicInteractionManager;
+import com.ontimize.jee.common.gui.Form;
+import com.ontimize.jee.common.gui.button.Button;
+import com.ontimize.jee.common.gui.manager.IFormManager;
 import com.ontimize.jee.common.services.servermanagement.IServerManagementService;
 import com.ontimize.jee.desktopclient.components.messaging.MessageManager;
 import com.ontimize.jee.desktopclient.components.task.OSwingWorker;

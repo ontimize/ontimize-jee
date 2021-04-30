@@ -7,8 +7,8 @@ import java.util.List;
 
 import org.springframework.context.ApplicationContext;
 
-import com.ontimize.dto.EntityResult;
-import com.ontimize.gui.field.ReferenceFieldAttribute;
+import com.ontimize.jee.common.dto.EntityResult;
+import com.ontimize.jee.common.gui.field.ReferenceFieldAttribute;
 import com.ontimize.jee.common.dao.DeleteOperation;
 import com.ontimize.jee.common.dao.InsertOperation;
 import com.ontimize.jee.common.dao.UpdateOperation;
@@ -23,7 +23,7 @@ public class ReferenceFieldAttributeDispatcher extends AbstractAttributeDispatch
      *
      * @see
      * com.ontimize.jee.server.services.core.IAttributeDispatcher#processAttribute(java.lang.Object,
-     * com.ontimize.db.EntityResult, org.springframework.context.ApplicationContext)
+     * com.ontimize.jee.common.db.EntityResult, org.springframework.context.ApplicationContext)
      */
     @Override
     public void processQueryAttribute(ReferenceFieldAttribute oAttribute, EntityResult result,

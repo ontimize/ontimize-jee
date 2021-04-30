@@ -9,16 +9,16 @@ import java.util.Map;
 import java.util.List;
 import java.util.Vector;
 
-import com.ontimize.dto.EntityResultMapImpl;
+import com.ontimize.jee.common.dto.EntityResultMapImpl;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import com.ontimize.dto.EntityResult;
-import com.ontimize.db.SQLStatementBuilder;
-import com.ontimize.db.SQLStatementBuilder.BasicExpression;
-import com.ontimize.db.SQLStatementBuilder.BasicField;
-import com.ontimize.db.SQLStatementBuilder.BasicOperator;
+import com.ontimize.jee.common.dto.EntityResult;
+import com.ontimize.jee.common.db.SQLStatementBuilder;
+import com.ontimize.jee.common.db.SQLStatementBuilder.BasicExpression;
+import com.ontimize.jee.common.db.SQLStatementBuilder.BasicField;
+import com.ontimize.jee.common.db.SQLStatementBuilder.BasicOperator;
 import com.ontimize.jee.common.exceptions.OntimizeJEEException;
 import com.ontimize.jee.common.services.sharepreferences.ISharePreferencesService;
 import com.ontimize.jee.common.services.user.UserInformation;
@@ -26,8 +26,8 @@ import com.ontimize.jee.common.tools.CheckingTools;
 import com.ontimize.jee.server.dao.DefaultOntimizeDaoHelper;
 import com.ontimize.jee.server.dao.IOntimizeDaoSupport;
 import com.ontimize.jee.server.security.ISecurityUserInformationService;
-import com.ontimize.util.share.IShareRemoteReference;
-import com.ontimize.util.share.SharedElement;
+import com.ontimize.jee.common.util.share.IShareRemoteReference;
+import com.ontimize.jee.common.util.share.SharedElement;
 
 public class SharePreferencesEngine implements ISharePreferencesService, InitializingBean {
 

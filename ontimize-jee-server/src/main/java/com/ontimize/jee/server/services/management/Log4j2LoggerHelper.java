@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import com.ontimize.dto.EntityResultMapImpl;
+import com.ontimize.jee.common.dto.EntityResultMapImpl;
 import org.apache.logging.log4j.core.Appender;
 import org.apache.logging.log4j.core.appender.FileAppender;
 import org.apache.logging.log4j.core.appender.RollingFileAppender;
@@ -23,11 +23,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StreamUtils;
 
-import com.ontimize.dto.EntityResult;
+import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.common.exceptions.OntimizeJEEException;
 import com.ontimize.jee.common.tools.EntityResultTools;
-import com.ontimize.util.logging.LogManagerFactory;
-import com.ontimize.util.logging.log4j.Log4jManager;
+import com.ontimize.jee.common.util.logging.LogManagerFactory;
+import com.ontimize.jee.common.util.logging.log4j.Log4jManager;
 
 
 public class Log4j2LoggerHelper implements ILoggerHelper {

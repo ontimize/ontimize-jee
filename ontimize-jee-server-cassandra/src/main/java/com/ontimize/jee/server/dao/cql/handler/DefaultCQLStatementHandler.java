@@ -16,12 +16,12 @@ import com.datastax.driver.core.ColumnDefinitions.Definition;
 import com.datastax.driver.core.DataType;
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
-import com.ontimize.dto.EntityResult;
-import com.ontimize.db.SQLStatementBuilder;
-import com.ontimize.db.SQLStatementBuilder.SQLConditionValuesProcessor;
-import com.ontimize.db.SQLStatementBuilder.SQLNameEval;
-import com.ontimize.db.SQLStatementBuilder.SQLOrder;
-import com.ontimize.db.util.DBFunctionName;
+import com.ontimize.jee.common.dto.EntityResult;
+import com.ontimize.jee.common.db.SQLStatementBuilder;
+import com.ontimize.jee.common.db.SQLStatementBuilder.SQLConditionValuesProcessor;
+import com.ontimize.jee.common.db.SQLStatementBuilder.SQLNameEval;
+import com.ontimize.jee.common.db.SQLStatementBuilder.SQLOrder;
+import com.ontimize.jee.common.db.util.DBFunctionName;
 import com.ontimize.jee.server.dao.cql.CQLStatement;
 
 public class DefaultCQLStatementHandler implements CQLStatementHandler {

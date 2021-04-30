@@ -570,7 +570,7 @@ public class EntityResultMapImpl implements EntityResult, Map {
 
         if (!checkApplicationClass && applicationInputStreamConstructor == null) {
             try {
-                Class clazz = Class.forName("com.ontimize.db.ApplicationStatusBarInputStream");
+                Class clazz = Class.forName("com.ontimize.jee.common.db.ApplicationStatusBarInputStream");
                 applicationInputStreamConstructor = clazz.getConstructor(new Class[] { InputStream.class, int.class });
             } catch (Exception e) {
             } finally {

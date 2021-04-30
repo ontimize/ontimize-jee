@@ -27,9 +27,9 @@ import javax.persistence.metamodel.Type.PersistenceType;
 
 import org.springframework.beans.BeanUtils;
 
-import com.ontimize.dto.EntityResult;
-import com.ontimize.dto.EntityResultMapImpl;
-import com.ontimize.db.NullValue;
+import com.ontimize.jee.common.dto.EntityResult;
+import com.ontimize.jee.common.dto.EntityResultMapImpl;
+import com.ontimize.jee.common.db.NullValue;
 import com.ontimize.jee.common.tools.EntityResultTools;
 import com.ontimize.jee.server.dao.jpa.common.MappingInfo;
 import com.ontimize.jee.server.dao.jpa.common.MappingInfoUtils;
@@ -111,7 +111,7 @@ public final class OntimizeJpaUtils {
             columnList.addAll(JPAUtils.getColumnNames(data.getClass()));
         }
 
-        EntityResult result = com.ontimize.dto.EntityResultTools.createEmptyEntityResult(columnList);
+        EntityResult result = com.ontimize.jee.common.dto.EntityResultTools.createEmptyEntityResult(columnList);
 
         for (final String col : columnList) {
             if (col != null) {

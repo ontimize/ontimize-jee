@@ -3,7 +3,7 @@ package com.ontimize.jee.server.dao;
 import java.util.Date;
 import java.util.Map;
 
-import com.ontimize.dto.EntityResult;
+import com.ontimize.jee.common.dto.EntityResult;
 
 public interface IDownDateHelper {
 

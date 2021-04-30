@@ -10,12 +10,12 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ontimize.db.NullValue;
-import com.ontimize.db.SQLStatementBuilder;
-import com.ontimize.db.SQLStatementBuilder.NoWildCard;
-import com.ontimize.db.SQLStatementBuilder.SQLExpression;
-import com.ontimize.db.SQLStatementBuilder.SQLNameEval;
-import com.ontimize.gui.SearchValue;
+import com.ontimize.jee.common.db.NullValue;
+import com.ontimize.jee.common.db.SQLStatementBuilder;
+import com.ontimize.jee.common.db.SQLStatementBuilder.NoWildCard;
+import com.ontimize.jee.common.db.SQLStatementBuilder.SQLExpression;
+import com.ontimize.jee.common.db.SQLStatementBuilder.SQLNameEval;
+import com.ontimize.jee.common.gui.SearchValue;
 
 public abstract class AbstractQLConditionValuesProcessor implements QLConditionValuesProcessor {
 
