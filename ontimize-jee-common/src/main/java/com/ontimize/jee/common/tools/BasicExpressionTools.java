@@ -378,9 +378,9 @@ public final class BasicExpressionTools {
     /**
      * Allow to replace an expression by another into a complex expression.<br>
      * For instance: <br>
-     * · Replace name='JACK' by fullName='Jack Jones' <br>
-     * · Into the expression (Date=today AND name=Jack) or (date=yesterday and name='Louis')<br>
-     * · Results in: (Date=today AND fullName='Jack Jones' ) or (date=yesterday and name='Louis')<br>
+     * Replace name='JACK' by fullName='Jack Jones' <br>
+     * Into the expression (Date=today AND name=Jack) or (date=yesterday and name='Louis')<br>
+     * Results in: (Date=today AND fullName='Jack Jones' ) or (date=yesterday and name='Louis')<br>
      * @param originalExpr
      * @param ipExpr
      * @param replaceExpr

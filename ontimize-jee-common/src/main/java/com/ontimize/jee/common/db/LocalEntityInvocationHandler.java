@@ -23,7 +23,7 @@ public class LocalEntityInvocationHandler implements InvocationHandler, Entity, 
     protected Map<String, Object> entityMetadata;
 
     protected EntityResult cacheData = ((EntityResult) new EntityResultMapImpl(EntityResult.OPERATION_SUCCESSFUL,
-            EntityResult.BEST_COMPRESSION)); // todo revisar cuando se añada nueva implementación
+            EntityResult.BEST_COMPRESSION)); // todo review on future implementations
 
     public LocalEntityInvocationHandler(EntityReferenceLocator locator, String entityName) {
         this.locator = locator;

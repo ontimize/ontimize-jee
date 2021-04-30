@@ -18,7 +18,7 @@ public final class CheckingTools {
      * Si el objeto a chequear es nulo lanza una {@link OntimizeJEERuntimeException} con el texto
      * indicado.
      * @param toCheck the to check
-     * @param exceptionText the exception text
+     * @param messageParameters the exception text
      */
     public static void failIfNull(Object toCheck, String messageFormat, Object... messageParameters) {
         if (toCheck == null) {
@@ -31,7 +31,8 @@ public final class CheckingTools {
      * Si el objeto a chequear es true lanza una {@link OntimizeJEERuntimeException} con el texto
      * indicado
      * @param toCheck
-     * @param exceptionText
+     * @param messageFormat
+     * @param messageParameters
      */
     public static void failIf(boolean toCheck, String messageFormat, Object... messageParameters) {
         if (toCheck) {
@@ -44,7 +45,9 @@ public final class CheckingTools {
      * Si el objeto a chequear es true lanza una excepcion de la clase definida. con el texto indicado.
      * El constructor debe tener un parametro string
      * @param toCheck
-     * @param exceptionText
+     * @param exceptionClass
+     * @param messageFormat
+     * @param messageParameters
      */
     public static <T extends Throwable> void failIf(boolean toCheck, Class<T> exceptionClass, String messageFormat,
             Object... messageParameters) throws T {
@@ -75,9 +78,11 @@ public final class CheckingTools {
     }
 
     /**
-     * Método para chequear si un {@link EntityResult} es incorrecto. Permite encapsular la excepción
+     * Metodo para chequear si un {@link EntityResult} es incorrecto. Permite encapsular la excepcion
      * con un mensaje concreto.
-     * @param res
+     * @param rs
+     * @param messageFormat
+     * @param messageParameters
      * @throws Exception Cuando o es reaultado NULL o no es correcto.
      */
     public static void checkValidEntityResult(EntityResult rs, String messageFormat, Object... messageParameters)
@@ -97,7 +102,7 @@ public final class CheckingTools {
     }
 
     /**
-     * Método para chequear si un {@link EntityResult} es incorrecto.
+     * Metodo para chequear si un {@link EntityResult} es incorrecto.
      * @param res
      * @throws Exception Cuando o es reaultado NULL o no es correcto.
      */
@@ -106,7 +111,7 @@ public final class CheckingTools {
     }
 
     /**
-     * Método para chequear si un {@link EntityResult} es incorrecto. Permite encapsular la excepción
+     * Metodo para chequear si un {@link EntityResult} es incorrecto. Permite encapsular la excepcion
      * con un mensaje concreto.
      * @param res
      * @throws Exception Cuando o es reaultado NULL o no es correcto.

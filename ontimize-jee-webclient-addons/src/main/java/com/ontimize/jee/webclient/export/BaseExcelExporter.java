@@ -52,8 +52,8 @@ public abstract class BaseExcelExporter<T extends Workbook> implements Exporter<
     }
 
     /**
-     * Obtenemos primero los posibles estilos que pueden venir con las definiciones de columnas.
-     * Podrían venir de las anotaciones en la tabla. Pero podrían estar todas a null. Si no se usaron
+     * Obtenemos primero los posibles estilos que pueden venir con las definiciones de columnas. Podrían
+     * venir de las anotaciones en la tabla. Pero podrían estar todas a null. Si no se usaron
      * anotaciones, la forma de asignar estilo es es mediante el StyleProvider. Estos estilos
      * complementan a los que tuvieran las columnas. En el StyleProvider hay tres estilos: - Cabecera:
      * estilo por defecto para las cabeceras. - Columna: estilo de todas las celdas de una columna. -
@@ -576,8 +576,8 @@ public abstract class BaseExcelExporter<T extends Workbook> implements Exporter<
         }
 
         /*
-         * Si no hay ningún estilo de anotaciones tomamos el estilo de la columna Si hay alguno le
-         * asignamos los valores del estilo de la columna del styleProvider
+         * Si no hay ningún estilo de anotaciones tomamos el estilo de la columna Si hay alguno le asignamos
+         * los valores del estilo de la columna del styleProvider
          */
         ExportColumnStyle finalStyle = styleFromAnnotations;
         if (styleProvider != null) {

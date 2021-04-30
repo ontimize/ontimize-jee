@@ -34,7 +34,7 @@
 		<!-- =========================================================== -->
 		<!-- Encoding -->
 		<!-- =========================================================== -->
-		<project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<!-- =========================================================== -->
 		<!-- Plugin versions -->
 		<!-- =========================================================== -->
@@ -222,14 +222,8 @@
 
 	<dependencyManagement>
 		<dependencies>
+
 			<!-- Project dependencies -->
-<!--
-                        <dependency>
-                            <groupId>com.ontimize.jee</groupId>
-                            <artifactId>ontimize-jee-desktopclient</artifactId>
-                            <version>${project.version}</version>
-                        </dependency>
- -->
 			<dependency>
 				<groupId>com.ontimize.jee</groupId>
 				<artifactId>ontimize-jee-common</artifactId>
@@ -240,40 +234,17 @@
 				<artifactId>ontimize-jee-server</artifactId>
 				<version>${project.version}</version>
 			</dependency>
- <!--
-			<dependency>
-				<groupId>com.ontimize.jee</groupId>
-				<artifactId>ontimize-jee-hessian</artifactId>
-				<version>${project.version}</version>
-			</dependency>
- -->
 			<dependency>
 				<groupId>com.ontimize.jee</groupId>
 				<artifactId>ontimize-jee-server-rest</artifactId>
 				<version>${project.version}</version>
 			</dependency>
-			
-			<!-- 
-			<dependency>
-				<groupId>com.ontimize.jee</groupId>
-				<artifactId>ontimize-jee-jpa</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			-->
-			
 			<dependency>
 				<groupId>com.ontimize.jee</groupId>
 				<artifactId>ontimize-jee-jdbc</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 
-			<!--
-			<dependency>
-				<groupId>com.ontimize.jee</groupId>
-				<artifactId>ontimize-jee-logic</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			-->
 			<!-- commons-lang -->
 			<dependency>
 				<groupId>org.apache.commons</groupId>
@@ -439,14 +410,6 @@
 				<version>${aspectjweaver.version}</version>
 			</dependency>
 
-			<!-- Spring data -->
-			<dependency>
-				<groupId>org.springframework.data</groupId>
-				<artifactId>spring-data-cassandra</artifactId>
-				<version>${spring-data-cassandra.version}</version>
-			</dependency>
-
-			
 			<!-- JEE 7 dependencies https://wikis.oracle.com/display/GlassFish/Java+EE+7+Maven+Coordinates -->
 			<dependency>
 				<groupId>javax.websocket</groupId>
@@ -503,18 +466,7 @@
 				<version>3.2.2</version>
 			</dependency>
 
-			<!-- Ontimize
-			<dependency>
-				<groupId>com.ontimize</groupId>
-				<artifactId>ontimize-core-client</artifactId>
-				<version>${ontimize.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.ontimize</groupId>
-				<artifactId>ontimize-core-common</artifactId>
-				<version>${ontimize.version}</version>
-			</dependency>
-			-->
+			<!-- javax what is out of jdk 11-->
 			<dependency>
 				<groupId>javax</groupId>
 				<artifactId>javaee-api</artifactId>
@@ -561,20 +513,6 @@
 				<version>${jackson.version}</version>
 			</dependency>
 
-
-			<!-- HTTP Client used on "common" submodule test
-            <dependency>
-                <groupId>org.apache.httpcomponents</groupId>
-                <artifactId>httpclient</artifactId>
-                <version>${httpclient.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>commons-logging</groupId>
-                        <artifactId>commons-logging</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>			
-			-->
 		</dependencies>
 	</dependencyManagement>
 
@@ -584,11 +522,5 @@
 		<module>ontimize-jee-server-rest</module>
 		<module>ontimize-jee-server-jdbc</module>
 		<module>ontimize-jee-webclient-addons</module>
-	<!--<module>ontimize-jee-core-common</module> -->
-	<!--<module>ontimize-jee-hessian</module> -->
-    <!--<module>ontimize-jee-desktopclient</module> -->
-	<!--<module>ontimize-jee-server-jpa</module> -->
-	<!--<module>ontimize-jee-server-cassandra</module> -->
-	<!--<module>ontimize-jee-server-logic</module> -->
 	</modules>
-     </project>
+</project>
