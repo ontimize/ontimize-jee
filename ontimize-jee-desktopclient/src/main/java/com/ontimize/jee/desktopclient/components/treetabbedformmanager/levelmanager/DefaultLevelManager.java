@@ -18,17 +18,17 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ontimize.gui.Form;
-import com.ontimize.gui.IDetailForm;
-import com.ontimize.gui.InteractionManager;
-import com.ontimize.gui.button.Button;
-import com.ontimize.gui.container.CardPanel;
-import com.ontimize.gui.container.Column;
-import com.ontimize.gui.container.Row;
+import com.ontimize.jee.common.gui.Form;
+import com.ontimize.jee.common.gui.IDetailForm;
+import com.ontimize.jee.common.gui.InteractionManager;
+import com.ontimize.jee.common.gui.button.Button;
+import com.ontimize.jee.common.gui.container.CardPanel;
+import com.ontimize.jee.common.gui.container.Column;
+import com.ontimize.jee.common.gui.container.Row;
 import com.ontimize.jee.common.tools.ConcatTools;
 import com.ontimize.jee.desktopclient.components.treetabbedformmanager.ITreeTabbedFormManager;
 import com.ontimize.jee.desktopclient.components.treetabbedformmanager.TreeTabbedDetailForm;
-import com.ontimize.util.ParseUtils;
+import com.ontimize.jee.common.util.ParseUtils;
 
 public class DefaultLevelManager extends Column implements LevelManager {
 

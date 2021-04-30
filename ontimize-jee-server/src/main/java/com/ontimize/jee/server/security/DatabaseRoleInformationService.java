@@ -9,18 +9,18 @@ package com.ontimize.jee.server.security;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Hashtable;
+import java.util.Map;
 import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ontimize.db.EntityResult;
+import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.common.tools.CheckingTools;
 import com.ontimize.jee.server.dao.IOntimizeDaoSupport;
 import com.ontimize.jee.server.security.authorization.Role;
-import com.ontimize.security.XMLClientUtilities;
+import com.ontimize.jee.common.security.XMLClientUtilities;
 
 /**
  * The Class PermissionsProvider.
@@ -79,7 +79,7 @@ public class DatabaseRoleInformationService implements ISecurityRoleInformationS
         }
         CheckingTools.failIf(res.calculateRecordNumber() > 1, "Multiple results for role");
         final List<?> clientPermissions = (List<?>) res.get(this.clientPermissionColumn);
-        Map<String, ?> clientPermission = new Hashtable<>();
+        Map<String, ?> clientPermission = new HashMap<>();
         try {
             final String plainClientPermission = (String) clientPermissions.get(0);
             if (plainClientPermission != null) {

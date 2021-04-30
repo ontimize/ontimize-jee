@@ -7,12 +7,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
+import java.util.Map;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.Vector;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -27,8 +27,9 @@ import javax.persistence.metamodel.Type.PersistenceType;
 
 import org.springframework.beans.BeanUtils;
 
-import com.ontimize.db.EntityResult;
-import com.ontimize.db.NullValue;
+import com.ontimize.jee.common.dto.EntityResult;
+import com.ontimize.jee.common.dto.EntityResultMapImpl;
+import com.ontimize.jee.common.db.NullValue;
 import com.ontimize.jee.common.tools.EntityResultTools;
 import com.ontimize.jee.server.dao.jpa.common.MappingInfo;
 import com.ontimize.jee.server.dao.jpa.common.MappingInfoUtils;
@@ -63,7 +64,7 @@ public final class OntimizeJpaUtils {
     public static EntityResult transformListToEntityResultBeans(final List<?> data, List<String> columnList)
             throws Exception {
         if ((data == null) || (data.size() == 0)) {
-            return new EntityResult(EntityResult.OPERATION_SUCCESSFUL_SHOW_MESSAGE, EntityResult.NODATA_RESULT);
+            return new EntityResultMapImpl(EntityResult.OPERATION_SUCCESSFUL_SHOW_MESSAGE, EntityResult.NODATA_RESULT);
         }
 
         if ((columnList == null) || (columnList.size() == 0)) {// Query all fields
@@ -79,10 +80,10 @@ public final class OntimizeJpaUtils {
                     final String column = col.toString();
                     try {
                         final Object methodReturned = OntimizeJpaUtils.getAttributeBean(column, obj);
-                        ((Vector) result.get(column)).add(methodReturned);
+                        ((List) result.get(column)).add(methodReturned);
                     } catch (final Exception ex) {
                         OntimizeJpaUtils.logger.error(null, ex);
-                        ((Vector) result.get(column)).add(null);
+                        ((List) result.get(column)).add(null);
                     }
                 }
             }
@@ -110,17 +111,17 @@ public final class OntimizeJpaUtils {
             columnList.addAll(JPAUtils.getColumnNames(data.getClass()));
         }
 
-        EntityResult result = com.ontimize.db.EntityResultTools.createEmptyEntityResult(columnList);
+        EntityResult result = com.ontimize.jee.common.dto.EntityResultTools.createEmptyEntityResult(columnList);
 
         for (final String col : columnList) {
             if (col != null) {
                 final String column = col.toString();
                 try {
                     final Object methodReturned = OntimizeJpaUtils.getAttributeBean(column, data);
-                    ((Vector) result.get(column)).add(methodReturned);
+                    ((List) result.get(column)).add(methodReturned);
                 } catch (final Exception ex) {
                     OntimizeJpaUtils.logger.error(null, ex);
-                    ((Vector) result.get(column)).add(null);
+                    ((List) result.get(column)).add(null);
                 }
             }
         }
@@ -177,13 +178,13 @@ public final class OntimizeJpaUtils {
      * @return the SQL types
      * @throws Exception the exception
      */
-    public static Hashtable<String, Integer> getSQLTypes(final Query selectQuery, final List<String> validAttributes,
+    public static Map<String, Integer> getSQLTypes(final Query selectQuery, final List<String> validAttributes,
             final Class<?> anEntityClass, final EntityManager em)
             throws Exception {
 
         final EntityType<?> entity = em.getMetamodel().entity(anEntityClass);
 
-        final Hashtable<String, Integer> sqlTypes = new Hashtable<>();
+        final Map<String, Integer> sqlTypes = new HashMap<>();
         for (final String vat : validAttributes) {
             // TODO what to do with non singular attributesor if they have a DOT
             // FIXME quitar el try-catch, es muy lento
@@ -210,10 +211,10 @@ public final class OntimizeJpaUtils {
      * @return the SQL types
      * @throws Exception the exception
      */
-    public static Hashtable<String, Integer> getSQLTypes(final Query selectQuery, final List<String> validAttributes,
+    public static Map<String, Integer> getSQLTypes(final Query selectQuery, final List<String> validAttributes,
             final Class<?> anEntityClass) throws Exception {
 
-        final Hashtable<String, Integer> sqlTypes = new Hashtable<>();
+        final Map<String, Integer> sqlTypes = new HashMap<>();
         for (final String vat : validAttributes) {
 
             sqlTypes.put(vat, java.sql.Types.JAVA_OBJECT);

@@ -6,7 +6,7 @@ import java.util.ResourceBundle;
 
 import javax.swing.JComponent;
 
-import com.ontimize.gui.Form;
+import com.ontimize.jee.common.gui.Form;
 
 public interface LevelManager {
 

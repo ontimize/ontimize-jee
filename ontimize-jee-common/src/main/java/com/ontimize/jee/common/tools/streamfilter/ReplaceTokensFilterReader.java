@@ -31,7 +31,7 @@ public final class ReplaceTokensFilterReader extends AbstractBaseFilterReader {
     /** Index into queue data */
     private int queueIndex = -1;
 
-    /** Hashtable to hold the replacee-replacer pairs (String to String). */
+    /** Map to hold the replacee-replacer pairs (String to String). */
     private final Map<String, String> hash;
 
     /** Character marking the beginning of a token. */

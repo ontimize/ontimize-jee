@@ -10,10 +10,10 @@ import java.util.Vector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ontimize.db.AdvancedEntity;
-import com.ontimize.db.AdvancedEntityResult;
-import com.ontimize.db.AdvancedQueryEntity;
-import com.ontimize.db.EntityResult;
+import com.ontimize.jee.common.db.AdvancedEntity;
+import com.ontimize.jee.common.db.AdvancedEntityResult;
+import com.ontimize.jee.common.db.AdvancedQueryEntity;
+import com.ontimize.jee.common.db.EntityResult;
 import com.ontimize.jee.common.services.ServiceTools;
 import com.ontimize.jee.common.tools.ReflectionTools;
 import com.ontimize.jee.common.tools.proxy.AbstractInvocationDelegate;
@@ -93,7 +93,7 @@ public class HessianEntityInvocationHandler extends AbstractInvocationDelegate
     /*
      * (non-Javadoc)
      *
-     * @see com.ontimize.db.Entity#query(java.util.Hashtable, java.util.Vector, int)
+     * @see com.ontimize.jee.common.db.Entity#query(java.util.Hashtable, java.util.Vector, int)
      */
     @Override
     public EntityResult query(Hashtable keysValues, Vector attributes, int sessionId) throws Exception {
@@ -112,7 +112,7 @@ public class HessianEntityInvocationHandler extends AbstractInvocationDelegate
     /*
      * (non-Javadoc)
      *
-     * @see com.ontimize.db.Entity#insert(java.util.Hashtable, int)
+     * @see com.ontimize.jee.common.db.Entity#insert(java.util.Hashtable, int)
      */
     @Override
     public EntityResult insert(Hashtable attributesValues, int sessionId) throws Exception {
@@ -127,7 +127,7 @@ public class HessianEntityInvocationHandler extends AbstractInvocationDelegate
     /*
      * (non-Javadoc)
      *
-     * @see com.ontimize.db.Entity#update(java.util.Hashtable, java.util.Hashtable, int)
+     * @see com.ontimize.jee.common.db.Entity#update(java.util.Hashtable, java.util.Hashtable, int)
      */
     @Override
     public EntityResult update(Hashtable attributesValues, Hashtable keysValues, int sessionId) throws Exception {
@@ -146,7 +146,7 @@ public class HessianEntityInvocationHandler extends AbstractInvocationDelegate
     /*
      * (non-Javadoc)
      *
-     * @see com.ontimize.db.Entity#delete(java.util.Hashtable, int)
+     * @see com.ontimize.jee.common.db.Entity#delete(java.util.Hashtable, int)
      */
     @Override
     public EntityResult delete(Hashtable keysValues, int sessionId) throws Exception {
@@ -161,7 +161,7 @@ public class HessianEntityInvocationHandler extends AbstractInvocationDelegate
     /*
      * (non-Javadoc)
      *
-     * @see com.ontimize.db.AdvancedEntity#query(java.util.Hashtable, java.util.Vector, int, int, int,
+     * @see com.ontimize.jee.common.db.AdvancedEntity#query(java.util.Hashtable, java.util.Vector, int, int, int,
      * java.lang.String, boolean)
      */
     @Override
@@ -174,7 +174,7 @@ public class HessianEntityInvocationHandler extends AbstractInvocationDelegate
     /*
      * (non-Javadoc)
      *
-     * @see com.ontimize.db.AdvancedEntity#query(java.util.Hashtable, java.util.Vector, int, int, int,
+     * @see com.ontimize.jee.common.db.AdvancedEntity#query(java.util.Hashtable, java.util.Vector, int, int, int,
      * java.util.Vector)
      */
     @Override
@@ -198,7 +198,7 @@ public class HessianEntityInvocationHandler extends AbstractInvocationDelegate
     /*
      * (non-Javadoc)
      *
-     * @see com.ontimize.db.AdvancedQueryEntity#getColumnListForAvancedQuery(int)
+     * @see com.ontimize.jee.common.db.AdvancedQueryEntity#getColumnListForAvancedQuery(int)
      */
     @Override
     public Map getColumnListForAvancedQuery(int sessionId) throws Exception {

@@ -30,7 +30,7 @@ public class ChronometerNano {
     }
 
     /**
-     * Comienza el cronómetro.
+     * Comienza el cronometro.
      * @return the chronometer nano
      */
     public ChronometerNano start() {
@@ -41,7 +41,7 @@ public class ChronometerNano {
     }
 
     /**
-     * Devuelve el tiempo entre el último elapsed (o el begin) y ahora.
+     * Devuelve el tiempo entre el ultimo elapsed (o el begin) y ahora.
      * @return the long
      */
     public long elapsed() {
@@ -96,7 +96,7 @@ public class ChronometerNano {
     }
 
     /**
-     * Devuelve el tiempo desde el último elaspsed o desde el principio.
+     * Devuelve el tiempo desde el ultimo elaspsed o desde el principio.
      * @return the long
      */
     public long timeFromLastElapsed() {
@@ -120,7 +120,7 @@ public class ChronometerNano {
     }
 
     /**
-     * Finaliza el cronómetro y devuelve el tiempo desde el principio.
+     * Finaliza el cronometro y devuelve el tiempo desde el principio.
      * @return the long
      */
     public long stop() {
@@ -145,7 +145,7 @@ public class ChronometerNano {
     }
 
     /**
-     * Devuelve el tiempo entre el final y el inicio del cronómetro.
+     * Devuelve el tiempo entre el final y el inicio del cronometro.
      * @return the measure time
      */
     public long getMeasureTime() {

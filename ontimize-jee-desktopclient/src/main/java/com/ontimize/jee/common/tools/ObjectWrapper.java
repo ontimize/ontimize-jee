@@ -1,7 +1,7 @@
 package com.ontimize.jee.common.tools;
 
-import com.ontimize.gui.ValueChangeListener;
-import com.ontimize.gui.ValueEvent;
+import com.ontimize.jee.common.gui.ValueChangeListener;
+import com.ontimize.jee.common.gui.ValueEvent;
 
 public class ObjectWrapper<T> {
 

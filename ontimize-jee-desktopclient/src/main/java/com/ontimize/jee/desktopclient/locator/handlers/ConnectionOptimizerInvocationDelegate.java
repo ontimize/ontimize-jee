@@ -1,7 +1,7 @@
 package com.ontimize.jee.desktopclient.locator.handlers;
 
-import com.ontimize.db.EntityResult;
-import com.ontimize.gui.ConnectionOptimizer;
+import com.ontimize.jee.common.db.EntityResult;
+import com.ontimize.jee.common.gui.ConnectionOptimizer;
 import com.ontimize.jee.common.tools.proxy.AbstractInvocationDelegate;
 
 /**
@@ -12,7 +12,7 @@ public class ConnectionOptimizerInvocationDelegate extends AbstractInvocationDel
     /*
      * (non-Javadoc)
      *
-     * @see com.ontimize.gui.ConnectionOptimizer#testConnectionSpeed(int, boolean)
+     * @see com.ontimize.jee.common.gui.ConnectionOptimizer#testConnectionSpeed(int, boolean)
      */
     @Override
     public EntityResult testConnectionSpeed(int sizeInBytes, boolean compressed) throws Exception {
@@ -22,7 +22,7 @@ public class ConnectionOptimizerInvocationDelegate extends AbstractInvocationDel
     /*
      * (non-Javadoc)
      *
-     * @see com.ontimize.gui.ConnectionOptimizer#setDataCompressionThreshold(java.lang.String, int, int)
+     * @see com.ontimize.jee.common.gui.ConnectionOptimizer#setDataCompressionThreshold(java.lang.String, int, int)
      */
     @Override
     public void setDataCompressionThreshold(String user, int id, int compression) throws Exception {
@@ -32,7 +32,7 @@ public class ConnectionOptimizerInvocationDelegate extends AbstractInvocationDel
     /*
      * (non-Javadoc)
      *
-     * @see com.ontimize.gui.ConnectionOptimizer#getDataCompressionThreshold(int)
+     * @see com.ontimize.jee.common.gui.ConnectionOptimizer#getDataCompressionThreshold(int)
      */
     @Override
     public int getDataCompressionThreshold(int sessionId) throws Exception {

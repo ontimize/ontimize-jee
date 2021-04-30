@@ -3,20 +3,22 @@ package com.ontimize.jee.server.services.sharepreferences;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Hashtable;
+import java.util.Map;
 import java.util.List;
 import java.util.Map;
+import java.util.List;
 import java.util.Vector;
 
+import com.ontimize.jee.common.dto.EntityResultMapImpl;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import com.ontimize.db.EntityResult;
-import com.ontimize.db.SQLStatementBuilder;
-import com.ontimize.db.SQLStatementBuilder.BasicExpression;
-import com.ontimize.db.SQLStatementBuilder.BasicField;
-import com.ontimize.db.SQLStatementBuilder.BasicOperator;
+import com.ontimize.jee.common.dto.EntityResult;
+import com.ontimize.jee.common.db.SQLStatementBuilder;
+import com.ontimize.jee.common.db.SQLStatementBuilder.BasicExpression;
+import com.ontimize.jee.common.db.SQLStatementBuilder.BasicField;
+import com.ontimize.jee.common.db.SQLStatementBuilder.BasicOperator;
 import com.ontimize.jee.common.exceptions.OntimizeJEEException;
 import com.ontimize.jee.common.services.sharepreferences.ISharePreferencesService;
 import com.ontimize.jee.common.services.user.UserInformation;
@@ -24,8 +26,8 @@ import com.ontimize.jee.common.tools.CheckingTools;
 import com.ontimize.jee.server.dao.DefaultOntimizeDaoHelper;
 import com.ontimize.jee.server.dao.IOntimizeDaoSupport;
 import com.ontimize.jee.server.security.ISecurityUserInformationService;
-import com.ontimize.util.share.IShareRemoteReference;
-import com.ontimize.util.share.SharedElement;
+import com.ontimize.jee.common.util.share.IShareRemoteReference;
+import com.ontimize.jee.common.util.share.SharedElement;
 
 public class SharePreferencesEngine implements ISharePreferencesService, InitializingBean {
 
@@ -281,7 +283,7 @@ public class SharePreferencesEngine implements ISharePreferencesService, Initial
 
     @Override
     public EntityResult editTargetSharedElement(int idShare, List<String> targetList) throws OntimizeJEEException {
-        EntityResult toRet = new EntityResult();
+        EntityResult toRet = new EntityResultMapImpl();
 
         if (targetList != null) {
             String keyColumn = this.getShareKeyColumn();
@@ -368,7 +370,7 @@ public class SharePreferencesEngine implements ISharePreferencesService, Initial
         for (String target : targetNameToDelete) {
             Map<String, String> hDeleteTargetKey = new HashMap<>();
             hDeleteTargetKey.put(this.getShareTargetUserColumn(), target);
-            int i = erTarget.getRecordIndex(new Hashtable<String, String>(hDeleteTargetKey));
+            int i = erTarget.getRecordIndex(new HashMap<String, String>(hDeleteTargetKey));
             int idTarget = (Integer) erTarget.getRecordValues(i).get(this.getShareTargetKeyColumn());
             EntityResult res = this.deleteTargetSharedItem(idTarget);
             if (res.getCode() == EntityResult.OPERATION_WRONG) {
@@ -506,7 +508,7 @@ public class SharePreferencesEngine implements ISharePreferencesService, Initial
                 Map<String, Object> hTargetkey = new HashMap<>();
                 hTargetkey.put(keyColumn, idShare);
                 @SuppressWarnings({ "rawtypes", "unchecked" })
-                int j = erTargetList.getRecordIndex(new Hashtable(hTargetkey));
+                int j = erTargetList.getRecordIndex(new HashMap(hTargetkey));
                 @SuppressWarnings("unchecked")
                 Map<String, Object> erTargetValue = erTargetList.getRecordValues(j);
                 mapToRet.put(IShareRemoteReference.SHARE_TARGET_KEY_STRING, erTargetValue.get(keyTargetColumn));
@@ -705,7 +707,7 @@ public class SharePreferencesEngine implements ISharePreferencesService, Initial
     @Override
     public EntityResult deleteSharedItem(int idShare) throws OntimizeJEEException {
 
-        EntityResult toRet = new EntityResult();
+        EntityResult toRet = new EntityResultMapImpl();
 
         String targetKeyColumn = this.getShareTargetKeyColumn();
 
@@ -744,7 +746,7 @@ public class SharePreferencesEngine implements ISharePreferencesService, Initial
     @Override
     public EntityResult deleteTargetSharedItem(int idShareTarget) throws OntimizeJEEException {
         // Check target element
-        EntityResult toRet = new EntityResult();
+        EntityResult toRet = new EntityResultMapImpl();
 
         String targetKeyColumn = this.getShareTargetKeyColumn();
         String keyColumn = this.getShareKeyColumn();
@@ -817,7 +819,7 @@ public class SharePreferencesEngine implements ISharePreferencesService, Initial
     public EntityResult updateSharedItem(int idShare, String content, String message, String name)
             throws OntimizeJEEException {
 
-        EntityResult toRet = new EntityResult();
+        EntityResult toRet = new EntityResultMapImpl();
 
         String keyColumn = this.getShareKeyColumn();
 

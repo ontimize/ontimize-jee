@@ -6,8 +6,8 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ontimize.gui.ValueChangeListener;
-import com.ontimize.gui.ValueEvent;
+import com.ontimize.jee.common.gui.ValueChangeListener;
+import com.ontimize.jee.common.gui.ValueEvent;
 import com.ontimize.jee.common.exceptions.InvalidCredentialsException;
 import com.ontimize.jee.common.tools.ObjectWrapper;
 

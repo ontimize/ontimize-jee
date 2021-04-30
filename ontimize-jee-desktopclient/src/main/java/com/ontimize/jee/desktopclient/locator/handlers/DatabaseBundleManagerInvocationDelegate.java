@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import com.ontimize.gui.i18n.DatabaseBundleDescriptor;
-import com.ontimize.gui.i18n.DatabaseBundleValues;
-import com.ontimize.gui.i18n.IDatabaseBundleManager;
+import com.ontimize.jee.common.gui.i18n.DatabaseBundleDescriptor;
+import com.ontimize.jee.common.gui.i18n.DatabaseBundleValues;
+import com.ontimize.jee.common.gui.i18n.IDatabaseBundleManager;
 import com.ontimize.jee.common.services.i18n.II18nService;
 import com.ontimize.jee.common.tools.CheckingTools;
 import com.ontimize.jee.common.tools.proxy.AbstractInvocationDelegate;
@@ -22,7 +22,7 @@ public class DatabaseBundleManagerInvocationDelegate extends AbstractInvocationD
     /*
      * (non-Javadoc)
      *
-     * @see com.ontimize.gui.i18n.IDatabaseBundleManager#getAvailableBundles(int)
+     * @see com.ontimize.jee.common.gui.i18n.IDatabaseBundleManager#getAvailableBundles(int)
      */
     @Override
     public DatabaseBundleDescriptor[] getAvailableBundles(int sessionId) throws Exception {
@@ -32,7 +32,7 @@ public class DatabaseBundleManagerInvocationDelegate extends AbstractInvocationD
     /*
      * (non-Javadoc)
      *
-     * @see com.ontimize.gui.i18n.IDatabaseBundleManager#getBundle(java.lang.String, java.util.Locale,
+     * @see com.ontimize.jee.common.gui.i18n.IDatabaseBundleManager#getBundle(java.lang.String, java.util.Locale,
      * int)
      */
     @Override
@@ -43,7 +43,7 @@ public class DatabaseBundleManagerInvocationDelegate extends AbstractInvocationD
     /*
      * (non-Javadoc)
      *
-     * @see com.ontimize.gui.i18n.IDatabaseBundleManager#getBundles(java.util.List, java.util.Locale,
+     * @see com.ontimize.jee.common.gui.i18n.IDatabaseBundleManager#getBundles(java.util.List, java.util.Locale,
      * int)
      */
     @Override
@@ -54,7 +54,7 @@ public class DatabaseBundleManagerInvocationDelegate extends AbstractInvocationD
     /*
      * (non-Javadoc)
      *
-     * @see com.ontimize.gui.i18n.IDatabaseBundleManager#getAllResourceBundles(java.util.Locale, int)
+     * @see com.ontimize.jee.common.gui.i18n.IDatabaseBundleManager#getAllResourceBundles(java.util.Locale, int)
      */
     @Override
     public Hashtable getAllResourceBundles(Locale locale, int sessionId) throws Exception {
@@ -64,7 +64,7 @@ public class DatabaseBundleManagerInvocationDelegate extends AbstractInvocationD
     /*
      * (non-Javadoc)
      *
-     * @see com.ontimize.gui.i18n.IDatabaseBundleManager#getAvailableLocales(int)
+     * @see com.ontimize.jee.common.gui.i18n.IDatabaseBundleManager#getAvailableLocales(int)
      */
     @Override
     public String[] getAvailableLocales(int sessionId) throws Exception {
@@ -74,7 +74,7 @@ public class DatabaseBundleManagerInvocationDelegate extends AbstractInvocationD
     /*
      * (non-Javadoc)
      *
-     * @see com.ontimize.gui.i18n.IDatabaseBundleManager#updateBundleValues(com.ontimize.gui.i18n.
+     * @see com.ontimize.jee.common.gui.i18n.IDatabaseBundleManager#updateBundleValues(com.ontimize.jee.common.gui.i18n.
      * DatabaseBundleValues, int)
      */
     @Override

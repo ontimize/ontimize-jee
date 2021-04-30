@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
+import java.util.List;
 
 import org.springframework.context.ApplicationContext;
 
-import com.ontimize.db.EntityResult;
-import com.ontimize.db.NullValue;
-import com.ontimize.db.util.DBFunctionName;
-import com.ontimize.gui.field.EntityFunctionAttribute;
+import com.ontimize.jee.common.dto.EntityResult;
+import com.ontimize.jee.common.db.NullValue;
+import com.ontimize.jee.common.db.util.DBFunctionName;
+import com.ontimize.jee.common.gui.field.EntityFunctionAttribute;
 import com.ontimize.jee.common.dao.DeleteOperation;
 import com.ontimize.jee.common.dao.InsertOperation;
 import com.ontimize.jee.common.dao.UpdateOperation;
@@ -36,16 +36,16 @@ public class EntityFunctionAttributeDispatcher extends AbstractAttributeDispatch
             }
 
             int recordCount = result.calculateRecordNumber();
-            Vector<Object> queryResults = new Vector<>(recordCount);
+            List<Object> queryResults = new ArrayList<>(recordCount);
 
             Map<Object, Object> queryFilterValues = new HashMap<>();
             for (int k = 0; k < recordCount; k++) {
                 queryFilterValues.clear();
                 for (int m = 0; m < filterAttributes.size(); m++) {
                     Object keyValues = result.get(filterAttributes.get(m));
-                    if ((keyValues != null) && (keyValues instanceof Vector)
-                            && (((Vector<?>) keyValues).get(k) != null)) {
-                        queryFilterValues.put(filterAttributes.get(m), ((Vector<?>) keyValues).get(k));
+                    if ((keyValues != null) && (keyValues instanceof List)
+                            && (((List<?>) keyValues).get(k) != null)) {
+                        queryFilterValues.put(filterAttributes.get(m), ((List<?>) keyValues).get(k));
                     } else {
                         if (attributeAdv.isUseNullValueToParentkeys()) {
                             if (result.containsKey(filterAttributes.get(m))) {
@@ -65,7 +65,7 @@ public class EntityFunctionAttributeDispatcher extends AbstractAttributeDispatch
 
                 Object resultObject = res.get(attributeAdv.getAttr());
                 if (resultObject != null) {
-                    if (resultObject instanceof Vector) {
+                    if (resultObject instanceof List) {
                         queryResults.add(k, ((List<?>) resultObject).get(0));
                     } else {
                         queryResults.add(k, resultObject);

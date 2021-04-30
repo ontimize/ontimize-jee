@@ -6,14 +6,13 @@
  */
 package com.ontimize.jee.common.cache;
 
-import java.util.Hashtable;
-import java.util.Map;
-
+import com.ontimize.jee.common.exceptions.OntimizeJEEException;
+import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ontimize.jee.common.exceptions.OntimizeJEEException;
-import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The Class GenericCache.
@@ -45,7 +44,7 @@ public abstract class AbstractGenericCache<K, V> {
      */
     public AbstractGenericCache(final long ttl) {
         this.ttl = ttl;
-        this.cache = new Hashtable<>();
+        this.cache = new HashMap();
     }
 
     /**

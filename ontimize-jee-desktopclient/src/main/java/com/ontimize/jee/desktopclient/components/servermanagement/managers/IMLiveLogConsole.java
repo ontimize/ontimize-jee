@@ -4,11 +4,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import com.ontimize.annotation.FormComponent;
-import com.ontimize.gui.BasicInteractionManager;
-import com.ontimize.gui.Form;
-import com.ontimize.gui.button.Button;
-import com.ontimize.gui.field.MemoDataField;
-import com.ontimize.gui.manager.IFormManager;
+import com.ontimize.jee.common.gui.BasicInteractionManager;
+import com.ontimize.jee.common.gui.Form;
+import com.ontimize.jee.common.gui.button.Button;
+import com.ontimize.jee.common.gui.field.MemoDataField;
+import com.ontimize.jee.common.gui.manager.IFormManager;
 
 /**
  * The Class IMLiveLogConsole.

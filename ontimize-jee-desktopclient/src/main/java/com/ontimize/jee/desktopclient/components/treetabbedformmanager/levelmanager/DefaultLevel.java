@@ -14,15 +14,15 @@ import javax.swing.ListSelectionModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ontimize.gui.ApplicationManager;
-import com.ontimize.gui.InteractionManager;
-import com.ontimize.gui.MessageDialog;
-import com.ontimize.gui.manager.IFormManager;
-import com.ontimize.gui.table.Table;
-import com.ontimize.gui.table.TableSorter;
+import com.ontimize.jee.common.gui.ApplicationManager;
+import com.ontimize.jee.common.gui.InteractionManager;
+import com.ontimize.jee.common.gui.MessageDialog;
+import com.ontimize.jee.common.gui.manager.IFormManager;
+import com.ontimize.jee.common.gui.table.Table;
+import com.ontimize.jee.common.gui.table.TableSorter;
 import com.ontimize.jee.desktopclient.components.treetabbedformmanager.ITreeTabbedFormManager;
-import com.ontimize.util.FormatPattern;
-import com.ontimize.util.ParseUtils;
+import com.ontimize.jee.common.util.FormatPattern;
+import com.ontimize.jee.common.util.ParseUtils;
 
 public class DefaultLevel extends Table implements Level {
 

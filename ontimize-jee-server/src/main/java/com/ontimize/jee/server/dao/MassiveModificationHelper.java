@@ -3,26 +3,27 @@ package com.ontimize.jee.server.dao;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Hashtable;
+import java.util.Map;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
+import java.util.List;
 
+import com.ontimize.jee.common.dto.EntityResultMapImpl;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
-import com.ontimize.db.EntityResult;
-import com.ontimize.db.NullValue;
-import com.ontimize.gui.SearchValue;
-import com.ontimize.gui.field.EntityFunctionAttribute;
-import com.ontimize.gui.field.MultipleReferenceDataFieldAttribute;
-import com.ontimize.gui.field.MultipleTableAttribute;
-import com.ontimize.gui.field.ReferenceFieldAttribute;
-import com.ontimize.gui.table.TableAttribute;
+import com.ontimize.jee.common.dto.EntityResult;
+import com.ontimize.jee.common.db.NullValue;
+import com.ontimize.jee.common.gui.SearchValue;
+import com.ontimize.jee.common.gui.field.EntityFunctionAttribute;
+import com.ontimize.jee.common.gui.field.MultipleReferenceDataFieldAttribute;
+import com.ontimize.jee.common.gui.field.MultipleTableAttribute;
+import com.ontimize.jee.common.gui.field.ReferenceFieldAttribute;
+import com.ontimize.jee.common.gui.table.TableAttribute;
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
 import com.ontimize.jee.common.tools.EntityResultTools;
 import com.ontimize.jee.common.tools.MapTools;
@@ -85,8 +86,8 @@ public class MassiveModificationHelper implements ApplicationContextAware, IMass
     }
 
     public EntityResult compareData(String pkColumn, Map<?, ?> keysValues, List<?> attributes, EntityResult query) {
-        EntityResult resFinal = new EntityResult(query.getRecordValues(0));
-        EntityResult resMassiveMod = (EntityResult) resFinal.clone();
+        EntityResult resFinal = new EntityResultMapImpl((HashMap) query.getRecordValues(0));
+        EntityResult resMassiveMod = (EntityResultMapImpl) resFinal.clone();
         attributes.remove(pkColumn);
         attributes.remove(IMassiveModificationHelper.MASSIVE_MODIFICATION_UNIQUE_IDENTIFIER);
 
@@ -95,7 +96,7 @@ public class MassiveModificationHelper implements ApplicationContextAware, IMass
             if (attribute instanceof TableAttribute) {
                 tableAttrs.add((TableAttribute) attribute);
             } else {
-                Vector<Object> values = (Vector<Object>) query.get(attribute);
+                List<Object> values = (List<Object>) query.get(attribute);
                 boolean isEquals = true;
                 if ((values != null) && !values.isEmpty()) {
                     Object lastValue = values.get(0);
@@ -108,23 +109,24 @@ public class MassiveModificationHelper implements ApplicationContextAware, IMass
                             break;
                         }
                     }
-                    Vector<? extends Object> value = isEquals ? new Vector<>(Arrays.asList(lastValue))
-                            : new Vector<>(Arrays.asList(new NullValue()));
-                    MapTools.safePut(resFinal, attribute, value);
-                    MapTools.safePut(resMassiveMod, attribute, values);// debug mode
+                    List<? extends Object> value = isEquals ? new ArrayList<>(Arrays.asList(lastValue))
+                            : new ArrayList<>(Arrays.asList(new NullValue()));
+                    MapTools.safePut((EntityResultMapImpl) resFinal, attribute, value);
+                    MapTools.safePut((EntityResultMapImpl) resMassiveMod, attribute, values);// debug mode
                 }
             }
         }
         for (TableAttribute tableAttr : tableAttrs) {
-            Vector<EntityResult> vValues = (Vector<EntityResult>) query.get(tableAttr);
+            List<EntityResult> vValues = (List<EntityResult>) query.get(tableAttr);
             EntityResult doUnionAll = EntityResultTools.doUnionAll(vValues.toArray(new EntityResult[vValues.size()]));
             EntityResult doRemoveDuplicates = EntityResultTools.doRemoveDuplicates(doUnionAll);
-            MapTools.safePut(resFinal, tableAttr, doRemoveDuplicates);
+            MapTools.safePut((EntityResultMapImpl) resFinal, tableAttr, doRemoveDuplicates);
         }
 
-        MapTools.safePut(resFinal, pkColumn, keysValues.get(pkColumn));
-        MapTools.safePut(resMassiveMod, pkColumn, keysValues.get(pkColumn));
-        MapTools.safePut(resFinal, IMassiveModificationHelper.MASSIVE_MODIFICATION_UNIQUE_IDENTIFIER, resMassiveMod);
+        MapTools.safePut((EntityResultMapImpl) resFinal, pkColumn, keysValues.get(pkColumn));
+        MapTools.safePut((EntityResultMapImpl) resMassiveMod, pkColumn, keysValues.get(pkColumn));
+        MapTools.safePut((EntityResultMapImpl) resFinal,
+                IMassiveModificationHelper.MASSIVE_MODIFICATION_UNIQUE_IDENTIFIER, resMassiveMod);
         return resFinal;
     }
 
@@ -139,7 +141,7 @@ public class MassiveModificationHelper implements ApplicationContextAware, IMass
                 keys.put(pkColumn, id);
                 daoHelper.update(dao, attributesValues, keys);
             }
-            return new EntityResult();
+            return new EntityResultMapImpl();
         }
         return daoHelper.update(dao, attributesValues, keysValues);
     }
@@ -155,7 +157,7 @@ public class MassiveModificationHelper implements ApplicationContextAware, IMass
                 keys.put(pkColumn, id);
                 one2oneHelper.update(daoHelper, mainDao, secondaryDaos, attributesValues, keys, type);
             }
-            return new EntityResult();
+            return new EntityResultMapImpl();
         }
         return one2oneHelper.update(daoHelper, mainDao, secondaryDaos, attributesValues, keysValues, type);
     }
@@ -184,7 +186,7 @@ public class MassiveModificationHelper implements ApplicationContextAware, IMass
             String pkColumn, Map<?, ?> attributesValues) {
         if (attributesValues.containsKey(vKeysColumn) && (attributesValues.get(vKeysColumn) instanceof int[])) {
             int[] ids = (int[]) attributesValues.get(vKeysColumn);
-            Vector pks = new Vector<>();
+            List pks = new ArrayList<>();
             for (int id : ids) {
                 HashMap<Object, Object> keys = new HashMap<>();
                 keys.putAll(attributesValues);
@@ -192,9 +194,9 @@ public class MassiveModificationHelper implements ApplicationContextAware, IMass
                 EntityResult update = daoHelper.insert(dao, keys);
                 pks.add(update.get(pkColumn));
             }
-            Hashtable hash = new Hashtable<>();
+            Map hash = new HashMap<>();
             hash.put(pkColumn, pks);
-            return new EntityResult(hash);
+            return new EntityResultMapImpl((HashMap) hash);
         }
         return daoHelper.insert(dao, attributesValues);
     }
@@ -210,7 +212,7 @@ public class MassiveModificationHelper implements ApplicationContextAware, IMass
                 MapTools.safePut((Map<Object, Object>) attributesValues, pkColumn, id);
                 one2oneHelper.insert(daoHelper, mainDao, secondaryDaos, attributesValues, type);
             }
-            return new EntityResult();
+            return new EntityResultMapImpl();
         }
         return one2oneHelper.insert(daoHelper, mainDao, secondaryDaos, attributesValues, type);
     }

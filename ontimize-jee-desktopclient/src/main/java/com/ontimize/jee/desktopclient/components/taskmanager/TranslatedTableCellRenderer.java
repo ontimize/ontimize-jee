@@ -5,7 +5,7 @@ import java.awt.Component;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 
-import com.ontimize.gui.ApplicationManager;
+import com.ontimize.jee.common.gui.ApplicationManager;
 
 /**
  * The Class TranslatedTableCellRenderer.

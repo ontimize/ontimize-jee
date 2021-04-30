@@ -3,7 +3,7 @@ package com.ontimize.jee.server.dao;
 import java.util.List;
 import java.util.Map;
 
-import com.ontimize.db.EntityResult;
+import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
 import com.ontimize.jee.server.dao.One2OneDaoHelper.One2OneType;
 import com.ontimize.jee.server.dao.One2OneDaoHelper.OneToOneSubDao;

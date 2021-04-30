@@ -7,10 +7,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 
-import com.ontimize.db.AdvancedEntity;
-import com.ontimize.db.DirectSQLQueryEntity;
-import com.ontimize.db.Entity;
-import com.ontimize.gui.ClientWatch;
+import com.ontimize.jee.common.db.AdvancedEntity;
+import com.ontimize.jee.common.db.DirectSQLQueryEntity;
+import com.ontimize.jee.common.db.Entity;
+import com.ontimize.jee.common.gui.ClientWatch;
 import com.ontimize.jee.common.services.session.ISessionService;
 import com.ontimize.jee.common.tools.proxy.AbstractInvocationDelegate;
 import com.ontimize.jee.desktopclient.spring.BeansFactory;

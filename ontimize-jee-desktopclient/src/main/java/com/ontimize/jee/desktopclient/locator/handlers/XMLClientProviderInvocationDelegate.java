@@ -3,7 +3,7 @@ package com.ontimize.jee.desktopclient.locator.handlers;
 import java.util.Hashtable;
 
 import com.ontimize.jee.common.tools.proxy.AbstractInvocationDelegate;
-import com.ontimize.util.remote.BytesBlock;
+import com.ontimize.jee.common.util.remote.BytesBlock;
 import com.ontimize.xml.XMLClientProvider;
 
 /**

@@ -6,8 +6,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ontimize.gui.ApplicationManager;
-import com.ontimize.gui.preferences.RemoteApplicationPreferences;
+import com.ontimize.jee.common.gui.ApplicationManager;
+import com.ontimize.jee.common.gui.preferences.RemoteApplicationPreferences;
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
 import com.ontimize.jee.common.services.preferences.IRemoteApplicationPreferencesService;
 import com.ontimize.jee.common.tools.ReflectionTools;
@@ -60,7 +60,7 @@ public class RemoteApplicationPreferencesInvocationHandler extends AbstractInvoc
     /*
      * (non-Javadoc)
      *
-     * @see com.ontimize.gui.preferences.RemoteApplicationPreferences#getRemotePreference(int,
+     * @see com.ontimize.jee.common.gui.preferences.RemoteApplicationPreferences#getRemotePreference(int,
      * java.lang.String, java.lang.String)
      */
     @Override
@@ -75,7 +75,7 @@ public class RemoteApplicationPreferencesInvocationHandler extends AbstractInvoc
     /*
      * (non-Javadoc)
      *
-     * @see com.ontimize.gui.preferences.RemoteApplicationPreferences#setRemotePreference(int,
+     * @see com.ontimize.jee.common.gui.preferences.RemoteApplicationPreferences#setRemotePreference(int,
      * java.lang.String, java.lang.String, java.lang.String)
      */
     @Override
@@ -90,7 +90,7 @@ public class RemoteApplicationPreferencesInvocationHandler extends AbstractInvoc
     /*
      * (non-Javadoc)
      *
-     * @see com.ontimize.gui.preferences.RemoteApplicationPreferences#saveRemotePreferences(int)
+     * @see com.ontimize.jee.common.gui.preferences.RemoteApplicationPreferences#saveRemotePreferences(int)
      */
     @Override
     public void saveRemotePreferences(int sessionId) throws Exception {
@@ -108,7 +108,7 @@ public class RemoteApplicationPreferencesInvocationHandler extends AbstractInvoc
     /*
      * (non-Javadoc)
      *
-     * @see com.ontimize.gui.preferences.RemoteApplicationPreferences#loadRemotePreferences(int)
+     * @see com.ontimize.jee.common.gui.preferences.RemoteApplicationPreferences#loadRemotePreferences(int)
      */
     @Override
     public void loadRemotePreferences(int sessionId) throws Exception {

@@ -8,11 +8,10 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.ResourceBundle;
 import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 
@@ -20,11 +19,11 @@ import javax.swing.Icon;
 import javax.swing.SwingConstants;
 import javax.xml.bind.DatatypeConverter;
 
-import com.ontimize.util.ParseTools;
+import com.ontimize.jee.common.util.ParseTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ontimize.util.Base64Utils;
+import com.ontimize.jee.common.util.Base64Utils;
 
 /**
  * The Class ParseUtilsExtended.
@@ -98,7 +97,7 @@ public class ParseUtilsExtended extends ParseTools {
         if ((textToParse == null) || "".equals(textToParse)) {
             return defaultValue;
         }
-        Map<String, String> res = new Hashtable<>();
+        Map<String, String> res = new HashMap<>();
         String[] split = textToParse.split(Pattern.quote(";"));
         for (String part : split) {
             String[] mids = part.split(Pattern.quote(":"));
@@ -350,13 +349,13 @@ public class ParseUtilsExtended extends ParseTools {
         return sb.toString();
     }
 
-    public static Hashtable getParametersPreffixed(Hashtable<Object, Object> parameters, String preffix) {
+    public static Map getParametersPreffixed(Map<Object, Object> parameters, String preffix) {
         return ParseUtilsExtended.getParametersPreffixed(parameters, preffix, true);
     }
 
-    public static Hashtable getParametersPreffixed(Hashtable<Object, Object> parameters, String preffix,
-            Hashtable otherParams) {
-        Hashtable parametersPreffixed = ParseUtilsExtended.getParametersPreffixed(parameters, preffix, false);
+    public static Map getParametersPreffixed(Map<Object, Object> parameters, String preffix,
+            Map otherParams) {
+        Map parametersPreffixed = ParseUtilsExtended.getParametersPreffixed(parameters, preffix, false);
 
         if (otherParams != null) {
             for (Object key : otherParams.keySet()) {
@@ -374,15 +373,15 @@ public class ParseUtilsExtended extends ParseTools {
         return parametersPreffixed;
     }
 
-    public static Hashtable getParametersPreffixed(Hashtable<Object, Object> parameters, String preffix,
+    public static Map getParametersPreffixed(Map<Object, Object> parameters, String preffix,
             boolean includeGenerics) {
-        Hashtable params = new Hashtable<>();
+        Map params = new HashMap<>();
         for (Entry<Object, Object> entry : parameters.entrySet()) {
             String param = entry.getKey().toString();
             if (param.startsWith(preffix)) {
                 MapTools.safePut(params, entry.getKey().toString().substring(preffix.length()), entry.getValue(),
                         false);
-            } else if (!param.contains(".") && includeGenerics) {
+            } else if (!(param.contains(".")) && includeGenerics) {
                 MapTools.safePut(params, entry.getKey(), entry.getValue(), true);
             }
         }

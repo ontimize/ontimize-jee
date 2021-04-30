@@ -5,8 +5,8 @@ package com.ontimize.jee.desktopclient.components.treetabbedformmanager;
 
 import java.awt.Component;
 
-import com.ontimize.gui.Form;
-import com.ontimize.gui.manager.IFormManager;
+import com.ontimize.jee.common.gui.Form;
+import com.ontimize.jee.common.gui.manager.IFormManager;
 
 /**
  * The Interface ITreeTabbedFormManager.

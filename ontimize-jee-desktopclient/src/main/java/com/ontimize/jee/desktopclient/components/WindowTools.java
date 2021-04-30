@@ -11,7 +11,7 @@ import java.util.List;
 
 import javax.swing.SwingUtilities;
 
-import com.ontimize.gui.TipScroll;
+import com.ontimize.jee.common.gui.TipScroll;
 
 /**
  * Utilidades de ventanas.

@@ -32,18 +32,18 @@ import org.slf4j.LoggerFactory;
 import com.ontimize.builder.ApplicationBuilder;
 import com.ontimize.builder.FormBuilder;
 import com.ontimize.builder.xml.XMLFormBuilder;
-import com.ontimize.gui.ApplicationManager;
-import com.ontimize.gui.DataNavigationEvent;
-import com.ontimize.gui.DynamicFormManager;
-import com.ontimize.gui.Form;
-import com.ontimize.gui.InteractionManager;
-import com.ontimize.gui.field.DataComponent;
-import com.ontimize.gui.manager.BaseFormManager;
-import com.ontimize.gui.manager.IFormManager;
-import com.ontimize.gui.manager.TabbedFormManager.ButtonTabComponent;
-import com.ontimize.gui.preferences.ApplicationPreferences;
-import com.ontimize.gui.tree.OTreeNode;
-import com.ontimize.gui.tree.Tree;
+import com.ontimize.jee.common.gui.ApplicationManager;
+import com.ontimize.jee.common.gui.DataNavigationEvent;
+import com.ontimize.jee.common.gui.DynamicFormManager;
+import com.ontimize.jee.common.gui.Form;
+import com.ontimize.jee.common.gui.InteractionManager;
+import com.ontimize.jee.common.gui.field.DataComponent;
+import com.ontimize.jee.common.gui.manager.BaseFormManager;
+import com.ontimize.jee.common.gui.manager.IFormManager;
+import com.ontimize.jee.common.gui.manager.TabbedFormManager.ButtonTabComponent;
+import com.ontimize.jee.common.gui.preferences.ApplicationPreferences;
+import com.ontimize.jee.common.gui.tree.OTreeNode;
+import com.ontimize.jee.common.gui.tree.Tree;
 import com.ontimize.jee.desktopclient.components.treetabbedformmanager.levelmanager.LevelManager;
 import com.ontimize.jee.desktopclient.components.treetabbedformmanager.levelmanager.builder.LevelManagerBuilder;
 import com.ontimize.locator.ClientReferenceLocator;
@@ -429,7 +429,7 @@ public class TreeTabbedFormManager extends BaseFormManager implements ITreeTabbe
                 this.splitPane.add(this.tabbedPane, JSplitPane.RIGHT);
             }
         } catch (Exception e) {
-            if (com.ontimize.gui.ApplicationManager.DEBUG) {
+            if (com.ontimize.jee.common.gui.ApplicationManager.DEBUG) {
                 TreeTabbedFormManager.logger.debug("Error adding form manager to the container. ", e);
             }
             return;

@@ -2,11 +2,11 @@ package com.ontimize.jee.server.dao.cql.handler;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.Map;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,12 +16,12 @@ import com.datastax.driver.core.ColumnDefinitions.Definition;
 import com.datastax.driver.core.DataType;
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
-import com.ontimize.db.EntityResult;
-import com.ontimize.db.SQLStatementBuilder;
-import com.ontimize.db.SQLStatementBuilder.SQLConditionValuesProcessor;
-import com.ontimize.db.SQLStatementBuilder.SQLNameEval;
-import com.ontimize.db.SQLStatementBuilder.SQLOrder;
-import com.ontimize.db.util.DBFunctionName;
+import com.ontimize.jee.common.dto.EntityResult;
+import com.ontimize.jee.common.db.SQLStatementBuilder;
+import com.ontimize.jee.common.db.SQLStatementBuilder.SQLConditionValuesProcessor;
+import com.ontimize.jee.common.db.SQLStatementBuilder.SQLNameEval;
+import com.ontimize.jee.common.db.SQLStatementBuilder.SQLOrder;
+import com.ontimize.jee.common.db.util.DBFunctionName;
 import com.ontimize.jee.server.dao.cql.CQLStatement;
 
 public class DefaultCQLStatementHandler implements CQLStatementHandler {
@@ -40,7 +40,7 @@ public class DefaultCQLStatementHandler implements CQLStatementHandler {
     /**
      * Transforms a com.datastax.driver.core.ResultSet object into an Ontimize {@link EntityResult}. The
      * columns in the ResultSet are the keys in the EntityResult, and the values for the columns are
-     * stored in Vector objects corresponding to the keys in the EntityResult.
+     * stored in List objects corresponding to the keys in the EntityResult.
      * <p>
      * The following getxxxxx ResulSet methods are used for getting column data:
      * <ul>
@@ -51,7 +51,7 @@ public class DefaultCQLStatementHandler implements CQLStatementHandler {
      * <li>getObject for rest of SQLTypes</li>
      * </ul>
      * @param resultSet the source ResultSet
-     * @param entityResult the destination EntityResult. It has a Hashtable of Vectors structure.
+     * @param entityResult the destination EntityResult. It has a Map of Lists structure.
      * @param recordNumber Number of records to query
      * @param offset number of the row where start
      * @param delimited If delimited is true then all the resultSet must be queried into the
@@ -75,7 +75,7 @@ public class DefaultCQLStatementHandler implements CQLStatementHandler {
 
             // String[] sColumnNames = this.getColumnNames(rsMetaData);
 
-            Hashtable hColumnTypesAux = new Hashtable();
+            Map hColumnTypesAux = new HashMap();
             for (Definition definition : definitions) {
                 DataType dataType = definition.getType();
                 hColumnTypesAux.put(definition.getName(), definition.getType().getName());
@@ -89,11 +89,11 @@ public class DefaultCQLStatementHandler implements CQLStatementHandler {
                 for (Definition definition : definitions) {
                     String columnName = definition.getName();
                     Object oValue = this.getResultSetValue(rowData, definition);
-                    Vector vPreviousData = (Vector) entityResult.get(columnName);
+                    List vPreviousData = (List) entityResult.get(columnName);
                     if (vPreviousData != null) {
                         vPreviousData.add(oValue);
                     } else {
-                        Vector vData = new Vector(rowCount);
+                        List vData = new ArrayList(rowCount);
                         vData.add(oValue);
                         entityResult.put(columnName, vData);
                     }
@@ -139,7 +139,7 @@ public class DefaultCQLStatementHandler implements CQLStatementHandler {
     protected void changeColumnName(EntityResult result, String nameColumn, String replaceByColumn) {
         if (result.containsKey(nameColumn)) {
             result.put(replaceByColumn, result.remove(nameColumn));
-            Hashtable sqlTypes = result.getColumnSQLTypes();
+            Map sqlTypes = result.getColumnSQLTypes();
             if ((sqlTypes != null) && sqlTypes.containsKey(nameColumn)) {
                 sqlTypes.put(replaceByColumn, sqlTypes.get(nameColumn));
             }
@@ -179,7 +179,7 @@ public class DefaultCQLStatementHandler implements CQLStatementHandler {
         if (function == null) {
             sql.append(this.createSelectQuery(table, (List) requestedColumns, forceDistinct));
         } else {
-            Vector temp = new Vector();
+            List temp = new ArrayList();
             temp.add(function);
             sql.append(this.createSelectQuery("", temp, false));
             sql.append("(");
@@ -214,9 +214,9 @@ public class DefaultCQLStatementHandler implements CQLStatementHandler {
             sbStringQuery.append(SQLStatementBuilder.WHERE);
         }
 
-        Vector vValues = new Vector();
-        sbStringQuery.append(this.queryConditionsProcessor.createQueryConditions(new Hashtable<>(conditions),
-                new Vector<>(wildcards), vValues));
+        List vValues = new ArrayList();
+        sbStringQuery.append(this.queryConditionsProcessor.createQueryConditions(new HashMap<>(conditions),
+                new ArrayList<>(wildcards), vValues));
         values.addAll(vValues);
 
         return sbStringQuery.toString();

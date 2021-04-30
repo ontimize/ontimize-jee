@@ -5,7 +5,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ontimize.gui.ApplicationManager;
+import com.ontimize.jee.common.gui.ApplicationManager;
 import com.ontimize.jee.common.callback.CallbackWrapperMessage;
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
 import com.ontimize.jee.common.services.remoteoperation.RemoteOperationFinishMessage;
@@ -15,7 +15,7 @@ import com.ontimize.jee.desktopclient.components.task.OSwingWorker;
 import com.ontimize.jee.desktopclient.components.task.WorkerStatusInfo;
 import com.ontimize.locator.EntityReferenceLocator;
 import com.ontimize.locator.UtilReferenceLocator;
-import com.ontimize.util.operation.RemoteOperationManager;
+import com.ontimize.jee.common.util.operation.RemoteOperationManager;
 
 /**
  * The Class AbstractRemoteOperationSwingWorker.

@@ -7,7 +7,7 @@ import java.util.Vector;
 
 import javax.swing.table.TableModel;
 
-import com.ontimize.db.EntityResult;
+import com.ontimize.jee.common.db.EntityResult;
 import com.ontimize.jee.common.tools.FastQSortAlgorithm;
 import com.ontimize.report.TableSorter;
 import org.slf4j.Logger;
@@ -70,7 +70,7 @@ public final class EntityResultTools {
      */
     protected static EntityResult doSlowSort(EntityResult res, String... cols) {
         if (res != null) {
-            TableModel model = com.ontimize.db.EntityResultUtils.createTableModel(res, new Vector(res.keySet()), false,
+            TableModel model = com.ontimize.jee.common.db.EntityResultUtils.createTableModel(res, new Vector(res.keySet()), false,
                     false, false);
             TableSorter sorter = new TableSorter(model) {
 

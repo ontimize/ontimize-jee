@@ -12,20 +12,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ontimize.annotation.FormComponent;
-import com.ontimize.db.EntityResult;
-import com.ontimize.gui.BasicInteractionManager;
-import com.ontimize.gui.Form;
-import com.ontimize.gui.button.Button;
-import com.ontimize.gui.container.Row;
-import com.ontimize.gui.manager.IFormManager;
-import com.ontimize.gui.table.Table;
+import com.ontimize.jee.common.db.EntityResult;
+import com.ontimize.jee.common.gui.BasicInteractionManager;
+import com.ontimize.jee.common.gui.Form;
+import com.ontimize.jee.common.gui.button.Button;
+import com.ontimize.jee.common.gui.container.Row;
+import com.ontimize.jee.common.gui.manager.IFormManager;
+import com.ontimize.jee.common.gui.table.Table;
 import com.ontimize.jee.common.services.servermanagement.IServerManagementService;
 import com.ontimize.jee.common.services.servermanagement.IServerManagementService.OntimizeJEELogger;
 import com.ontimize.jee.common.tools.EntityResultTools;
 import com.ontimize.jee.desktopclient.spring.BeansFactory;
-import com.ontimize.util.logging.Level;
-import com.ontimize.util.logging.LevelCellEditor;
-import com.ontimize.util.logging.LevelCellRenderer;
+import com.ontimize.jee.common.util.logging.Level;
+import com.ontimize.jee.common.util.logging.LevelCellEditor;
+import com.ontimize.jee.common.util.logging.LevelCellRenderer;
 
 /**
  * The Class IMLiveLogConsole.

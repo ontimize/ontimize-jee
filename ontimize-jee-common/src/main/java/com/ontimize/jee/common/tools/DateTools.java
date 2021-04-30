@@ -1,17 +1,18 @@
 package com.ontimize.jee.common.tools;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.ontimize.jee.common.gui.SearchValue;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
-import java.util.Vector;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.ontimize.gui.SearchValue;
 
 /**
  * Clase de utilidades para trabajar con {@link Date}.
@@ -220,15 +221,15 @@ public final class DateTools {
      * @param except days to exclude. It can be null.
      * @return the long[]
      */
-    public static long[] countDaysBetween(Date start, Date end, boolean exceptweekends, Vector<Date> except) {
+    public static long[] countDaysBetween(Date start, Date end, boolean exceptweekends, List<Date> except) {
         if (end.before(start)) {
             throw new IllegalArgumentException("The end date must be later than the start date");
         }
 
         long startTime = DateTools.truncate(start).getTime();
         long endTime = DateTools.lastMilisecond(end).getTime();
-        Vector<Date> exceptDays = new Vector<>();
-        Vector<Date> excludedDays = new Vector<>();
+        List<Date> exceptDays = new ArrayList<>();
+        List<Date> excludedDays = new ArrayList<>();
 
         /*
          * Truncate all the exceptions and remove the duplicated
@@ -353,7 +354,7 @@ public final class DateTools {
 
     public static SearchValue betweenDatesExpression(Object leftValue, Object rightValue) {
         if ((leftValue != null) && (rightValue != null)) {
-            return new SearchValue(SearchValue.BETWEEN, new Vector(Arrays.asList(leftValue, rightValue)));
+            return new SearchValue(SearchValue.BETWEEN, new ArrayList(Arrays.asList(leftValue, rightValue)));
         } else {
             if (leftValue != null) {
                 return new SearchValue(SearchValue.MORE_EQUAL, leftValue);

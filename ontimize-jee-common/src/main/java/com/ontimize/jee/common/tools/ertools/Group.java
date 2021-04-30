@@ -1,11 +1,12 @@
 package com.ontimize.jee.common.tools.ertools;
 
+import com.ontimize.jee.common.dto.EntityResult;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.ontimize.db.EntityResult;
 
 /**
  * The Class Group.

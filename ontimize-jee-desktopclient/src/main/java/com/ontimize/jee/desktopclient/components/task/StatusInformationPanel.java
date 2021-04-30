@@ -27,9 +27,9 @@ import javax.swing.border.EmptyBorder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ontimize.gui.ApplicationManager;
-import com.ontimize.gui.ApplicationManager.CancelOperationDialog;
-import com.ontimize.gui.images.ImageManager;
+import com.ontimize.jee.common.gui.ApplicationManager;
+import com.ontimize.jee.common.gui.ApplicationManager.CancelOperationDialog;
+import com.ontimize.jee.common.gui.images.ImageManager;
 
 /**
  * The Class StatusInformationPanel.

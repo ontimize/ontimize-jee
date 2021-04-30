@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.StringTokenizer;
 
+import com.ontimize.jee.common.db.AdvancedEntityResultMapImpl;
+import com.ontimize.jee.common.dto.EntityResultMapImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +22,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.caucho.hessian.util.IExceptionTranslator;
-import com.ontimize.db.AdvancedEntityResult;
-import com.ontimize.db.EntityResult;
-import com.ontimize.db.NullValue;
-import com.ontimize.db.SQLStatementBuilder;
-import com.ontimize.db.SQLStatementBuilder.BasicExpression;
-import com.ontimize.db.SQLStatementBuilder.SQLOrder;
+import com.ontimize.jee.server.exceptiontranslator.IExceptionTranslator;
+import com.ontimize.jee.common.db.AdvancedEntityResult;
+import com.ontimize.jee.common.dto.EntityResult;
+import com.ontimize.jee.common.db.NullValue;
+import com.ontimize.jee.common.db.SQLStatementBuilder;
+import com.ontimize.jee.common.db.SQLStatementBuilder.BasicExpression;
+import com.ontimize.jee.common.db.SQLStatementBuilder.SQLOrder;
 import com.ontimize.jee.common.jackson.OntimizeMapper;
 import com.ontimize.jee.common.tools.CheckingTools;
 import com.ontimize.jee.common.tools.ReflectionTools;
@@ -74,7 +76,8 @@ public abstract class ORestController<S> {
             return new ResponseEntity<>(eR, HttpStatus.OK);
         } catch (Exception error) {
             ORestController.logger.error(null, error);
-            EntityResult entityResult = new EntityResult(EntityResult.OPERATION_WRONG, EntityResult.BEST_COMPRESSION);
+            EntityResult entityResult = new EntityResultMapImpl(EntityResult.OPERATION_WRONG,
+                    EntityResult.BEST_COMPRESSION);
             entityResult.setMessage(error.getMessage());
             return new ResponseEntity<>(entityResult, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -191,14 +194,15 @@ public abstract class ORestController<S> {
 
     protected ResponseEntity<EntityResult> processError(Exception error) {
         ORestController.logger.error("{}", error.getMessage(), error);
-        EntityResult entityResult = new EntityResult(EntityResult.OPERATION_WRONG, EntityResult.BEST_COMPRESSION);
+        EntityResult entityResult = new EntityResultMapImpl(EntityResult.OPERATION_WRONG,
+                EntityResult.BEST_COMPRESSION);
         entityResult.setMessage(this.getErrorMessage(error));
         return new ResponseEntity<>(entityResult, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     protected ResponseEntity<AdvancedEntityResult> processAdvancedError(Exception error) {
         ORestController.logger.error("{}", error.getMessage(), error);
-        AdvancedEntityResult advancedEntityResult = new AdvancedEntityResult(EntityResult.OPERATION_WRONG,
+        AdvancedEntityResult advancedEntityResult = new AdvancedEntityResultMapImpl(EntityResult.OPERATION_WRONG,
                 EntityResult.BEST_COMPRESSION);
         advancedEntityResult.setMessage(this.getErrorMessage(error));
         return new ResponseEntity<>(advancedEntityResult, HttpStatus.INTERNAL_SERVER_ERROR);

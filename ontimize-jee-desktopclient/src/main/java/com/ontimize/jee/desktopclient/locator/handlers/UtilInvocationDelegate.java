@@ -10,17 +10,17 @@ import java.util.Locale;
 import java.util.TimeZone;
 import java.util.Vector;
 
-import com.ontimize.db.Entity;
-import com.ontimize.db.EntityResult;
-import com.ontimize.gui.i18n.ExtendedPropertiesBundle;
-import com.ontimize.gui.i18n.IDatabaseBundleManager;
+import com.ontimize.jee.common.db.Entity;
+import com.ontimize.jee.common.db.EntityResult;
+import com.ontimize.jee.common.gui.i18n.ExtendedPropertiesBundle;
+import com.ontimize.jee.common.gui.i18n.IDatabaseBundleManager;
 import com.ontimize.jee.common.tools.proxy.AbstractInvocationDelegate;
 import com.ontimize.jee.desktopclient.locator.remoteoperation.WebsocketRemoteOperationManager;
 import com.ontimize.locator.ErrorAccessControl;
 import com.ontimize.locator.InitialContext;
 import com.ontimize.locator.UtilReferenceLocator;
-import com.ontimize.util.operation.RemoteOperationManager;
-import com.ontimize.util.share.IShareRemoteReference;
+import com.ontimize.jee.common.util.operation.RemoteOperationManager;
+import com.ontimize.jee.common.util.share.IShareRemoteReference;
 
 /**
  * The Class UtilLocatorInvocationDelegate.

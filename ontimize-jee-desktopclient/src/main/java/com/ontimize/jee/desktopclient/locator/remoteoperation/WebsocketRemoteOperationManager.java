@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
-import com.ontimize.util.operation.RemoteOperationManager;
+import com.ontimize.jee.common.util.operation.RemoteOperationManager;
 
 /**
  * The Class RemoteOperationManagerProxyHandler.

@@ -6,7 +6,7 @@ import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 
-import com.ontimize.gui.table.CellRenderer;
+import com.ontimize.jee.common.gui.table.CellRenderer;
 import com.ontimize.jee.common.tools.FileTools;
 
 /**
@@ -26,7 +26,7 @@ public class ByteSizeTableCellRenderer extends CellRenderer {
     /*
      * (non-Javadoc)
      *
-     * @see com.ontimize.gui.table.CellRenderer#getTableCellRendererComponent(javax.swing.JTable,
+     * @see com.ontimize.jee.common.gui.table.CellRenderer#getTableCellRendererComponent(javax.swing.JTable,
      * java.lang.Object, boolean, boolean, int, int)
      */
     @Override

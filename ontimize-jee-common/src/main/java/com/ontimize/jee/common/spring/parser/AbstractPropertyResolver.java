@@ -10,7 +10,7 @@ public abstract class AbstractPropertyResolver<T> implements IPropertyResolver<T
     /** The object type. */
     private Class<T> objectType;
 
-    /** permite inyectar este objeto a través del motor de spring (en el getObject se devuelve this). */
+    /** permite inyectar este objeto a traves del motor de spring (en el getObject se devuelve this). */
     private boolean useMyselfInSpringContext;
 
     /**

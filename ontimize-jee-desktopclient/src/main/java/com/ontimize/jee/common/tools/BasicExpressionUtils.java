@@ -8,17 +8,17 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Vector;
+import java.util.List;
 import java.util.regex.Pattern;
 
-import com.ontimize.db.SQLStatementBuilder.BasicExpression;
-import com.ontimize.db.SQLStatementBuilder.BasicField;
-import com.ontimize.db.SQLStatementBuilder.BasicOperator;
-import com.ontimize.db.SQLStatementBuilder.Operator;
-import com.ontimize.gui.Form;
-import com.ontimize.gui.SearchValue;
+import com.ontimize.jee.common.db.SQLStatementBuilder.BasicExpression;
+import com.ontimize.jee.common.db.SQLStatementBuilder.BasicField;
+import com.ontimize.jee.common.db.SQLStatementBuilder.BasicOperator;
+import com.ontimize.jee.common.db.SQLStatementBuilder.Operator;
+import com.ontimize.jee.common.gui.Form;
+import com.ontimize.jee.common.gui.SearchValue;
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
-import com.ontimize.util.ParseTools;
+import com.ontimize.jee.common.util.ParseTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -271,7 +271,7 @@ public final class BasicExpressionUtils {
                 if ((fromDate != null) && (toDate != null)) {
                     fieldExpr = BasicExpressionUtils.convertSearchValue(basicField,
                             new SearchValue(SearchValue.BETWEEN,
-                                    new Vector<>(Arrays.asList(new Object[] { fromDate, toDate }))));
+                                    new ArrayList<>(Arrays.asList(new Object[] { fromDate, toDate }))));
                 } else if (fromDate != null) {
                     fieldExpr = BasicExpressionUtils
                         .convertSearchValue(basicField, new SearchValue(SearchValue.MORE_EQUAL, fromDate));

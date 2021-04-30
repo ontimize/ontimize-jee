@@ -3,11 +3,12 @@ package com.ontimize.jee.server.dao;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Hashtable;
+import java.util.Map;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.ontimize.jee.common.dto.EntityResultMapImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -17,15 +18,15 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
-import com.ontimize.db.AdvancedEntityResult;
-import com.ontimize.db.EntityResult;
-import com.ontimize.gui.TableMultipleValue;
-import com.ontimize.gui.field.EntityFunctionAttribute;
-import com.ontimize.gui.field.MultipleReferenceDataFieldAttribute;
-import com.ontimize.gui.field.MultipleTableAttribute;
-import com.ontimize.gui.field.ReferenceFieldAttribute;
-import com.ontimize.gui.table.ExtendedTableAttribute;
-import com.ontimize.gui.table.TableAttribute;
+import com.ontimize.jee.common.db.AdvancedEntityResult;
+import com.ontimize.jee.common.dto.EntityResult;
+import com.ontimize.jee.common.gui.TableMultipleValue;
+import com.ontimize.jee.common.gui.field.EntityFunctionAttribute;
+import com.ontimize.jee.common.gui.field.MultipleReferenceDataFieldAttribute;
+import com.ontimize.jee.common.gui.field.MultipleTableAttribute;
+import com.ontimize.jee.common.gui.field.ReferenceFieldAttribute;
+import com.ontimize.jee.common.gui.table.ExtendedTableAttribute;
+import com.ontimize.jee.common.gui.table.TableAttribute;
 import com.ontimize.jee.common.dao.DeleteOperation;
 import com.ontimize.jee.common.dao.ICascadeOperationContainer;
 import com.ontimize.jee.common.dao.IOperation;
@@ -238,8 +239,9 @@ public class DefaultOntimizeDaoHelper implements IOntimizeDaoHelper, Application
 
         EntityResult resGeneratedKeys = dao.insert(avToInsert);
 
-        EntityResult resOtherEntities = this.propagateToOtherEntities(resGeneratedKeys, avToInsert, avToPropagate);
-        resOtherEntities.putAll(resGeneratedKeys);
+        EntityResult resOtherEntities = this.propagateToOtherEntities((EntityResultMapImpl) resGeneratedKeys,
+                avToInsert, avToPropagate);
+        resOtherEntities.putAll((EntityResultMapImpl) resGeneratedKeys);
         return resOtherEntities;
     }
 
@@ -252,7 +254,7 @@ public class DefaultOntimizeDaoHelper implements IOntimizeDaoHelper, Application
     public EntityResult propagateToOtherEntities(Map<?, ?> generatedValuesInParentEntity,
             Map<?, ?> attributesValuesReceivedInParentEntity,
             Map<?, ICascadeOperationContainer> attributesValuesToPropagate) {
-        EntityResult result = new EntityResult();
+        EntityResult result = new EntityResultMapImpl();
         for (Entry<?, ICascadeOperationContainer> entry : attributesValuesToPropagate.entrySet()) {
             // El orden de propagación será primero deletes, luego updates y finalmente insert
             List<IOperation> operations = new ArrayList<>();
@@ -268,15 +270,15 @@ public class DefaultOntimizeDaoHelper implements IOntimizeDaoHelper, Application
                             .getValue();
                         Map<?, ?> generatedValues = null;
                         if (operation instanceof InsertOperation) {
-                            generatedValues = dispatcher.processInsertAttribute(entry.getKey(),
+                            generatedValues = (EntityResultMapImpl) dispatcher.processInsertAttribute(entry.getKey(),
                                     (InsertOperation) operation, generatedValuesInParentEntity,
                                     attributesValuesReceivedInParentEntity, this.applicationContext);
                         } else if (operation instanceof UpdateOperation) {
-                            generatedValues = dispatcher.processUpdateAttribute(entry.getKey(),
+                            generatedValues = (EntityResultMapImpl) dispatcher.processUpdateAttribute(entry.getKey(),
                                     (UpdateOperation) operation, generatedValuesInParentEntity,
                                     attributesValuesReceivedInParentEntity, this.applicationContext);
                         } else if (operation instanceof DeleteOperation) {
-                            generatedValues = dispatcher.processDeleteAttribute(entry.getKey(),
+                            generatedValues = (EntityResultMapImpl) dispatcher.processDeleteAttribute(entry.getKey(),
                                     (DeleteOperation) operation, generatedValuesInParentEntity,
                                     attributesValuesReceivedInParentEntity, this.applicationContext);
                         }
@@ -326,14 +328,14 @@ public class DefaultOntimizeDaoHelper implements IOntimizeDaoHelper, Application
         Map<?, ICascadeOperationContainer> avToPropagate = new HashMap<>();
         this.extactPropagableValues(attributesValues, avUpdate, avToPropagate);
 
-        EntityResult updateResult = new EntityResult();
+        EntityResult updateResult = new EntityResultMapImpl();
 
         if (!avUpdate.isEmpty()) {
             updateResult = dao.update(avUpdate, keysValues);
         }
 
         avUpdate.putAll(keysValues);
-        this.propagateToOtherEntities(updateResult, avUpdate, avToPropagate);
+        this.propagateToOtherEntities((EntityResultMapImpl) updateResult, avUpdate, avToPropagate);
 
         return updateResult;
     }
@@ -360,13 +362,13 @@ public class DefaultOntimizeDaoHelper implements IOntimizeDaoHelper, Application
     }
 
     /**
-     * Processes all the MultipleTableAttribute contained in the Vector <code>list</code>. All other
-     * objects are added to the resulting Vector with no changes. The MultipleTableAttribute objects are
+     * Processes all the MultipleTableAttribute contained in the List <code>list</code>. All other
+     * objects are added to the resulting List with no changes. The MultipleTableAttribute objects are
      * replaced by their attribute plus a list of ExtendedTableAttribute objects corresponding to the
      * keys of the MultipleTableAttribute object.
      * @param list the list
      * @param processedMultipleAttributes the processed multiple attributes
-     * @return a new Vector with the processed objects.
+     * @return a new ArrayList with the processed objects.
      */
     protected List<?> processMultipleTableAttribute(List<?> list, List<Object> processedMultipleAttributes) {
         List<Object> vOutput = new ArrayList<>();
@@ -393,9 +395,9 @@ public class DefaultOntimizeDaoHelper implements IOntimizeDaoHelper, Application
      * Processes MultipleReferenceDataFieldAttribute objects contained in <code>list</code>.
      * <p>
      * For each MultipleReferenceDataFieldAttribute found, the objects in
-     * MultipleReferenceDataFieldAttribute.getCods() are added to the resulting Vector
+     * MultipleReferenceDataFieldAttribute.getCods() are added to the resulting List
      * @param list the list
-     * @return the processed list as a new Vector
+     * @return the processed list as a new ArrayList
      */
     public List<?> processMultipleAttributeKey(List<?> list) {
         List<Object> destination = new ArrayList<>();
@@ -418,8 +420,8 @@ public class DefaultOntimizeDaoHelper implements IOntimizeDaoHelper, Application
     }
 
     /**
-     * This method performs a query for each object of any of the following types contained in the
-     * Vector <code>attributes</code>:
+     * This method performs a query for each object of any of the following types contained in the List
+     * <code>attributes</code>:
      * <ul>
      * <li>ReferenceFieldAttribute</li>
      * <li>TableAttribute</li>
@@ -499,7 +501,7 @@ public class DefaultOntimizeDaoHelper implements IOntimizeDaoHelper, Application
             MultipleTableAttribute aD = (MultipleTableAttribute) processedMultipleAttributes.get(i);
             List<TableMultipleValue> vData = new ArrayList<>(0);
             for (int j = 0; j < result.calculateRecordNumber(); j++) {
-                Hashtable<?, ?> hCurrent = result.getRecordValues(j);
+                Map<?, ?> hCurrent = result.getRecordValues(j);
                 TableMultipleValue vMT = new TableMultipleValue(hCurrent.get(aD.getAttribute()));
                 Enumeration<?> enu = aD.keys();
                 while (enu.hasMoreElements()) {

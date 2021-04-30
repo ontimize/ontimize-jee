@@ -3,7 +3,7 @@ package com.ontimize.jee.webclient.remoteconfiguration;
 import java.util.List;
 import java.util.Map;
 
-import com.ontimize.db.EntityResult;
+import com.ontimize.jee.common.dto.EntityResult;
 
 /**
  * Remote configuration service interface

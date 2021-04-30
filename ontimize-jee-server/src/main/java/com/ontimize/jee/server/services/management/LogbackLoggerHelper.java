@@ -10,24 +10,27 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import com.ontimize.jee.common.dto.EntityResultMapImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StreamUtils;
 
-import com.ontimize.db.EntityResult;
+import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.common.exceptions.OntimizeJEEException;
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
 import com.ontimize.jee.common.tools.TimeLimiter;
@@ -51,7 +54,6 @@ public class LogbackLoggerHelper implements ILoggerHelper {
 
     /**
      * Query log.
-     * @param response the response
      * @throws IOException
      */
     public InputStream openLogStream() throws IOException {
@@ -60,27 +62,23 @@ public class LogbackLoggerHelper implements ILoggerHelper {
         synchronized (out) {
             final CustomOutputStreamAppender appender = this.registerAppender(in, out);
 
-            new Thread(new Runnable() {
-
-                @Override
-                public void run() {
-                    synchronized (out) {
-                        try {
-                            out.wait();
-                        } catch (InterruptedException e1) {
-                            LogbackLoggerHelper.logger.trace(null, e1);
-                        }
-                        LogbackLoggerHelper.logger.debug("unregistering remote logger");
-                        LogbackLoggerHelper.this.unregisterAppender(appender);
-                        try {
-                            in.close();
-                            out.close();
-                        } catch (IOException e) {
-                            LogbackLoggerHelper.logger.error(null, e);
-                        }
+            new Thread(() -> {
+                synchronized (out) {
+                    try {
+                        out.wait();
+                    } catch (InterruptedException e1) {
+                        LogbackLoggerHelper.logger.trace(null, e1);
                     }
-
+                    LogbackLoggerHelper.logger.debug("unregistering remote logger");
+                    LogbackLoggerHelper.this.unregisterAppender(appender);
+                    try {
+                        in.close();
+                        out.close();
+                    } catch (IOException e) {
+                        LogbackLoggerHelper.logger.error(null, e);
+                    }
                 }
+
             }, "Thread-close log stream").start();
         }
         return in;
@@ -172,16 +170,16 @@ public class LogbackLoggerHelper implements ILoggerHelper {
     public EntityResult getLogFiles() throws Exception {
         Path folder = this.getLogFolder();
         if (folder == null) {
-            return new EntityResult(EntityResult.OPERATION_SUCCESSFUL_SHOW_MESSAGE, EntityResult.NODATA_RESULT,
+            return new EntityResultMapImpl(EntityResult.OPERATION_SUCCESSFUL_SHOW_MESSAGE, EntityResult.NODATA_RESULT,
                     "No hay ficheros que mostrar");
         }
-        final EntityResult res = new EntityResult();
+        final EntityResult res = new EntityResultMapImpl();
         this.initEntityResult(res, Arrays.asList(new String[] { "FILE_NAME", "FILE_SIZE" }), 0);
         Files.walkFileTree(folder, new java.nio.file.SimpleFileVisitor<Path>() {
 
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                res.addRecord((Hashtable) LogbackLoggerHelper.this.keysvalues("FILE_NAME", file.toString(), "FILE_SIZE",
+                res.addRecord((Map) LogbackLoggerHelper.this.keysvalues("FILE_NAME", file.toString(), "FILE_SIZE",
                         Files.size(file)));
                 return FileVisitResult.CONTINUE;
             }
@@ -191,13 +189,13 @@ public class LogbackLoggerHelper implements ILoggerHelper {
 
     private void initEntityResult(EntityResult res, List<?> columns, int length) {
         for (Object col : columns) {
-            res.put(col, new Vector<>(length > 0 ? length : 10));
+            res.put(col, new ArrayList<>(length > 0 ? length : 10));
         }
     }
 
     private Map<Object, Object> keysvalues(Object... objects) {
         if (objects == null) {
-            return new Hashtable<>();
+            return new HashMap<>();
         }
         if ((objects.length % 2) != 0) {
             throw new RuntimeException("Review filters, it is mandatory to set dual <key><value>.");
@@ -208,7 +206,7 @@ public class LogbackLoggerHelper implements ILoggerHelper {
             }
         }
 
-        Map<Object, Object> res = new Hashtable<>();
+        Map<Object, Object> res = new HashMap<>();
         int i = 0;
         while (i < objects.length) {
             res.put(objects[i++], objects[i++]);

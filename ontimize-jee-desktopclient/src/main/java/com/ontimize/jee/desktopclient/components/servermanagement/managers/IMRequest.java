@@ -7,13 +7,13 @@ import java.util.Hashtable;
 import java.util.Vector;
 
 import com.ontimize.annotation.FormComponent;
-import com.ontimize.gui.BasicInteractionManager;
-import com.ontimize.gui.Form;
-import com.ontimize.gui.MessageDialog;
-import com.ontimize.gui.button.Button;
-import com.ontimize.gui.field.DateDataField;
-import com.ontimize.gui.manager.IFormManager;
-import com.ontimize.gui.table.Table;
+import com.ontimize.jee.common.gui.BasicInteractionManager;
+import com.ontimize.jee.common.gui.Form;
+import com.ontimize.jee.common.gui.MessageDialog;
+import com.ontimize.jee.common.gui.button.Button;
+import com.ontimize.jee.common.gui.field.DateDataField;
+import com.ontimize.jee.common.gui.manager.IFormManager;
+import com.ontimize.jee.common.gui.table.Table;
 import com.ontimize.jee.common.services.servermanagement.IServerManagementService;
 import com.ontimize.jee.desktopclient.spring.BeansFactory;
 

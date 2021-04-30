@@ -21,9 +21,9 @@ import javax.swing.SwingConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ontimize.gui.container.Column;
-import com.ontimize.gui.container.Row;
-import com.ontimize.util.ParseUtils;
+import com.ontimize.jee.common.gui.container.Column;
+import com.ontimize.jee.common.gui.container.Row;
+import com.ontimize.jee.common.util.ParseUtils;
 
 public class LinkPathManager implements PathManager {
 

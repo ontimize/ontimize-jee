@@ -18,16 +18,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ontimize.annotation.FormComponent;
-import com.ontimize.db.EntityResult;
-import com.ontimize.gui.ApplicationManager;
-import com.ontimize.gui.BasicInteractionManager;
-import com.ontimize.gui.Form;
-import com.ontimize.gui.MainApplication;
-import com.ontimize.gui.button.Button;
-import com.ontimize.gui.field.MemoDataField;
-import com.ontimize.gui.field.TextComboDataField;
-import com.ontimize.gui.manager.IFormManager;
-import com.ontimize.gui.table.Table;
+import com.ontimize.jee.common.db.EntityResult;
+import com.ontimize.jee.common.gui.ApplicationManager;
+import com.ontimize.jee.common.gui.BasicInteractionManager;
+import com.ontimize.jee.common.gui.Form;
+import com.ontimize.jee.common.gui.MainApplication;
+import com.ontimize.jee.common.gui.button.Button;
+import com.ontimize.jee.common.gui.field.MemoDataField;
+import com.ontimize.jee.common.gui.field.TextComboDataField;
+import com.ontimize.jee.common.gui.manager.IFormManager;
+import com.ontimize.jee.common.gui.table.Table;
 import com.ontimize.jee.common.services.servermanagement.IServerManagementService;
 import com.ontimize.jee.common.tools.MapTools;
 import com.ontimize.jee.desktopclient.components.servermanagement.window.list.ListSql;
@@ -86,8 +86,8 @@ public class IMSqlManager extends BasicInteractionManager {
     /*
      * (non-Javadoc)
      *
-     * @see com.utilmize.client.fim.UBasicFIM#registerInteractionManager(com.ontimize.gui.Form,
-     * com.ontimize.gui.FormManager)
+     * @see com.utilmize.client.fim.UBasicFIM#registerInteractionManager(com.ontimize.jee.common.gui.Form,
+     * com.ontimize.jee.common.gui.FormManager)
      */
     @Override
     public void registerInteractionManager(Form f, IFormManager gf) {

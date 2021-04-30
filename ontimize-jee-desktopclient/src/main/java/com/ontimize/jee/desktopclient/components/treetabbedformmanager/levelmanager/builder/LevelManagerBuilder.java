@@ -5,7 +5,7 @@ package com.ontimize.jee.desktopclient.components.treetabbedformmanager.levelman
 
 import java.util.ResourceBundle;
 
-import com.ontimize.gui.Form;
+import com.ontimize.jee.common.gui.Form;
 import com.ontimize.jee.desktopclient.components.treetabbedformmanager.levelmanager.LevelManager;
 
 /**

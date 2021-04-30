@@ -12,8 +12,8 @@ import java.util.Vector;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import com.ontimize.gui.ApplicationManager;
-import com.ontimize.gui.i18n.Internationalization;
+import com.ontimize.jee.common.gui.ApplicationManager;
+import com.ontimize.jee.common.gui.i18n.Internationalization;
 import com.ontimize.jee.desktopclient.components.WindowTools;
 
 /**

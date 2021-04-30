@@ -10,20 +10,20 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
-import com.ontimize.db.EntityResult;
-import com.ontimize.db.NullValue;
-import com.ontimize.db.SQLStatementBuilder.BasicExpression;
-import com.ontimize.db.SQLStatementBuilder.BasicField;
-import com.ontimize.db.SQLStatementBuilder.BasicOperator;
-import com.ontimize.db.SQLStatementBuilder.Expression;
-import com.ontimize.db.SQLStatementBuilder.ExtendedSQLConditionValuesProcessor;
-import com.ontimize.db.SQLStatementBuilder.Field;
-import com.ontimize.gui.SearchValue;
+import com.ontimize.jee.common.dto.EntityResult;
+import com.ontimize.jee.common.db.NullValue;
+import com.ontimize.jee.common.db.SQLStatementBuilder.BasicExpression;
+import com.ontimize.jee.common.db.SQLStatementBuilder.BasicField;
+import com.ontimize.jee.common.db.SQLStatementBuilder.BasicOperator;
+import com.ontimize.jee.common.db.SQLStatementBuilder.Expression;
+import com.ontimize.jee.common.db.SQLStatementBuilder.ExtendedSQLConditionValuesProcessor;
+import com.ontimize.jee.common.db.SQLStatementBuilder.Field;
+import com.ontimize.jee.common.gui.SearchValue;
 import com.ontimize.jee.common.tools.BasicExpressionTools;
 import com.ontimize.jee.common.tools.EntityResultTools;
 import com.ontimize.jee.common.tools.MapTools;
 import com.ontimize.jee.common.tools.ObjectTools;
-import com.ontimize.util.ParseTools;
+import com.ontimize.jee.common.util.ParseTools;
 
 @Component
 @Lazy(value = true)
