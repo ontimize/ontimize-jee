@@ -149,7 +149,7 @@ abstract public class AbstractSkeleton {
             return "boolean";
         } else if ("int".equals(name) || "java.lang.Integer".equals(name) || "short".equals(name)
                 || "java.lang.Short".equals(name) || "byte".equals(name) || "java.lang.Byte"
-                    .equals(name)) {
+                .equals(name)) {
             return "int";
         } else if ("long".equals(name) || "java.lang.Long".equals(name)) {
             return "long";
@@ -158,7 +158,7 @@ abstract public class AbstractSkeleton {
             return "double";
         } else if ("java.lang.String".equals(name) || "com.caucho.util.CharBuffer".equals(name) || "char".equals(name)
                 || "java.lang.Character".equals(name) || "java.io.Reader"
-                    .equals(name)) {
+                .equals(name)) {
             return "string";
         } else if ("java.util.Date".equals(name) || "com.caucho.util.QDate".equals(name)) {
             return "date";

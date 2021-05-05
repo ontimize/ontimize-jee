@@ -1,27 +1,5 @@
 package export.entityresult;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.sql.JDBCType;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.collections4.iterators.IteratorEnumeration;
-import org.apache.poi.ss.usermodel.BorderStyle;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.DataFormat;
-import org.apache.poi.ss.usermodel.FillPatternType;
-import org.apache.poi.ss.usermodel.IndexedColors;
-import org.apache.poi.ss.usermodel.Workbook;
-
-import com.ontimize.dto.EntityResult;
-import com.ontimize.dto.EntityResultMapImpl;
 import com.ontimize.jee.webclient.export.BaseExcelExporter;
 import com.ontimize.jee.webclient.export.CellStyleContext;
 import com.ontimize.jee.webclient.export.ExportColumnStyle;
@@ -37,12 +15,31 @@ import com.ontimize.jee.webclient.export.pagination.PaginationRequest;
 import com.ontimize.jee.webclient.export.pagination.PaginationResult;
 import com.ontimize.jee.webclient.export.providers.ExportColumnProvider;
 import com.ontimize.jee.webclient.export.providers.SheetNameProvider;
-
+import com.ontimize.jee.common.dto.EntityResult;
+import com.ontimize.jee.common.dto.EntityResultMapImpl;
 import export.barebean.BareExportBean;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import org.apache.commons.collections4.iterators.IteratorEnumeration;
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.DataFormat;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.Workbook;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.sql.JDBCType;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class EntityResultPaginatedExcelExportTest extends Application {
 
@@ -71,10 +68,12 @@ public class EntityResultPaginatedExcelExportTest extends Application {
             entityResult.addRecord(bareExportBeanToRecord(bean));
         }
 
-        final ExportColumnProvider exportColumnProvider = EntityResultExportHelper.getExportContextFromEntityResult(entityResult);
+        final ExportColumnProvider exportColumnProvider = EntityResultExportHelper
+            .getExportContextFromEntityResult(entityResult);
         final BaseExcelExporter exporter = new SXSSFWorkbookExcelExporter();
         try {
-            final DefaultEntityResultExcelExportPaginatedDataProvider dataProvider = new DefaultEntityResultExcelExportPaginatedDataProvider(entityResult);
+            final DefaultEntityResultExcelExportPaginatedDataProvider dataProvider = new DefaultEntityResultExcelExportPaginatedDataProvider(
+                    entityResult);
             dataProvider.setRowsPerPage(10);
 
             dataProvider.setPageFactory((Callback<PaginationRequest, PaginationResult<List<BareExportBean>>>) param -> {
@@ -95,7 +94,7 @@ public class EntityResultPaginatedExcelExportTest extends Application {
             dataProvider.setRowsPerPage(100);
             final Workbook workBook = exporter
                 .export(
-                    exportColumnProvider,
+                        exportColumnProvider,
                         dataProvider,
                         new DefaultExcelExportStyleProvider<CellStyle>() {
                             private CellStyle style1;
@@ -117,11 +116,11 @@ public class EntityResultPaginatedExcelExportTest extends Application {
                             @Override
                             public ExportColumnStyle getColumnStyle(final String columnId) {
                                 final ExportColumnStyle ret = new DefaultExportColumnStyle();
-                                if(columnId.equals("percentage")){
+                                if (columnId.equals("percentage")) {
                                     ret.setDataFormatString("0.00%");
                                     ret.setFillBackgroundColor(CellColor.CORAL);
                                     ret.setAlignment(HorizontalAlignment.RIGHT);
-                                }else if (columnId.equals("money")){
+                                } else if (columnId.equals("money")) {
                                     ret.setDataFormatString("#.##0,00 €;-#.##0,00 €");
                                     ret.setFillBackgroundColor(CellColor.AQUA);
                                     ret.setAlignment(HorizontalAlignment.RIGHT);
@@ -154,22 +153,22 @@ public class EntityResultPaginatedExcelExportTest extends Application {
                                 return null;
                             }
                         },
-                    new SheetNameProvider() {
-                        @Override
-                        public String getDefaultSheetName() {
-                            return "Resultados";
-                        }
+                        new SheetNameProvider() {
+                            @Override
+                            public String getDefaultSheetName() {
+                                return "Resultados";
+                            }
 
-                        @Override
-                        public Callback<SheetContext, String> getSheetName() {
-                            return context -> {
-                                if (context.getNumRows() > 100) {
-                                    return this.getDefaultSheetName() + "_" + context.getActualSheetIndex();
-                                }
-                                return context.getActualSheetName();
-                            };
-                        }
-                    },
+                            @Override
+                            public Callback<SheetContext, String> getSheetName() {
+                                return context -> {
+                                    if (context.getNumRows() > 100) {
+                                        return this.getDefaultSheetName() + "_" + context.getActualSheetIndex();
+                                    }
+                                    return context.getActualSheetName();
+                                };
+                            }
+                        },
                         null);
 
             final File file = new File("PaginatedEntityResult.xlsx");
@@ -183,23 +182,24 @@ public class EntityResultPaginatedExcelExportTest extends Application {
         }
         System.exit(0);
     }
-    static  Map extractExportBeanFieldTypes() {
+
+    static Map extractExportBeanFieldTypes() {
         Map ret = new HashMap();
-        ret.put("id"               ,JDBCType.INTEGER.getVendorTypeNumber());
-        ret.put("firstName"        ,JDBCType.VARCHAR.getVendorTypeNumber());
-        ret.put("lastName"         ,JDBCType.VARCHAR.getVendorTypeNumber());
-        ret.put("gender"           ,JDBCType.VARCHAR.getVendorTypeNumber());
-        ret.put("age"              ,JDBCType.INTEGER.getVendorTypeNumber());
-        ret.put("single"           ,JDBCType.BIT.getVendorTypeNumber());
-        ret.put("birthDate"        ,JDBCType.DATE.getVendorTypeNumber());
-        ret.put("localBirthDate"   ,JDBCType.DATE.getVendorTypeNumber());
-        ret.put("percentage"       ,JDBCType.DECIMAL.getVendorTypeNumber());
-        ret.put("doublePercentage" ,JDBCType.DECIMAL.getVendorTypeNumber());
-        ret.put("money"            , JDBCType.DOUBLE.getVendorTypeNumber());
-        ret.put("street"           ,JDBCType.VARCHAR.getVendorTypeNumber());
-        ret.put("zipCode"          ,JDBCType.INTEGER.getVendorTypeNumber());
-        ret.put("city"             ,JDBCType.VARCHAR.getVendorTypeNumber());
-        ret.put("country"          ,JDBCType.VARCHAR.getVendorTypeNumber());
+        ret.put("id", JDBCType.INTEGER.getVendorTypeNumber());
+        ret.put("firstName", JDBCType.VARCHAR.getVendorTypeNumber());
+        ret.put("lastName", JDBCType.VARCHAR.getVendorTypeNumber());
+        ret.put("gender", JDBCType.VARCHAR.getVendorTypeNumber());
+        ret.put("age", JDBCType.INTEGER.getVendorTypeNumber());
+        ret.put("single", JDBCType.BIT.getVendorTypeNumber());
+        ret.put("birthDate", JDBCType.DATE.getVendorTypeNumber());
+        ret.put("localBirthDate", JDBCType.DATE.getVendorTypeNumber());
+        ret.put("percentage", JDBCType.DECIMAL.getVendorTypeNumber());
+        ret.put("doublePercentage", JDBCType.DECIMAL.getVendorTypeNumber());
+        ret.put("money", JDBCType.DOUBLE.getVendorTypeNumber());
+        ret.put("street", JDBCType.VARCHAR.getVendorTypeNumber());
+        ret.put("zipCode", JDBCType.INTEGER.getVendorTypeNumber());
+        ret.put("city", JDBCType.VARCHAR.getVendorTypeNumber());
+        ret.put("country", JDBCType.VARCHAR.getVendorTypeNumber());
         return ret;
     }
 
@@ -223,4 +223,5 @@ public class EntityResultPaginatedExcelExportTest extends Application {
 
         return ret;
     }
+
 }

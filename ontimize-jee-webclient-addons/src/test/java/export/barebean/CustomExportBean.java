@@ -20,31 +20,41 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public class CustomExportBean {
+
     private final SimpleStringProperty textField = new SimpleStringProperty();
+
     private final IntegerProperty integerField = new SimpleIntegerProperty();
+
     private final BooleanProperty booleanField = new SimpleBooleanProperty();
+
     private final FloatProperty floatField = new SimpleFloatProperty();
+
     private final ObjectProperty<Date> dateField = new SimpleObjectProperty();
+
     private final ObjectProperty<LocalDate> localDateField = new SimpleObjectProperty();
+
     private final ObjectProperty<LocalDate> customLocalDateField = new SimpleObjectProperty();
+
     private final DoubleProperty moneyField = new SimpleDoubleProperty();
+
     private final DoubleProperty customMoneyField = new SimpleDoubleProperty();
+
     private final DoubleProperty percentField = new SimpleDoubleProperty();
 
     public CustomExportBean() {
     }
 
     public CustomExportBean(
-        final String textField,
-        final Integer integerField,
-        final Boolean booleanField,
-        final Float floatField,
-        final Date dateField,
-        final LocalDate localDateField,
-        final LocalDate customLocalDateField,
-        final Float moneyField,
-        final Float customMoneyField,
-        final Float percentField) {
+            final String textField,
+            final Integer integerField,
+            final Boolean booleanField,
+            final Float floatField,
+            final Date dateField,
+            final LocalDate localDateField,
+            final LocalDate customLocalDateField,
+            final Float moneyField,
+            final Float customMoneyField,
+            final Float percentField) {
         this.setTextField(textField);
         this.setIntegerField(integerField);
         this.setBooleanField(booleanField);
@@ -76,16 +86,16 @@ public class CustomExportBean {
         final ObservableList<CustomExportBean> ret = FXCollections.observableArrayList();
         for (int n = 0; n < amount; n++) {
             ret.add(new CustomExportBean(
-                "text_" + n,
-                (int) (Math.random() * 10000),
-                Math.random() > 0.5,
-                (float) (Math.random() * 10000),
-                getRandomDate(),
-                getRandomLocalDate(),
-                getRandomLocalDate(),
-                (float) (Math.random() * 10000),
-                (float) (Math.random() * 10000),
-                (float) (Math.random() * 100)));
+                    "text_" + n,
+                    (int) (Math.random() * 10000),
+                    Math.random() > 0.5,
+                    (float) (Math.random() * 10000),
+                    getRandomDate(),
+                    getRandomLocalDate(),
+                    getRandomLocalDate(),
+                    (float) (Math.random() * 10000),
+                    (float) (Math.random() * 10000),
+                    (float) (Math.random() * 100)));
         }
         return ret;
     }
@@ -101,25 +111,25 @@ public class CustomExportBean {
 
     private static LocalDate getRandomLocalDate() {
         final long randomDay = (int) LocalDate.of(1900, 1, 1).toEpochDay()
-            + new Random().nextInt((int) LocalDate.of(2015, 1, 1).toEpochDay()
-            - (int) LocalDate.of(1900, 1, 1).toEpochDay());
+                + new Random().nextInt((int) LocalDate.of(2015, 1, 1).toEpochDay()
+                        - (int) LocalDate.of(1900, 1, 1).toEpochDay());
         return LocalDate.ofEpochDay(randomDay);
     }
 
     @Override
     public String toString() {
         return "CustomExportBean{" +
-            "textField=" + this.textField +
-            ", integerField=" + this.integerField +
-            ", booleanField=" + this.booleanField +
-            ", floatField=" + this.floatField +
-            ", dateField=" + this.dateField +
-            ", localDateField=" + this.localDateField +
-            ", customLocalDateField=" + this.customLocalDateField +
-            ", moneyField=" + this.moneyField +
-            ", customMoneyField=" + this.customMoneyField +
-            ", percentField=" + this.percentField +
-            '}';
+                "textField=" + this.textField +
+                ", integerField=" + this.integerField +
+                ", booleanField=" + this.booleanField +
+                ", floatField=" + this.floatField +
+                ", dateField=" + this.dateField +
+                ", localDateField=" + this.localDateField +
+                ", customLocalDateField=" + this.customLocalDateField +
+                ", moneyField=" + this.moneyField +
+                ", customMoneyField=" + this.customMoneyField +
+                ", percentField=" + this.percentField +
+                '}';
     }
 
     public String getTextField() {

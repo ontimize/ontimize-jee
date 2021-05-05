@@ -40,9 +40,10 @@ public class BareBeanPaginatedExcelExportTest extends Application {
 
     @Override
     public void start(final Stage primaryStage) {
-//        ResourceBundleContext.setResourceBundle(ResourceBundle.getBundle("i18nResourcesjfxcomponents"));
+        // ResourceBundleContext.setResourceBundle(ResourceBundle.getBundle("i18nResourcesjfxcomponents"));
         final ObservableList<BareExportBean> personList = BareExportBean.getBareExportBeanList(5000);
-        final ExportColumnProvider exportColumnProvider = BareBeanExportHelper.getExportContextFromBean(BareExportBean.class);
+        final ExportColumnProvider exportColumnProvider = BareBeanExportHelper
+            .getExportContextFromBean(BareExportBean.class);
         final BaseExcelExporter exporter = new SXSSFWorkbookExcelExporter();
         try {
             final DefaultBareBeanExcelExportPaginatedDataProvider dataProvider = new DefaultBareBeanExcelExportPaginatedDataProvider();
@@ -67,7 +68,7 @@ public class BareBeanPaginatedExcelExportTest extends Application {
             dataProvider.setRowsPerPage(100);
             final Workbook workBook = exporter
                 .export(
-                    exportColumnProvider,
+                        exportColumnProvider,
                         dataProvider,
                         new DefaultExcelExportStyleProvider<CellStyle>() {
                             private CellStyle style1;
@@ -117,22 +118,22 @@ public class BareBeanPaginatedExcelExportTest extends Application {
                                 return null;
                             }
                         },
-                    new SheetNameProvider() {
-                        @Override
-                        public String getDefaultSheetName() {
-                            return "Resultados";
-                        }
+                        new SheetNameProvider() {
+                            @Override
+                            public String getDefaultSheetName() {
+                                return "Resultados";
+                            }
 
-                        @Override
-                        public Callback<SheetContext, String> getSheetName() {
-                            return context -> {
-                                if (context.getNumRows() > 100) {
-                                    return this.getDefaultSheetName() + "_" + context.getActualSheetIndex();
-                                }
-                                return context.getActualSheetName();
-                            };
-                        }
-                    },
+                            @Override
+                            public Callback<SheetContext, String> getSheetName() {
+                                return context -> {
+                                    if (context.getNumRows() > 100) {
+                                        return this.getDefaultSheetName() + "_" + context.getActualSheetIndex();
+                                    }
+                                    return context.getActualSheetName();
+                                };
+                            }
+                        },
                         null);
 
             final File file = new File("PaginatedBareBean.xlsx");
