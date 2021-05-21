@@ -13,21 +13,21 @@
 	</organization>
 
 	<distributionManagement>
-	    <repository>
+		<repository>
 			<id>public-artifactory</id>
 			<name>public-artifactory-releases</name>
 			<url>https://public-artifactory.imatia.com/artifactory/ontimize-release-opensource</url>
-	    </repository>
+		</repository>
 		<snapshotRepository>
 			<id>imatia-artifactory</id>
 			<name>libs-snapshot-local</name>
 			<url>https://artifactory.imatia.com/artifactory/libs-snapshot-local</url>
 		</snapshotRepository>
 	</distributionManagement>
-	
+
 	<properties>
 		<maven.compiler.target>11</maven.compiler.target>
-        <maven.compiler.source>11</maven.compiler.source>
+		<maven.compiler.source>11</maven.compiler.source>
 
 		<projectGroupId>com.ontimize.jee</projectGroupId>
 
@@ -57,7 +57,7 @@
 		<spring-session.version>1.3.5.RELEASE</spring-session.version>
 		<spring-security-jwt.version>1.1.1.RELEASE</spring-security-jwt.version>
 		<jackson.version>2.12.3</jackson.version>
-		<cxf.version>3.4.3</cxf.version>	
+		<cxf.version>3.4.3</cxf.version>
 		<httpclient.version>4.5.13</httpclient.version>
 		<apache-poi.version>4.1.2</apache-poi.version>
 		<apache-poi.ooxml-schemas.version>1.1</apache-poi.ooxml-schemas.version>
@@ -66,18 +66,18 @@
 		<xmlbeans.version>2.4.0</xmlbeans.version>
 		<servlet-api.version>3.1.0</servlet-api.version>
 		<commons-lang.version>3.12.0</commons-lang.version>
-		
+
 		<commons-beanutils.version>1.9.4</commons-beanutils.version>
 		<commons-lang.gis.version>2.6</commons-lang.gis.version>
 		<commons-codec.version>1.10</commons-codec.version>
 		<jmimemagic.version>0.1.2</jmimemagic.version>
 		<jasperreports.version>6.2.0</jasperreports.version>
 		<dynamicjasper.version>5.0.7</dynamicjasper.version>
-		
+
 		<commons-collections.version>4.4</commons-collections.version>
 		<commons-io.version>2.7</commons-io.version>
 		<mesp.version>1.0.2</mesp.version>
-	<!--	<ontimize.version>8.0.1-SNAPSHOT</ontimize.version> -->
+		<!-- <ontimize.version>8.0.1-SNAPSHOT</ontimize.version> -->
 		<ontimize.plaf.version>1.1.7</ontimize.plaf.version>
 		<ontimize.plaf.color.version>1.4.4</ontimize.plaf.color.version>
 		<zip4j.version>1.3.2</zip4j.version>
@@ -196,7 +196,7 @@
 				<artifactId>maven-source-plugin</artifactId>
 			</plugin>
 			<plugin>
-			<groupId>com.imatia.javaformat</groupId>
+				<groupId>com.imatia.javaformat</groupId>
 				<artifactId>imatia-javaformat-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
@@ -430,7 +430,7 @@
 				<artifactId>commons-codec</artifactId>
 				<version>${commons-codec.version}</version>
 			</dependency>
-			
+
 			<!-- Jmimemagic -->
 			<dependency>
 				<groupId>jmimemagic</groupId>
@@ -443,22 +443,22 @@
 					</exclusion>
 				</exclusions>
 			</dependency>
-			
+
 			<!-- commons io -->
 			<dependency>
 				<groupId>commons-io</groupId>
 				<artifactId>commons-io</artifactId>
 				<version>${commons-io.version}</version>
 			</dependency>
-				
-			
+
+
 			<!-- XML Config -->
 			<dependency>
 				<groupId>org.apache.commons</groupId>
 				<artifactId>commons-collections4</artifactId>
 				<version>${commons-collections.version}</version>
 			</dependency>
-			
+
 			<!-- si alguien utiliza la version vieja -->
 			<dependency>
 				<groupId>commons-collections</groupId>
@@ -466,14 +466,30 @@
 				<version>3.2.2</version>
 			</dependency>
 
-			<!-- javax what is out of jdk 11-->
+			<!-- javax what is out of jdk 11 -->
 			<dependency>
 				<groupId>javax</groupId>
 				<artifactId>javaee-api</artifactId>
 				<version>${jee.version}</version>
 				<scope>provided</scope>
 			</dependency>
-			
+
+			<dependency>
+				<groupId>javax.xml.bind</groupId>
+				<artifactId>jaxb-api</artifactId>
+				<version>2.3.0-b170201.1204</version>
+			</dependency>
+			<dependency>
+				<groupId>javax.activation</groupId>
+				<artifactId>activation</artifactId>
+				<version>1.1</version>
+			</dependency>
+			<dependency>
+				<groupId>org.glassfish.jaxb</groupId>
+				<artifactId>jaxb-runtime</artifactId>
+				<version>2.3.0-b170127.1453</version>
+			</dependency>
+
 			<!-- apache cxf -->
 			<dependency>
 				<groupId>org.apache.cxf</groupId>
@@ -485,18 +501,18 @@
 				<artifactId>cxf-rt-transports-http</artifactId>
 				<version>${cxf.version}</version>
 			</dependency>
-			
+
 			<!-- Zip4j -->
 			<dependency>
 				<groupId>net.lingala.zip4j</groupId>
 				<artifactId>zip4j</artifactId>
 				<version>${zip4j.version}</version>
 			</dependency>
-	        <!-- http client -->
-	        <dependency>
-	            <groupId>org.apache.httpcomponents</groupId>
-	            <artifactId>httpclient</artifactId>
-	        </dependency>
+			<!-- http client -->
+			<dependency>
+				<groupId>org.apache.httpcomponents</groupId>
+				<artifactId>httpclient</artifactId>
+			</dependency>
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
 				<artifactId>jackson-core</artifactId>
