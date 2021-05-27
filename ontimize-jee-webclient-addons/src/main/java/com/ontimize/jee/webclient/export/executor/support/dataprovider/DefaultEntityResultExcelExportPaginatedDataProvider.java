@@ -105,7 +105,7 @@ public class DefaultEntityResultExcelExportPaginatedDataProvider<T> implements E
     public Object getCellValue(final int row, final int column) {
         Map record = entityResult.getRecordValues(row);
         int n = 0;
-        // TODO ver cual de los dos es más viable
+        // TODO ver cual de los dos es mï¿½s viable
         Enumeration i = new IteratorEnumeration(record.keySet().iterator());
         Enumeration e = entityResult.keys();
         Object ret = null;

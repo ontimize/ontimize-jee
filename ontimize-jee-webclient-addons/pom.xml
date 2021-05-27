@@ -52,10 +52,10 @@
 			<version>2.1.7</version>
 			<scope>provided</scope>
 		</dependency>
-        <dependency>
-            <groupId>com.ontimize.jee</groupId>
-            <artifactId>ontimize-jee-common</artifactId>
-        </dependency>
+		<dependency>
+			<groupId>com.ontimize.jee</groupId>
+			<artifactId>ontimize-jee-common</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-controls</artifactId>
@@ -69,22 +69,13 @@
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-collections4</artifactId>
-			<version>4.4</version>
 		</dependency>
-
 		<dependency>
 			<groupId>org.kie.modules</groupId>
 			<artifactId>org-junit</artifactId>
 			<version>6.5.0.Final</version>
 			<type>pom</type>
 		</dependency>
-
-		<!-- Temporalmente hay que borrar la dependecia con el módulo de exportacion
-        <dependency>
-            <groupId>com.ontimize</groupId>
-            <artifactId>ontimize-core-client</artifactId>
-        </dependency>
-        -->
 	</dependencies>
 
 </project>

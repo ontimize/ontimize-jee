@@ -8,11 +8,11 @@ import com.ontimize.jee.webclient.export.providers.SheetNameProvider;
 import javafx.util.Callback;
 
 /**
- * @author <a href="antonio.vazquez@imatia.com">Antonio Vázquez Araújo</a>
+ * @author <a href="antonio.vazquez@imatia.com">Antonio Vï¿½zquez Araï¿½jo</a>
  */
 public class DefaultSheetNameProvider implements SheetNameProvider {
 
-    // Suponemos una altura máxima de 20 lineas para la cabecera
+    // Suponemos una altura mï¿½xima de 20 lineas para la cabecera
     public static final int MAX_ROWS = SpreadsheetVersion.EXCEL2007.getMaxRows() - 20;
 
     @Override

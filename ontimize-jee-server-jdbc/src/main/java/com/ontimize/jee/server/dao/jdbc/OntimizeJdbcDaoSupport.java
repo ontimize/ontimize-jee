@@ -737,7 +737,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
             .getValidAttributes(this.processStringKeys(avWithoutMultipleValueAttributes));
         final Map<String, Object> avValid = this.removeNullValues(avValidPre);
         if (avValid.isEmpty()) {
-            // TODO se debería lanzar excepción, pero puede tener colaterales con la one-2-one
+            // TODO se deberï¿½a lanzar excepciï¿½n, pero puede tener colaterales con la one-2-one
             OntimizeJdbcDaoSupport.logger.warn("Insert: Attributes does not contain any pair key-value valid");
             return erResult;
         }

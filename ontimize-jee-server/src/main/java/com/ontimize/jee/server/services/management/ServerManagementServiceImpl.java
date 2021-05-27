@@ -112,7 +112,7 @@ public class ServerManagementServiceImpl implements ApplicationContextAware, ISe
          * res = new EntityResult(); try { sqlStatementHandler.resultSetToEntityResult(rs, res, null); }
          * catch (Exception error) { throw new DataRetrievalFailureException(error.getMessage(), error); }
          * return res; } return new EntityResult(EntityResult.OPERATION_SUCCESSFUL,
-         * EntityResult.NODATA_RESULT, "Operación realizada. " + stmt.getUpdateCount() +
+         * EntityResult.NODATA_RESULT, "Operaciï¿½n realizada. " + stmt.getUpdateCount() +
          * " filas modificadas"); } });
          */
         throw new OntimizeJEERuntimeException("NOT_IMPLEMENTED");

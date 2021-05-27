@@ -6,7 +6,7 @@ import com.ontimize.jee.webclient.export.HeadExportColumn;
 /**
  * Provider que proporciona los datos de la exportacion.
  *
- * @author enrique.alvarez@imatia.com Enrique AÅlvarez Pereira
+ * @author enrique.alvarez@imatia.com Enrique AÔøΩlvarez Pereira
  */
 
 public interface ExcelExportDataProvider {

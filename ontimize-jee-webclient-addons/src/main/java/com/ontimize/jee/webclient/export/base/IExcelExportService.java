@@ -9,7 +9,7 @@ import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
 
 /**
- * @author <a href="antonio.vazquez@imatia.com">Antonio Vázquez Araújo</a>
+ * @author <a href="antonio.vazquez@imatia.com">Antonio Vï¿½zquez Araï¿½jo</a>
  */
 public interface IExcelExportService {
 

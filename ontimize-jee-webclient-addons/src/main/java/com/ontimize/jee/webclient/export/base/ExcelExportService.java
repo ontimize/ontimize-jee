@@ -151,7 +151,7 @@ public class ExcelExportService implements IExcelExportService, ApplicationConte
                             // Query avanzada que devuelve todas las paginas
                             AdvancedEntityResult data = getAdvancedEntityResult(row);
                             List cellValue = (List) data.get(String.valueOf(bodyColumns.get(column).getId()));
-                            // Cuando el numero de fila es igual al tamaño de pagina, cambia el offset a la
+                            // Cuando el numero de fila es igual al tamaï¿½o de pagina, cambia el offset a la
                             // siguiente pagina
                             int nRow = row % pageSize;
                             if (data != null && nRow < cellValue.size()) {

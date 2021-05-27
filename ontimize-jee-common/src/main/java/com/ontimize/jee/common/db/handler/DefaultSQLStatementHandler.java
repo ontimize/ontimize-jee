@@ -46,7 +46,7 @@ public class DefaultSQLStatementHandler implements SQLStatementHandler {
 
     protected SQLStatementBuilder.SQLNameEval sqlNameEval = null;
 
-    protected char[] CONFLICT_CHARS = { ' ', '/', '-', 'Á', 'É', 'Í', 'Ó', 'Ú', 'á', 'é', 'í', 'ó', 'ú', '%' };
+    protected char[] CONFLICT_CHARS = { ' ', '/', '-', 'ï¿½', 'ï¿½', 'ï¿½', 'ï¿½', 'ï¿½', 'ï¿½', 'ï¿½', 'ï¿½', 'ï¿½', 'ï¿½', '%' };
 
     public boolean useAsInSubqueries = true;
 

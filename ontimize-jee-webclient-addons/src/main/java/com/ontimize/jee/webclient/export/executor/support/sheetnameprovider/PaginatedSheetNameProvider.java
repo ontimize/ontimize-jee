@@ -6,10 +6,10 @@ import com.ontimize.jee.webclient.export.providers.SheetNameProvider;
 import javafx.util.Callback;
 
 /**
- * @author <a href="enrique.alvarez@imatia.com">Enrique Álvarez Pereira</a>
+ * @author <a href="enrique.alvarez@imatia.com">Enrique ï¿½lvarez Pereira</a>
  *
- *         En caso de querer que de una query paginada se devuelva cada página en una hoja de excel,
- *         se utilizaría este provider.
+ *         En caso de querer que de una query paginada se devuelva cada pï¿½gina en una hoja de excel,
+ *         se utilizarï¿½a este provider.
  */
 public class PaginatedSheetNameProvider implements SheetNameProvider {
 

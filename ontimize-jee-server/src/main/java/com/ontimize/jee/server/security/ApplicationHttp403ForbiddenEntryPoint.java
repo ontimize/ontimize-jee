@@ -34,7 +34,7 @@ public class ApplicationHttp403ForbiddenEntryPoint extends Http403ForbiddenEntry
      */
     @Override
     public void commence(final HttpServletRequest request, final HttpServletResponse response,
-            final AuthenticationException arg2) throws IOException, ServletException {
+            final AuthenticationException arg2) throws IOException {
         ApplicationHttp403ForbiddenEntryPoint.logger.error(null, arg2);
         if (ApplicationHttp403ForbiddenEntryPoint.logger.isDebugEnabled()) {
             ApplicationHttp403ForbiddenEntryPoint.logger
