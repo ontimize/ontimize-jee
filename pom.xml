@@ -62,7 +62,7 @@
 		<cxf.version>3.1.6</cxf.version>
 		<jackson.version>2.8.5</jackson.version>
 
-		<httpclient.version>4.5</httpclient.version>
+		<httpclient.version>4.5.13</httpclient.version>
 		<apache-poi.version>3.9</apache-poi.version>
 		<apache-poi.ooxml-schemas.version>1.1</apache-poi.ooxml-schemas.version>
 		<dom4j.version>1.1</dom4j.version>
