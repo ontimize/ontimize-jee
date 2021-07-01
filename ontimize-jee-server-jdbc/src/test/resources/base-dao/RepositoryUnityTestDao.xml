@@ -11,6 +11,7 @@
 	<UpdateKeys>
 		<Column>employeeid</Column>
 	</UpdateKeys>
+	<GeneratedKey>uniqueid</GeneratedKey>
 
 	<Queries>
 		<Query id="INNER_JOIN">
