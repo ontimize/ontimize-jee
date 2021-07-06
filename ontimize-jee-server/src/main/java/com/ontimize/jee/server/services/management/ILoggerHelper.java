@@ -3,7 +3,7 @@ package com.ontimize.jee.server.services.management;
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.ontimize.db.EntityResult;
+import com.ontimize.jee.common.dto.EntityResult;
 
 public interface ILoggerHelper {
 

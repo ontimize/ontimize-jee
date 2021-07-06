@@ -15,7 +15,7 @@ import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
+import java.util.Map;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -42,20 +42,20 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 
-import com.ontimize.db.AdvancedEntityResult;
-import com.ontimize.db.EntityResult;
-import com.ontimize.db.NullValue;
-import com.ontimize.db.SQLStatementBuilder;
-import com.ontimize.db.SQLStatementBuilder.BasicExpression;
-import com.ontimize.db.SQLStatementBuilder.BasicField;
-import com.ontimize.db.SQLStatementBuilder.Expression;
-import com.ontimize.db.SQLStatementBuilder.Field;
-import com.ontimize.db.SQLStatementBuilder.SQLOrder;
-import com.ontimize.gui.MultipleValue;
-import com.ontimize.gui.SearchValue;
-import com.ontimize.gui.field.MultipleTableAttribute;
-import com.ontimize.gui.field.ReferenceFieldAttribute;
-import com.ontimize.gui.table.TableAttribute;
+import com.ontimize.jee.common.db.AdvancedEntityResult;
+import com.ontimize.jee.common.dto.EntityResult;
+import com.ontimize.jee.common.db.NullValue;
+import com.ontimize.jee.common.db.SQLStatementBuilder;
+import com.ontimize.jee.common.db.SQLStatementBuilder.BasicExpression;
+import com.ontimize.jee.common.db.SQLStatementBuilder.BasicField;
+import com.ontimize.jee.common.db.SQLStatementBuilder.Expression;
+import com.ontimize.jee.common.db.SQLStatementBuilder.Field;
+import com.ontimize.jee.common.db.SQLStatementBuilder.SQLOrder;
+import com.ontimize.jee.common.gui.MultipleValue;
+import com.ontimize.jee.common.gui.SearchValue;
+import com.ontimize.jee.common.gui.field.MultipleTableAttribute;
+import com.ontimize.jee.common.gui.field.ReferenceFieldAttribute;
+import com.ontimize.jee.common.gui.table.TableAttribute;
 import com.ontimize.jee.common.exceptions.OntimizeJEEException;
 import com.ontimize.jee.common.naming.I18NNaming;
 import com.ontimize.jee.common.tools.CheckingTools;
@@ -233,7 +233,7 @@ public class OntimizeJpaDaoSupport implements ApplicationContextAware, IOntimize
                     false, adapter);
         } catch (final Exception e) {
             OntimizeJpaDaoSupport.logger.error(e.getMessage(), e);
-            return new EntityResult(EntityResult.OPERATION_WRONG, EntityResult.OPERATION_WRONG, e.getMessage());
+            return new EntityResultMapImpl(EntityResult.OPERATION_WRONG, EntityResult.OPERATION_WRONG, e.getMessage());
         }
     }
 
@@ -334,7 +334,7 @@ public class OntimizeJpaDaoSupport implements ApplicationContextAware, IOntimize
             }
         } else {
             if (EntityResult.class.isAssignableFrom(resultStyleClass)) {
-                EntityResult result = new EntityResult(EntityResult.OPERATION_WRONG, EntityResult.OPERATION_WRONG,
+                EntityResult result = new EntityResultMapImpl(EntityResult.OPERATION_WRONG, EntityResult.OPERATION_WRONG,
                         I18NNaming.MC_ERROR_QUERY_TYPE_NOT_KNOWN);
                 Object[] parameters = { queryId };
                 result.setMessageParameters(parameters);
@@ -350,7 +350,7 @@ public class OntimizeJpaDaoSupport implements ApplicationContextAware, IOntimize
     private <T> T prepareResult(final List<String> validAttributes, Class<T> resultStyleClass,
             Class<?> queryResultClass, Query selectQuery, List<?> totalData) throws Exception {
         if (EntityResult.class.isAssignableFrom(resultStyleClass)) {
-            EntityResult result = null;
+            EntityResultMapImpl result = null;
             if ((totalData != null) && (totalData.size() > 0)) {
 
                 result = OntimizeJpaUtils.transformListToEntityResultBeans(totalData, validAttributes);
@@ -484,7 +484,7 @@ public class OntimizeJpaDaoSupport implements ApplicationContextAware, IOntimize
                 final List<String> attrs = Arrays.asList(id.getName());
 
                 // construimos el resultado
-                final Hashtable<String, Object> idMap = new Hashtable<>();
+                final Map<String, Object> idMap = new HashMap<>();
                 idMap.put(id.getName(), idValue);
                 result = new EntityResult(idMap);
 
@@ -653,7 +653,7 @@ public class OntimizeJpaDaoSupport implements ApplicationContextAware, IOntimize
         this.check();
         // try safe update going through primary key
         final Map<?, ?> kvWithoutReferenceAttributes = this.processReferenceDataFieldAttributes(keysValues);
-        final Hashtable<Object, Object> kvValidKeysValues = new Hashtable<>();
+        final Map<Object, Object> kvValidKeysValues = new HashMap<>();
         final Map<?, ?> processMultipleValueAttributes = this
             .processMultipleValueAttributes(kvWithoutReferenceAttributes);
         if (processMultipleValueAttributes != null) {
@@ -729,7 +729,7 @@ public class OntimizeJpaDaoSupport implements ApplicationContextAware, IOntimize
     public EntityResult unsafeDelete(final Map<?, ?> keysValues) {
         this.check();
         final Map<?, ?> kvWithoutReferenceAttributes = this.processReferenceDataFieldAttributes(keysValues);
-        final Hashtable<Object, Object> kvValidKeysValues = new Hashtable<>();
+        final Map<Object, Object> kvValidKeysValues = new HashMap<>();
         final Map<?, ?> processMultipleValueAttributes = this
             .processMultipleValueAttributes(kvWithoutReferenceAttributes);
         if (processMultipleValueAttributes != null) {
@@ -780,7 +780,7 @@ public class OntimizeJpaDaoSupport implements ApplicationContextAware, IOntimize
         this.check();
         final Map<String, ?> validAttributes = this.adaptAttributesValues(attributesValues);
         final Map<?, ?> kvWithoutReferenceAttributes = this.processReferenceDataFieldAttributes(keysValues);
-        final Hashtable<Object, Object> kvValidKeysValues = new Hashtable<>();
+        final Map<Object, Object> kvValidKeysValues = new HashMap<>();
         final Map<?, ?> processMultipleValueAttributes = this
             .processMultipleValueAttributes(kvWithoutReferenceAttributes);
         if (processMultipleValueAttributes != null) {
@@ -1296,12 +1296,12 @@ public class OntimizeJpaDaoSupport implements ApplicationContextAware, IOntimize
     /**
      * Processes the ReferenceFieldAttribute objects contained in <code>keysValues</code>.
      * <p>
-     * Returns a hashtable containing all the objects contained in the argument <code>keysValues</code>
+     * Returns a Map containing all the objects contained in the argument <code>keysValues</code>
      * except in the case of keys that are ReferenceFieldAttribute objects, which are replaced by
      * ((ReferenceFieldAttribute)object).getAttr()
      * <p>
      * @param keysValues the keysValues to process
-     * @return a hashtable containing the processed objects
+     * @return a Map containing the processed objects
      */
     private Map<?, ?> processReferenceDataFieldAttributes(final Map<?, ?> keysValues) {
         if (keysValues == null) {
@@ -1342,7 +1342,7 @@ public class OntimizeJpaDaoSupport implements ApplicationContextAware, IOntimize
      * ((ReferenceFieldAttribute)object).getAttr() is added
      * <p>
      * @param list the list to process
-     * @return a vector containing the processed objects
+     * @return a List containing the processed objects
      */
     private List<String> processReferenceDataFieldAttributes(final List<?> list) {
         if (list == null) {
@@ -1429,15 +1429,15 @@ public class OntimizeJpaDaoSupport implements ApplicationContextAware, IOntimize
      * Apply template prefix.
      * @param templateInformation the template information
      * @param kvValidKeysValues the kv valid keys values
-     * @return the hashtable
+     * @return the Map
      */
-    protected Hashtable<Object, Object> applySQLTransformations(final QueryTemplateInformation templateInformation,
+    protected Map<Object, Object> applySQLTransformations(final QueryTemplateInformation templateInformation,
             final Map<Object, Object> kvValidKeysValues) {
         final List<AmbiguousColumnType> ambiguousColumns = templateInformation.getAmbiguousColumns();
         final List<FunctionColumnType> functionColumns = templateInformation.getFunctionColumns();
         final MappingInfo mappingInfo = templateInformation.getMappingInfo();
 
-        final Hashtable<Object, Object> res = new Hashtable<>();
+        final Map<Object, Object> res = new HashMap<>();
         for (final Entry<Object, Object> kvEntry : kvValidKeysValues.entrySet()) {
             if (kvEntry.getKey() instanceof String) {
                 String ob = (String) kvEntry.getKey();
@@ -1543,11 +1543,11 @@ public class OntimizeJpaDaoSupport implements ApplicationContextAware, IOntimize
     }
 
     /**
-     * Processes the MultipleValue objects contained in <code>keysValues</code>. Returns a new Hashtable
+     * Processes the MultipleValue objects contained in <code>keysValues</code>. Returns a new HashMap
      * with the same data as <code>keysValues</code> except that MultipleValue objects are deleted and
-     * the key-value pairs of these objects are added to the new Hashtable.
+     * the key-value pairs of these objects are added to the new HashMap.
      * @param keysValues the keys values
-     * @return a new Hashtable with MultipleValue objects replaced by their key-value pairs
+     * @return a new HashMap with MultipleValue objects replaced by their key-value pairs
      */
     private Map<?, ?> processMultipleValueAttributes(final Map<?, ?> keysValues) {
         if (keysValues == null) {
@@ -1695,7 +1695,7 @@ public class OntimizeJpaDaoSupport implements ApplicationContextAware, IOntimize
      */
     private EntityResult unadaptAttributesInResult(final EntityResult result, final List<String> validAttributes) {
         final boolean keepOriginal = (validAttributes == null) || (validAttributes.size() == 0);
-        final Map<String, Object> toAdd = new Hashtable<>();
+        final Map<String, Object> toAdd = new HashMap<>();
         if (validAttributes != null) {
             for (final Object entryObject : result.entrySet()) {
                 if (entryObject instanceof Entry) {

@@ -1,9 +1,10 @@
 package com.ontimize.jee.common.services.i18n;
 
-import java.util.Hashtable;
+
+import java.util.Map;
 import java.util.Locale;
 
-import com.ontimize.gui.i18n.DatabaseResourceBundle;
+import com.ontimize.jee.common.gui.i18n.DatabaseResourceBundle;
 
 /**
  * The Class TmpDatabaseResourceBundle. Ontimize llama a la variable del Locale "locale" igual que
@@ -19,7 +20,7 @@ public class TmpDatabaseResourceBundle extends DatabaseResourceBundle {
      * @param data the data
      * @param l the l
      */
-    public TmpDatabaseResourceBundle(Hashtable data, Locale l) {
+    public TmpDatabaseResourceBundle(Map data, Locale l) {
         super(data, l);
         this.mylocale = l;
     }
@@ -27,7 +28,7 @@ public class TmpDatabaseResourceBundle extends DatabaseResourceBundle {
     /*
      * (non-Javadoc)
      *
-     * @see com.ontimize.gui.i18n.DatabaseResourceBundle#getLocale()
+     * @see com.ontimize.jee.common.gui.i18n.DatabaseResourceBundle#getLocale()
      */
     @Override
     public Locale getLocale() {

@@ -7,8 +7,8 @@ import java.util.regex.Pattern;
 
 import javax.xml.bind.DatatypeConverter;
 
-import com.ontimize.util.Base64Utils;
-import com.ontimize.util.ParseTools;
+import com.ontimize.jee.common.util.Base64Utils;
+import com.ontimize.jee.common.util.ParseTools;
 
 public class ParseUtilsExt extends ParseTools {
 

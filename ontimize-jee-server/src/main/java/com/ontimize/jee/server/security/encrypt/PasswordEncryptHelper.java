@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
-import com.ontimize.util.Base64Utils;
+import com.ontimize.jee.common.util.Base64Utils;
 
 /**
  * The Class PasswordEncryptHelper.

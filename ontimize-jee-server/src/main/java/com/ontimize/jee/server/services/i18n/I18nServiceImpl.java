@@ -12,8 +12,8 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ontimize.gui.i18n.DatabaseBundleDescriptor;
-import com.ontimize.gui.i18n.DatabaseBundleValues;
+import com.ontimize.jee.common.gui.i18n.DatabaseBundleDescriptor;
+import com.ontimize.jee.common.gui.i18n.DatabaseBundleValues;
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
 import com.ontimize.jee.common.security.PermissionsProviderSecured;
 import com.ontimize.jee.common.services.i18n.II18nService;
@@ -101,8 +101,9 @@ public class I18nServiceImpl implements II18nService, ApplicationContextAware {
     /*
      * (non-Javadoc)
      *
-     * @see com.ontimize.jee.common.services.i18n.II18nService#updateBundleValues(com.ontimize.gui.i18n.
-     * DatabaseBundleValues)
+     * @see
+     * com.ontimize.jee.common.services.i18n.II18nService#updateBundleValues(com.ontimize.jee.common.gui
+     * .i18n. DatabaseBundleValues)
      */
     @Secured({ PermissionsProviderSecured.SECURED })
     @Transactional(rollbackFor = Exception.class)

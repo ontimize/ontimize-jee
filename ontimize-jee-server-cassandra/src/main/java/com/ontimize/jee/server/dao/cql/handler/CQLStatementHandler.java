@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.datastax.driver.core.ResultSet;
-import com.ontimize.db.EntityResult;
-import com.ontimize.db.SQLStatementBuilder.SQLOrder;
+import com.ontimize.jee.common.dto.EntityResult;
+import com.ontimize.jee.common.db.SQLStatementBuilder.SQLOrder;
 import com.ontimize.jee.server.dao.cql.CQLStatement;
 
 public interface CQLStatementHandler {

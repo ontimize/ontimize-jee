@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.ontimize.jee</groupId>
 		<artifactId>ontimize-jee</artifactId>
-		<version>2.1.5-SNAPSHOT</version>
+		<version>5.0.1-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>ontimize-jee-server</artifactId>
@@ -15,15 +15,7 @@
 			<groupId>${projectGroupId}</groupId>
 			<artifactId>ontimize-jee-common</artifactId>
 		</dependency>
-		<!-- apache cxf -->
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.apache.cxf</groupId> -->
-<!-- 			<artifactId>cxf-rt-frontend-jaxws</artifactId> -->
-<!-- 		</dependency> -->
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.apache.cxf</groupId> -->
-<!-- 			<artifactId>cxf-rt-transports-http</artifactId> -->
-<!-- 		</dependency> -->
+
 		<!-- Spring -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -53,6 +45,7 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
 		</dependency>
+
 		<!-- Spring Security -->
 		<dependency>
 			<groupId>org.springframework.security</groupId>
@@ -83,11 +76,11 @@
 			<artifactId>spring-session-data-redis</artifactId>
 			<optional>true</optional>
 		</dependency>
-			<!-- JWT -->
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-jwt</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>javax.websocket</groupId>
 			<artifactId>javax.websocket-api</artifactId>
@@ -106,16 +99,24 @@
             <version>2.8.2</version>
             <optional>true</optional>
         </dependency>
-
-		<!-- Zip4j -->
-<!-- 		<dependency> -->
-<!-- 			<groupId>net.lingala.zip4j</groupId> -->
-<!-- 			<artifactId>zip4j</artifactId> -->
-<!-- 		</dependency> -->
 		<dependency>
 			<groupId>javax</groupId>
 			<artifactId>javaee-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>javax.xml.bind</groupId>
+			<artifactId>jaxb-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javax.activation</groupId>
+			<artifactId>activation</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.jaxb</groupId>
+			<artifactId>jaxb-runtime</artifactId>
+		</dependency>
+
 	</dependencies>
+	
 </project>

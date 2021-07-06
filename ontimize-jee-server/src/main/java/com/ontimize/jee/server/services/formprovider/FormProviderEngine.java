@@ -7,7 +7,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.InitializingBean;
 
-import com.ontimize.db.EntityResult;
+import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.common.services.formprovider.IFormProviderService;
 import com.ontimize.jee.common.tools.CheckingTools;
 import com.ontimize.jee.server.dao.IOntimizeDaoSupport;

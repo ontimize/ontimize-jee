@@ -5,8 +5,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-import com.ontimize.gui.i18n.DatabaseBundleDescriptor;
-import com.ontimize.gui.i18n.DatabaseBundleValues;
+import com.ontimize.jee.common.gui.i18n.DatabaseBundleDescriptor;
+import com.ontimize.jee.common.gui.i18n.DatabaseBundleValues;
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
 
 /**
@@ -40,10 +40,10 @@ public interface II18nService {
     Map<String, ResourceBundle> getBundles(List<String> baseNames, Locale locale) throws OntimizeJEERuntimeException;
 
     /**
-     * Get a hashtable with all the available bundles in the database for the specified locale.
+     * Get a Map with all the available bundles in the database for the specified locale.
      * @param locale the locale
      * @return The keys of the object are Strings with the bundle class name (for example
-     *         com.ontimize.gui.i18m.bundle) and each value is the ResourceBundle object
+     *         com.ontimize.jee.common.gui.i18m.bundle) and each value is the ResourceBundle object
      * @throws OntimizeJEERuntimeException the ontimize jee runtime exception
      */
     Map<String, ResourceBundle> getAllResourceBundles(Locale locale) throws OntimizeJEERuntimeException;

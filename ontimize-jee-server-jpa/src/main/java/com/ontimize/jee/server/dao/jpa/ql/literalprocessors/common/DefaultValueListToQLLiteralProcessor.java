@@ -5,7 +5,7 @@ package com.ontimize.jee.server.dao.jpa.ql.literalprocessors.common;
 
 import java.util.List;
 
-import com.ontimize.db.SQLStatementBuilder;
+import com.ontimize.jee.common.db.SQLStatementBuilder;
 import com.ontimize.jee.server.dao.jpa.ql.ValueToQLLiteralProcessor;
 
 /**

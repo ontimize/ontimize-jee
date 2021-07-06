@@ -5,7 +5,7 @@ package com.ontimize.jee.server.dao.jpa.dataconversors;
 
 import java.math.BigDecimal;
 
-import com.ontimize.db.NullValue;
+import com.ontimize.jee.common.db.NullValue;
 import com.ontimize.jee.common.tools.ParseUtilsExtended;
 
 /**

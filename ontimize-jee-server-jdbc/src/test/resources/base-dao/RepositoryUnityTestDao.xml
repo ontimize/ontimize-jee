@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<JdbcEntitySetup
+	xmlns="http://www.ontimize.com/schema/jdbc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.ontimize.com/schema/jdbc http://www.ontimize.com/schema/jdbc/ontimize-jdbc-dao.xsd"
+	table="employees" datasource="inMemDataSource"
+	sqlhandler="testSqlStatementHandler">
+	<DeleteKeys>
+		<Column>employeeid</Column>
+	</DeleteKeys>
+	<UpdateKeys>
+		<Column>employeeid</Column>
+	</UpdateKeys>
+	<GeneratedKey>uniqueid</GeneratedKey>
+
+	<Queries>
+		<Query id="INNER_JOIN">
+			<Sentence>
+				<![CDATA[
+					SELECT
+ 					#COLUMNS#
+ 					FROM employees em
+ 					INNER JOIN employeeaccounts ea ON em.employeeid = ea.employeeid
+ 					INNER JOIN accounts ac ON ea.accountid = ac.accountid
+ 					#WHERE#
+ 					#ORDER#
+				]]> 
+			</Sentence>
+		</Query>
+
+		<Query id="AMBIGUOUS_COLUMNS">
+			<AmbiguousColumns>
+				<AmbiguousColumn name="name" prefix="ea" />
+			</AmbiguousColumns>
+			<Sentence>
+				<![CDATA[
+					SELECT
+ 					#COLUMNS#
+ 					FROM employees em
+ 					INNER JOIN employeeaccounts ea ON em.employeeid = ea.employeeid
+ 					#WHERE#
+				]]> 
+			</Sentence>
+		</Query>
+
+		<Query id="ORDERBY">
+			<Sentence>
+				<![CDATA[
+					SELECT
+ 					#COLUMNS#
+ 					FROM employees
+ 					#ORDER#
+				]]> 
+			</Sentence>
+		</Query>
+
+		<Query id="ORDERCOLUMN">
+			<OrderColumns>
+				<OrderColumn name="name" type="ASC"/>
+			</OrderColumns>
+			<Sentence>
+				<![CDATA[
+					SELECT
+ 					#COLUMNS#
+ 					FROM employees
+ 					#ORDER#
+				]]> 
+			</Sentence>
+		</Query>
+		
+		<Query id="WHERE_CONCAT">
+			<OrderColumns>
+				<OrderColumn name="name" type="ASC"/>
+			</OrderColumns>
+			<Sentence>
+				<![CDATA[
+					SELECT
+ 					#COLUMNS#
+ 					FROM accounts
+ 					WHERE balance < 10000
+ 					#WHERE_CONCAT#
+				]]> 
+			</Sentence>
+		</Query>
+
+		<Query id="NESTED_TABLES">
+			<Sentence>
+				<![CDATA[
+					SELECT
+ 					#COLUMNS#
+ 					FROM accounts
+ 					WHERE accountid IN
+ 					(SELECT accountid from employeeaccounts
+ 					WHERE employeeid IN
+ 					(SELECT employeeid from employees
+ 					#WHERE#))
+				]]> 
+			</Sentence>
+		</Query>
+
+		<Query id="FUNCTION_COLUMNS">
+			<FunctionColumns>
+				<FunctionColumn name="ACTIVED" value="'N'" />
+				<FunctionColumn name="accountid" value="null" />
+			</FunctionColumns>
+			<Sentence>
+				<![CDATA[
+					select 
+					    #COLUMNS#	
+					from
+						accounts				
+					#WHERE#
+					]]>		
+		</Sentence>
+		</Query>
+	</Queries>
+
+</JdbcEntitySetup>

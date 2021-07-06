@@ -1,16 +1,17 @@
 package com.ontimize.jee.server.dao.common.attributedispatcher;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 
-import com.ontimize.db.EntityResult;
-import com.ontimize.gui.table.TableAttribute;
+import com.ontimize.jee.common.dto.EntityResult;
+import com.ontimize.jee.common.gui.table.TableAttribute;
 import com.ontimize.jee.common.dao.DeleteOperation;
 import com.ontimize.jee.common.dao.InsertOperation;
 import com.ontimize.jee.common.dao.UpdateOperation;
@@ -28,7 +29,7 @@ public class TableAttributeDispatcher extends AbstractAttributeDispatcher<TableA
      *
      * @see
      * com.ontimize.jee.server.services.core.IAttributeDispatcher#processAttribute(java.lang.Object,
-     * com.ontimize.db.EntityResult, org.springframework.context.ApplicationContext)
+     * com.ontimize.jee.common.db.EntityResult, org.springframework.context.ApplicationContext)
      */
     @Override
     public void processQueryAttribute(TableAttribute tableAttribute, EntityResult result,
@@ -41,7 +42,7 @@ public class TableAttributeDispatcher extends AbstractAttributeDispatcher<TableA
         }
 
         // Query for each main record
-        Vector<Object> vOtherEntityValues = new Vector<>();
+        List<Object> vOtherEntityValues = new ArrayList<>();
         int numberRecords = result.calculateRecordNumber();
         for (int k = 0; k < numberRecords; k++) {
             EntityResult res = this.processQueryAttribute(tableAttribute, result, applicationContext, k);
@@ -65,12 +66,12 @@ public class TableAttributeDispatcher extends AbstractAttributeDispatcher<TableA
         // Do Query
         EntityResult res = null;
         if (requestedRecordNumber < 0) {
-            res = this.invokeQuery(appContext, entityName, finalKeysValues, (Vector<?>) tableAttribute.get(entityName));
+            res = this.invokeQuery(appContext, entityName, finalKeysValues, (List<?>) tableAttribute.get(entityName));
         } else {
             TableAttributeDispatcher.logger
                 .error(" UNIMPLEMENTED TABLEATTRIBUTE WITH \"RECORDNUMBERTOINITIALLYDOWNLOAD\" LENGTH.");
             // TODO implementar esta query
-            // res = ((AdvancedEntity)entity).query(hOtherKeysValues, (Vector)((Hashtable)
+            // res = ((AdvancedEntity)entity).query(hOtherKeysValues, (List)((Map)
             // oAttribute).get(sKey), otherEntitySessionId, requestedRecordNumber, 0, ((TableAttribute)
             // oAttribute).getOrderBy())
         }
@@ -87,10 +88,10 @@ public class TableAttributeDispatcher extends AbstractAttributeDispatcher<TableA
         }
         for (int j = 0; j < parentkeys.size(); j++) {
             String parentkeyColumn = parentkeys.get(j).toString();
-            Vector<?> vKeyValues = (Vector<?>) result.get(parentkeyColumn);
+            List<?> vKeyValues = (List<?>) result.get(parentkeyColumn);
             if (vKeyValues == null) {
                 TableAttributeDispatcher.logger.warn(
-                        " RESULT VECTOR NOT FOUND IN QUERY RESULT NEITHER FOR PARENTKEY: '{}' NOR FOR: '{}'. CHECK CONFIGURATION.",
+                        " RESULT List NOT FOUND IN QUERY RESULT NEITHER FOR PARENTKEY: '{}' NOR FOR: '{}'. CHECK CONFIGURATION.",
                         parentkeys.get(j),
                         parentkeyColumn);
             }

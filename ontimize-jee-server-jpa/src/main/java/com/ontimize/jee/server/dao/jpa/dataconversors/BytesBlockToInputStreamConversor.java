@@ -6,7 +6,7 @@ package com.ontimize.jee.server.dao.jpa.dataconversors;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-import com.ontimize.util.remote.BytesBlock;
+import com.ontimize.jee.common.util.remote.BytesBlock;
 
 /**
  * The Class BytesBlockToInputStreamConversor.
