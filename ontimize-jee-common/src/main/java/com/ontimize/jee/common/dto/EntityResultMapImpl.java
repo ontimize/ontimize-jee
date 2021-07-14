@@ -717,7 +717,7 @@ public class EntityResultMapImpl implements EntityResult, Map {
             if (s > 0) {
                 throw new IllegalArgumentException("is empty -> index must be 0");
             }
-            Enumeration keys = Collections.enumeration((this.data.keySet()));
+            Enumeration keys = Collections.enumeration(data.keySet());
             while (keys.hasMoreElements()) {
                 Object oKey = keys.nextElement();
                 List v = new ArrayList();
