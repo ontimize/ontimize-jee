@@ -166,15 +166,12 @@ public class EntityResultMapImpl implements EntityResult, Map {
 
     private EntityResultMapImpl deepClone() {
         EntityResultMapImpl o = new EntityResultMapImpl();
-        Enumeration eKeys = Collections.enumeration((this.data.keySet()));
-        while (eKeys.hasMoreElements()) {
-            Object oKey = eKeys.nextElement();
-            List vValues = (ArrayList) this.data.get(oKey);
+        this.data.forEach((oKey, ovalues) -> {
+            List vValues = (ArrayList) ovalues;
             if (vValues != null) {
                 ((EntityResultMapImpl) o).data.put(oKey, new ArrayList(vValues));
             }
-        }
-
+        });
         return (EntityResultMapImpl) o;
     }
 
@@ -717,13 +714,11 @@ public class EntityResultMapImpl implements EntityResult, Map {
             if (s > 0) {
                 throw new IllegalArgumentException("is empty -> index must be 0");
             }
-            Enumeration keys = Collections.enumeration((this.data.keySet()));
-            while (keys.hasMoreElements()) {
-                Object oKey = keys.nextElement();
-                List v = new ArrayList();
-                v.add(0, data.get(oKey));
-                this.put(oKey, v);
-            }
+            data.forEach((k, v) -> {
+                List auxList = new ArrayList();
+                auxList.add(0, v);
+                this.put(k, auxList);
+            });
         } else {
             Enumeration keys = this.keys();
             int nReg = this.calculateRecordNumber();
