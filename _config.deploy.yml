@@ -1,0 +1,14 @@
+# Develop override settings
+
+url                     : https://ontimize.github.io
+baseurl                 : "/ontimize-jee/v3"
+
+analytics:
+  provider              : false
+
+comments:
+  disqus:
+    shortname           : "mmistakes-dev"
+
+sass:
+  style: expanded
