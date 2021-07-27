@@ -8,3 +8,10 @@ main:
   #   url: /collection-archive/
   # - title: "Sitemap"
   #   url: /sitemap/
+
+versions:
+  - title: "3.x.x"
+    url: /ontimize-jee/v3
+    active: true
+  - title: "1.x.x"
+    url: /ontimize-jee
