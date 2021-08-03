@@ -178,22 +178,6 @@
 					<artifactId>maven-surefire-plugin</artifactId>
 					<version>3.0.0-M5</version>
 				</plugin>
-				<!-- Imatia javaformat plugin -->
-				<plugin>
-					<groupId>com.imatia.javaformat</groupId>
-					<artifactId>imatia-javaformat-maven-plugin</artifactId>
-					<version>2.0.0</version>
-					<executions>
-						<execution>
-							<id>imatia-javaformat</id>
-							<phase>validate</phase>
-							<inherited>true</inherited>
-							<goals>
-								<goal>validate</goal>
-							</goals>
-						</execution>
-					</executions>
-				</plugin>
 			</plugins>
 		</pluginManagement>
 		<plugins>
