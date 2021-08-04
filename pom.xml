@@ -4,13 +4,74 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.ontimize.jee</groupId>
 	<artifactId>ontimize-jee</artifactId>
-	<version>5.0.1-SNAPSHOT</version>
+	<version>5.0.1-alpha</version>
 	<packaging>pom</packaging>
-	<url>http://www.ontimize.com/</url>
 	<organization>
 		<name>Imatia Innovation</name>
 		<url>http://imatia.com</url>
 	</organization>
+
+	<name>Ontimize EE</name>
+	<description>Ontimize EE uses Spring technology to separate the client and the server, allowing applications to be developed quickly and efficiently.</description>
+	<url>https://www.ontimize.com</url>
+
+	<developers>
+		<developer>
+			<name>Joaquín Romero Riveiro</name>
+			<email>joaquin.romero@imatia.com</email>
+			<organization>Imatia Innovation</organization>
+			<organizationUrl>http://imatia.com</organizationUrl>
+		</developer>
+		<developer>
+			<name>Enrique Álvarez Pereira</name>
+			<email>enrique.alvarez@imatia.com</email>
+			<organization>Imatia Innovation</organization>
+			<organizationUrl>http://imatia.com</organizationUrl>
+		</developer>
+		<developer>
+			<name>Pablo Martínez Kirsten</name>
+			<email>pablo.martinez@imatia.com</email>
+			<organization>Imatia Innovation</organization>
+			<organizationUrl>http://imatia.com</organizationUrl>
+		</developer>
+		<developer>
+			<name>Manuel Cid Rodríguez</name>
+			<email>manuel.cid@imatia.com</email>
+			<organization>Imatia Innovation</organization>
+			<organizationUrl>http://imatia.com</organizationUrl>
+		</developer>
+		<developer>
+			<name>Faustino Lage Rego</name>
+			<email>faustino.lage@imatia.com</email>
+			<organization>Imatia Innovation</organization>
+			<organizationUrl>http://imatia.com</organizationUrl>
+		</developer>
+		<developer>
+			<name>Gonzalo Martínez Fernández</name>
+			<email>gonzalo.martinez@imatia.com</email>
+			<organization>Imatia Innovation</organization>
+			<organizationUrl>http://imatia.com</organizationUrl>
+		</developer>
+		<developer>
+			<name>Daniel Graña Cousido</name>
+			<email>daniel.grana@imatia.com</email>
+			<organization>Imatia Innovation</organization>
+			<organizationUrl>http://imatia.com</organizationUrl>
+		</developer>
+	</developers>
+
+	<licenses>
+		<license>
+			<name>The Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+		</license>
+	</licenses>
+
+	<scm>
+		<connection>scm:git:git://github.com/ontimize/ontimize-jee.git</connection>
+		<developerConnection>scm:git:ssh://github.com:ontimize/ontimize-jee.git</developerConnection>
+		<url>https://github.com/ontimize/ontimize-jee/tree/mvn-central-release</url>
+	</scm>
 
 	<distributionManagement>
 		<repository>
@@ -185,10 +246,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>com.imatia.javaformat</groupId>
-				<artifactId>imatia-javaformat-maven-plugin</artifactId>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
