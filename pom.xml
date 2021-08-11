@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.ontimize.jee</groupId>
 	<artifactId>ontimize-jee</artifactId>
-	<version>5.0.1-alpha</version>
+	<version>5.0.1-alpha.3</version>
 	<packaging>pom</packaging>
 	<organization>
 		<name>Imatia Innovation</name>
@@ -312,6 +312,8 @@
 										<arg>--pinentry-mode</arg>
 										<arg>loopback</arg>
 									</gpgArguments>
+									<keyname>${gpg.keyname}</keyname>
+									<passphraseServerId>${gpg.keyname}</passphraseServerId>
 								</configuration>
 							</execution>
 						</executions>
