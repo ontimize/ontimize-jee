@@ -70,7 +70,7 @@
 	<scm>
 		<connection>scm:git:git://github.com/ontimize/ontimize-jee.git</connection>
 		<developerConnection>scm:git:ssh://github.com:ontimize/ontimize-jee.git</developerConnection>
-		<url>https://github.com/ontimize/ontimize-jee/tree/mvn-central-release</url>
+		<url>https://github.com/ontimize/ontimize-jee/tree/master</url>
 	</scm>
 
 	<distributionManagement>
