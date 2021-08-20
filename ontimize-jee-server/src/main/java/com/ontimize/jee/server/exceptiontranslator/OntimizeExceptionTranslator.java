@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.NestedRuntimeException;
 import org.springframework.remoting.RemoteAccessException;
 
-import com.caucho.hessian.util.IExceptionTranslator;
 import com.ontimize.jee.common.exceptions.IParametrizedException;
 import com.ontimize.jee.common.exceptions.NoTraceOntimizeJEEException;
 import com.ontimize.jee.common.exceptions.OntimizeJEEException;
@@ -18,13 +17,12 @@ import com.ontimize.jee.common.tools.ReflectionTools;
 import com.ontimize.jee.common.tools.proxy.InvalidDelegateException;
 
 public class OntimizeExceptionTranslator
-        implements IExceptionTranslator, com.ontimize.jee.server.exceptiontranslator.IExceptionTranslator {
+        implements com.ontimize.jee.server.exceptiontranslator.IExceptionTranslator {
 
     private static final Logger logger = LoggerFactory.getLogger(OntimizeExceptionTranslator.class);
 
     private DBErrorMessagesTranslator dbErrorMessagesTranslator;
 
-    @Override
     public Throwable translateException(Throwable original) {
         OntimizeExceptionTranslator.logger.error(null, original);
 

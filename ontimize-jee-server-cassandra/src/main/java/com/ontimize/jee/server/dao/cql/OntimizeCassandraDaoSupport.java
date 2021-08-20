@@ -7,7 +7,7 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Hashtable;
+import java.util.Map;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -32,13 +32,13 @@ import com.datastax.driver.core.querybuilder.Insert;
 import com.datastax.driver.core.querybuilder.QueryBuilder;
 import com.datastax.driver.core.querybuilder.Update;
 import com.datastax.driver.core.querybuilder.Update.Assignments;
-import com.ontimize.db.AdvancedEntityResult;
-import com.ontimize.db.EntityResult;
-import com.ontimize.db.NullValue;
-import com.ontimize.db.SQLStatementBuilder.SQLOrder;
-import com.ontimize.gui.MultipleValue;
-import com.ontimize.gui.field.MultipleTableAttribute;
-import com.ontimize.gui.field.ReferenceFieldAttribute;
+import com.ontimize.jee.common.db.AdvancedEntityResult;
+import com.ontimize.jee.common.dto.EntityResult;
+import com.ontimize.jee.common.db.NullValue;
+import com.ontimize.jee.common.db.SQLStatementBuilder.SQLOrder;
+import com.ontimize.jee.common.gui.MultipleValue;
+import com.ontimize.jee.common.gui.field.MultipleTableAttribute;
+import com.ontimize.jee.common.gui.field.ReferenceFieldAttribute;
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
 import com.ontimize.jee.common.naming.I18NNaming;
 import com.ontimize.jee.common.tools.CheckingTools;
@@ -159,7 +159,7 @@ public class OntimizeCassandraDaoSupport implements IOntimizeDaoSupport, Applica
             .getCassandraQueryTemplateInformation(queryId);
 
         final Map<?, ?> kvWithoutReferenceAttributes = this.processReferenceDataFieldAttributes(keysValues);
-        Hashtable<Object, Object> kvValidKeysValues = new Hashtable<>();
+        Map<Object, Object> kvValidKeysValues = new HashMap<>();
         final Map<?, ?> processMultipleValueAttributes = this
             .processMultipleValueAttributes(kvWithoutReferenceAttributes);
         if (processMultipleValueAttributes != null) {
@@ -220,7 +220,7 @@ public class OntimizeCassandraDaoSupport implements IOntimizeDaoSupport, Applica
     @Override
     public EntityResult insert(Map<?, ?> attributesValues) {
         this.checkCompiled();
-        final EntityResult erResult = new EntityResult();
+        final EntityResult erResult = new EntityResultMapImpl();
 
         final Map<?, ?> avWithoutMultipleTableAttributes = this.processMultipleTableAttribute(attributesValues);
         final Map<?, ?> avWithoutReferenceAttributes = this
@@ -278,7 +278,7 @@ public class OntimizeCassandraDaoSupport implements IOntimizeDaoSupport, Applica
     }
 
     /**
-     * Returns a hashtable containing a list of valid key-value pairs from those contained in the
+     * Returns a Map containing a list of valid key-value pairs from those contained in the
      * <code>attributesValues</code> argument.
      * <p>
      * A key-value pair is valid if the key is in the table column list.
@@ -303,7 +303,7 @@ public class OntimizeCassandraDaoSupport implements IOntimizeDaoSupport, Applica
     /**
      * Processes the keys in order to get String as column name.
      * @param keysValues the keys values
-     * @return a new Hashtable with MultipleValue objects replaced by their key-value pairs
+     * @return a new HashMap with MultipleValue objects replaced by their key-value pairs
      */
     public Map<String, ?> processStringKeys(final Map<?, ?> keysValues) {
         if (keysValues == null) {
@@ -319,11 +319,11 @@ public class OntimizeCassandraDaoSupport implements IOntimizeDaoSupport, Applica
     }
 
     /**
-     * Processes the MultipleValue objects contained in <code>keysValues</code>. Returns a new Hashtable
+     * Processes the MultipleValue objects contained in <code>keysValues</code>. Returns a new HashMap
      * with the same data as <code>keysValues</code> except that MultipleValue objects are deleted and
-     * the key-value pairs of these objects are added to the new Hashtable.
+     * the key-value pairs of these objects are added to the new HashMap.
      * @param keysValues the keys values
-     * @return a new Hashtable with MultipleValue objects replaced by their key-value pairs
+     * @return a new HashMap with MultipleValue objects replaced by their key-value pairs
      */
     public Map<?, ?> processMultipleValueAttributes(final Map<?, ?> keysValues) {
         if (keysValues == null) {
@@ -350,12 +350,12 @@ public class OntimizeCassandraDaoSupport implements IOntimizeDaoSupport, Applica
     /**
      * Processes the ReferenceFieldAttribute objects contained in <code>keysValues</code>.
      * <p>
-     * Returns a hashtable containing all the objects contained in the argument <code>keysValues</code>
+     * Returns a Map containing all the objects contained in the argument <code>keysValues</code>
      * except in the case of keys that are ReferenceFieldAttribute objects, which are replaced by
      * ((ReferenceFieldAttribute)object).getAttr()
      * <p>
      * @param keysValues the keysValues to process
-     * @return a hashtable containing the processed objects
+     * @return a Map containing the processed objects
      */
     public Map<?, ?> processReferenceDataFieldAttributes(final Map<?, ?> keysValues) {
         if (keysValues == null) {
@@ -383,7 +383,7 @@ public class OntimizeCassandraDaoSupport implements IOntimizeDaoSupport, Applica
      * ((ReferenceFieldAttribute)object).getAttr() is added
      * <p>
      * @param list the list to process
-     * @return a vector containing the processed objects
+     * @return a List containing the processed objects
      */
     public List<?> processReferenceDataFieldAttributes(final List<?> list) {
         if (list == null) {
@@ -404,11 +404,11 @@ public class OntimizeCassandraDaoSupport implements IOntimizeDaoSupport, Applica
     }
 
     /**
-     * Processes all the MultipleTableAttribute contained as keys ih the Hashtable <code>av</code>. All
-     * other objects are added to the resulting Vector with no changes. The MultipleTableAttribute
+     * Processes all the MultipleTableAttribute contained as keys ih the Map <code>av</code>. All
+     * other objects are added to the resulting List with no changes. The MultipleTableAttribute
      * objects are replaced by their attribute.
      * @param av the av
-     * @return a new Hashtable with the processed objects.
+     * @return a new HashMap with the processed objects.
      */
     protected Map<?, ?> processMultipleTableAttribute(final Map<?, ?> av) {
         final Map<Object, Object> res = new HashMap<>();
@@ -427,7 +427,7 @@ public class OntimizeCassandraDaoSupport implements IOntimizeDaoSupport, Applica
     @Override
     public EntityResult update(Map<?, ?> attributesValues, Map<?, ?> keysValues) {
         this.checkCompiled();
-        final EntityResult erResult = new EntityResult();
+        final EntityResult erResult = new EntityResultMapImpl();
 
         // Check the primary keys
         final Map<?, ?> avWithoutMultipleTableAttributes = this.processMultipleTableAttribute(attributesValues);
@@ -698,7 +698,7 @@ public class OntimizeCassandraDaoSupport implements IOntimizeDaoSupport, Applica
     }
 
     /**
-     * Returns a hashtable containing a list of valid key-value pairs from those contained in the
+     * Returns a Map containing a list of valid key-value pairs from those contained in the
      * <code>keysValues</code> argument.
      * <p>
      * A key-value pair is valid if the key is valid.

@@ -1,13 +1,14 @@
 package com.ontimize.jee.server.dao.common.attributedispatcher;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Vector;
+import java.util.List;
 
 import org.springframework.context.ApplicationContext;
 
-import com.ontimize.db.EntityResult;
-import com.ontimize.gui.field.ReferenceFieldAttribute;
+import com.ontimize.jee.common.dto.EntityResult;
+import com.ontimize.jee.common.gui.field.ReferenceFieldAttribute;
 import com.ontimize.jee.common.dao.DeleteOperation;
 import com.ontimize.jee.common.dao.InsertOperation;
 import com.ontimize.jee.common.dao.UpdateOperation;
@@ -22,19 +23,19 @@ public class ReferenceFieldAttributeDispatcher extends AbstractAttributeDispatch
      *
      * @see
      * com.ontimize.jee.server.services.core.IAttributeDispatcher#processAttribute(java.lang.Object,
-     * com.ontimize.db.EntityResult, org.springframework.context.ApplicationContext)
+     * com.ontimize.jee.common.db.EntityResult, org.springframework.context.ApplicationContext)
      */
     @Override
     public void processQueryAttribute(ReferenceFieldAttribute oAttribute, EntityResult result,
             ApplicationContext applicationContext) {
         // Fist of all reference data fields
         String cod = oAttribute.getCod();
-        Vector<?> cols = oAttribute.getCols();
+        List<?> cols = oAttribute.getCols();
         String entityName = oAttribute.getEntity();
         String attr = oAttribute.getAttr();
-        Vector<?> attrs = (Vector<?>) result.get(attr);
+        List<?> attrs = (List<?>) result.get(attr);
 
-        Vector<EntityResult> vResults = new Vector<>();
+        List<EntityResult> vResults = new ArrayList<>();
         if ((attrs != null) && (attrs.size() > 0)) {
             for (int j = 0; j < attrs.size(); j++) {
                 Object oAttrValue = attrs.get(j);

@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import com.ontimize.jee.common.dto.EntityResultMapImpl;
 import org.apache.logging.log4j.core.Appender;
 import org.apache.logging.log4j.core.appender.FileAppender;
 import org.apache.logging.log4j.core.appender.RollingFileAppender;
@@ -22,11 +23,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StreamUtils;
 
-import com.ontimize.db.EntityResult;
+import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.common.exceptions.OntimizeJEEException;
 import com.ontimize.jee.common.tools.EntityResultTools;
-import com.ontimize.util.logging.LogManagerFactory;
-import com.ontimize.util.logging.log4j.Log4jManager;
+import com.ontimize.jee.common.util.logging.LogManagerFactory;
+import com.ontimize.jee.common.util.logging.log4j.Log4jManager;
 
 
 public class Log4j2LoggerHelper implements ILoggerHelper {
@@ -46,10 +47,10 @@ public class Log4j2LoggerHelper implements ILoggerHelper {
     public EntityResult getLogFiles() throws Exception {
         Path folder = this.getLogFolder();
         if (folder == null) {
-            return new EntityResult(EntityResult.OPERATION_SUCCESSFUL_SHOW_MESSAGE, EntityResult.NODATA_RESULT,
+            return new EntityResultMapImpl(EntityResult.OPERATION_SUCCESSFUL_SHOW_MESSAGE, EntityResult.NODATA_RESULT,
                     "No hay ficheros que mostrar");
         }
-        final EntityResult res = new EntityResult(Arrays.asList(new String[] { "FILE_NAME", "FILE_SIZE" }));
+        final EntityResult res = new EntityResultMapImpl(Arrays.asList(new String[] { "FILE_NAME", "FILE_SIZE" }));
         Files.walkFileTree(folder, new java.nio.file.SimpleFileVisitor<Path>() {
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
@@ -70,17 +71,13 @@ public class Log4j2LoggerHelper implements ILoggerHelper {
         }
         final PipedInputStream pis = new PipedInputStream();
         final PipedOutputStream pos = new PipedOutputStream(pis);
-        new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                try (ZipOutputStream zos = new ZipOutputStream(pos)) {
-                    zos.putNextEntry(new ZipEntry(file.getFileName().toString()));
-                    StreamUtils.copy(Files.newInputStream(file), zos);
-                    zos.closeEntry();
-                } catch (IOException e) {
-                    Log4j2LoggerHelper.logger.error(null, e);
-                }
+        new Thread(() -> {
+            try (ZipOutputStream zos = new ZipOutputStream(pos)) {
+                zos.putNextEntry(new ZipEntry(file.getFileName().toString()));
+                StreamUtils.copy(Files.newInputStream(file), zos);
+                zos.closeEntry();
+            } catch (IOException e) {
+                Log4j2LoggerHelper.logger.error(null, e);
             }
         }, "LoggerHelper copy stream").start();
 

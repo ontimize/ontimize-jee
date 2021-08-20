@@ -18,16 +18,18 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Hashtable;
+import java.util.Map;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
-import java.util.Vector;
+import java.util.List;
 
 import javax.sql.DataSource;
 import javax.xml.bind.JAXB;
 
+import com.ontimize.jee.common.dto.EntityResult;
+import com.ontimize.jee.common.dto.EntityResultMapImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -55,21 +57,21 @@ import org.springframework.jdbc.support.JdbcUtils;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.util.Assert;
 
-import com.ontimize.db.AdvancedEntityResult;
-import com.ontimize.db.EntityResult;
-import com.ontimize.db.NullValue;
-import com.ontimize.db.SQLStatementBuilder;
-import com.ontimize.db.SQLStatementBuilder.BasicExpression;
-import com.ontimize.db.SQLStatementBuilder.BasicField;
-import com.ontimize.db.SQLStatementBuilder.ExtendedSQLConditionValuesProcessor;
-import com.ontimize.db.SQLStatementBuilder.Operator;
-import com.ontimize.db.SQLStatementBuilder.SQLOrder;
-import com.ontimize.db.SQLStatementBuilder.SQLStatement;
-import com.ontimize.db.handler.SQLStatementHandler;
-import com.ontimize.db.util.DBFunctionName;
-import com.ontimize.gui.MultipleValue;
-import com.ontimize.gui.field.MultipleTableAttribute;
-import com.ontimize.gui.field.ReferenceFieldAttribute;
+import com.ontimize.jee.common.db.AdvancedEntityResult;
+import com.ontimize.jee.common.dto.EntityResult;
+import com.ontimize.jee.common.db.NullValue;
+import com.ontimize.jee.common.db.SQLStatementBuilder;
+import com.ontimize.jee.common.db.SQLStatementBuilder.BasicExpression;
+import com.ontimize.jee.common.db.SQLStatementBuilder.BasicField;
+import com.ontimize.jee.common.db.SQLStatementBuilder.ExtendedSQLConditionValuesProcessor;
+import com.ontimize.jee.common.db.SQLStatementBuilder.Operator;
+import com.ontimize.jee.common.db.SQLStatementBuilder.SQLOrder;
+import com.ontimize.jee.common.db.SQLStatementBuilder.SQLStatement;
+import com.ontimize.jee.common.db.handler.SQLStatementHandler;
+import com.ontimize.jee.common.db.util.DBFunctionName;
+import com.ontimize.jee.common.gui.MultipleValue;
+import com.ontimize.jee.common.gui.field.MultipleTableAttribute;
+import com.ontimize.jee.common.gui.field.ReferenceFieldAttribute;
 import com.ontimize.jee.common.naming.I18NNaming;
 import com.ontimize.jee.common.tools.CheckingTools;
 import com.ontimize.jee.common.tools.Chronometer;
@@ -205,7 +207,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
         final SQLStatement stSQL = this.composeQuerySql(queryId, attributes, keysValues, sort, null, queryAdapter);
 
         final String sqlQuery = stSQL.getSQLStatement();
-        final Vector<?> vValues = stSQL.getValues();
+        final List<?> vValues = stSQL.getValues();
         // TODO los atributos que se pasan al entityresultsetextractor tienen que ir "desambiguados" porque
         // cuando el DefaultSQLStatementHandler busca
         // las columnas toUpperCase y toLowerCase no tiene en cuenta el '.'
@@ -247,7 +249,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
                 new PageableInfo(recordNumber, startIndex),
                 queryAdapter);
         final String sqlQuery = stSQL.getSQLStatement();
-        final Vector<?> vValues = stSQL.getValues();
+        final List<?> vValues = stSQL.getValues();
         AdvancedEntityResult advancedER = this.getJdbcTemplate()
             .query(sqlQuery, vValues.toArray(),
                     new AdvancedEntityResultResultSetExtractor(this.getStatementHandler(), queryTemplateInformation,
@@ -261,7 +263,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
     protected int getQueryRecordNumber(Map<?, ?> keysValues, final String queryId) {
         final QueryTemplateInformation queryTemplateInformation = this.getQueryTemplateInformation(queryId);
         final Map<?, ?> kvWithoutReferenceAttributes = this.processReferenceDataFieldAttributes(keysValues);
-        Hashtable<Object, Object> kvValidKeysValues = new Hashtable<>();
+        Map<Object, Object> kvValidKeysValues = new HashMap<>();
         final Map<?, ?> processMultipleValueAttributes = this
             .processMultipleValueAttributes(kvWithoutReferenceAttributes);
         if (processMultipleValueAttributes != null) {
@@ -282,15 +284,15 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
             String sqlTemplate = queryTemplateInformation.getSqlTemplate()
                 .replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_COLUMNS, sbColumns.toString());
             // Where
-            final Vector<Object> vValues = new Vector<>();
+            final List<Object> vValues = new ArrayList<>();
             String cond = this.getStatementHandler()
-                .createQueryConditionsWithoutWhere(kvValidKeysValues, new Vector<>(), vValues);
+                .createQueryConditionsWithoutWhere(kvValidKeysValues, new ArrayList<>(), vValues);
             if (cond == null) {
                 cond = "";
             }
             cond = cond.trim();
 
-            Vector<Object> vValuesTemp = new Vector<Object>();
+            List<Object> vValuesTemp = new ArrayList<Object>();
             vValuesTemp.addAll(vValues);
 
             Pair<String, Integer> replaceAll = StringTools.replaceAll(sqlTemplate,
@@ -313,8 +315,8 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
             stSQL = new SQLStatement(sqlTemplate, vValues);
         } else {
             stSQL = this.getStatementHandler()
-                .createCountQuery(this.getSchemaTable(), new Hashtable<>(kvValidKeysValues), new Vector<>(),
-                        new Vector<>());
+                .createCountQuery(this.getSchemaTable(), new HashMap<>(kvValidKeysValues), new ArrayList<>(),
+                        new ArrayList<>());
         }
 
         String sqlQuery = stSQL.getSQLStatement();
@@ -329,7 +331,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
             return 0;
         }
 
-        Vector<?> v = (Vector<?>) erResult.get(SQLStatementBuilder.COUNT_COLUMN_NAME);
+        List<?> v = (List<?>) erResult.get(SQLStatementBuilder.COUNT_COLUMN_NAME);
         if ((v == null) || v.isEmpty()) {
             OntimizeJdbcDaoSupport.logger
                 .error("Error executed record cound query. The result not contain record number.");
@@ -360,7 +362,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
         final QueryTemplateInformation queryTemplateInformation = this.getQueryTemplateInformation(queryId);
 
         final Map<?, ?> kvWithoutReferenceAttributes = this.processReferenceDataFieldAttributes(keysValues);
-        Hashtable<Object, Object> kvValidKeysValues = new Hashtable<>();
+        Map<Object, Object> kvValidKeysValues = new HashMap<>();
         final Map<?, ?> processMultipleValueAttributes = this
             .processMultipleValueAttributes(kvWithoutReferenceAttributes);
         if (processMultipleValueAttributes != null) {
@@ -376,15 +378,16 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
             // use table
             if (pageableInfo != null) {
                 stSQL = this.getStatementHandler()
-                    .createSelectQuery(this.getSchemaTable(), new Vector<>(vValidAttributes),
-                            new Hashtable<>(kvValidKeysValues), new Vector<>(),
-                            new Vector<>(sort == null ? Collections.emptyList() : sort), pageableInfo.getRecordNumber(),
+                    .createSelectQuery(this.getSchemaTable(), new ArrayList<>(vValidAttributes),
+                            new HashMap<>(kvValidKeysValues), new ArrayList<>(),
+                            new ArrayList<>(sort == null ? Collections.emptyList() : sort),
+                            pageableInfo.getRecordNumber(),
                             pageableInfo.getStartIndex());
             } else {
                 stSQL = this.getStatementHandler()
-                    .createSelectQuery(this.getSchemaTable(), new Vector<>(vValidAttributes),
-                            new Hashtable<>(kvValidKeysValues), new Vector<>(),
-                            new Vector<>(sort == null ? Collections.emptyList() : sort));
+                    .createSelectQuery(this.getSchemaTable(), new ArrayList<>(vValidAttributes),
+                            new HashMap<>(kvValidKeysValues), new ArrayList<>(),
+                            new ArrayList<>(sort == null ? Collections.emptyList() : sort));
             }
 
         } else {
@@ -408,15 +411,15 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
                 .replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_COLUMNS, sbColumns.toString());
 
             // Where
-            final Vector<Object> vValues = new Vector<>();
+            final List<Object> vValues = new ArrayList<>();
             String cond = this.getStatementHandler()
-                .createQueryConditionsWithoutWhere(kvValidKeysValues, new Vector<>(), vValues);
+                .createQueryConditionsWithoutWhere(kvValidKeysValues, new ArrayList<>(), vValues);
             if (cond == null) {
                 cond = "";
             }
             cond = cond.trim();
 
-            Vector<Object> vValuesTemp = new Vector<Object>();
+            List<Object> vValuesTemp = new ArrayList<Object>();
             vValuesTemp.addAll(vValues);
 
             Pair<String, Integer> replaceAll = StringTools.replaceAll(sqlTemplate,
@@ -436,7 +439,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 
             // Order by
             List<OrderColumnType> orderColumns = queryTemplateInformation.getOrderColumns();
-            Vector<Object> sortColumns = this.applyOrderColumns(sort, orderColumns);
+            List<Object> sortColumns = this.applyOrderColumns(sort, orderColumns);
             String order = this.getStatementHandler().createSortStatement(sortColumns, false);
             if (order.length() > 0) {
                 order = order.substring(SQLStatementBuilder.ORDER_BY.length());
@@ -484,7 +487,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
         final SQLStatement stSQL = this.composeQuerySql(queryId, rowMapper.convertBeanPropertiesToDB(clazz), keysValues,
                 sort, null, queryAdapter);
         final String sqlQuery = stSQL.getSQLStatement();
-        final Vector<?> vValues = stSQL.getValues();
+        final List<?> vValues = stSQL.getValues();
         return this.getJdbcTemplate().query(sqlQuery, vValues.toArray(), rowMapper);
     }
 
@@ -555,14 +558,14 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
      * Apply template prefix.
      * @param templateInformation the template information
      * @param kvValidKeysValues the kv valid keys values
-     * @return the hashtable
+     * @return the Map
      */
-    protected Hashtable<Object, Object> applyTransformations(final QueryTemplateInformation templateInformation,
-            final Hashtable<Object, Object> kvValidKeysValues) {
+    protected Map<Object, Object> applyTransformations(final QueryTemplateInformation templateInformation,
+            final Map<Object, Object> kvValidKeysValues) {
         final List<AmbiguousColumnType> ambiguousColumns = templateInformation.getAmbiguousColumns();
         final List<FunctionColumnType> functionColumns = templateInformation.getFunctionColumns();
 
-        final Hashtable<Object, Object> res = new Hashtable<>();
+        final Map<Object, Object> res = new HashMap<>();
         for (final Entry<Object, Object> kvEntry : kvValidKeysValues.entrySet()) {
             if (kvEntry.getKey() instanceof String) {
                 String key = (String) kvEntry.getKey();
@@ -595,8 +598,8 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
         return res;
     }
 
-    protected Vector<Object> applyOrderColumns(final List<?> sort, final List<OrderColumnType> orderColumns) {
-        Vector<Object> vResult = new Vector<>();
+    protected List<Object> applyOrderColumns(final List<?> sort, final List<OrderColumnType> orderColumns) {
+        List<Object> vResult = new ArrayList<>();
         if ((sort != null) && (sort.size() > 0)) {
             for (Object current : sort) {
                 vResult.add(current);
@@ -723,7 +726,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
     @Override
     public EntityResult insert(final Map<?, ?> attributesValues) {
         this.checkCompiled();
-        final EntityResult erResult = new EntityResult();
+        final EntityResult erResult = new EntityResultMapImpl();
 
         final Map<?, ?> avWithoutMultipleTableAttributes = this.processMultipleTableAttribute(attributesValues);
         final Map<?, ?> avWithoutReferenceAttributes = this
@@ -734,7 +737,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
             .getValidAttributes(this.processStringKeys(avWithoutMultipleValueAttributes));
         final Map<String, Object> avValid = this.removeNullValues(avValidPre);
         if (avValid.isEmpty()) {
-            // TODO se debería lanzar excepción, pero puede tener colaterales con la one-2-one
+            // TODO se deberï¿½a lanzar excepciï¿½n, pero puede tener colaterales con la one-2-one
             OntimizeJdbcDaoSupport.logger.warn("Insert: Attributes does not contain any pair key-value valid");
             return erResult;
         }
@@ -814,7 +817,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
     protected EntityResult innerUpdate(final Map<?, ?> attributesValues, final Map<?, ?> keysValues,
             final boolean safe) {
         this.checkCompiled();
-        final EntityResult erResult = new EntityResult();
+        final EntityResult erResult = new EntityResultMapImpl();
 
         // Check the primary keys
         final Map<?, ?> avWithoutMultipleTableAttributes = this.processMultipleTableAttribute(attributesValues);
@@ -840,8 +843,8 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
             throw new SQLWarningException(I18NNaming.M_IT_HAS_NOT_CHANGED_ANY_RECORD, null);
         }
         final SQLStatement stSQL = this.getStatementHandler()
-            .createUpdateQuery(this.getSchemaTable(), new Hashtable<>(hValidAttributesValues),
-                    new Hashtable<>(hValidKeysValues));
+            .createUpdateQuery(this.getSchemaTable(), new HashMap<>(hValidAttributesValues),
+                    new HashMap<>(hValidKeysValues));
         final String sqlQuery = stSQL.getSQLStatement();
         final List<?> vValues = this.processNullValues(stSQL.getValues());
         final int update = this.getJdbcTemplate().update(sqlQuery, vValues.toArray());
@@ -905,7 +908,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
      */
     public EntityResult innerDelete(final Map<?, ?> keysValues, final boolean safe) {
         this.checkCompiled();
-        final EntityResult erResult = new EntityResult();
+        final EntityResult erResult = new EntityResultMapImpl();
         Map<?, ?> keysValuesChecked = keysValues;
         if (safe) {
             keysValuesChecked = this.checkDeleteKeys(keysValues);
@@ -918,9 +921,9 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
         }
 
         final SQLStatement stSQL = this.getStatementHandler()
-            .createDeleteQuery(this.getSchemaTable(), new Hashtable<>(keysValuesChecked));
+            .createDeleteQuery(this.getSchemaTable(), new HashMap<>(keysValuesChecked));
         final String sqlQuery = stSQL.getSQLStatement();
-        final Vector<?> vValues = stSQL.getValues();
+        final List<?> vValues = stSQL.getValues();
         this.getJdbcTemplate().update(sqlQuery, vValues.toArray());
 
         return erResult;
@@ -960,7 +963,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
     }
 
     /**
-     * Returns a hashtable containing a list of valid key-value pairs from those contained in the
+     * Returns a Map containing a list of valid key-value pairs from those contained in the
      * <code>keysValues</code> argument.
      * <p>
      * A key-value pair is valid if the key is valid.
@@ -984,7 +987,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
     }
 
     /**
-     * Returns a hashtable containing a list of valid key-value pairs from those contained in the
+     * Returns a Map containing a list of valid key-value pairs from those contained in the
      * <code>attributesValues</code> argument.
      * <p>
      * A key-value pair is valid if the key is in the table column list.
@@ -1008,11 +1011,11 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
     }
 
     /**
-     * Processes all the MultipleTableAttribute contained as keys ih the Hashtable <code>av</code>. All
-     * other objects are added to the resulting Vector with no changes. The MultipleTableAttribute
-     * objects are replaced by their attribute.
+     * Processes all the MultipleTableAttribute contained as keys ih the Map <code>av</code>. All other
+     * objects are added to the resulting List with no changes. The MultipleTableAttribute objects are
+     * replaced by their attribute.
      * @param av the av
-     * @return a new Hashtable with the processed objects.
+     * @return a new HashMap with the processed objects.
      */
     protected Map<?, ?> processMultipleTableAttribute(final Map<?, ?> av) {
         final Map<Object, Object> res = new HashMap<>();
@@ -1031,12 +1034,12 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
     /**
      * Processes the ReferenceFieldAttribute objects contained in <code>keysValues</code>.
      * <p>
-     * Returns a hashtable containing all the objects contained in the argument <code>keysValues</code>
-     * except in the case of keys that are ReferenceFieldAttribute objects, which are replaced by
+     * Returns a Map containing all the objects contained in the argument <code>keysValues</code> except
+     * in the case of keys that are ReferenceFieldAttribute objects, which are replaced by
      * ((ReferenceFieldAttribute)object).getAttr()
      * <p>
      * @param keysValues the keysValues to process
-     * @return a hashtable containing the processed objects
+     * @return a Map containing the processed objects
      */
     public Map<?, ?> processReferenceDataFieldAttributes(final Map<?, ?> keysValues) {
         if (keysValues == null) {
@@ -1064,7 +1067,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
      * ((ReferenceFieldAttribute)object).getAttr() is added
      * <p>
      * @param list the list to process
-     * @return a vector containing the processed objects
+     * @return a List containing the processed objects
      */
     public List<?> processReferenceDataFieldAttributes(final List<?> list) {
         if (list == null) {
@@ -1085,7 +1088,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
     }
 
     /**
-     * Returns a list containing the valid attributes of those included in the vector
+     * Returns a list containing the valid attributes of those included in the List
      * <code>attributes</code>
      * <p>
      * If valid column names have been specified for this entity, only attributes matching
@@ -1094,7 +1097,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
      * If no columns have been defined, all attributes will be considered valid.
      * @param attributes the attributes
      * @param validColumns the valid columns
-     * @return a Vector with the valid attributes
+     * @return a List with the valid attributes
      */
     public List<?> getValidAttributes(final List<?> attributes, List<String> validColumns) {
         List<String> inputValidColumns = validColumns == null ? (List<String>) Collections.EMPTY_LIST : validColumns;
@@ -1143,12 +1146,12 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
      * @param validColumns
      * @return
      */
-    protected Hashtable<Object, Object> getValidQueryingKeysValues(Hashtable<Object, Object> inputKeysValues,
+    protected Map<Object, Object> getValidQueryingKeysValues(Map<Object, Object> inputKeysValues,
             List<String> validColumns) {
         if ((validColumns == null) || validColumns.isEmpty()) {
             return inputKeysValues;
         }
-        final Hashtable<Object, Object> hValidKeysValues = new Hashtable<>();
+        final Map<Object, Object> hValidKeysValues = new HashMap<>();
         for (Entry<Object, Object> entry : inputKeysValues.entrySet()) {
             if (ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY.equals(entry.getKey())
                     || validColumns.contains(entry.getKey())) {
@@ -1161,11 +1164,11 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
     }
 
     /**
-     * Processes the MultipleValue objects contained in <code>keysValues</code>. Returns a new Hashtable
+     * Processes the MultipleValue objects contained in <code>keysValues</code>. Returns a new HashMap
      * with the same data as <code>keysValues</code> except that MultipleValue objects are deleted and
-     * the key-value pairs of these objects are added to the new Hashtable.
+     * the key-value pairs of these objects are added to the new HashMap.
      * @param keysValues the keys values
-     * @return a new Hashtable with MultipleValue objects replaced by their key-value pairs
+     * @return a new HashMap with MultipleValue objects replaced by their key-value pairs
      */
     public Map<?, ?> processMultipleValueAttributes(final Map<?, ?> keysValues) {
         if (keysValues == null) {
@@ -1192,7 +1195,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
     /**
      * Processes the keys in order to get String as column name.
      * @param keysValues the keys values
-     * @return a new Hashtable with MultipleValue objects replaced by their key-value pairs
+     * @return a new HashMap with MultipleValue objects replaced by their key-value pairs
      */
     public Map<String, ?> processStringKeys(final Map<?, ?> keysValues) {
         if (keysValues == null) {

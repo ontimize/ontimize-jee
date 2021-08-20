@@ -1,13 +1,14 @@
 package com.ontimize.jee.server.services.management;
 
 import java.util.Arrays;
-import java.util.Hashtable;
+import java.util.Map;
 import java.util.List;
 
+import com.ontimize.jee.common.dto.EntityResultMapImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ontimize.db.EntityResult;
+import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.common.tools.EntityResultTools;
 import com.ontimize.jee.common.tools.ertools.AvgAggregateFunction;
 import com.ontimize.jee.common.tools.ertools.CountAggregateFunction;
@@ -22,7 +23,7 @@ public class RequestStatisticsContext {
 
     private static RequestStatisticsContext instance;
 
-    private EntityResult rs = new EntityResult(
+    private EntityResult rs = new EntityResultMapImpl(
             Arrays.asList("SERVICE_NAME", "METHOD_NAME", "USER_NAME", "METHOD_PARAMS", "EXECUTION_DATE",
                     "EXECUTION_TIME", "SERVICE_EXCEPTION"));
 
@@ -48,11 +49,11 @@ public class RequestStatisticsContext {
         return RequestStatisticsContext.instance;
     }
 
-    public void addRequest(Hashtable<Object, Object> attributesValues) {
+    public void addRequest(Map<Object, Object> attributesValues) {
         this.rs.addRecord(attributesValues);
     }
 
-    public EntityResult getRequest(Hashtable<String, Object> keysValues, List<String> attributes, boolean statistics) {
+    public EntityResult getRequest(Map<String, Object> keysValues, List<String> attributes, boolean statistics) {
         EntityResult dofilter = EntityResultTools.dofilter(this.rs, keysValues);
         if (statistics) {
             try {

@@ -13,7 +13,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.Hashtable;
+import java.util.Map;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -36,7 +36,7 @@ public final class MapTools {
     }
 
     /**
-     * Clona un {@link Hashtable} escribiendolo y leyendolo de un stream.
+     * Clona un {@link Map} escribiendolo y leyendolo de un stream.
      * @param <U> the generic type
      * @param <V> the value type
      * @param map the map
@@ -68,14 +68,14 @@ public final class MapTools {
     }
 
     /**
-     * Devuelve un hashtable con las claves de filtro que estan en origen.
+     * Devuelve un Map con las claves de filtro que estan en origen.
      * @param <U> the generic type
      * @param <V> the value type
      * @param origen the origen
      * @param filtro the filtro
-     * @return the hashtable
+     * @return the Map
      */
-    public static <U, V> Map<U, V> hashtableFilter(Map<U, V> origen, List<U> filtro) {
+    public static <U, V> Map<U, V> MapFilter(Map<U, V> origen, List<U> filtro) {
         Map<U, V> filtrado;
         try {
             filtrado = origen.getClass().newInstance();
@@ -94,16 +94,16 @@ public final class MapTools {
 
     /**
      * Une los dos hastable en uno nuevo que contiene los valores del primero y los del segundo, si
-     * ambos contiene claves iguales predomina el valor del segundo hashtable.
+     * ambos contiene claves iguales predomina el valor del segundo Map.
      * @param <U> the generic type
      * @param <V> the value type
      * @param first the origen
      * @param second the destino
-     * @return the hashtable
+     * @return the Map
      */
     public static <U, V> Map<U, ? extends V> union(Map<U, V> first, Map<U, ? extends V> second) {
         if ((first == null) && (second == null)) {
-            return new Hashtable<>();
+            return new HashMap<>();
         }
         Map<U, V> res = null;
         try {
@@ -127,7 +127,7 @@ public final class MapTools {
     }
 
     /**
-     * Introduce el park key/value en el hashtable siempre que sean distintos de null.
+     * Introduce el park key/value en el Map siempre que sean distintos de null.
      * @param <T> the generic type
      * @param <Q> the generic type
      * @param map the h
@@ -166,8 +166,8 @@ public final class MapTools {
     }
 
     /**
-     * Introduce el park key/value en el hashtable siempre que sean distintos de null, y si no existe ya
-     * esa clave.
+     * Introduce el park key/value en el Map siempre que sean distintos de null, y si no existe ya esa
+     * clave.
      * @param <T> the generic type
      * @param <Q> the generic type
      * @param h the h

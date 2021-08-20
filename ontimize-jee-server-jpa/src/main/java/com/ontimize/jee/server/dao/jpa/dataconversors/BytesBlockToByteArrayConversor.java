@@ -3,7 +3,7 @@
  */
 package com.ontimize.jee.server.dao.jpa.dataconversors;
 
-import com.ontimize.util.remote.BytesBlock;
+import com.ontimize.jee.common.util.remote.BytesBlock;
 
 /**
  * The Class BytesBlockToByteArrayConversor.

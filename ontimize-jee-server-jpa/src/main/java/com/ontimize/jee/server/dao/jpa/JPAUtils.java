@@ -10,7 +10,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.Map;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -299,7 +299,7 @@ public final class JPAUtils {
      * @return
      * @throws Exception
      */
-    public static Object getPrimaryKeyObjectToClass(final Hashtable kv, final Class beanClass) throws Exception {
+    public static Object getPrimaryKeyObjectToClass(final Map kv, final Class beanClass) throws Exception {
         final Class pkClass = JPAUtils.getKeyClassBean(beanClass);
 
         if (pkClass != null) {
@@ -308,7 +308,7 @@ public final class JPAUtils {
         } else {
             // In this case the key must have only one value. -> SIMPLE KEY
             if (kv.size() == 1) {
-                final Enumeration enumKeys = kv.keys();
+                final Enumeration enumKeys = Collections.enumeration(kv.keySet());
                 while (enumKeys.hasMoreElements()) {
                     final Object oKey = enumKeys.nextElement();
                     Object oValue = kv.get(oKey);
@@ -330,11 +330,11 @@ public final class JPAUtils {
      * @return
      * @throws Exception
      */
-    public static Object getPrimaryKeyInstance(final Hashtable kv, final Class pkClass) throws Exception {
+    public static Object getPrimaryKeyInstance(final Map kv, final Class pkClass) throws Exception {
         if (pkClass != null) {
             // MULTIPLE KEY
             final Object pkInstance = JPAUtils.createInstanceofClass(pkClass);
-            final Enumeration<Object> keys = kv.keys();
+            final Enumeration<Object> keys = Collections.enumeration(kv.keySet());
             while (keys.hasMoreElements()) {
                 // TODO Review if it allow more than one dot in a name of primary key column.
                 // E.g. Now we can use: procedurecassid or id.procedureclassid, but not more than one dot:
@@ -794,10 +794,10 @@ public final class JPAUtils {
      * @throws Exception
      */
     // one bean
-    protected static Hashtable<Object, Object> getAttributesRelation(final String entityClass, final String fieldName,
+    protected static Map<Object, Object> getAttributesRelation(final String entityClass, final String fieldName,
             final Class otherBeanClass,
             final JoinColumn annotaJoinColumn) throws Exception {
-        final Hashtable<Object, Object> otherBeanKeys = new Hashtable<>();
+        final Map<Object, Object> otherBeanKeys = new HashMap<>();
         String nameColumn = annotaJoinColumn.referencedColumnName();
         if ((nameColumn == null) || (nameColumn.length() <= 0)) {
             nameColumn = annotaJoinColumn.name();
@@ -847,10 +847,10 @@ public final class JPAUtils {
      * @param annotaJoinColumn
      */
     // TWO different BEANS
-    protected static Hashtable<Object, Object> getAttributesRelation(final String entityClass,
+    protected static Map<Object, Object> getAttributesRelation(final String entityClass,
             final String queryEntityClass, final String fieldName, final Class otherBeanClass,
             final JoinColumn annotaJoinColumn) throws Exception {
-        final Hashtable<Object, Object> otherBeanKeys = new Hashtable<>();
+        final Map<Object, Object> otherBeanKeys = new HashMap<>();
         String nameColumn = annotaJoinColumn.referencedColumnName();
         if ((nameColumn == null) || (nameColumn.length() <= 0)) {
             nameColumn = annotaJoinColumn.name();
@@ -884,8 +884,8 @@ public final class JPAUtils {
      *         query/update/insert/delete operation. If the exception was thrown from ABL system, return
      *         a Hastable with one of those rules expeptions and a list with all of them.
      */
-    public static Hashtable<String, Object> getExceptionMessage(final Exception se, final String msgDefault) {
-        final Hashtable<String, Object> messages = new Hashtable<>();
+    public static Map<String, Object> getExceptionMessage(final Exception se, final String msgDefault) {
+        final Map<String, Object> messages = new HashMap<>();
         String msg = se.getMessage();
         Throwable cause = se.getCause();
         while ((cause != null) && (cause.getCause() != null)) {
@@ -937,7 +937,7 @@ public final class JPAUtils {
      * Get a list with attributes of EntityClass which have a ManyToOne relation with another bean (the
      * bean in ManyToOne annotations).
      * @param entityClass
-     * @return A Hashtable with information of beans related with EntityClass bean
+     * @return A Map with information of beans related with EntityClass bean
      */
     public static List<Object> getManyToOneAttributes(final String entityClass) throws Exception {
         final List<Object> ret = new ArrayList<>();
@@ -982,7 +982,7 @@ public final class JPAUtils {
      * Get a list with attributes of EntityClass which have a OneToOne relation with another bean (the
      * bean in ManyToOne annotations).
      * @param entityClass
-     * @return A Hashtable with information of beans related with EntityClass bean
+     * @return A Map with information of beans related with EntityClass bean
      */
     public static List<Object> getOneToOneAttributes(final String entityClass) throws Exception {
         final List<Object> ret = new ArrayList<>();

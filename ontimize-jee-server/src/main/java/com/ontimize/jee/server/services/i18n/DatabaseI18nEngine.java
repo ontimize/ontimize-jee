@@ -3,27 +3,28 @@ package com.ontimize.jee.server.services.i18n;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Hashtable;
+import java.util.Map;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.ResourceBundle;
 
+import com.ontimize.jee.common.dto.EntityResultMapImpl;
 import org.springframework.beans.factory.InitializingBean;
 
-import com.ontimize.db.EntityResult;
-import com.ontimize.gui.SearchValue;
-import com.ontimize.gui.i18n.DatabaseBundleDescriptor;
-import com.ontimize.gui.i18n.DatabaseBundleValues;
-import com.ontimize.gui.i18n.DatabaseBundleValues.BundleValue;
+import com.ontimize.jee.common.dto.EntityResult;
+import com.ontimize.jee.common.gui.SearchValue;
+import com.ontimize.jee.common.gui.i18n.DatabaseBundleDescriptor;
+import com.ontimize.jee.common.gui.i18n.DatabaseBundleValues;
+import com.ontimize.jee.common.gui.i18n.DatabaseBundleValues.BundleValue;
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
 import com.ontimize.jee.common.services.i18n.II18nService;
 import com.ontimize.jee.common.services.i18n.TmpDatabaseResourceBundle;
 import com.ontimize.jee.common.tools.CheckingTools;
 import com.ontimize.jee.server.dao.DaoProperty;
 import com.ontimize.jee.server.dao.IOntimizeDaoSupport;
-import com.ontimize.util.ParseTools;
+import com.ontimize.jee.common.util.ParseTools;
 
 /**
  * The Class DatabaseI18nEngine.
@@ -103,7 +104,7 @@ public class DatabaseI18nEngine implements II18nService, InitializingBean {
     @Override
     public Map<String, ResourceBundle> getAllResourceBundles(Locale locale) throws OntimizeJEERuntimeException {
         DatabaseBundleDescriptor[] availableBundles = this.getAvailableBundles();
-        Map<String, ResourceBundle> result = new Hashtable<>();
+        Map<String, ResourceBundle> result = new HashMap<>();
         for (DatabaseBundleDescriptor bundleDescriptor : availableBundles) {
             ResourceBundle bundle = this.getBundle(bundleDescriptor, locale);
             if (bundle != null) {
@@ -122,7 +123,7 @@ public class DatabaseI18nEngine implements II18nService, InitializingBean {
     @Override
     public Map<String, ResourceBundle> getBundles(List<String> baseNames, Locale locale)
             throws OntimizeJEERuntimeException {
-        Map<String, ResourceBundle> result = new Hashtable<>();
+        Map<String, ResourceBundle> result = new HashMap<>();
 
         for (String baseName : baseNames) {
             ResourceBundle bundle = this.getBundle(baseName, locale);
@@ -200,8 +201,9 @@ public class DatabaseI18nEngine implements II18nService, InitializingBean {
     /*
      * (non-Javadoc)
      *
-     * @see com.ontimize.jee.common.services.i18n.II18nService#updateBundleValues(com.ontimize.gui.i18n.
-     * DatabaseBundleValues)
+     * @see
+     * com.ontimize.jee.common.services.i18n.II18nService#updateBundleValues(com.ontimize.jee.common.gui
+     * .i18n. DatabaseBundleValues)
      */
     @Override
     public void updateBundleValues(DatabaseBundleValues dbvalues) throws OntimizeJEERuntimeException {
@@ -258,7 +260,7 @@ public class DatabaseI18nEngine implements II18nService, InitializingBean {
         DatabaseBundleDescriptor[] availableBundlesArray = this.getAvailableBundles();
         List<DatabaseBundleDescriptor> availableBundles = new ArrayList<>(Arrays.asList(availableBundlesArray));
 
-        Hashtable filter = new Hashtable();
+        Map filter = new HashMap();
         for (int i = 0; i < bundleValues.size(); i++) {
 
             BundleValue bv = bundleValues.get(i);
@@ -292,13 +294,13 @@ public class DatabaseI18nEngine implements II18nService, InitializingBean {
             List<?> keys = (List<?>) resBundleValues.get(this.bundleValuesTextKeyColumn);
             List<?> translations = (List<?>) resBundleValues.get(localeColumn);
             if ((keys != null) && (translations != null)) {
-                Hashtable<String, Object> data = new Hashtable<>();
+                Map<String, Object> data = new HashMap<>();
                 for (int i = 0; i < keys.size(); i++) {
                     if ((keys.get(i) != null) && (translations.get(i) != null)) {
                         data.put((String) keys.get(i), (String) translations.get(i));
                     }
                 }
-                return new TmpDatabaseResourceBundle(data, locale);
+                return new TmpDatabaseResourceBundle((EntityResultMapImpl) data, locale);
             }
         }
         return null;
@@ -311,7 +313,7 @@ public class DatabaseI18nEngine implements II18nService, InitializingBean {
      * @return the entity result
      */
     protected EntityResult queryBundleValues(Object bundleId, String languageColumn) {
-        Map<String, Object> filter = new Hashtable<>();
+        Map<String, Object> filter = new HashMap<>();
         if (bundleId != null) {
             filter.put(this.bundleKeyColumn, bundleId);
         } else {
@@ -384,7 +386,7 @@ public class DatabaseI18nEngine implements II18nService, InitializingBean {
             if (tokensAt.size() > 2) {
                 tokensAt.set(2, tokensAt.get(2).toString().toLowerCase());
             }
-            return ParseTools.vectorToStringSeparateBy(tokensAt, "_");
+            return ParseTools.ListToStringSeparateBy(tokensAt, "_");
         }
         return null;
     }

@@ -10,12 +10,12 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ontimize.db.NullValue;
-import com.ontimize.db.SQLStatementBuilder;
-import com.ontimize.db.SQLStatementBuilder.NoWildCard;
-import com.ontimize.db.SQLStatementBuilder.SQLExpression;
-import com.ontimize.db.SQLStatementBuilder.SQLNameEval;
-import com.ontimize.gui.SearchValue;
+import com.ontimize.jee.common.db.NullValue;
+import com.ontimize.jee.common.db.SQLStatementBuilder;
+import com.ontimize.jee.common.db.SQLStatementBuilder.NoWildCard;
+import com.ontimize.jee.common.db.SQLStatementBuilder.SQLExpression;
+import com.ontimize.jee.common.db.SQLStatementBuilder.SQLNameEval;
+import com.ontimize.jee.common.gui.SearchValue;
 
 public abstract class AbstractQLConditionValuesProcessor implements QLConditionValuesProcessor {
 
@@ -204,7 +204,7 @@ public abstract class AbstractQLConditionValuesProcessor implements QLConditionV
      */
     protected StringBuilder appendOrClause(final String oKey, final SearchValue oValue, final boolean encloseColumnName,
             StringBuilder sbStringQueryInner) {
-        // If it is OR, then value is a vector with
+        // If it is OR, then value is a List with
         // objects
         final Object oSearchValue = oValue.getValue();
         if ((oSearchValue instanceof List) && !((List<?>) oSearchValue).isEmpty()) {
@@ -258,7 +258,7 @@ public abstract class AbstractQLConditionValuesProcessor implements QLConditionV
     private StringBuilder appendInAndExistsClause(final String oKey, final Object oSearchValue, String condition,
             final boolean encloseColumnName,
             StringBuilder sbStringQueryInner) {
-        // If it is IN, then value is a vector with
+        // If it is IN, then value is a List with
         // Objects
         if (oSearchValue instanceof List) {
             if (!((List<?>) oSearchValue).isEmpty()) {

@@ -94,7 +94,7 @@ public class DefaultDaoExtensionHelper implements IDaoExtensionHelper {
         } else {
             logger.debug("Dao extensions found for dao '{}' : ({}):", inputFile, extensions.size());
             for (URL url : extensions) {
-                logger.debug("\t · {}", url);
+                logger.debug("\t . {}", url);
             }
         }
         return extensions;
@@ -155,23 +155,23 @@ public class DefaultDaoExtensionHelper implements IDaoExtensionHelper {
      */
     protected JdbcEntitySetupType mergeSetups(JdbcEntitySetupType baseSetup, JdbcEntitySetupType setupExtension) {
         if (setupExtension.getTable() != null) {
-            logger.trace("\t·Overriding dao table: {}", setupExtension.getTable());
+            logger.trace("\t .Overriding dao table: {}", setupExtension.getTable());
             baseSetup.setTable(setupExtension.getTable());
         }
         if (setupExtension.getSchema() != null) {
-            logger.trace("\t·Overriding dao schema: {}", setupExtension.getSchema());
+            logger.trace("\t .Overriding dao schema: {}", setupExtension.getSchema());
             baseSetup.setSchema(setupExtension.getSchema());
         }
         if (setupExtension.getCatalog() != null) {
-            logger.trace("\t·Overriding dao catalog: {}", setupExtension.getCatalog());
+            logger.trace("\t .Overriding dao catalog: {}", setupExtension.getCatalog());
             baseSetup.setCatalog(setupExtension.getCatalog());
         }
         if (setupExtension.getDeleteKeys() != null) {
-            logger.trace("\t·Overriding dao deteleKeys: {}", setupExtension.getDeleteKeys().getColumn());
+            logger.trace("\t .Overriding dao deteleKeys: {}", setupExtension.getDeleteKeys().getColumn());
             baseSetup.setDeleteKeys(setupExtension.getDeleteKeys());
         }
         if (setupExtension.getUpdateKeys() != null) {
-            logger.trace("\t·Overriding dao updateKeys: {}", setupExtension.getUpdateKeys().getColumn());
+            logger.trace("\t .Overriding dao updateKeys: {}", setupExtension.getUpdateKeys().getColumn());
             baseSetup.setUpdateKeys(setupExtension.getUpdateKeys());
         }
         if (setupExtension.getQueries() != null) {
@@ -179,31 +179,31 @@ public class DefaultDaoExtensionHelper implements IDaoExtensionHelper {
                 QueryType baseQuery = this.getQueryById(baseSetup.getQueries(), newQuery.getId());
                 boolean queryAlreadyDefined = baseQuery != null;
                 if (queryAlreadyDefined) {
-                    logger.trace("\t·Overriding dao query '{}'", newQuery.getId());
+                    logger.trace("\t Overriding dao query '{}'", newQuery.getId());
                     QueryType mergedQuery = this.mergeQueries(baseQuery, newQuery);
                     baseSetup.getQueries().getQuery().remove(baseQuery);
                     baseSetup.getQueries().getQuery().add(mergedQuery);
                 } else {
-                    logger.trace("\t·Adding dao query '{}'", newQuery.getId());
+                    logger.trace("\t .Adding dao query '{}'", newQuery.getId());
                     baseSetup.getQueries().getQuery().add(newQuery);
                 }
             }
         }
         if (setupExtension.getGeneratedKey() != null) {
-            logger.trace("\t·Overriding dao generatedKey: {}", setupExtension.getGeneratedKey());
+            logger.trace("\tï¿½Overriding dao generatedKey: {}", setupExtension.getGeneratedKey());
             baseSetup.setGeneratedKey(setupExtension.getGeneratedKey());
         }
         if (setupExtension.getDatasource() != null) {
-            logger.trace("\t·Overriding dao datasource: {}", setupExtension.getDatasource());
+            logger.trace("\t .Overriding dao datasource: {}", setupExtension.getDatasource());
             baseSetup.setDatasource(setupExtension.getDatasource());
         }
         if (setupExtension.getSqlhandler() != null) {
-            logger.trace("\t·Overriding dao sqlhandler: {}", setupExtension.getSqlhandler());
+            logger.trace("\t .Overriding dao sqlhandler: {}", setupExtension.getSqlhandler());
             baseSetup.setSqlhandler(setupExtension.getSqlhandler());
         }
 
         if (setupExtension.getNameconverter() != null) {
-            logger.trace("\t·Overriding dao nameConverter: {}", setupExtension.getNameconverter());
+            logger.trace("\t .Overriding dao nameConverter: {}", setupExtension.getNameconverter());
             baseSetup.setNameconverter(setupExtension.getNameconverter());
         }
         return baseSetup;
@@ -229,12 +229,12 @@ public class DefaultDaoExtensionHelper implements IDaoExtensionHelper {
     protected QueryType mergeQueries(QueryType baseQuery, QueryType newQuery) {
 
         // //----> Mode two : Merge ------------------------------------------------------------------------
-        // // // · Sentence: if present in new, override
+        // // // Sentence: if present in new, override
         if ((newQuery.getSentence() != null) && (!StringTools.isEmpty(newQuery.getSentence().getValue()))) {
-            logger.trace("\t\t·Overriding dao query '{}' -> sentence changed", newQuery.getId());
+            logger.trace("\t\t .Overriding dao query '{}' -> sentence changed", newQuery.getId());
             baseQuery.setSentence(newQuery.getSentence());
         }
-        // // // · AmbiguousColumns: Match by "name": if empty "prefix" then remove, else override
+        // // // AmbiguousColumns: Match by "name": if empty "prefix" then remove, else override
         if (newQuery.getAmbiguousColumns() != null) {
             for (AmbiguousColumnType newAmb : newQuery.getAmbiguousColumns().getAmbiguousColumn()) {
 
@@ -242,65 +242,67 @@ public class DefaultDaoExtensionHelper implements IDaoExtensionHelper {
                         newAmb.getName());
                 if (StringTools.isEmpty(newAmb.getPrefix())) {
                     // Remove it
-                    logger.trace("\t\t·Overriding dao query '{}' -> ambiguous column removed : '{}' ", newQuery.getId(),
+                    logger.trace("\t\t .Overriding dao query '{}' -> ambiguous column removed : '{}' ",
+                            newQuery.getId(),
                             newAmb.getName());
                     baseQuery.getAmbiguousColumns().getAmbiguousColumn().remove(oldAmb);
                 } else if (oldAmb != null) {
-                    logger.trace("\t\t·Overriding dao query '{}' -> ambiguous column replaced : '{}' ",
+                    logger.trace("\t\t .Overriding dao query '{}' -> ambiguous column replaced : '{}' ",
                             newQuery.getId(), newAmb.getName());
                     baseQuery.getAmbiguousColumns().getAmbiguousColumn().remove(oldAmb);
                     baseQuery.getAmbiguousColumns().getAmbiguousColumn().add(newAmb);
                 } else {
-                    logger.trace("\t\t·Overriding dao query '{}' -> ambiguous column added : '{}' ", newQuery.getId(),
+                    logger.trace("\t\t .Overriding dao query '{}' -> ambiguous column added : '{}' ", newQuery.getId(),
                             newAmb.getName());
                     baseQuery.getAmbiguousColumns().getAmbiguousColumn().add(newAmb);
                 }
             }
         }
-        // // // · getFunctionColumns: Match by "name": if empty "value" then remove, else override
+        // // // ï¿½ getFunctionColumns: Match by "name": if empty "value" then remove, else override
         if (newQuery.getFunctionColumns() != null) {
             for (FunctionColumnType newFnc : newQuery.getFunctionColumns().getFunctionColumn()) {
                 FunctionColumnType oldFnc = this.getFunctionColumnByName(baseQuery.getFunctionColumns(),
                         newFnc.getName());
                 if (StringTools.isEmpty(newFnc.getValue())) {
                     // Remove it
-                    logger.trace("\t\t·Overriding dao query '{}' -> function column removed : '{}' ", newQuery.getId(),
+                    logger.trace("\t\t .Overriding dao query '{}' -> function column removed : '{}' ", newQuery.getId(),
                             newFnc.getName());
                     baseQuery.getFunctionColumns().getFunctionColumn().remove(oldFnc);
                 } else if (oldFnc != null) {
-                    logger.trace("\t\t·Overriding dao query '{}' -> function column replaced : '{}' ", newQuery.getId(),
+                    logger.trace("\t\t .Overriding dao query '{}' -> function column replaced : '{}' ",
+                            newQuery.getId(),
                             newFnc.getName());
                     baseQuery.getFunctionColumns().getFunctionColumn().remove(oldFnc);
                     baseQuery.getFunctionColumns().getFunctionColumn().add(newFnc);
                 } else {
 
-                    logger.trace("\t\t·Overriding dao query '{}' -> function column added : '{}' ", newQuery.getId(),
+                    logger.trace("\t\t .Overriding dao query '{}' -> function column added : '{}' ", newQuery.getId(),
                             newFnc.getName());
                     baseQuery.getFunctionColumns().getFunctionColumn().add(newFnc);
                 }
             }
         }
-        // // // · ValidColumns: Always override, does not exists a criteria to map
+        // // // ï¿½ ValidColumns: Always override, does not exists a criteria to map
         if (newQuery.getValidColumns() != null) {
-            logger.trace("\t\t·Overriding dao query '{}' -> valid columns changed", newQuery.getId());
+            logger.trace("\t\t .Overriding dao query '{}' -> valid columns changed", newQuery.getId());
             baseQuery.setValidColumns(newQuery.getValidColumns());
         }
-        // // // · OrderColumns: Match by "name": if empty "type" then remove, else override
+        // // // ï¿½ OrderColumns: Match by "name": if empty "type" then remove, else override
         if (newQuery.getOrderColumns() != null) {
             for (OrderColumnType newOrd : newQuery.getOrderColumns().getOrderColumn()) {
                 OrderColumnType oldOrd = this.getOrderColumnByName(baseQuery.getOrderColumns(), newOrd.getName());
                 if (StringTools.isEmpty(newOrd.getType())) {
                     // Remove it
-                    logger.trace("\t\t·Overriding dao query '{}' -> order column removed : '{}' ", newQuery.getId(),
+                    logger.trace("\t\t .Overriding dao query '{}' -> order column removed : '{}' ", newQuery.getId(),
                             newOrd.getName());
                     baseQuery.getOrderColumns().getOrderColumn().remove(oldOrd);
                 } else if (oldOrd != null) {
-                    logger.trace("\t\t·Overriding dao query '{}' -> order column replaced : '{}' ", newQuery.getId(),
+                    logger.trace("\t\t .Overriding dao query '{}' -> order column replaced : '{}' ", newQuery.getId(),
                             newOrd.getName());
                     baseQuery.getOrderColumns().getOrderColumn().remove(oldOrd);
                     baseQuery.getOrderColumns().getOrderColumn().add(newOrd);
                 } else {
-                    logger.trace("\t\t·Overriding dao query '{}' -> order column added : '{}' ", newQuery.getId(),
+                    logger.trace("\t\t .Overriding dao query '{}' -> order column added : '{}' ", newQuery.getId(),
                             newOrd.getName());
                     baseQuery.getOrderColumns().getOrderColumn().add(newOrd);
                 }

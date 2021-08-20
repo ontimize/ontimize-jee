@@ -8,7 +8,7 @@ import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import com.ontimize.db.SQLStatementBuilder.SQLOrder;
+import com.ontimize.jee.common.db.SQLStatementBuilder.SQLOrder;
 
 public class SQLOrderDeserializer extends StdDeserializer<SQLOrder> {
 
