@@ -17,6 +17,12 @@
 
 	<developers>
 		<developer>
+			<name>Cristóbal Miguel Vázquez Carde</name>
+			<email>cmiguel.vazquez@imatia.com</email>
+			<organization>Imatia Innovation</organization>
+			<organizationUrl>http://imatia.com</organizationUrl>
+		</developer>
+		<developer>
 			<name>Daniel Graña Cousido</name>
 			<email>daniel.grana@imatia.com</email>
 			<organization>Imatia Innovation</organization>
