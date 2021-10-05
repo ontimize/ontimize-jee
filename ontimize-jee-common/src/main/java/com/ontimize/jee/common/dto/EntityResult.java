@@ -1,6 +1,7 @@
 package com.ontimize.jee.common.dto;
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -8,7 +9,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.zip.Deflater;
 
-public interface EntityResult {
+public interface EntityResult extends Serializable {
 
     boolean DEBUG = false;
 
