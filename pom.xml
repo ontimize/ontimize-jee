@@ -4,18 +4,26 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.ontimize.jee</groupId>
 	<artifactId>ontimize-jee</artifactId>
-	<version>5.4.0</version>
+	<version>5.5.0</version>
 	<packaging>pom</packaging>
 	<organization>
 		<name>Imatia Innovation</name>
 		<url>http://imatia.com</url>
 	</organization>
 
+	<!-- Test for automatic develop from push -->
+
 	<name>Ontimize EE</name>
 	<description>Ontimize EE uses Spring technology to separate the client and the server, allowing applications to be developed quickly and efficiently.</description>
 	<url>https://www.ontimize.com</url>
 
 	<developers>
+		<developer>
+			<name>Cristóbal Miguel Vázquez Carde</name>
+			<email>cmiguel.vazquez@imatia.com</email>
+			<organization>Imatia Innovation</organization>
+			<organizationUrl>http://imatia.com</organizationUrl>
+		</developer>
 		<developer>
 			<name>Daniel Graña Cousido</name>
 			<email>daniel.grana@imatia.com</email>

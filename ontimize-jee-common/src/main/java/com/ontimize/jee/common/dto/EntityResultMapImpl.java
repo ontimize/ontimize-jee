@@ -27,7 +27,9 @@ import java.util.zip.ZipOutputStream;
 
 public class EntityResultMapImpl implements EntityResult, Map {
 
-    Logger logger = LoggerFactory.getLogger(EntityResultMapImpl.class);
+	private static final long serialVersionUID = -6104167996157072846L;
+
+	Logger logger = LoggerFactory.getLogger(EntityResultMapImpl.class);
 
     protected String message = "";
 

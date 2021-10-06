@@ -1,16 +1,17 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.ontimize.jee</groupId>
 		<artifactId>ontimize-jee</artifactId>
-		<version>5.4.0</version>
+		<version>5.5.0</version>
 	</parent>
 
 	<artifactId>ontimize-jee-common</artifactId>
 
 	<packaging>jar</packaging>
-	
+
 	<organization>
 		<name>Imatia Innovation</name>
 		<url>http://imatia.com</url>
@@ -21,6 +22,12 @@
 	<url>https://www.ontimize.com</url>
 
 	<developers>
+		<developer>
+			<name>Cristóbal Miguel Vázquez Carde</name>
+			<email>cmiguel.vazquez@imatia.com</email>
+			<organization>Imatia Innovation</organization>
+			<organizationUrl>http://imatia.com</organizationUrl>
+		</developer>
 		<developer>
 			<name>Daniel Graña Cousido</name>
 			<email>daniel.grana@imatia.com</email>
@@ -113,12 +120,8 @@
 			<artifactId>commons-io</artifactId>
 		</dependency>
 
-		<!-- http client
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpclient</artifactId>
-		</dependency>
-		-->
+		<!-- http client <dependency> <groupId>org.apache.httpcomponents</groupId> 
+			<artifactId>httpclient</artifactId> </dependency> -->
 		<dependency>
 			<groupId>javax.websocket</groupId>
 			<artifactId>javax.websocket-api</artifactId>
@@ -185,15 +188,15 @@
 			<version>3.9</version>
 			<scope>compile</scope>
 			<exclusions>
-            	<exclusion>
-                	<groupId>xml-apis</groupId>
-                	<artifactId>xml-apis</artifactId>
-            	</exclusion>
-            	<exclusion>
-                	<groupId>org.apache.xmlbeans</groupId>
-                	<artifactId>xmlbeans</artifactId>
-            	</exclusion>
-        	</exclusions>
+				<exclusion>
+					<groupId>xml-apis</groupId>
+					<artifactId>xml-apis</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.xmlbeans</groupId>
+					<artifactId>xmlbeans</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<!-- END dependencies from old core parent -->
 
