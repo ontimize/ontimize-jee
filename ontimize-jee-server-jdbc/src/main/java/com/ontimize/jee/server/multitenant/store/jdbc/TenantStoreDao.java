@@ -1,4 +1,4 @@
-package com.ontimize.jee.server.multitenant.jdbc;
+package com.ontimize.jee.server.multitenant.store.jdbc;
 
 import java.util.ArrayList;
 import java.util.HashMap;
