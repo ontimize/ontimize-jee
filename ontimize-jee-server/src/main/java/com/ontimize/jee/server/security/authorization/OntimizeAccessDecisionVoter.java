@@ -1,5 +1,6 @@
 package com.ontimize.jee.server.security.authorization;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -93,7 +94,17 @@ public class OntimizeAccessDecisionVoter implements AccessDecisionVoter<Object>,
             }
             if ((findAnnotation == null) || containsCustomRole) {
                 final String methodName = rmi.getMethod().getName();
-                final String property = apiClass.getCanonicalName() + "/" + methodName;
+                String property = "";
+                for (Class<?> i : apiClass.getInterfaces()) {
+                
+                	for ( Method method : i.getMethods()) {
+                		if (methodName.equals(method.getName())) {
+                			property = i.getCanonicalName() + "/" + methodName;
+                			break;
+                		}
+                	}
+                	
+                }
                 final List<String> roles = new ArrayList<>();
                 for (final GrantedAuthority ga : authentication.getAuthorities()) {
                     roles.add(ga.getAuthority());
@@ -105,9 +116,9 @@ public class OntimizeAccessDecisionVoter implements AccessDecisionVoter<Object>,
                 } catch (final PermissionValidationException e) {
                     // ups it doesn't validate the 0 checkers I passed to it
                     OntimizeAccessDecisionVoter.logger.trace(null, e);
-                }
                 OntimizeAccessDecisionVoter.logger
                     .error("This roles:" + roles.toString() + " have not access to:" + property);
+            }
             }
             return this.voteDefault(authentication, object, attributes);
         } else if (object instanceof FilterInvocation) {
