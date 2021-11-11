@@ -1,4 +1,4 @@
-name: learn-github-actions
+name: Generate a snapshot in MVNCentral
 on: 
   push:
     branches:    
