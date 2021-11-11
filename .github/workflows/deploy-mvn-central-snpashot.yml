@@ -4,7 +4,7 @@ on:
     branches:    
       - 'test-gitActions-mvn'
 jobs:
-  Generate a snapshot in MVNCentral:
+  Generate-a-snapshot-in-MVNCentral:
     runs-on: ubuntu-latest
     steps:
       - name : Checkout repository code
