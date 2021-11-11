@@ -7,8 +7,12 @@ jobs:
   check-bats-version:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-java@v2
+      - name : Checkout repository code
+        uses: actions/checkout@v2
+      - name: Setup Java JDK and Maven
+        uses: actions/setup-java@v2
         with:
           distribution: 'temurin'
           java-version: '11'
+      - name: Perform a maven install
+        run: mvn clean install
