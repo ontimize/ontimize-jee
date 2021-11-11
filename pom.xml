@@ -152,6 +152,8 @@
 
 		<jee.version>8.0</jee.version>
 		<aspectjweaver.version>1.6.6</aspectjweaver.version>
+
+		<keycloak.version>15.0.2</keycloak.version>
 	</properties>
 
 
@@ -659,6 +661,7 @@
 		<module>ontimize-jee-server</module>
 		<module>ontimize-jee-server-rest</module>
 		<module>ontimize-jee-server-jdbc</module>
+		<module>ontimize-jee-server-keycloak</module>
 		<module>ontimize-jee-webclient-addons</module>
 	</modules>
 </project>
