@@ -6,10 +6,10 @@ import com.ontimize.jee.server.multitenant.MultiTenantContextHolder;
 
 public class MultiTenantRoutingDataSource extends AbstractRoutingDataSource {
 
-    @Override
-    protected Object determineCurrentLookupKey() {
-        String currentTenant = MultiTenantContextHolder.getTenant();
+	@Override
+	protected Object determineCurrentLookupKey() {
+		String currentTenant = MultiTenantContextHolder.getTenant();
 
-        return currentTenant;
-    }
+		return currentTenant;
+	}
 }

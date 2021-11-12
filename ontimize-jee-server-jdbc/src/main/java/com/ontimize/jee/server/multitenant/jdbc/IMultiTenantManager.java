@@ -4,7 +4,7 @@ import java.util.Map;
 
 public interface IMultiTenantManager {
 
-    Map<Object, Object> getDataSourceHashMap();
+	Map<Object, Object> getDataSourceHashMap();
 
-    void setTenantRoutingDataSource(MultiTenantRoutingDataSource tenantRoutingDataSource);
+	void setTenantRoutingDataSource(MultiTenantRoutingDataSource tenantRoutingDataSource);
 }

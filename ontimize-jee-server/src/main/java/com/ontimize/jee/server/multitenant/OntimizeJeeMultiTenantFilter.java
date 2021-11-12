@@ -15,16 +15,16 @@ import org.slf4j.LoggerFactory;
 
 public class OntimizeJeeMultiTenantFilter implements Filter {
 
-    private static final Logger logger = LoggerFactory.getLogger(OntimizeJeeMultiTenantFilter.class);
+	private static final Logger logger = LoggerFactory.getLogger(OntimizeJeeMultiTenantFilter.class);
 
-    @Override
+	@Override
 	public void destroy() {
 		// TODO Auto-generated method stub
 	}
 
 	@Override
-    public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain filterChain)
-            throws IOException, ServletException {
+	public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain filterChain)
+			throws IOException, ServletException {
 
 		if (request instanceof HttpServletRequest) {
 			final String tenantId = ((HttpServletRequest) request).getHeader("xtenant");
@@ -33,11 +33,11 @@ public class OntimizeJeeMultiTenantFilter implements Filter {
 			}
 		}
 
-        try {
-    		filterChain.doFilter(request, response);
-        } catch (Exception e) {
-        	OntimizeJeeMultiTenantFilter.logger.error(null, e);
-        }
+		try {
+			filterChain.doFilter(request, response);
+		} catch (Exception e) {
+			OntimizeJeeMultiTenantFilter.logger.error(null, e);
+		}
 	}
 
 	@Override

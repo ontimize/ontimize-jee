@@ -8,20 +8,11 @@ import org.keycloak.adapters.KeycloakDeployment;
 import org.keycloak.adapters.KeycloakDeploymentBuilder;
 import org.keycloak.adapters.OIDCHttpFacade;
 import org.keycloak.representations.adapters.config.AdapterConfig;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class OntimizeMultitenantKeycloakConfigResolver implements KeycloakConfigResolver {
-	@Value("${ontimize.security.keycloak.auth-server-url}")
-	private String authServerUrl;
-
-	@Value("${ontimize.security.keycloak.public-client}")
-	private Boolean publicClient;
-
-	@Value("${ontimize.security.keycloak.realm}")
-	private String realm;
-
-	@Value("${ontimize.security.keycloak.resource}")
-	private String resource;
+	@Autowired
+	KeycloakConfiguration config;
 
 	private final Map<String, KeycloakDeployment> cache = new ConcurrentHashMap<String, KeycloakDeployment>();
 
@@ -30,7 +21,7 @@ public class OntimizeMultitenantKeycloakConfigResolver implements KeycloakConfig
 		String realm = request.getHeader("xtenant");
 
 		if (realm == null) {
-			realm = this.realm; // Default Tenant
+			realm = this.config.getRealm(); // Default Tenant
 		}
 		
 		KeycloakDeployment deployment = cache.get(realm);
@@ -38,10 +29,10 @@ public class OntimizeMultitenantKeycloakConfigResolver implements KeycloakConfig
 		if (deployment == null) {
 			final AdapterConfig ac = new AdapterConfig();
 
-			ac.setAuthServerUrl(this.authServerUrl);
+			ac.setAuthServerUrl(this.config.getAuthServerUrl());
 			ac.setRealm(realm); // Tenant
-			ac.setResource(this.resource); // Client Id
-			ac.setPublicClient(this.publicClient);
+			ac.setResource(this.config.getResource()); // Client Id
+			ac.setPublicClient(this.config.getPublicClient());
 
 			deployment = KeycloakDeploymentBuilder.build(ac);
 
