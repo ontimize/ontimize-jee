@@ -2,7 +2,7 @@ name: Generate a snapshot in MVNCentral
 on: 
   push:
     branches:    
-      - 'test-gitActions-mvn'
+      - 'develop'
 jobs:
   Generate-a-snapshot-in-MVNCentral:
     runs-on: ubuntu-latest
