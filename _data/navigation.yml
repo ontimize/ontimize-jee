@@ -1,7 +1,7 @@
 # main links
 main:
   - title: "Ontimize Docs"
-    url: https://ontimize.github.io/docs/v3/
+    url: https://ontimize.github.io/docs/
   # - title: "Sample Posts"
   #   url: /year-archive/
   # - title: "Sample Collections"
@@ -11,7 +11,7 @@ main:
 
 versions:
   - title: "3.x.x"
-    url: /ontimize-jee/v3
+    url: /ontimize-jee
     active: true
   - title: "1.x.x"
-    url: /ontimize-jee
+    url: /ontimize-jee/v1
