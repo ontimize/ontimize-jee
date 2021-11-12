@@ -11,8 +11,6 @@
 		<url>http://imatia.com</url>
 	</organization>
 
-	<!-- Test for automatic develop from push -->
-
 	<name>Ontimize EE</name>
 	<description>Ontimize EE uses Spring technology to separate the client and the server, allowing applications to be developed quickly and efficiently.</description>
 	<url>https://www.ontimize.com</url>
@@ -305,9 +303,9 @@
 						</configuration>
 					</plugin>
 					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-gpg-plugin</artifactId>
-						<version>1.5</version>
+						<groupId>org.simplify4u.plugins</groupId>
+						<artifactId>sign-maven-plugin</artifactId>
+						<version>0.3.1</version>
 						<executions>
 							<execution>
 								<id>sign-artifacts</id>
