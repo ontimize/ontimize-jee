@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class OntimizeMultitenantKeycloakConfigResolver implements KeycloakConfigResolver {
 	@Autowired
-	KeycloakConfiguration config;
+	IOntimizeKeycloakConfiguration config;
 
 	private final Map<String, KeycloakDeployment> cache = new ConcurrentHashMap<String, KeycloakDeployment>();
 
@@ -23,7 +23,7 @@ public class OntimizeMultitenantKeycloakConfigResolver implements KeycloakConfig
 		if (realm == null) {
 			realm = this.config.getRealm(); // Default Tenant
 		}
-		
+
 		KeycloakDeployment deployment = cache.get(realm);
 
 		if (deployment == null) {

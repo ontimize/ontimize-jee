@@ -29,6 +29,7 @@ import org.keycloak.representations.idm.UserRepresentation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -45,7 +46,25 @@ import com.ontimize.jee.server.security.keycloak.dto.application.UserRoles;
 @Service
 public class UserManagementKeycloakImpl implements IUserManagement {
 	@Autowired
-	private KeycloakConfiguration config;
+	private IOntimizeKeycloakConfiguration config;
+
+	@Value("${ontimize.security.keycloak.admin.realm}")
+	private String adminRealm;
+
+	@Value("${ontimize.security.keycloak.admin.resource}")
+	private String adminResource;
+
+	@Value("${ontimize.security.keycloak.admin.username}")
+	private String adminUserName;
+
+	@Value("${ontimize.security.keycloak.admin.password}")
+	private String adminPassword;
+
+	@Value("${ontimize.security.keycloak.realm-defaults.role}")
+	private String realmKeycloakRole;
+
+	@Value("${ontimize.security.keycloak.realm-defaults.redirect-urls:}")
+	private String[] redirectUrls;
 
 	private static final Logger logger = LoggerFactory.getLogger(UserManagementKeycloakImpl.class);
 	private static final ResteasyClient CONNECTION_POOL = new ResteasyClientBuilder().connectionPoolSize(10).build();
@@ -53,11 +72,11 @@ public class UserManagementKeycloakImpl implements IUserManagement {
 
 	protected Keycloak getInstance() {
 		logger.debug("Auth at keycloak for rest admin api Server URL: {} Username: {} ClientId: {}",
-				this.config.getAuthServerUrl(), this.config.getAdminUserName(), this.config.getAdminResource());
+				this.config.getAuthServerUrl(), this.adminUserName, this.adminResource);
 
-		return KeycloakBuilder.builder().serverUrl(this.config.getAuthServerUrl()).realm(this.config.getAdminRealm())
-				.username(this.config.getAdminUserName()).password(this.config.getAdminPassword())
-				.clientId(this.config.getAdminResource()).resteasyClient(CONNECTION_POOL).build();
+		return KeycloakBuilder.builder().serverUrl(this.config.getAuthServerUrl()).realm(this.adminRealm)
+				.username(this.adminUserName).password(this.adminPassword)
+				.clientId(this.adminResource).resteasyClient(CONNECTION_POOL).build();
 	}
 
 	/**
@@ -68,29 +87,30 @@ public class UserManagementKeycloakImpl implements IUserManagement {
 	 */
 	@Override
 	public List<UserRepresentation> searchUsers(final String realm) {
-		List<UserRepresentation> userList = getInstance().realm(realm).users().list();
-
-		return userList;
+		return this.getInstance().realm(realm).users().list();
 	}
 
 	@Override
 	public List<RealmInfo> getRealmsForUser(final String username) {
-		List<RealmRepresentation> rreps = getInstance().realms().findAll();
-		List<RealmInfo> result = new ArrayList<RealmInfo>();
+		final Keycloak keycloak = this.getInstance();
+		final List<RealmRepresentation> rreps = keycloak.realms().findAll();
+		final List<RealmInfo> result = new ArrayList<RealmInfo>();
 
 		for (RealmRepresentation r : rreps) {
-			List<UserRepresentation> users = this.searchUsers(r.getRealm());
-			
-			for (UserRepresentation ur : users) {
-				if (ur.getUsername().equalsIgnoreCase(username)) {
-					RealmInfo ti = new RealmInfo();
-					
-					ti.setId(r.getRealm());
-					ti.setName(r.getDisplayName());
-			
-					result.add(ti);
-					
-					break;
+			if (!r.getRealm().equalsIgnoreCase(adminRealm)) {
+				final List<UserRepresentation> users = keycloak.realm(r.getRealm()).users().list();
+
+				for (UserRepresentation ur : users) {
+					if (ur.getUsername().equalsIgnoreCase(username)) {
+						final RealmInfo ti = new RealmInfo();
+
+						ti.setId(r.getRealm());
+						ti.setName(r.getDisplayName());
+
+						result.add(ti);
+
+						break;
+					}
 				}
 			}
 		}
@@ -100,22 +120,22 @@ public class UserManagementKeycloakImpl implements IUserManagement {
 
 	@Override
 	public RealmResource createRealmIfNotExists(final String realm, final String displayName, final String... clients) {
-		List<RealmRepresentation> rreps = getInstance().realms().findAll();
+		final Keycloak keycloak = this.getInstance();
 
-		for (RealmRepresentation r : rreps) {
-			if (r.getRealm().equalsIgnoreCase(realm))
-				return getInstance().realm(realm);
+		RealmResource rr = this.searchRealm(realm, keycloak);
+		if (rr != null) {
+			return rr;
 		}
 
-		RealmRepresentation rrep = new RealmRepresentation();
+		final RealmRepresentation rrep = new RealmRepresentation();
 
 		rrep.setRealm(realm);
 		rrep.setEnabled(true);
 		rrep.setDisplayName(displayName);
 
-		getInstance().realms().create(rrep);
+		keycloak.realms().create(rrep);
 
-		RealmResource rr = getInstance().realm(realm);
+		rr = keycloak.realm(realm);
 
 		ClientRepresentation cr = new ClientRepresentation();
 
@@ -131,7 +151,7 @@ public class UserManagementKeycloakImpl implements IUserManagement {
 		}
 
 		for (String client : clients) {
-			rr = getInstance().realm(realm);
+			rr = keycloak.realm(realm);
 
 			cr = new ClientRepresentation();
 
@@ -142,7 +162,7 @@ public class UserManagementKeycloakImpl implements IUserManagement {
 
 			List<String> redirectUris = new ArrayList<String>(Arrays.asList(clients));
 
-			redirectUris.addAll(Arrays.asList(this.config.getRedirectUrls()));
+			redirectUris.addAll(Arrays.asList(this.redirectUrls));
 
 			cr.setRedirectUris(redirectUris);
 			cr.setDirectAccessGrantsEnabled(true);
@@ -162,22 +182,22 @@ public class UserManagementKeycloakImpl implements IUserManagement {
 
 	@Override
 	public void addClientToRealm(final String realm, final String client, final String... redirectUrls) {
-		RealmResource rr = this.getRealm(realm);
+		final RealmResource rr = this.searchRealm(realm);
 
 		if (rr == null) {
 			throw new RuntimeException("realm not found");
 		}
 
-		ClientRepresentation cr = new ClientRepresentation();
+		final ClientRepresentation cr = new ClientRepresentation();
 
 		cr.setName(client);
 		cr.setClientId(client);
 		cr.setPublicClient(true);
 		cr.setEnabled(true);
 
-		List<String> redirectUris = new ArrayList<String>(Arrays.asList(redirectUrls));
+		final List<String> redirectUris = new ArrayList<String>(Arrays.asList(redirectUrls));
 
-		redirectUris.addAll(Arrays.asList(this.config.getRedirectUrls()));
+		redirectUris.addAll(Arrays.asList(this.redirectUrls));
 
 		cr.setRedirectUris(redirectUris);
 		cr.setDirectAccessGrantsEnabled(true);
@@ -188,14 +208,14 @@ public class UserManagementKeycloakImpl implements IUserManagement {
 
 	@Override
 	public GroupRepresentation getGroup(final String groupName) {
-		List<GroupRepresentation> groupList = getInstance().realm(this.config.getRealm()).groups().groups();
+		final List<GroupRepresentation> groupList = this.getRealResource().groups().groups();
 
 		return groupList.stream().filter(g -> groupName.equals(g.getName())).findAny().get();
 	}
 
 	@Override
 	public void addUserToGroup(final String userId, final String groupId) {
-		getInstance().realm(this.config.getRealm()).users().get(userId).joinGroup(groupId);
+		this.getUserResource(userId).joinGroup(groupId);
 	}
 
 	/**
@@ -209,7 +229,7 @@ public class UserManagementKeycloakImpl implements IUserManagement {
 		logger.debug("Keycloak search for username: {}", username);
 
 		// this should return just one result in the list
-		List<UserRepresentation> userList = getInstance().realm(this.config.getRealm()).users().search(username);
+		final List<UserRepresentation> userList = this.getRealResource().users().search(username);
 
 		logger.debug("Keycloak user search result count: {}", userList.size());
 
@@ -227,8 +247,7 @@ public class UserManagementKeycloakImpl implements IUserManagement {
 		logger.debug("Keycloak user groups search for user id: {}", userId);
 
 		// this should return just one result in the list
-		List<GroupRepresentation> groupRepresentationList = getInstance().realm(this.config.getRealm()).users()
-				.get(userId).groups();
+		final List<GroupRepresentation> groupRepresentationList = this.getUserResource(userId).groups();
 
 		logger.debug("Keycloak user groups search result count: {}", groupRepresentationList.size());
 
@@ -243,19 +262,16 @@ public class UserManagementKeycloakImpl implements IUserManagement {
 	 */
 	@Override
 	public UserRepresentation getUserRepresentation(final String userId) {
-		return getInstance().realm(this.config.getRealm()).users().get(userId).toRepresentation();
+		return this.getUserResource(userId).toRepresentation();
 	}
 
 	@Override
 	public HttpStatus createGroup(final String groupName) {
-		Keycloak keycloak = getInstance();
-
-		GroupRepresentation groupRepresentation = new GroupRepresentation();
+		final GroupRepresentation groupRepresentation = new GroupRepresentation();
 
 		groupRepresentation.setName(groupName);
 
-		RealmResource keycloakImatiak8sResource = keycloak.realm(this.config.getRealm());
-		GroupsResource groupsResource = keycloakImatiak8sResource.groups();
+		final GroupsResource groupsResource = this.getRealResource().groups();
 
 		groupsResource.add(groupRepresentation);
 
@@ -269,13 +285,13 @@ public class UserManagementKeycloakImpl implements IUserManagement {
 	public HttpStatus createUserAccount(final String realm, final String username, final String firstName,
 			final String lastName, final String email, final String password) {
 
-		CredentialRepresentation credential = new CredentialRepresentation();
+		final CredentialRepresentation credential = new CredentialRepresentation();
 
 		credential.setType(CredentialRepresentation.PASSWORD);
 		// credential.setTemporary(true); // TODO
 		credential.setValue(password);
 
-		UserRepresentation user = new UserRepresentation();
+		final UserRepresentation user = new UserRepresentation();
 
 		user.setUsername(username);
 		user.setFirstName(firstName);
@@ -288,17 +304,15 @@ public class UserManagementKeycloakImpl implements IUserManagement {
 
 		logger.debug("Create new User Account in Keycloak: {}", user.getUsername());
 
-		Keycloak keycloak = getInstance();
-
-		RealmResource keycloakCorporateResource = keycloak.realm(realm);// this.config.getRealm());
-		UsersResource keycloakCorporateUserResource = keycloakCorporateResource.users();
+		final RealmResource keycloakCorporateResource = this.getInstance().realm(realm);// this.config.getRealm());
+		final UsersResource keycloakCorporateUserResource = keycloakCorporateResource.users();
 
 		try (Response response = keycloakCorporateUserResource.create(user)) {
 			final HttpStatus status = HttpStatus.valueOf(response.getStatus());
 
 			logger.debug("Keycloak Create User Account Response Status: {}", response.getStatusInfo());
 
-			List<UserRepresentation> userList = keycloakCorporateUserResource.search(user.getUsername());
+			final List<UserRepresentation> userList = keycloakCorporateUserResource.search(user.getUsername());
 
 			if (userList.isEmpty()) {
 				logger.error("Creation of new Keycloak user account was not successful: Username: {}, Status: {}",
@@ -307,9 +321,8 @@ public class UserManagementKeycloakImpl implements IUserManagement {
 				return status;
 			}
 
-			UserRepresentation createdUser = userList.get(0);
-
-			UserResource keycloakUserResource = keycloakCorporateResource.users().get(createdUser.getId());
+			final UserRepresentation createdUser = userList.get(0);
+			final UserResource keycloakUserResource = keycloakCorporateResource.users().get(createdUser.getId());
 
 			logger.info("Keycloak User created with username[{}] and userId[{}]", createdUser.getUsername(),
 					createdUser.getId());
@@ -333,18 +346,20 @@ public class UserManagementKeycloakImpl implements IUserManagement {
 
 		logger.debug("Keycloak search for username: {}", username);
 
+		final RealmResource rr = this.getRealResource();
+
 		// this should return just one result in the list
-		List<UserRepresentation> userList = getInstance().realm(this.config.getRealm()).users().search(username);
+		List<UserRepresentation> userList = rr.users().search(username);
 
 		if (userList != null && !userList.isEmpty()) {
 			logger.debug("Keycloak user search result count: {}", userList.size());
 
-			UserRepresentation userRep = userList.get(0);
+			final UserRepresentation userRep = userList.get(0);
 
 			logger.info("Get UserResource with user account id {}", userRep.getId());
 
 			// Get the user resource through the user id
-			UserResource userRes = getInstance().realm(this.config.getRealm()).users().get(userRep.getId());
+			final UserResource userRes = rr.users().get(userRep.getId());
 
 			logger.debug("Returned UserResource {}", userRes);
 
@@ -365,6 +380,7 @@ public class UserManagementKeycloakImpl implements IUserManagement {
 		} else {
 			// Search with username did not find anything in keycloak
 			logger.warn("No result for search of username {} in keycloak", username);
+
 			status = HttpStatus.NOT_FOUND;
 		}
 
@@ -378,18 +394,14 @@ public class UserManagementKeycloakImpl implements IUserManagement {
 	public HttpStatus resetPassword(final UserRepresentation userRepresentation, final String password) {
 		HttpStatus status = HttpStatus.NO_CONTENT;
 
-		CredentialRepresentation credential = new CredentialRepresentation();
+		final CredentialRepresentation credential = new CredentialRepresentation();
 		// VERY IMPORTANT!!! DO NOT REMOVE!!!
 		credential.setTemporary(false);
 		credential.setType(CredentialRepresentation.PASSWORD);
 		credential.setValue(password);
 
 		try {
-			RealmResource realmResource = getInstance().realm(this.config.getRealm());
-			UsersResource userResource = realmResource.users();
-			String userId = userRepresentation.getId();
-
-			userResource.get(userId).resetPassword(credential);
+			this.getUserResource(userRepresentation.getId()).resetPassword(credential);
 		} catch (ClientErrorException ex) {
 			logger.error("Keycloak - Reset password failed with client request error.", ex);
 
@@ -402,8 +414,9 @@ public class UserManagementKeycloakImpl implements IUserManagement {
 	@Override
 	public void updateEmailUserAccount(final String userId, final String email) {
 		try {
-			UserResource user = getInstance().realm(this.config.getRealm()).users().get(userId);
-			UserRepresentation userRepresentation = user.toRepresentation();
+			final UserResource user = this.getUserResource(userId);
+			final UserRepresentation userRepresentation = user.toRepresentation();
+
 			userRepresentation.setEmail(email);
 			userRepresentation.setUsername(email.substring(0, email.indexOf("@")));
 
@@ -416,8 +429,9 @@ public class UserManagementKeycloakImpl implements IUserManagement {
 	@Override
 	public void updateNameUserAccount(final String userId, final String name) {
 		try {
-			UserResource user = getInstance().realm(this.config.getRealm()).users().get(userId);
-			UserRepresentation userRepresentation = user.toRepresentation();
+			final UserResource user = this.getUserResource(userId);
+			final UserRepresentation userRepresentation = user.toRepresentation();
+
 			userRepresentation.setFirstName(name);
 
 			user.update(userRepresentation);
@@ -429,8 +443,9 @@ public class UserManagementKeycloakImpl implements IUserManagement {
 	@Override
 	public void updateSurnameUserAccount(final String userId, final String surname) {
 		try {
-			UserResource user = getInstance().realm(this.config.getRealm()).users().get(userId);
-			UserRepresentation userRepresentation = user.toRepresentation();
+			final UserResource user = this.getUserResource(userId);
+			final UserRepresentation userRepresentation = user.toRepresentation();
+
 			userRepresentation.setLastName(surname);
 
 			user.update(userRepresentation);
@@ -442,8 +457,9 @@ public class UserManagementKeycloakImpl implements IUserManagement {
 	@Override
 	public void disableUserAccount(final String userId) {
 		try {
-			UserResource user = getInstance().realm(this.config.getRealm()).users().get(userId);
-			UserRepresentation userRepresentation = user.toRepresentation();
+			final UserResource user = this.getUserResource(userId);
+			final UserRepresentation userRepresentation = user.toRepresentation();
+
 			userRepresentation.setEnabled(false);
 
 			user.update(userRepresentation);
@@ -458,20 +474,20 @@ public class UserManagementKeycloakImpl implements IUserManagement {
 	@Override
 	public void addRolesToRealm(final String realm, final String client, final List<RoleInfo> roles) {
 		// add user roles to realm client
-		RealmResource rr = this.getRealm(realm);
+		RealmResource rr = this.searchRealm(realm);
 
 		if (rr == null) {
 			throw new RuntimeException("realm not found");
 		}
 
-		ClientResource cr = getClient(client, rr);
+		ClientResource cr = this.searchClient(client, rr);
 
 		if (cr == null) {
 			throw new RuntimeException("client not found");
 		}
 
 		for (RoleInfo role : roles) {
-			RoleRepresentation rRep = new RoleRepresentation();
+			final RoleRepresentation rRep = new RoleRepresentation();
 
 			rRep.setName(role.getName());
 			rRep.setClientRole(true);
@@ -481,35 +497,9 @@ public class UserManagementKeycloakImpl implements IUserManagement {
 		}
 	}
 
-	private ClientResource getClient(String name, RealmResource realm) {
-		List<ClientRepresentation> r = realm.clients().findAll().stream()
-				.filter(cr -> cr.getName().equalsIgnoreCase(name)).collect(Collectors.toList());
-
-		if (r.isEmpty()) {
-			return null;
-		} else {
-			return realm.clients().get(r.get(0).getId());
-		}
-	}
-
-	private RealmResource getRealm(String realm) {
-		List<RealmRepresentation> rreps = getInstance().realms().findAll();
-		RealmResource rr = null;
-
-		for (RealmRepresentation r : rreps) {
-			if (r.getRealm().equalsIgnoreCase(realm)) {
-				rr = getInstance().realm(realm);
-
-				break;
-			}
-		}
-
-		return rr;
-	}
-
 	@Override
 	public List<String> getUsersForRealm(final String realm) {
-		RealmResource rr = this.getRealm(realm);
+		final RealmResource rr = this.searchRealm(realm);
 
 		if (rr == null) {
 			return new ArrayList<String>(); // TODO throw error
@@ -520,24 +510,24 @@ public class UserManagementKeycloakImpl implements IUserManagement {
 
 	@Override
 	public List<String> getRolesForUser(final String user, final String realm, final String client) {
-		RealmResource rr = this.getRealm(realm);
+		final RealmResource rr = this.searchRealm(realm);
 		if (rr == null) {
 			return new ArrayList<String>(); // TODO throw error
 		}
 
-		List<UserRepresentation> userR = rr.users().list().stream().filter((u) -> u.getEmail().equalsIgnoreCase(user))
-				.collect(Collectors.toList());
+		final List<UserRepresentation> userR = rr.users().list().stream()
+				.filter((u) -> u.getEmail().equalsIgnoreCase(user)).collect(Collectors.toList());
 		if (userR.isEmpty()) {
 			return new ArrayList<String>();
 		}
 
-		List<ClientRepresentation> clientR = rr.clients().findAll().stream()
+		final List<ClientRepresentation> clientR = rr.clients().findAll().stream()
 				.filter(cr -> cr.getName().equalsIgnoreCase(client)).collect(Collectors.toList());
 		if (clientR.isEmpty()) {
 			return new ArrayList<String>();
 		}
 
-		List<RoleRepresentation> rolesRep = rr.users().get(userR.get(0).getId()).roles()
+		final List<RoleRepresentation> rolesRep = rr.users().get(userR.get(0).getId()).roles()
 				.clientLevel(clientR.get(0).getId()).listEffective();
 		if (rolesRep == null || rolesRep.isEmpty()) {
 			return new ArrayList<String>();
@@ -548,64 +538,59 @@ public class UserManagementKeycloakImpl implements IUserManagement {
 
 	@Override
 	public List<RoleInfo> getRolesForClient(final String realm, final String client) {
-		RealmResource rr = this.getRealm(realm);
+		final RealmResource rr = this.searchRealm(realm);
 
 		if (rr == null) {
 			return new ArrayList<RoleInfo>(); // TODO throw error
 		}
 
-		ClientResource cr = this.getClient(client, rr);
+		final ClientResource cr = this.searchClient(client, rr);
 
-		return cr.roles().list().stream().map(r -> getRoleInfo(r.getName(), r.getDescription()))
-				.collect(Collectors.toList());
-	}
-
-	private RoleInfo getRoleInfo(String name, String description) {
-		RoleInfo ri = new RoleInfo();
-
-		ri.setName(name);
-		ri.setDescription(description);
-
-		return ri;
+		return cr.roles().list().stream().map(r -> {
+			RoleInfo ri = new RoleInfo();
+			ri.setName(r.getName());
+			ri.setDescription(r.getDescription());
+			return ri;
+		}).collect(Collectors.toList());
 	}
 
 	@Override
 	public void setRolesForUser(final String realm, final String client, final List<UserRoles> userRoles) {
-		RealmResource rr = this.getRealm(realm);
-
+		final RealmResource rr = this.searchRealm(realm);
 		if (rr == null) {
 			return; // TODO throw error
 		}
 
-		ClientResource cr = this.getClient(client, rr);
+		final ClientResource cr = this.searchClient(client, rr);
 		if (cr == null) {
 			return;
 		}
 
-		List<ClientRepresentation> r = rr.clients().findAll().stream()
+		final List<ClientRepresentation> r = rr.clients().findAll().stream()
 				.filter(clientRep -> clientRep.getName().equalsIgnoreCase(client)).collect(Collectors.toList());
 		if (r == null || r.isEmpty()) {
 			return;
 		}
 
-		List<UserRepresentation> userR = rr.users().list();
+		final List<UserRepresentation> userR = rr.users().list();
 		if (userR == null || userR.isEmpty()) {
 			return;
 		}
 
 		// for users in realm, assign roles for those specified
 		for (UserRepresentation userRep : userR) {
-			Optional<UserRoles> ur = userRoles.stream()
+			final Optional<UserRoles> ur = userRoles.stream()
 					.filter(uroles -> uroles.getUser_().equalsIgnoreCase(userRep.getEmail())).findFirst();
 
 			if (ur.isPresent()) {
-				List<String> roles = Arrays.asList(ur.get().getAssignedRoles());
-				RoleScopeResource rolesRes = rr.users().get(userRep.getId()).roles().clientLevel(r.get(0).getId());
-				List<RoleRepresentation> availableRoles = rolesRes.listAvailable();
-				List<RoleRepresentation> effectiveRoles = rolesRes.listEffective();
-				List<RoleRepresentation> toRemove = effectiveRoles.stream().filter(er -> !roles.contains(er.getName()))
-						.collect(Collectors.toList());
-				UserResource userResource = rr.users().get(userRep.getId());
+				final List<String> roles = Arrays.asList(ur.get().getAssignedRoles());
+				final RoleScopeResource rolesRes = rr.users().get(userRep.getId()).roles()
+						.clientLevel(r.get(0).getId());
+				final List<RoleRepresentation> availableRoles = rolesRes.listAvailable();
+				final List<RoleRepresentation> effectiveRoles = rolesRes.listEffective();
+				final List<RoleRepresentation> toRemove = effectiveRoles.stream()
+						.filter(er -> !roles.contains(er.getName())).collect(Collectors.toList());
+				final UserResource userResource = rr.users().get(userRep.getId());
 
 				if (!toRemove.isEmpty()) {
 					userResource.roles().clientLevel(r.get(0).getId()).remove(toRemove);
@@ -614,8 +599,8 @@ public class UserManagementKeycloakImpl implements IUserManagement {
 				}
 
 				// add new
-				List<RoleRepresentation> toAdd = availableRoles.stream().filter(er -> roles.contains(er.getName()))
-						.collect(Collectors.toList());
+				final List<RoleRepresentation> toAdd = availableRoles.stream()
+						.filter(er -> roles.contains(er.getName())).collect(Collectors.toList());
 
 				if (!toAdd.isEmpty()) {
 					userResource.roles().clientLevel(r.get(0).getId()).add(toAdd);
@@ -629,30 +614,32 @@ public class UserManagementKeycloakImpl implements IUserManagement {
 	@Override
 	public void setApplicationRolesForUser(final String realm, final String user,
 			final List<ApplicationRoles> appRoles) {
-		RealmResource rr = this.getRealm(realm);
+		final RealmResource rr = this.searchRealm(realm);
 		if (rr == null) {
 			return; // TODO throw error
 		}
 
-		List<ClientRepresentation> clientsRep = rr.clients().findAll();
-		List<UserRepresentation> userR = rr.users().list();
-		Optional<UserRepresentation> ur = userR.stream().filter(u -> user.equalsIgnoreCase(u.getEmail())).findFirst();
+		final List<ClientRepresentation> clientsRep = rr.clients().findAll();
+		final List<UserRepresentation> userR = rr.users().list();
+		final Optional<UserRepresentation> ur = userR.stream().filter(u -> user.equalsIgnoreCase(u.getEmail()))
+				.findFirst();
 
 		if (ur.isPresent()) {
-			UserResource userResource = rr.users().get(ur.get().getId());
+			final UserResource userResource = rr.users().get(ur.get().getId());
 
 			for (ApplicationRoles appRole : appRoles) {
-				Optional<ClientRepresentation> clientRep = clientsRep.stream()
+				final Optional<ClientRepresentation> clientRep = clientsRep.stream()
 						.filter(cr -> cr.getClientId().equals(appRole.getApplicationId())).findFirst();
 
 				if (clientRep.isPresent()) {
-					List<String> roles = appRole.getAssignedRoles();
-					RoleScopeResource rolesRes = rr.users().get(ur.get().getId()).roles()
+					final List<String> roles = appRole.getAssignedRoles();
+					final RoleScopeResource rolesRes = rr.users().get(ur.get().getId()).roles()
 							.clientLevel(clientRep.get().getId());
-					List<RoleRepresentation> availableRoles = rolesRes.listAvailable();
-					List<RoleRepresentation> effectiveRoles = rolesRes.listEffective(); // TODO probably we should use
-																						// assigned. method??
-					List<RoleRepresentation> toRemove = effectiveRoles.stream()
+					final List<RoleRepresentation> availableRoles = rolesRes.listAvailable();
+					final List<RoleRepresentation> effectiveRoles = rolesRes.listEffective(); // TODO probably we should
+																								// use
+					// assigned. method??
+					final List<RoleRepresentation> toRemove = effectiveRoles.stream()
 							.filter(er -> !roles.contains(er.getName())).collect(Collectors.toList());
 
 					if (!toRemove.isEmpty()) {
@@ -662,8 +649,8 @@ public class UserManagementKeycloakImpl implements IUserManagement {
 					}
 
 					// add new
-					List<RoleRepresentation> toAdd = availableRoles.stream().filter(er -> roles.contains(er.getName()))
-							.collect(Collectors.toList());
+					final List<RoleRepresentation> toAdd = availableRoles.stream()
+							.filter(er -> roles.contains(er.getName())).collect(Collectors.toList());
 
 					if (!toAdd.isEmpty()) {
 						userResource.roles().clientLevel(clientRep.get().getId()).add(toAdd);
@@ -673,5 +660,43 @@ public class UserManagementKeycloakImpl implements IUserManagement {
 				}
 			}
 		}
+	}
+
+	private ClientResource searchClient(String name, RealmResource realm) {
+		final List<ClientRepresentation> r = realm.clients().findAll().stream()
+				.filter(cr -> cr.getName().equalsIgnoreCase(name)).collect(Collectors.toList());
+
+		if (r.isEmpty()) {
+			return null;
+		} else {
+			return realm.clients().get(r.get(0).getId());
+		}
+	}
+
+	private RealmResource searchRealm(String realm) {
+		return this.searchRealm(realm, this.getInstance());
+	}
+
+	private RealmResource searchRealm(String realm, Keycloak keycloak) {
+		final List<RealmRepresentation> rreps = keycloak.realms().findAll();
+		RealmResource rr = null;
+
+		for (RealmRepresentation r : rreps) {
+			if (r.getRealm().equalsIgnoreCase(realm)) {
+				rr = keycloak.realm(realm);
+
+				break;
+			}
+		}
+
+		return rr;
+	}
+
+	private RealmResource getRealResource() {
+		return this.getInstance().realm(this.config.getRealm());
+	}
+
+	private UserResource getUserResource(final String userId) {
+		return this.getRealResource().users().get(userId);
 	}
 }
