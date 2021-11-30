@@ -137,43 +137,42 @@ public class UserManagementKeycloakImpl implements IUserManagement {
 		rr = keycloak.realm(realm);
 
 		ClientRepresentation cr = new ClientRepresentation();
-
 		cr.setName(realm);
 		cr.setClientId(realm);
 		cr.setEnabled(true);
 		cr.setPublicClient(true);
 
-		Response resp = rr.clients().create(cr);
-
-		if (resp.getStatus() != 201) {
-			throw new RuntimeException("error creating realm client");
-		}
-
-		for (String client : clients) {
-			rr = keycloak.realm(realm);
-
-			cr = new ClientRepresentation();
-
-			cr.setName(client);
-			cr.setClientId(client);
-			cr.setPublicClient(true);
-			cr.setEnabled(true);
-
-			List<String> redirectUris = new ArrayList<String>(Arrays.asList(clients));
-
-			redirectUris.addAll(Arrays.asList(this.redirectUrls));
-
-			cr.setRedirectUris(redirectUris);
-			cr.setDirectAccessGrantsEnabled(true);
-			cr.setStandardFlowEnabled(true);
-
-			resp = rr.clients().create(cr);
-
+		try (Response resp = rr.clients().create(cr)) {
 			if (resp.getStatus() != 201) {
 				throw new RuntimeException("error creating realm client");
 			}
 
-			logger.debug("Create realm client response status: " + resp.getStatusInfo());
+			for (String client : clients) {
+				rr = keycloak.realm(realm);
+
+				cr = new ClientRepresentation();
+
+				cr.setName(client);
+				cr.setClientId(client);
+				cr.setPublicClient(true);
+				cr.setEnabled(true);
+
+				List<String> redirectUris = new ArrayList<String>(Arrays.asList(clients));
+
+				redirectUris.addAll(Arrays.asList(this.redirectUrls));
+
+				cr.setRedirectUris(redirectUris);
+				cr.setDirectAccessGrantsEnabled(true);
+				cr.setStandardFlowEnabled(true);
+
+				try (Response resp2 = rr.clients().create(cr)) {
+					if (resp2.getStatus() != 201) {
+						throw new RuntimeException("error creating realm client");
+					}
+
+					logger.debug("Create realm client response status: " + resp.getStatusInfo());
+				}
+			}
 		}
 
 		return rr;
@@ -209,7 +208,13 @@ public class UserManagementKeycloakImpl implements IUserManagement {
 	public GroupRepresentation getGroup(final String groupName) {
 		final List<GroupRepresentation> groupList = this.getRealmResource().groups().groups();
 
-		return groupList.stream().filter(g -> groupName.equals(g.getName())).findAny().get();
+		Optional<GroupRepresentation> group = groupList.stream().filter(g -> groupName.equals(g.getName())).findAny();
+
+		if (!group.isPresent()) {
+			return null;
+		}
+
+		return group.get();
 	}
 
 	@Override
@@ -577,6 +582,10 @@ public class UserManagementKeycloakImpl implements IUserManagement {
 		}
 
 		final ClientResource cr = this.searchClient(client, rr);
+
+		if (cr == null) {
+			return new ArrayList<RoleInfo>();
+		}
 
 		return cr.roles().list().stream().map(r -> {
 			RoleInfo ri = new RoleInfo();
