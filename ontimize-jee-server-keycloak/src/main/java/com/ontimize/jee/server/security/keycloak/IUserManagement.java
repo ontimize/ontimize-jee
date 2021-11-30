@@ -25,7 +25,7 @@ public interface IUserManagement {
 	 * @param realm realm name
 	 * @return Returns a List<UserRepresentation>
 	 */
-	List<UserRepresentation> searchUsers(final String realm);
+	List<UserRepresentation> getUsers(final String realm);
 
 	/**
 	 * Search of an created user account. It will search with overgiven username in
@@ -43,7 +43,7 @@ public interface IUserManagement {
 	 * @param userId user id
 	 * @return Returns a List<GroupRepresentation>
 	 */
-	List<GroupRepresentation> searchUserGroups(final String userId);
+	List<GroupRepresentation> getUserGroups(final String userId);
 
 	/**
 	 * Returns user representation object from keycloak
@@ -94,6 +94,8 @@ public interface IUserManagement {
 	 */
 	void addUserToGroup(final String userId, final String groupId);
 
+	public void addRealmToUser(final String username, final String realm);
+
 	/**
 	 * Activation of an created user account. It will search with overgiven username
 	 * in the related user management system. If it finds the user account, it will
@@ -123,21 +125,21 @@ public interface IUserManagement {
 
 	void disableUserAccount(final String userId);
 
-	public RealmResource createRealmIfNotExists(String realm, String displayName, String... clients);
+	public RealmResource createRealmIfNotExists(final String realmName, final String displayName, final String... clients);
 
-	public List<RealmInfo> getRealmsForUser(String username);
+	public List<RealmInfo> getRealmsForUser(final String username);
 
-	public void addClientToRealm(String realm, String client, String... redirectUrls);
+	public void addClientToRealm(final String realm, final String client, final String... redirectUrls);
 
-	void addRolesToRealm(String realm, String client, List<RoleInfo> roles);
+	void addRolesToRealm(final String realm, final String client, final List<RoleInfo> roles);
 
-	List<String> getUsersForRealm(String realm);
+	List<String> getUsersForRealm(final String realm);
 
-	List<String> getRolesForUser(String user, String realm, String client);
+	List<String> getRolesForUser(final String user, final String realm, final String client);
 
-	List<RoleInfo> getRolesForClient(String realm, String client);
+	List<RoleInfo> getRolesForClient(final String realm, final String client);
 
-	void setRolesForUser(String realm, String client, List<UserRoles> userRoles);
+	void setRolesForUser(final String realm, final String client, final List<UserRoles> userRoles);
 
-	void setApplicationRolesForUser(String realm, String user, List<ApplicationRoles> appRoles);
+	void setApplicationRolesForUser(final String realm, final String user, final List<ApplicationRoles> appRoles);
 }

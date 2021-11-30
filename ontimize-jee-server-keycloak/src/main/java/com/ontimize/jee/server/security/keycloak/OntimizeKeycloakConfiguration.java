@@ -8,6 +8,9 @@ public class OntimizeKeycloakConfiguration implements IOntimizeKeycloakConfigura
 	@Value("${ontimize.security.keycloak.auth-server-url}")
 	private String authServerUrl;
 
+	@Value("${ontimize.security.ignore-paths:}")
+	private String[] ignorePaths;
+
 	@Value("${ontimize.security.keycloak.public-client}")
 	private Boolean publicClient;
 
@@ -24,6 +27,15 @@ public class OntimizeKeycloakConfiguration implements IOntimizeKeycloakConfigura
 
 	public void setAuthServerUrl(String authServerUrl) {
 		this.authServerUrl = authServerUrl;
+	}
+
+	@Override
+	public String[] getIgnorePaths() {
+		return ignorePaths;
+	}
+
+	public void setIgnorePaths(String[] ignorePaths) {
+		this.ignorePaths = ignorePaths;
 	}
 
 	@Override

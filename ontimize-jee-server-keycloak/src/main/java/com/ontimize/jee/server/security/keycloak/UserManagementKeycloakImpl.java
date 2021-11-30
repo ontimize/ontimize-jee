@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -60,15 +61,13 @@ public class UserManagementKeycloakImpl implements IUserManagement {
 	@Value("${ontimize.security.keycloak.admin.password}")
 	private String adminPassword;
 
-	@Value("${ontimize.security.keycloak.realm-defaults.role}")
-	private String realmKeycloakRole;
-
 	@Value("${ontimize.security.keycloak.realm-defaults.redirect-urls:}")
 	private String[] redirectUrls;
 
 	private static final Logger logger = LoggerFactory.getLogger(UserManagementKeycloakImpl.class);
 	private static final ResteasyClient CONNECTION_POOL = new ResteasyClientBuilder().connectionPoolSize(10).build();
 	private static final String DEFAULT_LANGUAGE = "en";
+	private static final String TENANTS_KEY = "tenants";
 
 	protected Keycloak getInstance() {
 		logger.debug("Auth at keycloak for rest admin api Server URL: {} Username: {} ClientId: {}",
@@ -86,7 +85,7 @@ public class UserManagementKeycloakImpl implements IUserManagement {
 	 * @return list of UserRepresentation instances
 	 */
 	@Override
-	public List<UserRepresentation> searchUsers(final String realm) {
+	public List<UserRepresentation> getUsers(final String realm) {
 		return this.getInstance().realm(realm).users().list();
 	}
 
@@ -208,7 +207,7 @@ public class UserManagementKeycloakImpl implements IUserManagement {
 
 	@Override
 	public GroupRepresentation getGroup(final String groupName) {
-		final List<GroupRepresentation> groupList = this.getRealResource().groups().groups();
+		final List<GroupRepresentation> groupList = this.getRealmResource().groups().groups();
 
 		return groupList.stream().filter(g -> groupName.equals(g.getName())).findAny().get();
 	}
@@ -218,7 +217,40 @@ public class UserManagementKeycloakImpl implements IUserManagement {
 		this.getUserResource(userId).joinGroup(groupId);
 	}
 
-	/**
+	@Override
+	public void addRealmToUser(final String username, final String realm) {
+		final RealmResource rr = this.getRealmResource();
+
+		logger.debug("Keycloak search for username: {}", username);
+
+		// this should return just one result in the list
+		List<UserRepresentation> userList = rr.users().search(username);
+
+		if (userList != null && !userList.isEmpty()) {
+			logger.debug("Keycloak user search result count: {}", userList.size());
+
+			UserRepresentation userRep = userList.get(0);
+
+			logger.info("Get UserResource with user account id {}", userRep.getId());
+
+			// Get the user resource through the user id
+			UserResource userRes = rr.users().get(userRep.getId());
+			Map<String, List<String>> attributes = userRep.getAttributes();
+
+			if (attributes == null) {
+				userRep.singleAttribute(TENANTS_KEY, realm);
+			} else if (attributes.containsKey(TENANTS_KEY)) {
+				List<String> attr = attributes.get(TENANTS_KEY);
+				attr.add(realm);
+				userRes.update(userRep);
+			} else {
+				attributes.put(TENANTS_KEY, Collections.singletonList(realm));
+				userRes.update(userRep);
+			}
+		}
+	}
+
+	  /**
 	 * Please see further details at UserManagementInterface
 	 *
 	 * @param username user name
@@ -229,7 +261,7 @@ public class UserManagementKeycloakImpl implements IUserManagement {
 		logger.debug("Keycloak search for username: {}", username);
 
 		// this should return just one result in the list
-		final List<UserRepresentation> userList = this.getRealResource().users().search(username);
+		final List<UserRepresentation> userList = this.getRealmResource().users().search(username);
 
 		logger.debug("Keycloak user search result count: {}", userList.size());
 
@@ -243,13 +275,13 @@ public class UserManagementKeycloakImpl implements IUserManagement {
 	 * @return list of GroupRepresentation instances
 	 */
 	@Override
-	public List<GroupRepresentation> searchUserGroups(final String userId) {
-		logger.debug("Keycloak user groups search for user id: {}", userId);
+	public List<GroupRepresentation> getUserGroups(final String userId) {
+		logger.debug("Keycloak get user groups for user id: {}", userId);
 
 		// this should return just one result in the list
 		final List<GroupRepresentation> groupRepresentationList = this.getUserResource(userId).groups();
 
-		logger.debug("Keycloak user groups search result count: {}", groupRepresentationList.size());
+		logger.debug("Keycloak user groups count: {}", groupRepresentationList.size());
 
 		return groupRepresentationList;
 	}
@@ -271,7 +303,7 @@ public class UserManagementKeycloakImpl implements IUserManagement {
 
 		groupRepresentation.setName(groupName);
 
-		final GroupsResource groupsResource = this.getRealResource().groups();
+		final GroupsResource groupsResource = this.getRealmResource().groups();
 
 		groupsResource.add(groupRepresentation);
 
@@ -346,7 +378,7 @@ public class UserManagementKeycloakImpl implements IUserManagement {
 
 		logger.debug("Keycloak search for username: {}", username);
 
-		final RealmResource rr = this.getRealResource();
+		final RealmResource rr = this.getRealmResource();
 
 		// this should return just one result in the list
 		List<UserRepresentation> userList = rr.users().search(username);
@@ -677,13 +709,13 @@ public class UserManagementKeycloakImpl implements IUserManagement {
 		return this.searchRealm(realm, this.getInstance());
 	}
 
-	private RealmResource searchRealm(String realm, Keycloak keycloak) {
+	private RealmResource searchRealm(String realmName, Keycloak keycloak) {
 		final List<RealmRepresentation> rreps = keycloak.realms().findAll();
 		RealmResource rr = null;
 
 		for (RealmRepresentation r : rreps) {
-			if (r.getRealm().equalsIgnoreCase(realm)) {
-				rr = keycloak.realm(realm);
+			if (r.getRealm().equalsIgnoreCase(realmName)) {
+				rr = keycloak.realm(realmName);
 
 				break;
 			}
@@ -692,11 +724,11 @@ public class UserManagementKeycloakImpl implements IUserManagement {
 		return rr;
 	}
 
-	private RealmResource getRealResource() {
+	private RealmResource getRealmResource() {
 		return this.getInstance().realm(this.config.getRealm());
 	}
 
 	private UserResource getUserResource(final String userId) {
-		return this.getRealResource().users().get(userId);
+		return this.getRealmResource().users().get(userId);
 	}
 }
