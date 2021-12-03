@@ -4,9 +4,11 @@ import java.util.List;
 
 public interface ITenantStore {
 
-	List<TenantSettings> getAll();
+	TenantConnectionInfo get(String tenantId);
 
-	void addTenant(TenantSettings configuration);
+	List<TenantConnectionInfo> getAll();
+
+	void addTenant(TenantConnectionInfo configuration);
 
 	void removeTenant(String tenantId);
 }

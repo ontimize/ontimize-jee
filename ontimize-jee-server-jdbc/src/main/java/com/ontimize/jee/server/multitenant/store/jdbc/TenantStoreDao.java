@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.server.dao.jdbc.OntimizeJdbcDaoSupport;
 import com.ontimize.jee.server.multitenant.store.ITenantStore;
-import com.ontimize.jee.server.multitenant.store.TenantSettings;
+import com.ontimize.jee.server.multitenant.store.TenantConnectionInfo;
 
 public class TenantStoreDao extends OntimizeJdbcDaoSupport implements ITenantStore {
 	private static final String TENANT_ID_KEY = "${ontimize.multitenant.configuration.store-repository.tenant-id}";
@@ -35,8 +35,32 @@ public class TenantStoreDao extends OntimizeJdbcDaoSupport implements ITenantSto
 	private String passwordColumnName;
 
 	@Override
-	public List<TenantSettings> getAll() {
-		List<TenantSettings> allTenants = new ArrayList<>();
+	public TenantConnectionInfo get(String tenantId) {
+		TenantConnectionInfo tenantConnectionInfo = null;
+		Map<Object, Object> keys = new HashMap<>();
+		keys.put(tenantIdColumnName, tenantId);
+		List<Object> attributes = List.of(tenantIdColumnName, driverClassColumnName, jdbcUrlColumnName,
+				usernameColumnName, passwordColumnName);
+		EntityResult result = query(keys, attributes, (List) null, "default");
+
+		if (result.calculateRecordNumber() > 0) {
+			Map record = result.getRecordValues(0);
+
+			tenantConnectionInfo = new TenantConnectionInfo();
+
+			tenantConnectionInfo.setDriverClass((String) record.get(driverClassColumnName));
+			tenantConnectionInfo.setTenantId((String) record.get(tenantIdColumnName));
+			tenantConnectionInfo.setJdbcUrl((String) record.get(jdbcUrlColumnName));
+			tenantConnectionInfo.setUsername(((String) record.get(usernameColumnName)));
+			tenantConnectionInfo.setPassword(((String) record.get(passwordColumnName)));
+		}
+
+		return tenantConnectionInfo;
+	}
+
+	@Override
+	public List<TenantConnectionInfo> getAll() {
+		List<TenantConnectionInfo> allTenants = new ArrayList<>();
 		Map<Object, Object> keys = new HashMap<>();
 		List<Object> attributes = List.of(tenantIdColumnName, driverClassColumnName, jdbcUrlColumnName,
 				usernameColumnName, passwordColumnName);
@@ -44,22 +68,22 @@ public class TenantStoreDao extends OntimizeJdbcDaoSupport implements ITenantSto
 
 		for (int i = 0; i < result.calculateRecordNumber(); i++) {
 			Map record = result.getRecordValues(i);
-			TenantSettings tenantSettings = new TenantSettings();
+			TenantConnectionInfo tenantConnectionInfo = new TenantConnectionInfo();
 
-			tenantSettings.setDriverClass((String) record.get(driverClassColumnName));
-			tenantSettings.setTenantId((String) record.get(tenantIdColumnName));
-			tenantSettings.setJdbcUrl((String) record.get(jdbcUrlColumnName));
-			tenantSettings.setUsername(((String) record.get(usernameColumnName)));
-			tenantSettings.setPassword(((String) record.get(passwordColumnName)));
+			tenantConnectionInfo.setDriverClass((String) record.get(driverClassColumnName));
+			tenantConnectionInfo.setTenantId((String) record.get(tenantIdColumnName));
+			tenantConnectionInfo.setJdbcUrl((String) record.get(jdbcUrlColumnName));
+			tenantConnectionInfo.setUsername(((String) record.get(usernameColumnName)));
+			tenantConnectionInfo.setPassword(((String) record.get(passwordColumnName)));
 
-			allTenants.add(tenantSettings);
+			allTenants.add(tenantConnectionInfo);
 		}
 
 		return allTenants;
 	}
 
 	@Override
-	public void addTenant(TenantSettings settings) {
+	public void addTenant(TenantConnectionInfo settings) {
 		Map<Object, Object> data = new HashMap<>();
 		data.put(driverClassColumnName, settings.getDriverClass());
 		data.put(tenantIdColumnName, settings.getTenantId());
