@@ -34,7 +34,7 @@ public class SaveConfigurationService implements ISaveConfiguration, Initializin
 	}
 
 	@Override
-	public EntityResult getConfigPreferences(String user, String configType) throws OntimizeJEERuntimeException {
+	public EntityResult getConfigurations(String user, String configType) throws OntimizeJEERuntimeException {
 
 		Map<String, Object> keysValues = new HashMap<String, Object>();
 		keysValues.put(SaveConfigNameConvention.USER, user);
@@ -47,10 +47,10 @@ public class SaveConfigurationService implements ISaveConfiguration, Initializin
 	}
 
 	@Override
-	public void setConfigPreferences(String user, String configType, Map<String, Object> components)
+	public void setConfigurations(String user, String configType, Map<String, Object> components)
 			throws OntimizeJEERuntimeException {
 
-		EntityResult ePrefs = this.getConfigPreferences(user, configType);
+		EntityResult ePrefs = this.getConfigurations(user, configType);
 		
 		if (ePrefs.get(SaveConfigNameConvention.COMPONENTS) == null) {
 			Map<String, Object> attrValues = new HashMap<String, Object>();
