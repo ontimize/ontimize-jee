@@ -36,10 +36,10 @@ public class SaveConfigurationService implements ISaveConfiguration, Initializin
 	@Override
 	public EntityResult getConfigurations(String user, String configType) throws OntimizeJEERuntimeException {
 
-		Map<String, Object> keysValues = new HashMap<String, Object>();
+		Map<String, Object> keysValues = new HashMap<>();
 		keysValues.put(SaveConfigNameConvention.USER, user);
 		keysValues.put(SaveConfigNameConvention.TYPE, configType);
-		List<String> attributes = new ArrayList<String>();
+		List<String> attributes = new ArrayList<>();
 		attributes.add(SaveConfigNameConvention.ID);
 		attributes.add(SaveConfigNameConvention.COMPONENTS);
 
@@ -53,15 +53,15 @@ public class SaveConfigurationService implements ISaveConfiguration, Initializin
 		EntityResult ePrefs = this.getConfigurations(user, configType);
 		
 		if (ePrefs.get(SaveConfigNameConvention.COMPONENTS) == null) {
-			Map<String, Object> attrValues = new HashMap<String, Object>();
+			Map<String, Object> attrValues = new HashMap<>();
 			attrValues.put(SaveConfigNameConvention.USER, user);
 			attrValues.put(SaveConfigNameConvention.TYPE, configType);
 			attrValues.put(SaveConfigNameConvention.COMPONENTS, String.valueOf(components));
 			this.daoHelper.insert(dao, attrValues);
 		} else {
-			Map<String, Object> keysValues = new HashMap<String, Object>();
+			Map<String, Object> keysValues = new HashMap<>();
 			keysValues.put(SaveConfigNameConvention.ID, ((List)ePrefs.get(SaveConfigNameConvention.ID)).get(0));
-			Map<String, Object> attrValues = new HashMap<String, Object>();
+			Map<String, Object> attrValues = new HashMap<>();
 			attrValues.put(SaveConfigNameConvention.COMPONENTS, String.valueOf(components));
 			this.daoHelper.update(dao, attrValues, keysValues);
 		}

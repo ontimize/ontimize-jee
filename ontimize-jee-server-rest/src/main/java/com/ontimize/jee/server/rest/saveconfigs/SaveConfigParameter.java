@@ -6,8 +6,6 @@ import java.util.Map;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 @XmlRootElement
 public class SaveConfigParameter implements Serializable {
 
