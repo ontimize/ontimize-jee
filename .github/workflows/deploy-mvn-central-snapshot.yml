@@ -10,7 +10,7 @@ jobs:
       - name : Checkout repository code
         uses: actions/checkout@v2
       - name: Setup Java JDK and Maven
-        uses: actions/setup-java@v2
+        uses: ontimize/setup-java-maven-gitAction@v2.4.2
         with:
           distribution: 'temurin'
           java-version: '11'
