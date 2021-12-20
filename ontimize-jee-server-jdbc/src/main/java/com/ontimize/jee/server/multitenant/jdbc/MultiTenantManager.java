@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import com.ontimize.jee.server.multitenant.store.ITenantStore;
-import com.ontimize.jee.server.multitenant.store.TenantSettings;
+import com.ontimize.jee.server.multitenant.store.TenantConnectionInfo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,9 +31,9 @@ public class MultiTenantManager implements IMultiTenantManager {
 		if (dataSourceMap == null) {
 			dataSourceMap = new HashMap();
 
-			List<TenantSettings> tenantList = this.tenantStore.getAll();
+			List<TenantConnectionInfo> tenantList = this.tenantStore.getAll();
 
-			for (TenantSettings configuration : tenantList) {
+			for (TenantConnectionInfo configuration : tenantList) {
 				try {
 					DriverManagerDataSource dataSource = new DriverManagerDataSource();
 					dataSource.setDriverClassName(configuration.getDriverClass());
@@ -77,7 +77,7 @@ public class MultiTenantManager implements IMultiTenantManager {
 			dataSource.setUsername(username);
 			dataSource.setPassword(password);
 
-			TenantSettings tenantConfiguration = new TenantSettings();
+			TenantConnectionInfo tenantConfiguration = new TenantConnectionInfo();
 			tenantConfiguration.setTenantId(tenantId);
 			tenantConfiguration.setDriverClass(driverClassName);
 			tenantConfiguration.setJdbcUrl(jdbcUrl);

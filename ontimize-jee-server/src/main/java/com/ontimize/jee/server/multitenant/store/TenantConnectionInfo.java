@@ -1,6 +1,6 @@
 package com.ontimize.jee.server.multitenant.store;
 
-public class TenantSettings {
+public class TenantConnectionInfo {
 	private String tenantId;
 
 	private String driverClass;
@@ -10,6 +10,18 @@ public class TenantSettings {
 	private String username;
 
 	private String password;
+
+	public TenantConnectionInfo() {
+
+	}
+
+	public TenantConnectionInfo(String tenantId,String driverClass, String jdbcUrl, String username, String password) {
+		this.tenantId = tenantId;
+		this.driverClass = driverClass;
+		this.jdbcUrl = jdbcUrl;
+		this.username = username;
+		this.password = password;
+	}
 
 	public String getDriverClass() {
 		return driverClass;

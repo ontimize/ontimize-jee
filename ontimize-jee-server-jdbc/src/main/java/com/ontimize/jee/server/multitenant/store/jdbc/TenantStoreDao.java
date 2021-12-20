@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.server.dao.jdbc.OntimizeJdbcDaoSupport;
 import com.ontimize.jee.server.multitenant.store.ITenantStore;
-import com.ontimize.jee.server.multitenant.store.TenantSettings;
+import com.ontimize.jee.server.multitenant.store.TenantConnectionInfo;
 
 public class TenantStoreDao extends OntimizeJdbcDaoSupport implements ITenantStore {
 	private static final String TENANT_ID_KEY = "${ontimize.multitenant.configuration.store-repository.tenant-id}";
@@ -35,31 +35,55 @@ public class TenantStoreDao extends OntimizeJdbcDaoSupport implements ITenantSto
 	private String passwordColumnName;
 
 	@Override
-	public List<TenantSettings> getAll() {
-		List<TenantSettings> allTenants = new ArrayList<>();
+	public TenantConnectionInfo get(String tenantId) {
+		TenantConnectionInfo tci = null;
+		Map<Object, Object> keys = new HashMap<>();
+		keys.put(tenantIdColumnName, tenantId);
+		List<Object> attributes = List.of(tenantIdColumnName, driverClassColumnName, jdbcUrlColumnName,
+				usernameColumnName, passwordColumnName);
+		EntityResult result = query(keys, attributes, (List) null, "default");
+
+		if (result.calculateRecordNumber() > 0) {
+			Map<Object, Object> rec = result.getRecordValues(0);
+
+			tci = new TenantConnectionInfo();
+
+			tci.setDriverClass((String) rec.get(driverClassColumnName));
+			tci.setTenantId((String) rec.get(tenantIdColumnName));
+			tci.setJdbcUrl((String) rec.get(jdbcUrlColumnName));
+			tci.setUsername(((String) rec.get(usernameColumnName)));
+			tci.setPassword(((String) rec.get(passwordColumnName)));
+		}
+
+		return tci;
+	}
+
+	@Override
+	public List<TenantConnectionInfo> getAll() {
+		List<TenantConnectionInfo> allTenants = new ArrayList<>();
 		Map<Object, Object> keys = new HashMap<>();
 		List<Object> attributes = List.of(tenantIdColumnName, driverClassColumnName, jdbcUrlColumnName,
 				usernameColumnName, passwordColumnName);
 		EntityResult result = query(keys, attributes, (List) null, "default");
 
 		for (int i = 0; i < result.calculateRecordNumber(); i++) {
-			Map record = result.getRecordValues(i);
-			TenantSettings tenantSettings = new TenantSettings();
+			Map<Object, Object> rec = result.getRecordValues(i);
+			TenantConnectionInfo tci = new TenantConnectionInfo();
 
-			tenantSettings.setDriverClass((String) record.get(driverClassColumnName));
-			tenantSettings.setTenantId((String) record.get(tenantIdColumnName));
-			tenantSettings.setJdbcUrl((String) record.get(jdbcUrlColumnName));
-			tenantSettings.setUsername(((String) record.get(usernameColumnName)));
-			tenantSettings.setPassword(((String) record.get(passwordColumnName)));
+			tci.setDriverClass((String) rec.get(driverClassColumnName));
+			tci.setTenantId((String) rec.get(tenantIdColumnName));
+			tci.setJdbcUrl((String) rec.get(jdbcUrlColumnName));
+			tci.setUsername(((String) rec.get(usernameColumnName)));
+			tci.setPassword(((String) rec.get(passwordColumnName)));
 
-			allTenants.add(tenantSettings);
+			allTenants.add(tci);
 		}
 
 		return allTenants;
 	}
 
 	@Override
-	public void addTenant(TenantSettings settings) {
+	public void addTenant(TenantConnectionInfo settings) {
 		Map<Object, Object> data = new HashMap<>();
 		data.put(driverClassColumnName, settings.getDriverClass());
 		data.put(tenantIdColumnName, settings.getTenantId());
