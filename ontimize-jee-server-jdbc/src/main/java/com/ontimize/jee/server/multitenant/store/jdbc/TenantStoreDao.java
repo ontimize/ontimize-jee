@@ -44,15 +44,15 @@ public class TenantStoreDao extends OntimizeJdbcDaoSupport implements ITenantSto
 		EntityResult result = query(keys, attributes, (List) null, "default");
 
 		if (result.calculateRecordNumber() > 0) {
-			Map record = result.getRecordValues(0);
+			Map<Object, Object> rec = result.getRecordValues(0);
 
 			tci = new TenantConnectionInfo();
 
-			tci.setDriverClass((String) record.get(driverClassColumnName));
-			tci.setTenantId((String) record.get(tenantIdColumnName));
-			tci.setJdbcUrl((String) record.get(jdbcUrlColumnName));
-			tci.setUsername(((String) record.get(usernameColumnName)));
-			tci.setPassword(((String) record.get(passwordColumnName)));
+			tci.setDriverClass((String) rec.get(driverClassColumnName));
+			tci.setTenantId((String) rec.get(tenantIdColumnName));
+			tci.setJdbcUrl((String) rec.get(jdbcUrlColumnName));
+			tci.setUsername(((String) rec.get(usernameColumnName)));
+			tci.setPassword(((String) rec.get(passwordColumnName)));
 		}
 
 		return tci;
@@ -67,14 +67,14 @@ public class TenantStoreDao extends OntimizeJdbcDaoSupport implements ITenantSto
 		EntityResult result = query(keys, attributes, (List) null, "default");
 
 		for (int i = 0; i < result.calculateRecordNumber(); i++) {
-			Map<Object, Object> record = result.getRecordValues(i);
+			Map<Object, Object> rec = result.getRecordValues(i);
 			TenantConnectionInfo tci = new TenantConnectionInfo();
 
-			tci.setDriverClass((String) record.get(driverClassColumnName));
-			tci.setTenantId((String) record.get(tenantIdColumnName));
-			tci.setJdbcUrl((String) record.get(jdbcUrlColumnName));
-			tci.setUsername(((String) record.get(usernameColumnName)));
-			tci.setPassword(((String) record.get(passwordColumnName)));
+			tci.setDriverClass((String) rec.get(driverClassColumnName));
+			tci.setTenantId((String) rec.get(tenantIdColumnName));
+			tci.setJdbcUrl((String) rec.get(jdbcUrlColumnName));
+			tci.setUsername(((String) rec.get(usernameColumnName)));
+			tci.setPassword(((String) rec.get(passwordColumnName)));
 
 			allTenants.add(tci);
 		}
