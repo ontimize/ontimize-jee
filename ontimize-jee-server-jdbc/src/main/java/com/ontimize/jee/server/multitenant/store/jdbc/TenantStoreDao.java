@@ -36,7 +36,7 @@ public class TenantStoreDao extends OntimizeJdbcDaoSupport implements ITenantSto
 
 	@Override
 	public TenantConnectionInfo get(String tenantId) {
-		TenantConnectionInfo tenantConnectionInfo = null;
+		TenantConnectionInfo tci = null;
 		Map<Object, Object> keys = new HashMap<>();
 		keys.put(tenantIdColumnName, tenantId);
 		List<Object> attributes = List.of(tenantIdColumnName, driverClassColumnName, jdbcUrlColumnName,
@@ -46,16 +46,16 @@ public class TenantStoreDao extends OntimizeJdbcDaoSupport implements ITenantSto
 		if (result.calculateRecordNumber() > 0) {
 			Map record = result.getRecordValues(0);
 
-			tenantConnectionInfo = new TenantConnectionInfo();
+			tci = new TenantConnectionInfo();
 
-			tenantConnectionInfo.setDriverClass((String) record.get(driverClassColumnName));
-			tenantConnectionInfo.setTenantId((String) record.get(tenantIdColumnName));
-			tenantConnectionInfo.setJdbcUrl((String) record.get(jdbcUrlColumnName));
-			tenantConnectionInfo.setUsername(((String) record.get(usernameColumnName)));
-			tenantConnectionInfo.setPassword(((String) record.get(passwordColumnName)));
+			tci.setDriverClass((String) record.get(driverClassColumnName));
+			tci.setTenantId((String) record.get(tenantIdColumnName));
+			tci.setJdbcUrl((String) record.get(jdbcUrlColumnName));
+			tci.setUsername(((String) record.get(usernameColumnName)));
+			tci.setPassword(((String) record.get(passwordColumnName)));
 		}
 
-		return tenantConnectionInfo;
+		return tci;
 	}
 
 	@Override
@@ -67,16 +67,16 @@ public class TenantStoreDao extends OntimizeJdbcDaoSupport implements ITenantSto
 		EntityResult result = query(keys, attributes, (List) null, "default");
 
 		for (int i = 0; i < result.calculateRecordNumber(); i++) {
-			Map record = result.getRecordValues(i);
-			TenantConnectionInfo tenantConnectionInfo = new TenantConnectionInfo();
+			Map<Object, Object> record = result.getRecordValues(i);
+			TenantConnectionInfo tci = new TenantConnectionInfo();
 
-			tenantConnectionInfo.setDriverClass((String) record.get(driverClassColumnName));
-			tenantConnectionInfo.setTenantId((String) record.get(tenantIdColumnName));
-			tenantConnectionInfo.setJdbcUrl((String) record.get(jdbcUrlColumnName));
-			tenantConnectionInfo.setUsername(((String) record.get(usernameColumnName)));
-			tenantConnectionInfo.setPassword(((String) record.get(passwordColumnName)));
+			tci.setDriverClass((String) record.get(driverClassColumnName));
+			tci.setTenantId((String) record.get(tenantIdColumnName));
+			tci.setJdbcUrl((String) record.get(jdbcUrlColumnName));
+			tci.setUsername(((String) record.get(usernameColumnName)));
+			tci.setPassword(((String) record.get(passwordColumnName)));
 
-			allTenants.add(tenantConnectionInfo);
+			allTenants.add(tci);
 		}
 
 		return allTenants;
