@@ -7,7 +7,8 @@ import java.util.Map;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -22,15 +23,20 @@ import com.ontimize.jee.server.dao.IOntimizeDaoSupport;
 public class SaveConfigurationService implements ISaveConfiguration, InitializingBean {
 
 	@Autowired
-	@Qualifier("ConfigsDao")
-	private IOntimizeDaoSupport dao;
-
+	private ApplicationContext context;
+	
+	@Value("${ontimize.save-config-dao}")
+	private String daoNaming;
+	
+	private IOntimizeDaoSupport daoSupport;
+	
 	@Autowired
 	private DefaultOntimizeDaoHelper daoHelper;
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		CheckingTools.failIfNull(this.dao, "Dao not found");
+		daoSupport = (IOntimizeDaoSupport) context.getBean(daoNaming);
+		CheckingTools.failIfNull(this.daoSupport, "Dao not found");
 	}
 
 	@Override
@@ -43,7 +49,7 @@ public class SaveConfigurationService implements ISaveConfiguration, Initializin
 		attributes.add(SaveConfigNameConvention.ID);
 		attributes.add(SaveConfigNameConvention.COMPONENTS);
 
-		return this.daoHelper.query(dao, keysValues, attributes);
+		return this.daoHelper.query(daoSupport, keysValues, attributes);
 	}
 
 	@Override
@@ -57,13 +63,13 @@ public class SaveConfigurationService implements ISaveConfiguration, Initializin
 			attrValues.put(SaveConfigNameConvention.USER, user);
 			attrValues.put(SaveConfigNameConvention.TYPE, configType);
 			attrValues.put(SaveConfigNameConvention.COMPONENTS, String.valueOf(components));
-			this.daoHelper.insert(dao, attrValues);
+			this.daoHelper.insert(daoSupport, attrValues);
 		} else {
 			Map<String, Object> keysValues = new HashMap<>();
 			keysValues.put(SaveConfigNameConvention.ID, ((List)ePrefs.get(SaveConfigNameConvention.ID)).get(0));
 			Map<String, Object> attrValues = new HashMap<>();
 			attrValues.put(SaveConfigNameConvention.COMPONENTS, String.valueOf(components));
-			this.daoHelper.update(dao, attrValues, keysValues);
+			this.daoHelper.update(daoSupport, attrValues, keysValues);
 		}
 	}
 }
