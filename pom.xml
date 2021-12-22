@@ -355,7 +355,7 @@
             </dependency>
             <dependency>
                 <groupId>com.ontimize.jee</groupId>
-                <artifactId>ontimize-jee-jdbc</artifactId>
+                <artifactId>ontimize-jee-server-jdbc</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
