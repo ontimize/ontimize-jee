@@ -1,662 +1,669 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.ontimize.jee</groupId>
-	<artifactId>ontimize-jee</artifactId>
-	<version>5.6.0-SNAPSHOT</version>
-	<packaging>pom</packaging>
-	<organization>
-		<name>Imatia Innovation</name>
-		<url>http://imatia.com</url>
-	</organization>
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.ontimize.jee</groupId>
+    <artifactId>ontimize-jee</artifactId>
+    <version>5.6.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <organization>
+        <name>Imatia Innovation</name>
+        <url>http://imatia.com</url>
+    </organization>
 
-	<name>Ontimize EE</name>
-	<description>Ontimize EE uses Spring technology to separate the client and the server, allowing applications to be developed quickly and efficiently.</description>
-	<url>https://www.ontimize.com</url>
+    <name>Ontimize EE</name>
+    <description>Ontimize EE uses Spring technology to separate the client and the server, allowing applications to be developed quickly and efficiently.</description>
+    <url>https://www.ontimize.com</url>
 
-	<developers>
-		<developer>
-			<name>Cristóbal Miguel Vázquez Carde</name>
-			<email>cmiguel.vazquez@imatia.com</email>
-			<organization>Imatia Innovation</organization>
-			<organizationUrl>http://imatia.com</organizationUrl>
-		</developer>
-		<developer>
-			<name>Daniel Graña Cousido</name>
-			<email>daniel.grana@imatia.com</email>
-			<organization>Imatia Innovation</organization>
-			<organizationUrl>http://imatia.com</organizationUrl>
-		</developer>
-		<developer>
-			<name>Enrique Álvarez Pereira</name>
-			<email>enrique.alvarez@imatia.com</email>
-			<organization>Imatia Innovation</organization>
-			<organizationUrl>http://imatia.com</organizationUrl>
-		</developer>
-		<developer>
-			<name>Faustino Lage Rego</name>
-			<email>faustino.lage@imatia.com</email>
-			<organization>Imatia Innovation</organization>
-			<organizationUrl>http://imatia.com</organizationUrl>
-		</developer>
-		<developer>
-			<name>Gonzalo Martínez Fernández</name>
-			<email>gonzalo.martinez@imatia.com</email>
-			<organization>Imatia Innovation</organization>
-			<organizationUrl>http://imatia.com</organizationUrl>
-		</developer>
-		<developer>
-			<name>Joaquín Romero Riveiro</name>
-			<email>joaquin.romero@imatia.com</email>
-			<organization>Imatia Innovation</organization>
-			<organizationUrl>http://imatia.com</organizationUrl>
-		</developer>
-		<developer>
-			<name>Manuel Cid Rodríguez</name>
-			<email>manuel.cid@imatia.com</email>
-			<organization>Imatia Innovation</organization>
-			<organizationUrl>http://imatia.com</organizationUrl>
-		</developer>
-		<developer>
-			<name>Pablo Martínez Kirsten</name>
-			<email>pablo.martinez@imatia.com</email>
-			<organization>Imatia Innovation</organization>
-			<organizationUrl>http://imatia.com</organizationUrl>
-		</developer>
-	</developers>
+    <developers>
+        <developer>
+            <name>Cristóbal Miguel Vázquez Carde</name>
+            <email>cmiguel.vazquez@imatia.com</email>
+            <organization>Imatia Innovation</organization>
+            <organizationUrl>http://imatia.com</organizationUrl>
+        </developer>
+        <developer>
+            <name>Daniel Graña Cousido</name>
+            <email>daniel.grana@imatia.com</email>
+            <organization>Imatia Innovation</organization>
+            <organizationUrl>http://imatia.com</organizationUrl>
+        </developer>
+        <developer>
+            <name>Enrique Álvarez Pereira</name>
+            <email>enrique.alvarez@imatia.com</email>
+            <organization>Imatia Innovation</organization>
+            <organizationUrl>http://imatia.com</organizationUrl>
+        </developer>
+        <developer>
+            <name>Faustino Lage Rego</name>
+            <email>faustino.lage@imatia.com</email>
+            <organization>Imatia Innovation</organization>
+            <organizationUrl>http://imatia.com</organizationUrl>
+        </developer>
+        <developer>
+            <name>Gonzalo Martínez Fernández</name>
+            <email>gonzalo.martinez@imatia.com</email>
+            <organization>Imatia Innovation</organization>
+            <organizationUrl>http://imatia.com</organizationUrl>
+        </developer>
+        <developer>
+            <name>Joaquín Romero Riveiro</name>
+            <email>joaquin.romero@imatia.com</email>
+            <organization>Imatia Innovation</organization>
+            <organizationUrl>http://imatia.com</organizationUrl>
+        </developer>
+        <developer>
+            <name>Manuel Cid Rodríguez</name>
+            <email>manuel.cid@imatia.com</email>
+            <organization>Imatia Innovation</organization>
+            <organizationUrl>http://imatia.com</organizationUrl>
+        </developer>
+        <developer>
+            <name>Pablo Martínez Kirsten</name>
+            <email>pablo.martinez@imatia.com</email>
+            <organization>Imatia Innovation</organization>
+            <organizationUrl>http://imatia.com</organizationUrl>
+        </developer>
+    </developers>
 
-	<licenses>
-		<license>
-			<name>The Apache License, Version 2.0</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-		</license>
-	</licenses>
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
 
-	<scm>
-		<connection>scm:git:git://github.com/ontimize/ontimize-jee.git</connection>
-		<developerConnection>scm:git:ssh://github.com:ontimize/ontimize-jee.git</developerConnection>
-		<url>https://github.com/ontimize/ontimize-jee/tree/master</url>
-	</scm>
+    <scm>
+        <connection>scm:git:git://github.com/ontimize/ontimize-jee.git</connection>
+        <developerConnection>scm:git:ssh://github.com:ontimize/ontimize-jee.git</developerConnection>
+        <url>https://github.com/ontimize/ontimize-jee/tree/master</url>
+    </scm>
 
-	<distributionManagement>
-		<snapshotRepository>
-			<id>ossrh</id>
-			<url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
-		</snapshotRepository>
-		<repository>
-			<id>ossrh</id>
-			<url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-		</repository>
-	</distributionManagement>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
 
-	<properties>
-		<maven.compiler.target>11</maven.compiler.target>
-		<maven.compiler.source>11</maven.compiler.source>
+    <properties>
+        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.source>11</maven.compiler.source>
 
-		<projectGroupId>com.ontimize.jee</projectGroupId>
+        <projectGroupId>com.ontimize.jee</projectGroupId>
 
-		<!-- =========================================================== -->
-		<!-- Encoding -->
-		<!-- =========================================================== -->
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<!-- =========================================================== -->
-		<!-- Plugin versions -->
-		<!-- =========================================================== -->
-		<compiler.plugin.version>3.8.1</compiler.plugin.version>
-		<ear.plugin.version>2.8</ear.plugin.version>
-		<resources.plugin.version>3.2.0</resources.plugin.version>
-		<war.plugin.version>2.4</war.plugin.version>
-		<deploy.plugin.version>3.0.0-M1</deploy.plugin.version>
-		<source.plugin.version>3.2.1</source.plugin.version>
-		<!-- =========================================================== -->
-		<!-- Versions -->
-		<!-- =========================================================== -->
-		<junit.version>5.7.2</junit.version>
-		<junit-launcher.version>1.7.2</junit-launcher.version>
-		<logback.version>1.2.3</logback.version>
-		<slf4j.version>1.7.30</slf4j.version>
-		<spring.version>5.3.6</spring.version>
-		<spring-security.version>5.5.0</spring-security.version>
-		<spring-security-kerberos.version>1.0.1.RELEASE</spring-security-kerberos.version>
-		<spring-security-ldap.version>5.5.0</spring-security-ldap.version>
-		<spring-security-jwt.version>1.1.1.RELEASE</spring-security-jwt.version>
-		<spring-session.version>1.3.5.RELEASE</spring-session.version>
-		<spring-session-data-redis.version>2.5.0</spring-session-data-redis.version>
-		<jackson.version>2.12.3</jackson.version>
-		<cxf.version>3.4.3</cxf.version>
-		<httpclient.version>4.5.13</httpclient.version>
-		<apache-poi.version>4.1.2</apache-poi.version>
-		<apache-poi.ooxml-schemas.version>1.1</apache-poi.ooxml-schemas.version>
-		<dom4j.version>1.1</dom4j.version>
-		<itext.version>2.1.7</itext.version>
-		<xmlbeans.version>2.4.0</xmlbeans.version>
-		<servlet-api.version>3.1.0</servlet-api.version>
-		<commons-lang.version>3.12.0</commons-lang.version>
+        <!-- =========================================================== -->
+        <!-- Encoding -->
+        <!-- =========================================================== -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- =========================================================== -->
+        <!-- Plugin versions -->
+        <!-- =========================================================== -->
+        <compiler.plugin.version>3.8.1</compiler.plugin.version>
+        <ear.plugin.version>2.8</ear.plugin.version>
+        <resources.plugin.version>3.2.0</resources.plugin.version>
+        <war.plugin.version>2.4</war.plugin.version>
+        <deploy.plugin.version>3.0.0-M1</deploy.plugin.version>
+        <source.plugin.version>3.2.1</source.plugin.version>
+        <!-- =========================================================== -->
+        <!-- Versions -->
+        <!-- =========================================================== -->
+        <junit.version>5.7.2</junit.version>
+        <junit-launcher.version>1.7.2</junit-launcher.version>
+        <logback.version>1.2.3</logback.version>
+        <slf4j.version>1.7.30</slf4j.version>
+        <spring.version>5.3.6</spring.version>
+        <spring-security.version>5.5.1</spring-security.version>
+        <spring-security-kerberos.version>1.0.1.RELEASE</spring-security-kerberos.version>
+        <spring-security-ldap.version>5.5.1</spring-security-ldap.version>
+        <spring-security-jwt.version>1.1.1.RELEASE</spring-security-jwt.version>
+        <spring-session.version>1.3.5.RELEASE</spring-session.version>
+        <spring-session-data-redis.version>2.5.0</spring-session-data-redis.version>
+        <jackson.version>2.12.3</jackson.version>
+        <cxf.version>3.4.3</cxf.version>
+        <httpclient.version>4.5.13</httpclient.version>
+        <apache-poi.version>4.1.2</apache-poi.version>
+        <apache-poi.ooxml-schemas.version>1.1</apache-poi.ooxml-schemas.version>
+        <dom4j.version>1.1</dom4j.version>
+        <itext.version>2.1.7</itext.version>
+        <xmlbeans.version>2.4.0</xmlbeans.version>
+        <servlet-api.version>3.1.0</servlet-api.version>
+        <commons-lang.version>3.12.0</commons-lang.version>
 
-		<commons-beanutils.version>1.9.4</commons-beanutils.version>
-		<commons-lang.gis.version>2.6</commons-lang.gis.version>
-		<commons-codec.version>1.10</commons-codec.version>
-		<jmimemagic.version>0.1.2</jmimemagic.version>
-		<jasperreports.version>6.2.0</jasperreports.version>
-		<dynamicjasper.version>5.0.7</dynamicjasper.version>
+        <commons-beanutils.version>1.9.4</commons-beanutils.version>
+        <commons-lang.gis.version>2.6</commons-lang.gis.version>
+        <commons-codec.version>1.10</commons-codec.version>
+        <jmimemagic.version>0.1.2</jmimemagic.version>
+        <jasperreports.version>6.2.0</jasperreports.version>
+        <dynamicjasper.version>5.0.7</dynamicjasper.version>
 
-		<commons-collections.version>4.4</commons-collections.version>
-		<commons-io.version>2.7</commons-io.version>
-		<mesp.version>1.0.2</mesp.version>
-		<ontimize.plaf.version>1.1.7</ontimize.plaf.version>
-		<ontimize.plaf.color.version>1.4.4</ontimize.plaf.color.version>
-		<zip4j.version>1.3.2</zip4j.version>
+        <commons-collections.version>4.4</commons-collections.version>
+        <commons-io.version>2.7</commons-io.version>
+        <mesp.version>1.0.2</mesp.version>
+        <ontimize.plaf.version>1.1.7</ontimize.plaf.version>
+        <ontimize.plaf.color.version>1.4.4</ontimize.plaf.color.version>
+        <zip4j.version>1.3.2</zip4j.version>
 
-		<jee.version>8.0</jee.version>
-		<aspectjweaver.version>1.6.6</aspectjweaver.version>
-	</properties>
+        <jee.version>8.0</jee.version>
+        <aspectjweaver.version>1.6.6</aspectjweaver.version>
+
+        <keycloak.version>15.0.2</keycloak.version>
+        
+        <!-- SONARCloud configuration -->
+        <sonar.organization>ontimize</sonar.organization>
+          <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+    </properties>
 
 
 
-	<build>
-		<!-- =========================================================== -->
-		<!-- Plugins -->
-		<!-- =========================================================== -->
-		<pluginManagement>
-			<plugins>
-				<!-- Resources plugin (2.4.x versions do not correctly filter files containing 
-					'@' character). -->
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-resources-plugin</artifactId>
-					<version>${resources.plugin.version}</version>
-				</plugin>
+    <build>
+        <!-- =========================================================== -->
+        <!-- Plugins -->
+        <!-- =========================================================== -->
+        <pluginManagement>
+            <plugins>
+                <!-- Resources plugin (2.4.x versions do not correctly filter files containing 
+                    '@' character). -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>${resources.plugin.version}</version>
+                </plugin>
 
-				<!-- Compiler configuration -->
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<version>${compiler.plugin.version}</version>
-					<configuration>
-						<verbose>true</verbose>
-						<source>${maven.compiler.source}</source>
-						<target>${maven.compiler.target}</target>
-						<encoding>${project.build.sourceEncoding}</encoding>
-					</configuration>
-				</plugin>
-				<!-- JAR plugin adding entries to manifest -->
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-jar-plugin</artifactId>
-					<version>3.0.2</version>
-					<configuration>
-						<archive>
-							<addMavenDescriptor>false</addMavenDescriptor>
-							<manifestEntries>
-								<Trusted-Library>true</Trusted-Library>
-								<Permissions>all-permissions</Permissions>
-								<Codebase>*</Codebase>
-							</manifestEntries>
-						</archive>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-deploy-plugin</artifactId>
-					<version>${deploy.plugin.version}</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-source-plugin</artifactId>
-					<version>${source.plugin.version}</version>
-					<executions>
-						<execution>
-							<id>attach-sources</id>
-							<goals>
-								<goal>jar-no-fork</goal>
-							</goals>
-						</execution>
-					</executions>
-				</plugin>
-				<!-- dependency maven plugin -->
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>dependency-maven-plugin</artifactId>
-					<version>1.0</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-javadoc-plugin</artifactId>
-					<version>3.2.0</version>
-					<executions>
-						<execution>
-							<id>attach-javadocs</id>
-							<goals>
-								<goal>jar</goal>
-							</goals>
-							<configuration>
-								<failOnError>false</failOnError>
-								<doclint>none</doclint>
-							</configuration>
-						</execution>
-					</executions>
-				</plugin>
-				<!-- Maven junit test plugin -->
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-surefire-plugin</artifactId>
-					<version>3.0.0-M5</version>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-		<plugins>
-			<!-- Source -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
-	<profiles>
-		<profile>
-			<id>generate-local-version</id>
-			<build>
-				<plugins>
-					<!-- Source -->
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-source-plugin</artifactId>
-					</plugin>
-					<!-- JavaDoc -->
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-javadoc-plugin</artifactId>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<id>generate-version</id>
-			<build>
-				<plugins>
-					<!-- Source -->
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-source-plugin</artifactId>
-					</plugin>
-					<!-- JavaDoc -->
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-javadoc-plugin</artifactId>
-					</plugin>
-					<plugin>
-						<groupId>org.sonatype.plugins</groupId>
-						<artifactId>nexus-staging-maven-plugin</artifactId>
-						<version>1.6.7</version>
-						<extensions>true</extensions>
-						<configuration>
-							<serverId>ossrh</serverId>
-							<nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
-							<autoReleaseAfterClose>true</autoReleaseAfterClose>
-						</configuration>
-					</plugin>
-					<plugin>
-						<groupId>org.simplify4u.plugins</groupId>
-						<artifactId>sign-maven-plugin</artifactId>
-						<version>0.3.1</version>
-						<executions>
-							<execution>
-								<id>sign-artifacts</id>
-								<phase>verify</phase>
-								<goals>
-									<goal>sign</goal>
-								</goals>
-								<configuration>
-									<!-- Prevent gpg from using pinentry programs. Fixes: gpg: signing 
-										failed: Inappropriate ioctl for device -->
-									<gpgArguments>
-										<arg>--pinentry-mode</arg>
-										<arg>loopback</arg>
-									</gpgArguments>
-									<keyname>${gpg.keyname}</keyname>
-									<passphraseServerId>${gpg.keyname}</passphraseServerId>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
+                <!-- Compiler configuration -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${compiler.plugin.version}</version>
+                    <configuration>
+                        <verbose>true</verbose>
+                        <source>${maven.compiler.source}</source>
+                        <target>${maven.compiler.target}</target>
+                        <encoding>${project.build.sourceEncoding}</encoding>
+                    </configuration>
+                </plugin>
+                <!-- JAR plugin adding entries to manifest -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>3.0.2</version>
+                    <configuration>
+                        <archive>
+                            <addMavenDescriptor>false</addMavenDescriptor>
+                            <manifestEntries>
+                                <Trusted-Library>true</Trusted-Library>
+                                <Permissions>all-permissions</Permissions>
+                                <Codebase>*</Codebase>
+                            </manifestEntries>
+                        </archive>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>${deploy.plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>${source.plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>attach-sources</id>
+                            <goals>
+                                <goal>jar-no-fork</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <!-- dependency maven plugin -->
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>dependency-maven-plugin</artifactId>
+                    <version>1.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>3.2.0</version>
+                    <executions>
+                        <execution>
+                            <id>attach-javadocs</id>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                            <configuration>
+                                <failOnError>false</failOnError>
+                                <doclint>none</doclint>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <!-- Maven junit test plugin -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>3.0.0-M5</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <!-- Source -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+    <profiles>
+        <profile>
+            <id>generate-local-version</id>
+            <build>
+                <plugins>
+                    <!-- Source -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                    </plugin>
+                    <!-- JavaDoc -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>generate-version</id>
+            <build>
+                <plugins>
+                    <!-- Source -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                    </plugin>
+                    <!-- JavaDoc -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <version>1.6.7</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <serverId>ossrh</serverId>
+                            <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
+                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                      <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>3.0.1</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                                <configuration>
+                                    <!-- Prevent gpg from using pinentry programs. Fixes: gpg: signing 
+                                        failed: Inappropriate ioctl for device -->
+                                    <gpgArguments>
+                                        <arg>--pinentry-mode</arg>
+                                        <arg>loopback</arg>
+                                    </gpgArguments>
+                                    <keyname>${gpg.keyname}</keyname>
+                                    <passphraseServerId>${gpg.keyname}</passphraseServerId>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
-	<dependencyManagement>
-		<dependencies>
-			<!-- Project dependencies -->
-			<dependency>
-				<groupId>com.ontimize.jee</groupId>
-				<artifactId>ontimize-jee-common</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.ontimize.jee</groupId>
-				<artifactId>ontimize-jee-server</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.ontimize.jee</groupId>
-				<artifactId>ontimize-jee-server-rest</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.ontimize.jee</groupId>
-				<artifactId>ontimize-jee-server-jdbc</artifactId>
-				<version>${project.version}</version>
-			</dependency>
+    <dependencyManagement>
+        <dependencies>
+            <!-- Project dependencies -->
+            <dependency>
+                <groupId>com.ontimize.jee</groupId>
+                <artifactId>ontimize-jee-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.ontimize.jee</groupId>
+                <artifactId>ontimize-jee-server</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.ontimize.jee</groupId>
+                <artifactId>ontimize-jee-server-rest</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.ontimize.jee</groupId>
+                <artifactId>ontimize-jee-server-jdbc</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
-			<!-- commons-lang -->
-			<dependency>
-				<groupId>org.apache.commons</groupId>
-				<artifactId>commons-lang3</artifactId>
-				<version>${commons-lang.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>commons-lang</groupId>
-				<artifactId>commons-lang</artifactId>
-				<version>${commons-lang.gis.version}</version>
-			</dependency>
+            <!-- commons-lang -->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons-lang.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-lang</groupId>
+                <artifactId>commons-lang</artifactId>
+                <version>${commons-lang.gis.version}</version>
+            </dependency>
 
-			<!-- Logback -->
-			<dependency>
-				<groupId>ch.qos.logback</groupId>
-				<artifactId>logback-classic</artifactId>
-				<version>${logback.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>ch.qos.logback</groupId>
-				<artifactId>logback-core</artifactId>
-				<version>${logback.version}</version>
-			</dependency>
-			<!-- Logging -->
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>slf4j-api</artifactId>
-				<version>${slf4j.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>jcl-over-slf4j</artifactId>
-				<version>${slf4j.version}</version>
-			</dependency>
+            <!-- Logback -->
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${logback.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-core</artifactId>
+                <version>${logback.version}</version>
+            </dependency>
+            <!-- Logging -->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>jcl-over-slf4j</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
 
-			<!-- Spring -->
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-core</artifactId>
-				<version>${spring.version}</version>
-				<exclusions>
-					<exclusion>
-						<groupId>commons-logging</groupId>
-						<artifactId>commons-logging</artifactId>
-					</exclusion>
-				</exclusions>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-aop</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-orm</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-jdbc</artifactId>
-				<version>${spring.version}</version>
-				<optional>true</optional>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-tx</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-test</artifactId>
-				<version>${spring.version}</version>
-				<optional>true</optional>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-web</artifactId>
-				<version>${spring.version}</version>
-				<!-- <scope>provided</scope> -->
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-beans</artifactId>
-				<version>${spring.version}</version>
-				<exclusions>
-					<exclusion>
-						<artifactId>commons-logging</artifactId>
-						<groupId>commons-logging</groupId>
-					</exclusion>
-				</exclusions>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-context</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-expression</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-context-support</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-webmvc</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-			<!-- Spring Security -->
-			<dependency>
-				<groupId>org.springframework.security</groupId>
-				<artifactId>spring-security-core</artifactId>
-				<version>${spring-security.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework.security</groupId>
-				<artifactId>spring-security-web</artifactId>
-				<version>${spring-security.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework.security</groupId>
-				<artifactId>spring-security-config</artifactId>
-				<version>${spring-security.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework.security</groupId>
-				<artifactId>spring-security-taglibs</artifactId>
-				<version>${spring-security.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework.security.kerberos</groupId>
-				<artifactId>spring-security-kerberos-web</artifactId>
-				<version>${spring-security-kerberos.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework.security</groupId>
-				<artifactId>spring-security-ldap</artifactId>
-				<version>${spring-security-ldap.version}</version>
-			</dependency>
+            <!-- Spring -->
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-core</artifactId>
+                <version>${spring.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-aop</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-orm</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-jdbc</artifactId>
+                <version>${spring.version}</version>
+                <optional>true</optional>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-tx</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-test</artifactId>
+                <version>${spring.version}</version>
+                <optional>true</optional>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-web</artifactId>
+                <version>${spring.version}</version>
+                <!-- <scope>provided</scope> -->
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-beans</artifactId>
+                <version>${spring.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>commons-logging</artifactId>
+                        <groupId>commons-logging</groupId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-expression</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context-support</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-webmvc</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <!-- Spring Security -->
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-core</artifactId>
+                <version>${spring-security.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-web</artifactId>
+                <version>${spring-security.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-config</artifactId>
+                <version>${spring-security.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-taglibs</artifactId>
+                <version>${spring-security.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.security.kerberos</groupId>
+                <artifactId>spring-security-kerberos-web</artifactId>
+                <version>${spring-security-kerberos.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-ldap</artifactId>
+                <version>${spring-security-ldap.version}</version>
+            </dependency>
 
-			<dependency>
-				<groupId>org.springframework.security</groupId>
-				<artifactId>spring-security-jwt</artifactId>
-				<version>${spring-security-jwt.version}</version>
-			</dependency>
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-jwt</artifactId>
+                <version>${spring-security-jwt.version}</version>
+            </dependency>
 
-			<dependency>
-				<groupId>org.springframework.session</groupId>
-				<artifactId>spring-session</artifactId>
-				<version>${spring-session.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework.session</groupId>
-				<artifactId>spring-session-data-redis</artifactId>
-				<version>${spring-session-data-redis.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.aspectj</groupId>
-				<artifactId>aspectjweaver</artifactId>
-				<version>${aspectjweaver.version}</version>
-			</dependency>
+            <dependency>
+                <groupId>org.springframework.session</groupId>
+                <artifactId>spring-session</artifactId>
+                <version>${spring-session.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.session</groupId>
+                <artifactId>spring-session-data-redis</artifactId>
+                <version>${spring-session-data-redis.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.aspectj</groupId>
+                <artifactId>aspectjweaver</artifactId>
+                <version>${aspectjweaver.version}</version>
+            </dependency>
 
-			<!-- JEE 7 dependencies https://wikis.oracle.com/display/GlassFish/Java+EE+7+Maven+Coordinates -->
-			<dependency>
-				<groupId>javax.websocket</groupId>
-				<artifactId>javax.websocket-api</artifactId>
-				<version>1.0</version>
-				<scope>provided</scope>
-			</dependency>
-			<dependency>
-				<groupId>javax.servlet</groupId>
-				<artifactId>javax.servlet-api</artifactId>
-				<version>${servlet-api.version}</version>
-				<scope>provided</scope>
-			</dependency>
+            <!-- JEE 7 dependencies https://wikis.oracle.com/display/GlassFish/Java+EE+7+Maven+Coordinates -->
+            <dependency>
+                <groupId>javax.websocket</groupId>
+                <artifactId>javax.websocket-api</artifactId>
+                <version>1.0</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>javax.servlet-api</artifactId>
+                <version>${servlet-api.version}</version>
+                <scope>provided</scope>
+            </dependency>
 
-			<!-- documents -->
-			<dependency>
-				<groupId>commons-codec</groupId>
-				<artifactId>commons-codec</artifactId>
-				<version>${commons-codec.version}</version>
-			</dependency>
+            <!-- documents -->
+            <dependency>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>${commons-codec.version}</version>
+            </dependency>
 
-			<!-- Jmimemagic -->
-			<dependency>
-				<groupId>jmimemagic</groupId>
-				<artifactId>jmimemagic</artifactId>
-				<version>${jmimemagic.version}</version>
-				<exclusions>
-					<exclusion>
-						<artifactId>log4j</artifactId>
-						<groupId>log4j</groupId>
-					</exclusion>
-				</exclusions>
-			</dependency>
+            <!-- Jmimemagic -->
+            <dependency>
+                <groupId>jmimemagic</groupId>
+                <artifactId>jmimemagic</artifactId>
+                <version>${jmimemagic.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>log4j</artifactId>
+                        <groupId>log4j</groupId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
 
-			<!-- commons io -->
-			<dependency>
-				<groupId>commons-io</groupId>
-				<artifactId>commons-io</artifactId>
-				<version>${commons-io.version}</version>
-			</dependency>
+            <!-- commons io -->
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons-io.version}</version>
+            </dependency>
 
-			<!-- JUnit -->
-			<dependency>
-				<groupId>org.junit.jupiter</groupId>
-				<artifactId>junit-jupiter-engine</artifactId>
-				<version>${junit.version}</version>
-			</dependency>
+            <!-- JUnit -->
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-engine</artifactId>
+                <version>${junit.version}</version>
+            </dependency>
 
-			<dependency>
-				<groupId>org.junit.platform</groupId>
-				<artifactId>junit-platform-launcher</artifactId>
-				<version>${junit-launcher.version}</version>
-				<scope>test</scope>
-			</dependency>
+            <dependency>
+                <groupId>org.junit.platform</groupId>
+                <artifactId>junit-platform-launcher</artifactId>
+                <version>${junit-launcher.version}</version>
+                <scope>test</scope>
+            </dependency>
 
-			<!-- XML Config -->
-			<dependency>
-				<groupId>org.apache.commons</groupId>
-				<artifactId>commons-collections4</artifactId>
-				<version>${commons-collections.version}</version>
-			</dependency>
+            <!-- XML Config -->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-collections4</artifactId>
+                <version>${commons-collections.version}</version>
+            </dependency>
 
-			<!-- si alguien utiliza la version vieja -->
-			<dependency>
-				<groupId>commons-collections</groupId>
-				<artifactId>commons-collections</artifactId>
-				<version>3.2.2</version>
-			</dependency>
+            <!-- si alguien utiliza la version vieja -->
+            <dependency>
+                <groupId>commons-collections</groupId>
+                <artifactId>commons-collections</artifactId>
+                <version>3.2.2</version>
+            </dependency>
 
-			<!-- javax what is out of jdk 11 -->
-			<dependency>
-				<groupId>javax</groupId>
-				<artifactId>javaee-api</artifactId>
-				<version>${jee.version}</version>
-				<scope>provided</scope>
-			</dependency>
+            <!-- javax what is out of jdk 11 -->
+            <dependency>
+                <groupId>javax</groupId>
+                <artifactId>javaee-api</artifactId>
+                <version>${jee.version}</version>
+                <scope>provided</scope>
+            </dependency>
 
-			<dependency>
-				<groupId>javax.xml.bind</groupId>
-				<artifactId>jaxb-api</artifactId>
-				<version>2.3.0-b170201.1204</version>
-			</dependency>
-			<dependency>
-				<groupId>javax.activation</groupId>
-				<artifactId>activation</artifactId>
-				<version>1.1</version>
-			</dependency>
-			<dependency>
-				<groupId>org.glassfish.jaxb</groupId>
-				<artifactId>jaxb-runtime</artifactId>
-				<version>2.3.0-b170127.1453</version>
-			</dependency>
+            <dependency>
+                <groupId>javax.xml.bind</groupId>
+                <artifactId>jaxb-api</artifactId>
+                <version>2.3.0-b170201.1204</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.activation</groupId>
+                <artifactId>activation</artifactId>
+                <version>1.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jaxb</groupId>
+                <artifactId>jaxb-runtime</artifactId>
+                <version>2.3.0-b170127.1453</version>
+            </dependency>
 
-			<!-- apache cxf -->
-			<dependency>
-				<groupId>org.apache.cxf</groupId>
-				<artifactId>cxf-rt-frontend-jaxws</artifactId>
-				<version>${cxf.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.cxf</groupId>
-				<artifactId>cxf-rt-transports-http</artifactId>
-				<version>${cxf.version}</version>
-			</dependency>
+            <!-- apache cxf -->
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-frontend-jaxws</artifactId>
+                <version>${cxf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-transports-http</artifactId>
+                <version>${cxf.version}</version>
+            </dependency>
 
-			<!-- Zip4j -->
-			<dependency>
-				<groupId>net.lingala.zip4j</groupId>
-				<artifactId>zip4j</artifactId>
-				<version>${zip4j.version}</version>
-			</dependency>
-			<!-- http client -->
-			<dependency>
-				<groupId>org.apache.httpcomponents</groupId>
-				<artifactId>httpclient</artifactId>
-			</dependency>
-			<dependency>
-				<groupId>com.fasterxml.jackson.core</groupId>
-				<artifactId>jackson-core</artifactId>
-				<version>${jackson.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.fasterxml.jackson.core</groupId>
-				<artifactId>jackson-databind</artifactId>
-				<version>${jackson.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.fasterxml.jackson.core</groupId>
-				<artifactId>jackson-annotations</artifactId>
-				<version>${jackson.version}</version>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
+            <!-- Zip4j -->
+            <dependency>
+                <groupId>net.lingala.zip4j</groupId>
+                <artifactId>zip4j</artifactId>
+                <version>${zip4j.version}</version>
+            </dependency>
+            <!-- http client -->
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-annotations</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
-	<modules>
-		<module>ontimize-jee-common</module>
-		<module>ontimize-jee-server</module>
-		<module>ontimize-jee-server-rest</module>
-		<module>ontimize-jee-server-jdbc</module>
-		<module>ontimize-jee-webclient-addons</module>
-	</modules>
+    <modules>
+        <module>ontimize-jee-common</module>
+        <module>ontimize-jee-server</module>
+        <module>ontimize-jee-server-rest</module>
+        <module>ontimize-jee-server-jdbc</module>
+        <module>ontimize-jee-server-keycloak</module>
+        <module>ontimize-jee-webclient-addons</module>
+    </modules>
 </project>
