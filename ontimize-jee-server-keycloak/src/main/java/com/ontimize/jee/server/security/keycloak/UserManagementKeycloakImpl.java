@@ -3,6 +3,7 @@ package com.ontimize.jee.server.security.keycloak;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -255,7 +256,31 @@ public class UserManagementKeycloakImpl implements IUserManagement {
 		}
 	}
 
-	  /**
+	@Override
+	public void addRealmToUserAccount(final String userId, final String realm) {
+		try {
+			final UserResource user = this.getUserResource(userId);
+			final UserRepresentation userRepresentation = user.toRepresentation();
+			Map<String, List<String>> attributes = userRepresentation.getAttributes();
+
+			if (attributes == null) {
+				attributes = new HashMap<String, List<String>>();
+				userRepresentation.setAttributes(attributes);
+			}
+
+			if(attributes.containsKey("tenants")) {
+				attributes.get("tenants").add(realm);
+			} else {
+				attributes.put("tenants", Collections.singletonList(realm));
+			}
+
+			user.update(userRepresentation);
+		} catch (ClientErrorException ex) {
+			logger.error("Keycloak - addTenantUserAccount error", ex);
+		}
+	}
+
+	/**
 	 * Please see further details at UserManagementInterface
 	 *
 	 * @param username user name

@@ -18,7 +18,7 @@ public class OntimizeMultitenantKeycloakConfigResolver implements KeycloakConfig
 
 	@Override
 	public KeycloakDeployment resolve(OIDCHttpFacade.Request request) {
-		String realm = request.getHeader("xtenant");
+		String realm = request.getHeader("X-Tenant");
 
 		if (realm == null) {
 			realm = this.config.getRealm(); // Default Tenant
