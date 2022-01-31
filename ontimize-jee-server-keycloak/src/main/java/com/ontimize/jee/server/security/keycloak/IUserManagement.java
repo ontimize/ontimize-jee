@@ -94,7 +94,21 @@ public interface IUserManagement {
 	 */
 	void addUserToGroup(final String userId, final String groupId);
 
-	public void addRealmToUser(final String username, final String realm);
+	/**
+	 * Add a realm to a user
+	 *
+	 * @param user    username
+	 * @param realm   realm
+	 */
+	void addRealmToUser(final String username, final String realm);
+
+	/**
+	 * Add a realm to a user
+	 *
+	 * @param user    username
+	 * @param realm   realm
+	 */
+	void addRealmToUserAccount(final String userId, final String realm);
 
 	/**
 	 * Activation of an created user account. It will search with overgiven username

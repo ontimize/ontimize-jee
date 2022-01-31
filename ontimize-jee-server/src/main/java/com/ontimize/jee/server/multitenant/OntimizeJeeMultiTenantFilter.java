@@ -27,7 +27,7 @@ public class OntimizeJeeMultiTenantFilter implements Filter {
 			throws IOException, ServletException {
 
 		if (request instanceof HttpServletRequest) {
-			final String tenantId = ((HttpServletRequest) request).getHeader("xtenant");
+			final String tenantId = ((HttpServletRequest) request).getHeader("X-Tenant");
 			if (tenantId != null) {
 				MultiTenantContextHolder.setTenant(tenantId);
 			}
