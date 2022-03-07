@@ -10,35 +10,51 @@ import org.keycloak.adapters.OIDCHttpFacade;
 import org.keycloak.representations.adapters.config.AdapterConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class OntimizeMultitenantKeycloakConfigResolver implements KeycloakConfigResolver {
+import com.ontimize.jee.common.multitenant.ITenantAuthenticationInfo;
+
+public class OntimizeMultitenantKeycloakConfigResolver implements IOntimizeMultitenantKeycloakConfigResolver, KeycloakConfigResolver {
 	@Autowired
 	IOntimizeKeycloakConfiguration config;
 
+	private Map<String, ITenantAuthenticationInfo> tenantsAuthenticationInfo = null;
 	private final Map<String, KeycloakDeployment> cache = new ConcurrentHashMap<String, KeycloakDeployment>();
 
 	@Override
 	public KeycloakDeployment resolve(OIDCHttpFacade.Request request) {
-		String realm = request.getHeader("X-Tenant");
+		String tenantId = request.getHeader("X-Tenant");
 
-		if (realm == null) {
-			realm = this.config.getRealm(); // Default Tenant
+		if (tenantId == null) {
+			tenantId = this.config.getRealm(); // Default Tenant
 		}
 
-		KeycloakDeployment deployment = cache.get(realm);
+		KeycloakDeployment deployment = cache.get(tenantId);
 
 		if (deployment == null) {
 			final AdapterConfig ac = new AdapterConfig();
 
-			ac.setAuthServerUrl(this.config.getAuthServerUrl());
-			ac.setRealm(realm); // Tenant
-			ac.setResource(this.config.getResource()); // Client Id
+			if (tenantsAuthenticationInfo != null && tenantsAuthenticationInfo.containsKey(tenantId)) {
+				ITenantAuthenticationInfo auth = tenantsAuthenticationInfo.get(tenantId);
+				ac.setAuthServerUrl(auth.getUrl());
+				ac.setRealm(auth.getRealm()); // Realm
+				ac.setResource(auth.getClient()); // Client Id
+			} else {
+				ac.setAuthServerUrl(this.config.getAuthServerUrl());
+				ac.setRealm(tenantId); // Realm
+				ac.setResource(this.config.getResource()); // Client Id
+			}
+
 			ac.setPublicClient(this.config.getPublicClient());
 
 			deployment = KeycloakDeploymentBuilder.build(ac);
 
-			cache.put(realm, deployment);
+			cache.put(tenantId, deployment);
 		}
 
 		return deployment;
+	}
+
+	@Override
+	public void setTenantsAuthenticationInfo(Map<String, ITenantAuthenticationInfo> tenantsAuthenticationInfo) {
+		this.tenantsAuthenticationInfo = tenantsAuthenticationInfo;
 	}
 }
