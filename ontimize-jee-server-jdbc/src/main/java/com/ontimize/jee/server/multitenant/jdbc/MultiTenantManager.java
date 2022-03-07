@@ -9,8 +9,8 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
-import com.ontimize.jee.common.multitenant.ITenantStore;
-import com.ontimize.jee.common.multitenant.TenantConnectionInfo;
+import com.ontimize.jee.server.multitenant.store.ITenantStore;
+import com.ontimize.jee.server.multitenant.store.TenantConnectionInfo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -8,9 +8,9 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Value;
 
 import com.ontimize.jee.common.dto.EntityResult;
-import com.ontimize.jee.common.multitenant.ITenantStore;
-import com.ontimize.jee.common.multitenant.TenantConnectionInfo;
 import com.ontimize.jee.server.dao.jdbc.OntimizeJdbcDaoSupport;
+import com.ontimize.jee.server.multitenant.store.ITenantStore;
+import com.ontimize.jee.server.multitenant.store.TenantConnectionInfo;
 
 public class TenantStoreDao extends OntimizeJdbcDaoSupport implements ITenantStore {
 	private static final String TENANT_ID_KEY = "${ontimize.multitenant.configuration.store-repository.tenant-id}";

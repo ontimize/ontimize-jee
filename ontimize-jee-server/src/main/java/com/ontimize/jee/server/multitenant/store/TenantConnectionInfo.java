@@ -1,4 +1,4 @@
-package com.ontimize.jee.common.multitenant;
+package com.ontimize.jee.server.multitenant.store;
 
 public class TenantConnectionInfo {
 	private String tenantId;
