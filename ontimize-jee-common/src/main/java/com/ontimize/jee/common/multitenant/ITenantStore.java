@@ -1,4 +1,4 @@
-package com.ontimize.jee.server.multitenant.store;
+package com.ontimize.jee.common.multitenant;
 
 import java.util.List;
 
