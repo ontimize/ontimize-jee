@@ -11,6 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLWarning;
 import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
@@ -963,7 +964,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	protected Map<Object, Object> checkDeleteKeys(final Map<?, ?> keysValues) {
 		Map<Object, Object> res = new HashMap<>();
 		for (String element : this.deleteKeys) {
-			String mapKey = element.toString();
+			String mapKey = element;
 			if (!keysValues.containsKey(mapKey)) {
 				throw new SQLWarningException("M_NECESSARY_" + mapKey.toUpperCase(), null);
 			}
@@ -981,8 +982,8 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	 */
 	protected void checkUpdateKeys(final Map<?, ?> keysValues) {
 		for (String element : this.updateKeys) {
-			if (!keysValues.containsKey(element.toString())) {
-				throw new SQLWarningException("M_NECESSARY_" + element.toString().toUpperCase(), null);
+			if (!keysValues.containsKey(element)) {
+				throw new SQLWarningException("M_NECESSARY_" + element.toUpperCase(), new SQLWarning());
 			}
 		}
 	}
