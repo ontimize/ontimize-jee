@@ -219,7 +219,9 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 
 			if (jdbcTemplate != null) {
 
-				return jdbcTemplate.query(sqlQuery, vValues.toArray(),
+				ArgumentPreparedStatementSetter pss = new ArgumentPreparedStatementSetter(vValues.toArray());
+
+				return jdbcTemplate.query(sqlQuery, pss,
 						new EntityResultResultSetExtractor(this.getStatementHandler(), queryTemplateInformation,
 								attributes));
 			}
