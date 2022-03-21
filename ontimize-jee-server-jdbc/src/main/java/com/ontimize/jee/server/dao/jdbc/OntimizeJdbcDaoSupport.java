@@ -248,16 +248,12 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 				queryAdapter);
 		final String sqlQuery = stSQL.getSQLStatement();
 		final List<?> vValues = stSQL.getValues();
-		//		AdvancedEntityResult advancedER = this.getJdbcTemplate().query(sqlQuery, vValues.toArray(),
-		//				new AdvancedEntityResultResultSetExtractor(this.getStatementHandler(), queryTemplateInformation,
-		//						attributes, recordNumber, startIndex));
-
-		//		AdvancedEntityResult advancedER = this.getJdbcTemplate().query
 
 		ArgumentPreparedStatementSetter pss = new ArgumentPreparedStatementSetter(vValues.toArray());
 
-		AdvancedEntityResult advancedER = this.getJdbcTemplate().query(new SimpleScrollablePreparedStatementCreator(sqlQuery), pss, new AdvancedEntityResultResultSetExtractor(this.getStatementHandler(), queryTemplateInformation,
-				attributes, recordNumber, startIndex));
+		AdvancedEntityResult advancedER = this.getJdbcTemplate().query(
+				new SimpleScrollablePreparedStatementCreator(sqlQuery), pss, new AdvancedEntityResultResultSetExtractor(
+						this.getStatementHandler(), queryTemplateInformation, attributes, recordNumber, startIndex));
 
 		advancedER.setTotalRecordCount(this.getQueryRecordNumber(keysValues, queryId));
 		return advancedER;
