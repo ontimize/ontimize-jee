@@ -252,17 +252,19 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 
 		ArgumentPreparedStatementSetter pss = new ArgumentPreparedStatementSetter(vValues.toArray());
 
-		if (this.getJdbcTemplate() != null) {
-			AdvancedEntityResult advancedER = this.getJdbcTemplate().query(
+		JdbcTemplate jdbcTemplate = this.getJdbcTemplate();
+
+		if (jdbcTemplate != null) {
+			AdvancedEntityResult advancedER = jdbcTemplate.query(
 					new SimpleScrollablePreparedStatementCreator(sqlQuery), pss, new AdvancedEntityResultResultSetExtractor(
 							this.getStatementHandler(), queryTemplateInformation, attributes, recordNumber, startIndex));
 
 			advancedER.setTotalRecordCount(this.getQueryRecordNumber(keysValues, queryId));
 			return advancedER;
 
-	}
+		}
 
-	return new AdvancedEntityResultMapImpl(EntityResult.OPERATION_WRONG, EntityResult.NODATA_RESULT);
+		return new AdvancedEntityResultMapImpl(EntityResult.OPERATION_WRONG, EntityResult.NODATA_RESULT);
 
 	}
 
