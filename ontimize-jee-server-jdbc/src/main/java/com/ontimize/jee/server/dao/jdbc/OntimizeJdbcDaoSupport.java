@@ -214,10 +214,18 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 		// las columnas toUpperCase y toLowerCase no tiene en cuenta el '.'
 		Chronometer chrono = new Chronometer().start();
 		try {
-			return this.getJdbcTemplate()
-					.query(sqlQuery, vValues.toArray(),
-							new EntityResultResultSetExtractor(this.getStatementHandler(), queryTemplateInformation,
-									attributes));
+
+			JdbcTemplate jdbcTemplate = this.getJdbcTemplate();
+
+			if (jdbcTemplate != null) {
+
+				return jdbcTemplate.query(sqlQuery, vValues.toArray(),
+						new EntityResultResultSetExtractor(this.getStatementHandler(), queryTemplateInformation,
+								attributes));
+			}
+
+			return new EntityResultMapImpl(EntityResult.OPERATION_WRONG, EntityResult.NODATA_RESULT);
+
 		} finally {
 			OntimizeJdbcDaoSupport.logger.trace("Time consumed in query+result= {} ms", chrono.stopMs());
 		}
