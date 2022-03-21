@@ -56,6 +56,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.util.Assert;
 
 import com.ontimize.jee.common.db.AdvancedEntityResult;
+import com.ontimize.jee.common.db.AdvancedEntityResultMapImpl;
 import com.ontimize.jee.common.db.NullValue;
 import com.ontimize.jee.common.db.SQLStatementBuilder;
 import com.ontimize.jee.common.db.SQLStatementBuilder.BasicExpression;
@@ -251,12 +252,17 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 
 		ArgumentPreparedStatementSetter pss = new ArgumentPreparedStatementSetter(vValues.toArray());
 
-		AdvancedEntityResult advancedER = this.getJdbcTemplate().query(
-				new SimpleScrollablePreparedStatementCreator(sqlQuery), pss, new AdvancedEntityResultResultSetExtractor(
-						this.getStatementHandler(), queryTemplateInformation, attributes, recordNumber, startIndex));
+		if (this.getJdbcTemplate() != null) {
+			AdvancedEntityResult advancedER = this.getJdbcTemplate().query(
+					new SimpleScrollablePreparedStatementCreator(sqlQuery), pss, new AdvancedEntityResultResultSetExtractor(
+							this.getStatementHandler(), queryTemplateInformation, attributes, recordNumber, startIndex));
 
-		advancedER.setTotalRecordCount(this.getQueryRecordNumber(keysValues, queryId));
-		return advancedER;
+			advancedER.setTotalRecordCount(this.getQueryRecordNumber(keysValues, queryId));
+			return advancedER;
+
+	}
+
+	return new AdvancedEntityResultMapImpl(EntityResult.OPERATION_WRONG, EntityResult.NODATA_RESULT);
 
 	}
 
