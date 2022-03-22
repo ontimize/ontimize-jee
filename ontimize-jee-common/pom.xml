@@ -203,5 +203,10 @@
 			<artifactId>junit-jupiter-api</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>org.assertj</groupId>
+			<artifactId>assertj-core</artifactId>
+		</dependency>
+
 	</dependencies>
 </project>	
