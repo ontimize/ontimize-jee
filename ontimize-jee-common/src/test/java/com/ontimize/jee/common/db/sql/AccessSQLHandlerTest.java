@@ -6,10 +6,17 @@ import org.junit.jupiter.api.Test;
 class AccessSQLHandlerTest {
 
 	@Test
-	void testNonValidSQLType() {
+	void getSQLTypeName_Fail_IfSQLTypeNotExist() {
 		int invalidSQLType = -99999;
 		AccessSQLHandler accessSQLHandler = new AccessSQLHandler();
 		Assertions.assertThrows(AccessSQLException.class, () -> accessSQLHandler.getSQLTypeName(invalidSQLType));
 	}
+
+	//	@Test
+	//	void getSQLTypeName_Success_IfSQLTypeExist() {
+	//		int validSQLType = ;
+	//		AccessSQLHandler accessSQLHandler = new AccessSQLHandler();
+	//		Assertions.asser;
+	//	}
 
 }
