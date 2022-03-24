@@ -22,32 +22,47 @@ public class OntimizeMultitenantKeycloakConfigResolver implements IOntimizeMulti
 	@Override
 	public KeycloakDeployment resolve(OIDCHttpFacade.Request request) {
 		String tenantId = request.getHeader("X-Tenant");
+		KeycloakDeployment deployment = null;
 
-		if (tenantId == null) {
-			tenantId = this.config.getRealm(); // Default Tenant
-		}
+		if (tenantId != null && cache.containsKey(tenantId)) {
+			deployment = cache.get(tenantId);
+		} else {
+			if (this.tenantsAuthenticationInfo != null) {
+				if (tenantId != null && this.tenantsAuthenticationInfo.containsKey(tenantId)) {
+					final ITenantAuthenticationInfo auth = this.tenantsAuthenticationInfo.get(tenantId);
+					final AdapterConfig ac = new AdapterConfig();
+					ac.setAuthServerUrl(auth.getUrl());
+					ac.setRealm(auth.getRealm()); // Realm
+					ac.setResource(auth.getClient()); // Client Id
+					ac.setPublicClient(this.config.getPublicClient());
 
-		KeycloakDeployment deployment = cache.get(tenantId);
+					deployment = KeycloakDeploymentBuilder.build(ac);
 
-		if (deployment == null) {
-			final AdapterConfig ac = new AdapterConfig();
+					cache.put(tenantId, deployment);
+				} else {
+					tenantId = this.config.getRealm(); // Default Tenant
 
-			if (tenantsAuthenticationInfo != null && tenantsAuthenticationInfo.containsKey(tenantId)) {
-				ITenantAuthenticationInfo auth = tenantsAuthenticationInfo.get(tenantId);
-				ac.setAuthServerUrl(auth.getUrl());
-				ac.setRealm(auth.getRealm()); // Realm
-				ac.setResource(auth.getClient()); // Client Id
+					deployment = cache.get(tenantId);
+				}
 			} else {
+				if (tenantId == null) {
+					tenantId = this.config.getRealm(); // Default Tenant
+				}
+
+				deployment = cache.get(tenantId);
+			}
+
+			if (deployment == null) {
+				final AdapterConfig ac = new AdapterConfig();
 				ac.setAuthServerUrl(this.config.getAuthServerUrl());
 				ac.setRealm(tenantId); // Realm
 				ac.setResource(this.config.getResource()); // Client Id
+				ac.setPublicClient(this.config.getPublicClient());
+
+				deployment = KeycloakDeploymentBuilder.build(ac);
+
+				cache.put(tenantId, deployment);
 			}
-
-			ac.setPublicClient(this.config.getPublicClient());
-
-			deployment = KeycloakDeploymentBuilder.build(ac);
-
-			cache.put(tenantId, deployment);
 		}
 
 		return deployment;
