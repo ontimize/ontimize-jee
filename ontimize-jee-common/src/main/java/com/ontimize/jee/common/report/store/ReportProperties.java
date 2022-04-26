@@ -12,7 +12,7 @@ public interface ReportProperties extends java.io.Serializable {
      */
     public static final String JASPERREPORT = "JASPERREPORT";
 
-    public Object getKey();
+    public String getKey();
 
     public String getName();
 
@@ -24,7 +24,7 @@ public interface ReportProperties extends java.io.Serializable {
 
     public String getReportType();
 
-    public void setKey(Object key);
+    public void setKey(String key);
 
     public void setName(String name);
 
