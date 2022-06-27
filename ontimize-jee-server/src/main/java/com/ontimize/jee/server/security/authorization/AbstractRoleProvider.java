@@ -43,7 +43,9 @@ public abstract class AbstractRoleProvider implements IRoleProvider {
 
     protected Role loadRoleAndCache(String roleName) {
         Role role = this.getRoleService().loadRole(roleName);
-        this.addRole(role);
+        if (role != null) {
+            this.addRole(role);
+        }
         return role;
     }
 
