@@ -12,6 +12,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.ontimize.jee.webclient.export.util.ApplicationContextUtils;
 import org.apache.poi.ss.usermodel.DataFormat;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.IndexedColors;
@@ -80,6 +81,8 @@ public class ExcelExportService implements IExcelExportService, ApplicationConte
     private static final Logger logger = LoggerFactory.getLogger(ExcelExportService.class);
 
     private ApplicationContext appContext;
+    
+    private ApplicationContextUtils applicationContextUtils;
 
     /**
      * Method that generates the data provider
@@ -594,6 +597,10 @@ public class ExcelExportService implements IExcelExportService, ApplicationConte
             ExportColumnProvider columnProvider = createColumnProvider(entityResult);
 
             // DataProvider
+            String service = String.valueOf(entityResult.get("service"));
+            String path = String.valueOf(entityResult.get("path"));
+            Object serviceBean = this.getApplicationContextUtils().getServiceBean(service, path);
+            
             StringBuffer buffer = new StringBuffer();
             buffer.append(entityResult.get("dao")).append(ORestController.QUERY);
 
@@ -601,7 +608,7 @@ public class ExcelExportService implements IExcelExportService, ApplicationConte
             orderBy.add(new SQLOrder("NAME"));
 
             ExcelExportDataProvider dataProvider = generateDataProvider(
-                    appContext.getBean(String.valueOf(entityResult.get("service"))),
+                    serviceBean,
                     (QueryParameter) entityResult.get("queryParameters"), buffer.toString(), keysValues,
                     attributesValues, columnProvider.getBodyColumns(), pageSize, orderBy, advQuery, offSet);
 
@@ -664,4 +671,11 @@ public class ExcelExportService implements IExcelExportService, ApplicationConte
         return appContext;
     }
 
+    protected ApplicationContextUtils getApplicationContextUtils() {
+        if(this.applicationContextUtils == null){
+            this.applicationContextUtils = new ApplicationContextUtils();
+            ((ApplicationContextAware) this.applicationContextUtils).setApplicationContext(this.appContext);
+        }
+        return applicationContextUtils;
+    }
 }
