@@ -1,15 +1,15 @@
 package export.entityresult;
 
-import com.ontimize.jee.webclient.export.BaseExcelExporter;
+import com.ontimize.jee.webclient.export.support.exporter.BaseExcelExporter;
 import com.ontimize.jee.webclient.export.CellStyleContext;
 import com.ontimize.jee.webclient.export.ExportColumnStyle;
 import com.ontimize.jee.webclient.export.ExportColumnStyle.CellColor;
 import com.ontimize.jee.webclient.export.ExportColumnStyle.HorizontalAlignment;
-import com.ontimize.jee.webclient.export.SXSSFWorkbookExcelExporter;
+import com.ontimize.jee.webclient.export.support.exporter.DefaultSXSSFExcelExporter;
 import com.ontimize.jee.webclient.export.SheetContext;
-import com.ontimize.jee.webclient.export.executor.support.DefaultExportColumnStyle;
-import com.ontimize.jee.webclient.export.executor.support.dataprovider.DefaultEntityResultExcelExportPaginatedDataProvider;
-import com.ontimize.jee.webclient.export.executor.support.styleprovider.DefaultExcelExportStyleProvider;
+import com.ontimize.jee.webclient.export.support.DefaultExportColumnStyle;
+import com.ontimize.jee.webclient.export.support.dataprovider.DefaultEntityResultExcelExportPaginatedDataProvider;
+import com.ontimize.jee.webclient.export.support.styleprovider.DefaultExcelExportStyleProvider;
 import com.ontimize.jee.webclient.export.helpers.EntityResultExportHelper;
 import com.ontimize.jee.webclient.export.pagination.PaginationRequest;
 import com.ontimize.jee.webclient.export.pagination.PaginationResult;
@@ -70,7 +70,7 @@ public class EntityResultPaginatedExcelExportTest extends Application {
 
         final ExportColumnProvider exportColumnProvider = EntityResultExportHelper
             .getExportContextFromEntityResult(entityResult);
-        final BaseExcelExporter exporter = new SXSSFWorkbookExcelExporter();
+        final BaseExcelExporter exporter = new DefaultSXSSFExcelExporter();
         try {
             final DefaultEntityResultExcelExportPaginatedDataProvider dataProvider = new DefaultEntityResultExcelExportPaginatedDataProvider(
                     entityResult);

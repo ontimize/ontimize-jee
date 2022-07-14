@@ -4,6 +4,7 @@ package export.barebean;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.function.Function;
 
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -16,11 +17,11 @@ import com.ontimize.jee.webclient.export.CellStyleContext;
 import com.ontimize.jee.webclient.export.ExportColumnStyle;
 import com.ontimize.jee.webclient.export.SheetContext;
 import com.ontimize.jee.webclient.export.ExportColumnStyle.CellColor;
-import com.ontimize.jee.webclient.export.executor.support.DefaultExportColumnStyle;
-import com.ontimize.jee.webclient.export.executor.support.dataprovider.DefaultBareBeanExcelExportDataProvider;
-import com.ontimize.jee.webclient.export.executor.support.exporter.DefaultXSSFExcelExporter;
-import com.ontimize.jee.webclient.export.executor.support.styleprovider.DefaultExcelExportStyleProvider;
-import com.ontimize.jee.webclient.export.helpers.BareBeanExportHelper;
+import com.ontimize.jee.webclient.export.support.DefaultExportColumnStyle;
+import export.support.dataprovider.DefaultBareBeanExcelExportDataProvider;
+import com.ontimize.jee.webclient.export.support.exporter.DefaultXSSFExcelExporter;
+import com.ontimize.jee.webclient.export.support.styleprovider.DefaultExcelExportStyleProvider;
+import export.helpers.BareBeanExportHelper;
 import com.ontimize.jee.webclient.export.providers.ExportColumnProvider;
 import com.ontimize.jee.webclient.export.providers.SheetNameProvider;
 
@@ -101,7 +102,7 @@ public class BareBeanExcelExportTest {
                             }
 
                             @Override
-                            public Callback<SheetContext, String> getSheetName() {
+                            public Function<SheetContext, String> getSheetName() {
                                 return context -> {
                                     if (context.getNumRows() > 100) {
                                         return this.getDefaultSheetName() + "_" + context.getActualSheetIndex();

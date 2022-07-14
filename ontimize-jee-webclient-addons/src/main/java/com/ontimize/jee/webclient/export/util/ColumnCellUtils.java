@@ -93,18 +93,6 @@ public class ColumnCellUtils {
         return false;
     }
 
-    /**
-     * Obtiene type.
-     * @param tableConfiguration table configuration
-     * @return type
-     */
-    // public static Class<?> getType(final TableColumnConfiguration tableConfiguration) {
-    // if (tableConfiguration == null) {
-    // return null;
-    // }
-    // return tableConfiguration.getType();
-    // }
-
     /***************************************************************************
      * * Private fields * *
      **************************************************************************/

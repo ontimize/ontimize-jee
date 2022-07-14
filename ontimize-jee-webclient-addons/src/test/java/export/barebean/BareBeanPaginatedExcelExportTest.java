@@ -5,7 +5,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.function.Function;
 
+import com.ontimize.jee.webclient.export.support.exporter.DefaultSXSSFExcelExporter;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.DataFormat;
@@ -13,15 +15,14 @@ import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Workbook;
 
-import com.ontimize.jee.webclient.export.BaseExcelExporter;
+import com.ontimize.jee.webclient.export.support.exporter.BaseExcelExporter;
 import com.ontimize.jee.webclient.export.CellStyleContext;
 import com.ontimize.jee.webclient.export.ExportColumnStyle;
-import com.ontimize.jee.webclient.export.SXSSFWorkbookExcelExporter;
 import com.ontimize.jee.webclient.export.SheetContext;
-import com.ontimize.jee.webclient.export.executor.support.DefaultExportColumnStyle;
-import com.ontimize.jee.webclient.export.executor.support.dataprovider.DefaultBareBeanExcelExportPaginatedDataProvider;
-import com.ontimize.jee.webclient.export.executor.support.styleprovider.DefaultExcelExportStyleProvider;
-import com.ontimize.jee.webclient.export.helpers.BareBeanExportHelper;
+import com.ontimize.jee.webclient.export.support.DefaultExportColumnStyle;
+import export.support.dataprovider.DefaultBareBeanExcelExportPaginatedDataProvider;
+import com.ontimize.jee.webclient.export.support.styleprovider.DefaultExcelExportStyleProvider;
+import export.helpers.BareBeanExportHelper;
 import com.ontimize.jee.webclient.export.pagination.PaginationRequest;
 import com.ontimize.jee.webclient.export.pagination.PaginationResult;
 import com.ontimize.jee.webclient.export.providers.ExportColumnProvider;
@@ -44,7 +45,7 @@ public class BareBeanPaginatedExcelExportTest extends Application {
         final ObservableList<BareExportBean> personList = BareExportBean.getBareExportBeanList(5000);
         final ExportColumnProvider exportColumnProvider = BareBeanExportHelper
             .getExportContextFromBean(BareExportBean.class);
-        final BaseExcelExporter exporter = new SXSSFWorkbookExcelExporter();
+        final BaseExcelExporter exporter = new DefaultSXSSFExcelExporter();
         try {
             final DefaultBareBeanExcelExportPaginatedDataProvider dataProvider = new DefaultBareBeanExcelExportPaginatedDataProvider();
             dataProvider.setRowsPerPage(10);
@@ -125,7 +126,7 @@ public class BareBeanPaginatedExcelExportTest extends Application {
                             }
 
                             @Override
-                            public Callback<SheetContext, String> getSheetName() {
+                            public Function<SheetContext, String> getSheetName() {
                                 return context -> {
                                     if (context.getNumRows() > 100) {
                                         return this.getDefaultSheetName() + "_" + context.getActualSheetIndex();
