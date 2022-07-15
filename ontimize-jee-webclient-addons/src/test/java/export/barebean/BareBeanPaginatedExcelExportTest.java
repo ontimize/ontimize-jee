@@ -7,7 +7,19 @@ import java.io.IOException;
 import java.util.List;
 import java.util.function.Function;
 
+import com.ontimize.jee.webclient.export.CellStyleContext;
+import com.ontimize.jee.webclient.export.ExportColumnStyle;
+import com.ontimize.jee.webclient.export.SheetContext;
+import com.ontimize.jee.webclient.export.pagination.PaginationRequest;
+import com.ontimize.jee.webclient.export.pagination.PaginationResult;
+import com.ontimize.jee.webclient.export.providers.ExportColumnProvider;
+import com.ontimize.jee.webclient.export.providers.SheetNameProvider;
+import com.ontimize.jee.webclient.export.support.DefaultExportColumnStyle;
+import com.ontimize.jee.webclient.export.support.exporter.BaseExcelExporter;
 import com.ontimize.jee.webclient.export.support.exporter.DefaultSXSSFExcelExporter;
+import com.ontimize.jee.webclient.export.support.styleprovider.DefaultExcelExportStyleProvider;
+import export.helpers.BareBeanExportHelper;
+import export.support.dataprovider.DefaultBareBeanExcelExportPaginatedDataProvider;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.DataFormat;
@@ -15,34 +27,14 @@ import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Workbook;
 
-import com.ontimize.jee.webclient.export.support.exporter.BaseExcelExporter;
-import com.ontimize.jee.webclient.export.CellStyleContext;
-import com.ontimize.jee.webclient.export.ExportColumnStyle;
-import com.ontimize.jee.webclient.export.SheetContext;
-import com.ontimize.jee.webclient.export.support.DefaultExportColumnStyle;
-import export.support.dataprovider.DefaultBareBeanExcelExportPaginatedDataProvider;
-import com.ontimize.jee.webclient.export.support.styleprovider.DefaultExcelExportStyleProvider;
-import export.helpers.BareBeanExportHelper;
-import com.ontimize.jee.webclient.export.pagination.PaginationRequest;
-import com.ontimize.jee.webclient.export.pagination.PaginationResult;
-import com.ontimize.jee.webclient.export.providers.ExportColumnProvider;
-import com.ontimize.jee.webclient.export.providers.SheetNameProvider;
-
-import javafx.application.Application;
-import javafx.collections.ObservableList;
-import javafx.stage.Stage;
-import javafx.util.Callback;
-
-public class BareBeanPaginatedExcelExportTest extends Application {
+public class BareBeanPaginatedExcelExportTest {
 
     public static void main(final String[] args) {
-        launch(args);
+        start();
     }
 
-    @Override
-    public void start(final Stage primaryStage) {
-        // ResourceBundleContext.setResourceBundle(ResourceBundle.getBundle("i18nResourcesjfxcomponents"));
-        final ObservableList<BareExportBean> personList = BareExportBean.getBareExportBeanList(5000);
+    public static void start() {
+        final List<BareExportBean> personList = BareExportBean.getBareExportBeanList(5000);
         final ExportColumnProvider exportColumnProvider = BareBeanExportHelper
             .getExportContextFromBean(BareExportBean.class);
         final BaseExcelExporter exporter = new DefaultSXSSFExcelExporter();
@@ -51,7 +43,7 @@ public class BareBeanPaginatedExcelExportTest extends Application {
             dataProvider.setRowsPerPage(10);
 
 
-            dataProvider.setPageFactory((Callback<PaginationRequest, PaginationResult<List<BareExportBean>>>) param -> {
+            dataProvider.setPageFactory((Function<PaginationRequest, PaginationResult<List<BareExportBean>>>) param -> {
                 int realEnd = param.getRowsRange().getEnd() + 1;
                 if (realEnd > personList.size()) {
                     realEnd = personList.size();

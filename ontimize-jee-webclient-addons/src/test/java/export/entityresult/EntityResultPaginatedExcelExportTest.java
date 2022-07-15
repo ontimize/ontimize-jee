@@ -1,35 +1,5 @@
 package export.entityresult;
 
-import com.ontimize.jee.webclient.export.support.exporter.BaseExcelExporter;
-import com.ontimize.jee.webclient.export.CellStyleContext;
-import com.ontimize.jee.webclient.export.ExportColumnStyle;
-import com.ontimize.jee.webclient.export.ExportColumnStyle.CellColor;
-import com.ontimize.jee.webclient.export.ExportColumnStyle.HorizontalAlignment;
-import com.ontimize.jee.webclient.export.support.exporter.DefaultSXSSFExcelExporter;
-import com.ontimize.jee.webclient.export.SheetContext;
-import com.ontimize.jee.webclient.export.support.DefaultExportColumnStyle;
-import com.ontimize.jee.webclient.export.support.dataprovider.DefaultEntityResultExcelExportPaginatedDataProvider;
-import com.ontimize.jee.webclient.export.support.styleprovider.DefaultExcelExportStyleProvider;
-import com.ontimize.jee.webclient.export.helpers.EntityResultExportHelper;
-import com.ontimize.jee.webclient.export.pagination.PaginationRequest;
-import com.ontimize.jee.webclient.export.pagination.PaginationResult;
-import com.ontimize.jee.webclient.export.providers.ExportColumnProvider;
-import com.ontimize.jee.webclient.export.providers.SheetNameProvider;
-import com.ontimize.jee.common.dto.EntityResult;
-import com.ontimize.jee.common.dto.EntityResultMapImpl;
-import export.barebean.BareExportBean;
-import javafx.application.Application;
-import javafx.collections.ObservableList;
-import javafx.stage.Stage;
-import javafx.util.Callback;
-import org.apache.commons.collections4.iterators.IteratorEnumeration;
-import org.apache.poi.ss.usermodel.BorderStyle;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.DataFormat;
-import org.apache.poi.ss.usermodel.FillPatternType;
-import org.apache.poi.ss.usermodel.IndexedColors;
-import org.apache.poi.ss.usermodel.Workbook;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -40,16 +10,42 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
-public class EntityResultPaginatedExcelExportTest extends Application {
+import com.ontimize.jee.common.dto.EntityResult;
+import com.ontimize.jee.common.dto.EntityResultMapImpl;
+import com.ontimize.jee.webclient.export.CellStyleContext;
+import com.ontimize.jee.webclient.export.ExportColumnStyle;
+import com.ontimize.jee.webclient.export.ExportColumnStyle.CellColor;
+import com.ontimize.jee.webclient.export.ExportColumnStyle.HorizontalAlignment;
+import com.ontimize.jee.webclient.export.SheetContext;
+import com.ontimize.jee.webclient.export.helpers.EntityResultExportHelper;
+import com.ontimize.jee.webclient.export.pagination.PaginationRequest;
+import com.ontimize.jee.webclient.export.pagination.PaginationResult;
+import com.ontimize.jee.webclient.export.providers.ExportColumnProvider;
+import com.ontimize.jee.webclient.export.providers.SheetNameProvider;
+import com.ontimize.jee.webclient.export.support.DefaultExportColumnStyle;
+import com.ontimize.jee.webclient.export.support.dataprovider.DefaultEntityResultExcelExportPaginatedDataProvider;
+import com.ontimize.jee.webclient.export.support.exporter.BaseExcelExporter;
+import com.ontimize.jee.webclient.export.support.exporter.DefaultSXSSFExcelExporter;
+import com.ontimize.jee.webclient.export.support.styleprovider.DefaultExcelExportStyleProvider;
+import export.barebean.BareExportBean;
+import org.apache.commons.collections4.iterators.IteratorEnumeration;
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.DataFormat;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.Workbook;
+
+public class EntityResultPaginatedExcelExportTest {
 
     public static void main(final String[] args) {
-        launch(args);
+        start();
     }
 
-    @Override
-    public void start(final Stage primaryStage) {
-        final ObservableList<BareExportBean> personList = BareExportBean.getBareExportBeanList(5000);
+    public static void start() {
+        final List<BareExportBean> personList = BareExportBean.getBareExportBeanList(5000);
         EntityResult entityResult = new EntityResultMapImpl(new ArrayList());
         Map types = extractExportBeanFieldTypes();
         // Ponemos a la entityResult los tipos de columnas extraidos del BareExportBean
@@ -76,7 +72,7 @@ public class EntityResultPaginatedExcelExportTest extends Application {
                     entityResult);
             dataProvider.setRowsPerPage(10);
 
-            dataProvider.setPageFactory((Callback<PaginationRequest, PaginationResult<List<BareExportBean>>>) param -> {
+            dataProvider.setPageFactory((Function<PaginationRequest, PaginationResult<List<BareExportBean>>>) param -> {
                 int realEnd = param.getRowsRange().getEnd() + 1;
                 if (realEnd > personList.size()) {
                     realEnd = personList.size();
@@ -160,7 +156,7 @@ public class EntityResultPaginatedExcelExportTest extends Application {
                             }
 
                             @Override
-                            public Callback<SheetContext, String> getSheetName() {
+                            public Function<SheetContext, String> getSheetName() {
                                 return context -> {
                                     if (context.getNumRows() > 100) {
                                         return this.getDefaultSheetName() + "_" + context.getActualSheetIndex();

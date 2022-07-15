@@ -1,45 +1,33 @@
 package export.barebean;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
-
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.FloatProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleFloatProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
 public class CustomExportBean {
 
-    private final SimpleStringProperty textField = new SimpleStringProperty();
+    private String textField;
 
-    private final IntegerProperty integerField = new SimpleIntegerProperty();
+    private Integer integerField;
 
-    private final BooleanProperty booleanField = new SimpleBooleanProperty();
+    private Boolean booleanField;
 
-    private final FloatProperty floatField = new SimpleFloatProperty();
+    private Float floatField;
 
-    private final ObjectProperty<Date> dateField = new SimpleObjectProperty();
+    private Date dateField;
 
-    private final ObjectProperty<LocalDate> localDateField = new SimpleObjectProperty();
+    private LocalDate localDateField;
 
-    private final ObjectProperty<LocalDate> customLocalDateField = new SimpleObjectProperty();
+    private LocalDate customLocalDateField;
 
-    private final DoubleProperty moneyField = new SimpleDoubleProperty();
+    private Double moneyField;
 
-    private final DoubleProperty customMoneyField = new SimpleDoubleProperty();
+    private Double customMoneyField;
 
-    private final DoubleProperty percentField = new SimpleDoubleProperty();
+    private Double percentField;
 
     public CustomExportBean() {
     }
@@ -52,9 +40,9 @@ public class CustomExportBean {
             final Date dateField,
             final LocalDate localDateField,
             final LocalDate customLocalDateField,
-            final Float moneyField,
-            final Float customMoneyField,
-            final Float percentField) {
+            final Double moneyField,
+            final Double customMoneyField,
+            final Double percentField) {
         this.setTextField(textField);
         this.setIntegerField(integerField);
         this.setBooleanField(booleanField);
@@ -82,8 +70,8 @@ public class CustomExportBean {
         return p;
     }
 
-    public static ObservableList<CustomExportBean> getData(final int amount) {
-        final ObservableList<CustomExportBean> ret = FXCollections.observableArrayList();
+    public static List<CustomExportBean> getData(final int amount) {
+        final List<CustomExportBean> ret = new ArrayList<>();
         for (int n = 0; n < amount; n++) {
             ret.add(new CustomExportBean(
                     "text_" + n,
@@ -93,9 +81,9 @@ public class CustomExportBean {
                     getRandomDate(),
                     getRandomLocalDate(),
                     getRandomLocalDate(),
-                    (float) (Math.random() * 10000),
-                    (float) (Math.random() * 10000),
-                    (float) (Math.random() * 100)));
+                    (double) (Math.random() * 10000),
+                    (double) (Math.random() * 10000),
+                    (double) (Math.random() * 100)));
         }
         return ret;
     }
@@ -133,127 +121,82 @@ public class CustomExportBean {
     }
 
     public String getTextField() {
-        return this.textField.get();
+        return textField;
     }
 
-    public void setTextField(final String textField) {
-        this.textField.set(textField);
+    public void setTextField(String textField) {
+        this.textField = textField;
     }
 
-    public SimpleStringProperty textFieldProperty() {
-        return this.textField;
+    public Integer getIntegerField() {
+        return integerField;
     }
 
-    public int getIntegerField() {
-        return this.integerField.get();
+    public void setIntegerField(Integer integerField) {
+        this.integerField = integerField;
     }
 
-    public void setIntegerField(final int integerField) {
-        this.integerField.set(integerField);
+    public Boolean isBooleanField() {
+        return booleanField;
     }
 
-    public IntegerProperty integerFieldProperty() {
-        return this.integerField;
+    public void setBooleanField(Boolean booleanField) {
+        this.booleanField = booleanField;
     }
 
-    public boolean isBooleanField() {
-        return this.booleanField.get();
+    public Float getFloatField() {
+        return floatField;
     }
 
-    public void setBooleanField(final boolean booleanField) {
-        this.booleanField.set(booleanField);
-    }
-
-    public BooleanProperty booleanFieldProperty() {
-        return this.booleanField;
-    }
-
-    public float getFloatField() {
-        return this.floatField.get();
-    }
-
-    public void setFloatField(final float floatField) {
-        this.floatField.set(floatField);
-    }
-
-    public FloatProperty floatFieldProperty() {
-        return this.floatField;
+    public void setFloatField(Float floatField) {
+        this.floatField = floatField;
     }
 
     public Date getDateField() {
-        return this.dateField.get();
+        return dateField;
     }
 
-    public void setDateField(final Date dateField) {
-        this.dateField.set(dateField);
-    }
-
-    public ObjectProperty<Date> dateFieldProperty() {
-        return this.dateField;
+    public void setDateField(Date dateField) {
+        this.dateField = dateField;
     }
 
     public LocalDate getLocalDateField() {
-        return this.localDateField.get();
+        return localDateField;
     }
 
-    public void setLocalDateField(final LocalDate localDateField) {
-        this.localDateField.set(localDateField);
-    }
-
-    public ObjectProperty<LocalDate> localDateFieldProperty() {
-        return this.localDateField;
+    public void setLocalDateField(LocalDate localDateField) {
+        this.localDateField = localDateField;
     }
 
     public LocalDate getCustomLocalDateField() {
-        return this.customLocalDateField.get();
+        return customLocalDateField;
     }
 
-    public void setCustomLocalDateField(final LocalDate customLocalDateField) {
-        this.customLocalDateField.set(customLocalDateField);
+    public void setCustomLocalDateField(LocalDate customLocalDateField) {
+        this.customLocalDateField = customLocalDateField;
     }
 
-    public ObjectProperty<LocalDate> customLocalDateFieldProperty() {
-        return this.customLocalDateField;
+    public Double getMoneyField() {
+        return moneyField;
     }
 
-    public double getMoneyField() {
-        return this.moneyField.get();
+    public void setMoneyField(Double moneyField) {
+        this.moneyField = moneyField;
     }
 
-    public void setMoneyField(final double moneyField) {
-        this.moneyField.set(moneyField);
+    public Double getCustomMoneyField() {
+        return customMoneyField;
     }
 
-    public DoubleProperty moneyFieldProperty() {
-        return this.moneyField;
+    public void setCustomMoneyField(Double customMoneyField) {
+        this.customMoneyField = customMoneyField;
     }
 
-    public double getCustomMoneyField() {
-        return this.customMoneyField.get();
+    public Double getPercentField() {
+        return percentField;
     }
 
-    public void setCustomMoneyField(final double customMoneyField) {
-        this.customMoneyField.set(customMoneyField);
+    public void setPercentField(Double percentField) {
+        this.percentField = percentField;
     }
-
-    public DoubleProperty customMoneyFieldProperty() {
-        return this.customMoneyField;
-    }
-
-    public double getPercentField() {
-        return this.percentField.get();
-    }
-
-    public void setPercentField(final double percentField) {
-        this.percentField.set(percentField);
-    }
-
-    public void setPercentField(final float percentField) {
-        this.percentField.set(percentField);
-    }
-
-    public DoubleProperty percentFieldProperty() {
-        return this.percentField;
-    }
-
 }

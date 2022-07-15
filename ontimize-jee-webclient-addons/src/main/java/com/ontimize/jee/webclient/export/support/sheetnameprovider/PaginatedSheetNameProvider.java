@@ -1,9 +1,9 @@
 package com.ontimize.jee.webclient.export.support.sheetnameprovider;
 
+import java.util.function.Function;
+
 import com.ontimize.jee.webclient.export.SheetContext;
 import com.ontimize.jee.webclient.export.providers.SheetNameProvider;
-
-import javafx.util.Callback;
 
 /**
  * @author <a href="enrique.alvarez@imatia.com">Enrique �lvarez Pereira</a>
@@ -25,7 +25,7 @@ public class PaginatedSheetNameProvider implements SheetNameProvider {
     }
 
     @Override
-    public Callback<SheetContext, String> getSheetName() {
+    public Function<SheetContext, String> getSheetName() {
         return param -> {
             if (param.getNumRows() >= maxRows) {
                 return this.getDefaultSheetName()

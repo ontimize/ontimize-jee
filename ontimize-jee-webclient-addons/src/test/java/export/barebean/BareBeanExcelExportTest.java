@@ -1,11 +1,22 @@
 package export.barebean;
 
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.List;
 import java.util.function.Function;
 
+import com.ontimize.jee.webclient.export.CellStyleContext;
+import com.ontimize.jee.webclient.export.ExportColumnStyle;
+import com.ontimize.jee.webclient.export.ExportColumnStyle.CellColor;
+import com.ontimize.jee.webclient.export.SheetContext;
+import com.ontimize.jee.webclient.export.providers.ExportColumnProvider;
+import com.ontimize.jee.webclient.export.providers.SheetNameProvider;
+import com.ontimize.jee.webclient.export.support.DefaultExportColumnStyle;
+import com.ontimize.jee.webclient.export.support.exporter.DefaultXSSFExcelExporter;
+import com.ontimize.jee.webclient.export.support.styleprovider.DefaultExcelExportStyleProvider;
+import export.helpers.BareBeanExportHelper;
+import export.support.dataprovider.DefaultBareBeanExcelExportDataProvider;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.DataFormat;
@@ -13,25 +24,10 @@ import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Workbook;
 
-import com.ontimize.jee.webclient.export.CellStyleContext;
-import com.ontimize.jee.webclient.export.ExportColumnStyle;
-import com.ontimize.jee.webclient.export.SheetContext;
-import com.ontimize.jee.webclient.export.ExportColumnStyle.CellColor;
-import com.ontimize.jee.webclient.export.support.DefaultExportColumnStyle;
-import export.support.dataprovider.DefaultBareBeanExcelExportDataProvider;
-import com.ontimize.jee.webclient.export.support.exporter.DefaultXSSFExcelExporter;
-import com.ontimize.jee.webclient.export.support.styleprovider.DefaultExcelExportStyleProvider;
-import export.helpers.BareBeanExportHelper;
-import com.ontimize.jee.webclient.export.providers.ExportColumnProvider;
-import com.ontimize.jee.webclient.export.providers.SheetNameProvider;
-
-import javafx.collections.ObservableList;
-import javafx.util.Callback;
-
 public class BareBeanExcelExportTest {
 
     public static void main(final String[] args) {
-        final ObservableList<BareExportBean> personList = BareExportBean.getBareExportBeanList(1000);
+        final List<BareExportBean> personList = BareExportBean.getBareExportBeanList(1000);
         final ExportColumnProvider exportColumnProvider = BareBeanExportHelper
             .getExportContextFromBean(BareExportBean.class);
         final DefaultXSSFExcelExporter exporter = new DefaultXSSFExcelExporter();

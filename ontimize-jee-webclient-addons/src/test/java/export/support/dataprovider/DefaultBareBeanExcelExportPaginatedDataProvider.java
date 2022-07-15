@@ -12,21 +12,15 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.function.Function;
 
 import com.ontimize.jee.server.rest.QueryParameter;
 import com.ontimize.jee.webclient.export.HeadExportColumn;
 import com.ontimize.jee.webclient.export.pagination.PaginationRequest;
 import com.ontimize.jee.webclient.export.pagination.PaginationResult;
 import com.ontimize.jee.webclient.export.providers.ExcelExportDataProvider;
-
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.util.Callback;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DefaultBareBeanExcelExportPaginatedDataProvider<T> implements ExcelExportDataProvider {
 
@@ -40,28 +34,20 @@ public class DefaultBareBeanExcelExportPaginatedDataProvider<T> implements Excel
 
     long totalSize = -1;
 
-    private IntegerProperty rowsPerPage;
+    private int rowsPerPage;
 
-    private ObjectProperty<Callback<PaginationRequest, PaginationResult<List<T>>>> pageFactory;
+    private Function<PaginationRequest, PaginationResult<List<T>>> pageFactory;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DefaultBareBeanExcelExportPaginatedDataProvider.class);
 
     public DefaultBareBeanExcelExportPaginatedDataProvider() {
         this.descriptors = new ArrayList<>();
-        this.rowsPerPageProperty().addListener((o, ov, nv) -> this.reset());
-        this.pageFactoryProperty().addListener((o, ov, nv) -> {
-            this.reset();
-            this.extractFields(this.pageData.get(0));
-        });
     }
 
     public void reset() {
-        if (this.pageFactory.get() == null) {
-            return;
-        }
         final PaginationRequest paginationRequest = new PaginationRequest(1, this.getRowsPerPage(),
                 this.getRowsPerPage());
-        final PaginationResult<List<T>> paginationResult = this.getPageFactory().call(paginationRequest);
+        final PaginationResult<List<T>> paginationResult = this.getPageFactory().apply(paginationRequest);
         if (paginationResult != null) {
             this.pageData = paginationResult.getResult();
             this.totalSize = paginationResult.getTotalSize();
@@ -88,7 +74,7 @@ public class DefaultBareBeanExcelExportPaginatedDataProvider<T> implements Excel
 
     private void loadPage(final int pageIndex) {
         final PaginationResult<List<T>> paginationResult = this.getPageFactory()
-            .call(new PaginationRequest(pageIndex, this.getRowsPerPage(), 0));
+            .apply(new PaginationRequest(pageIndex, this.getRowsPerPage(), 0));
         this.pageData = paginationResult.getResult();
     }
 
@@ -157,35 +143,23 @@ public class DefaultBareBeanExcelExportPaginatedDataProvider<T> implements Excel
             .orElse(-1);
     }
 
-    public Callback<PaginationRequest, PaginationResult<List<T>>> getPageFactory() {
-        return this.pageFactoryProperty().get();
-    }
-
-    public void setPageFactory(final Callback<PaginationRequest, PaginationResult<List<T>>> pageFactory) {
-        this.pageFactoryProperty().set(pageFactory);
-    }
-
-    public ObjectProperty<Callback<PaginationRequest, PaginationResult<List<T>>>> pageFactoryProperty() {
-        if (this.pageFactory == null) {
-            this.pageFactory = new SimpleObjectProperty<>(this, "pageFactory");
-        }
-
+    public Function<PaginationRequest, PaginationResult<List<T>>> getPageFactory() {
         return this.pageFactory;
     }
 
-    public int getRowsPerPage() {
-        return this.rowsPerPageProperty().get();
+    public void setPageFactory(final Function<PaginationRequest, PaginationResult<List<T>>> pageFactory) {
+        this.pageFactory = pageFactory;
+        this.reset();
     }
 
-    public IntegerProperty rowsPerPageProperty() {
-        if (this.rowsPerPage == null) {
-            this.rowsPerPage = new SimpleIntegerProperty(ROWS_PER_PAGE);
-        }
+
+    public int getRowsPerPage() {
         return this.rowsPerPage;
     }
 
     public void setRowsPerPage(final int rowsPerPage) {
-        this.rowsPerPageProperty().set(rowsPerPage);
+        this.rowsPerPage = rowsPerPage;
+        this.reset();
     }
 
     @Override

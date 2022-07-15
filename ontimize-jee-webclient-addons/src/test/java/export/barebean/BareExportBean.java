@@ -6,20 +6,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.scene.control.TreeItem;
-
 
 interface Tree {
 
@@ -29,35 +15,35 @@ interface Tree {
 
 public class BareExportBean implements Tree {
 
-    private final IntegerProperty id = new SimpleIntegerProperty();
+    private  Integer id;
 
-    private final StringProperty firstName = new SimpleStringProperty();
+    private  String firstName;
 
-    private final StringProperty lastName = new SimpleStringProperty();
+    private  String lastName;
 
-    private final StringProperty gender = new SimpleStringProperty();
+    private  String gender;
 
-    private final IntegerProperty age = new SimpleIntegerProperty();
+    private  Integer age;
 
-    private final BooleanProperty single = new SimpleBooleanProperty();
+    private  Boolean single;
 
-    private final ObjectProperty<Date> birthDate = new SimpleObjectProperty();
+    private  Date birthDate;
 
-    private final ObjectProperty<LocalDate> localBirthDate = new SimpleObjectProperty();
+    private  LocalDate localBirthDate;
 
-    private final IntegerProperty percentage = new SimpleIntegerProperty();
+    private  Integer percentage;
 
-    private final DoubleProperty doublePercentage = new SimpleDoubleProperty();
+    private  Double doublePercentage;
 
-    private final DoubleProperty money = new SimpleDoubleProperty();
+    private  Double money;
 
-    private final StringProperty street = new SimpleStringProperty();
+    private  String street;
 
-    private final IntegerProperty zipCode = new SimpleIntegerProperty();
+    private  Integer zipCode;
 
-    private final StringProperty city = new SimpleStringProperty();
+    private  String city;
 
-    private final StringProperty country = new SimpleStringProperty();
+    private  String country;
 
     /*
      * For trees
@@ -102,12 +88,12 @@ public class BareExportBean implements Tree {
         this.setLocalBirthDate(localBirthDate);
     }
 
-    public static ObservableList<BareExportBean> getBareExportBeanList() {
+    public static List<BareExportBean> getBareExportBeanList() {
         return getBareExportBeanList(20);
     }
 
-    public static ObservableList<BareExportBean> getBareExportBeanList(final int size) {
-        final ObservableList<BareExportBean> ret = FXCollections.observableArrayList();
+    public static List<BareExportBean> getBareExportBeanList(final int size) {
+        final List<BareExportBean> ret = new ArrayList<>();
         for (int n = 0; n < size; n++) {
             final BareExportBean bareExportBean = new BareExportBean(
                     n,
@@ -158,53 +144,6 @@ public class BareExportBean implements Tree {
         return p;
     }
 
-    public static TreeItem<BareExportBean> getBeanTree() {
-        final ObservableList<BareExportBean> data = getBareExportBeanList();
-        final TreeItem<BareExportBean> rootNode = new TreeItem<>();
-        buildTree(rootNode, data);
-        return rootNode;
-    }
-
-    public static TreeItem<BareExportBean> getHugeBeanTree() {
-        return getHugeBeanTree(1000);
-    }
-
-    public static TreeItem<BareExportBean> getHugeBeanTree(final int size) {
-        final ObservableList<BareExportBean> list = FXCollections.observableArrayList();
-        final ObservableList<BareExportBean> personList = getBareExportBeanList();
-        for (int i = 0; i < size; i++) {
-            final int index = (int) Math.floor((Math.random() * 6));
-            final BareExportBean person = personList.get(index);
-            list.add(cloneBareExportBean(person));
-        }
-        final TreeItem<BareExportBean> rootNode = new TreeItem<>();
-        buildTree(rootNode, list);
-        return rootNode;
-    }
-
-    public static TreeItem<BareExportBean> cloneTreeBean(final TreeItem<BareExportBean> original) {
-        final BareExportBean p = cloneBareExportBean(original.getValue());
-        final TreeItem<BareExportBean> root = new TreeItem<>();
-        final ObservableList<TreeItem<BareExportBean>> children = original.getChildren();
-        if ((children != null) && (!children.isEmpty())) {
-            for (final TreeItem<BareExportBean> child : children) {
-                root.getChildren().add(cloneTreeBean(child));
-            }
-        }
-        return root;
-    }
-
-    public static void buildTree(final TreeItem<BareExportBean> rootNode, final List<BareExportBean> bareExportBeans) {
-        bareExportBeans.forEach(bareExportBean -> {
-            final TreeItem<BareExportBean> childNode = new TreeItem<>(bareExportBean);
-            childNode.setExpanded(true);
-            rootNode.getChildren().add(childNode);
-            if (!bareExportBean.getChildren().isEmpty()) {
-                buildTree(childNode, bareExportBean.getChildren());
-            }
-        });
-    }
-
     @Override
     public List<BareExportBean> getChildren() {
         return this.children;
@@ -221,184 +160,125 @@ public class BareExportBean implements Tree {
     /*
      * Properties
      */
-    public IntegerProperty idProperty() {
-        return this.id;
-    }
 
-    public int getId() {
-        return this.idProperty().get();
-    }
-
-    public void setId(final int id) {
-        this.idProperty().set(id);
-    }
-
-    public StringProperty firstNameProperty() {
-        return this.firstName;
+    public Integer getId() {
+        return id;
     }
 
     public String getFirstName() {
-        return this.firstNameProperty().get();
-    }
-
-    public void setFirstName(final String firstName) {
-        this.firstNameProperty().set(firstName);
-    }
-
-    public StringProperty lastNameProperty() {
-        return this.lastName;
+        return firstName;
     }
 
     public String getLastName() {
-        return this.lastNameProperty().get();
-    }
-
-    public void setLastName(final String lastName) {
-        this.lastNameProperty().set(lastName);
-    }
-
-    public StringProperty streetProperty() {
-        return this.street;
-    }
-
-    public String getStreet() {
-        return this.streetProperty().get();
-    }
-
-    public void setStreet(final String street) {
-        this.streetProperty().set(street);
-    }
-
-    public IntegerProperty zipCodeProperty() {
-        return this.zipCode;
-    }
-
-    public int getZipCode() {
-        return this.zipCodeProperty().get();
-    }
-
-    public void setZipCode(final int zipCode) {
-        this.zipCodeProperty().set(zipCode);
-    }
-
-    public StringProperty cityProperty() {
-        return this.city;
-    }
-
-    public String getCity() {
-        return this.cityProperty().get();
-    }
-
-    public void setCity(final String city) {
-        this.cityProperty().set(city);
-    }
-
-    public StringProperty countryProperty() {
-        return this.country;
-    }
-
-    public String getCountry() {
-        return this.countryProperty().get();
-    }
-
-    public void setCountry(final String country) {
-        this.countryProperty().set(country);
-    }
-
-    public IntegerProperty ageProperty() {
-        return this.age;
-    }
-
-    public int getAge() {
-        return this.ageProperty().get();
-    }
-
-    public void setAge(final int age) {
-        this.ageProperty().set(age);
-    }
-
-    public DoubleProperty moneyProperty() {
-        return this.money;
-    }
-
-    public double getMoney() {
-        return this.moneyProperty().get();
-    }
-
-    public void setMoney(final double money) {
-        this.moneyProperty().set(money);
-    }
-
-    public Date getBirthDate() {
-        return this.birthDate.get();
-    }
-
-    public void setBirthDate(final Date birthDate) {
-        this.birthDate.set(birthDate);
-    }
-
-    public ObjectProperty<Date> birthDateProperty() {
-        return this.birthDate;
-    }
-
-    public LocalDate getLocalBirthDate() {
-        return this.localBirthDate.get();
-    }
-
-    public void setLocalBirthDate(final LocalDate localBirthDate) {
-        this.localBirthDate.set(localBirthDate);
-    }
-
-    public ObjectProperty<LocalDate> localBirthDateProperty() {
-        return this.localBirthDate;
-    }
-
-    public IntegerProperty percentageProperty() {
-        return this.percentage;
-    }
-
-    public int getPercentage() {
-        return this.percentageProperty().get();
-    }
-
-    public void setPercentage(final int percentage) {
-        this.percentageProperty().set(percentage);
-    }
-
-    public DoubleProperty doublePercentageProperty() {
-        return this.doublePercentage;
-    }
-
-    public double getDoublePercentage() {
-        return this.doublePercentage.get();
-    }
-
-    public void setDoublePercentage(final double doublePercentage) {
-        this.doublePercentageProperty().set(doublePercentage);
-    }
-
-    public BooleanProperty singleProperty() {
-        return this.single;
-    }
-
-    public boolean isSingle() {
-        return this.singleProperty().get();
-    }
-
-    public void setSingle(final boolean single) {
-        this.singleProperty().set(single);
-    }
-
-    public StringProperty genderProperty() {
-        return this.gender;
+        return lastName;
     }
 
     public String getGender() {
-        return this.genderProperty().get();
+        return gender;
     }
 
-    public void setGender(final String gender) {
-        this.genderProperty().set(gender);
+    public Integer getAge() {
+        return age;
+    }
+
+    public Boolean isSingle() {
+        return single;
+    }
+
+    public Date getBirthDate() {
+        return birthDate;
+    }
+
+    public LocalDate getLocalBirthDate() {
+        return localBirthDate;
+    }
+
+    public Integer getPercentage() {
+        return percentage;
+    }
+
+    public Double getDoublePercentage() {
+        return doublePercentage;
+    }
+
+    public Double getMoney() {
+        return money;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public Integer getZipCode() {
+        return zipCode;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    public void setSingle(Boolean single) {
+        this.single = single;
+    }
+
+    public void setBirthDate(Date birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public void setLocalBirthDate(LocalDate localBirthDate) {
+        this.localBirthDate = localBirthDate;
+    }
+
+    public void setPercentage(Integer percentage) {
+        this.percentage = percentage;
+    }
+
+    public void setDoublePercentage(Double doublePercentage) {
+        this.doublePercentage = doublePercentage;
+    }
+
+    public void setMoney(Double money) {
+        this.money = money;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    public void setZipCode(Integer zipCode) {
+        this.zipCode = zipCode;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
     }
 
     @Override

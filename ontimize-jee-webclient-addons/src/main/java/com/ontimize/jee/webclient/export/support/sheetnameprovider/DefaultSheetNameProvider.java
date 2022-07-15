@@ -1,11 +1,10 @@
 package com.ontimize.jee.webclient.export.support.sheetnameprovider;
 
-import org.apache.poi.ss.SpreadsheetVersion;
+import java.util.function.Function;
 
 import com.ontimize.jee.webclient.export.SheetContext;
 import com.ontimize.jee.webclient.export.providers.SheetNameProvider;
-
-import javafx.util.Callback;
+import org.apache.poi.ss.SpreadsheetVersion;
 
 /**
  * @author <a href="antonio.vazquez@imatia.com">Antonio V�zquez Ara�jo</a>
@@ -22,7 +21,7 @@ public class DefaultSheetNameProvider implements SheetNameProvider {
     }
 
     @Override
-    public Callback<SheetContext, String> getSheetName() {
+    public Function<SheetContext, String> getSheetName() {
         return param -> {
             if (param.getNumRows() >= MAX_ROWS) {
                 return this.getDefaultSheetName()

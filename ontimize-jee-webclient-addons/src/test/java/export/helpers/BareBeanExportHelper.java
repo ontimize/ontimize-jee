@@ -12,20 +12,16 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.ontimize.jee.webclient.export.ExportColumn;
 import com.ontimize.jee.webclient.export.ExportColumnStyle;
 import com.ontimize.jee.webclient.export.HeadExportColumn;
-import com.ontimize.jee.webclient.export.support.DefaultExportColumnStyle;
 import com.ontimize.jee.webclient.export.providers.ExportColumnProvider;
 import com.ontimize.jee.webclient.export.support.BaseExportColumnProvider;
+import com.ontimize.jee.webclient.export.support.DefaultExportColumnStyle;
 import com.ontimize.jee.webclient.export.support.DefaultHeadExportColumn;
 import com.ontimize.jee.webclient.export.util.ColumnCellUtils;
-
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class BareBeanExportHelper {
 
@@ -64,7 +60,7 @@ public class BareBeanExportHelper {
     }
 
     private static <T> List<ExportColumn> createBodyColumnsFromClass(final Class<T> beanClass) {
-        final ObservableList<ExportColumn> columns = FXCollections.observableArrayList();
+        final List<ExportColumn> columns = new ArrayList<>();
 
         final List<PropertyDescriptor> descriptors = extractDescriptors(beanClass);
         for (final PropertyDescriptor pd : Objects.requireNonNull(descriptors)) {
@@ -78,7 +74,7 @@ public class BareBeanExportHelper {
     }
 
     private static <T> List<HeadExportColumn> createHeaderColumnsFromClass(final Class<T> beanClass) {
-        final ObservableList<HeadExportColumn> columns = FXCollections.observableArrayList();
+        final List<HeadExportColumn> columns = new ArrayList<>();
         final List<PropertyDescriptor> descriptors = extractDescriptors(beanClass);
         for (final PropertyDescriptor pd : Objects.requireNonNull(descriptors)) {
             columns.add(new DefaultHeadExportColumn(
