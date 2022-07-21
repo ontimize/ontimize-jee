@@ -62,6 +62,7 @@ public abstract class ExcelExportRestController extends ORestController<IExcelEx
             entityResult.put("columnStyles", exportParam.getColumnStyles());
             entityResult.put("columnTypes", exportParam.getColumnTypes());
             entityResult.put("dao", exportParam.getDao());
+            entityResult.put("path", exportParam.getPath());
             entityResult.put("rowStyles", exportParam.getRowStyles());
             entityResult.put("service", exportParam.getService());
             entityResult.put("columnTitles", exportParam.getColumnTitles());
