@@ -3,9 +3,9 @@ package com.ontimize.jee.webclient.export.base;
 import com.ontimize.jee.server.rest.AdvancedQueryParameter;
 import com.ontimize.jee.server.rest.QueryParameter;
 
-public class BaseExportQueryParameters extends AdvancedQueryParameter implements ExportQueryParameters {
+public class BaseExportQueryParameters implements ExportQueryParameters {
 
-    private QueryParameter queryParam;
+    private AdvancedQueryParameter queryParam;
 
     private String dao;
 
@@ -20,7 +20,7 @@ public class BaseExportQueryParameters extends AdvancedQueryParameter implements
         super();
     }
 
-    public BaseExportQueryParameters(QueryParameter queryParam, String dao, String service, String path, boolean advQuery) {
+    public BaseExportQueryParameters(AdvancedQueryParameter queryParam, String dao, String service, String path, boolean advQuery) {
         super();
         this.queryParam = queryParam;
         this.dao = dao;
@@ -29,11 +29,11 @@ public class BaseExportQueryParameters extends AdvancedQueryParameter implements
         this.advQuery = advQuery;
     }
 
-    public QueryParameter getQueryParam() {
+    public AdvancedQueryParameter getQueryParam() {
         return queryParam;
     }
 
-    public void setQueryParam(QueryParameter queryParam) {
+    public void setQueryParam(AdvancedQueryParameter queryParam) {
         this.queryParam = queryParam;
     }
 

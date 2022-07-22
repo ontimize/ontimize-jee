@@ -1,42 +1,10 @@
 package export.entityresult;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.sql.JDBCType;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-
-import com.ontimize.jee.common.dto.EntityResult;
-import com.ontimize.jee.common.dto.EntityResultMapImpl;
-import com.ontimize.jee.webclient.export.CellStyleContext;
-import com.ontimize.jee.webclient.export.ExportColumnStyle;
-import com.ontimize.jee.webclient.export.ExportColumnStyle.CellColor;
-import com.ontimize.jee.webclient.export.ExportColumnStyle.HorizontalAlignment;
-import com.ontimize.jee.webclient.export.SheetContext;
-import com.ontimize.jee.webclient.export.helpers.EntityResultExportHelper;
-import com.ontimize.jee.webclient.export.pagination.PaginationRequest;
-import com.ontimize.jee.webclient.export.pagination.PaginationResult;
-import com.ontimize.jee.webclient.export.providers.ExportColumnProvider;
-import com.ontimize.jee.webclient.export.providers.SheetNameProvider;
-import com.ontimize.jee.webclient.export.support.DefaultExportColumnStyle;
-import com.ontimize.jee.webclient.export.support.dataprovider.DefaultEntityResultExcelExportPaginatedDataProvider;
-import com.ontimize.jee.webclient.export.support.exporter.BaseExcelExporter;
-import com.ontimize.jee.webclient.export.support.exporter.DefaultSXSSFExcelExporter;
-import com.ontimize.jee.webclient.export.support.styleprovider.DefaultExcelExportStyleProvider;
 import export.barebean.BareExportBean;
-import org.apache.commons.collections4.iterators.IteratorEnumeration;
-import org.apache.poi.ss.usermodel.BorderStyle;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.DataFormat;
-import org.apache.poi.ss.usermodel.FillPatternType;
-import org.apache.poi.ss.usermodel.IndexedColors;
-import org.apache.poi.ss.usermodel.Workbook;
+
+import java.sql.JDBCType;
+import java.util.HashMap;
+import java.util.Map;
 
 public class EntityResultPaginatedExcelExportTest {
 

@@ -1,7 +1,6 @@
 package com.ontimize.jee.webclient.export.providers;
 
 import com.ontimize.jee.server.rest.QueryParameter;
-import com.ontimize.jee.webclient.export.HeadExportColumn;
 
 /**
  * Provider que proporciona los datos de la exportación.
@@ -25,9 +24,6 @@ public interface ExportDataProvider {
 
     int getNumberOfColumns();
 
-    int getColumnIndex(HeadExportColumn column);
-
-    Object getCellValue(int row, int column);
     Object getCellValue(int row, String colId);
 
 }

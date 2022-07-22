@@ -2,6 +2,7 @@ package com.ontimize.jee.webclient.export.base;
 
 import com.ontimize.jee.webclient.export.exception.ExportException;
 import com.ontimize.jee.webclient.export.providers.ExportDataProvider;
+import com.ontimize.jee.webclient.export.support.dataprovider.DefaultAdvancedEntityResultExportDataProvider;
 import com.ontimize.jee.webclient.export.support.dataprovider.DefaultEntityResultExportDataProvider;
 import com.ontimize.jee.webclient.export.util.ApplicationContextUtils;
 import org.slf4j.Logger;
@@ -62,13 +63,16 @@ public abstract class BaseExportService implements ExportService, ApplicationCon
         
     
     protected ExportDataProvider createDataProvider(final ExportQueryParameters exportParam) throws ExportException {
-        Object serviceBean = this.getApplicationContextUtils().getServiceBean(exportParam.getService(), exportParam.getPath());
 
         ExportDataProvider dataProvider = null;
         if(exportParam.isAdvQuery()) {
-            // TODO
+            dataProvider = new DefaultAdvancedEntityResultExportDataProvider(exportParam);
         } else {
             dataProvider = new DefaultEntityResultExportDataProvider(exportParam);
+        }
+        
+        if(dataProvider != null) {
+            Object serviceBean = this.getApplicationContextUtils().getServiceBean(exportParam.getService(), exportParam.getPath());
             dataProvider.setServiceBean(serviceBean);
         }
         

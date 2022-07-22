@@ -1,8 +1,10 @@
 package export.entityresult;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import com.ontimize.jee.common.dto.EntityResult;
+import com.ontimize.jee.common.dto.EntityResultMapImpl;
+import export.barebean.BareExportBean;
+import org.junit.Assert;
+
 import java.net.URL;
 import java.sql.JDBCType;
 import java.util.ArrayList;
@@ -10,30 +12,6 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
-
-import com.ontimize.jee.common.dto.EntityResult;
-import com.ontimize.jee.common.dto.EntityResultMapImpl;
-import com.ontimize.jee.webclient.export.CellStyleContext;
-import com.ontimize.jee.webclient.export.ExportColumnStyle;
-import com.ontimize.jee.webclient.export.ExportColumnStyle.CellColor;
-import com.ontimize.jee.webclient.export.ExportColumnStyle.HorizontalAlignment;
-import com.ontimize.jee.webclient.export.SheetContext;
-import com.ontimize.jee.webclient.export.helpers.EntityResultExportHelper;
-import com.ontimize.jee.webclient.export.providers.ExportColumnProvider;
-import com.ontimize.jee.webclient.export.providers.SheetNameProvider;
-import com.ontimize.jee.webclient.export.support.DefaultExportColumnStyle;
-import com.ontimize.jee.webclient.export.support.dataprovider.DefaultEntityResultExcelExportDataProvider;
-import com.ontimize.jee.webclient.export.support.exporter.DefaultXSSFExcelExporter;
-import com.ontimize.jee.webclient.export.support.styleprovider.DefaultExcelExportStyleProvider;
-import export.barebean.BareExportBean;
-import org.apache.poi.ss.usermodel.BorderStyle;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.DataFormat;
-import org.apache.poi.ss.usermodel.FillPatternType;
-import org.apache.poi.ss.usermodel.IndexedColors;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.junit.Assert;
 
 public class EntityResultExcelExportTest {
 

@@ -85,152 +85,50 @@ public class ExcelExportService extends BaseExportService implements IExcelExpor
     private ApplicationContext appContext;
     
     private ApplicationContextUtils applicationContextUtils;
+    
+    // ColumnProvider
+    private ExportColumnProvider columnProvider;
+
+    // StyleProvider
+    ExportStyleProvider styleProvider;
+
+    public ExportColumnProvider getColumnProvider() {
+        return columnProvider;
+    }
+
+    public ExportStyleProvider getStyleProvider() {
+        return styleProvider;
+    }
+
+    @Override
+    protected void createProviders(ExportQueryParameters exportParam) throws ExportException {
+        super.createProviders(exportParam);
+        
+        if(exportParam instanceof ExcelExportQueryParameters) {
+            ExcelExportQueryParameters excelExportParam = (ExcelExportQueryParameters)exportParam; 
+            // create specific providers...
+            createColumnProvider(excelExportParam);
+            createStyleProvider(excelExportParam);
+        }
+    }
 
     /**
-     * Method that generates the data provider
-     * @param service The query service.
-     * @param queryParameters Columns and sqltypes.
-     * @param dao The query dao.
-     * @param keysValues The keys values.
-     * @param attributesValues The attributes values.
-     * @param bodyColumns Columns list.
-     * @param pageSize Size of the page.
-     * @param orderBy Table field by which data is sorted.
-     * @param advancedQuery Boolean that specifies if it is a normal or advanced query.
-     * @param page Page number to export, -1 if you don't want to specify it.
-     * @return Returns the dataProvider.
+     * Creamos un columnProvider que extrae las columnas de la cabecera por una parte y las columnas de
+     * datos por otra. Para ello usa el algoritmo recursivo addParentColumn, que agrega a la lista una
+     * columna y todas sus hijas en profundidad.
      */
-    private static ExcelExportDataProvider generateDataProvider(Object service, QueryParameter queryParameters,
-            String dao, Map<Object, Object> keysValues, List<Object> attributesValues, List<ExportColumn> bodyColumns,
-            int pageSize, List<SQLOrder> orderBy, boolean advancedQuery, int page) {
-        return new ExcelExportDataProvider() {
+    protected ExportColumnProvider createColumnProvider(final ExcelExportQueryParameters exportParam) {
+        List<HeadExportColumn> headerColumns = new ArrayList<>();
+        List<ExportColumn> bodyColumns = new ArrayList<>();
+        Map<String, Object> columns = exportParam.getExcelColumns();
+        Map<String, String> columnTitles = exportParam.getColumnTitles();
+        addChildrenColumns(bodyColumns, headerColumns, columns, columnTitles);
+        ExportColumnProvider ret = new BaseExportColumnProvider(headerColumns, bodyColumns);
+        return ret;
+    }
 
-            AdvancedEntityResult advEr;
-
-            EntityResult eR;
-
-            @Override
-            public String getService() {
-                return String.valueOf(service);
-            }
-
-            @Override
-            public String getDao() {
-                return dao;
-            }
-
-            @Override
-            public QueryParameter getQueryParameters() {
-                return queryParameters;
-            }
-
-            @Override
-            public int getNumberOfRows() {
-                if (advancedQuery) {
-                    if (page == -1) {
-                        return getAdvancedEntityResult().getTotalRecordCount();
-                    } else {
-                        return getUniquePage(page).calculateRecordNumber();
-                    }
-                } else {
-                    return getEntityResult().calculateRecordNumber();
-                }
-            }
-
-            @Override
-            public int getNumberOfColumns() {
-                return bodyColumns.size();
-            }
-
-            @Override
-            public int getColumnIndex(final HeadExportColumn column) {
-                return bodyColumns.indexOf(column);
-            }
-
-            @Override
-            public Object getCellValue(int row, int column) {
-                // devuelve los valores de la query de uno en uno
-                if (column >= 0 && column < bodyColumns.size()) {
-                    if (advancedQuery) {
-                        if (page == -1) {
-                            // Query avanzada que devuelve todas las paginas
-                            AdvancedEntityResult data = getAdvancedEntityResult(row);
-                            List cellValue = (List) data.get(String.valueOf(bodyColumns.get(column).getId()));
-                            // Cuando el numero de fila es igual al tama�o de pagina, cambia el offset a la
-                            // siguiente pagina
-                            int nRow = row % pageSize;
-                            if (data != null && nRow < cellValue.size()) {
-                                return cellValue.get(nRow);
-                            }
-                        } else {
-                            // Query avanzada que devuelve una pagina especifica
-                            AdvancedEntityResult data = getUniquePage(page);
-                            List cellValue = (List) data.get(String.valueOf(bodyColumns.get(column).getId()));
-                            if (data != null && row < cellValue.size()) {
-                                return cellValue.get(row);
-                            }
-                        }
-
-                    } else {
-                        // Query simple que devuelve todos los datos
-                        EntityResult data = getEntityResult();
-                        List cellValue = (List) data.get(String.valueOf(bodyColumns.get(column).getId()));
-                        if (data != null && row < cellValue.size()) {
-                            return cellValue.get(row);
-                        }
-                    }
-
-                }
-                return null;
-            }
-
-            public EntityResult getEntityResult() {
-                if (eR == null) {
-                    eR = doQuery();
-                }
-
-                return eR;
-            }
-
-            public AdvancedEntityResult getAdvancedEntityResult() {
-                if (advEr == null) {
-                    advEr = doAdvancedQuery(0);
-                }
-                return advEr;
-            }
-
-            public AdvancedEntityResult getAdvancedEntityResult(int row) {
-                if (advEr == null) {
-                    advEr = doAdvancedQuery(0);
-                    return advEr;
-                }
-
-                if (row >= advEr.getStartRecordIndex() + pageSize) {
-                    advEr = doAdvancedQuery(advEr.getStartRecordIndex() + pageSize);
-                }
-
-                return advEr;
-            }
-
-            public AdvancedEntityResult getUniquePage(int page) {
-                if (advEr == null) {
-                    advEr = doAdvancedQuery(page);
-                    return advEr;
-                }
-                return advEr;
-            }
-
-            public EntityResult doQuery() {
-                return (EntityResult) ReflectionTools.invoke(service, dao, keysValues, attributesValues);
-            }
-
-            public AdvancedEntityResult doAdvancedQuery(int offSet) {
-                return (AdvancedEntityResult) ReflectionTools.invoke(service, dao, keysValues, attributesValues,
-                        pageSize, offSet, orderBy);
-            }
-
-        };
-
+    protected ExportStyleProvider<XSSFCellStyle, DataFormat> createStyleProvider(final ExcelExportQueryParameters exportParam) {
+        return new DefaultExcelExportStyleProvider<XSSFCellStyle>();
     }
 
     /**
@@ -615,23 +513,9 @@ public class ExcelExportService extends BaseExportService implements IExcelExpor
     public void generateExcel(EntityResult entityResult, File xlsxFile) {
         try {
             // ColumnProvider
-            ExportColumnProvider columnProvider = createColumnProvider(entityResult);
+            ExportColumnProvider columnProvider = getColumnProvider();
 
             // DataProvider
-//            String service = String.valueOf(entityResult.get("service"));
-//            String path = String.valueOf(entityResult.get("path"));
-//            Object serviceBean = this.getApplicationContextUtils().getServiceBean(service, path);
-//            
-//            StringBuffer buffer = new StringBuffer();
-//            buffer.append(entityResult.get("dao")).append(ORestController.QUERY);
-//
-//            List<SQLOrder> orderBy = new ArrayList<SQLOrder>();
-//            orderBy.add(new SQLOrder("NAME"));
-//
-//            ExcelExportDataProvider dataProvider = generateDataProvider(
-//                    serviceBean,
-//                    (QueryParameter) entityResult.get("queryParameters"), buffer.toString(), keysValues,
-//                    attributesValues, columnProvider.getBodyColumns(), pageSize, orderBy, advQuery, offSet);
             ExportDataProvider dataProvider = getDataProvider();
 
             // StyleProvider

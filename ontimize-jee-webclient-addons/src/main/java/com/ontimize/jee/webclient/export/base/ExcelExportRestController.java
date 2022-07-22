@@ -71,11 +71,14 @@ public abstract class ExcelExportRestController extends ORestController<IExcelEx
             Map<?, ?> kvQueryParameter = exportParam.getQueryParam().getFilter();
             List<?> avQueryParameter = exportParam.getQueryParam().getColumns();
             HashMap<?, ?> hSqlTypes = exportParam.getQueryParam().getSqltypes();
+            
+            int pageSize = exportParam.getQueryParam().getPageSize();
+            int offset = exportParam.getQueryParam().getOffset();
 
             File exportFile = getService().queryParameters(entityResult, new ArrayList(),
                     this.createKeysValues(kvQueryParameter, hSqlTypes),
-                    this.createAttributesValues(avQueryParameter, hSqlTypes), exportParam.getPageSize(),
-                    exportParam.isAdvQuery(), exportParam.getOffset());
+                    this.createAttributesValues(avQueryParameter, hSqlTypes), pageSize,
+                    exportParam.isAdvQuery(), offset);
 
             response.setHeader("Content-Type", "application/octet-stream");
             response.setHeader("Content-Disposition", "attachment; filename=\"" + exportFile.getName() + "\"");
