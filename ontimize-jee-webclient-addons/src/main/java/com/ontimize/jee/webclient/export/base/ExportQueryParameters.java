@@ -1,71 +1,31 @@
 package com.ontimize.jee.webclient.export.base;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.ontimize.jee.server.rest.QueryParameter;
 
-public class ExportQueryParameters extends BaseExcelExportParameters {
+@JsonTypeInfo(
+    use = JsonTypeInfo.Id.NAME,
+    include = JsonTypeInfo.As.PROPERTY,
+    property = "type",
+    defaultImpl = ExcelExportQueryParameters.class
+)
+@JsonSubTypes({
+    @JsonSubTypes.Type(value = ExcelExportQueryParameters.class, name = "xlsx")
+//TODO    @JsonSubTypes.Type(value = PdfExportQueryParameters.class, name = "pdf")
+})
 
-    private QueryParameter queryParam;
+public interface ExportQueryParameters {
 
-    private String dao;
+  QueryParameter getQueryParam();
 
-    private String service;
-    
-    private String path;
+  String getDao();
+  
+  String getService();
 
-    private boolean advQuery;
-
-
-    public ExportQueryParameters() {
-        super();
-    }
-
-    public ExportQueryParameters(QueryParameter queryParam, String dao, String service, String path, boolean advQuery) {
-        super();
-        this.queryParam = queryParam;
-        this.dao = dao;
-        this.service = service;
-        this.path = path;
-        this.advQuery = advQuery;
-    }
-
-    public QueryParameter getQueryParam() {
-        return queryParam;
-    }
-
-    public void setQueryParam(QueryParameter queryParam) {
-        this.queryParam = queryParam;
-    }
-
-    public String getDao() {
-        return dao;
-    }
-
-    public void setDao(String dao) {
-        this.dao = dao;
-    }
-
-    public String getService() {
-        return service;
-    }
-
-    public void setService(String service) {
-        this.service = service;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    public boolean isAdvQuery() {
-        return advQuery;
-    }
-
-    public void setAdvQuery(boolean advQuery) {
-        this.advQuery = advQuery;
-    }
+  
+  String getPath();
+  
+  public boolean isAdvQuery();
 
 }

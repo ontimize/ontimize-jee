@@ -173,3 +173,4 @@ buiild.properties
 
 # End of https://www.gitignore.io/api/maven,eclipse,intellij+iml
 
+/.idea/

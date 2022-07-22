@@ -12,6 +12,9 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.ontimize.jee.common.dto.EntityResultMapImpl;
+import com.ontimize.jee.webclient.export.exception.ExportException;
+import com.ontimize.jee.webclient.export.providers.ExportDataProvider;
 import com.ontimize.jee.webclient.export.util.ApplicationContextUtils;
 import org.apache.poi.ss.usermodel.DataFormat;
 import org.apache.poi.ss.usermodel.FillPatternType;
@@ -30,7 +33,6 @@ import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.common.db.SQLStatementBuilder.SQLOrder;
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
 import com.ontimize.jee.common.tools.ReflectionTools;
-import com.ontimize.jee.server.rest.ORestController;
 import com.ontimize.jee.server.rest.QueryParameter;
 import com.ontimize.jee.webclient.export.CellStyleContext;
 import com.ontimize.jee.webclient.export.ExportColumn;
@@ -76,7 +78,7 @@ import com.ontimize.jee.webclient.export.util.ExportOptions;
  * @author <a href="antonio.vazquez@imatia.com">Antonio Vazquez Araujo</a>
  */
 @Service("ExcelExportService")
-public class ExcelExportService implements IExcelExportService, ApplicationContextAware {
+public class ExcelExportService extends BaseExportService implements IExcelExportService, ApplicationContextAware {
 
     private static final Logger logger = LoggerFactory.getLogger(ExcelExportService.class);
 
@@ -574,43 +576,63 @@ public class ExcelExportService implements IExcelExportService, ApplicationConte
         System.out.println(keysValues);
 
         File xlsxFile = File.createTempFile(String.valueOf(System.currentTimeMillis()), ".xlsx");
-        generateExcel(data, orderColumns, xlsxFile, keysValues, attributesValues, pageSize, advQuery, offSet);
+//        generateExcel(data, orderColumns, xlsxFile, keysValues, attributesValues, pageSize, advQuery, offSet);
         return xlsxFile;
 
+    }
+
+    @Override
+    public File generateFile(final ExportQueryParameters exportParam) throws ExportException {
+        File xlsxFile = null;
+        try {
+            ExcelExportQueryParameters excelExportParam = (ExcelExportQueryParameters)exportParam; 
+            
+            EntityResult entityResult = new EntityResultMapImpl();
+            entityResult.put("cellStyles", excelExportParam.getCellStyles());
+            entityResult.put("excelColumns", excelExportParam.getExcelColumns());
+            entityResult.put("columnStyles", excelExportParam.getColumnStyles());
+            entityResult.put("columnTypes", excelExportParam.getColumnTypes());
+            entityResult.put("dao", excelExportParam.getDao());
+            entityResult.put("path", excelExportParam.getPath());
+            entityResult.put("rowStyles", excelExportParam.getRowStyles());
+            entityResult.put("service", excelExportParam.getService());
+            entityResult.put("columnTitles", excelExportParam.getColumnTitles());
+            entityResult.put("styles", excelExportParam.getStyles());
+            
+            xlsxFile = File.createTempFile(String.valueOf(System.currentTimeMillis()), ".xlsx");
+            generateExcel(entityResult, xlsxFile);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return xlsxFile;
     }
 
     /**
      * Create all the providers and generate the book
      * @param entityResult The entity result with all data
-     * @param orderColumns Colums to order the query
      * @param xlsxFile The tempfile
-     * @param keysValues The keys values
-     * @param attributesValues The attributes values
-     * @param pageSize The size of the page for advanced query
-     * @param advQuery Boolean to controll if it's a advanced query or not
-     * @param offSet Integer to especify a page to query. -1 if don't want it
      */
-    public void generateExcel(EntityResult entityResult, List<String> orderColumns, File xlsxFile,
-            Map<Object, Object> keysValues, List<Object> attributesValues, int pageSize, boolean advQuery, int offSet) {
+    public void generateExcel(EntityResult entityResult, File xlsxFile) {
         try {
             // ColumnProvider
             ExportColumnProvider columnProvider = createColumnProvider(entityResult);
 
             // DataProvider
-            String service = String.valueOf(entityResult.get("service"));
-            String path = String.valueOf(entityResult.get("path"));
-            Object serviceBean = this.getApplicationContextUtils().getServiceBean(service, path);
-            
-            StringBuffer buffer = new StringBuffer();
-            buffer.append(entityResult.get("dao")).append(ORestController.QUERY);
-
-            List<SQLOrder> orderBy = new ArrayList<SQLOrder>();
-            orderBy.add(new SQLOrder("NAME"));
-
-            ExcelExportDataProvider dataProvider = generateDataProvider(
-                    serviceBean,
-                    (QueryParameter) entityResult.get("queryParameters"), buffer.toString(), keysValues,
-                    attributesValues, columnProvider.getBodyColumns(), pageSize, orderBy, advQuery, offSet);
+//            String service = String.valueOf(entityResult.get("service"));
+//            String path = String.valueOf(entityResult.get("path"));
+//            Object serviceBean = this.getApplicationContextUtils().getServiceBean(service, path);
+//            
+//            StringBuffer buffer = new StringBuffer();
+//            buffer.append(entityResult.get("dao")).append(ORestController.QUERY);
+//
+//            List<SQLOrder> orderBy = new ArrayList<SQLOrder>();
+//            orderBy.add(new SQLOrder("NAME"));
+//
+//            ExcelExportDataProvider dataProvider = generateDataProvider(
+//                    serviceBean,
+//                    (QueryParameter) entityResult.get("queryParameters"), buffer.toString(), keysValues,
+//                    attributesValues, columnProvider.getBodyColumns(), pageSize, orderBy, advQuery, offSet);
+            ExportDataProvider dataProvider = getDataProvider();
 
             // StyleProvider
             ExportStyleProvider styleProvider = createStyleProvider(entityResult);
@@ -619,7 +641,7 @@ public class ExcelExportService implements IExcelExportService, ApplicationConte
             SheetNameProvider sheetNameProvider = createDefaultSheetNameProvider();
 
             // ExportOptions
-            ExportOptions exportOptions = this.createExportOptions(entityResult, orderColumns);
+            ExportOptions exportOptions = this.createExportOptions(entityResult, new ArrayList<>() /*orderColumns*/);
 
             final Workbook book = generateBook(columnProvider, dataProvider, styleProvider, sheetNameProvider,
                     exportOptions);
@@ -642,7 +664,7 @@ public class ExcelExportService implements IExcelExportService, ApplicationConte
      * @return
      * @throws Exception
      */
-    public Workbook generateBook(ExportColumnProvider columnProvider, ExcelExportDataProvider dataProvider,
+    public Workbook generateBook(ExportColumnProvider columnProvider, ExportDataProvider dataProvider,
             ExportStyleProvider<XSSFCellStyle, DataFormat> styleProvider, SheetNameProvider sheetNameProvider,
             ExportOptions exportOptions) throws Exception {
         return new DefaultXSSFExcelExporter().export(columnProvider, dataProvider, styleProvider, sheetNameProvider,
@@ -671,7 +693,7 @@ public class ExcelExportService implements IExcelExportService, ApplicationConte
         return appContext;
     }
 
-    protected ApplicationContextUtils getApplicationContextUtils() {
+    public ApplicationContextUtils getApplicationContextUtils() {
         if(this.applicationContextUtils == null){
             this.applicationContextUtils = new ApplicationContextUtils();
             ((ApplicationContextAware) this.applicationContextUtils).setApplicationContext(this.appContext);

@@ -18,6 +18,7 @@ import com.ontimize.jee.webclient.export.ExportColumnStyle;
 import com.ontimize.jee.webclient.export.Exporter;
 import com.ontimize.jee.webclient.export.HeadExportColumn;
 import com.ontimize.jee.webclient.export.SheetContext;
+import com.ontimize.jee.webclient.export.providers.ExportDataProvider;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.DataFormat;
@@ -69,7 +70,7 @@ public abstract class BaseExcelExporter<T extends Workbook> implements Exporter<
     @Override
     public T export(
             final ExportColumnProvider exportColumnProvider,
-            final ExcelExportDataProvider dataProvider,
+            final ExportDataProvider dataProvider,
             final ExportStyleProvider styleProvider,
             SheetNameProvider sheetNameProvider,
             ExportOptions exportOptions) {
@@ -118,7 +119,7 @@ public abstract class BaseExcelExporter<T extends Workbook> implements Exporter<
         return workBook;
     }
 
-    public void addHeader(final ExcelExportDataProvider provider, final Sheet sheet,
+    public void addHeader(final ExportDataProvider provider, final Sheet sheet,
             final List<HeadExportColumn> userHeaderColumns,
             final Map<String, CellStyle> headerCellStylesById,
             final ExportOptions exportOptions,
@@ -147,7 +148,7 @@ public abstract class BaseExcelExporter<T extends Workbook> implements Exporter<
 
     protected void addBody(
             final List<ExportColumn> userColumns,
-            final ExcelExportDataProvider dataProvider,
+            final ExportDataProvider dataProvider,
             final Map<String, CellStyle> bodyCellStyles,
             final ExportStyleProvider styleProvider,
             final List<HeadExportColumn> headerColumns,
@@ -195,14 +196,13 @@ public abstract class BaseExcelExporter<T extends Workbook> implements Exporter<
             aLastRowNum.set(actualSheet.getLastRowNum() + 1);
             aSheetName.set(actualSheet.getSheetName());
             aActualSheetIndex.set(actualSheet.getWorkbook().getSheetIndex(actualSheet));
-            IntStream.range(0, dataProvider.getNumberOfColumns()).forEach(colIndex -> {
-                final int dataProviderColumnIndex = dataProvider.getColumnIndex(userColumns.get(colIndex));
-                final Object value = dataProvider.getCellValue(rowIndex, dataProviderColumnIndex);
+            userColumns.stream().forEach(column -> {
+                final Object value = dataProvider.getCellValue(rowIndex, column.getId());
                 this.addCell(
                         actualSheet,
-                        dataProviderColumnIndex != -1 ? userColumns.get(dataProviderColumnIndex) : null,
+                        column,
                         aLastRowNum.get(),
-                        dataProviderColumnIndex,
+                        userColumns.indexOf(column),
                         value,
                         styleProvider,
                         bodyCellStyles);
@@ -269,7 +269,7 @@ public abstract class BaseExcelExporter<T extends Workbook> implements Exporter<
     }
 
     protected void createHeader(
-            final ExcelExportDataProvider provider,
+            final ExportDataProvider provider,
             final Sheet sheet,
             final List<HeadExportColumn> userHeaderColumns,
             final Map<String, CellStyle> headerCellStylesById,
@@ -298,7 +298,8 @@ public abstract class BaseExcelExporter<T extends Workbook> implements Exporter<
             .forEach(column -> {
                 if (ExportColumn.class.isAssignableFrom(column.getClass())) {
                     final ExportColumn exportColumn = (ExportColumn) column;
-                    final int columnNumber = provider.getColumnIndex(exportColumn);
+//                    final int columnNumber = provider.getColumnIndex(exportColumn);
+                    final int columnNumber = userHeaderColumns.indexOf(column);
                     if (headerHeight > 0) {
                         final CellRangeAddress region = new CellRangeAddress(
                                 0,
@@ -426,17 +427,18 @@ public abstract class BaseExcelExporter<T extends Workbook> implements Exporter<
     private Map<String, CellStyle> addBodyStyles(
             final Sheet sheet,
             final List<ExportColumn> bodyColumns,
-            final ExcelExportDataProvider dataProvider,
+            final ExportDataProvider dataProvider,
             final ExportStyleProvider styleProvider) {
 
         final Map<String, CellStyle> bodyCellStyles = new HashMap<>();
 
-        IntStream.range(0, bodyColumns.size())
-            .forEach(columnIndex -> {
-                final int dataProviderColumnIndex = dataProvider.getColumnIndex(bodyColumns.get(columnIndex));
-                if (dataProviderColumnIndex != -1) {
-                    final ExportColumn column = bodyColumns.get(dataProviderColumnIndex);
-                    final Object cellValue = dataProvider.getCellValue(0, dataProviderColumnIndex);
+//        IntStream.range(0, bodyColumns.size())
+        bodyColumns.stream()
+            .forEach(column -> {
+//                final int dataProviderColumnIndex = dataProvider.getColumnIndex(bodyColumns.get(columnIndex));
+//                if (dataProviderColumnIndex != -1) {
+//                    final ExportColumn column = bodyColumns.get(dataProviderColumnIndex);
+                    final Object cellValue = dataProvider.getCellValue(0, column.getId());
                     final Class objectClass = cellValue != null ? cellValue.getClass() : Object.class;
                     this.exportColumnStyle.reset();
                     /*
@@ -452,7 +454,7 @@ public abstract class BaseExcelExporter<T extends Workbook> implements Exporter<
                     bodyCellStyles.put(
                             column.getId(),
                             cellStyle);
-                }
+//                }
             });
         return bodyCellStyles;
     }
@@ -463,7 +465,7 @@ public abstract class BaseExcelExporter<T extends Workbook> implements Exporter<
 
     private Sheet selectSheetByName(
             final String newSheetName,
-            final ExcelExportDataProvider provider,
+            final ExportDataProvider provider,
             final List<HeadExportColumn> headerColumns,
             final Map<String, CellStyle> headerCellStylesById,
             final ExportOptions exportOptions,

@@ -1,5 +1,6 @@
 package com.ontimize.jee.webclient.export.providers;
 
+import com.ontimize.jee.server.rest.QueryParameter;
 import com.ontimize.jee.webclient.export.HeadExportColumn;
 
 /**
@@ -10,6 +11,16 @@ import com.ontimize.jee.webclient.export.HeadExportColumn;
 
 public interface ExportDataProvider {
 
+    String getService();
+    
+    void setServiceBean(Object serviceBean);
+    
+    Object getServiceBean();
+
+    String getDao();
+
+    QueryParameter getQueryParameters();
+
     int getNumberOfRows();
 
     int getNumberOfColumns();
@@ -17,5 +28,6 @@ public interface ExportDataProvider {
     int getColumnIndex(HeadExportColumn column);
 
     Object getCellValue(int row, int column);
+    Object getCellValue(int row, String colId);
 
 }

@@ -1,9 +1,8 @@
 package com.ontimize.jee.webclient.export.base;
 
-import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
+import com.ontimize.jee.webclient.export.exception.ExportException;
 
 import java.io.File;
-import java.io.IOException;
 
 /**
  */
@@ -13,6 +12,6 @@ public interface ExportService {
         xlsx, pdf
     }
     
-    File export(ExportQueryParameters exportParam) throws OntimizeJEERuntimeException, IOException;
+    File export(ExportQueryParameters exportParam) throws ExportException;
 
 }

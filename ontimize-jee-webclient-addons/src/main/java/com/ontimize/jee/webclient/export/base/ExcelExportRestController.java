@@ -50,7 +50,7 @@ public abstract class ExcelExportRestController extends ORestController<IExcelEx
      */
     @PostMapping(value = { "/{extension}" }, consumes = { "application/json" }, produces = { "application/json" })
     public void exportQuery(@PathVariable(name = "extension", required = true) final String fileExtension,
-            @RequestBody ExportQueryParameters exportParam, HttpServletResponse response) throws Exception {
+            @RequestBody ExcelExportQueryParameters exportParam, HttpServletResponse response) throws Exception {
         logger.debug("Invoked /{}", exportParam);
 
         BufferedInputStream inputStream = null;
