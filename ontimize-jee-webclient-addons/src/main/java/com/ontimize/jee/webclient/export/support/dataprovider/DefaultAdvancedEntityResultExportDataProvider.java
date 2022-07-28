@@ -13,20 +13,11 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-public class DefaultAdvancedEntityResultExportDataProvider implements ExportDataProvider {
+public class DefaultAdvancedEntityResultExportDataProvider extends AbstractEntityResultExportDataProvider {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DefaultAdvancedEntityResultExportDataProvider.class);
 
     AdvancedEntityResult entityResult;
-    
-    private String service;
-    
-    private Object serviceBean;
-    private String dao;
-    
-    private String daoMethod;
-    
-    private int numOfCols;
     
     private int pageSize;
 
@@ -37,49 +28,18 @@ public class DefaultAdvancedEntityResultExportDataProvider implements ExportData
     private AdvancedQueryParameter queryParameters;
 
     public DefaultAdvancedEntityResultExportDataProvider(final ExportQueryParameters exportParam) {
-        this.service = exportParam.getService();
-        this.dao = exportParam.getDao();
-        
-        this.numOfCols = exportParam.getQueryParam().getColumns().size();
-        
-        this.initialize(exportParam);
+        super(exportParam);
     }
     
     protected void initialize(final ExportQueryParameters exportParam) {
-        StringBuffer buffer = new StringBuffer();
-        buffer.append(this.getDao()).append(ORestController.PAGINATION_QUERY);
-        this.daoMethod = buffer.toString();
-        
+        super.initialize(exportParam);
         if(exportParam.getQueryParam() instanceof AdvancedQueryParameter) {
             this.queryParameters = (AdvancedQueryParameter) exportParam.getQueryParam();
+            this.numOfCols = this.queryParameters.getColumns().size();
             this.pageSize = this.queryParameters.getPageSize();
             this.page = this.queryParameters.getOffset();
             this.orderBy = this.queryParameters.getOrderBy();
         }
-    }
-
-    @Override
-    public String getService() {
-        return this.service;
-    }
-
-    @Override
-    public void setServiceBean(Object serviceBean) {
-        this.serviceBean = serviceBean;
-    }
-
-    @Override
-    public Object getServiceBean() {
-        return this.serviceBean;
-    }
-
-    @Override
-    public String getDao() {
-        return this.dao;
-    }
-
-    protected String getDaoMethod() {
-        return this.daoMethod;
     }
 
     @Override
@@ -153,6 +113,11 @@ public class DefaultAdvancedEntityResultExportDataProvider implements ExportData
             }
         }
         return null;
+    }
+
+    @Override
+    protected String getDaoMethodSuffix() {
+        return ORestController.PAGINATION_QUERY;
     }
 
     public AdvancedEntityResult getUniquePage(final int page) {

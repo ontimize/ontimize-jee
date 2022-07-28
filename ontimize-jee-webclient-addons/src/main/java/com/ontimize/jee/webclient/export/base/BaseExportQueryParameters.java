@@ -1,11 +1,12 @@
 package com.ontimize.jee.webclient.export.base;
 
-import com.ontimize.jee.server.rest.AdvancedQueryParameter;
-import com.ontimize.jee.server.rest.QueryParameter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.ontimize.jee.server.rest.FilterParameter;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class BaseExportQueryParameters implements ExportQueryParameters {
 
-    private AdvancedQueryParameter queryParam;
+    private FilterParameter queryParam;
 
     private String dao;
 
@@ -20,7 +21,7 @@ public class BaseExportQueryParameters implements ExportQueryParameters {
         super();
     }
 
-    public BaseExportQueryParameters(AdvancedQueryParameter queryParam, String dao, String service, String path, boolean advQuery) {
+    public BaseExportQueryParameters(FilterParameter queryParam, String dao, String service, String path, boolean advQuery) {
         super();
         this.queryParam = queryParam;
         this.dao = dao;
@@ -29,11 +30,11 @@ public class BaseExportQueryParameters implements ExportQueryParameters {
         this.advQuery = advQuery;
     }
 
-    public AdvancedQueryParameter getQueryParam() {
+    public FilterParameter getQueryParam() {
         return queryParam;
     }
 
-    public void setQueryParam(AdvancedQueryParameter queryParam) {
+    public void setQueryParam(FilterParameter queryParam) {
         this.queryParam = queryParam;
     }
 

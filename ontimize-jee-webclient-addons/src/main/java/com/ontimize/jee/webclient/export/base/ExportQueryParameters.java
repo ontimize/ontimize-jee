@@ -2,7 +2,7 @@ package com.ontimize.jee.webclient.export.base;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.ontimize.jee.server.rest.QueryParameter;
+import com.ontimize.jee.server.rest.FilterParameter;
 
 @JsonTypeInfo(
     use = JsonTypeInfo.Id.NAME,
@@ -17,7 +17,9 @@ import com.ontimize.jee.server.rest.QueryParameter;
 
 public interface ExportQueryParameters {
 
-  QueryParameter getQueryParam();
+  FilterParameter getQueryParam();
+  
+  void setQueryParam(FilterParameter filterParameter);
 
   String getDao();
   

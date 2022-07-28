@@ -3,6 +3,8 @@ package com.ontimize.jee.webclient.export.base;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -59,38 +61,22 @@ import com.ontimize.jee.webclient.export.support.DefaultHeadExportColumn;
 import com.ontimize.jee.webclient.export.util.ExportOptions;
 
 /**
- * Servicio de exportación en formato Excel. El formato de la entityResult es el siguiente:
- * <ul>
- * <li>data: lista de mapas de datos, uno por cada registro, con un par clave->valor por cada
- * campo</li>
- * <li>columns: mapa de pares columnId-> contenido. Las columnas pueden anidarse</li>
- * <li>columnTitles: mapa de pares columnId->título</li>
- * <li>columnTypes: mapa de pares columnId->clase entre comillas, como
- * <code>"java.lang.String"</code></li>
- * <li>styles: mapa de pares nombre_de_estilo->mapa de pares nombre_de_formato->valor</li>
- * <li>columnStyles: mapa de pares columnId->nombre_de_estilo o bien lista de nombres_de_estilo</li>
- * <li>rowStyles: mapa de pares regla_de_selección_de_fila->nombre_de_estilo o bien lista de
- * nombres_de_estilo</li>
- * <li>cellStyles: mapa de pares coordenadas_de_celda->nombre_de_estilo o bien lista de
- * nombres_de_estilo</li>
- * </ul>
+ * Servicio de exportación en formato Excel. 
  *
  * @author <a href="antonio.vazquez@imatia.com">Antonio Vazquez Araujo</a>
  */
 @Service("ExcelExportService")
-public class ExcelExportService extends BaseExportService implements IExcelExportService, ApplicationContextAware {
+public class ExcelExportService extends BaseExportService implements IExcelExportService {
 
     private static final Logger logger = LoggerFactory.getLogger(ExcelExportService.class);
 
-    private ApplicationContext appContext;
-    
-    private ApplicationContextUtils applicationContextUtils;
-    
     // ColumnProvider
     private ExportColumnProvider columnProvider;
 
     // StyleProvider
-    ExportStyleProvider styleProvider;
+    private ExportStyleProvider styleProvider;
+
+    private SheetNameProvider sheetNameProvider;
 
     public ExportColumnProvider getColumnProvider() {
         return columnProvider;
@@ -100,16 +86,94 @@ public class ExcelExportService extends BaseExportService implements IExcelExpor
         return styleProvider;
     }
 
+    public SheetNameProvider getSheetNameProvider() {
+        return sheetNameProvider;
+    }
+
+    @Override
+    public File generateFile(final ExportQueryParameters exportParam) throws ExportException {
+        File xlsxFile = null;
+        try {
+            if(!(exportParam instanceof ExcelExportQueryParameters)) {
+                throw new IllegalArgumentException();
+            }
+            ExcelExportQueryParameters excelExportParam = (ExcelExportQueryParameters)exportParam; 
+            xlsxFile = File.createTempFile(String.valueOf(System.currentTimeMillis()), ".xlsx");
+            generateExcel(excelExportParam, xlsxFile);
+        } catch (IOException e) {
+            throw new ExportException("Error creating xlsx file!", e);
+        } catch (IllegalArgumentException e) {
+            throw new ExportException("Invalid export configuration parameters", e);
+        } 
+        return xlsxFile;
+    }
+
+    /**
+     * Create all the providers and generate the book
+     * @param exportParam The export configuration parameters
+     * @param xlsxFile The tempfile
+     */
+    public void generateExcel(final ExcelExportQueryParameters exportParam, File xlsxFile) throws ExportException {
+        try {
+            // ColumnProvider
+            ExportColumnProvider columnProvider = getColumnProvider();
+
+            // DataProvider
+            ExportDataProvider dataProvider = getDataProvider();
+
+            // StyleProvider
+            ExportStyleProvider styleProvider = getStyleProvider();
+
+            // SheetNameProvider
+            SheetNameProvider sheetNameProvider = getSheetNameProvider();
+
+            // ExportOptions
+            ExportOptions exportOptions = this.createExportOptions(exportParam, new ArrayList<>() /*orderColumns*/);
+
+            final Workbook book = generateBook(columnProvider, dataProvider, styleProvider, sheetNameProvider,
+                    exportOptions);
+
+            final FileOutputStream fileOutputStream = new FileOutputStream(xlsxFile);
+            book.write(fileOutputStream);
+            fileOutputStream.close();
+        } catch (final Exception e) {
+            logger.error("{}", e.getMessage(), e);
+            throw new ExportException("Error filling export file", e);
+        }
+    }
+
+    /**
+     * Calls the exporter and send it the providers to build the excel file
+     * @param columnProvider The column provider
+     * @param dataProvider The data provider
+     * @param styleProvider The styles provider
+     * @param sheetNameProvider The sheet name provider
+     * @param exportOptions Is null, it creates it in the BaseExcelExporter
+     * @return
+     * @throws Exception
+     */
+    public Workbook generateBook(ExportColumnProvider columnProvider, ExportDataProvider dataProvider,
+            ExportStyleProvider<XSSFCellStyle, DataFormat> styleProvider, SheetNameProvider sheetNameProvider,
+            ExportOptions exportOptions) {
+        return new DefaultXSSFExcelExporter().export(columnProvider, dataProvider, styleProvider, sheetNameProvider,
+                exportOptions);
+    }
+
     @Override
     protected void createProviders(ExportQueryParameters exportParam) throws ExportException {
         super.createProviders(exportParam);
-        
+
         if(exportParam instanceof ExcelExportQueryParameters) {
-            ExcelExportQueryParameters excelExportParam = (ExcelExportQueryParameters)exportParam; 
+            ExcelExportQueryParameters excelExportParam = (ExcelExportQueryParameters)exportParam;
             // create specific providers...
-            createColumnProvider(excelExportParam);
-            createStyleProvider(excelExportParam);
+            this.createXlsxProviders(excelExportParam);
         }
+    }
+    
+    public void createXlsxProviders(final ExcelExportQueryParameters excelExportParam) {
+        this.columnProvider = createColumnProvider(excelExportParam);
+        this.styleProvider = createStyleProvider(excelExportParam);
+        this.sheetNameProvider = createDefaultSheetNameProvider();
     }
 
     /**
@@ -127,27 +191,16 @@ public class ExcelExportService extends BaseExportService implements IExcelExpor
         return ret;
     }
 
-    protected ExportStyleProvider<XSSFCellStyle, DataFormat> createStyleProvider(final ExcelExportQueryParameters exportParam) {
-        return new DefaultExcelExportStyleProvider<XSSFCellStyle>();
+    protected ExportStyleProvider createStyleProvider(final ExcelExportQueryParameters exportParam) {
+        return new DefaultExcelExportStyleProvider(exportParam);
     }
 
-    /**
-     * Creamos un columnProvider que extrae las columnas de la cabecera por una parte y las columnas de
-     * datos por otra. Para ello usa el algoritmo recursivo addParentColumn, que agrega a la lista una
-     * columna y todas sus hijas en profundidad.
-     */
-    private static ExportColumnProvider createColumnProvider(EntityResult entityResult) {
-        List<HeadExportColumn> headerColumns = new ArrayList<>();
-        List<ExportColumn> bodyColumns = new ArrayList<>();
-        Map<String, Object> columns = ((Map<String, Object>) (entityResult.get("excelColumns")));
-        Map<String, String> columnTitles = (Map<String, String>) entityResult.get("columnTitles");
-        addChildrenColumns(bodyColumns, headerColumns, columns, columnTitles);
-        ExportColumnProvider ret = new BaseExportColumnProvider(headerColumns, bodyColumns);
-        return ret;
+    protected SheetNameProvider createDefaultSheetNameProvider() {
+        return new DefaultSheetNameProvider();
     }
 
     static void addParentColumn(List<ExportColumn> bodyColumns, List<HeadExportColumn> columns, String id, Object value,
-            Map<String, String> columnTitles) {
+                                Map<String, String> columnTitles) {
 
         HeadExportColumn column = new DefaultHeadExportColumn(id, columnTitles.get(id));
         Map<String, Object> children = (Map<String, Object>) value;
@@ -162,426 +215,17 @@ public class ExcelExportService extends BaseExportService implements IExcelExpor
     }
 
     static List<HeadExportColumn> addChildrenColumns(List<ExportColumn> bodyColumns, List<HeadExportColumn> columns,
-            Map<String, Object> children, Map<String, String> columnTitles) {
+                                                     Map<String, Object> children, Map<String, String> columnTitles) {
         children.entrySet().forEach(entry -> {
             addParentColumn(bodyColumns, columns, entry.getKey(), entry.getValue(), columnTitles);
         });
         return columns;
     }
 
-    private static ExportStyleProvider<XSSFCellStyle, DataFormat> createStyleProvider(EntityResult entityResult) {
 
-        return new DefaultExcelExportStyleProvider<XSSFCellStyle>() {
-            Map<String, ExportColumnStyle> styles = createStyles(entityResult);
-
-            Map<String, List<String>> columnStyles = createColumnStyles(entityResult);
-
-            Map<RowSelectionRule, List<String>> rowStyles = createRowStyles(entityResult);
-
-            Map<CellSelectionRule, List<String>> cellStyles = createCellStyles(entityResult);
-
-            Map<String, String> columnTypes = (Map<String, String>) entityResult.get("columnTypes");
-
-            Map<String, XSSFCellStyle> poiCellStyles = null;
-
-            @Override
-            public XSSFCellStyle getHeaderCellStyle(CellStyleContext<XSSFCellStyle, DataFormat> context) {
-                if (poiCellStyles == null) {
-                    poiCellStyles = new HashMap<>();
-                    styles.forEach((name, s) -> {
-                        XSSFCellStyle style = context.getCellStyleCreator().get();
-                        applyExportStyleToPoiStyle(context, s, style);
-                        poiCellStyles.put(name, style);
-                    });
-                }
-                List<String> finalCombinedStyleNames = new ArrayList<>();
-                for (Entry<String, List<String>> entry : columnStyles.entrySet()) {
-                    if (entry.getKey().equals(context.getColumnId())) {
-                        List<String> stylesForColumn = entry.getValue();
-                        String combinedStyleName = stylesForColumn.stream().collect(Collectors.joining("+"));
-                        // Si no existe el estilo combinado como estilo poi lo agregamos ahora
-                        if (!poiCellStyles.containsKey(combinedStyleName)) {
-                            XSSFCellStyle combined = context.getCellStyleCreator().get();
-                            for (String style : stylesForColumn) {
-                                applyExportStyleToPoiStyle(context, styles.get(style), combined);
-                            }
-                            poiCellStyles.put(combinedStyleName, combined);
-                        }
-                        finalCombinedStyleNames.add(combinedStyleName);
-                    }
-                }
-                if (!finalCombinedStyleNames.isEmpty()) {
-                    String combinedStyleName = finalCombinedStyleNames.stream().collect(Collectors.joining("+"));
-                    if (!poiCellStyles.containsKey(combinedStyleName)) {
-                        for (String styleName : finalCombinedStyleNames) {
-                            XSSFCellStyle combined = context.getCellStyleCreator().get();
-                            for (String style : finalCombinedStyleNames) {
-                                applyExportStyleToPoiStyle(context, styles.get(style), combined);
-                            }
-                            poiCellStyles.put(combinedStyleName, combined);
-                        }
-                    }
-                    return poiCellStyles.get(combinedStyleName);
-                }
-                return null;
-            }
-
-            @Override
-            public ExportColumnStyle getColumnStyle(String columnId) {
-                List<String> stylesOfThisColumn = columnStyles.get(columnId);
-                if (stylesOfThisColumn != null) {
-                    DefaultExportColumnStyle ret = new DefaultExportColumnStyle();
-                    stylesOfThisColumn.forEach(t -> ret.set(styles.get(t)));
-                    return ret;
-                }
-                return super.getColumnStyle(columnId);
-            }
-
-            @Override
-            public XSSFCellStyle getCellStyle(CellStyleContext<XSSFCellStyle, DataFormat> context) {
-                List<String> finalCombinedStyleNames = new ArrayList<>();
-                // La primera vez, creamos todos los estilos poi usados y los guardamos
-                if (poiCellStyles == null) {
-                    poiCellStyles = new HashMap<>();
-                    styles.forEach((name, s) -> {
-                        XSSFCellStyle style = context.getCellStyleCreator().get();
-                        applyExportStyleToPoiStyle(context, s, style);
-                        poiCellStyles.put(name, style);
-                    });
-                }
-
-                // Si existe un grupo de estilos para esa fila, primero los agregamos a
-                // poiCellStyles combinados en uno solo con el nombre a+b+c. Luego lo usamos
-                for (Entry<RowSelectionRule, List<String>> entry : rowStyles.entrySet()) {
-                    if (entry.getKey().match(context.getRow())) {
-                        List<String> stylesForRow = entry.getValue();
-                        String combinedStyleName = stylesForRow.stream().collect(Collectors.joining("+"));
-                        // Si no existe el estilo combinado como estilo poi lo agregamos ahora
-                        if (!poiCellStyles.containsKey(combinedStyleName)) {
-                            XSSFCellStyle combined = context.getCellStyleCreator().get();
-                            for (String style : stylesForRow) {
-                                applyExportStyleToPoiStyle(context, styles.get(style), combined);
-                            }
-                            poiCellStyles.put(combinedStyleName, combined);
-                        }
-                        finalCombinedStyleNames.add(combinedStyleName);
-                    }
-                }
-
-                // Si existe un grupo de estilos para esa columna, primero los agregamos a
-                // poiCellStyles combinados en uno solo con el nombre a+b+c. Luego lo usamos
-                for (Entry<String, List<String>> entry : columnStyles.entrySet()) {
-                    if (entry.getKey().equals(context.getColumnId())) {
-                        List<String> stylesForColumn = entry.getValue();
-                        String combinedStyleName = stylesForColumn.stream().collect(Collectors.joining("+"));
-                        // Si no existe el estilo combinado como estilo poi lo agregamos ahora
-                        if (!poiCellStyles.containsKey(combinedStyleName)) {
-                            XSSFCellStyle combined = context.getCellStyleCreator().get();
-                            for (String style : stylesForColumn) {
-                                applyExportStyleToPoiStyle(context, styles.get(style), combined);
-                            }
-                            poiCellStyles.put(combinedStyleName, combined);
-                        }
-                        finalCombinedStyleNames.add(combinedStyleName);
-                    }
-                }
-
-                // Si existe un grupo de estilos para esa celda en particular,
-                for (Entry<CellSelectionRule, List<String>> cellStyleEntrySet : cellStyles.entrySet()) {
-                    if (cellStyleEntrySet.getKey().match(context.getRow(), context.getCol())) {
-                        List<String> cellStyleNamesOfCell = cellStyleEntrySet.getValue();
-                        String combinedStyleName = cellStyleNamesOfCell.stream().collect(Collectors.joining("+"));
-                        // Si no existe el estilo combinado como estilo poi lo agregamos ahora
-                        if (!poiCellStyles.containsKey(combinedStyleName)) {
-                            XSSFCellStyle combined = context.getCellStyleCreator().get();
-                            for (String style : cellStyleNamesOfCell) {
-                                applyExportStyleToPoiStyle(context, styles.get(style), combined);
-                            }
-                            poiCellStyles.put(combinedStyleName, combined);
-                        }
-                        finalCombinedStyleNames.add(combinedStyleName);
-                    }
-                }
-
-                // Si se han encontrado varios estilos se vuelven a combinar en uno solo y se
-                // agrega a poiCellStyles
-                if (!finalCombinedStyleNames.isEmpty()) {
-                    String combinedStyleName = finalCombinedStyleNames.stream().collect(Collectors.joining("+"));
-                    if (!poiCellStyles.containsKey(combinedStyleName)) {
-                        for (String styleName : finalCombinedStyleNames) {
-                            XSSFCellStyle combined = context.getCellStyleCreator().get();
-                            for (String style : finalCombinedStyleNames) {
-                                applyExportStyleToPoiStyle(context, styles.get(style), combined);
-                            }
-                            poiCellStyles.put(combinedStyleName, combined);
-                        }
-
-                    }
-                    return poiCellStyles.get(combinedStyleName);
-                }
-                return null;
-            }
-        };
-    }
-
-    private static Map<CellSelectionRule, List<String>> createCellStyles(EntityResult entityResult) {
-        Map<String, Object> styles = (Map<String, Object>) entityResult.get("cellStyles");
-        Map<CellSelectionRule, List<String>> exportCellStyles = new HashMap<>();
-        styles.entrySet().stream().forEach(m -> {
-            try {
-                CellSelectionRule rule = CellSelectionRuleFactory.create(m.getKey());
-                Object value = m.getValue();
-                if (List.class.isAssignableFrom(value.getClass())) {
-                    List<String> styleNames = (List<String>) value;
-                    exportCellStyles.put(rule, styleNames);
-                } else {
-                    List<String> styleNames = new ArrayList<>();
-                    styleNames.add((String) value);
-                    exportCellStyles.put(rule, styleNames);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-        return exportCellStyles;
-    }
-
-    private static Map<String, List<String>> createColumnHeaderStyles(EntityResult entityResult) {
-        Map<String, Object> styles = (Map<String, Object>) entityResult.get("columnHeaderStyles");
-        Map<String, List<String>> exportColumnStyles = new HashMap<>();
-        styles.entrySet().stream().forEach(m -> {
-            Object value = m.getValue();
-            if (List.class.isAssignableFrom(value.getClass())) {
-                List<String> styleNames = (List<String>) value;
-                exportColumnStyles.put(m.getKey(), styleNames);
-            } else {
-                List<String> styleNames = new ArrayList<>();
-                styleNames.add((String) value);
-                exportColumnStyles.put(m.getKey(), styleNames);
-            }
-        });
-        return exportColumnStyles;
-    }
-
-    private static Map<RowSelectionRule, List<String>> createRowStyles(EntityResult entityResult) {
-        Map<String, Object> styles = (Map<String, Object>) entityResult.get("rowStyles");
-        Map<RowSelectionRule, List<String>> exportColumnStyles = new HashMap<>();
-        styles.entrySet().stream().forEach(m -> {
-            try {
-                RowSelectionRule rule = RowSelectionRuleFactory.create(m.getKey());
-                Object value = m.getValue();
-                if (List.class.isAssignableFrom(value.getClass())) {
-                    List<String> styleNames = (List<String>) value;
-                    exportColumnStyles.put(rule, styleNames);
-                } else {
-                    List<String> styleNames = new ArrayList<>();
-                    styleNames.add((String) value);
-                    exportColumnStyles.put(rule, styleNames);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-        return exportColumnStyles;
-
-    }
-
-    private static Map<String, List<String>> createColumnStyles(EntityResult entityResult) {
-        Map<String, Object> styles = (Map<String, Object>) entityResult.get("columnStyles");
-        Map<String, List<String>> exportColumnStyles = new HashMap<>();
-        styles.entrySet().stream().forEach(m -> {
-            Object value = m.getValue();
-            if (List.class.isAssignableFrom(value.getClass())) {
-                List<String> styleNames = (List<String>) value;
-                exportColumnStyles.put(m.getKey(), styleNames);
-            } else {
-
-                List<String> styleNames = new ArrayList<>();
-                styleNames.add((String) value);
-                exportColumnStyles.put(m.getKey(), styleNames);
-            }
-        });
-        return exportColumnStyles;
-    }
-
-    private static Map<String, ExportColumnStyle> createStyles(EntityResult entityResult) {
-        Map<String, Map<String, String>> styles = (Map<String, Map<String, String>>) entityResult.get("styles");
-        Map<String, ExportColumnStyle> exportColumnStyles = new HashMap<>();
-        styles.entrySet().stream().forEach(m -> {
-            Set<Entry<String, String>> entries = m.getValue().entrySet();
-            exportColumnStyles.put(m.getKey(), createColumnStyle(entries));
-        });
-        return exportColumnStyles;
-    }
-
-    private static void applyExportStyleToPoiStyle(CellStyleContext<XSSFCellStyle, DataFormat> context,
-            ExportColumnStyle s, XSSFCellStyle style) {
-        if (s == null) {
-            return;
-        }
-        if (s.getHorizontalAlignment() != null) {
-            style.setAlignment(
-                    org.apache.poi.ss.usermodel.HorizontalAlignment.forInt(s.getHorizontalAlignment().getCode()));
-        }
-        if (s.getVerticalAlignment() != null) {
-            style.setVerticalAlignment(
-                    org.apache.poi.ss.usermodel.VerticalAlignment.forInt(s.getVerticalAlignment().getCode()));
-        }
-        if (s.getDataFormatString() != null) {
-            DataFormat dataFormat = context.getDataFormatCreator().get();
-            style.setDataFormat(dataFormat.getFormat(s.getDataFormatString()));
-        }
-        if (s.getFillBackgroundColor() != null) {
-            style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-            String name = s.getFillBackgroundColor().name();
-            IndexedColors indexedColor = IndexedColors.valueOf(name);
-            short index = indexedColor.getIndex();
-            style.setFillForegroundColor(index);
-        }
-    }
-
-    private static ExportColumnStyle createColumnStyle(Set<Entry<String, String>> entries) {
-        ExportColumnStyle style = new DefaultExportColumnStyle();
-        Iterator<Entry<String, String>> i = entries.iterator();
-        while (i.hasNext()) {
-            Entry<String, String> entry = i.next();
-            switch (entry.getKey()) {
-                case "dataFormatString":
-                    style.setDataFormatString(entry.getValue());
-                    break;
-                case "alignment":
-                    style.setAlignment(HorizontalAlignment.valueOf(entry.getValue()));
-                    break;
-                case "verticalAlignment":
-                    style.setVerticalAlignment(VerticalAlignment.valueOf(entry.getValue()));
-                    break;
-                case "fillBackgroundColor":
-                    style.setFillBackgroundColor(CellColor.valueOf(entry.getValue()));
-                    break;
-                case "width":
-                    style.setWidth(Integer.valueOf(entry.getValue()));
-                    break;
-            }
-        }
-        return style;
-    }
-
-    // Creamos el fichero temporal y llamamos al creador de providers
-    @Override
-    public File queryParameters(EntityResult data, List<String> orderColumns, Map<Object, Object> keysValues,
-            List<Object> attributesValues, int pageSize, boolean advQuery, int offSet)
-            throws OntimizeJEERuntimeException, IOException {
-        System.out.println(keysValues);
-
-        File xlsxFile = File.createTempFile(String.valueOf(System.currentTimeMillis()), ".xlsx");
-//        generateExcel(data, orderColumns, xlsxFile, keysValues, attributesValues, pageSize, advQuery, offSet);
-        return xlsxFile;
-
-    }
-
-    @Override
-    public File generateFile(final ExportQueryParameters exportParam) throws ExportException {
-        File xlsxFile = null;
-        try {
-            ExcelExportQueryParameters excelExportParam = (ExcelExportQueryParameters)exportParam; 
-            
-            EntityResult entityResult = new EntityResultMapImpl();
-            entityResult.put("cellStyles", excelExportParam.getCellStyles());
-            entityResult.put("excelColumns", excelExportParam.getExcelColumns());
-            entityResult.put("columnStyles", excelExportParam.getColumnStyles());
-            entityResult.put("columnTypes", excelExportParam.getColumnTypes());
-            entityResult.put("dao", excelExportParam.getDao());
-            entityResult.put("path", excelExportParam.getPath());
-            entityResult.put("rowStyles", excelExportParam.getRowStyles());
-            entityResult.put("service", excelExportParam.getService());
-            entityResult.put("columnTitles", excelExportParam.getColumnTitles());
-            entityResult.put("styles", excelExportParam.getStyles());
-            
-            xlsxFile = File.createTempFile(String.valueOf(System.currentTimeMillis()), ".xlsx");
-            generateExcel(entityResult, xlsxFile);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return xlsxFile;
-    }
-
-    /**
-     * Create all the providers and generate the book
-     * @param entityResult The entity result with all data
-     * @param xlsxFile The tempfile
-     */
-    public void generateExcel(EntityResult entityResult, File xlsxFile) {
-        try {
-            // ColumnProvider
-            ExportColumnProvider columnProvider = getColumnProvider();
-
-            // DataProvider
-            ExportDataProvider dataProvider = getDataProvider();
-
-            // StyleProvider
-            ExportStyleProvider styleProvider = createStyleProvider(entityResult);
-
-            // SheetNameProvider
-            SheetNameProvider sheetNameProvider = createDefaultSheetNameProvider();
-
-            // ExportOptions
-            ExportOptions exportOptions = this.createExportOptions(entityResult, new ArrayList<>() /*orderColumns*/);
-
-            final Workbook book = generateBook(columnProvider, dataProvider, styleProvider, sheetNameProvider,
-                    exportOptions);
-
-            final FileOutputStream fileOutputStream = new FileOutputStream(xlsxFile);
-            book.write(fileOutputStream);
-            fileOutputStream.close();
-        } catch (final Exception e) {
-            logger.error("{}", e.getMessage(), e);
-        }
-    }
-
-    /**
-     * Calls the exporter and send it the providers to build the excel file
-     * @param columnProvider The column provider
-     * @param dataProvider The data provider
-     * @param styleProvider The styles provider
-     * @param sheetNameProvider The sheet name provider
-     * @param exportOptions Is null, it creates it in the BaseExcelExporter
-     * @return
-     * @throws Exception
-     */
-    public Workbook generateBook(ExportColumnProvider columnProvider, ExportDataProvider dataProvider,
-            ExportStyleProvider<XSSFCellStyle, DataFormat> styleProvider, SheetNameProvider sheetNameProvider,
-            ExportOptions exportOptions) throws Exception {
-        return new DefaultXSSFExcelExporter().export(columnProvider, dataProvider, styleProvider, sheetNameProvider,
-                exportOptions);
-    }
-
-    private ExportOptions createExportOptions(EntityResult data, List<String> columns) {
+    protected ExportOptions createExportOptions(final ExcelExportQueryParameters exportParam, List<String> columns) {
         // TODO: de momento no hay opciones
         return null;
     }
 
-    private SheetNameProvider createSheetNameProvider(int pageSize) {
-        return new PaginatedSheetNameProvider(pageSize);
-    }
-
-    private SheetNameProvider createDefaultSheetNameProvider() {
-        return new DefaultSheetNameProvider();
-    }
-
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.appContext = applicationContext;
-    }
-
-    public ApplicationContext getContext() {
-        return appContext;
-    }
-
-    public ApplicationContextUtils getApplicationContextUtils() {
-        if(this.applicationContextUtils == null){
-            this.applicationContextUtils = new ApplicationContextUtils();
-            ((ApplicationContextAware) this.applicationContextUtils).setApplicationContext(this.appContext);
-        }
-        return applicationContextUtils;
-    }
 }
