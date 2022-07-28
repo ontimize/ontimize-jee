@@ -46,7 +46,8 @@ public class ExcelExportRestController extends BaseExportRestController<IExcelEx
             File exportFile = getService().export(exportParam);
             // add export file to http response
             return doResponse(response, exportFile);
-        } catch (Exception e) {
+        } catch (Exception ex) {
+            logger.error(ex.getMessage(), ex);
             return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

@@ -52,6 +52,7 @@ public class ExportRestController extends BaseExportRestController<ExportService
             // add export file to http response
             return doResponse(response, exportFile);
         } catch (Exception ex) {
+            logger.error(ex.getMessage(), ex);
             return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

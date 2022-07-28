@@ -4,7 +4,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.attribute.FileAttribute;
+import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -18,6 +22,7 @@ import com.ontimize.jee.common.dto.EntityResultMapImpl;
 import com.ontimize.jee.webclient.export.exception.ExportException;
 import com.ontimize.jee.webclient.export.providers.ExportDataProvider;
 import com.ontimize.jee.webclient.export.util.ApplicationContextUtils;
+import org.apache.commons.lang3.SystemUtils;
 import org.apache.poi.ss.usermodel.DataFormat;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.IndexedColors;
@@ -98,13 +103,28 @@ public class ExcelExportService extends BaseExportService implements IExcelExpor
                 throw new IllegalArgumentException();
             }
             ExcelExportQueryParameters excelExportParam = (ExcelExportQueryParameters)exportParam; 
-            xlsxFile = File.createTempFile(String.valueOf(System.currentTimeMillis()), ".xlsx");
+            xlsxFile = createTempFile();
             generateExcel(excelExportParam, xlsxFile);
         } catch (IOException e) {
             throw new ExportException("Error creating xlsx file!", e);
         } catch (IllegalArgumentException e) {
             throw new ExportException("Invalid export configuration parameters", e);
         } 
+        return xlsxFile;
+    }
+    
+    protected File createTempFile() throws IOException {
+
+        File xlsxFile = null;
+        if(SystemUtils.IS_OS_UNIX) {
+            FileAttribute<Set<PosixFilePermission>> attr = PosixFilePermissions.asFileAttribute(PosixFilePermissions.fromString("rwx------"));
+            xlsxFile = Files.createTempFile(String.valueOf(System.currentTimeMillis()), ".xlsx", attr).toFile(); // Compliant
+        } else {
+            xlsxFile = Files.createTempFile(String.valueOf(System.currentTimeMillis()), ".xlsx").toFile();  // Compliant
+            xlsxFile.setReadable(true, true);
+            xlsxFile.setWritable(true, true);
+            xlsxFile.setExecutable(true, true);
+        }
         return xlsxFile;
     }
 

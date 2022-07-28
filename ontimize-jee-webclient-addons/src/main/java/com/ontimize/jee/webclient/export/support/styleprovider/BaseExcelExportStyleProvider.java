@@ -1,7 +1,6 @@
 package com.ontimize.jee.webclient.export.support.styleprovider;
 
 
-import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.webclient.export.CellStyleContext;
 import com.ontimize.jee.webclient.export.ExportColumnStyle;
 import com.ontimize.jee.webclient.export.base.ExcelExportQueryParameters;
@@ -13,6 +12,8 @@ import com.ontimize.jee.webclient.export.rule.RowSelectionRuleFactory;
 import com.ontimize.jee.webclient.export.support.DefaultExportColumnStyle;
 import com.ontimize.jee.webclient.export.util.ColumnCellUtils;
 import org.apache.poi.ss.usermodel.DataFormat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,6 +23,8 @@ import java.util.Map;
 import java.util.Set;
 
 public class BaseExcelExportStyleProvider<T> implements ExportStyleProvider<T, DataFormat> {
+
+    private static final Logger logger = LoggerFactory.getLogger(BaseExcelExportStyleProvider.class);
 
     private Map<String, ExportColumnStyle> styles;
     
@@ -191,7 +194,7 @@ public class BaseExcelExportStyleProvider<T> implements ExportStyleProvider<T, D
                     exportRowStyles.put(rule, styleNames);
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("Impossible to create row styles", e);
             }
         });
         return exportRowStyles;
@@ -214,7 +217,7 @@ public class BaseExcelExportStyleProvider<T> implements ExportStyleProvider<T, D
                     exportCellStyles.put(rule, styleNames);
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("Impossible to create row styles", e);
             }
         });
         return exportCellStyles;
