@@ -58,6 +58,9 @@ public abstract class BaseExportRestController<T> extends ORestController<T> {
             if(exportFile != null) {
                 try {
                     Files.deleteIfExists(Paths.get(exportFile.getAbsolutePath()));
+                    if(exportFile.getParentFile() != null && exportFile.getParentFile().getName().contains("ontimize.export.")) {
+                        Files.deleteIfExists(Paths.get(exportFile.getParentFile().getAbsolutePath()));
+                    }
                 } catch (IOException ex) {
                     // no-op
                 }

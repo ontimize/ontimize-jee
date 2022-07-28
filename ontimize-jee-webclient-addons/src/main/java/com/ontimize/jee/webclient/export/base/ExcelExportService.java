@@ -5,65 +5,34 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.attribute.FileAttribute;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
-import java.util.stream.Collectors;
 
-import com.ontimize.jee.common.dto.EntityResultMapImpl;
+import com.ontimize.jee.webclient.export.ExportColumn;
+import com.ontimize.jee.webclient.export.HeadExportColumn;
 import com.ontimize.jee.webclient.export.exception.ExportException;
+import com.ontimize.jee.webclient.export.providers.ExportColumnProvider;
 import com.ontimize.jee.webclient.export.providers.ExportDataProvider;
-import com.ontimize.jee.webclient.export.util.ApplicationContextUtils;
+import com.ontimize.jee.webclient.export.providers.ExportStyleProvider;
+import com.ontimize.jee.webclient.export.providers.SheetNameProvider;
+import com.ontimize.jee.webclient.export.support.BaseExportColumnProvider;
+import com.ontimize.jee.webclient.export.support.DefaultHeadExportColumn;
+import com.ontimize.jee.webclient.export.support.exporter.DefaultXSSFExcelExporter;
+import com.ontimize.jee.webclient.export.support.sheetnameprovider.DefaultSheetNameProvider;
+import com.ontimize.jee.webclient.export.support.styleprovider.DefaultExcelExportStyleProvider;
+import com.ontimize.jee.webclient.export.util.ExportOptions;
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.poi.ss.usermodel.DataFormat;
-import org.apache.poi.ss.usermodel.FillPatternType;
-import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Service;
-
-import com.ontimize.jee.common.db.AdvancedEntityResult;
-import com.ontimize.jee.common.dto.EntityResult;
-import com.ontimize.jee.common.db.SQLStatementBuilder.SQLOrder;
-import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
-import com.ontimize.jee.common.tools.ReflectionTools;
-import com.ontimize.jee.server.rest.QueryParameter;
-import com.ontimize.jee.webclient.export.CellStyleContext;
-import com.ontimize.jee.webclient.export.ExportColumn;
-import com.ontimize.jee.webclient.export.ExportColumnStyle;
-import com.ontimize.jee.webclient.export.HeadExportColumn;
-import com.ontimize.jee.webclient.export.ExportColumnStyle.CellColor;
-import com.ontimize.jee.webclient.export.ExportColumnStyle.VerticalAlignment;
-import com.ontimize.jee.webclient.export.ExportColumnStyle.HorizontalAlignment;
-import com.ontimize.jee.webclient.export.support.DefaultExportColumnStyle;
-import com.ontimize.jee.webclient.export.support.exporter.DefaultXSSFExcelExporter;
-import com.ontimize.jee.webclient.export.support.sheetnameprovider.DefaultSheetNameProvider;
-import com.ontimize.jee.webclient.export.support.sheetnameprovider.PaginatedSheetNameProvider;
-import com.ontimize.jee.webclient.export.support.styleprovider.DefaultExcelExportStyleProvider;
-import com.ontimize.jee.webclient.export.providers.ExcelExportDataProvider;
-import com.ontimize.jee.webclient.export.providers.ExportColumnProvider;
-import com.ontimize.jee.webclient.export.providers.ExportStyleProvider;
-import com.ontimize.jee.webclient.export.providers.SheetNameProvider;
-import com.ontimize.jee.webclient.export.rule.CellSelectionRule;
-import com.ontimize.jee.webclient.export.rule.CellSelectionRuleFactory;
-import com.ontimize.jee.webclient.export.rule.RowSelectionRule;
-import com.ontimize.jee.webclient.export.rule.RowSelectionRuleFactory;
-import com.ontimize.jee.webclient.export.support.BaseExportColumnProvider;
-import com.ontimize.jee.webclient.export.support.DefaultHeadExportColumn;
-import com.ontimize.jee.webclient.export.util.ExportOptions;
 
 /**
  * Servicio de exportación en formato Excel. 
@@ -116,12 +85,12 @@ public class ExcelExportService extends BaseExportService implements IExcelExpor
     protected File createTempFile() throws IOException {
 
         File xlsxFile = null;
-        Path tmpFolder = Files.createTempDirectory("exportTmp");
+        Path tempDirectory = Files.createTempDirectory("ontimize.export.");
         if(SystemUtils.IS_OS_UNIX) {
             FileAttribute<Set<PosixFilePermission>> attr = PosixFilePermissions.asFileAttribute(PosixFilePermissions.fromString("rwx------"));
-            xlsxFile = Files.createTempFile(tmpFolder, String.valueOf(System.currentTimeMillis()), ".xlsx", attr).toFile(); // Compliant
+            xlsxFile = Files.createTempFile(tempDirectory, String.valueOf(System.currentTimeMillis()), ".xlsx", attr).toFile();
         } else {
-            xlsxFile = File.createTempFile(String.valueOf(System.currentTimeMillis()), ".xlsx", tmpFolder.toFile());  // Compliant
+            xlsxFile = File.createTempFile(String.valueOf(System.currentTimeMillis()), ".xlsx", tempDirectory.toFile());
             if(!xlsxFile.setReadable(true, true)){
                 throw new IOException("File is not readable");
             }
