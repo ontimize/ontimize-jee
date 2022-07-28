@@ -116,14 +116,18 @@ public class ExcelExportService extends BaseExportService implements IExcelExpor
     protected File createTempFile() throws IOException {
 
         File xlsxFile = null;
+        Path tmpFolder = Files.createTempDirectory("exportTmp");
         if(SystemUtils.IS_OS_UNIX) {
             FileAttribute<Set<PosixFilePermission>> attr = PosixFilePermissions.asFileAttribute(PosixFilePermissions.fromString("rwx------"));
-            xlsxFile = Files.createTempFile(String.valueOf(System.currentTimeMillis()), ".xlsx", attr).toFile(); // Compliant
+            xlsxFile = Files.createTempFile(tmpFolder, String.valueOf(System.currentTimeMillis()), ".xlsx", attr).toFile(); // Compliant
         } else {
-            xlsxFile = Files.createTempFile(String.valueOf(System.currentTimeMillis()), ".xlsx").toFile();  // Compliant
-            xlsxFile.setReadable(true, true);
-            xlsxFile.setWritable(true, true);
-            xlsxFile.setExecutable(true, true);
+            xlsxFile = File.createTempFile(String.valueOf(System.currentTimeMillis()), ".xlsx", tmpFolder.toFile());  // Compliant
+            if(!xlsxFile.setReadable(true, true)){
+                throw new IOException("File is not readable");
+            }
+            if(!xlsxFile.setWritable(true, true)){
+                throw new IOException("File is not writable");
+            }
         }
         return xlsxFile;
     }
