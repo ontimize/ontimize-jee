@@ -1,19 +1,5 @@
 package com.ontimize.jee.webclient.export.base;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.attribute.FileAttribute;
-import java.nio.file.attribute.PosixFilePermission;
-import java.nio.file.attribute.PosixFilePermissions;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import com.ontimize.jee.webclient.export.ExportColumn;
 import com.ontimize.jee.webclient.export.HeadExportColumn;
 import com.ontimize.jee.webclient.export.exception.ExportException;
@@ -34,6 +20,20 @@ import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.FileAttribute;
+import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.PosixFilePermissions;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Servicio de exportación en formato Excel. 
@@ -73,7 +73,7 @@ public class ExcelExportService extends BaseExportService implements IExcelExpor
                 throw new IllegalArgumentException();
             }
             ExcelExportQueryParameters excelExportParam = (ExcelExportQueryParameters)exportParam; 
-            xlsxFile = createTempFile();
+            xlsxFile = createTempFile(".xlsx");
             generateExcel(excelExportParam, xlsxFile);
         } catch (IOException e) {
             throw new ExportException("Error creating xlsx file!", e);
@@ -83,37 +83,13 @@ public class ExcelExportService extends BaseExportService implements IExcelExpor
         return xlsxFile;
     }
     
-    protected File createTempFile() throws IOException {
-
-        File xlsxFile = null;
-        String tmpDirsLocation = System.getProperty("java.io.tmpdir");
-        if(SystemUtils.IS_OS_UNIX) {
-            FileAttribute<Set<PosixFilePermission>> attr = PosixFilePermissions.asFileAttribute(PosixFilePermissions.fromString("rwx------"));
-            Path tempDirectory = Files.createTempDirectory(Paths.get(tmpDirsLocation), "ontimize.export.", attr);
-            xlsxFile = Files.createTempFile(tempDirectory, String.valueOf(System.currentTimeMillis()), ".xlsx", attr).toFile();
-        } else {
-            File tempDirectory = new File(tmpDirsLocation, "ontimize.export." + String.valueOf(System.currentTimeMillis()));
-            if(!tempDirectory.exists()) {
-                tempDirectory.mkdir();
-            }
-            xlsxFile = File.createTempFile(String.valueOf(System.currentTimeMillis()), ".xlsx", tempDirectory);
-            if(!xlsxFile.setReadable(true, true)){
-                throw new IOException("File is not readable");
-            }
-            if(!xlsxFile.setWritable(true, true)){
-                throw new IOException("File is not writable");
-            }
-        }
-        return xlsxFile;
-    }
-
     /**
      * Create all the providers and generate the book
      * @param exportParam The export configuration parameters
      * @param xlsxFile The tempfile
      */
     public void generateExcel(final ExcelExportQueryParameters exportParam, File xlsxFile) throws ExportException {
-        try {
+        try(final FileOutputStream fileOutputStream = new FileOutputStream(xlsxFile);) {
             // ColumnProvider
             ExportColumnProvider columnProvider = getColumnProvider();
 
@@ -131,10 +107,8 @@ public class ExcelExportService extends BaseExportService implements IExcelExpor
 
             final Workbook book = generateBook(columnProvider, dataProvider, styleProvider, sheetNameProvider,
                     exportOptions);
-
-            final FileOutputStream fileOutputStream = new FileOutputStream(xlsxFile);
+            
             book.write(fileOutputStream);
-            fileOutputStream.close();
         } catch (final Exception e) {
             logger.error("{}", e.getMessage(), e);
             throw new ExportException("Error filling export file", e);

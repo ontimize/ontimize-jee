@@ -6,6 +6,7 @@ import com.ontimize.jee.webclient.export.providers.ExportDataProvider;
 import com.ontimize.jee.webclient.export.support.dataprovider.DefaultAdvancedEntityResultExportDataProvider;
 import com.ontimize.jee.webclient.export.support.dataprovider.DefaultEntityResultExportDataProvider;
 import com.ontimize.jee.webclient.export.util.ApplicationContextUtils;
+import org.apache.commons.lang3.SystemUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -13,6 +14,14 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.FileAttribute;
+import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.PosixFilePermissions;
+import java.util.Set;
 
 public abstract class BaseExportService implements ExportService, ApplicationContextAware {
 
@@ -77,5 +86,29 @@ public abstract class BaseExportService implements ExportService, ApplicationCon
         dataProvider0.setServiceBean(serviceBean);
         
         return dataProvider0;
+    }
+
+    protected File createTempFile(final String fileExtension) throws IOException {
+
+        File tmpExportFile = null;
+        String tmpDirsLocation = System.getProperty("java.io.tmpdir");
+        if(SystemUtils.IS_OS_UNIX) {
+            FileAttribute<Set<PosixFilePermission>> attr = PosixFilePermissions.asFileAttribute(PosixFilePermissions.fromString("rwx------"));
+            Path tempDirectory = Files.createTempDirectory(Paths.get(tmpDirsLocation), "ontimize.export.", attr);
+            tmpExportFile = Files.createTempFile(tempDirectory, String.valueOf(System.currentTimeMillis()), fileExtension, attr).toFile();
+        } else {
+            File tempDirectory = new File(tmpDirsLocation, "ontimize.export." + String.valueOf(System.currentTimeMillis()));
+            if(!tempDirectory.exists()) {
+                tempDirectory.mkdir();
+            }
+            tmpExportFile = File.createTempFile(String.valueOf(System.currentTimeMillis()), fileExtension, tempDirectory);
+            if(!tmpExportFile.setReadable(true, true)){
+                throw new IOException("File is not readable");
+            }
+            if(!tmpExportFile.setWritable(true, true)){
+                throw new IOException("File is not writable");
+            }
+        }
+        return tmpExportFile;
     }
 }

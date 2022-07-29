@@ -1,8 +1,7 @@
 package com.ontimize.jee.webclient.export.base;
 
-import java.util.Map;
-
 import javax.xml.bind.annotation.XmlElement;
+import java.util.Map;
 
 public class ExcelExportQueryParameters extends BaseExportQueryParameters {
 

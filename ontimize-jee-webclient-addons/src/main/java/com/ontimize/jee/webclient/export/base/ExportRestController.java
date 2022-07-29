@@ -64,6 +64,9 @@ public class ExportRestController extends BaseExportRestController<ExportService
             case xlsx:
                 service = loadServiceBean("ExcelExportService");
                 break;
+            case csv:
+                service = loadServiceBean("CsvExportService");
+                break;
             default:
                 service = null;
         }
