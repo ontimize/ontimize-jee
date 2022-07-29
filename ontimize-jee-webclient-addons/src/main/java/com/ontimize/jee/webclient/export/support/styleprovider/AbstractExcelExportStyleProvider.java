@@ -1,7 +1,6 @@
 package com.ontimize.jee.webclient.export.support.styleprovider;
 
 
-import com.ontimize.jee.webclient.export.CellStyleContext;
 import com.ontimize.jee.webclient.export.ExportColumnStyle;
 import com.ontimize.jee.webclient.export.base.ExcelExportQueryParameters;
 import com.ontimize.jee.webclient.export.providers.ExportStyleProvider;
@@ -22,9 +21,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class BaseExcelExportStyleProvider<T> implements ExportStyleProvider<T, DataFormat> {
+public abstract class AbstractExcelExportStyleProvider<T> implements ExportStyleProvider<T, DataFormat> {
 
-    private static final Logger logger = LoggerFactory.getLogger(BaseExcelExportStyleProvider.class);
+    private static final Logger logger = LoggerFactory.getLogger(AbstractExcelExportStyleProvider.class);
 
     private Map<String, ExportColumnStyle> styles;
     
@@ -33,7 +32,7 @@ public class BaseExcelExportStyleProvider<T> implements ExportStyleProvider<T, D
     private Map<RowSelectionRule, List<String>> rowStyles;
     
     private Map<CellSelectionRule, List<String>> cellStyles;
-    public BaseExcelExportStyleProvider(final ExcelExportQueryParameters exportParam) {
+    public AbstractExcelExportStyleProvider(final ExcelExportQueryParameters exportParam) {
         this.initialize(exportParam);
     }
     
@@ -108,22 +107,6 @@ public class BaseExcelExportStyleProvider<T> implements ExportStyleProvider<T, D
         return style;
     }
 
-    @Override
-    public ExportColumnStyle getColumnStyle(final String columnId) {
-        return null;
-    }
-
-    @Override
-    public T getHeaderCellStyle(final CellStyleContext<T, DataFormat> context) {
-        return null;
-    }
-
-    @Override
-    public T getCellStyle(final CellStyleContext<T, DataFormat> context) {
-        return null;
-    }
-
-    
     protected Map<String, ExportColumnStyle> createStyles(final ExcelExportQueryParameters exportParam) {
         Map<String, Map<String, String>> styles = exportParam.getStyles();
         Map<String, ExportColumnStyle> exportColumnStyles = new HashMap<>();
