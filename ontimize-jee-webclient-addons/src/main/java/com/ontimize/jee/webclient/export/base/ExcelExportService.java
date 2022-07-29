@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.attribute.FileAttribute;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
@@ -85,12 +86,17 @@ public class ExcelExportService extends BaseExportService implements IExcelExpor
     protected File createTempFile() throws IOException {
 
         File xlsxFile = null;
-        Path tempDirectory = Files.createTempDirectory("ontimize.export.");
+        String tmpDirsLocation = System.getProperty("java.io.tmpdir");
         if(SystemUtils.IS_OS_UNIX) {
             FileAttribute<Set<PosixFilePermission>> attr = PosixFilePermissions.asFileAttribute(PosixFilePermissions.fromString("rwx------"));
+            Path tempDirectory = Files.createTempDirectory(Paths.get(tmpDirsLocation), "ontimize.export.", attr);
             xlsxFile = Files.createTempFile(tempDirectory, String.valueOf(System.currentTimeMillis()), ".xlsx", attr).toFile();
         } else {
-            xlsxFile = File.createTempFile(String.valueOf(System.currentTimeMillis()), ".xlsx", tempDirectory.toFile());
+            File tempDirectory = new File(tmpDirsLocation, "ontimize.export." + String.valueOf(System.currentTimeMillis()));
+            if(!tempDirectory.exists()) {
+                tempDirectory.mkdir();
+            }
+            xlsxFile = File.createTempFile(String.valueOf(System.currentTimeMillis()), ".xlsx", tempDirectory);
             if(!xlsxFile.setReadable(true, true)){
                 throw new IOException("File is not readable");
             }

@@ -1,7 +1,6 @@
 package com.ontimize.jee.webclient.export.providers;
 
-import com.ontimize.jee.common.dto.EntityResult;
-import com.ontimize.jee.server.rest.QueryParameter;
+import com.ontimize.jee.server.rest.FilterParameter;
 
 /**
  * Provider que proporciona los datos de la exportación.
@@ -19,7 +18,7 @@ public interface ExportDataProvider<T> {
 
     String getDao();
 
-    QueryParameter getQueryParameters();
+    FilterParameter getQueryParameters();
 
     int getNumberOfRows();
 
