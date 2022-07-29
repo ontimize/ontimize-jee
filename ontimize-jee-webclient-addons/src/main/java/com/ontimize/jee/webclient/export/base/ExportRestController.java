@@ -44,7 +44,7 @@ public class ExportRestController extends BaseExportRestController<ExportService
                                       @RequestBody ExportQueryParameters exportParam, HttpServletResponse response) {
         try {
             // retrieve specific export service for file extension
-            configureExportService(fileExtension);
+            this.exportService = configureExportService(fileExtension);
             // process query parameters (basic expressions, filter expression, etc.)
             processQueryParameter(exportParam);
             // do export
@@ -57,18 +57,20 @@ public class ExportRestController extends BaseExportRestController<ExportService
         }
     }
     
-    protected void configureExportService(final String fileExtension) throws ExportException {
+    protected ExportService configureExportService(final String fileExtension) throws ExportException {
         ExportService.ExportExtensionTypes ext = ExportService.ExportExtensionTypes.valueOf(fileExtension);
+        ExportService service;
         switch (ext){
             case xlsx:
-                this.exportService = loadServiceBean("ExcelExportService");
+                service = loadServiceBean("ExcelExportService");
                 break;
             default:
-                this.exportService = null;
+                service = null;
         }
-        if(this.exportService == null){
+        if(service == null){
             throw new ExportException(String.format("Export service for extension %s not found", fileExtension));
         }
+        return service;
     }
     
     protected ExportService loadServiceBean(final String beanName) {

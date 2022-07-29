@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-public class DefaultAdvancedEntityResultExportDataProvider extends AbstractEntityResultExportDataProvider {
+public class DefaultAdvancedEntityResultExportDataProvider extends AbstractEntityResultExportDataProvider<AdvancedEntityResult> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DefaultAdvancedEntityResultExportDataProvider.class);
 
@@ -59,11 +59,11 @@ public class DefaultAdvancedEntityResultExportDataProvider extends AbstractEntit
         return orderBy;
     }
 
-    public EntityResult getEntityResult() {
+    @Override
+    public AdvancedEntityResult getData() {
         if (entityResult == null) {
             entityResult = doQuery();
         }
-
         return entityResult;
     }
 
@@ -83,7 +83,7 @@ public class DefaultAdvancedEntityResultExportDataProvider extends AbstractEntit
     public int getNumberOfRows() {
         int page0 = getPage();
         if (page0 == -1) {
-            return ((AdvancedEntityResult)getEntityResult()).getTotalRecordCount();
+            return getData().getTotalRecordCount();
         } else {
             return getUniquePage(page0).calculateRecordNumber();
         }

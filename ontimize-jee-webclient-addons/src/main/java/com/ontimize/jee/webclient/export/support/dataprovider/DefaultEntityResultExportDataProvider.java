@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
-public class DefaultEntityResultExportDataProvider extends AbstractEntityResultExportDataProvider {
+public class DefaultEntityResultExportDataProvider extends AbstractEntityResultExportDataProvider<EntityResult> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DefaultEntityResultExportDataProvider.class);
 
@@ -41,7 +41,18 @@ public class DefaultEntityResultExportDataProvider extends AbstractEntityResultE
         return this.queryParameters;
     }
 
-    public EntityResult getEntityResult() {
+    @Override
+    public int getNumberOfRows() {
+        return getData().calculateRecordNumber();
+    }
+
+    public Object getCellValue(final int row, final String colId) {
+        Map recordValues = this.getData().getRecordValues(row);
+        return recordValues.get(colId);
+    }
+    
+    @Override
+    public EntityResult getData() {
         if (entityResult == null) {
             entityResult = doQuery();
         }

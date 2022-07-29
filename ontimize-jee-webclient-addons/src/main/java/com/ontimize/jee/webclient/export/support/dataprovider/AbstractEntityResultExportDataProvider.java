@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
-public abstract class AbstractEntityResultExportDataProvider implements ExportDataProvider {
+public abstract class AbstractEntityResultExportDataProvider<T> implements ExportDataProvider<T> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractEntityResultExportDataProvider.class);
 
@@ -59,23 +59,11 @@ public abstract class AbstractEntityResultExportDataProvider implements ExportDa
     }
 
     @Override
-    public int getNumberOfRows() {
-        return getEntityResult().calculateRecordNumber();
-    }
-
-    @Override
     public int getNumberOfColumns() {
         return this.numOfCols;
     }
 
-    public Object getCellValue(final int row, final String colId) {
-        Map recordValues = this.getEntityResult().getRecordValues(row);
-        return recordValues.get(colId);
-    }
-
     protected abstract String getDaoMethodSuffix();
-    public abstract EntityResult getEntityResult();
-    public abstract EntityResult doQuery();
 
 
 }

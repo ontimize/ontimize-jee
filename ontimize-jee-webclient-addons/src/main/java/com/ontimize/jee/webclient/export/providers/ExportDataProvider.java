@@ -1,5 +1,6 @@
 package com.ontimize.jee.webclient.export.providers;
 
+import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.server.rest.QueryParameter;
 
 /**
@@ -8,7 +9,7 @@ import com.ontimize.jee.server.rest.QueryParameter;
  * @author antonio.vazquez@imatia.com Antonio Vázquez Araújo
  */
 
-public interface ExportDataProvider {
+public interface ExportDataProvider<T> {
 
     String getService();
     
@@ -25,5 +26,9 @@ public interface ExportDataProvider {
     int getNumberOfColumns();
 
     Object getCellValue(int row, String colId);
+
+    T getData();
+
+    T doQuery();
 
 }
