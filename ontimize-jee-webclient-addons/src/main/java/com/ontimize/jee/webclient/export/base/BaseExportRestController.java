@@ -25,8 +25,8 @@ public abstract class BaseExportRestController<T> extends ORestController<T> {
 
     private static final Logger logger = LoggerFactory.getLogger(BaseExportRestController.class);
 
-    public BaseExportRestController() {
-
+    protected BaseExportRestController() {
+        // no-op
     }
     
     protected void processQueryParameter(final ExportQueryParameters exportParam) {
@@ -45,14 +45,16 @@ public abstract class BaseExportRestController<T> extends ORestController<T> {
     }
     
     protected ResponseEntity<Void> doResponse(final HttpServletResponse response, final File exportFile) {
-        response.setHeader("Content-Type", "application/octet-stream");
-        response.setHeader("Content-Disposition", "attachment; filename=\"" + exportFile.getName() + "\"");
 
         try(BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(exportFile));) {
+            response.setHeader("Content-Type", "application/octet-stream");
+            response.setHeader("Content-Disposition", "attachment; filename=\"" + exportFile.getName() + "\"");
+            
             FileCopyUtils.copy(inputStream, response.getOutputStream());
-            return new ResponseEntity<Void>(HttpStatus.OK);
-        } catch (IOException ex) {
-            return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception ex) {
+            logger.error("Impossible to add export file to HTTP response", ex);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }finally {
             //Ensure deleting temp file
             if(exportFile != null) {

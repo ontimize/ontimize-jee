@@ -1,5 +1,6 @@
 package com.ontimize.jee.webclient.export.base;
 
+import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.webclient.export.exception.ExportException;
 import com.ontimize.jee.webclient.export.providers.ExportDataProvider;
 import com.ontimize.jee.webclient.export.support.dataprovider.DefaultAdvancedEntityResultExportDataProvider;
@@ -15,9 +16,9 @@ import java.io.File;
 
 public abstract class BaseExportService implements ExportService, ApplicationContextAware {
 
-    private static final Logger logger = LoggerFactory.getLogger(ExcelExportService.class);
+    private static final Logger logger = LoggerFactory.getLogger(BaseExportService.class);
 
-    private ExportDataProvider dataProvider;
+    private ExportDataProvider<? extends EntityResult> dataProvider;
     
     private ApplicationContext appContext;
 
@@ -30,8 +31,7 @@ public abstract class BaseExportService implements ExportService, ApplicationCon
         createProviders(exportParam);
         
         // Generate export file
-        File file = generateFile(exportParam);
-        return file;
+        return generateFile(exportParam);
     }
     
     public abstract File generateFile(final ExportQueryParameters exportParam) throws ExportException;
@@ -64,18 +64,18 @@ public abstract class BaseExportService implements ExportService, ApplicationCon
     
     protected ExportDataProvider createDataProvider(final ExportQueryParameters exportParam) throws ExportException {
 
-        ExportDataProvider dataProvider = null;
+        ExportDataProvider<? extends EntityResult> dataProvider0 = null;
         if(exportParam.isAdvQuery()) {
-            dataProvider = new DefaultAdvancedEntityResultExportDataProvider(exportParam);
+            logger.debug("Configuring default AdvancedEntityResult data provider...");
+            dataProvider0 = new DefaultAdvancedEntityResultExportDataProvider(exportParam);
         } else {
-            dataProvider = new DefaultEntityResultExportDataProvider(exportParam);
+            logger.debug("Configuring default EntityResult data provider...");
+            dataProvider0 = new DefaultEntityResultExportDataProvider(exportParam);
         }
         
-        if(dataProvider != null) {
-            Object serviceBean = this.getApplicationContextUtils().getServiceBean(exportParam.getService(), exportParam.getPath());
-            dataProvider.setServiceBean(serviceBean);
-        }
+        Object serviceBean = this.getApplicationContextUtils().getServiceBean(exportParam.getService(), exportParam.getPath());
+        dataProvider0.setServiceBean(serviceBean);
         
-        return dataProvider;
+        return dataProvider0;
     }
 }
