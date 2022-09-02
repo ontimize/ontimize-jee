@@ -75,6 +75,8 @@ public class ExcelExportService extends BaseExportService implements IExcelExpor
             ExcelExportQueryParameters excelExportParam = (ExcelExportQueryParameters)exportParam; 
             xlsxFile = createTempFile(".xlsx");
             generateExcel(excelExportParam, xlsxFile);
+        } catch (final ExportException e){
+            throw e;
         } catch (IOException e) {
             throw new ExportException("Error creating xlsx file!", e);
         } catch (IllegalArgumentException e) {
@@ -109,7 +111,10 @@ public class ExcelExportService extends BaseExportService implements IExcelExpor
                     exportOptions);
             
             book.write(fileOutputStream);
-        } catch (final Exception e) {
+        } catch (final ExportException e){
+            logger.error("{}", e.getMessage(), e);
+            throw e;
+        }  catch (final Exception e) {
             logger.error("{}", e.getMessage(), e);
             throw new ExportException("Error filling export file", e);
         }
@@ -127,7 +132,7 @@ public class ExcelExportService extends BaseExportService implements IExcelExpor
      */
     public Workbook generateBook(ExportColumnProvider columnProvider, ExportDataProvider dataProvider,
             ExportStyleProvider<XSSFCellStyle, DataFormat> styleProvider, SheetNameProvider sheetNameProvider,
-            ExportOptions exportOptions) {
+            ExportOptions exportOptions) throws ExportException {
         return new DefaultXSSFExcelExporter().export(columnProvider, dataProvider, styleProvider, sheetNameProvider,
                 exportOptions);
     }

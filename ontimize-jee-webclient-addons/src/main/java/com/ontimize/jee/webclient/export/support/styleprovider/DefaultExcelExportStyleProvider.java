@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class DefaultExcelExportStyleProvider extends AbstractExcelExportStyleProvider<XSSFCellStyle> {
+public class DefaultExcelExportStyleProvider extends AbstractExportStyleProvider<XSSFCellStyle, DataFormat> {
 
     protected Map<String, XSSFCellStyle> poiCellStyles;
 

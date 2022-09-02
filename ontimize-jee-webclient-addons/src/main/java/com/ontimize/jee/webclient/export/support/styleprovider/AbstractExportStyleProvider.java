@@ -10,7 +10,6 @@ import com.ontimize.jee.webclient.export.rule.RowSelectionRule;
 import com.ontimize.jee.webclient.export.rule.RowSelectionRuleFactory;
 import com.ontimize.jee.webclient.export.support.DefaultExportColumnStyle;
 import com.ontimize.jee.webclient.export.util.ColumnCellUtils;
-import org.apache.poi.ss.usermodel.DataFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,21 +20,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public abstract class AbstractExcelExportStyleProvider<T> implements ExportStyleProvider<T, DataFormat> {
+public abstract class AbstractExportStyleProvider<T, D> implements ExportStyleProvider<T, D> {
 
-    private static final Logger logger = LoggerFactory.getLogger(AbstractExcelExportStyleProvider.class);
+    private static final Logger logger = LoggerFactory.getLogger(AbstractExportStyleProvider.class);
 
     private Map<String, ExportColumnStyle> styles;
-    
+
     private Map<String, List<String>> columnStyles;
-    
+
     private Map<RowSelectionRule, List<String>> rowStyles;
-    
+
     private Map<CellSelectionRule, List<String>> cellStyles;
-    public AbstractExcelExportStyleProvider(final ExcelExportQueryParameters exportParam) {
+
+    public AbstractExportStyleProvider(final ExcelExportQueryParameters exportParam) {
         this.initialize(exportParam);
     }
-    
+
     protected void initialize(final ExcelExportQueryParameters exportParam) {
         this.styles = createStyles(exportParam);
         this.columnStyles = createColumnStyles(exportParam);
@@ -44,28 +44,28 @@ public abstract class AbstractExcelExportStyleProvider<T> implements ExportStyle
     }
 
     public Map<String, ExportColumnStyle> getStyles() {
-        if(this.styles == null) {
+        if (this.styles == null) {
             this.styles = new HashMap<>();
         }
         return styles;
     }
 
     public Map<String, List<String>> getColumnStyles() {
-        if(this.columnStyles == null) {
+        if (this.columnStyles == null) {
             this.columnStyles = new HashMap<>();
         }
         return columnStyles;
     }
 
     public Map<RowSelectionRule, List<String>> getRowStyles() {
-        if(this.rowStyles == null) {
+        if (this.rowStyles == null) {
             this.rowStyles = new HashMap<>();
         }
         return rowStyles;
     }
 
     public Map<CellSelectionRule, List<String>> getCellStyles() {
-        if(this.cellStyles == null) {
+        if (this.cellStyles == null) {
             this.cellStyles = new HashMap<>();
         }
         return cellStyles;

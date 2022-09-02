@@ -13,11 +13,13 @@ import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
 import com.ontimize.jee.webclient.export.CellStyleContext;
+import com.ontimize.jee.webclient.export.ExcelExporter;
 import com.ontimize.jee.webclient.export.ExportColumn;
 import com.ontimize.jee.webclient.export.ExportColumnStyle;
 import com.ontimize.jee.webclient.export.Exporter;
 import com.ontimize.jee.webclient.export.HeadExportColumn;
 import com.ontimize.jee.webclient.export.SheetContext;
+import com.ontimize.jee.webclient.export.exception.ExportException;
 import com.ontimize.jee.webclient.export.providers.ExportDataProvider;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -45,7 +47,7 @@ import com.ontimize.jee.webclient.export.util.ExportOptions;
  * @author antonio.vazquez@imatia.com Antonio Vázquez Araújo
  */
 
-public abstract class BaseExcelExporter<T extends Workbook> implements Exporter<T> {
+public abstract class BaseExcelExporter<T extends Workbook> implements ExcelExporter<T> {
 
     // Usamos un nombre improbable para la hoja plantilla
     public static final String TEMPLATE_SHEET_NAME = "____TEMPLATE_SHEET____";
@@ -56,6 +58,14 @@ public abstract class BaseExcelExporter<T extends Workbook> implements Exporter<
 
     public BaseExcelExporter() {
 
+    }
+
+    public T export(
+            final ExportColumnProvider exportColumnProvider,
+            final ExportDataProvider dataProvider,
+            final ExportStyleProvider styleProvider,
+            ExportOptions exportOptions)  throws ExportException {
+        return this.export(exportColumnProvider, dataProvider, styleProvider, new DefaultSheetNameProvider(),exportOptions);
     }
 
     /**
@@ -73,7 +83,7 @@ public abstract class BaseExcelExporter<T extends Workbook> implements Exporter<
             final ExportDataProvider dataProvider,
             final ExportStyleProvider styleProvider,
             SheetNameProvider sheetNameProvider,
-            ExportOptions exportOptions) {
+            ExportOptions exportOptions) throws ExportException {
 
         if (sheetNameProvider == null) {
             sheetNameProvider = new DefaultSheetNameProvider();
