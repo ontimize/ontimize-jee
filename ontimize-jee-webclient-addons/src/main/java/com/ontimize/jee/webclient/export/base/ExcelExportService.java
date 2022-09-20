@@ -13,7 +13,6 @@ import com.ontimize.jee.webclient.export.support.exporter.DefaultXSSFExcelExport
 import com.ontimize.jee.webclient.export.support.sheetnameprovider.DefaultSheetNameProvider;
 import com.ontimize.jee.webclient.export.support.styleprovider.DefaultExcelExportStyleProvider;
 import com.ontimize.jee.webclient.export.util.ExportOptions;
-import org.apache.commons.lang3.SystemUtils;
 import org.apache.poi.ss.usermodel.DataFormat;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
@@ -24,19 +23,12 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.attribute.FileAttribute;
-import java.nio.file.attribute.PosixFilePermission;
-import java.nio.file.attribute.PosixFilePermissions;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
- * Servicio de exportación en formato Excel. 
+ * Servicio de exportación en formato Excel.
  *
  * @author <a href="antonio.vazquez@imatia.com">Antonio Vazquez Araujo</a>
  */
@@ -69,29 +61,30 @@ public class ExcelExportService extends BaseExportService implements IExcelExpor
     public File generateFile(final ExportQueryParameters exportParam) throws ExportException {
         File xlsxFile = null;
         try {
-            if(!(exportParam instanceof ExcelExportQueryParameters)) {
+            if (!(exportParam instanceof ExcelExportQueryParameters)) {
                 throw new IllegalArgumentException();
             }
-            ExcelExportQueryParameters excelExportParam = (ExcelExportQueryParameters)exportParam; 
+            ExcelExportQueryParameters excelExportParam = (ExcelExportQueryParameters) exportParam;
             xlsxFile = createTempFile(".xlsx");
             generateExcel(excelExportParam, xlsxFile);
-        } catch (final ExportException e){
+        } catch (final ExportException e) {
             throw e;
         } catch (IOException e) {
             throw new ExportException("Error creating xlsx file!", e);
         } catch (IllegalArgumentException e) {
             throw new ExportException("Invalid export configuration parameters", e);
-        } 
+        }
         return xlsxFile;
     }
-    
+
     /**
      * Create all the providers and generate the book
+     *
      * @param exportParam The export configuration parameters
-     * @param xlsxFile The tempfile
+     * @param xlsxFile    The tempfile
      */
     public void generateExcel(final ExcelExportQueryParameters exportParam, File xlsxFile) throws ExportException {
-        try(final FileOutputStream fileOutputStream = new FileOutputStream(xlsxFile);) {
+        try (final FileOutputStream fileOutputStream = new FileOutputStream(xlsxFile);) {
             // ColumnProvider
             ExportColumnProvider columnProvider = getColumnProvider();
 
@@ -109,12 +102,12 @@ public class ExcelExportService extends BaseExportService implements IExcelExpor
 
             final Workbook book = generateBook(columnProvider, dataProvider, styleProvider, sheetNameProvider,
                     exportOptions);
-            
+
             book.write(fileOutputStream);
-        } catch (final ExportException e){
+        } catch (final ExportException e) {
             logger.error("{}", e.getMessage(), e);
             throw e;
-        }  catch (final Exception e) {
+        } catch (final Exception e) {
             logger.error("{}", e.getMessage(), e);
             throw new ExportException("Error filling export file", e);
         }
@@ -122,17 +115,18 @@ public class ExcelExportService extends BaseExportService implements IExcelExpor
 
     /**
      * Calls the exporter and send it the providers to build the excel file
-     * @param columnProvider The column provider
-     * @param dataProvider The data provider
-     * @param styleProvider The styles provider
+     *
+     * @param columnProvider    The column provider
+     * @param dataProvider      The data provider
+     * @param styleProvider     The styles provider
      * @param sheetNameProvider The sheet name provider
-     * @param exportOptions Is null, it creates it in the BaseExcelExporter
+     * @param exportOptions     Is null, it creates it in the BaseExcelExporter
      * @return
      * @throws Exception
      */
     public Workbook generateBook(ExportColumnProvider columnProvider, ExportDataProvider dataProvider,
-            ExportStyleProvider<XSSFCellStyle, DataFormat> styleProvider, SheetNameProvider sheetNameProvider,
-            ExportOptions exportOptions) throws ExportException {
+                                 ExportStyleProvider<XSSFCellStyle, DataFormat> styleProvider, SheetNameProvider sheetNameProvider,
+                                 ExportOptions exportOptions) throws ExportException {
         return new DefaultXSSFExcelExporter().export(columnProvider, dataProvider, styleProvider, sheetNameProvider,
                 exportOptions);
     }
@@ -141,13 +135,13 @@ public class ExcelExportService extends BaseExportService implements IExcelExpor
     protected void createProviders(ExportQueryParameters exportParam) throws ExportException {
         super.createProviders(exportParam);
 
-        if(exportParam instanceof ExcelExportQueryParameters) {
-            ExcelExportQueryParameters excelExportParam = (ExcelExportQueryParameters)exportParam;
+        if (exportParam instanceof ExcelExportQueryParameters) {
+            ExcelExportQueryParameters excelExportParam = (ExcelExportQueryParameters) exportParam;
             // create specific providers...
             this.createXlsxProviders(excelExportParam);
         }
     }
-    
+
     public void createXlsxProviders(final ExcelExportQueryParameters excelExportParam) {
         this.columnProvider = createColumnProvider(excelExportParam);
         this.styleProvider = createStyleProvider(excelExportParam);

@@ -1,14 +1,13 @@
 package com.ontimize.jee.webclient.export.support.styleprovider;
 
 
+import com.ontimize.jee.webclient.export.CellStyleContext;
+import com.ontimize.jee.webclient.export.ExportColumnStyle;
 import com.ontimize.jee.webclient.export.base.ExcelExportQueryParameters;
 import com.ontimize.jee.webclient.export.rule.CellSelectionRule;
 import com.ontimize.jee.webclient.export.rule.RowSelectionRule;
-import org.apache.poi.ss.usermodel.DataFormat;
-
-import com.ontimize.jee.webclient.export.CellStyleContext;
-import com.ontimize.jee.webclient.export.ExportColumnStyle;
 import com.ontimize.jee.webclient.export.support.DefaultExportColumnStyle;
+import org.apache.poi.ss.usermodel.DataFormat;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
@@ -166,7 +165,7 @@ public class DefaultExcelExportStyleProvider extends AbstractExportStyleProvider
     }
 
     protected void applyExportStyleToPoiStyle(CellStyleContext<XSSFCellStyle, DataFormat> context,
-                                                   ExportColumnStyle s, XSSFCellStyle style) {
+                                              ExportColumnStyle s, XSSFCellStyle style) {
         if (s == null) {
             return;
         }

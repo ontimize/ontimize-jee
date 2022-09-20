@@ -5,30 +5,30 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.ontimize.jee.server.rest.FilterParameter;
 
 @JsonTypeInfo(
-    use = JsonTypeInfo.Id.NAME,
-    include = JsonTypeInfo.As.PROPERTY,
-    property = "type",
-    defaultImpl = ExcelExportQueryParameters.class
+        use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "type",
+        defaultImpl = ExcelExportQueryParameters.class
 )
 @JsonSubTypes({
-    @JsonSubTypes.Type(value = ExcelExportQueryParameters.class, name = "xlsx"),
-    @JsonSubTypes.Type(value = BaseExportQueryParameters.class, name = "csv")
-//TODO    @JsonSubTypes.Type(value = PdfExportQueryParameters.class, name = "pdf")
+        @JsonSubTypes.Type(value = ExcelExportQueryParameters.class, name = "xlsx"),
+        @JsonSubTypes.Type(value = BaseExportQueryParameters.class, name = "csv"),
+        @JsonSubTypes.Type(value = ExcelExportQueryParameters.class, name = "pdf")
 })
 
 public interface ExportQueryParameters {
 
-  FilterParameter getQueryParam();
-  
-  void setQueryParam(FilterParameter filterParameter);
+    FilterParameter getQueryParam();
 
-  String getDao();
-  
-  String getService();
+    void setQueryParam(FilterParameter filterParameter);
 
-  
-  String getPath();
-  
-  public boolean isAdvQuery();
+    String getDao();
+
+    String getService();
+
+
+    String getPath();
+
+    public boolean isAdvQuery();
 
 }

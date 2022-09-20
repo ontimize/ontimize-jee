@@ -2,46 +2,48 @@ package com.ontimize.jee.webclient.export.style.support;
 
 import java.text.Format;
 
-import com.itextpdf.text.BaseColor;
+import com.itextpdf.kernel.colors.Color;
+import com.itextpdf.layout.properties.HorizontalAlignment;
+import com.itextpdf.layout.properties.VerticalAlignment;
 import com.ontimize.jee.webclient.export.style.PdfCellStyle;
 
 public class DefaultPdfPCellStyle implements PdfCellStyle {
 
-  private Integer horizontalAlignment;
+  private HorizontalAlignment horizontalAlignment;
 
-  private Integer verticalAlignment;
+  private VerticalAlignment verticalAlignment;
 
-  private BaseColor backgroundColor;
+  private Color backgroundColor;
 
   private Format formatter;
 
   @Override
-  public void setHorizontalAlignment(Integer horizontalAlignment) {
+  public void setHorizontalAlignment(HorizontalAlignment horizontalAlignment) {
     this.horizontalAlignment = horizontalAlignment;
   }
 
   @Override
-  public Integer getHorizontalAlignment() {
+  public HorizontalAlignment getHorizontalAlignment() {
     return this.horizontalAlignment;
   }
 
   @Override
-  public void setVerticalAlignment(Integer verticalAlignment) {
+  public void setVerticalAlignment(VerticalAlignment verticalAlignment) {
     this.verticalAlignment = verticalAlignment;
   }
 
   @Override
-  public Integer getVerticalAlignment() {
+  public VerticalAlignment getVerticalAlignment() {
     return this.verticalAlignment;
   }
 
   @Override
-  public void setBackgroundColor(BaseColor backgroundColor) {
+  public void setBackgroundColor(Color backgroundColor) {
     this.backgroundColor = backgroundColor;
   }
 
   @Override
-  public BaseColor getBackgroundColor() {
+  public Color getBackgroundColor() {
     return this.backgroundColor;
   }
 

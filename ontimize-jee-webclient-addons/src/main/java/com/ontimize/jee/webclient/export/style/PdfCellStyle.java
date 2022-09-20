@@ -2,21 +2,23 @@ package com.ontimize.jee.webclient.export.style;
 
 import java.text.Format;
 
-import com.itextpdf.text.BaseColor;
+import com.itextpdf.kernel.colors.Color;
+import com.itextpdf.layout.properties.HorizontalAlignment;
+import com.itextpdf.layout.properties.VerticalAlignment;
 
 public interface PdfCellStyle {
 
-  void setHorizontalAlignment(Integer horizontalAlignment);
+  void setHorizontalAlignment(HorizontalAlignment horizontalAlignment);
 
-  Integer getHorizontalAlignment();
+  HorizontalAlignment getHorizontalAlignment();
 
-  void setVerticalAlignment(Integer verticalAlignment);
+  void setVerticalAlignment(VerticalAlignment verticalAlignment);
 
-  Integer getVerticalAlignment();
+  VerticalAlignment getVerticalAlignment();
 
-  void setBackgroundColor(BaseColor backgroundColor);
+  void setBackgroundColor(Color backgroundColor);
 
-  BaseColor getBackgroundColor();
+  Color getBackgroundColor();
 
   Format getDataFormatter();
 

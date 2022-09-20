@@ -31,12 +31,13 @@ public class ExcelExportRestController extends BaseExportRestController<IExcelEx
 
     /**
      * Receive the query parameters, creates the temporal file and call the service
+     *
      * @param exportParam The query parameters
-     * @param response The HTTP response
+     * @param response    The HTTP response
      * @throws Exception
      */
-    @PostMapping(value = { "/xlsx" }, consumes = { "application/json" }, produces = { "application/json" })
-    public ResponseEntity<Void> exportQuery(@RequestBody ExcelExportQueryParameters exportParam, 
+    @PostMapping(value = {"/xlsx"}, consumes = {"application/json"}, produces = {"application/json"})
+    public ResponseEntity<Void> exportQuery(@RequestBody ExcelExportQueryParameters exportParam,
                                             HttpServletResponse response) {
         logger.debug("Invoked /{}", exportParam);
         try {
