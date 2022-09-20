@@ -37,7 +37,7 @@ public class ExcelExportRestController extends BaseExportRestController<IExcelEx
      * @throws Exception
      */
     @PostMapping(value = {"/xlsx"}, consumes = {"application/json"}, produces = {"application/json"})
-    public ResponseEntity<Void> exportQuery(@RequestBody ExcelExportQueryParameters exportParam,
+    public ResponseEntity<Void> exportQuery(@RequestBody AdvancedExportQueryParameters exportParam,
                                             HttpServletResponse response) {
         logger.debug("Invoked /{}", exportParam);
         try {

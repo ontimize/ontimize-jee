@@ -3,7 +3,7 @@ package com.ontimize.jee.webclient.export.support.styleprovider;
 
 import com.ontimize.jee.webclient.export.CellStyleContext;
 import com.ontimize.jee.webclient.export.ExportColumnStyle;
-import com.ontimize.jee.webclient.export.base.ExcelExportQueryParameters;
+import com.ontimize.jee.webclient.export.base.AdvancedExportQueryParameters;
 import com.ontimize.jee.webclient.export.rule.CellSelectionRule;
 import com.ontimize.jee.webclient.export.rule.RowSelectionRule;
 import com.ontimize.jee.webclient.export.support.DefaultExportColumnStyle;
@@ -22,7 +22,7 @@ public class DefaultExcelExportStyleProvider extends AbstractExportStyleProvider
 
     protected Map<String, XSSFCellStyle> poiCellStyles;
 
-    public DefaultExcelExportStyleProvider(ExcelExportQueryParameters exportParam) {
+    public DefaultExcelExportStyleProvider(AdvancedExportQueryParameters exportParam) {
         super(exportParam);
     }
 

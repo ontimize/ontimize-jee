@@ -61,10 +61,10 @@ public class ExcelExportService extends BaseExportService implements IExcelExpor
     public File generateFile(final ExportQueryParameters exportParam) throws ExportException {
         File xlsxFile = null;
         try {
-            if (!(exportParam instanceof ExcelExportQueryParameters)) {
+            if (!(exportParam instanceof AdvancedExportQueryParameters)) {
                 throw new IllegalArgumentException();
             }
-            ExcelExportQueryParameters excelExportParam = (ExcelExportQueryParameters) exportParam;
+            AdvancedExportQueryParameters excelExportParam = (AdvancedExportQueryParameters) exportParam;
             xlsxFile = createTempFile(".xlsx");
             generateExcel(excelExportParam, xlsxFile);
         } catch (final ExportException e) {
@@ -83,7 +83,7 @@ public class ExcelExportService extends BaseExportService implements IExcelExpor
      * @param exportParam The export configuration parameters
      * @param xlsxFile    The tempfile
      */
-    public void generateExcel(final ExcelExportQueryParameters exportParam, File xlsxFile) throws ExportException {
+    public void generateExcel(final AdvancedExportQueryParameters exportParam, File xlsxFile) throws ExportException {
         try (final FileOutputStream fileOutputStream = new FileOutputStream(xlsxFile);) {
             // ColumnProvider
             ExportColumnProvider columnProvider = getColumnProvider();
@@ -135,14 +135,14 @@ public class ExcelExportService extends BaseExportService implements IExcelExpor
     protected void createProviders(ExportQueryParameters exportParam) throws ExportException {
         super.createProviders(exportParam);
 
-        if (exportParam instanceof ExcelExportQueryParameters) {
-            ExcelExportQueryParameters excelExportParam = (ExcelExportQueryParameters) exportParam;
+        if (exportParam instanceof AdvancedExportQueryParameters) {
+            AdvancedExportQueryParameters excelExportParam = (AdvancedExportQueryParameters) exportParam;
             // create specific providers...
             this.createXlsxProviders(excelExportParam);
         }
     }
 
-    public void createXlsxProviders(final ExcelExportQueryParameters excelExportParam) {
+    public void createXlsxProviders(final AdvancedExportQueryParameters excelExportParam) {
         this.columnProvider = createColumnProvider(excelExportParam);
         this.styleProvider = createStyleProvider(excelExportParam);
         this.sheetNameProvider = createDefaultSheetNameProvider();
@@ -153,17 +153,17 @@ public class ExcelExportService extends BaseExportService implements IExcelExpor
      * datos por otra. Para ello usa el algoritmo recursivo addParentColumn, que agrega a la lista una
      * columna y todas sus hijas en profundidad.
      */
-    protected ExportColumnProvider createColumnProvider(final ExcelExportQueryParameters exportParam) {
+    protected ExportColumnProvider createColumnProvider(final AdvancedExportQueryParameters exportParam) {
         List<HeadExportColumn> headerColumns = new ArrayList<>();
         List<ExportColumn> bodyColumns = new ArrayList<>();
-        Map<String, Object> columns = exportParam.getExcelColumns();
+        Map<String, Object> columns = exportParam.getColumns();
         Map<String, String> columnTitles = exportParam.getColumnTitles();
         addChildrenColumns(bodyColumns, headerColumns, columns, columnTitles);
         ExportColumnProvider ret = new BaseExportColumnProvider(headerColumns, bodyColumns);
         return ret;
     }
 
-    protected ExportStyleProvider createStyleProvider(final ExcelExportQueryParameters exportParam) {
+    protected ExportStyleProvider createStyleProvider(final AdvancedExportQueryParameters exportParam) {
         return new DefaultExcelExportStyleProvider(exportParam);
     }
 
@@ -195,7 +195,7 @@ public class ExcelExportService extends BaseExportService implements IExcelExpor
     }
 
 
-    protected ExportOptions createExportOptions(final ExcelExportQueryParameters exportParam, List<String> columns) {
+    protected ExportOptions createExportOptions(final AdvancedExportQueryParameters exportParam, List<String> columns) {
         // TODO: de momento no hay opciones
         return null;
     }

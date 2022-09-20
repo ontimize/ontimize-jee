@@ -2,7 +2,7 @@ package com.ontimize.jee.webclient.export.support.styleprovider;
 
 
 import com.ontimize.jee.webclient.export.ExportColumnStyle;
-import com.ontimize.jee.webclient.export.base.ExcelExportQueryParameters;
+import com.ontimize.jee.webclient.export.base.AdvancedExportQueryParameters;
 import com.ontimize.jee.webclient.export.providers.ExportStyleProvider;
 import com.ontimize.jee.webclient.export.rule.CellSelectionRule;
 import com.ontimize.jee.webclient.export.rule.CellSelectionRuleFactory;
@@ -32,11 +32,11 @@ public abstract class AbstractExportStyleProvider<T, D> implements ExportStylePr
 
     private Map<CellSelectionRule, List<String>> cellStyles;
 
-    public AbstractExportStyleProvider(final ExcelExportQueryParameters exportParam) {
+    public AbstractExportStyleProvider(final AdvancedExportQueryParameters exportParam) {
         this.initialize(exportParam);
     }
 
-    protected void initialize(final ExcelExportQueryParameters exportParam) {
+    protected void initialize(final AdvancedExportQueryParameters exportParam) {
         this.styles = createStyles(exportParam);
         this.columnStyles = createColumnStyles(exportParam);
         this.rowStyles = this.createRowStyles(exportParam);
@@ -107,7 +107,7 @@ public abstract class AbstractExportStyleProvider<T, D> implements ExportStylePr
         return style;
     }
 
-    protected Map<String, ExportColumnStyle> createStyles(final ExcelExportQueryParameters exportParam) {
+    protected Map<String, ExportColumnStyle> createStyles(final AdvancedExportQueryParameters exportParam) {
         Map<String, Map<String, String>> styles = exportParam.getStyles();
         Map<String, ExportColumnStyle> exportColumnStyles = new HashMap<>();
         styles.entrySet().stream().forEach(m -> {
@@ -143,7 +143,7 @@ public abstract class AbstractExportStyleProvider<T, D> implements ExportStylePr
         return style;
     }
 
-    protected Map<String, List<String>> createColumnStyles(final ExcelExportQueryParameters exportParam) {
+    protected Map<String, List<String>> createColumnStyles(final AdvancedExportQueryParameters exportParam) {
         Map<String, Object> styles = exportParam.getColumnStyles();
         Map<String, List<String>> exportColumnStyles = new HashMap<>();
         styles.entrySet().stream().forEach(m -> {
@@ -161,7 +161,7 @@ public abstract class AbstractExportStyleProvider<T, D> implements ExportStylePr
         return exportColumnStyles;
     }
 
-    protected Map<RowSelectionRule, List<String>> createRowStyles(final ExcelExportQueryParameters exportParam) {
+    protected Map<RowSelectionRule, List<String>> createRowStyles(final AdvancedExportQueryParameters exportParam) {
         Map<String, Object> styles = exportParam.getRowStyles();
         Map<RowSelectionRule, List<String>> exportRowStyles = new HashMap<>();
         styles.entrySet().stream().forEach(m -> {
@@ -184,7 +184,7 @@ public abstract class AbstractExportStyleProvider<T, D> implements ExportStylePr
 
     }
 
-    protected Map<CellSelectionRule, List<String>> createCellStyles(final ExcelExportQueryParameters exportParam) {
+    protected Map<CellSelectionRule, List<String>> createCellStyles(final AdvancedExportQueryParameters exportParam) {
         Map<String, Object> styles = exportParam.getCellStyles();
         Map<CellSelectionRule, List<String>> exportCellStyles = new HashMap<>();
         styles.entrySet().stream().forEach(m -> {

@@ -8,12 +8,12 @@ import com.ontimize.jee.server.rest.FilterParameter;
         use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.PROPERTY,
         property = "type",
-        defaultImpl = ExcelExportQueryParameters.class
+        defaultImpl = AdvancedExportQueryParameters.class
 )
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = ExcelExportQueryParameters.class, name = "xlsx"),
+        @JsonSubTypes.Type(value = AdvancedExportQueryParameters.class, name = "xlsx"),
         @JsonSubTypes.Type(value = BaseExportQueryParameters.class, name = "csv"),
-        @JsonSubTypes.Type(value = ExcelExportQueryParameters.class, name = "pdf")
+        @JsonSubTypes.Type(value = AdvancedExportQueryParameters.class, name = "pdf")
 })
 
 public interface ExportQueryParameters {

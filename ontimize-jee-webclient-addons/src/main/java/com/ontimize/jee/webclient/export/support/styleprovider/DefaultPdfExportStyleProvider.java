@@ -2,7 +2,7 @@ package com.ontimize.jee.webclient.export.support.styleprovider;
 
 import com.ontimize.jee.webclient.export.CellStyleContext;
 import com.ontimize.jee.webclient.export.ExportColumnStyle;
-import com.ontimize.jee.webclient.export.base.ExcelExportQueryParameters;
+import com.ontimize.jee.webclient.export.base.AdvancedExportQueryParameters;
 import com.ontimize.jee.webclient.export.rule.CellSelectionRule;
 import com.ontimize.jee.webclient.export.rule.RowSelectionRule;
 import com.ontimize.jee.webclient.export.style.PdfCellStyle;
@@ -21,7 +21,7 @@ public class DefaultPdfExportStyleProvider extends AbstractExportStyleProvider<P
 
     protected Map<String, PdfCellStyle> pdfCellStylesMap;
 
-    public DefaultPdfExportStyleProvider(ExcelExportQueryParameters exportParam) {
+    public DefaultPdfExportStyleProvider(AdvancedExportQueryParameters exportParam) {
         super(exportParam);
     }
 

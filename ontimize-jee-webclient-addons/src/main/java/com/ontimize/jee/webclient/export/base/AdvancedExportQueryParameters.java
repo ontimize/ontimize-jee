@@ -3,10 +3,10 @@ package com.ontimize.jee.webclient.export.base;
 import javax.xml.bind.annotation.XmlElement;
 import java.util.Map;
 
-public class ExcelExportQueryParameters extends BaseExportQueryParameters {
+public class AdvancedExportQueryParameters extends BaseExportQueryParameters {
 
     @XmlElement
-    private Map<String, Object> excelColumns;
+    private Map<String, Object> columns;
 
     @XmlElement
     private Map<String, String> columnTitles;
@@ -29,16 +29,16 @@ public class ExcelExportQueryParameters extends BaseExportQueryParameters {
     @XmlElement
     private Map<String, Object> cellStyles;
 
-    public ExcelExportQueryParameters() {
+    public AdvancedExportQueryParameters() {
         super();
     }
 
-    public Map<String, Object> getExcelColumns() {
-        return excelColumns;
+    public Map<String, Object> getColumns() {
+        return columns;
     }
 
-    public void setExcelColumns(Map<String, Object> excelColumns) {
-        this.excelColumns = excelColumns;
+    public void setColumns(Map<String, Object> columns) {
+        this.columns = columns;
     }
 
     public Map<String, String> getColumnTitles() {
