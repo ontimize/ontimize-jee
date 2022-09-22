@@ -8,7 +8,6 @@ import com.ontimize.jee.webclient.export.providers.ExportDataProvider;
 import com.ontimize.jee.webclient.export.providers.ExportStyleProvider;
 import com.ontimize.jee.webclient.export.providers.SheetNameProvider;
 import com.ontimize.jee.webclient.export.support.BaseExportColumnProvider;
-import com.ontimize.jee.webclient.export.support.DefaultHeadExportColumn;
 import com.ontimize.jee.webclient.export.support.exporter.DefaultXSSFExcelExporter;
 import com.ontimize.jee.webclient.export.support.sheetnameprovider.DefaultSheetNameProvider;
 import com.ontimize.jee.webclient.export.support.styleprovider.DefaultExcelExportStyleProvider;
@@ -170,30 +169,6 @@ public class ExcelExportService extends BaseExportService implements IExcelExpor
     protected SheetNameProvider createDefaultSheetNameProvider() {
         return new DefaultSheetNameProvider();
     }
-
-    static void addParentColumn(List<ExportColumn> bodyColumns, List<HeadExportColumn> columns, String id, Object value,
-                                Map<String, String> columnTitles) {
-
-        HeadExportColumn column = new DefaultHeadExportColumn(id, columnTitles.get(id));
-        Map<String, Object> children = (Map<String, Object>) value;
-        // Si la columna no tiene hijos, la agregamos directamente
-        if (value == null || ((Map<String, Object>) value).size() == 0) {
-            bodyColumns.add(new ExportColumn(id, columnTitles.get(id), 0, null));
-        } else {
-            // Si la columna tiene hijos, le agregamos todos sus hijos
-            column.getColumns().addAll(addChildrenColumns(bodyColumns, new ArrayList(), children, columnTitles));
-        }
-        columns.add(column);
-    }
-
-    static List<HeadExportColumn> addChildrenColumns(List<ExportColumn> bodyColumns, List<HeadExportColumn> columns,
-                                                     Map<String, Object> children, Map<String, String> columnTitles) {
-        children.entrySet().forEach(entry -> {
-            addParentColumn(bodyColumns, columns, entry.getKey(), entry.getValue(), columnTitles);
-        });
-        return columns;
-    }
-
 
     protected ExportOptions createExportOptions(final AdvancedExportQueryParameters exportParam, List<String> columns) {
         // TODO: de momento no hay opciones

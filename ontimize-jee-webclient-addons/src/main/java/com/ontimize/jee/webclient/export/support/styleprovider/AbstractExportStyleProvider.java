@@ -108,12 +108,15 @@ public abstract class AbstractExportStyleProvider<T, D> implements ExportStylePr
     }
 
     protected Map<String, ExportColumnStyle> createStyles(final AdvancedExportQueryParameters exportParam) {
-        Map<String, Map<String, String>> styles = exportParam.getStyles();
         Map<String, ExportColumnStyle> exportColumnStyles = new HashMap<>();
-        styles.entrySet().stream().forEach(m -> {
-            Set<Map.Entry<String, String>> entries = m.getValue().entrySet();
-            exportColumnStyles.put(m.getKey(), createColumnStyle(entries));
-        });
+
+        Map<String, Map<String, String>> styles = exportParam.getStyles();
+        if (styles != null) {
+            styles.entrySet().stream().forEach(m -> {
+                Set<Map.Entry<String, String>> entries = m.getValue().entrySet();
+                exportColumnStyles.put(m.getKey(), createColumnStyle(entries));
+            });
+        }
         return exportColumnStyles;
     }
 
@@ -144,65 +147,74 @@ public abstract class AbstractExportStyleProvider<T, D> implements ExportStylePr
     }
 
     protected Map<String, List<String>> createColumnStyles(final AdvancedExportQueryParameters exportParam) {
-        Map<String, Object> styles = exportParam.getColumnStyles();
         Map<String, List<String>> exportColumnStyles = new HashMap<>();
-        styles.entrySet().stream().forEach(m -> {
-            Object value = m.getValue();
-            if (List.class.isAssignableFrom(value.getClass())) {
-                List<String> styleNames = (List<String>) value;
-                exportColumnStyles.put(m.getKey(), styleNames);
-            } else {
 
-                List<String> styleNames = new ArrayList<>();
-                styleNames.add((String) value);
-                exportColumnStyles.put(m.getKey(), styleNames);
-            }
-        });
+        Map<String, Object> styles = exportParam.getColumnStyles();
+        if (styles != null) {
+            styles.entrySet().stream().forEach(m -> {
+                Object value = m.getValue();
+                if (List.class.isAssignableFrom(value.getClass())) {
+                    List<String> styleNames = (List<String>) value;
+                    exportColumnStyles.put(m.getKey(), styleNames);
+                } else {
+
+                    List<String> styleNames = new ArrayList<>();
+                    styleNames.add((String) value);
+                    exportColumnStyles.put(m.getKey(), styleNames);
+                }
+            });
+        }
         return exportColumnStyles;
     }
 
     protected Map<RowSelectionRule, List<String>> createRowStyles(final AdvancedExportQueryParameters exportParam) {
-        Map<String, Object> styles = exportParam.getRowStyles();
         Map<RowSelectionRule, List<String>> exportRowStyles = new HashMap<>();
-        styles.entrySet().stream().forEach(m -> {
-            try {
-                RowSelectionRule rule = RowSelectionRuleFactory.create(m.getKey());
-                Object value = m.getValue();
-                if (List.class.isAssignableFrom(value.getClass())) {
-                    List<String> styleNames = (List<String>) value;
-                    exportRowStyles.put(rule, styleNames);
-                } else {
-                    List<String> styleNames = new ArrayList<>();
-                    styleNames.add((String) value);
-                    exportRowStyles.put(rule, styleNames);
+
+        Map<String, Object> styles = exportParam.getRowStyles();
+        if (styles != null) {
+            styles.entrySet().stream().forEach(m -> {
+                try {
+                    RowSelectionRule rule = RowSelectionRuleFactory.create(m.getKey());
+                    Object value = m.getValue();
+                    if (List.class.isAssignableFrom(value.getClass())) {
+                        List<String> styleNames = (List<String>) value;
+                        exportRowStyles.put(rule, styleNames);
+                    } else {
+                        List<String> styleNames = new ArrayList<>();
+                        styleNames.add((String) value);
+                        exportRowStyles.put(rule, styleNames);
+                    }
+                } catch (Exception e) {
+                    logger.error("Impossible to create row styles", e);
                 }
-            } catch (Exception e) {
-                logger.error("Impossible to create row styles", e);
-            }
-        });
+            });
+        }
         return exportRowStyles;
 
     }
 
     protected Map<CellSelectionRule, List<String>> createCellStyles(final AdvancedExportQueryParameters exportParam) {
-        Map<String, Object> styles = exportParam.getCellStyles();
         Map<CellSelectionRule, List<String>> exportCellStyles = new HashMap<>();
-        styles.entrySet().stream().forEach(m -> {
-            try {
-                CellSelectionRule rule = CellSelectionRuleFactory.create(m.getKey());
-                Object value = m.getValue();
-                if (List.class.isAssignableFrom(value.getClass())) {
-                    List<String> styleNames = (List<String>) value;
-                    exportCellStyles.put(rule, styleNames);
-                } else {
-                    List<String> styleNames = new ArrayList<>();
-                    styleNames.add((String) value);
-                    exportCellStyles.put(rule, styleNames);
+
+        Map<String, Object> styles = exportParam.getCellStyles();
+        if (styles != null) {
+            styles.entrySet().stream().forEach(m -> {
+                try {
+                    CellSelectionRule rule = CellSelectionRuleFactory.create(m.getKey());
+                    Object value = m.getValue();
+                    if (List.class.isAssignableFrom(value.getClass())) {
+                        List<String> styleNames = (List<String>) value;
+                        exportCellStyles.put(rule, styleNames);
+                    } else {
+                        List<String> styleNames = new ArrayList<>();
+                        styleNames.add((String) value);
+                        exportCellStyles.put(rule, styleNames);
+                    }
+                } catch (Exception e) {
+                    logger.error("Impossible to create row styles", e);
                 }
-            } catch (Exception e) {
-                logger.error("Impossible to create row styles", e);
-            }
-        });
+            });
+        }
         return exportCellStyles;
     }
 }

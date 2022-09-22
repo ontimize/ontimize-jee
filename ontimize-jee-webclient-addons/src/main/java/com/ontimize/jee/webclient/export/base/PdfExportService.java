@@ -10,7 +10,6 @@ import com.ontimize.jee.webclient.export.providers.ExportStyleProvider;
 import com.ontimize.jee.webclient.export.style.PdfCellStyle;
 import com.ontimize.jee.webclient.export.style.PdfDataFormat;
 import com.ontimize.jee.webclient.export.support.BaseExportColumnProvider;
-import com.ontimize.jee.webclient.export.support.DefaultHeadExportColumn;
 import com.ontimize.jee.webclient.export.support.exporter.DefaultPdfExporter;
 import com.ontimize.jee.webclient.export.support.styleprovider.DefaultPdfExportStyleProvider;
 import com.ontimize.jee.webclient.export.util.ExportOptions;
@@ -117,9 +116,9 @@ public class PdfExportService extends BaseExportService {
         super.createProviders(exportParam);
 
         if (exportParam instanceof AdvancedExportQueryParameters) {
-            AdvancedExportQueryParameters excelExportParam = (AdvancedExportQueryParameters) exportParam;
+            AdvancedExportQueryParameters advExportParam = (AdvancedExportQueryParameters) exportParam;
             // create specific providers...
-            this.createPdfProviders(excelExportParam);
+            this.createPdfProviders(advExportParam);
         }
     }
 
@@ -146,29 +145,6 @@ public class PdfExportService extends BaseExportService {
         return new DefaultPdfExportStyleProvider(exportParam);
     }
 
-    //FIXME duplicado de ExcelService
-    static void addParentColumn(List<ExportColumn> bodyColumns, List<HeadExportColumn> columns, String id, Object value,
-                                Map<String, String> columnTitles) {
-
-        HeadExportColumn column = new DefaultHeadExportColumn(id, columnTitles.get(id));
-        Map<String, Object> children = (Map<String, Object>) value;
-        // Si la columna no tiene hijos, la agregamos directamente
-        if (value == null || ((Map<String, Object>) value).size() == 0) {
-            bodyColumns.add(new ExportColumn(id, columnTitles.get(id), 0, null));
-        } else {
-            // Si la columna tiene hijos, le agregamos todos sus hijos
-            column.getColumns().addAll(addChildrenColumns(bodyColumns, new ArrayList(), children, columnTitles));
-        }
-        columns.add(column);
-    }
-
-    static List<HeadExportColumn> addChildrenColumns(List<ExportColumn> bodyColumns, List<HeadExportColumn> columns,
-                                                     Map<String, Object> children, Map<String, String> columnTitles) {
-        children.entrySet().forEach(entry -> {
-            addParentColumn(bodyColumns, columns, entry.getKey(), entry.getValue(), columnTitles);
-        });
-        return columns;
-    }
 
     protected ExportOptions createExportOptions(final AdvancedExportQueryParameters exportParam, List<String> columns) {
         // TODO: de momento no hay opciones

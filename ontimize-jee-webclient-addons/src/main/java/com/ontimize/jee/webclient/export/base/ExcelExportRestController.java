@@ -41,6 +41,8 @@ public class ExcelExportRestController extends BaseExportRestController<IExcelEx
                                             HttpServletResponse response) {
         logger.debug("Invoked /{}", exportParam);
         try {
+            // verify required attributes
+            verifyExportParameter(exportParam);
             // process query parameters (basic expressions, filter expression, etc.)
             processQueryParameter(exportParam);
             // do export
