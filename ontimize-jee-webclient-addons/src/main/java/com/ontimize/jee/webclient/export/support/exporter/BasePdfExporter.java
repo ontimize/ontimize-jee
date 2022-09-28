@@ -1,6 +1,9 @@
 package com.ontimize.jee.webclient.export.support.exporter;
 
+import com.itextpdf.kernel.colors.DeviceRgb;
 import com.itextpdf.layout.Document;
+import com.itextpdf.layout.borders.Border;
+import com.itextpdf.layout.borders.SolidBorder;
 import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
@@ -19,6 +22,7 @@ import com.ontimize.jee.webclient.export.style.support.DefaultPdfDataFormat;
 import com.ontimize.jee.webclient.export.style.support.DefaultPdfPCellStyle;
 import com.ontimize.jee.webclient.export.style.util.PdfCellStyleUtils;
 import com.ontimize.jee.webclient.export.support.DefaultExportColumnStyle;
+import com.ontimize.jee.webclient.export.support.DefaultHeadExportColumn;
 import com.ontimize.jee.webclient.export.util.ExportOptions;
 import org.apache.commons.lang3.StringUtils;
 
@@ -77,19 +81,15 @@ public abstract class BasePdfExporter<T extends Document> implements Exporter<T>
             final T document = this.buildDocument();
             Table pdfTable = this.createPdfTable(exportColumnProvider);
 
-            //TODO
-            final Map<String, Object> headerCellStylesById = new HashMap<>();
-            //        final Map<String, CellStyle> headerCellStylesById = this.addHeaderStyles(
-            //                this.templateSheet,
-            //                exportColumnProvider.getHeaderColumns(),
-            //                styleProvider);
+            final Map<String, PdfCellStyle> headerCellStylesById = this.addHeaderStyles(
+                    exportColumnProvider.getHeaderColumns(),
+                    styleProvider);
             this.addHeader(
-                    dataProvider,
                     pdfTable,
                     exportColumnProvider.getHeaderColumns(),
                     headerCellStylesById,
-                    exportOptions,
-                    styleProvider);
+                    styleProvider,
+                    exportOptions);
             final Map<String, PdfCellStyle> bodyCellStyles = this.addBodyStyles(
                     exportColumnProvider.getBodyColumns(),
                     dataProvider,
@@ -100,8 +100,6 @@ public abstract class BasePdfExporter<T extends Document> implements Exporter<T>
                     dataProvider,
                     bodyCellStyles,
                     styleProvider,
-                    exportColumnProvider.getHeaderColumns(),
-                    headerCellStylesById,
                     exportOptions);
 
             document.add(pdfTable);
@@ -117,24 +115,23 @@ public abstract class BasePdfExporter<T extends Document> implements Exporter<T>
     public Table createPdfTable(final ExportColumnProvider exportColumnProvider) {
         int numCols = Math.max(exportColumnProvider.getHeaderColumns().size(), exportColumnProvider.getBodyColumns().size());
         Table table = new Table(numCols);
-
+        table.setBorder(Border.NO_BORDER);
+        table.setAutoLayout();
         return table;
     }
 
-    public void addHeader(final ExportDataProvider provider, final Table pdfTable,
+    public void addHeader(final Table pdfTable,
                           final List<HeadExportColumn> userHeaderColumns,
-                          final Map<String, Object> headerCellStylesById,
-                          //      final Map<String, CellStyle> headerCellStylesById,
-                          final ExportOptions exportOptions,
-                          final ExportStyleProvider styleProvider) {
+                          final Map<String, PdfCellStyle> headerCellStylesById,
+                          final ExportStyleProvider styleProvider,
+                          final ExportOptions exportOptions) {
         if (userHeaderColumns != null) {
             this.createHeader(
-                    provider,
                     pdfTable,
                     userHeaderColumns,
                     headerCellStylesById,
-                    exportOptions,
-                    styleProvider);
+                    styleProvider,
+                    exportOptions);
         }
     }
 
@@ -158,9 +155,6 @@ public abstract class BasePdfExporter<T extends Document> implements Exporter<T>
             final ExportDataProvider dataProvider,
             final Map<String, PdfCellStyle> bodyCellStyles,
             final ExportStyleProvider styleProvider,
-            final List<HeadExportColumn> headerColumns,
-            //      final Map<String, CellStyle> headerCellStylesById,
-            final Map<String, Object> headerCellStylesById,
             final ExportOptions exportOptions) {
 
         // Para cada fila...
@@ -203,6 +197,10 @@ public abstract class BasePdfExporter<T extends Document> implements Exporter<T>
             final ExportStyleProvider<PdfCellStyle, PdfDataFormat> styleProvider,
             final PdfCellStyle cellStyle) {
 
+        cell.setBorder(Border.NO_BORDER);
+        cell.setPaddingLeft(8.0f);
+        cell.setPaddingRight(8.0f);
+
         /*
          * Primero asignamos el estilo general de esa columna
          */
@@ -234,23 +232,20 @@ public abstract class BasePdfExporter<T extends Document> implements Exporter<T>
     }
 
     protected void createHeader(
-            final ExportDataProvider provider,
             final Table pdfTable,
             final List<HeadExportColumn> userHeaderColumns,
-            //      final Map<String, CellStyle> headerCellStylesById,
-            final Map<String, Object> headerCellStylesById,
-            final ExportOptions exportOptions,
-            final ExportStyleProvider styleProvider) {
+            final Map<String, PdfCellStyle> headerCellStylesById,
+            final ExportStyleProvider styleProvider,
+            final ExportOptions exportOptions) {
 
         final AtomicInteger columnIndex = new AtomicInteger(0);
         userHeaderColumns.forEach(exportColumn -> {
-            final int width = this.createHeader(
+            final int width = this.createHeaderCell(
                     pdfTable,
                     exportColumn,
-                    0,
-                    columnIndex.get(),
                     headerCellStylesById,
-                    styleProvider);
+                    styleProvider,
+                    exportOptions);
 
             columnIndex.addAndGet(width);
         });
@@ -294,19 +289,12 @@ public abstract class BasePdfExporter<T extends Document> implements Exporter<T>
         //        }
     }
 
-    protected int createHeader(
+    protected int createHeaderCell(
             final Table pdfTable,
             final HeadExportColumn column,
-            final int rowIndex,
-            final int columnIndex,
-            final Map<String, Object> headerCellStylesById,
-            //      final Map<String, CellStyle> headerCellStylesById,
-            final ExportStyleProvider styleProvider) {
-        //        Row currentRow = sheet.getRow(rowIndex);
-        //        if (currentRow == null) {
-        //            currentRow = sheet.createRow(rowIndex);
-        //        }
-        //        final Cell cell = currentRow.createCell(columnIndex);
+            final Map<String, PdfCellStyle> headerCellStylesById,
+            final ExportStyleProvider styleProvider,
+            final ExportOptions exportOptions) {
 
         Cell headerCell = new Cell();
 
@@ -325,6 +313,15 @@ public abstract class BasePdfExporter<T extends Document> implements Exporter<T>
         //        }
 
         headerCell.add(new Paragraph(column.getTitle()));
+
+        //Default style
+        headerCell.setPaddingLeft(8.0f);
+        headerCell.setPaddingRight(8.0f);
+        headerCell.setBorder(Border.NO_BORDER);
+        Border border = new SolidBorder(new DeviceRgb(204, 204, 204), 1);
+        headerCell.setBorderBottom(border);
+        headerCell.setBold();
+
         if (styleProvider != null) {
             //FIXME estilos de la cabecera
             //            this.applyStyleToHeaderCell(sheet, column, rowIndex, columnIndex, headerCellStylesById, styleProvider,
@@ -365,7 +362,7 @@ public abstract class BasePdfExporter<T extends Document> implements Exporter<T>
         }
 
         if (pdfCellStyle.getHorizontalAlignment() != null) {
-            cell.setHorizontalAlignment(pdfCellStyle.getHorizontalAlignment());
+            cell.setTextAlignment(pdfCellStyle.getHorizontalAlignment());
         }
 
         if (pdfCellStyle.getVerticalAlignment() != null) {
@@ -375,17 +372,16 @@ public abstract class BasePdfExporter<T extends Document> implements Exporter<T>
 
     protected abstract T buildDocument() throws ExportException;
 
-    //  private Map<String, CellStyle> addHeaderStyles(
-    //      final Sheet sheet,
-    //      final List<HeadExportColumn> columns,
-    //      final ExportStyleProvider styleProvider) {
-    //
-    //    final Map<String, CellStyle> headerCellStylesById = new HashMap<>();
-    //    for (final HeadExportColumn column : columns) {
-    //      this.addHeaderStyles(sheet, column, headerCellStylesById, styleProvider);
-    //    }
-    //    return headerCellStylesById;
-    //  }
+    private Map<String, PdfCellStyle> addHeaderStyles(
+            final List<HeadExportColumn> columns,
+            final ExportStyleProvider styleProvider) {
+
+        final Map<String, PdfCellStyle> headerCellStylesById = new HashMap<>();
+        for (final HeadExportColumn column : columns) {
+            this.addHeaderStyles(column, headerCellStylesById, styleProvider);
+        }
+        return headerCellStylesById;
+    }
 
     private Map<String, PdfCellStyle> addBodyStyles(
             final List<ExportColumn> bodyColumns,
@@ -414,41 +410,41 @@ public abstract class BasePdfExporter<T extends Document> implements Exporter<T>
         return bodyCellStyles;
     }
 
-    //  private void applyStyleToHeaderCell(
-    //      final Sheet sheet,
-    //      final HeadExportColumn column,
-    //      final int rowIndex,
-    //      final int columnIndex,
-    //      final Map<String, CellStyle> headerCellStylesById,
-    //      final ExportStyleProvider styleProvider,
-    //      final Cell cell) {
-    //
-    //    final CellStyle style = headerCellStylesById.get(column.getId());
-    //    if (style == null) {
-    //      return;
-    //    }
-    //    cell.setCellStyle(style);
-    //    final Supplier<CellStyle> cellStyleSupplier = () -> {
-    //      final CellStyle ret = sheet.getWorkbook().createCellStyle();
-    //      ret.cloneStyleFrom(style);
-    //      return ret;
-    //    };
-    //    final Supplier<DataFormat> dataFormatSupplier = () -> {
-    //      return sheet.getWorkbook().createDataFormat();
-    //    };
-    //    final CellStyle userStyle = (CellStyle) styleProvider.getHeaderCellStyle(
-    //        new CellStyleContext<>(
-    //            rowIndex,
-    //            columnIndex,
-    //            column.getId(),
-    //            cell.getStringCellValue(),
-    //            style,
-    //            cellStyleSupplier,
-    //            dataFormatSupplier));
-    //    if (userStyle != null) {
-    //      cell.setCellStyle(userStyle);
-    //    }
-    //  }
+    protected void applyStyleToHeaderCell(
+            final HeadExportColumn column,
+            final int rowIndex,
+            final int columnIndex,
+            final Map<String, PdfCellStyle> headerCellStylesById,
+            final ExportStyleProvider styleProvider,
+            final Cell cell) {
+
+        final PdfCellStyle cellStyle = headerCellStylesById.get(column.getId());
+        if (cellStyle == null) {
+            return;
+        }
+        PdfCellStyle cellStyle1 = cellStyle;
+        if (cellStyle1 == null) {
+            cellStyle1 = new DefaultPdfPCellStyle();
+        }
+        updateCellStyle(cell, cellStyle1);
+
+        final PdfCellStyle userStyle = (PdfCellStyle) styleProvider.getHeaderCellStyle(
+                new CellStyleContext<>(
+                        rowIndex,
+                        columnIndex,
+                        column.getId(),
+                        null,
+                        cellStyle,
+                        () -> {
+                            final PdfCellStyle ret = new DefaultPdfPCellStyle();
+                            //  TODO check if it is necessary                          ret.set(columnStyle);
+                            return ret;
+                        },
+                        () -> new DefaultPdfDataFormat()));
+        if (userStyle != null) {
+            updateCellStyle(cell, userStyle);
+        }
+    }
 
     private void assignCellValue(final Cell cell, final Object value, final PdfCellStyle columnStyle) {
         if (value == null) {
@@ -490,62 +486,56 @@ public abstract class BasePdfExporter<T extends Document> implements Exporter<T>
         //        }
     }
 
-    //  private void addHeaderStyles(
-    //      final Sheet sheet,
-    //      final HeadExportColumn column,
-    //      final Map<String, CellStyle> headerCellStylesById,
-    //      final ExportStyleProvider styleProvider) {
-    //
-    //    DefaultHeadExportColumn<ExportColumnStyle> defaultHeadExportColumn = null;
-    //    ExportColumnStyle styleFromAnnotations = null;
-    //    /*
-    //     * Primero extraemos el estilo de las anotaciones de las columnas, si hay alguna
-    //     */
-    //    if (DefaultHeadExportColumn.class.isAssignableFrom(column.getClass())) {
-    //      defaultHeadExportColumn = (DefaultHeadExportColumn<ExportColumnStyle>) column;
-    //      styleFromAnnotations = defaultHeadExportColumn.getStyle();
-    //    } else if (ExportColumn.class.isAssignableFrom(column.getClass())) {
-    //      final ExportColumn exportColumn = (ExportColumn) column;
-    //      styleFromAnnotations = (ExportColumnStyle) exportColumn.getStyle();
-    //    }
-    //
-    //    /*
-    //     * Si no hay ningún estilo de anotaciones tomamos el estilo de la columna Si hay alguno le asignamos
-    //     * los valores del estilo de la columna del styleProvider
-    //     */
-    //    ExportColumnStyle finalStyle = styleFromAnnotations;
-    //    if (styleProvider != null) {
-    //      if (finalStyle == null) {
-    //        finalStyle = styleProvider.getColumnStyle(column.getId());
-    //      } else {
-    //        finalStyle.set(styleProvider.getColumnStyle(column.getId()));
-    //      }
-    //    }
-    //
-    //    /*
-    //     * Guardamos el estilo en un mapa por el id de la columna
-    //     */
-    //    if (finalStyle != null) {
-    //      //TODO REVIEW
-    //      //            headerCellStylesById.put(
-    //      //                    column.getId(),
-    //      //                    this.createCellStyle(
-    //      //                            sheet,
-    //      //                            finalStyle));
-    //    }
-    //    /*
-    //     * Si la columna tiene columnas anidadas hacemos lo mismo con cada una
-    //     */
-    //    if (column.getHeadExportColumnCount() > 0) {
-    //      for (int n = 0; n < column.getHeadExportColumnCount(); n++) {
-    //        this.addHeaderStyles(
-    //            sheet,
-    //            column.getHeadExportColumn(n),
-    //            headerCellStylesById,
-    //            styleProvider);
-    //      }
-    //    }
-    //  }
+    protected void addHeaderStyles(
+            final HeadExportColumn column,
+            final Map<String, PdfCellStyle> headerCellStylesById,
+            final ExportStyleProvider styleProvider) {
+
+        DefaultHeadExportColumn<ExportColumnStyle> defaultHeadExportColumn = null;
+        ExportColumnStyle styleFromAnnotations = null;
+        /*
+         * Primero extraemos el estilo de las anotaciones de las columnas, si hay alguna
+         */
+        if (DefaultHeadExportColumn.class.isAssignableFrom(column.getClass())) {
+            defaultHeadExportColumn = (DefaultHeadExportColumn<ExportColumnStyle>) column;
+            styleFromAnnotations = defaultHeadExportColumn.getStyle();
+        } else if (ExportColumn.class.isAssignableFrom(column.getClass())) {
+            final ExportColumn exportColumn = (ExportColumn) column;
+            styleFromAnnotations = (ExportColumnStyle) exportColumn.getStyle();
+        }
+
+        /*
+         * Si no hay ningún estilo de anotaciones tomamos el estilo de la columna Si hay alguno le asignamos
+         * los valores del estilo de la columna del styleProvider
+         */
+        ExportColumnStyle finalStyle = styleFromAnnotations;
+        if (styleProvider != null) {
+            if (finalStyle == null) {
+                finalStyle = styleProvider.getColumnStyle(column.getId());
+            } else {
+                finalStyle.set(styleProvider.getColumnStyle(column.getId()));
+            }
+        }
+
+        /*
+         * Guardamos el estilo en un mapa por el id de la columna
+         */
+        if (finalStyle != null) {
+            headerCellStylesById.put(
+                    column.getId(), this.createCellStyle(finalStyle, String.class));
+        }
+        /*
+         * Si la columna tiene columnas anidadas hacemos lo mismo con cada una
+         */
+        if (column.getHeadExportColumnCount() > 0) {
+            for (int n = 0; n < column.getHeadExportColumnCount(); n++) {
+                this.addHeaderStyles(
+                        column.getHeadExportColumn(n),
+                        headerCellStylesById,
+                        styleProvider);
+            }
+        }
+    }
 
     protected PdfCellStyle createCellStyle(final ExportColumnStyle columnStyle, Class<?> columnClass) {
         PdfCellStyle pdfCellStyle = PdfCellStyleUtils.createPdfCellStyle(columnStyle);
