@@ -96,9 +96,9 @@ public abstract class AbstractExportStyleProvider<T, D> implements ExportStylePr
                     || java.sql.Time.class.isAssignableFrom(columnClass)
                     || java.sql.Timestamp.class.isAssignableFrom(columnClass)
                     || java.time.LocalDateTime.class.isAssignableFrom(columnClass)) {
-                style.setDataFormatString("dd/mm/yyyy hh:mm:ss");
+                style.setDataFormatString("dd/MM/yyyy hh:mm:ss");
             } else {
-                style.setDataFormatString("dd/mm/yyyy");
+                style.setDataFormatString("dd/MM/yyyy");
             }
 
         } else {
