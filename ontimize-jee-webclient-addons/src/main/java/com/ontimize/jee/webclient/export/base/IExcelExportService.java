@@ -5,6 +5,6 @@ package com.ontimize.jee.webclient.export.base;
  */
 public interface IExcelExportService extends ExportService {
 
-    void createXlsxProviders(final ExcelExportQueryParameters excelExportParam);
+    void createXlsxProviders(final AdvancedExportQueryParameters excelExportParam);
 
 }

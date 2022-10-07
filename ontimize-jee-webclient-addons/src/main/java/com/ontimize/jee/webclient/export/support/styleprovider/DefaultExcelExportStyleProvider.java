@@ -1,14 +1,13 @@
 package com.ontimize.jee.webclient.export.support.styleprovider;
 
 
-import com.ontimize.jee.webclient.export.base.ExcelExportQueryParameters;
-import com.ontimize.jee.webclient.export.rule.CellSelectionRule;
-import com.ontimize.jee.webclient.export.rule.RowSelectionRule;
-import org.apache.poi.ss.usermodel.DataFormat;
-
 import com.ontimize.jee.webclient.export.CellStyleContext;
 import com.ontimize.jee.webclient.export.ExportColumnStyle;
+import com.ontimize.jee.webclient.export.base.AdvancedExportQueryParameters;
+import com.ontimize.jee.webclient.export.rule.CellSelectionRule;
+import com.ontimize.jee.webclient.export.rule.RowSelectionRule;
 import com.ontimize.jee.webclient.export.support.DefaultExportColumnStyle;
+import org.apache.poi.ss.usermodel.DataFormat;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
@@ -19,11 +18,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class DefaultExcelExportStyleProvider extends AbstractExcelExportStyleProvider<XSSFCellStyle> {
+public class DefaultExcelExportStyleProvider extends AbstractExportStyleProvider<XSSFCellStyle, DataFormat> {
 
     protected Map<String, XSSFCellStyle> poiCellStyles;
 
-    public DefaultExcelExportStyleProvider(ExcelExportQueryParameters exportParam) {
+    public DefaultExcelExportStyleProvider(AdvancedExportQueryParameters exportParam) {
         super(exportParam);
     }
 
@@ -166,7 +165,7 @@ public class DefaultExcelExportStyleProvider extends AbstractExcelExportStylePro
     }
 
     protected void applyExportStyleToPoiStyle(CellStyleContext<XSSFCellStyle, DataFormat> context,
-                                                   ExportColumnStyle s, XSSFCellStyle style) {
+                                              ExportColumnStyle s, XSSFCellStyle style) {
         if (s == null) {
             return;
         }
