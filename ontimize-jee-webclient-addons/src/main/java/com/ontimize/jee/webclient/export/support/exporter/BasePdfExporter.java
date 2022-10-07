@@ -353,10 +353,6 @@ public abstract class BasePdfExporter<T extends Document> implements Exporter<T>
             final Cell cell,
             final PdfCellStyle pdfCellStyle) {
 
-        //        final String dataFormatString = pdfCellStyle.getDataFormatString();
-        //        if (dataFormatString != null) {
-        ////            cellStyle.setDataFormat(sheet.getWorkbook().createDataFormat().getFormat(dataFormatString));
-        //        }
         if (pdfCellStyle.getBackgroundColor() != null) {
             cell.setBackgroundColor(pdfCellStyle.getBackgroundColor());
         }

@@ -94,7 +94,9 @@ public class DefaultPdfExportStyleProvider extends AbstractExportStyleProvider<P
         // Si existe un grupo de estilos para esa fila, primero los agregamos a
         // pdfCellStyles combinados en uno solo con el nombre a+b+c. Luego lo usamos
         for (Map.Entry<RowSelectionRule, List<String>> entry : getRowStyles().entrySet()) {
-            if (entry.getKey().match(context.getRow())) {
+            // For keeping compatibility with Excel exporting because of in Excel the header is included in row count but
+            // here the header is another component.
+            if (entry.getKey().match(context.getRow() + 1)) {
                 List<String> stylesForRow = entry.getValue();
                 String combinedStyleName = stylesForRow.stream().collect(Collectors.joining("+"));
                 // Si no existe el estilo combinado como estilo iText lo agregamos ahora
@@ -129,7 +131,9 @@ public class DefaultPdfExportStyleProvider extends AbstractExportStyleProvider<P
 
         // Si existe un grupo de estilos para esa celda en particular,
         for (Map.Entry<CellSelectionRule, List<String>> cellStyleEntrySet : getCellStyles().entrySet()) {
-            if (cellStyleEntrySet.getKey().match(context.getRow(), context.getCol())) {
+            // For keeping compatibility with Excel exporting because of in Excel the header is included in row count but
+            // here the header is another component.
+            if (cellStyleEntrySet.getKey().match(context.getRow() + 1, context.getCol())) {
                 List<String> cellStyleNamesOfCell = cellStyleEntrySet.getValue();
                 String combinedStyleName = cellStyleNamesOfCell.stream().collect(Collectors.joining("+"));
                 // Si no existe el estilo combinado como estilo iText lo agregamos ahora
