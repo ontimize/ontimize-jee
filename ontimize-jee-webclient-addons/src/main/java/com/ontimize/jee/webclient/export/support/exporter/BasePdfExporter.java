@@ -418,11 +418,7 @@ public abstract class BasePdfExporter<T extends Document> implements Exporter<T>
         if (cellStyle == null) {
             return;
         }
-        PdfCellStyle cellStyle1 = cellStyle;
-        if (cellStyle1 == null) {
-            cellStyle1 = new DefaultPdfPCellStyle();
-        }
-        updateCellStyle(cell, cellStyle1);
+        updateCellStyle(cell, cellStyle);
 
         final PdfCellStyle userStyle = (PdfCellStyle) styleProvider.getHeaderCellStyle(
                 new CellStyleContext<>(

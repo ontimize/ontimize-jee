@@ -35,15 +35,7 @@ public class DefaultPdfDataFormat implements PdfDataFormat {
             // TODO Create an specific format to transform boolean values
             return null;
         } else if (ColumnCellUtils.isDate(columnClass)) {
-            if (java.util.Date.class.isAssignableFrom(columnClass)
-                    || java.sql.Date.class.isAssignableFrom(columnClass)
-                    || java.sql.Time.class.isAssignableFrom(columnClass)
-                    || java.sql.Timestamp.class.isAssignableFrom(columnClass)
-                    || java.time.LocalDateTime.class.isAssignableFrom(columnClass)) {
-                return new SimpleDateFormat(pattern);
-            } else {
-                return new SimpleDateFormat(pattern);
-            }
+            return new SimpleDateFormat(pattern);
         }
         return null;
     }

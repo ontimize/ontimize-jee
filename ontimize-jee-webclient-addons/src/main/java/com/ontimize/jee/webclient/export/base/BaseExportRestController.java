@@ -56,8 +56,11 @@ public abstract class BaseExportRestController<T> extends ORestController<T> {
         }
     }
 
-    protected void processQueryParameter(final ExportQueryParameters exportParam) {
+    protected void processQueryParameter(final ExportQueryParameters exportParam) throws ExportException {
         FilterParameter filterParam = exportParam.getQueryParam();
+        if (exportParam.getQueryParam() == null) {
+            throw new ExportException("'queryParam' attribute not found!");
+        }
 
         Map<?, ?> kvQueryParameter = filterParam != null ? filterParam.getFilter() : new HashMap<>();
         List<?> avQueryParameter = filterParam != null ? filterParam.getColumns() : new ArrayList<>();
