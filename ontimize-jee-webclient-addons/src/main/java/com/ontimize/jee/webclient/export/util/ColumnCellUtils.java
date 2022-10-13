@@ -12,10 +12,10 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Calendar;
 
 /**
  * @author <a href=""></a>
- *
  */
 public class ColumnCellUtils {
 
@@ -23,18 +23,19 @@ public class ColumnCellUtils {
         // no-op
     }
 
-    private static final Class<?>[] numericTypes = new Class[] { byte.class, Byte.class, short.class, Short.class,
+    private static final Class<?>[] numericTypes = new Class[]{byte.class, Byte.class, short.class, Short.class,
             int.class, Integer.class, long.class, Long.class, float.class, Float.class, double.class, Double.class,
-            BigInteger.class, BigDecimal.class };
+            BigInteger.class, BigDecimal.class};
 
-    private static final Class<?>[] dateTypes = new Class[] { LocalDate.class,
-            LocalDateTime.class,
-            Timestamp.class, Time.class, Date.class, java.util.Date.class };
+    private static final Class<?>[] dateTypes = new Class[]{LocalDate.class,
+            LocalDateTime.class, Calendar.class,
+            Timestamp.class, Time.class, Date.class, java.util.Date.class};
 
-    private static final Class<?>[] booleanTypes = new Class[] { boolean.class, Boolean.class };
+    private static final Class<?>[] booleanTypes = new Class[]{boolean.class, Boolean.class};
 
     /**
      * Chequea si number.
+     *
      * @param type type
      * @return true, si number
      */
@@ -52,6 +53,7 @@ public class ColumnCellUtils {
 
     /**
      * Chequea si date.
+     *
      * @param type type
      * @return true, si date
      */
@@ -69,6 +71,7 @@ public class ColumnCellUtils {
 
     /**
      * Chequea si boolean.
+     *
      * @param type type
      * @return true, si boolean
      */

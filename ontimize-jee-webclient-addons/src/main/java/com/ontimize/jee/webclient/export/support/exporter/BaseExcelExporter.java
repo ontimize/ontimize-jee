@@ -1,26 +1,22 @@
 package com.ontimize.jee.webclient.export.support.exporter;
 
-import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Supplier;
-import java.util.stream.IntStream;
-
 import com.ontimize.jee.webclient.export.CellStyleContext;
 import com.ontimize.jee.webclient.export.ExcelExporter;
 import com.ontimize.jee.webclient.export.ExportColumn;
 import com.ontimize.jee.webclient.export.ExportColumnStyle;
-import com.ontimize.jee.webclient.export.Exporter;
 import com.ontimize.jee.webclient.export.HeadExportColumn;
 import com.ontimize.jee.webclient.export.SheetContext;
 import com.ontimize.jee.webclient.export.exception.ExportException;
+import com.ontimize.jee.webclient.export.helpers.ExcelHelper;
+import com.ontimize.jee.webclient.export.providers.ExportColumnProvider;
 import com.ontimize.jee.webclient.export.providers.ExportDataProvider;
+import com.ontimize.jee.webclient.export.providers.ExportStyleProvider;
+import com.ontimize.jee.webclient.export.providers.SheetNameProvider;
+import com.ontimize.jee.webclient.export.support.DefaultExportColumnStyle;
+import com.ontimize.jee.webclient.export.support.DefaultHeadExportColumn;
+import com.ontimize.jee.webclient.export.support.sheetnameprovider.DefaultSheetNameProvider;
+import com.ontimize.jee.webclient.export.util.ColumnCellUtils;
+import com.ontimize.jee.webclient.export.util.ExportOptions;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.DataFormat;
@@ -31,15 +27,20 @@ import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 
-import com.ontimize.jee.webclient.export.support.DefaultExportColumnStyle;
-import com.ontimize.jee.webclient.export.support.sheetnameprovider.DefaultSheetNameProvider;
-import com.ontimize.jee.webclient.export.helpers.ExcelHelper;
-import com.ontimize.jee.webclient.export.providers.ExcelExportDataProvider;
-import com.ontimize.jee.webclient.export.providers.ExportColumnProvider;
-import com.ontimize.jee.webclient.export.providers.ExportStyleProvider;
-import com.ontimize.jee.webclient.export.providers.SheetNameProvider;
-import com.ontimize.jee.webclient.export.support.DefaultHeadExportColumn;
-import com.ontimize.jee.webclient.export.util.ExportOptions;
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Supplier;
+import java.util.stream.IntStream;
 
 /**
  * Exportador base, que exporta a partir de un contexto y unos providers.
@@ -64,8 +65,8 @@ public abstract class BaseExcelExporter<T extends Workbook> implements ExcelExpo
             final ExportColumnProvider exportColumnProvider,
             final ExportDataProvider dataProvider,
             final ExportStyleProvider styleProvider,
-            ExportOptions exportOptions)  throws ExportException {
-        return this.export(exportColumnProvider, dataProvider, styleProvider, new DefaultSheetNameProvider(),exportOptions);
+            ExportOptions exportOptions) throws ExportException {
+        return this.export(exportColumnProvider, dataProvider, styleProvider, new DefaultSheetNameProvider(), exportOptions);
     }
 
     /**
@@ -130,10 +131,10 @@ public abstract class BaseExcelExporter<T extends Workbook> implements ExcelExpo
     }
 
     public void addHeader(final ExportDataProvider provider, final Sheet sheet,
-            final List<HeadExportColumn> userHeaderColumns,
-            final Map<String, CellStyle> headerCellStylesById,
-            final ExportOptions exportOptions,
-            final ExportStyleProvider styleProvider) {
+                          final List<HeadExportColumn> userHeaderColumns,
+                          final Map<String, CellStyle> headerCellStylesById,
+                          final ExportOptions exportOptions,
+                          final ExportStyleProvider styleProvider) {
         if (userHeaderColumns != null) {
             this.createHeader(
                     provider,
@@ -304,35 +305,35 @@ public abstract class BaseExcelExporter<T extends Workbook> implements ExcelExpo
         // También volvemos a aplicar el estilo de la celda al bloque creado
         final int headerHeight = sheet.getLastRowNum();
         userHeaderColumns.stream()
-            .filter(t -> t.getHeadExportColumnCount() == 0)
-            .forEach(column -> {
-                if (ExportColumn.class.isAssignableFrom(column.getClass())) {
-                    final ExportColumn exportColumn = (ExportColumn) column;
+                .filter(t -> t.getHeadExportColumnCount() == 0)
+                .forEach(column -> {
+                    if (ExportColumn.class.isAssignableFrom(column.getClass())) {
+                        final ExportColumn exportColumn = (ExportColumn) column;
 //                    final int columnNumber = provider.getColumnIndex(exportColumn);
-                    final int columnNumber = userHeaderColumns.indexOf(column);
-                    if (headerHeight > 0) {
-                        final CellRangeAddress region = new CellRangeAddress(
-                                0,
-                                headerHeight,
-                                columnNumber,
-                                columnNumber);
-                        sheet.addMergedRegion(region);
-                        for (int i = 0; i <= headerHeight; i++) {
-                            if (sheet.getRow(i) == null) {
-                                sheet.createRow(i);
-                            }
-                            Cell cell = sheet.getRow(i).getCell(columnNumber);
-                            if (cell == null) {
-                                cell = sheet.getRow(i).createCell(columnNumber);
-                            }
+                        final int columnNumber = userHeaderColumns.indexOf(column);
+                        if (headerHeight > 0) {
+                            final CellRangeAddress region = new CellRangeAddress(
+                                    0,
+                                    headerHeight,
+                                    columnNumber,
+                                    columnNumber);
+                            sheet.addMergedRegion(region);
+                            for (int i = 0; i <= headerHeight; i++) {
+                                if (sheet.getRow(i) == null) {
+                                    sheet.createRow(i);
+                                }
+                                Cell cell = sheet.getRow(i).getCell(columnNumber);
+                                if (cell == null) {
+                                    cell = sheet.getRow(i).createCell(columnNumber);
+                                }
 
-                            this.applyStyleToHeaderCell(sheet, exportColumn, 0, columnNumber, headerCellStylesById,
-                                    styleProvider,
-                                    cell);
+                                this.applyStyleToHeaderCell(sheet, exportColumn, 0, columnNumber, headerCellStylesById,
+                                        styleProvider,
+                                        cell);
+                            }
                         }
                     }
-                }
-            });
+                });
         if (exportOptions.isFreezeHeaders()) {
             sheet.createFreezePane(0, headerHeight + 1);
         }
@@ -444,7 +445,7 @@ public abstract class BaseExcelExporter<T extends Workbook> implements ExcelExpo
 
 //        IntStream.range(0, bodyColumns.size())
         bodyColumns.stream()
-            .forEach(column -> {
+                .forEach(column -> {
 //                final int dataProviderColumnIndex = dataProvider.getColumnIndex(bodyColumns.get(columnIndex));
 //                if (dataProviderColumnIndex != -1) {
 //                    final ExportColumn column = bodyColumns.get(dataProviderColumnIndex);
@@ -456,8 +457,8 @@ public abstract class BaseExcelExporter<T extends Workbook> implements ExcelExpo
                      * tipo de dato que contiene. Luego el estilo para esa columna según el styleProvider
                      */
                     this.exportColumnStyle
-                        .set(styleProvider.getColumnStyleByType(objectClass))
-                        .set(styleProvider.getColumnStyle(column.getId()));
+                            .set(styleProvider.getColumnStyleByType(objectClass))
+                            .set(styleProvider.getColumnStyle(column.getId()));
                     final CellStyle cellStyle = this.createCellStyle(
                             sheet,
                             this.exportColumnStyle);
@@ -465,7 +466,7 @@ public abstract class BaseExcelExporter<T extends Workbook> implements ExcelExpo
                             column.getId(),
                             cellStyle);
 //                }
-            });
+                });
         return bodyCellStyles;
     }
 
@@ -551,6 +552,16 @@ public abstract class BaseExcelExporter<T extends Workbook> implements ExcelExpo
             }
         } else if (Boolean.class.isAssignableFrom(value.getClass())) {
             cell.setCellValue((Boolean) value);
+        } else if (ColumnCellUtils.isDate(value.getClass())) {
+            if (Date.class.isAssignableFrom(value.getClass())) {
+                cell.setCellValue((Date) value);
+            } else if (LocalDate.class.isAssignableFrom(value.getClass())) {
+                cell.setCellValue((LocalDate) value);
+            } else if (LocalDateTime.class.isAssignableFrom(value.getClass())) {
+                cell.setCellValue((LocalDateTime) value);
+            } else if (Calendar.class.isAssignableFrom(value.getClass())) {
+                cell.setCellValue((Calendar) value);
+            }
         } else {
             final Date date = parseStringAsDate(value);
             if (date != null) {
@@ -559,19 +570,6 @@ public abstract class BaseExcelExporter<T extends Workbook> implements ExcelExpo
                 cell.setCellValue(String.valueOf(value));
             }
         }
-        // else if (Date.class.isAssignableFrom(value.getClass())) {
-        // final Date d = (Date) value;
-        // cell.setCellValue(d);
-        // } else if (LocalDate.class.isAssignableFrom(value.getClass())) {
-        // final LocalDate d = (LocalDate) value;
-        // final Date date = Date.from(d.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
-        // cell.setCellValue(date);
-        // } else if (Calendar.class.isAssignableFrom(value.getClass())) {
-        // final Calendar date = (Calendar) value;
-        // cell.setCellValue(date);
-        // } else {
-        //
-        // }
     }
 
     private void addHeaderStyles(
