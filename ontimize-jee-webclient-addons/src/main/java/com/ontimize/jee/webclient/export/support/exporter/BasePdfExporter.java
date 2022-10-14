@@ -7,6 +7,7 @@ import com.itextpdf.layout.borders.SolidBorder;
 import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.properties.UnitValue;
 import com.ontimize.jee.webclient.export.CellStyleContext;
 import com.ontimize.jee.webclient.export.ExportColumn;
 import com.ontimize.jee.webclient.export.ExportColumnStyle;
@@ -80,6 +81,7 @@ public abstract class BasePdfExporter<T extends Document> implements Exporter<T>
         try (final FileOutputStream fileOutputStream = new FileOutputStream(pdfFile);) {
             final T document = this.buildDocument();
             Table pdfTable = this.createPdfTable(exportColumnProvider);
+            document.add(pdfTable);
 
             final Map<String, PdfCellStyle> headerCellStylesById = this.addHeaderStyles(
                     exportColumnProvider.getHeaderColumns(),
@@ -102,7 +104,8 @@ public abstract class BasePdfExporter<T extends Document> implements Exporter<T>
                     styleProvider,
                     exportOptions);
 
-            document.add(pdfTable);
+            // Tell the table that there are not more records
+            pdfTable.complete();
 
             // IMPORTANT! close the document
             document.close();
@@ -114,9 +117,9 @@ public abstract class BasePdfExporter<T extends Document> implements Exporter<T>
 
     public Table createPdfTable(final ExportColumnProvider exportColumnProvider) {
         int numCols = Math.max(exportColumnProvider.getHeaderColumns().size(), exportColumnProvider.getBodyColumns().size());
-        Table table = new Table(numCols);
+        Table table = new Table(UnitValue.createPercentArray(numCols), true);
         table.setBorder(Border.NO_BORDER);
-        table.setAutoLayout();
+
         return table;
     }
 
@@ -160,6 +163,11 @@ public abstract class BasePdfExporter<T extends Document> implements Exporter<T>
         // Para cada fila...
         IntStream.range(0, dataProvider.getNumberOfRows()).forEach(rowIndex -> {
             userColumns.stream().forEach(column -> {
+                if (rowIndex % 50 == 0) {
+                    // Flushes the current content, e.g. places it on the document.
+                    // Please bear in mind that the method (alongside complete()) make sense only for 'large tables'
+                    pdfTable.flush();
+                }
                 final Object value = dataProvider.getCellValue(rowIndex, column.getId());
                 this.addCell(
                         pdfTable,
