@@ -217,6 +217,7 @@ public abstract class BaseExcelExporter<T extends Workbook> implements ExcelExpo
                         value,
                         styleProvider,
                         bodyCellStyles);
+                actualSheet.autoSizeColumn(userColumns.indexOf(column));
             });
         });
     }
@@ -326,10 +327,10 @@ public abstract class BaseExcelExporter<T extends Workbook> implements ExcelExpo
                                 if (cell == null) {
                                     cell = sheet.getRow(i).createCell(columnNumber);
                                 }
-
-                                this.applyStyleToHeaderCell(sheet, exportColumn, 0, columnNumber, headerCellStylesById,
-                                        styleProvider,
-                                        cell);
+// FIXME
+//                                this.applyStyleToHeaderCell(sheet, exportColumn, 0, columnNumber, headerCellStylesById,
+//                                        styleProvider,
+//                                        cell);
                             }
                         }
                     }
@@ -366,8 +367,9 @@ public abstract class BaseExcelExporter<T extends Workbook> implements ExcelExpo
 
         cell.setCellValue(column.getTitle());
         if (styleProvider != null) {
-            this.applyStyleToHeaderCell(sheet, column, rowIndex, columnIndex, headerCellStylesById, styleProvider,
-                    cell);
+            // FIXME
+//            this.applyStyleToHeaderCell(sheet, column, rowIndex, columnIndex, headerCellStylesById, styleProvider,
+//                    cell);
         }
 
         final int cCount = column.getHeadExportColumnCount();
