@@ -37,33 +37,10 @@ public class DefaultExcelExportStyleProvider extends AbstractExportStyleProvider
             });
         }
         List<String> finalCombinedStyleNames = new ArrayList<>();
-        for (Map.Entry<String, List<String>> entry : getColumnStyles().entrySet()) {
-            if (entry.getKey().equals(context.getColumnId())) {
-                List<String> stylesForColumn = entry.getValue();
-                String combinedStyleName = stylesForColumn.stream().collect(Collectors.joining("+"));
-                // Si no existe el estilo combinado como estilo poi lo agregamos ahora
-                if (!poiCellStyles.containsKey(combinedStyleName)) {
-                    XSSFCellStyle combined = context.getCellStyleCreator().get();
-                    for (String style : stylesForColumn) {
-                        applyExportStyleToPoiStyle(context, getStyles().get(style), combined);
-                    }
-                    poiCellStyles.put(combinedStyleName, combined);
-                }
-                finalCombinedStyleNames.add(combinedStyleName);
-            }
-        }
+        combineColumnStyles(context, finalCombinedStyleNames);
+
         if (!finalCombinedStyleNames.isEmpty()) {
-            String combinedStyleName = finalCombinedStyleNames.stream().collect(Collectors.joining("+"));
-            if (!poiCellStyles.containsKey(combinedStyleName)) {
-                for (String styleName : finalCombinedStyleNames) {
-                    XSSFCellStyle combined = context.getCellStyleCreator().get();
-                    for (String style : finalCombinedStyleNames) {
-                        applyExportStyleToPoiStyle(context, getStyles().get(style), combined);
-                    }
-                    poiCellStyles.put(combinedStyleName, combined);
-                }
-            }
-            return poiCellStyles.get(combinedStyleName);
+            return getOrStoreCombinedStyleFromCache(context, finalCombinedStyleNames);
         }
         return null;
     }
@@ -112,21 +89,7 @@ public class DefaultExcelExportStyleProvider extends AbstractExportStyleProvider
 
         // Si existe un grupo de estilos para esa columna, primero los agregamos a
         // poiCellStyles combinados en uno solo con el nombre a+b+c. Luego lo usamos
-        for (Map.Entry<String, List<String>> entry : getColumnStyles().entrySet()) {
-            if (entry.getKey().equals(context.getColumnId())) {
-                List<String> stylesForColumn = entry.getValue();
-                String combinedStyleName = stylesForColumn.stream().collect(Collectors.joining("+"));
-                // Si no existe el estilo combinado como estilo poi lo agregamos ahora
-                if (!poiCellStyles.containsKey(combinedStyleName)) {
-                    XSSFCellStyle combined = context.getCellStyleCreator().get();
-                    for (String style : stylesForColumn) {
-                        applyExportStyleToPoiStyle(context, getStyles().get(style), combined);
-                    }
-                    poiCellStyles.put(combinedStyleName, combined);
-                }
-                finalCombinedStyleNames.add(combinedStyleName);
-            }
-        }
+        combineColumnStyles(context, finalCombinedStyleNames);
 
         // Si existe un grupo de estilos para esa celda en particular,
         for (Map.Entry<CellSelectionRule, List<String>> cellStyleEntrySet : getCellStyles().entrySet()) {
@@ -148,18 +111,7 @@ public class DefaultExcelExportStyleProvider extends AbstractExportStyleProvider
         // Si se han encontrado varios estilos se vuelven a combinar en uno solo y se
         // agrega a poiCellStyles
         if (!finalCombinedStyleNames.isEmpty()) {
-            String combinedStyleName = finalCombinedStyleNames.stream().collect(Collectors.joining("+"));
-            if (!poiCellStyles.containsKey(combinedStyleName)) {
-                for (String styleName : finalCombinedStyleNames) {
-                    XSSFCellStyle combined = context.getCellStyleCreator().get();
-                    for (String style : finalCombinedStyleNames) {
-                        applyExportStyleToPoiStyle(context, getStyles().get(style), combined);
-                    }
-                    poiCellStyles.put(combinedStyleName, combined);
-                }
-
-            }
-            return poiCellStyles.get(combinedStyleName);
+            return getOrStoreCombinedStyleFromCache(context, finalCombinedStyleNames);
         }
         return null;
     }
@@ -189,5 +141,41 @@ public class DefaultExcelExportStyleProvider extends AbstractExportStyleProvider
             style.setFillForegroundColor(index);
         }
     }
+
+    protected void combineColumnStyles(CellStyleContext<XSSFCellStyle, DataFormat> context,
+                                       List<String> finalCombinedStyleNames) {
+        for (Map.Entry<String, List<String>> entry : getColumnStyles().entrySet()) {
+            if (entry.getKey().equals(context.getColumnId())) {
+                List<String> stylesForColumn = entry.getValue();
+                String combinedStyleName = stylesForColumn.stream().collect(Collectors.joining("+"));
+                // Si no existe el estilo combinado como estilo poi lo agregamos ahora
+                if (!poiCellStyles.containsKey(combinedStyleName)) {
+                    XSSFCellStyle combined = context.getCellStyleCreator().get();
+                    for (String style : stylesForColumn) {
+                        applyExportStyleToPoiStyle(context, getStyles().get(style), combined);
+                    }
+                    poiCellStyles.put(combinedStyleName, combined);
+                }
+                finalCombinedStyleNames.add(combinedStyleName);
+            }
+        }
+    }
+
+    protected XSSFCellStyle getOrStoreCombinedStyleFromCache(CellStyleContext<XSSFCellStyle, DataFormat> context,
+                                                             List<String> finalCombinedStyleNames) {
+        String combinedStyleName = finalCombinedStyleNames.stream().collect(Collectors.joining("+"));
+        if (!poiCellStyles.containsKey(combinedStyleName)) {
+            for (String styleName : finalCombinedStyleNames) {
+                XSSFCellStyle combined = context.getCellStyleCreator().get();
+                for (String style : finalCombinedStyleNames) {
+                    applyExportStyleToPoiStyle(context, getStyles().get(style), combined);
+                }
+                poiCellStyles.put(combinedStyleName, combined);
+            }
+
+        }
+        return poiCellStyles.get(combinedStyleName);
+    }
+
 
 }
