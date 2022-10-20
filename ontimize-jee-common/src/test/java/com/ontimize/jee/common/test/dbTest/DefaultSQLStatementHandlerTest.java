@@ -1,5 +1,6 @@
 package com.ontimize.jee.common.test.dbTest;
 
+import com.ontimize.jee.common.db.SQLStatementBuilder;
 import com.ontimize.jee.common.db.handler.DefaultSQLStatementHandler;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -9,6 +10,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,6 +24,165 @@ class DefaultSQLStatementHandlerTest {
     @InjectMocks
     DefaultSQLStatementHandler defaultSQLStatementHandler;
 
+    @Test
+    void checkColumnName_when_receive_columnName_expect_check_columnName() {
+        var result = this.defaultSQLStatementHandler.checkColumnName("COLUMN1");
+        assertFalse(result);
+
+        result = this.defaultSQLStatementHandler.checkColumnName("MY COLUMN");
+        assertTrue(result);
+
+        result = this.defaultSQLStatementHandler.checkColumnName("COLUMN1 as MYCOLUMN");
+        assertFalse(result);
+
+        result = this.defaultSQLStatementHandler.checkColumnName("COLUMN1 as MY COLUMN");
+        assertTrue(result);
+
+        result = this.defaultSQLStatementHandler.checkColumnName("MY COLUM 1 as MY ALIAS COLUMN 1");
+        assertTrue(result);
+
+
+    }
+
+    @Nested
+    class createUpdateQuery {
+
+        @Test
+        void when_receive_table_and_attributes_expect_update_query() {
+            String table = "table1";
+            HashMap attributes = new HashMap();
+            //HashMap keysValues = null;
+
+            attributes.put("field1", "value1");
+
+            var result = defaultSQLStatementHandler.createUpdateQuery(table, attributes, null);
+            var expected = "UPDATE table1 SET field1 = ?";
+
+            assertEquals(expected, result.getSQLStatement().trim());
+
+        }
+
+        @Test
+        void when_receive_table_and_attributes_and_keysValues_expect_update_query() {
+            String table = "table1";
+            HashMap attributes = new HashMap();
+            HashMap keysValues = new HashMap();
+
+            attributes.put("field1", "value1");
+            keysValues.put("keys1", "values1");
+
+            var result = defaultSQLStatementHandler.createUpdateQuery(table, attributes, null);
+            var expected = "UPDATE table1 SET field1 = ?";
+
+            assertEquals(expected, result.getSQLStatement().trim());
+
+        }
+    }
+
+    @Nested
+    class createDeleteQuery {
+        @Test
+        void when_receive_table_expect_delete_query() {
+            String table = "table1";
+
+            var result = defaultSQLStatementHandler.createDeleteQuery(table, null);
+            var expected = "DELETE  FROM table1";
+
+            assertEquals(expected, result.getSQLStatement().trim());
+
+        }
+
+        @Test
+        void when_receive_table_and_keysValues_expect_delete_query() {
+            String table = "table1";
+            HashMap keysValues = new HashMap();
+
+            keysValues.put("field1", "value1");
+
+            var result = defaultSQLStatementHandler.createDeleteQuery(table, keysValues);
+            var expected = "DELETE  FROM table1  WHERE field1 = ?";
+
+            assertEquals(expected, result.getSQLStatement().trim());
+
+        }
+    }
+
+    @Nested
+    class createInsertQuery {
+
+        @Test
+        void when_receive_table_and_attibutes_expect_insert_query() {
+            String table = "table1";
+            HashMap attributes = new HashMap();
+
+            attributes.put("field1", "value1");
+
+            var result = defaultSQLStatementHandler.createInsertQuery(table, attributes);
+            var expected = "INSERT INTO table1 ( field1 )  VALUES ( ?  )";
+
+            assertEquals(expected, result.getSQLStatement().trim());
+        }
+    }
+
+    @Nested
+    class createQueryConditionsWithoutWhere {
+
+
+        @Test
+        void when_receive_conditions_expect_query_without_where() {
+            HashMap conditions = new HashMap();
+            ArrayList wildcard = new ArrayList();
+            ArrayList values = new ArrayList();
+
+            conditions.put("field1", "value1");
+
+            var result = defaultSQLStatementHandler.createQueryConditionsWithoutWhere(conditions, wildcard, values);
+            var expected = "field1 = ?";
+
+            assertEquals(expected, result.trim());
+        }
+
+        @Test
+        void when_receive_conditions_and_wildcard_expect_query_without_where() {
+            HashMap conditions = new HashMap();
+            ArrayList wildcard = new ArrayList();
+            ArrayList values = new ArrayList();
+
+            conditions.put("field1", "value1");
+            conditions.put("field2", "value2");
+            wildcard.add("wildcard1");
+
+            var result = defaultSQLStatementHandler.createQueryConditionsWithoutWhere(conditions, wildcard, values);
+            var expected = "field1 = ?  AND field2 = ?";
+
+            assertEquals(expected, result.trim());
+        }
+
+        @Test
+        void when_receive_conditions_and_wildcard_and_values_expect_query_without_where() {
+            HashMap conditions = new HashMap();
+            ArrayList wildcard = new ArrayList();
+            ArrayList values = new ArrayList();
+
+            conditions.put("field1", "value1");
+            wildcard.add("wildcard1");
+            values.add("values1");
+
+            var result = defaultSQLStatementHandler.createQueryConditionsWithoutWhere(conditions, wildcard, values);
+            var expected = "field1 = ?";
+
+            assertEquals(expected, result.trim());
+        }
+
+        @Test
+        void when_receive_conditions_but_not_wildcard_and_values_expect_Exception_NullPointerException() {
+            HashMap conditions = new HashMap();
+
+            conditions.put("field1", "value1");
+
+            assertThrows(NullPointerException.class, () -> defaultSQLStatementHandler.createQueryConditionsWithoutWhere(conditions, null, null));
+        }
+    }
 
     @Nested
     class createCountQuery {
@@ -88,6 +250,21 @@ class DefaultSQLStatementHandlerTest {
 
             var result = defaultSQLStatementHandler.createCountQuery(table, conditions, wildcards, countColumns);
             var expected = "SELECT  COUNT( countColumns1 )  AS \"TotalRecordNumber\"  FROM  [my-table]   WHERE field1 = ?";
+
+            assertEquals(expected, result.getSQLStatement().trim());
+        }
+
+        @Test
+        void when_receive_table_and_countColumns_expect_count_query() {
+            var table = "my-table";
+            HashMap conditions = null;
+            ArrayList wildcards = null;
+            ArrayList countColumns = new ArrayList();
+
+            countColumns.add("countColumns1");
+
+            var result = defaultSQLStatementHandler.createCountQuery(table, null, null, countColumns);
+            var expected = "SELECT  COUNT( countColumns1 )  AS \"TotalRecordNumber\"  FROM  [my-table]";
 
             assertEquals(expected, result.getSQLStatement().trim());
         }
@@ -616,159 +793,76 @@ class DefaultSQLStatementHandlerTest {
         }
     }
 
-    @Test
-    void createSortStatement_when_receive_sortColumns_expect_SortStatement() {
-        ArrayList sortColumns = new ArrayList();
+    @Nested
+    class createSortStatement {
 
-        sortColumns.add("sortColumns");
+        @Test
+        void when_receive_sortColumns_expect_SortStatement() {
+            ArrayList sortColumns = new ArrayList();
 
-        var result = this.defaultSQLStatementHandler.createSortStatement(sortColumns);
-        var expected="ORDER BY sortColumns";
+            sortColumns.add("sortColumns");
 
-        assertEquals(expected, result.trim());
-    }
+            var result = defaultSQLStatementHandler.createSortStatement(sortColumns);
+            var expected = "ORDER BY sortColumns";
 
-
-    @Test
-    void createSortStatement_when_receive_sortColumns_and_descending_is_true_expect_SortStatement() {
-        ArrayList sortColumns = new ArrayList();
-        boolean descending = true;
-
-        sortColumns.add("sortColumns");
-
-        var result = this.defaultSQLStatementHandler.createSortStatement(sortColumns, descending);
-        var expected= "ORDER BY sortColumns DESC";
-
-        assertEquals(expected, result.trim());
-    }
-
-    @Test
-    void createSortStatement_when_receive_sortColumns_and_descending_is_false_expect_SortStatement() {
-        ArrayList sortColumns = new ArrayList();
-        boolean descending = false;
-
-        sortColumns.add("sortColumns");
-
-        var result = this.defaultSQLStatementHandler.createSortStatement(sortColumns, descending);
-        var expected= "ORDER BY sortColumns";
-
-        assertEquals(expected, result.trim());
-    }
+            assertEquals(expected, result.trim());
+        }
 
 
-    @Test
-    void createQueryConditionsWithoutWhere_when_receive_conditions_expect_query_without_where() {
-        HashMap conditions = new HashMap();
-        ArrayList wildcard = new ArrayList();
-        ArrayList values = new ArrayList();
+        @Test
+        void when_receive_sortColumns_and_descending_is_true_expect_SortStatement() {
+            ArrayList sortColumns = new ArrayList();
+            boolean descending = true;
 
-        conditions.put("field1", "value1");
+            sortColumns.add("sortColumns");
 
-        var result = this.defaultSQLStatementHandler.createQueryConditionsWithoutWhere(conditions, wildcard, values);
-        var expected= "field1 = ?";
+            var result = defaultSQLStatementHandler.createSortStatement(sortColumns, descending);
+            var expected = "ORDER BY sortColumns DESC";
 
-        assertEquals(expected, result.trim());
-    }
+            assertEquals(expected, result.trim());
+        }
 
-    @Test
-    void createQueryConditionsWithoutWhere_when_receive_conditions_and_wildcard_expect_query_without_where() {
-        HashMap conditions = new HashMap();
-        ArrayList wildcard = new ArrayList();
-        ArrayList values = new ArrayList();
+        @Test
+        void when_receive_sortColumns_and_descending_is_false_expect_SortStatement() {
+            ArrayList sortColumns = new ArrayList();
+            boolean descending = false;
 
-        conditions.put("field1", "value1");
-        conditions.put("field2", "value2");
-        wildcard.add("wildcard1");
+            sortColumns.add("sortColumns");
 
-        var result = this.defaultSQLStatementHandler.createQueryConditionsWithoutWhere(conditions, wildcard, values);
-        var expected= "field1 = ?  AND field2 = ?";
+            var result = defaultSQLStatementHandler.createSortStatement(sortColumns, descending);
+            var expected = "ORDER BY sortColumns";
 
-        assertEquals(expected, result.trim());
-    }
-
-    @Test
-    void createQueryConditionsWithoutWhere_when_receive_conditions_and_wildcard_and_values_expect_query_without_where() {
-        HashMap conditions = new HashMap();
-        ArrayList wildcard = new ArrayList();
-        ArrayList values = new ArrayList();
-
-        conditions.put("field1", "value1");
-        wildcard.add("wildcard1");
-        values.add("values1");
-
-        var result = this.defaultSQLStatementHandler.createQueryConditionsWithoutWhere(conditions, wildcard, values);
-        var expected= "field1 = ?";
-
-        assertEquals(expected, result.trim());
-    }
-
-    @Test
-    void createQueryConditionsWithoutWhere_when_receive_conditions_but_not_wildcard_and_values_expect_Exception_NullPointerException() {
-        HashMap conditions = new HashMap();
-
-        conditions.put("field1", "value1");
-
-        assertThrows(NullPointerException.class, () -> this.defaultSQLStatementHandler.createQueryConditionsWithoutWhere(conditions, null, null));
-    }
-
-    @Test
-    void checkColumnName_when_receive_columnName_expect_check_columnName() {
-        var result = this.defaultSQLStatementHandler.checkColumnName("COLUMN1");
-        assertFalse(result);
-
-        result = this.defaultSQLStatementHandler.checkColumnName("MY COLUMN");
-        assertTrue(result);
-
-        result = this.defaultSQLStatementHandler.checkColumnName("COLUMN1 as MYCOLUMN");
-        assertFalse(result);
-
-        result = this.defaultSQLStatementHandler.checkColumnName("COLUMN1 as MY COLUMN");
-        assertTrue(result);
-
-        result = this.defaultSQLStatementHandler.checkColumnName("MY COLUM 1 as MY ALIAS COLUMN 1");
-        assertTrue(result);
-    }
-
-    @Test
-    void createInsertQuery_when_receive_table_expect_insert_query() {
-        String table = "table1";
-        HashMap attributes = new HashMap();
-
-        attributes.put("field1", "value1");
-
-        var result = this.defaultSQLStatementHandler.createInsertQuery(table, attributes);
-        var expected="INSERT INTO table1 ( field1 )  VALUES ( ?  )";
-
-        assertEquals(expected, result.getSQLStatement().trim());
-    }
-
-    @Test
-    void createInsertQuery_when_receive_table_and_attibutes_expect_insert_query() {
-        String table = "table1";
-        HashMap attributes = new HashMap();
-
-        attributes.put("field1", "value1");
-
-        var result = this.defaultSQLStatementHandler.createInsertQuery(table, attributes);
-        var expected= "INSERT INTO table1 ( field1 )  VALUES ( ?  )";
-
-        assertEquals(expected, result.getSQLStatement().trim());
-    }
-
-    @Test
-    void createUpdateQuery_when_receive_table_and_attributes_expect_update_query() {
-        String table = "table1";
-        HashMap attributes = new HashMap();
-        //HashMap keysValues = null;
-
-        attributes.put("field1", "value1");
-
-        var result = this.defaultSQLStatementHandler.createUpdateQuery(table, attributes, null);
-        var expected= "UPDATE table1 SET field1 = ?";
-
-        assertEquals(expected, result.getSQLStatement().trim());
+            assertEquals(expected, result.trim());
+        }
 
     }
 
 
+    @Nested
+    class createJoinSelectQuery {
+
+        @Test
+        void when_receive_principalTable_expect_JoinSelect_query() {
+
+            String principalTable;
+            String secondaryTable;
+            ArrayList principalKeys = new ArrayList();
+            List secondaryKeys;
+            List principalTableRequestedColumns;
+            List secondaryTableRequestedColumns;
+            Map principalTableConditions;
+            Map secondaryTableConditions;
+            List wildcards;
+            List columnSorting;
+            boolean forceDistinct = false;
+
+            principalKeys.add("sortColumns");
+
+            var result = defaultSQLStatementHandler.createSortStatement(principalKeys, forceDistinct);
+            var expected = "ORDER BY sortColumns DESC";
+
+            assertEquals(expected, result.trim());
+        }
+
+    }
 }
