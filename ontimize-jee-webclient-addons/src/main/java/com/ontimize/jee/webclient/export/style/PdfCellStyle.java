@@ -23,4 +23,6 @@ public interface PdfCellStyle {
     Format getDataFormatter();
 
     void setDataFormatter(final Format formatter);
+
+    void cloneStyleFrom(PdfCellStyle source);
 }

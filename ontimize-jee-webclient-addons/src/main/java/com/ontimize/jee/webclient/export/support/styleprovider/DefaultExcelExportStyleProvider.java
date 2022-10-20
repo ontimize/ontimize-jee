@@ -62,11 +62,11 @@ public class DefaultExcelExportStyleProvider extends AbstractExportStyleProvider
         // La primera vez, creamos todos los estilos poi usados y los guardamos
         if (poiCellStyles == null) {
             poiCellStyles = new HashMap<>();
-            getStyles().forEach((name, s) -> {
-                XSSFCellStyle style = context.getCellStyleCreator().get();
-                applyExportStyleToPoiStyle(context, s, style);
-                poiCellStyles.put(name, style);
-            });
+//            getStyles().forEach((name, s) -> {
+//                XSSFCellStyle style = context.getCellStyleCreator().get();
+//                applyExportStyleToPoiStyle(context, s, style);
+//                poiCellStyles.put(name, style);
+//            });
         }
 
         // Si existe un grupo de estilos para esa fila, primero los agregamos a

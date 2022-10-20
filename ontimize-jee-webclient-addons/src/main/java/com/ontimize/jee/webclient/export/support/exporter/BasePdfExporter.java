@@ -227,10 +227,10 @@ public abstract class BasePdfExporter<T extends Document> implements Exporter<T>
                         colUserIndex,
                         exportColumn.getId(),
                         cellValue,
-                        cellStyle,
+                        cellStyle1,
                         () -> {
                             final PdfCellStyle ret = new DefaultPdfPCellStyle();
-                            //  TODO check if it is necessary                          ret.set(columnStyle);
+                            ret.cloneStyleFrom(cellStyle);
                             return ret;
                         },
                         () -> new DefaultPdfDataFormat()));
@@ -437,7 +437,7 @@ public abstract class BasePdfExporter<T extends Document> implements Exporter<T>
                         cellStyle,
                         () -> {
                             final PdfCellStyle ret = new DefaultPdfPCellStyle();
-                            //  TODO check if it is necessary                          ret.set(columnStyle);
+                            ret.cloneStyleFrom(cellStyle);
                             return ret;
                         },
                         () -> new DefaultPdfDataFormat()));

@@ -56,4 +56,14 @@ public class DefaultPdfPCellStyle implements PdfCellStyle {
     public void setDataFormatter(final Format formatter) {
         this.formatter = formatter;
     }
+
+    @Override
+    public void cloneStyleFrom(PdfCellStyle source) {
+        if (source != null) {
+            this.setBackgroundColor(source.getBackgroundColor());
+            this.setHorizontalAlignment(source.getHorizontalAlignment());
+            this.setVerticalAlignment(source.getVerticalAlignment());
+            this.setDataFormatter(source.getDataFormatter());
+        }
+    }
 }
