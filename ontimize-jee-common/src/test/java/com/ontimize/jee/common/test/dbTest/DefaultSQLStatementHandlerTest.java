@@ -1,6 +1,5 @@
 package com.ontimize.jee.common.test.dbTest;
 
-import com.ontimize.jee.common.db.SQLStatementBuilder;
 import com.ontimize.jee.common.db.handler.DefaultSQLStatementHandler;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -10,8 +9,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -841,27 +838,129 @@ class DefaultSQLStatementHandlerTest {
     @Nested
     class createJoinSelectQuery {
 
+
         @Test
-        void when_receive_principalTable_expect_JoinSelect_query() {
+        void when_receive_principalTable_and_secondaryTable_and_principalKeys_and_secondaryKeys_and_principalTableRequestedColumns_and_secondaryTableRequestedColumns_and_principalTableConditions_and_secondaryTableConditions_and_wildcards_and_columnSorting_and_forceDistinct_is_false_and_descending_is_false_expect_JoinSelect_query() {
 
-            String principalTable;
-            String secondaryTable;
+            String principalTable = "principalTable";
+            String secondaryTable = "secondaryTable";
             ArrayList principalKeys = new ArrayList();
-            List secondaryKeys;
-            List principalTableRequestedColumns;
-            List secondaryTableRequestedColumns;
-            Map principalTableConditions;
-            Map secondaryTableConditions;
-            List wildcards;
-            List columnSorting;
+            ArrayList secondaryKeys = new ArrayList();
+            ArrayList principalTableRequestedColumns = new ArrayList();
+            ArrayList secondaryTableRequestedColumns = new ArrayList();
+            HashMap principalTableConditions = new HashMap();
+            HashMap secondaryTableConditions = new HashMap();
+            ArrayList wildcards = new ArrayList();
+            ArrayList columnSorting = new ArrayList();
             boolean forceDistinct = false;
+            boolean descending = false;
 
-            principalKeys.add("sortColumns");
+            principalKeys.add("principalKeys");
+            secondaryKeys.add("secondaryTable");
+            principalTableRequestedColumns.add("principalTableRequestedColumns");
+            secondaryTableRequestedColumns.add("secondaryTableRequestedColumns");
+            principalTableConditions.put("field1", "value1");
+            secondaryTableConditions.put("field2", "value2");
+            wildcards.add("wildcards1");
+            columnSorting.add("columnSorting");
 
-            var result = defaultSQLStatementHandler.createSortStatement(principalKeys, forceDistinct);
-            var expected = "ORDER BY sortColumns DESC";
+            var result = defaultSQLStatementHandler.createJoinSelectQuery(principalTable, secondaryTable, principalKeys, secondaryKeys, principalTableRequestedColumns, secondaryTableRequestedColumns, principalTableConditions, secondaryTableConditions, wildcards, columnSorting, forceDistinct, descending);
+            var expected = "SELECT principalTable.principalTableRequestedColumns , secondaryTable.secondaryTableRequestedColumns " + "FROM principalTable,secondaryTable WHERE  principalTable.principalKeys=secondaryTable.secondaryTable AND  " + "secondaryTable.field2 = ?  AND principalTable.field1 = ?  ORDER BY columnSorting";
 
-            assertEquals(expected, result.trim());
+            assertEquals(expected, result.getSQLStatement().trim());
+        }
+
+        @Test
+        void when_receive_principalTable_and_secondaryTable_and_principalKeys_and_secondaryKeys_and_principalTableRequestedColumns_and_secondaryTableRequestedColumns_and_principalTableConditions_and_secondaryTableConditions_and_wildcards_and_columnSorting_and_forceDistinct_is_true_and_descending_is_false_expect_JoinSelect_query() {
+
+            String principalTable = "principalTable";
+            String secondaryTable = "secondaryTable";
+            ArrayList principalKeys = new ArrayList();
+            ArrayList secondaryKeys = new ArrayList();
+            ArrayList principalTableRequestedColumns = new ArrayList();
+            ArrayList secondaryTableRequestedColumns = new ArrayList();
+            HashMap principalTableConditions = new HashMap();
+            HashMap secondaryTableConditions = new HashMap();
+            ArrayList wildcards = new ArrayList();
+            ArrayList columnSorting = new ArrayList();
+            boolean forceDistinct = true;
+            boolean descending = false;
+
+            principalKeys.add("principalKeys");
+            secondaryKeys.add("secondaryTable");
+            principalTableRequestedColumns.add("principalTableRequestedColumns");
+            secondaryTableRequestedColumns.add("secondaryTableRequestedColumns");
+            principalTableConditions.put("field1", "value1");
+            secondaryTableConditions.put("field2", "value2");
+            wildcards.add("wildcards1");
+            columnSorting.add("columnSorting");
+
+            var result = defaultSQLStatementHandler.createJoinSelectQuery(principalTable, secondaryTable, principalKeys, secondaryKeys, principalTableRequestedColumns, secondaryTableRequestedColumns, principalTableConditions, secondaryTableConditions, wildcards, columnSorting, forceDistinct, descending);
+            var expected = "SELECT  DISTINCT principalTable.principalTableRequestedColumns , secondaryTable.secondaryTableRequestedColumns FROM principalTable,secondaryTable WHERE  principalTable.principalKeys=secondaryTable.secondaryTable AND  secondaryTable.field2 = ?  AND principalTable.field1 = ?  ORDER BY columnSorting";
+
+            assertEquals(expected, result.getSQLStatement().trim());
+        }
+
+        @Test
+        void when_receive_principalTable_and_secondaryTable_and_principalKeys_and_secondaryKeys_and_principalTableRequestedColumns_and_secondaryTableRequestedColumns_and_principalTableConditions_and_secondaryTableConditions_and_wildcards_and_columnSorting_and_forceDistinct_is_true_and_descending_is_true_expect_JoinSelect_query() {
+
+            String principalTable = "principalTable";
+            String secondaryTable = "secondaryTable";
+            ArrayList principalKeys = new ArrayList();
+            ArrayList secondaryKeys = new ArrayList();
+            ArrayList principalTableRequestedColumns = new ArrayList();
+            ArrayList secondaryTableRequestedColumns = new ArrayList();
+            HashMap principalTableConditions = new HashMap();
+            HashMap secondaryTableConditions = new HashMap();
+            ArrayList wildcards = new ArrayList();
+            ArrayList columnSorting = new ArrayList();
+            boolean forceDistinct = true;
+            boolean descending = true;
+
+            principalKeys.add("principalKeys");
+            secondaryKeys.add("secondaryTable");
+            principalTableRequestedColumns.add("principalTableRequestedColumns");
+            secondaryTableRequestedColumns.add("secondaryTableRequestedColumns");
+            principalTableConditions.put("field1", "value1");
+            secondaryTableConditions.put("field2", "value2");
+            wildcards.add("wildcards1");
+            columnSorting.add("columnSorting");
+
+            var result = defaultSQLStatementHandler.createJoinSelectQuery(principalTable, secondaryTable, principalKeys, secondaryKeys, principalTableRequestedColumns, secondaryTableRequestedColumns, principalTableConditions, secondaryTableConditions, wildcards, columnSorting, forceDistinct, descending);
+            var expected = "SELECT  DISTINCT principalTable.principalTableRequestedColumns , secondaryTable.secondaryTableRequestedColumns FROM principalTable,secondaryTable WHERE  principalTable.principalKeys=secondaryTable.secondaryTable AND  secondaryTable.field2 = ?  AND principalTable.field1 = ?  ORDER BY columnSorting DESC";
+
+            assertEquals(expected, result.getSQLStatement().trim());
+        }
+
+        @Test
+        void when_receive_principalTable_and_secondaryTable_and_principalKeys_and_secondaryKeys_and_principalTableRequestedColumns_and_secondaryTableRequestedColumns_and_principalTableConditions_and_secondaryTableConditions_and_wildcards_and_columnSorting_and_forceDistinct_is_false_and_descending_is_true_expect_JoinSelect_query() {
+
+            String principalTable = "principalTable";
+            String secondaryTable = "secondaryTable";
+            ArrayList principalKeys = new ArrayList();
+            ArrayList secondaryKeys = new ArrayList();
+            ArrayList principalTableRequestedColumns = new ArrayList();
+            ArrayList secondaryTableRequestedColumns = new ArrayList();
+            HashMap principalTableConditions = new HashMap();
+            HashMap secondaryTableConditions = new HashMap();
+            ArrayList wildcards = new ArrayList();
+            ArrayList columnSorting = new ArrayList();
+            boolean forceDistinct = false;
+            boolean descending = true;
+
+            principalKeys.add("principalKeys");
+            secondaryKeys.add("secondaryTable");
+            principalTableRequestedColumns.add("principalTableRequestedColumns");
+            secondaryTableRequestedColumns.add("secondaryTableRequestedColumns");
+            principalTableConditions.put("field1", "value1");
+            secondaryTableConditions.put("field2", "value2");
+            wildcards.add("wildcards1");
+            columnSorting.add("columnSorting");
+
+            var result = defaultSQLStatementHandler.createJoinSelectQuery(principalTable, secondaryTable, principalKeys, secondaryKeys, principalTableRequestedColumns, secondaryTableRequestedColumns, principalTableConditions, secondaryTableConditions, wildcards, columnSorting, forceDistinct, descending);
+            var expected = "SELECT principalTable.principalTableRequestedColumns , secondaryTable.secondaryTableRequestedColumns FROM principalTable,secondaryTable WHERE  principalTable.principalKeys=secondaryTable.secondaryTable AND  secondaryTable.field2 = ?  AND principalTable.field1 = ?  ORDER BY columnSorting DESC";
+
+            assertEquals(expected, result.getSQLStatement().trim());
         }
 
     }
