@@ -1,6 +1,8 @@
 package com.ontimize.jee.common.test.dbTest;
 
+import com.ontimize.jee.common.db.SQLStatementBuilder;
 import com.ontimize.jee.common.db.handler.DefaultSQLStatementHandler;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -42,13 +44,12 @@ class DefaultSQLStatementHandlerTest {
     }
 
     @Nested
-    class createUpdateQuery {
+    class CreateUpdateQuery {
 
         @Test
         void when_receive_table_and_attributes_expect_update_query() {
             String table = "table1";
             HashMap attributes = new HashMap();
-            //HashMap keysValues = null;
 
             attributes.put("field1", "value1");
 
@@ -77,7 +78,7 @@ class DefaultSQLStatementHandlerTest {
     }
 
     @Nested
-    class createDeleteQuery {
+    class CreateDeleteQuery {
         @Test
         void when_receive_table_expect_delete_query() {
             String table = "table1";
@@ -105,7 +106,7 @@ class DefaultSQLStatementHandlerTest {
     }
 
     @Nested
-    class createInsertQuery {
+    class CreateInsertQuery {
 
         @Test
         void when_receive_table_and_attibutes_expect_insert_query() {
@@ -122,7 +123,7 @@ class DefaultSQLStatementHandlerTest {
     }
 
     @Nested
-    class createQueryConditionsWithoutWhere {
+    class CreateQueryConditionsWithoutWhere {
 
 
         @Test
@@ -182,7 +183,7 @@ class DefaultSQLStatementHandlerTest {
     }
 
     @Nested
-    class createCountQuery {
+    class CreateCountQuery {
         @Test
         void when_receive_one_table_expect_count_query() {
             var table = "my-table";
@@ -269,7 +270,7 @@ class DefaultSQLStatementHandlerTest {
     }
 
     @Nested
-    class createSelectQuery {
+    class CreateSelectQuery {
         @Test
         void when_receive_one_table_expect_select_query() {
             var table = "my-table";
@@ -791,7 +792,7 @@ class DefaultSQLStatementHandlerTest {
     }
 
     @Nested
-    class createSortStatement {
+    class CreateSortStatement {
 
         @Test
         void when_receive_sortColumns_expect_SortStatement() {
@@ -834,9 +835,8 @@ class DefaultSQLStatementHandlerTest {
 
     }
 
-
     @Nested
-    class createJoinSelectQuery {
+    class CreateJoinSelectQuery {
 
 
         @Test
@@ -964,4 +964,100 @@ class DefaultSQLStatementHandlerTest {
         }
 
     }
+
+    @Nested
+    class Qualify{
+
+        @Test
+        void when_receive_col_expect_col_with_ExpressionKey_expect_col_with_ExpressionKey(){
+            String col = "EXPRESSION_KEY_UNIQUE_IDENTIFIER";
+            String table = "";
+
+            var result = defaultSQLStatementHandler.qualify(col, table);
+            var expected = col+table;
+
+            assertEquals(expected.trim(),result);
+        }
+
+        @Test
+        void when_receive_col_expect_col_with_ExpressionKey_expect_col_with_ExpressionKey_true(){
+            String col = "EXPRESSION_KEY_UNIQUE_IDENTIFIER";
+
+            var result = col.equals(SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY);
+
+            assertTrue(result);
+        }
+
+        @Test
+        void when_receive_col_expect_col_with_FilterKey_expect_col_with_FilterKey_true(){
+            String col = "FILTER_KEY_UNIQUE_IDENTIFIER";
+
+            var result = col.equals(SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.FILTER_KEY);
+
+            assertTrue(result);
+        }
+
+        @Test
+        void when_receive_col_and_table_expect_col_expect_thirth_codepath_of_qualify(){
+            String col = "table.[table].[table].";
+            String table = "";
+
+            var result = defaultSQLStatementHandler.qualify(col, table) ;
+            var expected = col;
+
+            assertEquals(expected, result);
+        }
+
+
+        @Test
+        void when_receive_col_and_table_expect_col_expect_fourth_codepath_of_qualify(){
+            String col = "[table].[col]";
+            String table = "";
+
+            var result = defaultSQLStatementHandler.qualify(col, table) ;
+            var expected = col;
+
+            assertEquals(expected, result);
+        }
+
+
+        @Test
+        void when_receive_col_and_table_expect_col_expect_fifth_codepath_of_qualify(){
+            String col = "table.[col]";
+            String table = "";
+
+            var result = defaultSQLStatementHandler.qualify(col, table) ;
+            var expected = col;
+
+            assertEquals(expected, result);
+        }
+
+        @Test
+        void when_receive_col_and_table_expect_col_expect_sixth_codepath_of_qualify(){
+            String col = ".[table ]";
+            String table = "";
+
+            var result = defaultSQLStatementHandler.qualify(col, table) ;
+            var expected = col;
+
+            assertEquals(expected, result);
+        }
+
+
+        @Test
+        void when_receive_col_and_table_expect_col_expect_other_codepath_qualify(){
+            String col = "col";
+            String table = "table";
+
+            var result = defaultSQLStatementHandler.qualify(col,table);
+            var expected = "table.col";
+
+            assertEquals(expected, result.trim());
+
+        }
+
+    }
+
+    
 }
+
