@@ -2,12 +2,19 @@ package com.ontimize.jee.common.test.dbTest;
 
 import com.ontimize.jee.common.db.SQLStatementBuilder;
 import com.ontimize.jee.common.db.handler.DefaultSQLStatementHandler;
+import com.ontimize.jee.common.dto.EntityResult;
+import com.ontimize.jee.common.dto.EntityResultMapImpl;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -21,6 +28,12 @@ class DefaultSQLStatementHandlerTest {
 
     @InjectMocks
     DefaultSQLStatementHandler defaultSQLStatementHandler;
+
+    @Mock
+    ResultSet resultSet;
+
+
+    EntityResult entityResult;
 
     @Test
     void checkColumnName_when_receive_columnName_expect_check_columnName() {
@@ -1474,7 +1487,7 @@ class DefaultSQLStatementHandlerTest {
     }
 
     @Nested
-    class createLeftJoinSelectQuery {
+    class CreateLeftJoinSelectQuery {
 
         @Test
         void when_receive_mainTable_and_subquery_and_secondaryTable_and_mainKeys_and_secondaryKeys_and_mainTableRequestedColumns_and_secondaryTableRequestedColumns_and_mainTableConditions_and_secondaryTableConditions_and_wildcards_and_columnSorting_and_forceDistinct_is_false_and_descending_is_false_expect_LeftJoinSelect_query() {
@@ -1605,8 +1618,40 @@ class DefaultSQLStatementHandlerTest {
             var expected = "SELECT  DISTINCT mainTable.mainTableRequestedColumns , secondaryTable.secondaryTableRequestedColumns FROM (subquery)mainTable LEFT JOIN secondaryTable ON  mainTable.mainKeys=secondaryTable.secondaryTable AND  secondaryTable.field2 = ?  AND mainTable.field1 = ?  ORDER BY columnSorting";
 
             assertEquals(expected, result.getSQLStatement().trim());
+
         }
 
     }
+
+
+    @Nested
+    class ResultSetToEntityResult {
+
+        @Test
+        void when_receive_resultSet_and_entityResult_and_recordNumber_and_offset_and_delimited_is_true_and_columnNames_expected_ResultSetToEntity_Result() throws Exception {
+
+            entityResult = new EntityResultMapImpl();
+            int recordNumber = 1;
+            int offset = 0;
+            boolean delimited = true;
+            ArrayList columnNames = new ArrayList();
+
+            columnNames.add("columnNames");
+
+            ResultSetMetaData resultSetMetaDatamock = Mockito.mock(ResultSetMetaData.class);
+
+            Mockito.doReturn(resultSetMetaDatamock).when(resultSet).getMetaData();
+            Mockito.doReturn(1).when(resultSetMetaDatamock).getColumnCount();
+            Mockito.doReturn("columnNames").when(resultSetMetaDatamock).getColumnLabel(1);
+            Mockito.doReturn(1).when(resultSetMetaDatamock).getColumnType(1);
+            Mockito.doReturn(true).doReturn(false).when(resultSet).next();
+
+            defaultSQLStatementHandler.resultSetToEntityResult(resultSet, entityResult, recordNumber, offset, delimited, columnNames);
+
+            Assertions.assertEquals(1,entityResult.calculateRecordNumber());
+        }
+    }
+
+
 }
 
