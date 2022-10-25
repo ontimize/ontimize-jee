@@ -15,6 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -1648,8 +1649,33 @@ class DefaultSQLStatementHandlerTest {
 
             defaultSQLStatementHandler.resultSetToEntityResult(resultSet, entityResult, recordNumber, offset, delimited, columnNames);
 
-            Assertions.assertEquals(1,entityResult.calculateRecordNumber());
+            assertEquals(1,entityResult.calculateRecordNumber());
         }
+    }
+
+    @Nested
+    class GeneratedKeysToEntityResult{
+        @Test
+        void when_receive_resultSet_and_entityResult_and_generatedKeys_expected_generate_keys_off_entityresult_result() throws Exception {
+            entityResult = new EntityResultMapImpl();
+            ArrayList generatedKeys = new ArrayList();
+
+            generatedKeys.add("0001");
+
+            ResultSetMetaData resultSetMetaDatamock = Mockito.mock(ResultSetMetaData.class);
+
+            Mockito.doReturn(resultSetMetaDatamock).when(resultSet).getMetaData();
+            Mockito.doReturn("columnNames").when(resultSetMetaDatamock).getColumnLabel(1);
+            Mockito.doReturn(1).when(resultSetMetaDatamock).getColumnType(1);
+            Mockito.doReturn(1).when(resultSetMetaDatamock).getColumnCount();
+            Mockito.doReturn(true).doReturn(false).when(resultSet).next();
+
+            defaultSQLStatementHandler.generatedKeysToEntityResult(resultSet, entityResult, generatedKeys);
+
+            Assertions.assertEquals(1,entityResult.calculateRecordNumber());
+
+        }
+
     }
 
 
