@@ -1,10 +1,11 @@
 package com.ontimize.jee.common.test.dbTest;
 
+import com.ontimize.jee.common.db.LocalePair;
 import com.ontimize.jee.common.db.SQLStatementBuilder;
 import com.ontimize.jee.common.db.handler.DefaultSQLStatementHandler;
 import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.common.dto.EntityResultMapImpl;
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,11 +14,9 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.sql.*;
+import java.util.*;
+import java.sql.Blob;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -1653,29 +1652,108 @@ class DefaultSQLStatementHandlerTest {
         }
     }
 
+    @Disabled
     @Nested
     class GeneratedKeysToEntityResult{
+
         @Test
         void when_receive_resultSet_and_entityResult_and_generatedKeys_expected_generate_keys_off_entityresult_result() throws Exception {
             entityResult = new EntityResultMapImpl();
             ArrayList generatedKeys = new ArrayList();
 
-            generatedKeys.add("0001");
+            generatedKeys.add("UNO");
 
             ResultSetMetaData resultSetMetaDatamock = Mockito.mock(ResultSetMetaData.class);
 
             Mockito.doReturn(resultSetMetaDatamock).when(resultSet).getMetaData();
-            Mockito.doReturn("columnNames").when(resultSetMetaDatamock).getColumnLabel(1);
+            Mockito.doReturn("COLUMN_NAMES").when(resultSetMetaDatamock).getColumnLabel(1);
             Mockito.doReturn(1).when(resultSetMetaDatamock).getColumnType(1);
             Mockito.doReturn(1).when(resultSetMetaDatamock).getColumnCount();
             Mockito.doReturn(true).doReturn(false).when(resultSet).next();
 
             defaultSQLStatementHandler.generatedKeysToEntityResult(resultSet, entityResult, generatedKeys);
 
-            Assertions.assertEquals(1,entityResult.calculateRecordNumber());
+            assertEquals(1,entityResult.calculateRecordNumber());
+
 
         }
 
+    }
+
+    @Disabled
+    @Nested
+    class SetObject{
+    /*public void setObject(int index, Object value, PreparedStatement preparedStatement, boolean truncDates)
+            throws SQLException {
+        if (value == null) {
+            DefaultSQLStatementHandler.logger.debug(" setObject {} with NULL", index);
+            preparedStatement.setObject(index, value);
+          }*/
+        @Mock
+        Connection connection;
+
+        @Test
+        void when_receive_index_and_value_is_null_and_preparedStatement_and_truncDates_expect_set_object() throws SQLException {
+            int index = 1;
+            Object value = null;
+            boolean truncDates = false;
+
+            //Mockito.doReturn("select * from table where fiedl1=?").when(connection).createStatement();
+
+            PreparedStatement preparedStatement = connection.prepareStatement("a");
+
+
+            //Mockito.doReturn(1).when(preparedStatement).executeQuery().getObject(1);
+            //Mockito.doReturn(null).when(preparedStatement).setObject(1,null);
+
+
+            defaultSQLStatementHandler.setObject(index,value,preparedStatement,truncDates);
+
+            assertEquals(null,preparedStatement.toString());
+
+        }
+
+
+    }
+
+    @Nested
+    class AddMultilanguageLeftJoinTables {
+        @Test
+        void when_receive_table_and_tables_and_keys_and_localeId_expect_count_query() throws SQLException {
+
+            String table = "my-table";
+            ArrayList tables = new ArrayList();
+            LinkedHashMap keys = new LinkedHashMap();
+            LocalePair localeId = new LocalePair("field2","value2");
+
+            tables.add("wildcard1");
+            keys.put("field1", "value1");
+
+            var result = defaultSQLStatementHandler.addMultilanguageLeftJoinTables(table, tables, keys, localeId);
+            var expected = "my-table LEFT JOIN wildcard1 ON wildcard1.field1 = my-table.value1 AND wildcard1.field2 = ?";
+
+            assertEquals(expected, result.trim());
+        }
+    }
+
+    @Nested
+    class AddInnerMultilanguageColumns{
+
+        @Test
+        void when_receive_subSqlQuery_and_attributes_and_hLocaleTablesAV_expect_inner_multilanguage_columns(){
+            var subSqlQuery = " from";
+            ArrayList attributes = new ArrayList();
+            HashMap hLocaleTablesAV = new HashMap();
+
+            attributes.add("attr1");
+            hLocaleTablesAV.put("field1","value1");
+
+            var result = defaultSQLStatementHandler.addInnerMultilanguageColumns(subSqlQuery,attributes,hLocaleTablesAV);
+            var expected = ", field1 AS value1 from";
+
+            assertEquals(expected, result.trim());
+
+    }
     }
 
 
