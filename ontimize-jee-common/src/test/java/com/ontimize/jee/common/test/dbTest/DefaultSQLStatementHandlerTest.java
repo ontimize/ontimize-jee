@@ -15,8 +15,9 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.sql.*;
-import java.util.*;
-import java.sql.Blob;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -1648,13 +1649,13 @@ class DefaultSQLStatementHandlerTest {
 
             defaultSQLStatementHandler.resultSetToEntityResult(resultSet, entityResult, recordNumber, offset, delimited, columnNames);
 
-            assertEquals(1,entityResult.calculateRecordNumber());
+            assertEquals(1, entityResult.calculateRecordNumber());
         }
     }
 
     @Disabled
     @Nested
-    class GeneratedKeysToEntityResult{
+    class GeneratedKeysToEntityResult {
 
         @Test
         void when_receive_resultSet_and_entityResult_and_generatedKeys_expected_generate_keys_off_entityresult_result() throws Exception {
@@ -1673,7 +1674,7 @@ class DefaultSQLStatementHandlerTest {
 
             defaultSQLStatementHandler.generatedKeysToEntityResult(resultSet, entityResult, generatedKeys);
 
-            assertEquals(1,entityResult.calculateRecordNumber());
+            assertEquals(1, entityResult.calculateRecordNumber());
 
 
         }
@@ -1682,13 +1683,13 @@ class DefaultSQLStatementHandlerTest {
 
     @Disabled
     @Nested
-    class SetObject{
-    /*public void setObject(int index, Object value, PreparedStatement preparedStatement, boolean truncDates)
-            throws SQLException {
-        if (value == null) {
-            DefaultSQLStatementHandler.logger.debug(" setObject {} with NULL", index);
-            preparedStatement.setObject(index, value);
-          }*/
+    class SetObject {
+        /*public void setObject(int index, Object value, PreparedStatement preparedStatement, boolean truncDates)
+                throws SQLException {
+            if (value == null) {
+                DefaultSQLStatementHandler.logger.debug(" setObject {} with NULL", index);
+                preparedStatement.setObject(index, value);
+              }*/
         @Mock
         Connection connection;
 
@@ -1707,9 +1708,9 @@ class DefaultSQLStatementHandlerTest {
             //Mockito.doReturn(null).when(preparedStatement).setObject(1,null);
 
 
-            defaultSQLStatementHandler.setObject(index,value,preparedStatement,truncDates);
+            defaultSQLStatementHandler.setObject(index, value, preparedStatement, truncDates);
 
-            assertEquals(null,preparedStatement.toString());
+            assertEquals(null, preparedStatement.toString());
 
         }
 
@@ -1724,7 +1725,7 @@ class DefaultSQLStatementHandlerTest {
             String table = "my-table";
             ArrayList tables = new ArrayList();
             LinkedHashMap keys = new LinkedHashMap();
-            LocalePair localeId = new LocalePair("field2","value2");
+            LocalePair localeId = new LocalePair("field2", "value2");
 
             tables.add("wildcard1");
             keys.put("field1", "value1");
@@ -1737,23 +1738,45 @@ class DefaultSQLStatementHandlerTest {
     }
 
     @Nested
-    class AddInnerMultilanguageColumns{
+    class AddInnerMultilanguageColumns {
 
         @Test
-        void when_receive_subSqlQuery_and_attributes_and_hLocaleTablesAV_expect_inner_multilanguage_columns(){
+        void when_receive_subSqlQuery_and_attributes_and_hLocaleTablesAV_expect_inner_multilanguage_columns() {
             var subSqlQuery = " from";
             ArrayList attributes = new ArrayList();
             HashMap hLocaleTablesAV = new HashMap();
 
             attributes.add("attr1");
-            hLocaleTablesAV.put("field1","value1");
+            hLocaleTablesAV.put("field1", "value1");
 
-            var result = defaultSQLStatementHandler.addInnerMultilanguageColumns(subSqlQuery,attributes,hLocaleTablesAV);
+            var result = defaultSQLStatementHandler.addInnerMultilanguageColumns(subSqlQuery, attributes, hLocaleTablesAV);
             var expected = ", field1 AS value1 from";
 
             assertEquals(expected, result.trim());
 
+        }
     }
+
+    @Nested
+    class AddOuterMultilanguageColumns {
+
+        @Test
+        void when_receive_sqlQuery_and_table_and_hLocaleTablesAV_expect_add_outer_multilanguage_columns() {
+            var sqlQuery = " from";
+            String table = "my table";
+            HashMap hLocaleTablesAV = new HashMap();
+
+            hLocaleTablesAV.put("field1", "value1");
+
+            var result = defaultSQLStatementHandler.addOuterMultilanguageColumns(sqlQuery, table, hLocaleTablesAV);
+            var expected = ", my table.value1 from";
+
+            assertEquals(expected, result.trim());
+
+
+        }
+
+
     }
 
 
