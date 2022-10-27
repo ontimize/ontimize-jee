@@ -1779,6 +1779,24 @@ class DefaultSQLStatementHandlerTest {
 
     }
 
+    @Nested
+    class AddOuterMultilanguageColumnsPageable {
+
+        @Test
+        void when_receive_sqlQuery_and_table_and_hLocaleTablesAV_expect_add_outer_multilanguage_columns_pageable() {
+            var sqlQuery = " from";
+            String table = "my table";
+            HashMap hLocaleTablesAV = new HashMap();
+
+            hLocaleTablesAV.put("field1", "value1");
+
+            var result = defaultSQLStatementHandler.addOuterMultilanguageColumnsPageable(sqlQuery, table, hLocaleTablesAV);
+            var expected = ", my table.value1 from";
+
+            assertEquals(expected, result.trim());
+        }
+    }
+
 
 }
 
