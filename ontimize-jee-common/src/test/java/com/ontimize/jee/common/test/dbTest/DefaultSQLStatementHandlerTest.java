@@ -56,6 +56,18 @@ class DefaultSQLStatementHandlerTest {
 
     }
 
+    @Test
+    void convertPaginationStatement_when_receive_sqlTemplate_and_startIndex_and_recordNumber_expect_convert_pagination_statement() {
+        String sqlTemplate = "sqlTemplate";
+        int startIndex = 1;
+        int recordNumber = 1;
+
+        var result = defaultSQLStatementHandler.convertPaginationStatement(sqlTemplate, startIndex, recordNumber);
+        var expected = "sqlTemplate";
+
+        assertEquals(expected, result);
+    }
+
     @Nested
     class CreateUpdateQuery {
 
@@ -1624,7 +1636,6 @@ class DefaultSQLStatementHandlerTest {
 
     }
 
-
     @Nested
     class ResultSetToEntityResult {
 
@@ -1796,7 +1807,6 @@ class DefaultSQLStatementHandlerTest {
             assertEquals(expected, result.trim());
         }
     }
-
 
 }
 
