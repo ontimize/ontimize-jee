@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class DefaultSQLStatementHandlerTest {
@@ -1640,7 +1641,7 @@ class DefaultSQLStatementHandlerTest {
     class ResultSetToEntityResult {
 
         @Test
-        void when_receive_resultSet_and_entityResult_and_recordNumber_and_offset_and_delimited_is_true_and_columnNames_expected_ResultSetToEntity_Result() throws Exception {
+        void when_receive_resultSet_and_entityResult_and_recordNumber_and_offset_and_delimited_is_true_and_columnNames_expected_ResultSet_To_EntityResult() throws Exception {
 
             entityResult = new EntityResultMapImpl();
             int recordNumber = 1;
@@ -1648,15 +1649,16 @@ class DefaultSQLStatementHandlerTest {
             boolean delimited = true;
             ArrayList columnNames = new ArrayList();
 
-            columnNames.add("columnNames");
+            columnNames.add("column1");
 
             ResultSetMetaData resultSetMetaDatamock = Mockito.mock(ResultSetMetaData.class);
 
             Mockito.doReturn(resultSetMetaDatamock).when(resultSet).getMetaData();
             Mockito.doReturn(1).when(resultSetMetaDatamock).getColumnCount();
-            Mockito.doReturn("columnNames").when(resultSetMetaDatamock).getColumnLabel(1);
+            Mockito.doReturn("column1").when(resultSetMetaDatamock).getColumnLabel(1);
             Mockito.doReturn(1).when(resultSetMetaDatamock).getColumnType(1);
             Mockito.doReturn(true).doReturn(false).when(resultSet).next();
+            Mockito.doReturn("valueColumn1").when(resultSet).getObject("column1");
 
             defaultSQLStatementHandler.resultSetToEntityResult(resultSet, entityResult, recordNumber, offset, delimited, columnNames);
 
@@ -1669,19 +1671,21 @@ class DefaultSQLStatementHandlerTest {
     class GeneratedKeysToEntityResult {
 
         @Test
-        void when_receive_resultSet_and_entityResult_and_generatedKeys_expected_generate_keys_off_entityresult_result() throws Exception {
+        void when_receive_resultSet_and_entityResult_and_generatedKeys_expected_generate_keys_off_entityresult() throws Exception {
             entityResult = new EntityResultMapImpl();
             ArrayList generatedKeys = new ArrayList();
 
-            generatedKeys.add("UNO");
+            generatedKeys.add("col1");
 
             ResultSetMetaData resultSetMetaDatamock = Mockito.mock(ResultSetMetaData.class);
 
             Mockito.doReturn(resultSetMetaDatamock).when(resultSet).getMetaData();
-            Mockito.doReturn("COLUMN_NAMES").when(resultSetMetaDatamock).getColumnLabel(1);
-            Mockito.doReturn(1).when(resultSetMetaDatamock).getColumnType(1);
             Mockito.doReturn(1).when(resultSetMetaDatamock).getColumnCount();
+            Mockito.doReturn("column1").when(resultSetMetaDatamock).getColumnLabel(1);
+            Mockito.doReturn(1).when(resultSetMetaDatamock).getColumnType(1);
             Mockito.doReturn(true).doReturn(false).when(resultSet).next();
+            Mockito.doReturn("valueColumn1").when(resultSet).getObject("column1");
+
 
             defaultSQLStatementHandler.generatedKeysToEntityResult(resultSet, entityResult, generatedKeys);
 
@@ -1692,17 +1696,12 @@ class DefaultSQLStatementHandlerTest {
 
     }
 
-    @Disabled
+
     @Nested
     class SetObject {
-        /*public void setObject(int index, Object value, PreparedStatement preparedStatement, boolean truncDates)
-                throws SQLException {
-            if (value == null) {
-                DefaultSQLStatementHandler.logger.debug(" setObject {} with NULL", index);
-                preparedStatement.setObject(index, value);
-              }*/
+
         @Mock
-        Connection connection;
+        PreparedStatement preparedStatement;
 
         @Test
         void when_receive_index_and_value_is_null_and_preparedStatement_and_truncDates_expect_set_object() throws SQLException {
@@ -1710,22 +1709,10 @@ class DefaultSQLStatementHandlerTest {
             Object value = null;
             boolean truncDates = false;
 
-            //Mockito.doReturn("select * from table where fiedl1=?").when(connection).createStatement();
-
-            PreparedStatement preparedStatement = connection.prepareStatement("a");
-
-
-            //Mockito.doReturn(1).when(preparedStatement).executeQuery().getObject(1);
-            //Mockito.doReturn(null).when(preparedStatement).setObject(1,null);
-
-
             defaultSQLStatementHandler.setObject(index, value, preparedStatement, truncDates);
 
-            assertEquals(null, preparedStatement.toString());
-
+            verify(preparedStatement).setObject(index, value);
         }
-
-
     }
 
     @Nested
