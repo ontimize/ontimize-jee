@@ -5,6 +5,8 @@ import com.ontimize.jee.common.db.SQLStatementBuilder;
 import com.ontimize.jee.common.db.handler.DefaultSQLStatementHandler;
 import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.common.dto.EntityResultMapImpl;
+import com.ontimize.jee.common.gui.LongString;
+import com.ontimize.jee.common.util.remote.BytesBlock;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -20,6 +22,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
@@ -1666,6 +1669,7 @@ class DefaultSQLStatementHandlerTest {
         }
     }
 
+
     @Disabled
     @Nested
     class GeneratedKeysToEntityResult {
@@ -1675,7 +1679,7 @@ class DefaultSQLStatementHandlerTest {
             entityResult = new EntityResultMapImpl();
             ArrayList generatedKeys = new ArrayList();
 
-            generatedKeys.add("col1");
+            generatedKeys.add(1234);
 
             ResultSetMetaData resultSetMetaDatamock = Mockito.mock(ResultSetMetaData.class);
 
@@ -1689,7 +1693,7 @@ class DefaultSQLStatementHandlerTest {
 
             defaultSQLStatementHandler.generatedKeysToEntityResult(resultSet, entityResult, generatedKeys);
 
-            assertEquals(1, entityResult.calculateRecordNumber());
+           
 
 
         }
@@ -1702,16 +1706,48 @@ class DefaultSQLStatementHandlerTest {
 
         @Mock
         PreparedStatement preparedStatement;
+        @Mock
+        Blob blob;
+        @Mock
+        Clob clob;
+        @Mock
+        BytesBlock bytesBlock;
+        @Mock
+        LongString longStringTest;
 
         @Test
-        void when_receive_index_and_value_is_null_and_preparedStatement_and_truncDates_expect_set_object() throws SQLException {
-            int index = 1;
-            Object value = null;
+        void when_receive_index_and_value_and_preparedStatement_and_truncDates_expect_set_object() throws SQLException {
+
             boolean truncDates = false;
 
-            defaultSQLStatementHandler.setObject(index, value, preparedStatement, truncDates);
+            defaultSQLStatementHandler.setObject(1, null, preparedStatement, truncDates);
+            defaultSQLStatementHandler.setObject(2, blob, preparedStatement, truncDates);
+            defaultSQLStatementHandler.setObject(3, clob, preparedStatement, truncDates);
 
-            verify(preparedStatement).setObject(index, value);
+            verify(preparedStatement).setObject(1, null);
+            verify(preparedStatement).setBlob(2, blob);
+            verify(preparedStatement).setClob(3, clob);
+
+           /* byte[] bytes = bytesBlock.getBytes();
+            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
+            defaultSQLStatementHandler.setObject(4, byteArrayInputStream, preparedStatement, truncDates);
+            verify(preparedStatement).setBinaryStream(4,byteArrayInputStream,0); */
+
+            /*defaultSQLStatementHandler.setObject(4, bytesBlock,preparedStatement,truncDates);
+            byte[] bytes = bytesBlock.getBytes();
+            verify(preparedStatement).setBytes(4,bytes); */
+
+            /*defaultSQLStatementHandler.setObject(5, longStringTest, preparedStatement, truncDates);
+            verify(preparedStatement).setObject(5, longStringTest); */
+
+            String string = "";
+            defaultSQLStatementHandler.setObject(6,string,preparedStatement,truncDates);
+            verify(preparedStatement).setObject(6,string);
+
+            defaultSQLStatementHandler.setObject(7,null,preparedStatement,truncDates);
+            verify(preparedStatement).setObject(7,null);
+
+
         }
     }
 
