@@ -22,7 +22,20 @@ class Oracle12cSQLStatementHandlerTest {
     @Nested
     class CreateSelectQuery {
         @Test
-        void when_receive_table_and_requestedColumns_and_conditions_and_wildcards_and_columnsSorting_and_recordCount_and_descending_is_true_and_forceDistinct_is_false_expect_select_query() {
+        void when_receive_one_table_expect_select_query() {
+            var table = "my-table";
+            HashMap conditions = null;
+            ArrayList wildcards = null;
+            ArrayList requestedColumns = null;
+
+            var result = oracle12cSQLStatementHandler.createSelectQuery(table, null, null, null);
+            var expected = "SELECT  *  FROM  [my-table]";
+
+            assertEquals(expected, result.getSQLStatement().trim());
+        }
+
+        @Test
+        void when_receive_table_and_requestedColumns_and_conditions_and_wildcards_and_columnsSorting_and_recordCount_and_descending_is_false_and_forceDistinct_is_false_expect_select_query() {
             var table = "my-table";
             ArrayList requestedColumns = new ArrayList();
             HashMap conditions = new HashMap();
@@ -30,7 +43,7 @@ class Oracle12cSQLStatementHandlerTest {
             ArrayList columnSorting = new ArrayList();
             int recordCount = 1;
             int offset = 1;
-            boolean descending = true;
+            boolean descending = false;
             boolean forceDistinct = false;
 
             requestedColumns.add("requestedColumns1");
@@ -39,7 +52,30 @@ class Oracle12cSQLStatementHandlerTest {
             columnSorting.add("columnSorting1");
 
             var result = oracle12cSQLStatementHandler.createSelectQuery(table, requestedColumns, conditions, wildcards, columnSorting, recordCount, offset, descending, forceDistinct);
-            var expected = "SELECT requestedColumns1 , columnSorting1 FROM  [my-table]   WHERE field1 = ?  ORDER BY columnSorting1 DESC  LIMIT 1 OFFSET 1";
+            var expected = "SELECT requestedColumns1 , columnSorting1 FROM  [my-table]   WHERE field1 = ?  ORDER BY columnSorting1 OFFSET 1 ROWS FETCH NEXT 1 ROWS ONLY";
+
+            assertEquals(expected, result.getSQLStatement().trim());
+        }
+
+        @Test
+        void when_receive_table_and_requestedColumns_and_conditions_and_wildcards_and_columnsSorting_and_recordCount_and_descending_is_true_and_forceDistinct_is_true_expect_select_query() {
+            var table = "my-table";
+            ArrayList requestedColumns = new ArrayList();
+            HashMap conditions = new HashMap();
+            ArrayList wildcards = new ArrayList();
+            ArrayList columnSorting = new ArrayList();
+            int recordCount = 1;
+            int offset = 1;
+            boolean descending = true;
+            boolean forceDistinct = true;
+
+            requestedColumns.add("requestedColumns1");
+            conditions.put("field1", "value1");
+            wildcards.add("wildcards1");
+            columnSorting.add("columnSorting1");
+
+            var result = oracle12cSQLStatementHandler.createSelectQuery(table, requestedColumns, conditions, wildcards, columnSorting, recordCount, offset, descending, forceDistinct);
+            var expected = "SELECT  DISTINCT requestedColumns1 , columnSorting1 FROM  [my-table]   WHERE field1 = ?  ORDER BY columnSorting1 DESC  OFFSET 1 ROWS FETCH NEXT 1 ROWS ONLY";
 
             assertEquals(expected, result.getSQLStatement().trim());
         }
