@@ -16,13 +16,16 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.io.ByteArrayInputStream;
+import java.io.StringReader;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
@@ -1673,7 +1676,6 @@ class DefaultSQLStatementHandlerTest {
     @Disabled
     @Nested
     class GeneratedKeysToEntityResult {
-
         @Test
         void when_receive_resultSet_and_entityResult_and_generatedKeys_expected_generate_keys_off_entityresult() throws Exception {
             entityResult = new EntityResultMapImpl();
@@ -1690,10 +1692,9 @@ class DefaultSQLStatementHandlerTest {
             Mockito.doReturn(true).doReturn(false).when(resultSet).next();
             Mockito.doReturn("valueColumn1").when(resultSet).getObject("column1");
 
-
             defaultSQLStatementHandler.generatedKeysToEntityResult(resultSet, entityResult, generatedKeys);
 
-           
+
 
 
         }
@@ -1711,10 +1712,11 @@ class DefaultSQLStatementHandlerTest {
         @Mock
         Clob clob;
         @Mock
-        BytesBlock bytesBlock;
+        Timestamp timestamp;
         @Mock
-        LongString longStringTest;
-
+        Time time;
+        @Mock
+        Date date;
         @Test
         void when_receive_index_and_value_and_preparedStatement_and_truncDates_expect_set_object() throws SQLException {
 
@@ -1728,25 +1730,30 @@ class DefaultSQLStatementHandlerTest {
             verify(preparedStatement).setBlob(2, blob);
             verify(preparedStatement).setClob(3, clob);
 
-           /* byte[] bytes = bytesBlock.getBytes();
-            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
-            defaultSQLStatementHandler.setObject(4, byteArrayInputStream, preparedStatement, truncDates);
-            verify(preparedStatement).setBinaryStream(4,byteArrayInputStream,0); */
+            byte[] bytes = new byte[]{};
+            BytesBlock bytesBlock = new BytesBlock(bytes);
+            defaultSQLStatementHandler.setObject(4, bytesBlock, preparedStatement, false);
+            verify(preparedStatement).setBinaryStream(eq(4), isA(ByteArrayInputStream.class), eq(0));
 
-            /*defaultSQLStatementHandler.setObject(4, bytesBlock,preparedStatement,truncDates);
-            byte[] bytes = bytesBlock.getBytes();
-            verify(preparedStatement).setBytes(4,bytes); */
-
-            /*defaultSQLStatementHandler.setObject(5, longStringTest, preparedStatement, truncDates);
-            verify(preparedStatement).setObject(5, longStringTest); */
+            LongString longString = new LongString("");
+            defaultSQLStatementHandler.setObject(5, longString, preparedStatement, truncDates);
+            verify(preparedStatement).setCharacterStream(eq(5), isA(StringReader.class), eq(0));
 
             String string = "";
-            defaultSQLStatementHandler.setObject(6,string,preparedStatement,truncDates);
-            verify(preparedStatement).setObject(6,string);
+            defaultSQLStatementHandler.setObject(6, string, preparedStatement, truncDates);
+            verify(preparedStatement).setObject(6, string);
 
-            defaultSQLStatementHandler.setObject(7,null,preparedStatement,truncDates);
-            verify(preparedStatement).setObject(7,null);
+            defaultSQLStatementHandler.setObject(7, null, preparedStatement, truncDates);
+            verify(preparedStatement).setObject(7, null);
 
+            defaultSQLStatementHandler.setObject(8,timestamp,preparedStatement,truncDates);
+            verify(preparedStatement).setTimestamp(8, timestamp);
+
+            defaultSQLStatementHandler.setObject(9, time, preparedStatement,truncDates);
+            verify(preparedStatement).setTime(9, time);
+
+            defaultSQLStatementHandler.setObject(10, date, preparedStatement,truncDates);
+            verify(preparedStatement).setDate(10, date);
 
         }
     }
