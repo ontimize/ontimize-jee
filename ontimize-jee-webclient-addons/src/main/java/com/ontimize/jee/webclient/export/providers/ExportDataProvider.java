@@ -1,6 +1,6 @@
 package com.ontimize.jee.webclient.export.providers;
 
-import com.ontimize.jee.webclient.export.HeadExportColumn;
+import com.ontimize.jee.server.rest.FilterParameter;
 
 /**
  * Provider que proporciona los datos de la exportación.
@@ -8,14 +8,26 @@ import com.ontimize.jee.webclient.export.HeadExportColumn;
  * @author antonio.vazquez@imatia.com Antonio Vázquez Araújo
  */
 
-public interface ExportDataProvider {
+public interface ExportDataProvider<T> {
+
+    String getService();
+    
+    void setServiceBean(Object serviceBean);
+    
+    Object getServiceBean();
+
+    String getDao();
+
+    FilterParameter getQueryParameters();
 
     int getNumberOfRows();
 
     int getNumberOfColumns();
 
-    int getColumnIndex(HeadExportColumn column);
+    Object getCellValue(int row, String colId);
 
-    Object getCellValue(int row, int column);
+    T getData();
+
+    T doQuery();
 
 }

@@ -9,7 +9,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
-public class QueryParameter implements Serializable {
+public class QueryParameter implements Serializable, FilterParameter {
 
     private static final long serialVersionUID = 1L;
 

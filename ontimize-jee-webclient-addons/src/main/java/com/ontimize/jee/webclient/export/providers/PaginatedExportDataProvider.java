@@ -1,11 +1,10 @@
 package com.ontimize.jee.webclient.export.providers;
 
 import java.util.List;
+import java.util.function.Function;
 
 import com.ontimize.jee.webclient.export.pagination.PaginationRequest;
 import com.ontimize.jee.webclient.export.pagination.PaginationResult;
-
-import javafx.util.Callback;
 
 /**
  * Provider de datos que utiliza paginación.
@@ -18,9 +17,9 @@ public interface PaginatedExportDataProvider<T> {
 
     T getData(int row);
 
-    Callback<PaginationRequest, PaginationResult<List<T>>> getPageFactory();
+    Function<PaginationRequest, PaginationResult<List<T>>> getPageFactory();
 
-    void setPageFactory(Callback<PaginationRequest, PaginationResult<List<T>>> pageFactory);
+    void setPageFactory(Function<PaginationRequest, PaginationResult<List<T>>> pageFactory);
 
     int getRowsPerPage();
 
