@@ -10,7 +10,11 @@ import com.ontimize.jee.common.util.remote.BytesBlock;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -22,6 +26,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.eq;
@@ -448,93 +453,18 @@ class DefaultSQLStatementHandlerTest {
         }
 
 
-        @Test
-        void when_receive_table_and_requestedColumns_and_conditions_and_wildcards_and_columnsSorting_and_recordCount_and_descending_is_true_and_forceDistinct_is_false_expect_select_query() {
-            var table = "my-table";
-            ArrayList requestedColumns = new ArrayList();
-            HashMap conditions = new HashMap();
-            ArrayList wildcards = new ArrayList();
-            ArrayList columnSorting = new ArrayList();
-            int recordCount = 10;
-            boolean descending = true;
-            boolean forceDistinct = false;
 
-            requestedColumns.add("requestedColumns1");
-            conditions.put("field1", "value1");
-            wildcards.add("wildcards1");
-            columnSorting.add("columnSorting1");
 
-            var result = defaultSQLStatementHandler.createSelectQuery(table, requestedColumns, conditions, wildcards, columnSorting, recordCount, descending, forceDistinct);
-            var expected = "SELECT requestedColumns1 , columnSorting1 FROM  [my-table]   WHERE field1 = ?  ORDER BY columnSorting1 DESC";
 
-            assertEquals(expected, result.getSQLStatement().trim());
-        }
 
-        @Test
-        void when_receive_table_and_requestedColumns_and_conditions_and_wildcards_and_columnsSorting_and_recordCount_and_descending_is_true_and_forceDistinct_is_true_expect_select_query() {
-            var table = "my-table";
-            ArrayList requestedColumns = new ArrayList();
-            HashMap conditions = new HashMap();
-            ArrayList wildcards = new ArrayList();
-            ArrayList columnSorting = new ArrayList();
-            int recordCount = 10;
-            boolean descending = true;
-            boolean forceDistinct = true;
 
-            requestedColumns.add("requestedColumns1");
-            conditions.put("field1", "value1");
-            wildcards.add("wildcards1");
-            columnSorting.add("columnSorting1");
 
-            var result = defaultSQLStatementHandler.createSelectQuery(table, requestedColumns, conditions, wildcards, columnSorting, recordCount, descending, forceDistinct);
-            var expected = "SELECT  DISTINCT requestedColumns1 , columnSorting1 FROM  [my-table]   WHERE field1 = ?  ORDER BY columnSorting1 DESC";
 
-            assertEquals(expected, result.getSQLStatement().trim());
-        }
 
-        @Test
-        void when_receive_table_and_requestedColumns_and_conditions_and_wildcards_and_columnsSorting_and_recordCount_and_descending_is_false_and_forceDistinct_is_false_expect_select_query() {
-            var table = "my-table";
-            ArrayList requestedColumns = new ArrayList();
-            HashMap conditions = new HashMap();
-            ArrayList wildcards = new ArrayList();
-            ArrayList columnSorting = new ArrayList();
-            int recordCount = 10;
-            boolean descending = false;
-            boolean forceDistinct = false;
 
-            requestedColumns.add("requestedColumns1");
-            conditions.put("field1", "value1");
-            wildcards.add("wildcards1");
-            columnSorting.add("columnSorting1");
 
-            var result = defaultSQLStatementHandler.createSelectQuery(table, requestedColumns, conditions, wildcards, columnSorting, recordCount, descending, forceDistinct);
-            var expected = "SELECT requestedColumns1 , columnSorting1 FROM  [my-table]   WHERE field1 = ?  ORDER BY columnSorting1";
 
-            assertEquals(expected, result.getSQLStatement().trim());
-        }
 
-        @Test
-        void when_receive_table_and_requestedColumns_and_conditions_and_wildcards_and_columnsSorting_and_recordCount_and_descending_is_false_and_forceDistinct_is_true_expect_select_query() {
-            var table = "my-table";
-            ArrayList requestedColumns = new ArrayList();
-            HashMap conditions = new HashMap();
-            ArrayList wildcards = new ArrayList();
-            ArrayList columnSorting = new ArrayList();
-            int recordCount = 10;
-            boolean descending = false;
-            boolean forceDistinct = true;
-
-            requestedColumns.add("requestedColumns1");
-            conditions.put("field1", "value1");
-            wildcards.add("wildcards1");
-            columnSorting.add("columnSorting1");
-
-            var result = defaultSQLStatementHandler.createSelectQuery(table, requestedColumns, conditions, wildcards, columnSorting, recordCount, descending, forceDistinct);
-            var expected = "SELECT  DISTINCT requestedColumns1 , columnSorting1 FROM  [my-table]   WHERE field1 = ?  ORDER BY columnSorting1";
-
-            assertEquals(expected, result.getSQLStatement().trim());
-        }
 
         @Test
         void when_receive_table_and_requestedColumns_and_conditions_and_wildcards_and_columnsSorting_and_recordCount_and_offset_expect_select_query() {
@@ -823,6 +753,45 @@ class DefaultSQLStatementHandlerTest {
         }
     }
 
+
+
+    @Nested
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    class CreateSelectQueryWithParameterizedTest {
+
+        @ParameterizedTest
+        @MethodSource("addDataCreateSelectQuery")
+        void when_receive_table_and_requestedColumns_and_conditions_and_wildcards_and_columnsSorting_and_recordCount_and_descending_and_forceDistinct_expect_select_query(boolean descending, boolean forceDistinct, String expected) {
+            var table = "my-table";
+            ArrayList requestedColumns = new ArrayList();
+            HashMap conditions = new HashMap();
+            ArrayList wildcards = new ArrayList();
+            ArrayList columnSorting = new ArrayList();
+            int recordCount = 10;
+
+
+            requestedColumns.add("requestedColumns1");
+            conditions.put("field1", "value1");
+            wildcards.add("wildcards1");
+            columnSorting.add("columnSorting1");
+
+            var result = defaultSQLStatementHandler.createSelectQuery(table, requestedColumns, conditions, wildcards, columnSorting, recordCount, descending, forceDistinct);
+            //var expected = "SELECT  DISTINCT requestedColumns1 , columnSorting1 FROM  [my-table]   WHERE field1 = ?  ORDER BY columnSorting1";
+
+            assertEquals(expected, result.getSQLStatement().trim());
+        }
+
+        Stream<Arguments> addDataCreateSelectQuery() {
+            return Stream.of(
+                    Arguments.of(true, false, "SELECT requestedColumns1 , columnSorting1 FROM  [my-table]   WHERE field1 = ?  ORDER BY columnSorting1 DESC"),
+                    Arguments.of(true, true, "SELECT  DISTINCT requestedColumns1 , columnSorting1 FROM  [my-table]   WHERE field1 = ?  ORDER BY columnSorting1 DESC"),
+                    Arguments.of(false, false, "SELECT requestedColumns1 , columnSorting1 FROM  [my-table]   WHERE field1 = ?  ORDER BY columnSorting1"),
+                    Arguments.of(false, true, "SELECT  DISTINCT requestedColumns1 , columnSorting1 FROM  [my-table]   WHERE field1 = ?  ORDER BY columnSorting1")
+            );
+
+
+        }
+    }
     @Nested
     class CreateSortStatement {
 
@@ -1691,9 +1660,11 @@ class DefaultSQLStatementHandlerTest {
             Mockito.doReturn(1).when(resultSetMetaDatamock).getColumnType(1);
             Mockito.doReturn(true).doReturn(false).when(resultSet).next();
             Mockito.doReturn("valueColumn1").when(resultSet).getObject("column1");
+            Mockito.doReturn(1234).when(resultSet).getObject(1);
 
             defaultSQLStatementHandler.generatedKeysToEntityResult(resultSet, entityResult, generatedKeys);
 
+            assertEquals(true, entityResult.containsKey(generatedKeys));
 
 
 
