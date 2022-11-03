@@ -794,7 +794,7 @@ class DefaultSQLStatementHandlerTest {
             );
         }
 
-        
+
         @Test
         void when_receive_col_expect_col_with_ExpressionKey_expect_col_with_ExpressionKey() {
             String col = "EXPRESSION_KEY_UNIQUE_IDENTIFIER";
@@ -839,10 +839,13 @@ class DefaultSQLStatementHandlerTest {
     }
 
     @Nested
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
     class CreateJoinFromSubselectsQuery {
 
-        @Test
-        void when_receive_primaryAlias_and_secondaryAlias_and_primaryQuery_and_secondaryQuery_and_primaryKeys_and_secondaryKeys_and_primaryTableRequestedColumns_and_secondaryTableRequestedColumns_and_primaryTableConditions_and_secondaryTableConditions_and_wildcards_and_columnSorting_and_forceDistinct_is_false_and_descending_is_false_expect_JoinFromSubSelect_query() {
+
+        @ParameterizedTest
+        @MethodSource("addDataCreateJoinFromSubselectsQuery")
+        void when_receive_primaryAlias_and_secondaryAlias_and_primaryQuery_and_secondaryQuery_and_primaryKeys_and_secondaryKeys_and_primaryTableRequestedColumns_and_secondaryTableRequestedColumns_and_primaryTableConditions_and_secondaryTableConditions_and_wildcards_and_columnSorting_and_forceDistinct_and_descending_expect_JoinFromSubSelect_query(boolean descending, boolean forceDistinct, String expected) {
 
             String primaryAlias = "primaryAlias";
             String secondaryAlias = "secondaryAlias";
@@ -856,8 +859,6 @@ class DefaultSQLStatementHandlerTest {
             HashMap secondaryTableConditions = new HashMap();
             ArrayList wildcards = new ArrayList();
             ArrayList columnSorting = new ArrayList();
-            boolean forceDistinct = false;
-            boolean descending = false;
 
 
             primaryKeys.add("primaryKeys");
@@ -870,111 +871,17 @@ class DefaultSQLStatementHandlerTest {
             columnSorting.add("columnSorting");
 
             var result = defaultSQLStatementHandler.createJoinFromSubselectsQuery(primaryAlias, secondaryAlias, primaryQuery, secondaryQuery, primaryKeys, secondaryKeys, primaryTableRequestedColumns, secondaryTableRequestedColumns, primaryTableConditions, secondaryTableConditions, wildcards, columnSorting, forceDistinct, descending);
-            var expected = "SELECT primaryAlias.primaryTableRequestedColumns , secondaryAlias.secondaryTableRequestedColumns FROM (primaryQuery) primaryAlias INNER JOIN (secondaryQuery) secondaryAlias ON  primaryAlias.primaryKeys=secondaryAlias.secondaryKeys AND  secondaryQuery.field2 = ?  AND primaryAlias.field1 = ?  ORDER BY columnSorting";
 
             assertEquals(expected, result.getSQLStatement().trim());
         }
 
-        @Test
-        void when_receive_primaryAlias_and_secondaryAlias_and_primaryQuery_and_secondaryQuery_and_primaryKeys_and_secondaryKeys_and_primaryTableRequestedColumns_and_secondaryTableRequestedColumns_and_primaryTableConditions_and_secondaryTableConditions_and_wildcards_and_columnSorting_and_forceDistinct_is_true_and_descending_is_true_expect_JoinFromSubSelect_query() {
-
-            String primaryAlias = "primaryAlias";
-            String secondaryAlias = "secondaryAlias";
-            String primaryQuery = "primaryQuery";
-            String secondaryQuery = "secondaryQuery";
-            ArrayList primaryKeys = new ArrayList();
-            ArrayList secondaryKeys = new ArrayList();
-            ArrayList primaryTableRequestedColumns = new ArrayList();
-            ArrayList secondaryTableRequestedColumns = new ArrayList();
-            HashMap primaryTableConditions = new HashMap();
-            HashMap secondaryTableConditions = new HashMap();
-            ArrayList wildcards = new ArrayList();
-            ArrayList columnSorting = new ArrayList();
-            boolean forceDistinct = true;
-            boolean descending = true;
-
-
-            primaryKeys.add("primaryKeys");
-            secondaryKeys.add("secondaryKeys");
-            primaryTableRequestedColumns.add("primaryTableRequestedColumns");
-            secondaryTableRequestedColumns.add("secondaryTableRequestedColumns");
-            primaryTableConditions.put("field1", "value1");
-            secondaryTableConditions.put("field2", "value2");
-            wildcards.add("wildcards1");
-            columnSorting.add("columnSorting");
-
-            var result = defaultSQLStatementHandler.createJoinFromSubselectsQuery(primaryAlias, secondaryAlias, primaryQuery, secondaryQuery, primaryKeys, secondaryKeys, primaryTableRequestedColumns, secondaryTableRequestedColumns, primaryTableConditions, secondaryTableConditions, wildcards, columnSorting, forceDistinct, descending);
-            var expected = "SELECT  DISTINCT primaryAlias.primaryTableRequestedColumns , secondaryAlias.secondaryTableRequestedColumns FROM (primaryQuery) primaryAlias INNER JOIN (secondaryQuery) secondaryAlias ON  primaryAlias.primaryKeys=secondaryAlias.secondaryKeys AND  secondaryQuery.field2 = ?  AND primaryAlias.field1 = ?  ORDER BY columnSorting DESC";
-
-            assertEquals(expected, result.getSQLStatement().trim());
-        }
-
-        @Test
-        void when_receive_primaryAlias_and_secondaryAlias_and_primaryQuery_and_secondaryQuery_and_primaryKeys_and_secondaryKeys_and_primaryTableRequestedColumns_and_secondaryTableRequestedColumns_and_primaryTableConditions_and_secondaryTableConditions_and_wildcards_and_columnSorting_and_forceDistinct_is_true_and_descending_is_false_expect_JoinFromSubSelect_query() {
-
-            String primaryAlias = "primaryAlias";
-            String secondaryAlias = "secondaryAlias";
-            String primaryQuery = "primaryQuery";
-            String secondaryQuery = "secondaryQuery";
-            ArrayList primaryKeys = new ArrayList();
-            ArrayList secondaryKeys = new ArrayList();
-            ArrayList primaryTableRequestedColumns = new ArrayList();
-            ArrayList secondaryTableRequestedColumns = new ArrayList();
-            HashMap primaryTableConditions = new HashMap();
-            HashMap secondaryTableConditions = new HashMap();
-            ArrayList wildcards = new ArrayList();
-            ArrayList columnSorting = new ArrayList();
-            boolean forceDistinct = true;
-            boolean descending = false;
-
-
-            primaryKeys.add("primaryKeys");
-            secondaryKeys.add("secondaryKeys");
-            primaryTableRequestedColumns.add("primaryTableRequestedColumns");
-            secondaryTableRequestedColumns.add("secondaryTableRequestedColumns");
-            primaryTableConditions.put("field1", "value1");
-            secondaryTableConditions.put("field2", "value2");
-            wildcards.add("wildcards1");
-            columnSorting.add("columnSorting");
-
-            var result = defaultSQLStatementHandler.createJoinFromSubselectsQuery(primaryAlias, secondaryAlias, primaryQuery, secondaryQuery, primaryKeys, secondaryKeys, primaryTableRequestedColumns, secondaryTableRequestedColumns, primaryTableConditions, secondaryTableConditions, wildcards, columnSorting, forceDistinct, descending);
-            var expected = "SELECT  DISTINCT primaryAlias.primaryTableRequestedColumns , secondaryAlias.secondaryTableRequestedColumns FROM (primaryQuery) primaryAlias INNER JOIN (secondaryQuery) secondaryAlias ON  primaryAlias.primaryKeys=secondaryAlias.secondaryKeys AND  secondaryQuery.field2 = ?  AND primaryAlias.field1 = ?  ORDER BY columnSorting";
-
-            assertEquals(expected, result.getSQLStatement().trim());
-        }
-
-        @Test
-        void when_receive_primaryAlias_and_secondaryAlias_and_primaryQuery_and_secondaryQuery_and_primaryKeys_and_secondaryKeys_and_primaryTableRequestedColumns_and_secondaryTableRequestedColumns_and_primaryTableConditions_and_secondaryTableConditions_and_wildcards_and_columnSorting_and_forceDistinct_is_false_and_descending_is_true_expect_JoinFromSubSelect_query() {
-
-            String primaryAlias = "primaryAlias";
-            String secondaryAlias = "secondaryAlias";
-            String primaryQuery = "primaryQuery";
-            String secondaryQuery = "secondaryQuery";
-            ArrayList primaryKeys = new ArrayList();
-            ArrayList secondaryKeys = new ArrayList();
-            ArrayList primaryTableRequestedColumns = new ArrayList();
-            ArrayList secondaryTableRequestedColumns = new ArrayList();
-            HashMap primaryTableConditions = new HashMap();
-            HashMap secondaryTableConditions = new HashMap();
-            ArrayList wildcards = new ArrayList();
-            ArrayList columnSorting = new ArrayList();
-            boolean forceDistinct = false;
-            boolean descending = true;
-
-
-            primaryKeys.add("primaryKeys");
-            secondaryKeys.add("secondaryKeys");
-            primaryTableRequestedColumns.add("primaryTableRequestedColumns");
-            secondaryTableRequestedColumns.add("secondaryTableRequestedColumns");
-            primaryTableConditions.put("field1", "value1");
-            secondaryTableConditions.put("field2", "value2");
-            wildcards.add("wildcards1");
-            columnSorting.add("columnSorting");
-
-            var result = defaultSQLStatementHandler.createJoinFromSubselectsQuery(primaryAlias, secondaryAlias, primaryQuery, secondaryQuery, primaryKeys, secondaryKeys, primaryTableRequestedColumns, secondaryTableRequestedColumns, primaryTableConditions, secondaryTableConditions, wildcards, columnSorting, forceDistinct, descending);
-            var expected = "SELECT primaryAlias.primaryTableRequestedColumns , secondaryAlias.secondaryTableRequestedColumns FROM (primaryQuery) primaryAlias INNER JOIN (secondaryQuery) secondaryAlias ON  primaryAlias.primaryKeys=secondaryAlias.secondaryKeys AND  secondaryQuery.field2 = ?  AND primaryAlias.field1 = ?  ORDER BY columnSorting DESC";
-
-            assertEquals(expected, result.getSQLStatement().trim());
+        Stream<Arguments> addDataCreateJoinFromSubselectsQuery() {
+            return Stream.of(
+                    Arguments.of(true, false, "SELECT primaryAlias.primaryTableRequestedColumns , secondaryAlias.secondaryTableRequestedColumns FROM (primaryQuery) primaryAlias INNER JOIN (secondaryQuery) secondaryAlias ON  primaryAlias.primaryKeys=secondaryAlias.secondaryKeys AND  secondaryQuery.field2 = ?  AND primaryAlias.field1 = ?  ORDER BY columnSorting DESC"),
+                    Arguments.of(true, true, "SELECT  DISTINCT primaryAlias.primaryTableRequestedColumns , secondaryAlias.secondaryTableRequestedColumns FROM (primaryQuery) primaryAlias INNER JOIN (secondaryQuery) secondaryAlias ON  primaryAlias.primaryKeys=secondaryAlias.secondaryKeys AND  secondaryQuery.field2 = ?  AND primaryAlias.field1 = ?  ORDER BY columnSorting DESC"),
+                    Arguments.of(false, false, "SELECT primaryAlias.primaryTableRequestedColumns , secondaryAlias.secondaryTableRequestedColumns FROM (primaryQuery) primaryAlias INNER JOIN (secondaryQuery) secondaryAlias ON  primaryAlias.primaryKeys=secondaryAlias.secondaryKeys AND  secondaryQuery.field2 = ?  AND primaryAlias.field1 = ?  ORDER BY columnSorting"),
+                    Arguments.of(false, true, "SELECT  DISTINCT primaryAlias.primaryTableRequestedColumns , secondaryAlias.secondaryTableRequestedColumns FROM (primaryQuery) primaryAlias INNER JOIN (secondaryQuery) secondaryAlias ON  primaryAlias.primaryKeys=secondaryAlias.secondaryKeys AND  secondaryQuery.field2 = ?  AND primaryAlias.field1 = ?  ORDER BY columnSorting")
+            );
         }
 
     }
