@@ -771,8 +771,30 @@ class DefaultSQLStatementHandlerTest {
     }
 
     @Nested
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
     class Qualify {
 
+
+        @ParameterizedTest
+        @MethodSource("addDataQualify")
+        void when_receive_col_and_table_expect_col_with_ExpressionKEy(String col, String table) {
+
+            var result = defaultSQLStatementHandler.qualify(col, table);
+            var expected = col;
+
+            assertEquals(expected, result);
+        }
+
+        Stream<Arguments> addDataQualify() {
+            return Stream.of(
+                    Arguments.of("table.[table].[table].", ""),
+                    Arguments.of("[table].[col]", ""),
+                    Arguments.of("table.[col]", ""),
+                    Arguments.of(".[table ]", "")
+            );
+        }
+
+        
         @Test
         void when_receive_col_expect_col_with_ExpressionKey_expect_col_with_ExpressionKey() {
             String col = "EXPRESSION_KEY_UNIQUE_IDENTIFIER";
@@ -801,53 +823,6 @@ class DefaultSQLStatementHandlerTest {
 
             assertTrue(result);
         }
-
-        @Test
-        void when_receive_col_and_table_expect_col_expect_thirth_codepath_of_qualify() {
-            String col = "table.[table].[table].";
-            String table = "";
-
-            var result = defaultSQLStatementHandler.qualify(col, table);
-            var expected = col;
-
-            assertEquals(expected, result);
-        }
-
-
-        @Test
-        void when_receive_col_and_table_expect_col_expect_fourth_codepath_of_qualify() {
-            String col = "[table].[col]";
-            String table = "";
-
-            var result = defaultSQLStatementHandler.qualify(col, table);
-            var expected = col;
-
-            assertEquals(expected, result);
-        }
-
-
-        @Test
-        void when_receive_col_and_table_expect_col_expect_fifth_codepath_of_qualify() {
-            String col = "table.[col]";
-            String table = "";
-
-            var result = defaultSQLStatementHandler.qualify(col, table);
-            var expected = col;
-
-            assertEquals(expected, result);
-        }
-
-        @Test
-        void when_receive_col_and_table_expect_col_expect_sixth_codepath_of_qualify() {
-            String col = ".[table ]";
-            String table = "";
-
-            var result = defaultSQLStatementHandler.qualify(col, table);
-            var expected = col;
-
-            assertEquals(expected, result);
-        }
-
 
         @Test
         void when_receive_col_and_table_expect_col_expect_other_codepath_qualify() {
