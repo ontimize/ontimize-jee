@@ -452,20 +452,6 @@ class DefaultSQLStatementHandlerTest {
             assertEquals(expected, result.getSQLStatement().trim());
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         @Test
         void when_receive_table_and_requestedColumns_and_conditions_and_wildcards_and_columnsSorting_and_recordCount_and_offset_expect_select_query() {
             var table = "my-table";
@@ -533,226 +519,7 @@ class DefaultSQLStatementHandlerTest {
         }
 
 
-        @Test
-        void when_receive_table_and_requestedColumns_and_conditions_and_wildcards_and_columnsSorting_and_recordCount_sum_offset_and_descending_is_false_and_forceDistinct_is_false_expect_select_query() {
-            var table = "my-table";
-            ArrayList requestedColumns = new ArrayList();
-            HashMap conditions = new HashMap();
-            ArrayList wildcards = new ArrayList();
-            ArrayList columnSorting = new ArrayList();
-            int recordCount = 1;
-            int offset = 1;
-            boolean descending = false;
-            boolean forceDistinct = false;
-
-            requestedColumns.add("requestedColumns1");
-            conditions.put("field1", "value1");
-            wildcards.add("wildcards1");
-            columnSorting.add("columnSorting1");
-
-            var result = defaultSQLStatementHandler.createSelectQuery(table, requestedColumns, conditions, wildcards, columnSorting, recordCount + offset, descending, forceDistinct);
-            var expected = "SELECT requestedColumns1 , columnSorting1 FROM  [my-table]   WHERE field1 = ?  ORDER BY columnSorting1";
-
-            assertEquals(expected, result.getSQLStatement().trim());
-        }
-
-        @Test
-        void when_receive_table_and_requestedColumns_and_conditions_and_wildcards_and_columnsSorting_and_recordCount_sum_offset_and_descending_is_false_and_forceDistinct_is_true_expect_select_query() {
-            var table = "my-table";
-            ArrayList requestedColumns = new ArrayList();
-            HashMap conditions = new HashMap();
-            ArrayList wildcards = new ArrayList();
-            ArrayList columnSorting = new ArrayList();
-            int recordCount = 1;
-            int offset = 1;
-            boolean descending = false;
-            boolean forceDistinct = true;
-
-            requestedColumns.add("requestedColumns1");
-            conditions.put("field1", "value1");
-            wildcards.add("wildcards1");
-            columnSorting.add("columnSorting1");
-
-            var result = defaultSQLStatementHandler.createSelectQuery(table, requestedColumns, conditions, wildcards, columnSorting, recordCount + offset, descending, forceDistinct);
-            var expected = "SELECT  DISTINCT requestedColumns1 , columnSorting1 FROM  [my-table]   WHERE field1 = ?  ORDER BY columnSorting1";
-
-            assertEquals(expected, result.getSQLStatement().trim());
-        }
-
-        @Test
-        void when_receive_table_and_requestedColumns_and_conditions_and_wildcards_and_columnsSorting_and_recordCount_sum_offset_and_descending_is_true_and_forceDistinct_is_true_expect_select_query() {
-            var table = "my-table";
-            ArrayList requestedColumns = new ArrayList();
-            HashMap conditions = new HashMap();
-            ArrayList wildcards = new ArrayList();
-            ArrayList columnSorting = new ArrayList();
-            int recordCount = 1;
-            int offset = 1;
-            boolean descending = true;
-            boolean forceDistinct = true;
-
-            requestedColumns.add("requestedColumns1");
-            conditions.put("field1", "value1");
-            wildcards.add("wildcards1");
-            columnSorting.add("columnSorting1");
-
-            var result = defaultSQLStatementHandler.createSelectQuery(table, requestedColumns, conditions, wildcards, columnSorting, recordCount + offset, descending, forceDistinct);
-            var expected = "SELECT  DISTINCT requestedColumns1 , columnSorting1 FROM  [my-table]   WHERE field1 = ?  ORDER BY columnSorting1 DESC";
-
-            assertEquals(expected, result.getSQLStatement().trim());
-        }
-
-        @Test
-        void when_receive_table_and_requestedColumns_and_conditions_and_wildcards_and_columnsSorting_and_recordCount_sum_offset_and_descending_is_true_and_forceDistinct_is_false_expect_select_query() {
-            var table = "my-table";
-            ArrayList requestedColumns = new ArrayList();
-            HashMap conditions = new HashMap();
-            ArrayList wildcards = new ArrayList();
-            ArrayList columnSorting = new ArrayList();
-            int recordCount = 1;
-            int offset = 1;
-            boolean descending = true;
-            boolean forceDistinct = false;
-
-            requestedColumns.add("requestedColumns1");
-            conditions.put("field1", "value1");
-            wildcards.add("wildcards1");
-            columnSorting.add("columnSorting1");
-
-            var result = defaultSQLStatementHandler.createSelectQuery(table, requestedColumns, conditions, wildcards, columnSorting, recordCount + offset, descending, forceDistinct);
-            var expected = "SELECT requestedColumns1 , columnSorting1 FROM  [my-table]   WHERE field1 = ?  ORDER BY columnSorting1 DESC";
-
-            assertEquals(expected, result.getSQLStatement().trim());
-        }
-
-        @Test
-        void when_receive_table_and_requestedColumns_and_conditions_and_wildcards_and_columnsSorting_and_descending_is_true_expect_select_query() {
-            var table = "my-table";
-            ArrayList requestedColumns = new ArrayList();
-            HashMap conditions = new HashMap();
-            ArrayList wildcards = new ArrayList();
-            ArrayList columnSorting = new ArrayList();
-            boolean descending = true;
-
-
-            requestedColumns.add("requestedColumns1");
-            conditions.put("field1", "value1");
-            wildcards.add("wildcards1");
-            columnSorting.add("columnSorting1");
-
-            var result = defaultSQLStatementHandler.createSelectQuery(table, requestedColumns, conditions, wildcards, columnSorting, descending);
-            var expected = "SELECT requestedColumns1 FROM  [my-table]   WHERE field1 = ?  ORDER BY columnSorting1 DESC";
-
-
-            assertEquals(expected, result.getSQLStatement().trim());
-        }
-
-        @Test
-        void when_receive_table_and_requestedColumns_and_conditions_and_wildcards_and_columnsSorting_and_descending_is_false_expect_select_query() {
-            var table = "my-table";
-            ArrayList requestedColumns = new ArrayList();
-            HashMap conditions = new HashMap();
-            ArrayList wildcards = new ArrayList();
-            ArrayList columnSorting = new ArrayList();
-            boolean descending = false;
-
-
-            requestedColumns.add("requestedColumns1");
-            conditions.put("field1", "value1");
-            wildcards.add("wildcards1");
-            columnSorting.add("columnSorting1");
-
-            var result = defaultSQLStatementHandler.createSelectQuery(table, requestedColumns, conditions, wildcards, columnSorting, descending);
-            var expected = "SELECT requestedColumns1 FROM  [my-table]   WHERE field1 = ?  ORDER BY columnSorting1";
-
-            assertEquals(expected, result.getSQLStatement().trim());
-        }
-
-        @Test
-        void when_receive_table_and_requestedColumns_and_conditions_and_wildcards_and_columnsSorting_and_descending_is_true_and_forceDistinct_is_false_expect_select_query() {
-            var table = "my-table";
-            ArrayList requestedColumns = new ArrayList();
-            HashMap conditions = new HashMap();
-            ArrayList wildcards = new ArrayList();
-            ArrayList columnSorting = new ArrayList();
-            boolean descending = true;
-            boolean forceDistinct = false;
-
-            requestedColumns.add("requestedColumns1");
-            conditions.put("field1", "value1");
-            wildcards.add("wildcards1");
-            columnSorting.add("columnSorting1");
-
-            var result = defaultSQLStatementHandler.createSelectQuery(table, requestedColumns, conditions, wildcards, columnSorting, descending, forceDistinct);
-            var expected = "SELECT requestedColumns1 FROM  [my-table]   WHERE field1 = ?  ORDER BY columnSorting1 DESC";
-
-            assertEquals(expected, result.getSQLStatement().trim());
-        }
-
-        @Test
-        void when_receive_table_and_requestedColumns_and_conditions_and_wildcards_and_columnsSorting_and_descending_is_true_and_forceDistinct_is_true_expect_select_query() {
-            var table = "my-table";
-            ArrayList requestedColumns = new ArrayList();
-            HashMap conditions = new HashMap();
-            ArrayList wildcards = new ArrayList();
-            ArrayList columnSorting = new ArrayList();
-            boolean descending = true;
-            boolean forceDistinct = true;
-
-            requestedColumns.add("requestedColumns1");
-            conditions.put("field1", "value1");
-            wildcards.add("wildcards1");
-            columnSorting.add("columnSorting1");
-
-            var result = defaultSQLStatementHandler.createSelectQuery(table, requestedColumns, conditions, wildcards, columnSorting, descending, forceDistinct);
-            var expected = "SELECT  DISTINCT requestedColumns1 , columnSorting1 FROM  [my-table]   WHERE field1 = ?  ORDER BY columnSorting1 DESC";
-
-            assertEquals(expected, result.getSQLStatement().trim());
-        }
-
-        @Test
-        void when_receive_table_and_requestedColumns_and_conditions_and_wildcards_and_columnsSorting_and_descending_is_false_and_forceDistinct_is_false_expect_select_query() {
-            var table = "my-table";
-            ArrayList requestedColumns = new ArrayList();
-            HashMap conditions = new HashMap();
-            ArrayList wildcards = new ArrayList();
-            ArrayList columnSorting = new ArrayList();
-            boolean descending = false;
-            boolean forceDistinct = false;
-
-            requestedColumns.add("requestedColumns1");
-            conditions.put("field1", "value1");
-            wildcards.add("wildcards1");
-            columnSorting.add("columnSorting1");
-
-            var result = defaultSQLStatementHandler.createSelectQuery(table, requestedColumns, conditions, wildcards, columnSorting, descending, forceDistinct);
-            var expected = "SELECT requestedColumns1 FROM  [my-table]   WHERE field1 = ?  ORDER BY columnSorting1";
-
-            assertEquals(expected, result.getSQLStatement().trim());
-        }
-
-        @Test
-        void when_receive_table_and_requestedColumns_and_conditions_and_wildcards_and_columnsSorting_and_descending_is_false_and_forceDistinct_is_true_expect_select_query() {
-            var table = "my-table";
-            ArrayList requestedColumns = new ArrayList();
-            HashMap conditions = new HashMap();
-            ArrayList wildcards = new ArrayList();
-            ArrayList columnSorting = new ArrayList();
-            boolean descending = false;
-            boolean forceDistinct = true;
-
-            requestedColumns.add("requestedColumns1");
-            conditions.put("field1", "value1");
-            wildcards.add("wildcards1");
-            columnSorting.add("columnSorting1");
-
-            var result = defaultSQLStatementHandler.createSelectQuery(table, requestedColumns, conditions, wildcards, columnSorting, descending, forceDistinct);
-            var expected = "SELECT  DISTINCT requestedColumns1 , columnSorting1 FROM  [my-table]   WHERE field1 = ?  ORDER BY columnSorting1";
-
-            assertEquals(expected, result.getSQLStatement().trim());
-        }
     }
-
 
 
     @Nested
@@ -776,10 +543,72 @@ class DefaultSQLStatementHandlerTest {
             columnSorting.add("columnSorting1");
 
             var result = defaultSQLStatementHandler.createSelectQuery(table, requestedColumns, conditions, wildcards, columnSorting, recordCount, descending, forceDistinct);
-            //var expected = "SELECT  DISTINCT requestedColumns1 , columnSorting1 FROM  [my-table]   WHERE field1 = ?  ORDER BY columnSorting1";
 
             assertEquals(expected, result.getSQLStatement().trim());
         }
+
+        @ParameterizedTest
+        @MethodSource("addDataCreateSelectQuery")
+        void when_receive_table_and_requestedColumns_and_conditions_and_wildcards_and_columnsSorting_and_recordCount_sum_offset_and_descending_and_forceDistinct_expect_select_query(boolean descending, boolean forceDistinct, String expected) {
+            var table = "my-table";
+            ArrayList requestedColumns = new ArrayList();
+            HashMap conditions = new HashMap();
+            ArrayList wildcards = new ArrayList();
+            ArrayList columnSorting = new ArrayList();
+            int recordCount = 10;
+            int offset = 1;
+
+
+            requestedColumns.add("requestedColumns1");
+            conditions.put("field1", "value1");
+            wildcards.add("wildcards1");
+            columnSorting.add("columnSorting1");
+
+            var result = defaultSQLStatementHandler.createSelectQuery(table, requestedColumns, conditions, wildcards, columnSorting, recordCount + offset, descending, forceDistinct);
+
+            assertEquals(expected, result.getSQLStatement().trim());
+        }
+
+        @ParameterizedTest
+        @MethodSource("addDataCreateSelectQueryWithDescending")
+        void when_receive_table_and_requestedColumns_and_conditions_and_wildcards_and_columnsSorting_and_descending_expect_select_query(boolean descending, String expected) {
+            var table = "my-table";
+            ArrayList requestedColumns = new ArrayList();
+            HashMap conditions = new HashMap();
+            ArrayList wildcards = new ArrayList();
+            ArrayList columnSorting = new ArrayList();
+
+
+            requestedColumns.add("requestedColumns1");
+            conditions.put("field1", "value1");
+            wildcards.add("wildcards1");
+            columnSorting.add("columnSorting1");
+
+            var result = defaultSQLStatementHandler.createSelectQuery(table, requestedColumns, conditions, wildcards, columnSorting, descending);
+
+            assertEquals(expected, result.getSQLStatement().trim());
+        }
+
+        @ParameterizedTest
+        @MethodSource("addDataCreateSelectQueryWithoutRecordCount")
+        void when_receive_table_and_requestedColumns_and_conditions_and_wildcards_and_columnsSorting_and_descending_and_forceDistinct_expect_select_query(boolean descending, boolean forceDistinct, String expected) {
+            var table = "my-table";
+            ArrayList requestedColumns = new ArrayList();
+            HashMap conditions = new HashMap();
+            ArrayList wildcards = new ArrayList();
+            ArrayList columnSorting = new ArrayList();
+
+
+            requestedColumns.add("requestedColumns1");
+            conditions.put("field1", "value1");
+            wildcards.add("wildcards1");
+            columnSorting.add("columnSorting1");
+
+            var result = defaultSQLStatementHandler.createSelectQuery(table, requestedColumns, conditions, wildcards, columnSorting, descending, forceDistinct);
+
+            assertEquals(expected, result.getSQLStatement().trim());
+        }
+
 
         Stream<Arguments> addDataCreateSelectQuery() {
             return Stream.of(
@@ -788,10 +617,27 @@ class DefaultSQLStatementHandlerTest {
                     Arguments.of(false, false, "SELECT requestedColumns1 , columnSorting1 FROM  [my-table]   WHERE field1 = ?  ORDER BY columnSorting1"),
                     Arguments.of(false, true, "SELECT  DISTINCT requestedColumns1 , columnSorting1 FROM  [my-table]   WHERE field1 = ?  ORDER BY columnSorting1")
             );
-
-
         }
+
+        Stream<Arguments> addDataCreateSelectQueryWithDescending() {
+            return Stream.of(
+                    Arguments.of(true, "SELECT requestedColumns1 FROM  [my-table]   WHERE field1 = ?  ORDER BY columnSorting1 DESC"),
+                    Arguments.of(false, "SELECT requestedColumns1 FROM  [my-table]   WHERE field1 = ?  ORDER BY columnSorting1")
+            );
+        }
+
+
+        Stream<Arguments> addDataCreateSelectQueryWithoutRecordCount() {
+            return Stream.of(
+                    Arguments.of(true, false, "SELECT requestedColumns1 FROM  [my-table]   WHERE field1 = ?  ORDER BY columnSorting1 DESC"),
+                    Arguments.of(true, true, "SELECT  DISTINCT requestedColumns1 , columnSorting1 FROM  [my-table]   WHERE field1 = ?  ORDER BY columnSorting1 DESC"),
+                    Arguments.of(false, false, "SELECT requestedColumns1 FROM  [my-table]   WHERE field1 = ?  ORDER BY columnSorting1"),
+                    Arguments.of(false, true, "SELECT  DISTINCT requestedColumns1 , columnSorting1 FROM  [my-table]   WHERE field1 = ?  ORDER BY columnSorting1")
+            );
+        }
+
     }
+
     @Nested
     class CreateSortStatement {
 
@@ -837,42 +683,12 @@ class DefaultSQLStatementHandlerTest {
     }
 
     @Nested
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
     class CreateJoinSelectQuery {
 
-
-        @Test
-        void when_receive_principalTable_and_secondaryTable_and_principalKeys_and_secondaryKeys_and_principalTableRequestedColumns_and_secondaryTableRequestedColumns_and_principalTableConditions_and_secondaryTableConditions_and_wildcards_and_columnSorting_and_forceDistinct_is_false_and_descending_is_false_expect_JoinSelect_query() {
-
-            String principalTable = "principalTable";
-            String secondaryTable = "secondaryTable";
-            ArrayList principalKeys = new ArrayList();
-            ArrayList secondaryKeys = new ArrayList();
-            ArrayList principalTableRequestedColumns = new ArrayList();
-            ArrayList secondaryTableRequestedColumns = new ArrayList();
-            HashMap principalTableConditions = new HashMap();
-            HashMap secondaryTableConditions = new HashMap();
-            ArrayList wildcards = new ArrayList();
-            ArrayList columnSorting = new ArrayList();
-            boolean forceDistinct = false;
-            boolean descending = false;
-
-            principalKeys.add("principalKeys");
-            secondaryKeys.add("secondaryTable");
-            principalTableRequestedColumns.add("principalTableRequestedColumns");
-            secondaryTableRequestedColumns.add("secondaryTableRequestedColumns");
-            principalTableConditions.put("field1", "value1");
-            secondaryTableConditions.put("field2", "value2");
-            wildcards.add("wildcards1");
-            columnSorting.add("columnSorting");
-
-            var result = defaultSQLStatementHandler.createJoinSelectQuery(principalTable, secondaryTable, principalKeys, secondaryKeys, principalTableRequestedColumns, secondaryTableRequestedColumns, principalTableConditions, secondaryTableConditions, wildcards, columnSorting, forceDistinct, descending);
-            var expected = "SELECT principalTable.principalTableRequestedColumns , secondaryTable.secondaryTableRequestedColumns " + "FROM principalTable,secondaryTable WHERE  principalTable.principalKeys=secondaryTable.secondaryTable AND  " + "secondaryTable.field2 = ?  AND principalTable.field1 = ?  ORDER BY columnSorting";
-
-            assertEquals(expected, result.getSQLStatement().trim());
-        }
-
-        @Test
-        void when_receive_principalTable_and_secondaryTable_and_principalKeys_and_secondaryKeys_and_principalTableRequestedColumns_and_secondaryTableRequestedColumns_and_principalTableConditions_and_secondaryTableConditions_and_wildcards_and_columnSorting_and_forceDistinct_is_true_and_descending_is_false_expect_JoinSelect_query() {
+        @ParameterizedTest
+        @MethodSource("addDataCreateJoinSelectQuery")
+        void when_receive_principalTable_and_secondaryTable_and_principalKeys_and_secondaryKeys_and_principalTableRequestedColumns_and_secondaryTableRequestedColumns_and_principalTableConditions_and_secondaryTableConditions_and_wildcards_and_columnSorting_and_forceDistinct_and_descending_expect_JoinSelect_query(boolean descending, boolean forceDistinct, String expected) {
 
             String principalTable = "principalTable";
             String secondaryTable = "secondaryTable";
@@ -884,8 +700,7 @@ class DefaultSQLStatementHandlerTest {
             HashMap secondaryTableConditions = new HashMap();
             ArrayList wildcards = new ArrayList();
             ArrayList columnSorting = new ArrayList();
-            boolean forceDistinct = true;
-            boolean descending = false;
+
 
             principalKeys.add("principalKeys");
             secondaryKeys.add("secondaryTable");
@@ -897,75 +712,25 @@ class DefaultSQLStatementHandlerTest {
             columnSorting.add("columnSorting");
 
             var result = defaultSQLStatementHandler.createJoinSelectQuery(principalTable, secondaryTable, principalKeys, secondaryKeys, principalTableRequestedColumns, secondaryTableRequestedColumns, principalTableConditions, secondaryTableConditions, wildcards, columnSorting, forceDistinct, descending);
-            var expected = "SELECT  DISTINCT principalTable.principalTableRequestedColumns , secondaryTable.secondaryTableRequestedColumns FROM principalTable,secondaryTable WHERE  principalTable.principalKeys=secondaryTable.secondaryTable AND  secondaryTable.field2 = ?  AND principalTable.field1 = ?  ORDER BY columnSorting";
 
             assertEquals(expected, result.getSQLStatement().trim());
+
+
         }
 
-        @Test
-        void when_receive_principalTable_and_secondaryTable_and_principalKeys_and_secondaryKeys_and_principalTableRequestedColumns_and_secondaryTableRequestedColumns_and_principalTableConditions_and_secondaryTableConditions_and_wildcards_and_columnSorting_and_forceDistinct_is_true_and_descending_is_true_expect_JoinSelect_query() {
-
-            String principalTable = "principalTable";
-            String secondaryTable = "secondaryTable";
-            ArrayList principalKeys = new ArrayList();
-            ArrayList secondaryKeys = new ArrayList();
-            ArrayList principalTableRequestedColumns = new ArrayList();
-            ArrayList secondaryTableRequestedColumns = new ArrayList();
-            HashMap principalTableConditions = new HashMap();
-            HashMap secondaryTableConditions = new HashMap();
-            ArrayList wildcards = new ArrayList();
-            ArrayList columnSorting = new ArrayList();
-            boolean forceDistinct = true;
-            boolean descending = true;
-
-            principalKeys.add("principalKeys");
-            secondaryKeys.add("secondaryTable");
-            principalTableRequestedColumns.add("principalTableRequestedColumns");
-            secondaryTableRequestedColumns.add("secondaryTableRequestedColumns");
-            principalTableConditions.put("field1", "value1");
-            secondaryTableConditions.put("field2", "value2");
-            wildcards.add("wildcards1");
-            columnSorting.add("columnSorting");
-
-            var result = defaultSQLStatementHandler.createJoinSelectQuery(principalTable, secondaryTable, principalKeys, secondaryKeys, principalTableRequestedColumns, secondaryTableRequestedColumns, principalTableConditions, secondaryTableConditions, wildcards, columnSorting, forceDistinct, descending);
-            var expected = "SELECT  DISTINCT principalTable.principalTableRequestedColumns , secondaryTable.secondaryTableRequestedColumns FROM principalTable,secondaryTable WHERE  principalTable.principalKeys=secondaryTable.secondaryTable AND  secondaryTable.field2 = ?  AND principalTable.field1 = ?  ORDER BY columnSorting DESC";
-
-            assertEquals(expected, result.getSQLStatement().trim());
+        Stream<Arguments> addDataCreateJoinSelectQuery() {
+            return Stream.of(
+                    Arguments.of(true, false, "SELECT principalTable.principalTableRequestedColumns , secondaryTable.secondaryTableRequestedColumns FROM principalTable,secondaryTable WHERE  principalTable.principalKeys=secondaryTable.secondaryTable AND  secondaryTable.field2 = ?  AND principalTable.field1 = ?  ORDER BY columnSorting DESC"),
+                    Arguments.of(true, true, "SELECT  DISTINCT principalTable.principalTableRequestedColumns , secondaryTable.secondaryTableRequestedColumns FROM principalTable,secondaryTable WHERE  principalTable.principalKeys=secondaryTable.secondaryTable AND  secondaryTable.field2 = ?  AND principalTable.field1 = ?  ORDER BY columnSorting DESC"),
+                    Arguments.of(false, false, "SELECT principalTable.principalTableRequestedColumns , secondaryTable.secondaryTableRequestedColumns FROM principalTable,secondaryTable WHERE  principalTable.principalKeys=secondaryTable.secondaryTable AND  secondaryTable.field2 = ?  AND principalTable.field1 = ?  ORDER BY columnSorting"),
+                    Arguments.of(false, true, "SELECT  DISTINCT principalTable.principalTableRequestedColumns , secondaryTable.secondaryTableRequestedColumns FROM principalTable,secondaryTable WHERE  principalTable.principalKeys=secondaryTable.secondaryTable AND  secondaryTable.field2 = ?  AND principalTable.field1 = ?  ORDER BY columnSorting")
+            );
         }
 
-        @Test
-        void when_receive_principalTable_and_secondaryTable_and_principalKeys_and_secondaryKeys_and_principalTableRequestedColumns_and_secondaryTableRequestedColumns_and_principalTableConditions_and_secondaryTableConditions_and_wildcards_and_columnSorting_and_forceDistinct_is_false_and_descending_is_true_expect_JoinSelect_query() {
 
-            String principalTable = "principalTable";
-            String secondaryTable = "secondaryTable";
-            ArrayList principalKeys = new ArrayList();
-            ArrayList secondaryKeys = new ArrayList();
-            ArrayList principalTableRequestedColumns = new ArrayList();
-            ArrayList secondaryTableRequestedColumns = new ArrayList();
-            HashMap principalTableConditions = new HashMap();
-            HashMap secondaryTableConditions = new HashMap();
-            ArrayList wildcards = new ArrayList();
-            ArrayList columnSorting = new ArrayList();
-            boolean forceDistinct = false;
-            boolean descending = true;
-
-            principalKeys.add("principalKeys");
-            secondaryKeys.add("secondaryTable");
-            principalTableRequestedColumns.add("principalTableRequestedColumns");
-            secondaryTableRequestedColumns.add("secondaryTableRequestedColumns");
-            principalTableConditions.put("field1", "value1");
-            secondaryTableConditions.put("field2", "value2");
-            wildcards.add("wildcards1");
-            columnSorting.add("columnSorting");
-
-            var result = defaultSQLStatementHandler.createJoinSelectQuery(principalTable, secondaryTable, principalKeys, secondaryKeys, principalTableRequestedColumns, secondaryTableRequestedColumns, principalTableConditions, secondaryTableConditions, wildcards, columnSorting, forceDistinct, descending);
-            var expected = "SELECT principalTable.principalTableRequestedColumns , secondaryTable.secondaryTableRequestedColumns FROM principalTable,secondaryTable WHERE  principalTable.principalKeys=secondaryTable.secondaryTable AND  secondaryTable.field2 = ?  AND principalTable.field1 = ?  ORDER BY columnSorting DESC";
-
-            assertEquals(expected, result.getSQLStatement().trim());
-        }
-
-        @Test
-        void when_receive_mainTable_and_secondaryTable_and_mainKeys_and_secondaryKeys_and_mainTableRequestedColumns_and_secondaryTableRequestedColumns_and_mainTableConditions_and_secondaryTableConditions_and_wildcards_and_columnSorting_and_forceDistinct_is_false_and_descending_is_false_expect_JoinSelect_query() {
+        @ParameterizedTest
+        @MethodSource("addDataCreateJoinSelectQueryWithMainTable")
+        void when_receive_mainTable_and_secondaryTable_and_mainKeys_and_secondaryKeys_and_mainTableRequestedColumns_and_secondaryTableRequestedColumns_and_mainTableConditions_and_secondaryTableConditions_and_wildcards_and_columnSorting_and_forceDistinct_and_descending_expect_JoinSelect_query(boolean descending, boolean forceDistinct, String expected) {
 
             String mainTable = "mainTable";
             String secondaryTable = "secondaryTable";
@@ -977,8 +742,6 @@ class DefaultSQLStatementHandlerTest {
             HashMap secondaryTableConditions = new HashMap();
             ArrayList wildcards = new ArrayList();
             ArrayList columnSorting = new ArrayList();
-            boolean forceDistinct = false;
-            boolean descending = false;
 
 
             mainKeys.add("mainKeys");
@@ -991,105 +754,17 @@ class DefaultSQLStatementHandlerTest {
             columnSorting.add("columnSorting");
 
             var result = defaultSQLStatementHandler.createJoinSelectQuery(mainTable, secondaryTable, mainKeys, secondaryKeys, mainTableRequestedColumns, secondaryTableRequestedColumns, mainTableConditions, secondaryTableConditions, wildcards, columnSorting, forceDistinct, descending);
-            var expected = "SELECT mainTable.mainTableRequestedColumns , secondaryTable.secondaryTableRequestedColumns FROM mainTable,secondaryTable WHERE  mainTable.mainKeys=secondaryTable.secondaryTable AND  secondaryTable.field2 = ?  AND mainTable.field1 = ?  ORDER BY columnSorting";
 
             assertEquals(expected, result.getSQLStatement().trim());
         }
 
-        @Test
-        void when_receive_mainTable_and_secondaryTable_and_mainKeys_and_secondaryKeys_and_mainTableRequestedColumns_and_secondaryTableRequestedColumns_and_mainTableConditions_and_secondaryTableConditions_and_wildcards_and_columnSorting_and_forceDistinct_is_true_and_descending_is_false_expect_JoinSelect_query() {
-
-            String mainTable = "mainTable";
-            String secondaryTable = "secondaryTable";
-            ArrayList mainKeys = new ArrayList();
-            ArrayList secondaryKeys = new ArrayList();
-            ArrayList mainTableRequestedColumns = new ArrayList();
-            ArrayList secondaryTableRequestedColumns = new ArrayList();
-            HashMap mainTableConditions = new HashMap();
-            HashMap secondaryTableConditions = new HashMap();
-            ArrayList wildcards = new ArrayList();
-            ArrayList columnSorting = new ArrayList();
-            boolean forceDistinct = true;
-            boolean descending = false;
-
-
-            mainKeys.add("mainKeys");
-            secondaryKeys.add("secondaryTable");
-            mainTableRequestedColumns.add("mainTableRequestedColumns");
-            secondaryTableRequestedColumns.add("secondaryTableRequestedColumns");
-            mainTableConditions.put("field1", "value1");
-            secondaryTableConditions.put("field2", "value2");
-            wildcards.add("wildcards1");
-            columnSorting.add("columnSorting");
-
-            var result = defaultSQLStatementHandler.createJoinSelectQuery(mainTable, secondaryTable, mainKeys, secondaryKeys, mainTableRequestedColumns, secondaryTableRequestedColumns, mainTableConditions, secondaryTableConditions, wildcards, columnSorting, forceDistinct, descending);
-            var expected = "SELECT  DISTINCT mainTable.mainTableRequestedColumns , secondaryTable.secondaryTableRequestedColumns FROM mainTable,secondaryTable WHERE  mainTable.mainKeys=secondaryTable.secondaryTable AND  secondaryTable.field2 = ?  AND mainTable.field1 = ?  ORDER BY columnSorting";
-
-            assertEquals(expected, result.getSQLStatement().trim());
-        }
-
-        @Test
-        void when_receive_mainTable_and_secondaryTable_and_mainKeys_and_secondaryKeys_and_mainTableRequestedColumns_and_secondaryTableRequestedColumns_and_mainTableConditions_and_secondaryTableConditions_and_wildcards_and_columnSorting_and_forceDistinct_is_true_and_descending_is_true_expect_JoinSelect_query() {
-
-            String mainTable = "mainTable";
-            String secondaryTable = "secondaryTable";
-            ArrayList mainKeys = new ArrayList();
-            ArrayList secondaryKeys = new ArrayList();
-            ArrayList mainTableRequestedColumns = new ArrayList();
-            ArrayList secondaryTableRequestedColumns = new ArrayList();
-            HashMap mainTableConditions = new HashMap();
-            HashMap secondaryTableConditions = new HashMap();
-            ArrayList wildcards = new ArrayList();
-            ArrayList columnSorting = new ArrayList();
-            boolean forceDistinct = true;
-            boolean descending = true;
-
-
-            mainKeys.add("mainKeys");
-            secondaryKeys.add("secondaryTable");
-            mainTableRequestedColumns.add("mainTableRequestedColumns");
-            secondaryTableRequestedColumns.add("secondaryTableRequestedColumns");
-            mainTableConditions.put("field1", "value1");
-            secondaryTableConditions.put("field2", "value2");
-            wildcards.add("wildcards1");
-            columnSorting.add("columnSorting");
-
-            var result = defaultSQLStatementHandler.createJoinSelectQuery(mainTable, secondaryTable, mainKeys, secondaryKeys, mainTableRequestedColumns, secondaryTableRequestedColumns, mainTableConditions, secondaryTableConditions, wildcards, columnSorting, forceDistinct, descending);
-            var expected = "SELECT  DISTINCT mainTable.mainTableRequestedColumns , secondaryTable.secondaryTableRequestedColumns FROM mainTable,secondaryTable WHERE  mainTable.mainKeys=secondaryTable.secondaryTable AND  secondaryTable.field2 = ?  AND mainTable.field1 = ?  ORDER BY columnSorting DESC";
-
-            assertEquals(expected, result.getSQLStatement().trim());
-        }
-
-        @Test
-        void when_receive_mainTable_and_secondaryTable_and_mainKeys_and_secondaryKeys_and_mainTableRequestedColumns_and_secondaryTableRequestedColumns_and_mainTableConditions_and_secondaryTableConditions_and_wildcards_and_columnSorting_and_forceDistinct_is_false_and_descending_is_true_expect_JoinSelect_query() {
-
-            String mainTable = "mainTable";
-            String secondaryTable = "secondaryTable";
-            ArrayList mainKeys = new ArrayList();
-            ArrayList secondaryKeys = new ArrayList();
-            ArrayList mainTableRequestedColumns = new ArrayList();
-            ArrayList secondaryTableRequestedColumns = new ArrayList();
-            HashMap mainTableConditions = new HashMap();
-            HashMap secondaryTableConditions = new HashMap();
-            ArrayList wildcards = new ArrayList();
-            ArrayList columnSorting = new ArrayList();
-            boolean forceDistinct = false;
-            boolean descending = true;
-
-
-            mainKeys.add("mainKeys");
-            secondaryKeys.add("secondaryTable");
-            mainTableRequestedColumns.add("mainTableRequestedColumns");
-            secondaryTableRequestedColumns.add("secondaryTableRequestedColumns");
-            mainTableConditions.put("field1", "value1");
-            secondaryTableConditions.put("field2", "value2");
-            wildcards.add("wildcards1");
-            columnSorting.add("columnSorting");
-
-            var result = defaultSQLStatementHandler.createJoinSelectQuery(mainTable, secondaryTable, mainKeys, secondaryKeys, mainTableRequestedColumns, secondaryTableRequestedColumns, mainTableConditions, secondaryTableConditions, wildcards, columnSorting, forceDistinct, descending);
-            var expected = "SELECT mainTable.mainTableRequestedColumns , secondaryTable.secondaryTableRequestedColumns FROM mainTable,secondaryTable WHERE  mainTable.mainKeys=secondaryTable.secondaryTable AND  secondaryTable.field2 = ?  AND mainTable.field1 = ?  ORDER BY columnSorting DESC";
-
-            assertEquals(expected, result.getSQLStatement().trim());
+        Stream<Arguments> addDataCreateJoinSelectQueryWithMainTable() {
+            return Stream.of(
+                    Arguments.of(true, false, "SELECT mainTable.mainTableRequestedColumns , secondaryTable.secondaryTableRequestedColumns FROM mainTable,secondaryTable WHERE  mainTable.mainKeys=secondaryTable.secondaryTable AND  secondaryTable.field2 = ?  AND mainTable.field1 = ?  ORDER BY columnSorting DESC"),
+                    Arguments.of(true, true, "SELECT  DISTINCT mainTable.mainTableRequestedColumns , secondaryTable.secondaryTableRequestedColumns FROM mainTable,secondaryTable WHERE  mainTable.mainKeys=secondaryTable.secondaryTable AND  secondaryTable.field2 = ?  AND mainTable.field1 = ?  ORDER BY columnSorting DESC"),
+                    Arguments.of(false, false, "SELECT mainTable.mainTableRequestedColumns , secondaryTable.secondaryTableRequestedColumns FROM mainTable,secondaryTable WHERE  mainTable.mainKeys=secondaryTable.secondaryTable AND  secondaryTable.field2 = ?  AND mainTable.field1 = ?  ORDER BY columnSorting"),
+                    Arguments.of(false, true, "SELECT  DISTINCT mainTable.mainTableRequestedColumns , secondaryTable.secondaryTableRequestedColumns FROM mainTable,secondaryTable WHERE  mainTable.mainKeys=secondaryTable.secondaryTable AND  secondaryTable.field2 = ?  AND mainTable.field1 = ?  ORDER BY columnSorting")
+            );
         }
 
 
@@ -1667,7 +1342,6 @@ class DefaultSQLStatementHandlerTest {
             assertEquals(true, entityResult.containsKey(generatedKeys));
 
 
-
         }
 
     }
@@ -1688,6 +1362,7 @@ class DefaultSQLStatementHandlerTest {
         Time time;
         @Mock
         Date date;
+
         @Test
         void when_receive_index_and_value_and_preparedStatement_and_truncDates_expect_set_object() throws SQLException {
 
@@ -1717,13 +1392,13 @@ class DefaultSQLStatementHandlerTest {
             defaultSQLStatementHandler.setObject(7, null, preparedStatement, truncDates);
             verify(preparedStatement).setObject(7, null);
 
-            defaultSQLStatementHandler.setObject(8,timestamp,preparedStatement,truncDates);
+            defaultSQLStatementHandler.setObject(8, timestamp, preparedStatement, truncDates);
             verify(preparedStatement).setTimestamp(8, timestamp);
 
-            defaultSQLStatementHandler.setObject(9, time, preparedStatement,truncDates);
+            defaultSQLStatementHandler.setObject(9, time, preparedStatement, truncDates);
             verify(preparedStatement).setTime(9, time);
 
-            defaultSQLStatementHandler.setObject(10, date, preparedStatement,truncDates);
+            defaultSQLStatementHandler.setObject(10, date, preparedStatement, truncDates);
             verify(preparedStatement).setDate(10, date);
 
         }
