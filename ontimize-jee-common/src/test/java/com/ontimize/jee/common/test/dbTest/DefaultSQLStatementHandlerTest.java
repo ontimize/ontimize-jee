@@ -939,10 +939,12 @@ class DefaultSQLStatementHandlerTest {
     }
 
     @Nested
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
     class CreateLeftJoinSelectQuery {
 
-        @Test
-        void when_receive_mainTable_and_subquery_and_secondaryTable_and_mainKeys_and_secondaryKeys_and_mainTableRequestedColumns_and_secondaryTableRequestedColumns_and_mainTableConditions_and_secondaryTableConditions_and_wildcards_and_columnSorting_and_forceDistinct_is_false_and_descending_is_false_expect_LeftJoinSelect_query() {
+        @ParameterizedTest
+        @MethodSource("addDataCreateJoinSelectQuery")
+        void when_receive_mainTable_and_subquery_and_secondaryTable_and_mainKeys_and_secondaryKeys_and_mainTableRequestedColumns_and_secondaryTableRequestedColumns_and_mainTableConditions_and_secondaryTableConditions_and_wildcards_and_columnSorting_and_forceDistinct_and_descending_expect_LeftJoinSelect_query(boolean descending, boolean forceDistinct, String expected) {
 
             String mainTable = "mainTable";
             String subquery = "subquery";
@@ -955,8 +957,6 @@ class DefaultSQLStatementHandlerTest {
             HashMap secondaryTableConditions = new HashMap();
             ArrayList wildcards = new ArrayList();
             ArrayList columnSorting = new ArrayList();
-            boolean forceDistinct = false;
-            boolean descending = false;
 
 
             mainKeys.add("mainKeys");
@@ -969,109 +969,20 @@ class DefaultSQLStatementHandlerTest {
             columnSorting.add("columnSorting");
 
             var result = defaultSQLStatementHandler.createLeftJoinSelectQuery(mainTable, subquery, secondaryTable, mainKeys, secondaryKeys, mainTableRequestedColumns, secondaryTableRequestedColumns, mainTableConditions, secondaryTableConditions, wildcards, columnSorting, forceDistinct, descending);
-            var expected = "SELECT mainTable.mainTableRequestedColumns , secondaryTable.secondaryTableRequestedColumns FROM (subquery)mainTable LEFT JOIN secondaryTable ON  mainTable.mainKeys=secondaryTable.secondaryTable AND  secondaryTable.field2 = ?  AND mainTable.field1 = ?  ORDER BY columnSorting";
 
             assertEquals(expected, result.getSQLStatement().trim());
         }
 
-        @Test
-        void when_receive_mainTable_and_subquery_and_secondaryTable_and_mainKeys_and_secondaryKeys_and_mainTableRequestedColumns_and_secondaryTableRequestedColumns_and_mainTableConditions_and_secondaryTableConditions_and_wildcards_and_columnSorting_and_forceDistinct_is_false_and_descending_is_true_expect_LeftJoinSelect_query() {
 
-            String mainTable = "mainTable";
-            String subquery = "subquery";
-            String secondaryTable = "secondaryTable";
-            ArrayList mainKeys = new ArrayList();
-            ArrayList secondaryKeys = new ArrayList();
-            ArrayList mainTableRequestedColumns = new ArrayList();
-            ArrayList secondaryTableRequestedColumns = new ArrayList();
-            HashMap mainTableConditions = new HashMap();
-            HashMap secondaryTableConditions = new HashMap();
-            ArrayList wildcards = new ArrayList();
-            ArrayList columnSorting = new ArrayList();
-            boolean forceDistinct = false;
-            boolean descending = true;
-
-
-            mainKeys.add("mainKeys");
-            secondaryKeys.add("secondaryTable");
-            mainTableRequestedColumns.add("mainTableRequestedColumns");
-            secondaryTableRequestedColumns.add("secondaryTableRequestedColumns");
-            mainTableConditions.put("field1", "value1");
-            secondaryTableConditions.put("field2", "value2");
-            wildcards.add("wildcards1");
-            columnSorting.add("columnSorting");
-
-            var result = defaultSQLStatementHandler.createLeftJoinSelectQuery(mainTable, subquery, secondaryTable, mainKeys, secondaryKeys, mainTableRequestedColumns, secondaryTableRequestedColumns, mainTableConditions, secondaryTableConditions, wildcards, columnSorting, forceDistinct, descending);
-            var expected = "SELECT mainTable.mainTableRequestedColumns , secondaryTable.secondaryTableRequestedColumns FROM (subquery)mainTable LEFT JOIN secondaryTable ON  mainTable.mainKeys=secondaryTable.secondaryTable AND  secondaryTable.field2 = ?  AND mainTable.field1 = ?  ORDER BY columnSorting DESC";
-
-            assertEquals(expected, result.getSQLStatement().trim());
+        Stream<Arguments> addDataCreateJoinSelectQuery() {
+            return Stream.of(
+                    Arguments.of(true, false, "SELECT mainTable.mainTableRequestedColumns , secondaryTable.secondaryTableRequestedColumns FROM (subquery)mainTable LEFT JOIN secondaryTable ON  mainTable.mainKeys=secondaryTable.secondaryTable AND  secondaryTable.field2 = ?  AND mainTable.field1 = ?  ORDER BY columnSorting DESC"),
+                    Arguments.of(true, true, "SELECT  DISTINCT mainTable.mainTableRequestedColumns , secondaryTable.secondaryTableRequestedColumns FROM (subquery)mainTable LEFT JOIN secondaryTable ON  mainTable.mainKeys=secondaryTable.secondaryTable AND  secondaryTable.field2 = ?  AND mainTable.field1 = ?  ORDER BY columnSorting DESC"),
+                    Arguments.of(false, false, "SELECT mainTable.mainTableRequestedColumns , secondaryTable.secondaryTableRequestedColumns FROM (subquery)mainTable LEFT JOIN secondaryTable ON  mainTable.mainKeys=secondaryTable.secondaryTable AND  secondaryTable.field2 = ?  AND mainTable.field1 = ?  ORDER BY columnSorting"),
+                    Arguments.of(false, true, "SELECT  DISTINCT mainTable.mainTableRequestedColumns , secondaryTable.secondaryTableRequestedColumns FROM (subquery)mainTable LEFT JOIN secondaryTable ON  mainTable.mainKeys=secondaryTable.secondaryTable AND  secondaryTable.field2 = ?  AND mainTable.field1 = ?  ORDER BY columnSorting")
+            );
         }
 
-        @Test
-        void when_receive_mainTable_and_subquery_and_secondaryTable_and_mainKeys_and_secondaryKeys_and_mainTableRequestedColumns_and_secondaryTableRequestedColumns_and_mainTableConditions_and_secondaryTableConditions_and_wildcards_and_columnSorting_and_forceDistinct_is_true_and_descending_is_true_expect_LeftJoinSelect_query() {
-
-            String mainTable = "mainTable";
-            String subquery = "subquery";
-            String secondaryTable = "secondaryTable";
-            ArrayList mainKeys = new ArrayList();
-            ArrayList secondaryKeys = new ArrayList();
-            ArrayList mainTableRequestedColumns = new ArrayList();
-            ArrayList secondaryTableRequestedColumns = new ArrayList();
-            HashMap mainTableConditions = new HashMap();
-            HashMap secondaryTableConditions = new HashMap();
-            ArrayList wildcards = new ArrayList();
-            ArrayList columnSorting = new ArrayList();
-            boolean forceDistinct = true;
-            boolean descending = true;
-
-            mainKeys.add("mainKeys");
-            secondaryKeys.add("secondaryTable");
-            mainTableRequestedColumns.add("mainTableRequestedColumns");
-            secondaryTableRequestedColumns.add("secondaryTableRequestedColumns");
-            mainTableConditions.put("field1", "value1");
-            secondaryTableConditions.put("field2", "value2");
-            wildcards.add("wildcards1");
-            columnSorting.add("columnSorting");
-
-            var result = defaultSQLStatementHandler.createLeftJoinSelectQuery(mainTable, subquery, secondaryTable, mainKeys, secondaryKeys, mainTableRequestedColumns, secondaryTableRequestedColumns, mainTableConditions, secondaryTableConditions, wildcards, columnSorting, forceDistinct, descending);
-            var expected = "SELECT  DISTINCT mainTable.mainTableRequestedColumns , secondaryTable.secondaryTableRequestedColumns FROM (subquery)mainTable LEFT JOIN secondaryTable ON  mainTable.mainKeys=secondaryTable.secondaryTable AND  secondaryTable.field2 = ?  AND mainTable.field1 = ?  ORDER BY columnSorting DESC";
-
-            assertEquals(expected, result.getSQLStatement().trim());
-        }
-
-        @Test
-        void when_receive_mainTable_and_subquery_and_secondaryTable_and_mainKeys_and_secondaryKeys_and_mainTableRequestedColumns_and_secondaryTableRequestedColumns_and_mainTableConditions_and_secondaryTableConditions_and_wildcards_and_columnSorting_and_forceDistinct_is_true_and_descending_is_false_expect_LeftJoinSelect_query() {
-
-            String mainTable = "mainTable";
-            String subquery = "subquery";
-            String secondaryTable = "secondaryTable";
-            ArrayList mainKeys = new ArrayList();
-            ArrayList secondaryKeys = new ArrayList();
-            ArrayList mainTableRequestedColumns = new ArrayList();
-            ArrayList secondaryTableRequestedColumns = new ArrayList();
-            HashMap mainTableConditions = new HashMap();
-            HashMap secondaryTableConditions = new HashMap();
-            ArrayList wildcards = new ArrayList();
-            ArrayList columnSorting = new ArrayList();
-            boolean forceDistinct = true;
-            boolean descending = false;
-
-
-            mainKeys.add("mainKeys");
-            secondaryKeys.add("secondaryTable");
-            mainTableRequestedColumns.add("mainTableRequestedColumns");
-            secondaryTableRequestedColumns.add("secondaryTableRequestedColumns");
-            mainTableConditions.put("field1", "value1");
-            secondaryTableConditions.put("field2", "value2");
-            wildcards.add("wildcards1");
-            columnSorting.add("columnSorting");
-
-            var result = defaultSQLStatementHandler.createLeftJoinSelectQuery(mainTable, subquery, secondaryTable, mainKeys, secondaryKeys, mainTableRequestedColumns, secondaryTableRequestedColumns, mainTableConditions, secondaryTableConditions, wildcards, columnSorting, forceDistinct, descending);
-            var expected = "SELECT  DISTINCT mainTable.mainTableRequestedColumns , secondaryTable.secondaryTableRequestedColumns FROM (subquery)mainTable LEFT JOIN secondaryTable ON  mainTable.mainKeys=secondaryTable.secondaryTable AND  secondaryTable.field2 = ?  AND mainTable.field1 = ?  ORDER BY columnSorting";
-
-            assertEquals(expected, result.getSQLStatement().trim());
-
-        }
 
     }
 
