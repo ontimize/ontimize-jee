@@ -3,12 +3,17 @@ package com.ontimize.jee.common.test.dbTest;
 import com.ontimize.jee.common.db.handler.MySQLSQLStatementHandler;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,9 +26,11 @@ class MySQLSQLStatementHandlerTest {
 
 
     @Nested
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
     class CreateSelectQuery {
-        @Test
-        void when_receive_table_and_requestedColumns_and_conditions_and_wildcards_and_columnsSorting_and_recordCount_and_descending_is_false_and_forceDistinct_is_false_expect_select_query() {
+        @ParameterizedTest
+        @MethodSource("addDataCreateSelectQuery")
+        void when_receive_table_and_requestedColumns_and_conditions_and_wildcards_and_columnsSorting_and_recordCount_and_descending_and_forceDistinct_expect_select_query(boolean descending, boolean forceDistinct, String expected) {
             var table = "my-table";
             ArrayList requestedColumns = new ArrayList();
             HashMap conditions = new HashMap();
@@ -31,8 +38,7 @@ class MySQLSQLStatementHandlerTest {
             ArrayList columnSorting = new ArrayList();
             int recordCount = 1;
             int offset = 1;
-            boolean descending = false;
-            boolean forceDistinct = false;
+
 
             requestedColumns.add("requestedColumns1");
             conditions.put("field1", "value1");
@@ -40,39 +46,27 @@ class MySQLSQLStatementHandlerTest {
             columnSorting.add("columnSorting1");
 
             var result = mySQLSQLStatementHandler.createSelectQuery(table, requestedColumns, conditions, wildcards, columnSorting, recordCount, offset, descending, forceDistinct);
-            var expected = "SELECT requestedColumns1 , columnSorting1 FROM  [my-table]   WHERE field1 = ?  ORDER BY columnSorting1 LIMIT 1 OFFSET 1";
 
             assertEquals(expected, result.getSQLStatement().trim());
         }
 
-        @Test
-        void when_receive_table_and_requestedColumns_and_conditions_and_wildcards_and_columnsSorting_and_recordCount_and_descending_is_true_and_forceDistinct_is_true_expect_select_query() {
-            var table = "my-table";
-            ArrayList requestedColumns = new ArrayList();
-            HashMap conditions = new HashMap();
-            ArrayList wildcards = new ArrayList();
-            ArrayList columnSorting = new ArrayList();
-            int recordCount = 1;
-            int offset = 1;
-            boolean descending = true;
-            boolean forceDistinct = true;
-
-            requestedColumns.add("requestedColumns1");
-            conditions.put("field1", "value1");
-            wildcards.add("wildcards1");
-            columnSorting.add("columnSorting1");
-
-            var result = mySQLSQLStatementHandler.createSelectQuery(table, requestedColumns, conditions, wildcards, columnSorting, recordCount, offset, descending, forceDistinct);
-            var expected = "SELECT  DISTINCT requestedColumns1 , columnSorting1 FROM  [my-table]   WHERE field1 = ?  ORDER BY columnSorting1 DESC  LIMIT 1 OFFSET 1";
-
-            assertEquals(expected, result.getSQLStatement().trim());
+        Stream<Arguments> addDataCreateSelectQuery() {
+            return Stream.of(
+                    Arguments.of(true, false, "SELECT requestedColumns1 , columnSorting1 FROM  [my-table]   WHERE field1 = ?  ORDER BY columnSorting1 DESC  LIMIT 1 OFFSET 1"),
+                    Arguments.of(true, true, "SELECT  DISTINCT requestedColumns1 , columnSorting1 FROM  [my-table]   WHERE field1 = ?  ORDER BY columnSorting1 DESC  LIMIT 1 OFFSET 1"),
+                    Arguments.of(false, false, "SELECT requestedColumns1 , columnSorting1 FROM  [my-table]   WHERE field1 = ?  ORDER BY columnSorting1 LIMIT 1 OFFSET 1"),
+                    Arguments.of(false, true, "SELECT  DISTINCT requestedColumns1 , columnSorting1 FROM  [my-table]   WHERE field1 = ?  ORDER BY columnSorting1 LIMIT 1 OFFSET 1")
+            );
         }
-    }
+
+            }
 
     @Nested
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
     class CreateLeftJoinSelectQueryPageable {
-        @Test
-        void when_receive_mainTable_and_subquery_and_secondaryTable_and_mainKeys_and_secondaryKeys_and_mainTableRequestedColumns_and_secondaryTableRequestedColumns_and_mainTableConditions_and_secondaryTableConditions_and_wildcards_and_columnSorting_and_forceDistinct_is_false_and_descending_is_false_and_recordNumber_and_startIndex_expect_LeftJoinSelect_query_pageable() {
+        @ParameterizedTest
+        @MethodSource("addDataCreateJoinSelectQuery")
+        void when_receive_mainTable_and_subquery_and_secondaryTable_and_mainKeys_and_secondaryKeys_and_mainTableRequestedColumns_and_secondaryTableRequestedColumns_and_mainTableConditions_and_secondaryTableConditions_and_wildcards_and_columnSorting_and_forceDistinct_is_false_and_descending_is_false_and_recordNumber_and_startIndex_expect_LeftJoinSelect_query_pageable(boolean descending, boolean forceDistinct, String expected) {
 
             String mainTable = "mainTable";
             String subquery = "subquery";
@@ -85,10 +79,8 @@ class MySQLSQLStatementHandlerTest {
             HashMap secondaryTableConditions = new HashMap();
             ArrayList wildcards = new ArrayList();
             ArrayList columnSorting = new ArrayList();
-            boolean forceDistinct = false;
-            boolean descending = false;
-            int recordNumber = 1;
-            int startIndex = 1;
+            int recordNumber = 0;
+            int startIndex = 0;
 
 
             mainKeys.add("mainKeys");
@@ -101,46 +93,18 @@ class MySQLSQLStatementHandlerTest {
             columnSorting.add("columnSorting");
 
             var result = mySQLSQLStatementHandler.createLeftJoinSelectQueryPageable(mainTable, subquery, secondaryTable, mainKeys, secondaryKeys, mainTableRequestedColumns, secondaryTableRequestedColumns, mainTableConditions, secondaryTableConditions, wildcards, columnSorting, forceDistinct, descending, recordNumber, startIndex);
-            var expected = "SELECT mainTable.mainTableRequestedColumns , secondaryTable.secondaryTableRequestedColumns FROM (subquery)mainTable LEFT JOIN secondaryTable ON  mainTable.mainKeys=secondaryTable.secondaryTable AND  secondaryTable.field2 = ?  AND mainTable.field1 = ?  ORDER BY columnSorting LIMIT 1 OFFSET 1";
 
             assertEquals(expected, result.getSQLStatement().trim());
         }
 
-        @Test
-        void when_receive_mainTable_and_subquery_and_secondaryTable_and_mainKeys_and_secondaryKeys_and_mainTableRequestedColumns_and_secondaryTableRequestedColumns_and_mainTableConditions_and_secondaryTableConditions_and_wildcards_and_columnSorting_and_forceDistinct_is_false_and_descending_is_false_and_recordNumber_is_negative_and_startIndex_is_negative_expect_LeftJoinSelect_query_pageable() {
-
-            String mainTable = "mainTable";
-            String subquery = "subquery";
-            String secondaryTable = "secondaryTable";
-            ArrayList mainKeys = new ArrayList();
-            ArrayList secondaryKeys = new ArrayList();
-            ArrayList mainTableRequestedColumns = new ArrayList();
-            ArrayList secondaryTableRequestedColumns = new ArrayList();
-            HashMap mainTableConditions = new HashMap();
-            HashMap secondaryTableConditions = new HashMap();
-            ArrayList wildcards = new ArrayList();
-            ArrayList columnSorting = new ArrayList();
-            boolean forceDistinct = false;
-            boolean descending = false;
-            int recordNumber = -1;
-            int startIndex = -1;
-
-
-            mainKeys.add("mainKeys");
-            secondaryKeys.add("secondaryTable");
-            mainTableRequestedColumns.add("mainTableRequestedColumns");
-            secondaryTableRequestedColumns.add("secondaryTableRequestedColumns");
-            mainTableConditions.put("field1", "value1");
-            secondaryTableConditions.put("field2", "value2");
-            wildcards.add("wildcards1");
-            columnSorting.add("columnSorting");
-
-            var result = mySQLSQLStatementHandler.createLeftJoinSelectQueryPageable(mainTable, subquery, secondaryTable, mainKeys, secondaryKeys, mainTableRequestedColumns, secondaryTableRequestedColumns, mainTableConditions, secondaryTableConditions, wildcards, columnSorting, forceDistinct, descending, recordNumber, startIndex);
-            var expected = "SELECT mainTable.mainTableRequestedColumns , secondaryTable.secondaryTableRequestedColumns FROM (subquery)mainTable LEFT JOIN secondaryTable ON  mainTable.mainKeys=secondaryTable.secondaryTable AND  secondaryTable.field2 = ?  AND mainTable.field1 = ?  ORDER BY columnSorting";
-
-            assertEquals(expected, result.getSQLStatement().trim());
+        Stream<Arguments> addDataCreateJoinSelectQuery() {
+            return Stream.of(
+                    Arguments.of(true, false, "SELECT mainTable.mainTableRequestedColumns , secondaryTable.secondaryTableRequestedColumns FROM (subquery)mainTable LEFT JOIN secondaryTable ON  mainTable.mainKeys=secondaryTable.secondaryTable AND  secondaryTable.field2 = ?  AND mainTable.field1 = ?  ORDER BY columnSorting DESC  LIMIT 0 OFFSET 0"),
+                    Arguments.of(true, true, "SELECT  DISTINCT mainTable.mainTableRequestedColumns , secondaryTable.secondaryTableRequestedColumns FROM (subquery)mainTable LEFT JOIN secondaryTable ON  mainTable.mainKeys=secondaryTable.secondaryTable AND  secondaryTable.field2 = ?  AND mainTable.field1 = ?  ORDER BY columnSorting DESC  LIMIT 0 OFFSET 0"),
+                    Arguments.of(false, false, "SELECT mainTable.mainTableRequestedColumns , secondaryTable.secondaryTableRequestedColumns FROM (subquery)mainTable LEFT JOIN secondaryTable ON  mainTable.mainKeys=secondaryTable.secondaryTable AND  secondaryTable.field2 = ?  AND mainTable.field1 = ?  ORDER BY columnSorting LIMIT 0 OFFSET 0"),
+                    Arguments.of(false, true, "SELECT  DISTINCT mainTable.mainTableRequestedColumns , secondaryTable.secondaryTableRequestedColumns FROM (subquery)mainTable LEFT JOIN secondaryTable ON  mainTable.mainKeys=secondaryTable.secondaryTable AND  secondaryTable.field2 = ?  AND mainTable.field1 = ?  ORDER BY columnSorting LIMIT 0 OFFSET 0")
+            );
         }
-
     }
 
     @Nested
