@@ -6,4 +6,5 @@ public interface IOntimizeKeycloakConfiguration {
 	public Boolean getPublicClient();
 	public String getRealm();
 	public String getResource();
+	public Boolean getUseResourceRoleMappings();
 }
