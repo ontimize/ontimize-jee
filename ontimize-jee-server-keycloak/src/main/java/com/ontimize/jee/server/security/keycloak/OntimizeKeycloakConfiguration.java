@@ -42,7 +42,7 @@ public class OntimizeKeycloakConfiguration implements IOntimizeKeycloakConfigura
 	}
 
 	@Override
-	public Boolean getPublicClient() {
+	public Boolean isPublicClient() {
 		return this.publicClient;
 	}
 
@@ -69,7 +69,7 @@ public class OntimizeKeycloakConfiguration implements IOntimizeKeycloakConfigura
 	}
 
 	@Override
-	public Boolean getUseResourceRoleMappings() {
+	public Boolean isUseResourceRoleMappings() {
 		return this.useResourceRoleMappings;
 	}
 

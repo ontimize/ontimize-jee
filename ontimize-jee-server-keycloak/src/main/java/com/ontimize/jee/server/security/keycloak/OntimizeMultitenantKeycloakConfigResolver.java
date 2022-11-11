@@ -34,8 +34,8 @@ public class OntimizeMultitenantKeycloakConfigResolver implements IOntimizeMulti
 					ac.setAuthServerUrl(auth.getUrl());
 					ac.setRealm(auth.getRealm()); // Realm
 					ac.setResource(auth.getClient()); // Client Id
-					ac.setPublicClient(this.config.getPublicClient());
-					ac.setUseResourceRoleMappings(true);
+					ac.setPublicClient(this.config.isPublicClient());
+					ac.setUseResourceRoleMappings(this.config.isUseResourceRoleMappings());
 
 					deployment = KeycloakDeploymentBuilder.build(ac);
 
@@ -58,7 +58,8 @@ public class OntimizeMultitenantKeycloakConfigResolver implements IOntimizeMulti
 				ac.setAuthServerUrl(this.config.getAuthServerUrl());
 				ac.setRealm(tenantId); // Realm
 				ac.setResource(this.config.getResource()); // Client Id
-				ac.setPublicClient(this.config.getPublicClient());
+				ac.setPublicClient(this.config.isPublicClient());
+				ac.setUseResourceRoleMappings(this.config.isUseResourceRoleMappings());
 
 				deployment = KeycloakDeploymentBuilder.build(ac);
 
