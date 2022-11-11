@@ -20,7 +20,7 @@ public class OntimizeKeycloakConfiguration implements IOntimizeKeycloakConfigura
 	@Value("${ontimize.security.keycloak.resource}")
 	private String resource;
 
-	@Value("${ontimize.security.keycloak.use-resource-role-mappings}")
+	@Value("${ontimize.security.keycloak.use-resource-role-mappings:false}")
 	private Boolean useResourceRoleMappings;
 
 	@Override
