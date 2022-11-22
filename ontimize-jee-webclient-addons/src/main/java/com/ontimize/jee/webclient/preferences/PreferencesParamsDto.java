@@ -59,7 +59,4 @@ public class PreferencesParamsDto {
         this.type = type;
     }
 
-    public PreferencesParamsDto() {
-    }
-
 }
