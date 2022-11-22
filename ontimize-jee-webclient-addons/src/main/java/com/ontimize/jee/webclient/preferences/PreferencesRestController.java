@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -51,7 +50,7 @@ public class PreferencesRestController {
     public static final String TYPE_QUERY = "TYPE";
 
     @PostMapping(value = "/save", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity savePreferences(@RequestBody PreferencesParamsDto param) {
+    public ResponseEntity<EntityResult> savePreferences(@RequestBody PreferencesParamsDto param) {
 
         EntityResult res = new EntityResultMapImpl();
         if (param != null) {
@@ -69,16 +68,16 @@ public class PreferencesRestController {
                 attrMap.put(TYPE_QUERY, param.getType().ordinal());
 
                 res = preferencesService.preferenceInsert(attrMap);
-                return new ResponseEntity(res, HttpStatus.OK);
+                return new ResponseEntity<EntityResult>(res, HttpStatus.OK);
             } catch (Exception ex) {
                 res.setMessage(ex.getMessage());
                 res.setCode(EntityResult.OPERATION_WRONG);
-                return new ResponseEntity(res, HttpStatus.INTERNAL_SERVER_ERROR);
+                return new ResponseEntity<EntityResult>(res, HttpStatus.INTERNAL_SERVER_ERROR);
             }
         } else {
             res.setCode(EntityResult.OPERATION_WRONG);
             res.setMessage("Report configuration parameters value is empty.");
-            return new ResponseEntity(res, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<EntityResult>(res, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -113,16 +112,17 @@ public class PreferencesRestController {
             attrMap.put("ID", id);
             this.preferencesService.preferenceDelete(attrMap);
             res.setCode(EntityResult.OPERATION_SUCCESSFUL);
-            return new ResponseEntity(res, HttpStatus.OK);
+            return new ResponseEntity<EntityResult>(res, HttpStatus.OK);
         } catch (Exception e) {
             res.setCode(EntityResult.OPERATION_WRONG);
             res.setMessage(e.getMessage());
-            return new ResponseEntity(res, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<EntityResult>(res, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PutMapping(value = "/update/{id}")
-    public ResponseEntity updatePreferences(@PathVariable("id") Long id, @RequestBody PreferencesParamsDto param) {
+    public ResponseEntity<EntityResult> updatePreferences(@PathVariable("id") Long id,
+            @RequestBody PreferencesParamsDto param) {
         EntityResult res = new EntityResultMapImpl();
 
         if (param != null) {
@@ -140,16 +140,16 @@ public class PreferencesRestController {
                 attrKey.put("ID", id);
                 this.preferencesService.preferenceUpdate(attrMap, attrKey);
                 res.setCode(EntityResult.OPERATION_SUCCESSFUL);
-                return new ResponseEntity(res, HttpStatus.OK);
+                return new ResponseEntity<EntityResult>(res, HttpStatus.OK);
             } catch (Exception ex) {
                 res.setMessage(ex.getMessage());
                 res.setCode(EntityResult.OPERATION_WRONG);
-                return new ResponseEntity(res, HttpStatus.INTERNAL_SERVER_ERROR);
+                return new ResponseEntity<EntityResult>(res, HttpStatus.INTERNAL_SERVER_ERROR);
             }
         } else {
             res.setCode(EntityResult.OPERATION_WRONG);
             res.setMessage("Report configuration parameters value is empty.");
-            return new ResponseEntity(res, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<EntityResult>(res, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }
