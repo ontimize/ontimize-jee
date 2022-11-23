@@ -1,4 +1,4 @@
-package com.ontimize.jee.webclient.preferences;
+package com.ontimize.jee.common.services.preferences;
 
 import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;

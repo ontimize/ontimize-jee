@@ -1,9 +1,9 @@
-package com.ontimize.jee.webclient.preferences;
-
-import com.ontimize.jee.webclient.preferences.PreferencesRestController.PreferencesType;
+package com.ontimize.jee.common.dto;
 
 public class PreferencesParamsDto {
-
+    public enum PreferencesType {
+        REPORT, CHART
+    }
     private String name;
     private String description;
     private String entity;

@@ -1,4 +1,4 @@
-package com.ontimize.jee.webclient.preferences;
+package com.ontimize.jee.server.services.preferences;
 
 import java.util.List;
 import java.util.Map;
@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 
 import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
+import com.ontimize.jee.common.services.preferences.IPreferencesService;
 import com.ontimize.jee.server.dao.DefaultOntimizeDaoHelper;
+import com.ontimize.jee.server.dao.IPreferencesDao;
 
 @Service("PreferencesService")
 @Lazy(value = true)

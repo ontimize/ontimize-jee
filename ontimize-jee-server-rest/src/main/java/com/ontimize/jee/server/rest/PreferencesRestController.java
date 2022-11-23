@@ -1,4 +1,4 @@
-package com.ontimize.jee.webclient.preferences;
+package com.ontimize.jee.server.rest;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,6 +26,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.common.dto.EntityResultMapImpl;
+import com.ontimize.jee.common.dto.PreferencesParamsDto;
+import com.ontimize.jee.common.dto.PreferencesParamsDto.PreferencesType;
+import com.ontimize.jee.common.services.preferences.IPreferencesService;
 
 @RestController
 @RequestMapping("${ontimize.report.preferences.url:/preferences}")
@@ -36,10 +39,6 @@ public class PreferencesRestController {
 
     public IPreferencesService getService() {
         return this.preferencesService;
-    }
-
-    public enum PreferencesType {
-        REPORT, CHART
     }
 
     public static final String ID_QUERY = "ID";
@@ -68,16 +67,16 @@ public class PreferencesRestController {
                 attrMap.put(TYPE_QUERY, param.getType().ordinal());
 
                 res = preferencesService.preferenceInsert(attrMap);
-                return new ResponseEntity<EntityResult>(res, HttpStatus.OK);
+                return new ResponseEntity<>(res, HttpStatus.OK);
             } catch (Exception ex) {
                 res.setMessage(ex.getMessage());
                 res.setCode(EntityResult.OPERATION_WRONG);
-                return new ResponseEntity<EntityResult>(res, HttpStatus.INTERNAL_SERVER_ERROR);
+                return new ResponseEntity<>(res, HttpStatus.INTERNAL_SERVER_ERROR);
             }
         } else {
             res.setCode(EntityResult.OPERATION_WRONG);
             res.setMessage("Report configuration parameters value is empty.");
-            return new ResponseEntity<EntityResult>(res, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(res, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -112,11 +111,11 @@ public class PreferencesRestController {
             attrMap.put("ID", id);
             this.preferencesService.preferenceDelete(attrMap);
             res.setCode(EntityResult.OPERATION_SUCCESSFUL);
-            return new ResponseEntity<EntityResult>(res, HttpStatus.OK);
+            return new ResponseEntity<>(res, HttpStatus.OK);
         } catch (Exception e) {
             res.setCode(EntityResult.OPERATION_WRONG);
             res.setMessage(e.getMessage());
-            return new ResponseEntity<EntityResult>(res, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(res, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -140,16 +139,16 @@ public class PreferencesRestController {
                 attrKey.put("ID", id);
                 this.preferencesService.preferenceUpdate(attrMap, attrKey);
                 res.setCode(EntityResult.OPERATION_SUCCESSFUL);
-                return new ResponseEntity<EntityResult>(res, HttpStatus.OK);
+                return new ResponseEntity<>(res, HttpStatus.OK);
             } catch (Exception ex) {
                 res.setMessage(ex.getMessage());
                 res.setCode(EntityResult.OPERATION_WRONG);
-                return new ResponseEntity<EntityResult>(res, HttpStatus.INTERNAL_SERVER_ERROR);
+                return new ResponseEntity<>(res, HttpStatus.INTERNAL_SERVER_ERROR);
             }
         } else {
             res.setCode(EntityResult.OPERATION_WRONG);
             res.setMessage("Report configuration parameters value is empty.");
-            return new ResponseEntity<EntityResult>(res, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(res, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }
