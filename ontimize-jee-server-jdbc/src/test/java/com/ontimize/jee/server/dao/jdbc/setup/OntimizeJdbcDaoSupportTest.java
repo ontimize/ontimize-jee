@@ -5,7 +5,9 @@ import com.ontimize.jee.common.db.handler.DefaultSQLStatementHandler;
 import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.common.dto.EntityResultMapImpl;
 import com.ontimize.jee.server.dao.ISQLQueryAdapter;
-import com.ontimize.jee.server.dao.jdbc.*;
+import com.ontimize.jee.server.dao.jdbc.OntimizeJdbcDaoSupport;
+import com.ontimize.jee.server.dao.jdbc.OntimizeTableMetaDataContext;
+import com.ontimize.jee.server.dao.jdbc.PageableInfo;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -14,17 +16,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.jdbc.core.ArgumentPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static org.mockito.Mockito.spy;
 
 @ExtendWith(MockitoExtension.class)
 class OntimizeJdbcDaoSupportTest {
@@ -33,17 +29,15 @@ class OntimizeJdbcDaoSupportTest {
     @InjectMocks
     OntimizeJdbcDaoSupport ontimizeJdbcDaoSupport;
 
-    @Mock
-    OntimizeTableMetaDataContext tableMetaDataContext;
 
-    @Mock
-    SQLStatementBuilder.SQLStatement stSQL;
+
+
+
 
     @Mock
     JdbcTemplate jdbcTemplate;
 
-    @Mock
-    DefaultSQLStatementHandler defaultSQLStatementHandler;
+
 
     @Mock
     EntityResult entityResult;
@@ -61,31 +55,46 @@ class OntimizeJdbcDaoSupportTest {
             ArrayList sort = new ArrayList();
             String queryId = "queryId";
 
+
             keysValues.put("key1", "value1");
-            attributes.add("attributes1");
+            attributes.add("column1");
             sort.add("sort1");
+
 
             entityResult = new EntityResultMapImpl();
 
             ReflectionTestUtils.setField(ontimizeJdbcDaoSupport, "compiled", true);
 
-            QueryTemplateInformation queryTemplateInformation = Mockito.mock(QueryTemplateInformation.class);
-            DefaultSQLStatementHandler defaultSQLStatementHandler = Mockito.mock(DefaultSQLStatementHandler.class);
 
-            String id = "id";
-            String value = "SELECT attributes1 FROM  [my-table]   WHERE key1 = ?  ORDER BY sort1";
-            List<AmbiguousColumnType> ambiguousColumns = new ArrayList<>();
-            List<FunctionColumnType> functionColumns = new ArrayList<>();
-            List<String> validColumns = new ArrayList<>();
-            validColumns.add("column1");
-            List<OrderColumnType> orderColumns = new ArrayList<>();
-
-            ontimizeJdbcDaoSupport.addQueryTemplateInformation(id,value,ambiguousColumns,functionColumns,validColumns,orderColumns);
-
-            //stSQL = ontimizeJdbcDaoSupport.composeQuerySql(queryId, attributes, keysValues, sort, null, null);
+            String value = "SELECT column1 FROM  [my-table]   WHERE key1 = ?  ORDER BY sort1";
 
 
-            
+            ArrayList requestedColumns = new ArrayList();
+            HashMap conditions = new HashMap();
+            ArrayList wildcards = new ArrayList();
+            ArrayList columnSorting = new ArrayList();
+
+            requestedColumns.add("column1");
+            conditions.put("key1", "value1");
+            wildcards.add("wildcards1");
+            columnSorting.add("sort1");
+
+            DefaultSQLStatementHandler statementHandler = Mockito.mock(DefaultSQLStatementHandler.class);
+            ontimizeJdbcDaoSupport.setStatementHandler(statementHandler);
+
+            OntimizeTableMetaDataContext tableMetaDataContext = ontimizeJdbcDaoSupport.getTableMetaDataContext();
+
+            ReflectionTestUtils.setField(tableMetaDataContext, "tableName", "my-table");
+
+            SQLStatementBuilder.SQLStatement stSQL = Mockito.mock(SQLStatementBuilder.SQLStatement.class);
+
+            Mockito.doReturn(stSQL).when(statementHandler).createSelectQuery(tableMetaDataContext.getTableName(), requestedColumns, conditions, new ArrayList<>(), columnSorting);
+            entityResult = ontimizeJdbcDaoSupport.query(keysValues, attributes, sort, queryId);
+
+            System.out.println(entityResult.toString());
+
+
+
 
 
             /*
@@ -102,7 +111,6 @@ class OntimizeJdbcDaoSupportTest {
             Mockito.doReturn(entityResult).when(jdbcTemplate).query((PreparedStatementCreator) Mockito.any(), Mockito.any(),Mockito.any());
 
             var result = ontimizeJdbcDaoSupport.query(keysValues,attributes,sort,queryId);
-
 
 
             System.out.println("result: " + result.toString());
@@ -128,19 +136,10 @@ class OntimizeJdbcDaoSupportTest {
 
             ReflectionTestUtils.setField(ontimizeJdbcDaoSupport, "compiled", true);
 
-            /*
-            preguntas: por que no puedo usar un mock de defaultSQLStatementHandler ?????
-            si quito la linea:
-                        ReflectionTestUtils.setField(ontimizeJdbcDaoSupport, "tableMetaDataContext", tableMetaDataContext);
-            da error
-             hay otra manera? /
-             */
+            //
 
-            DefaultSQLStatementHandler defaultSQLStatementHandler = Mockito.mock(DefaultSQLStatementHandler.class);
-
-            Mockito.doReturn("my-table").when(tableMetaDataContext).getTableName();
-            ReflectionTestUtils.setField(ontimizeJdbcDaoSupport, "tableMetaDataContext", tableMetaDataContext);
-            ontimizeJdbcDaoSupport.setStatementHandler(new DefaultSQLStatementHandler());
+            //Mockito.doReturn("my-table").when(tableMetaDataContext).getTableName();
+            //ReflectionTestUtils.setField(ontimizeJdbcDaoSupport, "tableMetaDataContext", tableMetaDataContext);
 
             var result = ontimizeJdbcDaoSupport.query(keysValues, attributes, sort, queryId, null);
             System.out.println("result: " + result);
@@ -156,6 +155,8 @@ class OntimizeJdbcDaoSupportTest {
 
     @Nested
     class PaginationQuery {
+
+        OntimizeTableMetaDataContext tableMetaDataContext = ontimizeJdbcDaoSupport.getTableMetaDataContext();
 
         @Mock
         PageableInfo pageableInfo;
@@ -179,9 +180,8 @@ class OntimizeJdbcDaoSupportTest {
 
             ReflectionTestUtils.setField(ontimizeJdbcDaoSupport, "compiled", true);
 
-            Mockito.doReturn("my-table").when(tableMetaDataContext).getTableName();
-            ReflectionTestUtils.setField(ontimizeJdbcDaoSupport, "tableMetaDataContext", tableMetaDataContext);
-            ontimizeJdbcDaoSupport.setStatementHandler(new DefaultSQLStatementHandler());
+            // Mockito.doReturn("my-table").when(tableMetaDataContext).getTableName();
+            //ReflectionTestUtils.setField(ontimizeJdbcDaoSupport, "tableMetaDataContext", tableMetaDataContext);
 
             var result = ontimizeJdbcDaoSupport.paginationQuery(keysValues, attributes, recordNumber, startIndex, orderBy, queryId, null);
             System.out.println("result: " + result);
