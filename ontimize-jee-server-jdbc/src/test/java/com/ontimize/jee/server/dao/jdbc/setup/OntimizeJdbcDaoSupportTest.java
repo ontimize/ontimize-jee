@@ -5,6 +5,7 @@ import com.ontimize.jee.common.db.handler.DefaultSQLStatementHandler;
 import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.common.dto.EntityResultMapImpl;
 import com.ontimize.jee.server.dao.ISQLQueryAdapter;
+import com.ontimize.jee.server.dao.jdbc.EntityResultResultSetExtractor;
 import com.ontimize.jee.server.dao.jdbc.OntimizeJdbcDaoSupport;
 import com.ontimize.jee.server.dao.jdbc.OntimizeTableMetaDataContext;
 import com.ontimize.jee.server.dao.jdbc.PageableInfo;
@@ -16,6 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.jdbc.core.ArgumentPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -29,14 +31,8 @@ class OntimizeJdbcDaoSupportTest {
     @InjectMocks
     OntimizeJdbcDaoSupport ontimizeJdbcDaoSupport;
 
-
-
-
-
-
     @Mock
     JdbcTemplate jdbcTemplate;
-
 
 
     @Mock
@@ -55,19 +51,12 @@ class OntimizeJdbcDaoSupportTest {
             ArrayList sort = new ArrayList();
             String queryId = "queryId";
 
-
             keysValues.put("key1", "value1");
             attributes.add("column1");
             sort.add("sort1");
 
-
             entityResult = new EntityResultMapImpl();
-
             ReflectionTestUtils.setField(ontimizeJdbcDaoSupport, "compiled", true);
-
-
-            String value = "SELECT column1 FROM  [my-table]   WHERE key1 = ?  ORDER BY sort1";
-
 
             ArrayList requestedColumns = new ArrayList();
             HashMap conditions = new HashMap();
@@ -89,36 +78,21 @@ class OntimizeJdbcDaoSupportTest {
             SQLStatementBuilder.SQLStatement stSQL = Mockito.mock(SQLStatementBuilder.SQLStatement.class);
 
             Mockito.doReturn(stSQL).when(statementHandler).createSelectQuery(tableMetaDataContext.getTableName(), requestedColumns, conditions, new ArrayList<>(), columnSorting);
+            //Mockito.doReturn(stSQL).when(statementHandler).createSelectQuery(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any());
             entityResult = ontimizeJdbcDaoSupport.query(keysValues, attributes, sort, queryId);
 
-            System.out.println(entityResult.toString());
-
-
-
-
-
-            /*
-            Mockito.doReturn("my-table").when(tableMetaDataContext).getTableName();
-            ReflectionTestUtils.setField(ontimizeJdbcDaoSupport, "tableMetaDataContext", tableMetaDataContext);
-            ontimizeJdbcDaoSupport.setStatementHandler(defaultSQLStatementHandler);
-            String sqlQuery = "SELECT attributes1 FROM  [my-table]   WHERE key1 = ?  ORDER BY sort1";
-
-            EntityResultResultSetExtractor entityResultResultSetExtractor = spy(new EntityResultResultSetExtractor(ontimizeJdbcDaoSupport.getStatementHandler(), queryTemplateInformation, attributes));
-
+            String sqlQuery = "SELECT column1 FROM  [my-table]   WHERE key1 = ?  ORDER BY sort1";
             ArrayList vValues = new ArrayList();
             vValues.add(1);
 
-            Mockito.doReturn(entityResult).when(jdbcTemplate).query((PreparedStatementCreator) Mockito.any(), Mockito.any(),Mockito.any());
+            ArgumentPreparedStatementSetter pss = Mockito.mock(ArgumentPreparedStatementSetter.class);
+            EntityResultResultSetExtractor entityResultResultSetExtractor = Mockito.mock(EntityResultResultSetExtractor.class);
 
-            var result = ontimizeJdbcDaoSupport.query(keysValues,attributes,sort,queryId);
+            Mockito.verify(jdbcTemplate).query(sqlQuery, pss, entityResultResultSetExtractor);
 
-
-            System.out.println("result: " + result.toString());
-
-            var expected = "EntityResult:  ERROR CODE RETURN:  : {}";
-            //Assertions.assertEquals(expected, result.toString().trim());
-
-            //Mockito.verify(jdbcTemplate).query(sqlQuery,pss,entityResultResultSetExtractor);*/
+            System.out.println(stSQL.getSQLStatement());
+            System.out.println(entityResult);
+            System.out.println(entityResult.toString());
 
         }
 
