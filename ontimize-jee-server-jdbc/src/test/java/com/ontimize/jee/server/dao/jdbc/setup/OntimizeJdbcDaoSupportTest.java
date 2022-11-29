@@ -5,10 +5,7 @@ import com.ontimize.jee.common.db.handler.DefaultSQLStatementHandler;
 import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.common.dto.EntityResultMapImpl;
 import com.ontimize.jee.server.dao.ISQLQueryAdapter;
-import com.ontimize.jee.server.dao.jdbc.EntityResultResultSetExtractor;
-import com.ontimize.jee.server.dao.jdbc.OntimizeJdbcDaoSupport;
-import com.ontimize.jee.server.dao.jdbc.OntimizeTableMetaDataContext;
-import com.ontimize.jee.server.dao.jdbc.PageableInfo;
+import com.ontimize.jee.server.dao.jdbc.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -23,6 +20,10 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class OntimizeJdbcDaoSupportTest {
@@ -30,6 +31,9 @@ class OntimizeJdbcDaoSupportTest {
 
     @InjectMocks
     OntimizeJdbcDaoSupport ontimizeJdbcDaoSupport;
+
+    @Mock
+    QueryTemplateInformation queryTemplateInformation;
 
     @Mock
     JdbcTemplate jdbcTemplate;
@@ -78,7 +82,6 @@ class OntimizeJdbcDaoSupportTest {
             SQLStatementBuilder.SQLStatement stSQL = Mockito.mock(SQLStatementBuilder.SQLStatement.class);
 
             Mockito.doReturn(stSQL).when(statementHandler).createSelectQuery(tableMetaDataContext.getTableName(), requestedColumns, conditions, new ArrayList<>(), columnSorting);
-            //Mockito.doReturn(stSQL).when(statementHandler).createSelectQuery(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any());
             entityResult = ontimizeJdbcDaoSupport.query(keysValues, attributes, sort, queryId);
 
             String sqlQuery = "SELECT column1 FROM  [my-table]   WHERE key1 = ?  ORDER BY sort1";
@@ -86,13 +89,10 @@ class OntimizeJdbcDaoSupportTest {
             vValues.add(1);
 
             ArgumentPreparedStatementSetter pss = Mockito.mock(ArgumentPreparedStatementSetter.class);
-            EntityResultResultSetExtractor entityResultResultSetExtractor = Mockito.mock(EntityResultResultSetExtractor.class);
+            EntityResultResultSetExtractor entityResultResultSetExtractor = new EntityResultResultSetExtractor(ontimizeJdbcDaoSupport.getStatementHandler(), queryTemplateInformation, attributes);
 
-            Mockito.verify(jdbcTemplate).query(sqlQuery, pss, entityResultResultSetExtractor);
+            verify(jdbcTemplate).query(sqlQuery, pss, entityResultResultSetExtractor);
 
-            System.out.println(stSQL.getSQLStatement());
-            System.out.println(entityResult);
-            System.out.println(entityResult.toString());
 
         }
 
@@ -130,7 +130,6 @@ class OntimizeJdbcDaoSupportTest {
     @Nested
     class PaginationQuery {
 
-        OntimizeTableMetaDataContext tableMetaDataContext = ontimizeJdbcDaoSupport.getTableMetaDataContext();
 
         @Mock
         PageableInfo pageableInfo;
@@ -138,27 +137,51 @@ class OntimizeJdbcDaoSupportTest {
         @Test
         void when_receive_keysValues_and_attributes_and_sort_and_queryId_and_queryAdapter_expect_paginationQuery() {
 
-            HashMap keysValues = new HashMap();
-            ArrayList attributes = new ArrayList();
-            ArrayList sort = new ArrayList();
+            Map keysValues = new HashMap();
+            List attributes = new ArrayList();
+            List sort = new ArrayList();
             String queryId = "queryId";
-            ArrayList orderBy = new ArrayList();
+            List orderBy = new ArrayList();
             int recordNumber = 1;
             int startIndex = 1;
-            ISQLQueryAdapter queryAdapter;
+
+
+            ISQLQueryAdapter queryAdapter = Mockito.mock(ISQLQueryAdapter.class);
 
             keysValues.put("key1", "value1");
-            attributes.add("attributes1");
+            attributes.add("column1");
             sort.add("sort1");
             orderBy.add("orderBy");
 
             ReflectionTestUtils.setField(ontimizeJdbcDaoSupport, "compiled", true);
 
-            // Mockito.doReturn("my-table").when(tableMetaDataContext).getTableName();
-            //ReflectionTestUtils.setField(ontimizeJdbcDaoSupport, "tableMetaDataContext", tableMetaDataContext);
+            ArrayList requestedColumns = new ArrayList();
+            HashMap conditions = new HashMap();
+            ArrayList wildcards = new ArrayList();
+            ArrayList columnSorting = new ArrayList();
 
-            var result = ontimizeJdbcDaoSupport.paginationQuery(keysValues, attributes, recordNumber, startIndex, orderBy, queryId, null);
-            System.out.println("result: " + result);
+            requestedColumns.add("column1");
+            conditions.put("key1", "value1");
+            wildcards.add("wildcards1");
+            columnSorting.add("sort1");
+
+            DefaultSQLStatementHandler statementHandler = Mockito.mock(DefaultSQLStatementHandler.class);
+            ontimizeJdbcDaoSupport.setStatementHandler(statementHandler);
+
+            OntimizeTableMetaDataContext tableMetaDataContext = ontimizeJdbcDaoSupport.getTableMetaDataContext();
+
+            ReflectionTestUtils.setField(tableMetaDataContext, "tableName", "my-table");
+
+            SQLStatementBuilder.SQLStatement stSQL = Mockito.mock(SQLStatementBuilder.SQLStatement.class);
+
+            pageableInfo = new PageableInfo(recordNumber, startIndex);
+            Mockito.doReturn(stSQL).when(statementHandler).createSelectQuery(tableMetaDataContext.getTableName(), requestedColumns, conditions, new ArrayList<>(), columnSorting);
+            entityResult = ontimizeJdbcDaoSupport.paginationQuery(keysValues, attributes, recordNumber, startIndex, orderBy, queryId, null);
+
+
+
+            //var result = ontimizeJdbcDaoSupport.paginationQuery(keysValues, attributes, recordNumber, startIndex, orderBy, queryId, null);
+            System.out.println("result: " + entityResult);
 
 
         }
