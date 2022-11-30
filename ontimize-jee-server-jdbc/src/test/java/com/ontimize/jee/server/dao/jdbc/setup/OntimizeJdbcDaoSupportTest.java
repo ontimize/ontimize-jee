@@ -1,12 +1,12 @@
 package com.ontimize.jee.server.dao.jdbc.setup;
 
+import com.ontimize.jee.common.db.AdvancedEntityResult;
 import com.ontimize.jee.common.db.SQLStatementBuilder;
 import com.ontimize.jee.common.db.handler.DefaultSQLStatementHandler;
 import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.common.dto.EntityResultMapImpl;
 import com.ontimize.jee.server.dao.ISQLQueryAdapter;
 import com.ontimize.jee.server.dao.jdbc.*;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -96,34 +96,6 @@ class OntimizeJdbcDaoSupportTest {
 
         }
 
-        @Test
-        void query_when_receive_keysValues_and_attributes_and_sort_and_queryId_and_queryAdapter_expect_error_query() {
-
-            HashMap keysValues = new HashMap();
-            ArrayList attributes = new ArrayList();
-            ArrayList sort = new ArrayList();
-            String queryId = "queryId";
-
-            keysValues.put("key1", "value1");
-            attributes.add("attributes1");
-            sort.add("sort1");
-
-            ReflectionTestUtils.setField(ontimizeJdbcDaoSupport, "compiled", true);
-
-            //
-
-            //Mockito.doReturn("my-table").when(tableMetaDataContext).getTableName();
-            //ReflectionTestUtils.setField(ontimizeJdbcDaoSupport, "tableMetaDataContext", tableMetaDataContext);
-
-            var result = ontimizeJdbcDaoSupport.query(keysValues, attributes, sort, queryId, null);
-            System.out.println("result: " + result);
-
-            var expected = "EntityResult:  ERROR CODE RETURN:  : {}";
-            Assertions.assertEquals(expected, result.toString().trim());
-
-
-        }
-
 
     }
 
@@ -133,6 +105,11 @@ class OntimizeJdbcDaoSupportTest {
 
         @Mock
         PageableInfo pageableInfo;
+
+        @Mock
+        ArgumentPreparedStatementSetter pss;
+        @Mock
+        AdvancedEntityResult advancedER;
 
         @Test
         void when_receive_keysValues_and_attributes_and_sort_and_queryId_and_queryAdapter_expect_paginationQuery() {
@@ -151,7 +128,7 @@ class OntimizeJdbcDaoSupportTest {
             keysValues.put("key1", "value1");
             attributes.add("column1");
             sort.add("sort1");
-            orderBy.add("orderBy");
+            orderBy.add("columnSort");
 
             ReflectionTestUtils.setField(ontimizeJdbcDaoSupport, "compiled", true);
 
@@ -163,7 +140,7 @@ class OntimizeJdbcDaoSupportTest {
             requestedColumns.add("column1");
             conditions.put("key1", "value1");
             wildcards.add("wildcards1");
-            columnSorting.add("sort1");
+            columnSorting.add("columnSort");
 
             DefaultSQLStatementHandler statementHandler = Mockito.mock(DefaultSQLStatementHandler.class);
             ontimizeJdbcDaoSupport.setStatementHandler(statementHandler);
@@ -175,10 +152,21 @@ class OntimizeJdbcDaoSupportTest {
             SQLStatementBuilder.SQLStatement stSQL = Mockito.mock(SQLStatementBuilder.SQLStatement.class);
 
             pageableInfo = new PageableInfo(recordNumber, startIndex);
-            Mockito.doReturn(stSQL).when(statementHandler).createSelectQuery(tableMetaDataContext.getTableName(), requestedColumns, conditions, new ArrayList<>(), columnSorting);
-            entityResult = ontimizeJdbcDaoSupport.paginationQuery(keysValues, attributes, recordNumber, startIndex, orderBy, queryId, null);
+            Mockito.doReturn(stSQL).when(statementHandler).createSelectQuery(tableMetaDataContext.getTableName(), requestedColumns, conditions, new ArrayList<>(), columnSorting, recordNumber, startIndex);
+
+            String sqlQuery = "SELECT column1 FROM  [my-table]   WHERE key1 = ?  ORDER BY sort1";
+            ArrayList vValues = new ArrayList();
+            vValues.add(1);
+            pss = new ArgumentPreparedStatementSetter(vValues.toArray());
+            advancedER = ontimizeJdbcDaoSupport.paginationQuery(keysValues, attributes, recordNumber, startIndex, orderBy, queryId, null);
+
+            AdvancedEntityResultResultSetExtractor advancedEntityResultResultSetExtractor = new AdvancedEntityResultResultSetExtractor(ontimizeJdbcDaoSupport.getStatementHandler(), queryTemplateInformation, attributes, recordNumber, startIndex);
+            advancedER = jdbcTemplate.query(sqlQuery, pss, advancedEntityResultResultSetExtractor);
+
+            verify(jdbcTemplate).query(sqlQuery, pss, advancedEntityResultResultSetExtractor);
 
 
+			//advancedER.setTotalRecordCount(ontimizeJdbcDaoSupport.getQueryRecordNumber(keysValues, queryId));
 
             //var result = ontimizeJdbcDaoSupport.paginationQuery(keysValues, attributes, recordNumber, startIndex, orderBy, queryId, null);
             System.out.println("result: " + entityResult);
