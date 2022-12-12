@@ -113,6 +113,7 @@
         <!-- Versions -->
         <!-- =========================================================== -->
         <junit.version>5.7.2</junit.version>
+        <mockito.version>4.5.1</mockito.version>
         <junit-launcher.version>1.7.2</junit-launcher.version>
         <logback.version>1.2.3</logback.version>
         <slf4j.version>1.7.30</slf4j.version>
@@ -576,6 +577,22 @@
                 <groupId>org.junit.platform</groupId>
                 <artifactId>junit-platform-launcher</artifactId>
                 <version>${junit-launcher.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-inline</artifactId>
+                <version>${mockito.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+
+
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-junit-jupiter</artifactId>
+                <version>${mockito.version}</version>
                 <scope>test</scope>
             </dependency>
 
