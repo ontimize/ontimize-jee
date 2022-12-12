@@ -4,6 +4,7 @@ import com.ontimize.jee.common.db.AdvancedEntityResult;
 import com.ontimize.jee.common.db.SQLStatementBuilder;
 import com.ontimize.jee.common.db.handler.DefaultSQLStatementHandler;
 import com.ontimize.jee.common.dto.EntityResult;
+import com.ontimize.jee.common.dto.EntityResultMapImpl;
 import com.ontimize.jee.server.dao.ISQLQueryAdapter;
 import com.ontimize.jee.server.dao.jdbc.*;
 import org.junit.jupiter.api.Assertions;
@@ -70,14 +71,28 @@ class OntimizeJdbcDaoSupportTest {
             OntimizeJdbcDaoSupportTest.this.ontimizeJdbcDaoSupport.setStatementHandler(statementHandler);
             OntimizeTableMetaDataContext tableMetaDataContext = OntimizeJdbcDaoSupportTest.this.ontimizeJdbcDaoSupport.getTableMetaDataContext();
             ReflectionTestUtils.setField(tableMetaDataContext, "tableName", "my-table");
+            ReflectionTestUtils.setField(OntimizeJdbcDaoSupportTest.this.ontimizeJdbcDaoSupport, "jdbcTemplate", jdbcTemplate);
+            ontimizeJdbcDaoSupport.setJdbcTemplate(jdbcTemplate);
+
             SQLStatementBuilder.SQLStatement stSQL = Mockito.mock(SQLStatementBuilder.SQLStatement.class);
 
-            //Mockito.doReturn(stSQL).when(statementHandler).createSelectQuery(tableMetaDataContext.getTableName(), requestedColumns, conditions, new ArrayList<>(), columnSorting);
-            EntityResult entityResult = OntimizeJdbcDaoSupportTest.this.ontimizeJdbcDaoSupport.query(keysValues, attributes, sort, queryId);
+            String sqlQuery = " SELECT column1 FROM  [my-table]   WHERE key1 = ?  AND column3 = ?  AND column2 = ?  ORDER BY sort1";
+            ArrayList vValues = new ArrayList();
+            vValues.add(1);
+
+
+
+            ArgumentPreparedStatementSetter pss = new ArgumentPreparedStatementSetter(vValues.toArray());
+            EntityResultResultSetExtractor entityResultResultSetExtractor = new EntityResultResultSetExtractor(ontimizeJdbcDaoSupport.getStatementHandler(), queryTemplateInformation, attributes);
+            EntityResult entityResult = OntimizeJdbcDaoSupportTest.this.ontimizeJdbcDaoSupport.query(keysValues, attributes, sort, queryId, null);
+
+
+            Mockito.doReturn(entityResult).when(jdbcTemplate).query(sqlQuery, pss, entityResultResultSetExtractor);
+
+            System.out.println("entityResult: " + entityResult.toString());
 
             String expected = "EntityResult:  ERROR CODE RETURN:  : {}";
             Assertions.assertEquals(expected, entityResult.toString());
-            System.out.println("entityResult: " + entityResult);
 
 
         }
@@ -117,8 +132,8 @@ class OntimizeJdbcDaoSupportTest {
             String sqlQuery = "SELECT column1 FROM  [my-table]   WHERE key1 = ?  ORDER BY sort1";
             ArrayList vValues = new ArrayList();
             vValues.add(1);
+            ArgumentPreparedStatementSetter pss = new ArgumentPreparedStatementSetter(vValues.toArray());
 
-            ArgumentPreparedStatementSetter pss = Mockito.mock(ArgumentPreparedStatementSetter.class);
             EntityResultResultSetExtractor entityResultResultSetExtractor = new EntityResultResultSetExtractor(ontimizeJdbcDaoSupport.getStatementHandler(), queryTemplateInformation, attributes);
             ontimizeJdbcDaoSupport.setJdbcTemplate(jdbcTemplate);
             entityResult = jdbcTemplate.query(sqlQuery, pss, entityResultResultSetExtractor);
@@ -138,9 +153,6 @@ class OntimizeJdbcDaoSupportTest {
 
         @Mock
         PageableInfo pageableInfo;
-
-        @Mock
-        ArgumentPreparedStatementSetter pss;
 
 
         @Test
@@ -190,7 +202,7 @@ class OntimizeJdbcDaoSupportTest {
             String sqlQuery = "SELECT column1 FROM  [my-table]   WHERE key1 = ?  ORDER BY sort1";
             ArrayList vValues = new ArrayList();
             vValues.add(1);
-            pss = new ArgumentPreparedStatementSetter(vValues.toArray());
+            ArgumentPreparedStatementSetter pss = new ArgumentPreparedStatementSetter(vValues.toArray());
 
             AdvancedEntityResultResultSetExtractor advancedEntityResultResultSetExtractor = new AdvancedEntityResultResultSetExtractor(ontimizeJdbcDaoSupport.getStatementHandler(), queryTemplateInformation, attributes, recordNumber, startIndex);
             advancedER = jdbcTemplate.query(sqlQuery, pss, advancedEntityResultResultSetExtractor);
@@ -210,8 +222,25 @@ class OntimizeJdbcDaoSupportTest {
             //advancedER.setTotalRecordCount(ontimizeJdbcDaoSupport.getQueryRecordNumber(keysValues, queryId));
 
 
+        }
+    }
+
+
+    @Nested
+    class insert {
+        @Test
+        void when_receive_attributesValues_expect_entityResult() {
+            Map attributesValues = Stream.of(new Object[][]{{"column1", 1}, {"column2", 2},}).collect(Collectors.toMap(data -> (String) data[0], data -> (Integer) data[1]));
+            ReflectionTestUtils.setField(OntimizeJdbcDaoSupportTest.this.ontimizeJdbcDaoSupport, "compiled", true);
+            OntimizeTableMetaDataContext tableMetaDataContext = OntimizeJdbcDaoSupportTest.this.ontimizeJdbcDaoSupport.getTableMetaDataContext();
+            List<String> tableColumns = new ArrayList<>(Arrays.asList("tableColumn1"));
+            tableMetaDataContext.getTableColumns();
+            //ReflectionTestUtils.setField(tableMetaDataContext, "tableColumns","tableColumn1");
+            EntityResult erResult = new EntityResultMapImpl();
+            erResult = ontimizeJdbcDaoSupport.insert(attributesValues);
 
         }
     }
+
 
 }
