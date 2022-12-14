@@ -1034,7 +1034,6 @@ class DefaultSQLStatementHandlerTest {
             Mockito.doReturn(1).when(resultSetMetaDatamock).getColumnType(1);
             Mockito.doReturn(true).doReturn(false).when(resultSet).next();
             Mockito.doReturn("valueColumn1").when(resultSet).getObject("column1");
-            Mockito.doReturn(1234).when(resultSet).getObject(1);
 
             defaultSQLStatementHandler.generatedKeysToEntityResult(resultSet, entityResult, generatedKeys);
 
