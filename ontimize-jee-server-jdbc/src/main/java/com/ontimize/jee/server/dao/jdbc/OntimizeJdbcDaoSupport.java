@@ -279,7 +279,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 
 	}
 
-	private class SimpleScrollablePreparedStatementCreator implements PreparedStatementCreator, SqlProvider {
+	protected static class SimpleScrollablePreparedStatementCreator implements PreparedStatementCreator, SqlProvider {
 
 		private final String sql;
 
