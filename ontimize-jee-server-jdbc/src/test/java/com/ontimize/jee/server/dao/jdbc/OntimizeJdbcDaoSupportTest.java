@@ -7,6 +7,7 @@ import com.ontimize.jee.common.db.handler.DefaultSQLStatementHandler;
 import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.common.dto.EntityResultMapImpl;
 import com.ontimize.jee.server.dao.common.INameConvention;
+import com.ontimize.jee.server.dao.common.LowerCaseNameConvention;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -17,6 +18,7 @@ import org.springframework.jdbc.core.ArgumentPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.metadata.TableMetaDataProvider;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.*;
@@ -185,8 +187,7 @@ class OntimizeJdbcDaoSupportTest {
             OntimizeTableMetaDataContext tableMetaDataContext = OntimizeJdbcDaoSupportTest.this.ontimizeJdbcDaoSupport.getTableMetaDataContext();
             List<String> tableColumns = new ArrayList<>(Arrays.asList("tableColumn1"));
             tableMetaDataContext.getTableColumns();
-            EntityResult erResult = new EntityResultMapImpl();
-            erResult = ontimizeJdbcDaoSupport.insert(attributesValues);
+            EntityResult erResult = ontimizeJdbcDaoSupport.insert(attributesValues);
             Assertions.assertTrue(true, "Insert: Attributes does not contain any pair key-value valid");
 
         }
@@ -197,18 +198,13 @@ class OntimizeJdbcDaoSupportTest {
             ReflectionTestUtils.setField(OntimizeJdbcDaoSupportTest.this.ontimizeJdbcDaoSupport, "compiled", true);
             OntimizeTableMetaDataContext tableMetaDataContext = OntimizeJdbcDaoSupportTest.this.ontimizeJdbcDaoSupport.getTableMetaDataContext();
             List<String> tableColumns = new ArrayList<>();
-            List<String> columnNames = new ArrayList<>();
-            tableColumns.add("column1");
-            tableColumns.add("column2");
-            columnNames.add("columnName");
-            String columnName = "columnName";
+            tableColumns.add("attribute1");
+            tableColumns.add("attribute2");
 
             ReflectionTestUtils.setField(tableMetaDataContext, "tableColumns", tableColumns);
-            INameConvention nameConvention = Mockito.mock(INameConvention.class);
+            ReflectionTestUtils.setField(tableMetaDataContext, "nameConvention", new LowerCaseNameConvention());
 
-
-            EntityResult erResult = new EntityResultMapImpl();
-            erResult = ontimizeJdbcDaoSupport.insert(attributesValues);
+            EntityResult erResult = ontimizeJdbcDaoSupport.insert(attributesValues);
 
         }
     }
