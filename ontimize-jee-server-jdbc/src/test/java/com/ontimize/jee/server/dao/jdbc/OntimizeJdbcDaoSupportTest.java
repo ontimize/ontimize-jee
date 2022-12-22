@@ -6,8 +6,8 @@ import com.ontimize.jee.common.db.SQLStatementBuilder;
 import com.ontimize.jee.common.db.handler.DefaultSQLStatementHandler;
 import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.common.dto.EntityResultMapImpl;
-import com.ontimize.jee.server.dao.common.INameConvention;
 import com.ontimize.jee.server.dao.common.LowerCaseNameConvention;
+import org.hsqldb.jdbc.JDBCDatabaseMetaData;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -18,9 +18,12 @@ import org.springframework.jdbc.core.ArgumentPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.metadata.HsqlTableMetaDataProvider;
 import org.springframework.jdbc.core.metadata.TableMetaDataProvider;
+import org.springframework.jdbc.core.metadata.TableParameterMetaData;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -203,6 +206,20 @@ class OntimizeJdbcDaoSupportTest {
 
             ReflectionTestUtils.setField(tableMetaDataContext, "tableColumns", tableColumns);
             ReflectionTestUtils.setField(tableMetaDataContext, "nameConvention", new LowerCaseNameConvention());
+
+            TableMetaDataProvider metaDataProviderCopy = Mockito.mock(TableMetaDataProvider.class);
+            ReflectionTestUtils.setField(tableMetaDataContext, "metaDataProvider",metaDataProviderCopy );
+            TableParameterMetaData tableParameterMetaData1 = new TableParameterMetaData("attribute1", 4, false);
+            TableParameterMetaData tableParameterMetaData2 = new TableParameterMetaData("attribute2", 12, false);
+            List<TableParameterMetaData> tableParameterMetaData = new ArrayList<>();
+            tableParameterMetaData.add(tableParameterMetaData1);
+            tableParameterMetaData.add(tableParameterMetaData2);
+            Mockito.doReturn(tableParameterMetaData).when(metaDataProviderCopy).getTableParameterMetaData();
+
+            InsertMetaInfoHolder holder = Mockito.mock(InsertMetaInfoHolder.class);
+            Map<String,Object> args = Stream.of(new Object[][]{{"attribute1", 1}, {"attribute2", 2},}).collect(Collectors.toMap(data -> (String) data[0], data -> (Integer) data[1]));
+            tableMetaDataContext.getInsertMetaInfo(args);
+            //ontimizeJdbcDaoSupport.getJdbcTemplate().update( Mockito.any(String),Mockito.any(List<Object>),Mockito.any(int[]));
 
             EntityResult erResult = ontimizeJdbcDaoSupport.insert(attributesValues);
 
