@@ -1,14 +1,18 @@
 package com.ontimize.jee.common.tools;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLDecoder;
@@ -26,9 +30,6 @@ import java.util.jar.JarFile;
 import java.util.jar.JarInputStream;
 import java.util.jar.Manifest;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * The Class FileTools.
  */
@@ -38,6 +39,8 @@ public final class FileTools {
     private static final Logger logger = LoggerFactory.getLogger(FileTools.class);
 
     private static final int BUFFER_SIZE = 4096;
+    public static final String SOURCE = "Source '";
+    public static final String ENCODING = "UTF-8";
 
     /**
      * Instantiates a new file tools.
@@ -108,13 +111,13 @@ public final class FileTools {
             throw new NullPointerException("Destination must not be null");
         }
         if (!srcFile.exists()) {
-            throw new FileNotFoundException("Source '" + srcFile + "' does not exist");
+            throw new FileNotFoundException(SOURCE + srcFile + "' does not exist");
         }
         if (srcFile.isDirectory()) {
-            throw new IOException("Source '" + srcFile + "' exists but is a directory");
+            throw new IOException(SOURCE + srcFile + "' exists but is a directory");
         }
         if (srcFile.getCanonicalPath().equals(destFile.getCanonicalPath())) {
-            throw new IOException("Source '" + srcFile + "' and destination '" + destFile + "' are the same");
+            throw new IOException(SOURCE + srcFile + "' and destination '" + destFile + "' are the same");
         }
         if ((destFile.getParentFile() != null) && !destFile.getParentFile().exists()
                 && !destFile.getParentFile().mkdirs()) {
@@ -128,8 +131,9 @@ public final class FileTools {
             if (srcFile.length() != destFile.length()) {
                 throw new IOException("Failed to copy full contents from '" + srcFile + "' to '" + destFile + "'");
             }
-            if (preserveFileDate) {
-                destFile.setLastModified(srcFile.lastModified());
+
+            if (preserveFileDate && !destFile.setLastModified(srcFile.lastModified())) {
+                logger.error("Could not set last modified to {}", destFile.getName());
             }
         }
     }
@@ -167,18 +171,18 @@ public final class FileTools {
      * @param path the path
      * @return true, if successful
      */
-    public static boolean deleteDirectory(File path) {
+    public static boolean deleteDirectory(File path) throws IOException {
         if (path.exists()) {
             File[] files = path.listFiles();
             for (int i = 0; i < files.length; i++) {
                 if (files[i].isDirectory()) {
                     FileTools.deleteDirectory(files[i]);
                 } else {
-                    files[i].delete();
+                    Files.deleteIfExists(files[i].toPath());
                 }
             }
         }
-        return path.delete();
+        return Files.deleteIfExists(path.toPath());
     }
 
     /**
@@ -191,7 +195,7 @@ public final class FileTools {
     public static void moveFile(String org, String dst) throws IOException {
         FileTools.copyFile(org, dst);
         File fcorig = new File(org);
-        fcorig.delete();
+        Files.deleteIfExists(fcorig.toPath());
     }
 
     /**
@@ -202,7 +206,7 @@ public final class FileTools {
      */
     public static void moveFile(File fcorg, File fcdst) throws IOException {
         FileTools.copyFile(fcorg, fcdst);
-        fcorg.delete();
+        Files.deleteIfExists(fcorg.toPath());
     }
 
     /**
@@ -220,11 +224,8 @@ public final class FileTools {
      * @throws IOException Signals that an I/O exception has occurred.
      */
     public static byte[] getBytesFromFile(File f) throws IOException {
-        InputStream in = new FileInputStream(f);
-        try {
+        try (InputStream in = new FileInputStream(f)){
             return FileTools.getBytesFromFile(in);
-        } finally {
-            in.close();
         }
     }
 
@@ -288,9 +289,7 @@ public final class FileTools {
      */
     public static File createTemporaryFolder(String prefix) throws IOException {
         File tmpFolder = File.createTempFile(prefix, "");
-        if (tmpFolder.exists()) {
-            tmpFolder.delete();
-        }
+        Files.deleteIfExists(tmpFolder.toPath());
         tmpFolder.mkdirs();
         tmpFolder.deleteOnExit();
         return tmpFolder;
@@ -314,13 +313,7 @@ public final class FileTools {
         if (!dirOut.isDirectory()) {
             throw new IOException("NOT_DIRECTORY_FILE");
         }
-        return dirOut.list(new FilenameFilter() {
-
-            @Override
-            public boolean accept(File dir, String name) {
-                return name.toLowerCase().endsWith(ext.toLowerCase());
-            }
-        });
+        return dirOut.list((dir, name) -> name.toLowerCase().endsWith(ext.toLowerCase()));
     }
 
     public static String readExternalFile(File file) throws IOException {
@@ -344,7 +337,7 @@ public final class FileTools {
      * @param classToLookFor
      * @return
      */
-    public static URL getJarURL(Class classToLookFor) {
+    public static URL getJarURL(Class<?> classToLookFor) {
         try {
             URL location = classToLookFor.getProtectionDomain().getCodeSource().getLocation();
             FileTools.logger.debug("location=\"{}\"", location);
@@ -353,19 +346,41 @@ public final class FileTools {
             return uri.toURL();
         } catch (Exception e) {
             FileTools.logger.error("Error detecting jar file URL. Detail: ", e);
-            try {
-                URL url = classToLookFor.getProtectionDomain().getCodeSource().getLocation();
-                String thePathEncoded = URLEncoder.encode(url.toString(), "UTF-8");
-                try {
-                    return new URL(URLEncoder.encode(thePathEncoded, "UTF-8"));
-                } catch (Exception ex2) {
-                    FileTools.logger.trace("Error detecting jar file URL - 2. Detail: ", ex2);
-                    return new URL(URLDecoder.decode(thePathEncoded, "UTF-8"));
-                }
-            } catch (Exception e2) {
-                FileTools.logger.error("Error detecting jar file URL encoded. Detail: ", e2);
-            }
+            URL thePathEncoded = getUrl(classToLookFor);
+            if (thePathEncoded != null) return thePathEncoded;
             return null;
+        }
+    }
+
+    /**
+     * Method extracted to improve readability of {@link #getJarURL(Class)}
+     * @param classToLookFor
+     * @return
+     */
+    private static URL getUrl(Class<?> classToLookFor) {
+        try {
+            URL url = classToLookFor.getProtectionDomain().getCodeSource().getLocation();
+            String thePathEncoded = URLEncoder.encode(url.toString(), ENCODING);
+            return getUrl(thePathEncoded);
+        } catch (Exception e2) {
+            FileTools.logger.error("Error detecting jar file URL encoded. Detail: ", e2);
+        }
+        return null;
+    }
+
+    /**
+     * Method extracted to improve readability of {@link #getUrl(Class)}
+     * @param thePathEncoded
+     * @return
+     * @throws MalformedURLException
+     * @throws UnsupportedEncodingException
+     */
+    private static URL getUrl(String thePathEncoded) throws MalformedURLException, UnsupportedEncodingException {
+        try {
+            return new URL(URLEncoder.encode(thePathEncoded, ENCODING));
+        } catch (Exception ex2) {
+            FileTools.logger.trace("Error detecting jar file URL - 2. Detail: ", ex2);
+            return new URL(URLDecoder.decode(thePathEncoded, ENCODING));
         }
     }
 
@@ -396,10 +411,6 @@ public final class FileTools {
      * @throws IOException
      */
     public static Map<String, String> readManifest(InputStream jarFileStream) {
-        return FileTools.readManifest(jarFileStream, null);
-    }
-
-    public static Map<String, String> readManifest(InputStream jarFileStream, Class classToLookFor) {
         Map<String, String> values = new HashMap<>();
         try {
             // Java 7+ ----------------------
@@ -418,22 +429,28 @@ public final class FileTools {
             // Parse main attributes
             final Attributes mainattr = mf.getMainAttributes();
             if (mainattr != null) {
-                for (Entry<Object, Object> entry : mainattr.entrySet()) {
-                    if ((entry.getKey() != null) && (entry.getValue() != null)) {
-                        values.put(String.valueOf(entry.getKey()), String.valueOf(entry.getValue()));
-                    }
-                }
+                for (Entry<Object, Object> entry : mainattr.entrySet())
+                    parseEntries(entry.getKey(), entry.getValue(), values);
             }
 
             // Parse another entries
             Map<String, Attributes> entries = mf.getEntries();
-            for (Entry<String, Attributes> entry : entries.entrySet()) {
-                if ((entry.getKey() != null) && (entry.getValue() != null)) {
-                    values.put(String.valueOf(entry.getKey()), String.valueOf(entry.getValue()));
-                }
-            }
+            for (Entry<String, Attributes> entry : entries.entrySet())
+                parseEntries(entry.getKey(), entry.getValue(), values);
         } else {
             FileTools.logger.warn("Null manifest.");
+        }
+    }
+
+    /**
+     * Method to reduce cognitive complexity of {@link #catchValuesFromManifest(Map, Manifest)}
+     * @param entry
+     * @param value
+     * @param values
+     */
+    private static void parseEntries(Object entry, Object value, Map<String, String> values) {
+        if ((entry != null) && (value != null)) {
+            values.put(String.valueOf(entry), String.valueOf(value));
         }
     }
 
