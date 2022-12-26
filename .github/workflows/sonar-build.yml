@@ -8,7 +8,7 @@ on:
     types: [opened, synchronize, reopened]
 jobs:
   Analyze-project-with-Sonar-Cloud:
-    name: Analyze Analyze project with Sonar Cloud
+    name: Analyze project with Sonar Cloud
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
