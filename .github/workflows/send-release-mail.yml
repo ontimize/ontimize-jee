@@ -1,0 +1,8 @@
+name: Send release mail
+on:   workflow_dispatch
+jobs:
+  Send-release-mail:
+    runs-on: ubuntu-latest
+    steps:
+      - name : Checkout repository code
+        uses: actions/checkout@v2
