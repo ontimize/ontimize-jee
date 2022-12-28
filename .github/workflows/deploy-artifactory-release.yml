@@ -7,22 +7,25 @@ jobs:
   Generate-a-RELEASE-in-Artifactory:
     runs-on: ubuntu-latest
     env:
-      ARTIFACTORY_USER: ${{ secrets.ARTIFACTORY_USER }}
-      ARTIFACTORY_PASS: ${{ secrets.ARTIFACTORY_PASS }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       CI_COMMIT_AUTHOR: ${{ secrets.CI_COMMIT_AUTHOR }}
       CI_COMMIT_MAIL: ${{ secrets.CI_COMMIT_MAIL }}
+      MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
+      MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
+      MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
     steps:
       - name: Checkout repository code
         uses: actions/checkout@v3
       - name: Setup Java JDK and Maven
-        uses: actions/setup-java@v3
+        uses: ontimize/setup-java-maven-gitAction@v2.4.2
         with:
           distribution: 'temurin'
-          java-version: '8'
-          server-id: imatia-artifactory
-          server-username: ARTIFACTORY_USER
-          server-password: ARTIFACTORY_PASS
+          java-version: '11'
+          server-id: ossrh
+          server-username: MAVEN_USERNAME
+          server-password: MAVEN_CENTRAL_TOKEN
+          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE
       - name: Perform MVN deploy action
         run: |
           mvn -B -U -Dmaven.test.failure.ignore=true -DskipTests=true clean deploy -Pgenerate-version
