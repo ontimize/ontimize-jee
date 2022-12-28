@@ -1,12 +1,55 @@
-name: Send release mail
-on: workflow_dispatch
+name: Generate a RELEASE in Artifactory
+on:
+  push:
+    branches:
+      - main
 jobs:
-  Send-release-mail:
+  Generate-a-RELEASE-in-Artifactory:
     runs-on: ubuntu-latest
+    env:
+      ARTIFACTORY_USER: ${{ secrets.ARTIFACTORY_USER }}
+      ARTIFACTORY_PASS: ${{ secrets.ARTIFACTORY_PASS }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      CI_COMMIT_AUTHOR: ${{ secrets.CI_COMMIT_AUTHOR }}
+      CI_COMMIT_MAIL: ${{ secrets.CI_COMMIT_MAIL }}
     steps:
-      - name : Checkout repository code
-        uses: actions/checkout@v2
-      - name: mail
+      - name: Checkout repository code
+        uses: actions/checkout@v3
+      - name: Setup Java JDK and Maven
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '8'
+          server-id: imatia-artifactory
+          server-username: ARTIFACTORY_USER
+          server-password: ARTIFACTORY_PASS
+      - name: Perform MVN deploy action
+        run: |
+          mvn -B -U -Dmaven.test.failure.ignore=true -DskipTests=true clean deploy -Pgenerate-version
+      - name: Set author identity
+        run: |
+          git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}"
+          git config --global user.email "${{ secrets.CI_COMMIT_MAIL }}"
+      - name: Annotate master version with a tag
+        id: tag
+        run: |
+          version=$(mvn help:evaluate -q -Dexpression=project.version -DforceStdout)
+          git tag -a $version -m "Version $version"
+          git push origin $version
+          echo "version=$version" >> $GITHUB_OUTPUT
+      - name: Create sync branch
+        run: |
+          version=${{ steps.tag.outputs.version }}
+          git checkout -b sync/$version
+          mvn -B build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.nextMinorVersion}.0-SNAPSHOT versions:commit
+          git add .
+          git commit -m "New develop version → $version"
+          git push origin sync/$version
+      - name: Create pull request
+        run: |
+          version=${{ steps.tag.outputs.version }}
+          gh pr create -B develop -H sync/$version --title "Backmerge from release/$version into develop" --body "Created by a GitHub Action → Resync develop branch with main branch and increase project version"
+      - name: Send email
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: smtp.office365.com
@@ -229,7 +272,7 @@ jobs:
                   <td style="overflow-wrap:break-word;word-break:break-word;padding:10px 10px 10px 20px;font-family:arial,helvetica,sans-serif;" align="left">
 
               <div style="color: #6b6b6b; line-height: 140%; text-align: left; word-wrap: break-word;">
-                <p style="font-size: 14px; line-height: 140%;"><span style="font-family: Lato, sans-serif; font-size: 14px; line-height: 19.6px;">Hemos lanzado la versión {{version}} del framework <strong>Ontimize EE</strong></span></p>
+                <p style="font-size: 14px; line-height: 140%;"><span style="font-family: Lato, sans-serif; font-size: 14px; line-height: 19.6px;">Hemos lanzado la versión <strong>${{ steps.tag.outputs.version }}</strong> del framework <strong>Ontimize EE</strong></span></p>
               </div>
 
                   </td>
@@ -291,8 +334,8 @@ jobs:
 
               <!--[if mso]><style>.v-button {background: transparent !important;}</style><![endif]-->
             <div align="center">
-              <!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="https://github.com/ontimize/ontimize-jee/tree/{{version}}" style="height:37px; v-text-anchor:middle; width:172px;" arcsize="11%"  stroke="f" fillcolor="#bedbf9"><w:anchorlock/><center style="color:#3598db;font-family:arial,helvetica,sans-serif;"><![endif]-->  
-                <a href="https://github.com/ontimize/ontimize-jee/tree/{{version}}" target="_blank" class="v-button" style="box-sizing: border-box;display: inline-block;font-family:arial,helvetica,sans-serif;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #3598db; background-color: #bedbf9; border-radius: 4px;-webkit-border-radius: 4px; -moz-border-radius: 4px; width:auto; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;">
+              <!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="https://github.com/ontimize/ontimize-jee/tree/${{ steps.tag.outputs.version }}" style="height:37px; v-text-anchor:middle; width:172px;" arcsize="11%"  stroke="f" fillcolor="#bedbf9"><w:anchorlock/><center style="color:#3598db;font-family:arial,helvetica,sans-serif;"><![endif]-->  
+                <a href="https://github.com/ontimize/ontimize-jee/tree/${{ steps.tag.outputs.version }}" target="_blank" class="v-button" style="box-sizing: border-box;display: inline-block;font-family:arial,helvetica,sans-serif;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #3598db; background-color: #bedbf9; border-radius: 4px;-webkit-border-radius: 4px; -moz-border-radius: 4px; width:auto; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;">
                   <span style="display:block;padding:10px 50px;line-height:120%;"><strong><span style="font-size: 14px; line-height: 16.8px;">Ir a GitHub</span></strong></span>
                 </a>
               <!--[if mso]></center></v:roundrect><![endif]-->
@@ -323,3 +366,4 @@ jobs:
             </body>
 
             </html>
+
