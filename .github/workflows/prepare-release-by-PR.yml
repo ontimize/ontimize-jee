@@ -41,7 +41,7 @@ jobs:
           git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}"
           git config --global user.email "${{ secrets.CI_COMMIT_MAIL }}"
       - name: Prepare version to release
-      id: tag
+        id: tag
         run: |
           version=$(echo "${{ steps.version.outputs.version }}" | sed 's/-SNAPSHOT//' )
           git checkout -b release/$version
