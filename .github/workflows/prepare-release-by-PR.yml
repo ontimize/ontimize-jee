@@ -52,7 +52,7 @@ jobs:
           mvn -B versions:set -DremoveSnapshot versions:commit
           mvn -B -N versions:update-child-modules versions:commit
           git ls-files | grep -e 'pom.xml' | xargs git add || true
-          echo "version=$var_version" >> $GITHUB_OUTPUT
+          echo "version=$version" >> $GITHUB_OUTPUT
       - name: Commit file changes
         run: |
           version=${{ steps.tag.outputs.version }}
