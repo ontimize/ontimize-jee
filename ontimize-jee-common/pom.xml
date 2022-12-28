@@ -1,11 +1,9 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.ontimize.jee</groupId>
 		<artifactId>ontimize-jee</artifactId>
-		<version>5.5.0</version>
+		<version>5.6.0</version>
 	</parent>
 
 	<artifactId>ontimize-jee-common</artifactId>
@@ -23,8 +21,14 @@
 
 	<developers>
 		<developer>
-			<name>Cristóbal Miguel Vázquez Carde</name>
-			<email>cmiguel.vazquez@imatia.com</email>
+			<name>Alberto Quintela Trabazos</name>
+			<email>alberto.quintela@imatia.com</email>
+			<organization>Imatia Innovation</organization>
+			<organizationUrl>http://imatia.com</organizationUrl>
+		</developer>
+		<developer>
+			<name>Ángel Vázquez Vázquez</name>
+			<email>angel.vazquez@imatia.com</email>
 			<organization>Imatia Innovation</organization>
 			<organizationUrl>http://imatia.com</organizationUrl>
 		</developer>
@@ -59,14 +63,32 @@
 			<organizationUrl>http://imatia.com</organizationUrl>
 		</developer>
 		<developer>
-			<name>Manuel Cid Rodríguez</name>
-			<email>manuel.cid@imatia.com</email>
+			<name>Jorge Diaz Seijo</name>
+			<email>jorge.diaz@imatia.com</email>
 			<organization>Imatia Innovation</organization>
 			<organizationUrl>http://imatia.com</organizationUrl>
 		</developer>
 		<developer>
 			<name>Pablo Martínez Kirsten</name>
 			<email>pablo.martinez@imatia.com</email>
+			<organization>Imatia Innovation</organization>
+			<organizationUrl>http://imatia.com</organizationUrl>
+		</developer>
+		<developer>
+			<name>Senén Diéguez López</name>
+			<email>senen.dieguez@imatia.com</email>
+			<organization>Imatia Innovation</organization>
+			<organizationUrl>http://imatia.com</organizationUrl>
+		</developer>
+		<developer>
+			<name>Tomás Fuentes Facal</name>
+			<email>tomas.fuentes@imatia.com</email>
+			<organization>Imatia Innovation</organization>
+			<organizationUrl>http://imatia.com</organizationUrl>
+		</developer>
+		<developer>
+			<name>Xoán Loureiro Santamaría</name>
+			<email>xoan.loureiro@imatia.com</email>
 			<organization>Imatia Innovation</organization>
 			<organizationUrl>http://imatia.com</organizationUrl>
 		</developer>
@@ -199,6 +221,16 @@
 			</exclusions>
 		</dependency>
 		<!-- END dependencies from old core parent -->
+
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.assertj</groupId>
+			<artifactId>assertj-core</artifactId>
+		</dependency>
 
 	</dependencies>
 </project>	

@@ -1,0 +1,67 @@
+name: Prepare a release by a pull request
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Optional. Enter a new custom version instead of default existing one.'
+        type: string
+        required: false
+jobs:
+  Prepare-a-release-by-a-pull-request:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      CI_COMMIT_AUTHOR: ${{ secrets.CI_COMMIT_AUTHOR }}
+      CI_COMMIT_MAIL: ${{ secrets.CI_COMMIT_MAIL }}
+      ARTIFACTORY_USER: ${{ secrets.ARTIFACTORY_USER }}
+      ARTIFACTORY_PASS: ${{ secrets.ARTIFACTORY_PASS }}
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v3
+      - name: Setup Java JDK and Maven
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '8'
+          server-id: imatia-artifactory
+          server-username: ARTIFACTORY_USER
+          server-password: ARTIFACTORY_PASS
+      - name: Get framework version to release
+        id: version
+        run: |
+          var_version=""
+          if  ${{ github.event.inputs.version != '' }}; then
+            var_version=${{ github.event.inputs.version }}
+          else
+            var_version=$(mvn help:evaluate -q -Dexpression=project.version -DforceStdout) 
+          fi
+          echo "version=$var_version" >> $GITHUB_OUTPUT
+      - name: Set author identity
+        run: |
+          git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}"
+          git config --global user.email "${{ secrets.CI_COMMIT_MAIL }}"
+      - name: Prepare version to release
+        id: tag
+        run: |
+          version=$(echo "${{ steps.version.outputs.version }}" | sed 's/-SNAPSHOT//' )
+          git checkout -b release/$version
+          mvn -B versions:use-releases
+          if  ${{ github.event.inputs.version != '' }}; then
+            mvn -B versions:set -DnewVersion=$version versions:commit
+          fi
+          mvn -B versions:set -DremoveSnapshot versions:commit
+          mvn -B -N versions:update-child-modules versions:commit
+          git ls-files | grep -e 'pom.xml' | xargs git add || true
+          echo "version=$version" >> $GITHUB_OUTPUT
+      - name: Commit file changes
+        run: |
+          version=${{ steps.tag.outputs.version }}
+          git commit -m "New release → $version"
+      - name: Push new branch
+        run: |
+          version=${{ steps.tag.outputs.version }}
+          git push origin release/$version
+      - name: Create pull request
+        run: |
+          version=${{ steps.tag.outputs.version }}
+          gh pr create -B main -H release/$version --title "Merge release/$version into main" --body "Created by a GitHub Action → Prepare a release by a pull request"

@@ -1,7 +1,8 @@
 package com.ontimize.jee.webclient.export;
 
-import com.ontimize.jee.webclient.export.providers.ExcelExportDataProvider;
+import com.ontimize.jee.webclient.export.exception.ExportException;
 import com.ontimize.jee.webclient.export.providers.ExportColumnProvider;
+import com.ontimize.jee.webclient.export.providers.ExportDataProvider;
 import com.ontimize.jee.webclient.export.providers.ExportStyleProvider;
 import com.ontimize.jee.webclient.export.providers.SheetNameProvider;
 import com.ontimize.jee.webclient.export.util.ExportOptions;
@@ -16,9 +17,8 @@ public interface Exporter<T> {
 
     T export(
             final ExportColumnProvider columnProvider,
-            final ExcelExportDataProvider dataProvider,
+            final ExportDataProvider dataProvider,
             final ExportStyleProvider styleProvider,
-            final SheetNameProvider sheetNameProvider,
-            final ExportOptions exportOptions);
+            final ExportOptions exportOptions) throws ExportException;
 
 }

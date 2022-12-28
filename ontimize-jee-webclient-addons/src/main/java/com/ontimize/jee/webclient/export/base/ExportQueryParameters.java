@@ -1,60 +1,34 @@
 package com.ontimize.jee.webclient.export.base;
 
-import com.ontimize.jee.server.rest.QueryParameter;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.ontimize.jee.server.rest.FilterParameter;
 
-public class ExportQueryParameters extends BaseExcelExportParameters {
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "type",
+        defaultImpl = AdvancedExportQueryParameters.class
+)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = AdvancedExportQueryParameters.class, name = "xlsx"),
+        @JsonSubTypes.Type(value = BaseExportQueryParameters.class, name = "csv"),
+        @JsonSubTypes.Type(value = AdvancedExportQueryParameters.class, name = "pdf")
+})
 
-    private QueryParameter queryParam;
+public interface ExportQueryParameters {
 
-    private String dao;
+    FilterParameter getQueryParam();
 
-    private String service;
+    void setQueryParam(FilterParameter filterParameter);
 
-    private boolean advQuery;
+    String getDao();
+
+    String getService();
 
 
-    public ExportQueryParameters() {
-        super();
-    }
+    String getPath();
 
-    public ExportQueryParameters(QueryParameter queryParam, String dao, String service, boolean advQuery) {
-        super();
-        this.queryParam = queryParam;
-        this.dao = dao;
-        this.service = service;
-        this.advQuery = advQuery;
-    }
-
-    public QueryParameter getQueryParam() {
-        return queryParam;
-    }
-
-    public void setQueryParam(QueryParameter queryParam) {
-        this.queryParam = queryParam;
-    }
-
-    public String getDao() {
-        return dao;
-    }
-
-    public void setDao(String dao) {
-        this.dao = dao;
-    }
-
-    public String getService() {
-        return service;
-    }
-
-    public void setService(String service) {
-        this.service = service;
-    }
-
-    public boolean isAdvQuery() {
-        return advQuery;
-    }
-
-    public void setAdvQuery(boolean advQuery) {
-        this.advQuery = advQuery;
-    }
+    public boolean isAdvQuery();
 
 }

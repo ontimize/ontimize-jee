@@ -1,25 +1,22 @@
 package com.ontimize.jee.webclient.export.helpers;
 
 import java.sql.JDBCType;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.webclient.export.ExportColumn;
 import com.ontimize.jee.webclient.export.ExportColumnStyle;
 import com.ontimize.jee.webclient.export.HeadExportColumn;
-import com.ontimize.jee.webclient.export.executor.support.DefaultExportColumnStyle;
 import com.ontimize.jee.webclient.export.providers.ExportColumnProvider;
 import com.ontimize.jee.webclient.export.support.BaseExportColumnProvider;
+import com.ontimize.jee.webclient.export.support.DefaultExportColumnStyle;
 import com.ontimize.jee.webclient.export.support.DefaultHeadExportColumn;
 import com.ontimize.jee.webclient.export.util.ColumnCellUtils;
-
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class EntityResultExportHelper {
 
@@ -42,7 +39,7 @@ public class EntityResultExportHelper {
 
     private static List<HeadExportColumn> createHeaderColumnsFromEntityResult(EntityResult entityResult,
             List orderColumns) {
-        final ObservableList<HeadExportColumn> columns = FXCollections.observableArrayList();
+        final List<HeadExportColumn> columns = new ArrayList<>();
         Iterator i = orderColumns != null
                 ? orderColumns.iterator()
                 : ((List) entityResult.get("columns")).iterator();
@@ -63,7 +60,7 @@ public class EntityResultExportHelper {
 
     private static <T> List<ExportColumn> createBodyColumnsFromEntityResult(final EntityResult entityResult,
             List orderColumns) {
-        final ObservableList<ExportColumn> columns = FXCollections.observableArrayList();
+        final List<ExportColumn> columns = new ArrayList<>();
         Iterator i = orderColumns != null
                 ? orderColumns.iterator()
                 : ((List) entityResult.get("columns")).iterator();
