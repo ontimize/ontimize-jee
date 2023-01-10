@@ -1,0 +1,55 @@
+name: Generate a RELEASE in Artifactory
+on:
+  push:
+    branches:
+      - main
+jobs:
+  Generate-a-RELEASE-in-Artifactory:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      CI_COMMIT_AUTHOR: ${{ secrets.CI_COMMIT_AUTHOR }}
+      CI_COMMIT_MAIL: ${{ secrets.CI_COMMIT_MAIL }}
+      MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
+      MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
+      MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v3
+      - name: Setup Java JDK and Maven
+        uses: ontimize/setup-java-maven-gitAction@v2.4.2
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+          server-id: ossrh
+          server-username: MAVEN_USERNAME
+          server-password: MAVEN_CENTRAL_TOKEN
+          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE
+      - name: Perform MVN deploy action
+        run: |
+          mvn -B -U -Dmaven.test.failure.ignore=true -DskipTests=true clean deploy -Pgenerate-version
+      - name: Set author identity
+        run: |
+          git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}"
+          git config --global user.email "${{ secrets.CI_COMMIT_MAIL }}"
+      - name: Annotate master version with a tag
+        id: tag
+        run: |
+          version=$(mvn help:evaluate -q -Dexpression=project.version -DforceStdout)
+          git tag -a $version -m "Version $version"
+          git push origin $version
+          echo "version=$version" >> $GITHUB_OUTPUT
+      - name: Create sync branch
+        run: |
+          version=${{ steps.tag.outputs.version }}
+          git checkout -b sync/$version
+          mvn -B build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.nextMinorVersion}.0-SNAPSHOT versions:commit
+          version_dev=$(mvn help:evaluate -q -Dexpression=project.version -DforceStdout)
+          git add .
+          git commit -m "New develop version → $version_dev"
+          git push origin sync/$version
+      - name: Create pull request
+        run: |
+          version=${{ steps.tag.outputs.version }}
+          gh pr create -B develop -H sync/$version --title "Backmerge from main into develop" --body "Created by a GitHub Action → Resync develop branch with main branch and increase project version"

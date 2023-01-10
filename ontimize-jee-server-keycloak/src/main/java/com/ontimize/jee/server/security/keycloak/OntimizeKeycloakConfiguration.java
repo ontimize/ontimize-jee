@@ -20,6 +20,9 @@ public class OntimizeKeycloakConfiguration implements IOntimizeKeycloakConfigura
 	@Value("${ontimize.security.keycloak.resource}")
 	private String resource;
 
+	@Value("${ontimize.security.keycloak.use-resource-role-mappings:false}")
+	private Boolean useResourceRoleMappings;
+
 	@Override
 	public String getAuthServerUrl() {
 		return this.authServerUrl;
@@ -39,7 +42,7 @@ public class OntimizeKeycloakConfiguration implements IOntimizeKeycloakConfigura
 	}
 
 	@Override
-	public Boolean getPublicClient() {
+	public Boolean isPublicClient() {
 		return this.publicClient;
 	}
 
@@ -63,5 +66,14 @@ public class OntimizeKeycloakConfiguration implements IOntimizeKeycloakConfigura
 
 	public void setResource(String resource) {
 		this.resource = resource;
+	}
+
+	@Override
+	public Boolean isUseResourceRoleMappings() {
+		return this.useResourceRoleMappings;
+	}
+
+	public void setUseResourceRoleMappings(Boolean useResourceRoleMappings) {
+		this.useResourceRoleMappings = useResourceRoleMappings;
 	}
 }

@@ -5,7 +5,7 @@
  */
 package com.ontimize.jee.webclient.export.pagination;
 
-import javafx.scene.control.IndexRange;
+import com.ontimize.jee.webclient.export.util.IndexRange;
 
 /**
  * The Class PaginationRequest.

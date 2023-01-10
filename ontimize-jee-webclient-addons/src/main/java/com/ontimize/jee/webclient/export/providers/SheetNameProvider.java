@@ -1,8 +1,8 @@
 package com.ontimize.jee.webclient.export.providers;
 
-import com.ontimize.jee.webclient.export.SheetContext;
+import java.util.function.Function;
 
-import javafx.util.Callback;
+import com.ontimize.jee.webclient.export.SheetContext;
 
 /**
  * Provider donde el usuario puede decidir si desea una hoja nueva. Cada vez que se exporta una fila
@@ -18,6 +18,6 @@ public interface SheetNameProvider {
     String getDefaultSheetName();
 
     // Nombre de las posibles subsiguientes hojas
-    Callback<SheetContext, String> getSheetName();
+    Function<SheetContext, String> getSheetName();
 
 }
