@@ -1,13 +1,11 @@
 package com.ontimize.jee.common.test.dbTest;
 
 import com.ontimize.jee.common.db.LocalePair;
-import com.ontimize.jee.common.db.SQLStatementBuilder;
 import com.ontimize.jee.common.db.handler.DefaultSQLStatementHandler;
 import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.common.dto.EntityResultMapImpl;
 import com.ontimize.jee.common.gui.LongString;
 import com.ontimize.jee.common.util.remote.BytesBlock;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -22,22 +20,32 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.ByteArrayInputStream;
 import java.io.StringReader;
-import java.sql.*;
+import java.sql.Blob;
+import java.sql.Clob;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class DefaultSQLStatementHandlerTest {
-
-
-    boolean useAsInSubqueries = true;
 
     @InjectMocks
     DefaultSQLStatementHandler defaultSQLStatementHandler;
@@ -50,7 +58,7 @@ class DefaultSQLStatementHandlerTest {
 
     @Test
     void checkColumnName_when_receive_columnName_expect_check_columnName() {
-        var result = this.defaultSQLStatementHandler.checkColumnName("COLUMN1");
+        boolean result = this.defaultSQLStatementHandler.checkColumnName("COLUMN1");
         assertFalse(result);
 
         result = this.defaultSQLStatementHandler.checkColumnName("MY COLUMN");
@@ -74,8 +82,8 @@ class DefaultSQLStatementHandlerTest {
         int startIndex = 1;
         int recordNumber = 1;
 
-        var result = defaultSQLStatementHandler.convertPaginationStatement(sqlTemplate, startIndex, recordNumber);
-        var expected = "sqlTemplate";
+        String result = defaultSQLStatementHandler.convertPaginationStatement(sqlTemplate, startIndex, recordNumber);
+        String expected = "sqlTemplate";
 
         assertEquals(expected, result);
     }
@@ -86,7 +94,7 @@ class DefaultSQLStatementHandlerTest {
         @Test
         void when_receive_table_and_attributes_expect_update_query() {
             String table = "table1";
-            HashMap attributes = new HashMap();
+            Map<String, String> attributes = new HashMap<>();
 
             attributes.put("field1", "value1");
 
@@ -100,11 +108,9 @@ class DefaultSQLStatementHandlerTest {
         @Test
         void when_receive_table_and_attributes_and_keysValues_expect_update_query() {
             String table = "table1";
-            HashMap attributes = new HashMap();
-            HashMap keysValues = new HashMap();
+            Map<String, String> attributes = new HashMap<>();
 
             attributes.put("field1", "value1");
-            keysValues.put("keys1", "values1");
 
             var result = defaultSQLStatementHandler.createUpdateQuery(table, attributes, null);
             var expected = "UPDATE table1 SET field1 = ?";
@@ -130,7 +136,7 @@ class DefaultSQLStatementHandlerTest {
         @Test
         void when_receive_table_and_keysValues_expect_delete_query() {
             String table = "table1";
-            HashMap keysValues = new HashMap();
+            Map<String, String> keysValues = new HashMap<>();
 
             keysValues.put("field1", "value1");
 
@@ -148,7 +154,7 @@ class DefaultSQLStatementHandlerTest {
         @Test
         void when_receive_table_and_attibutes_expect_insert_query() {
             String table = "table1";
-            HashMap attributes = new HashMap();
+            Map<String, String> attributes = new HashMap<>();
 
             attributes.put("field1", "value1");
 
@@ -165,9 +171,9 @@ class DefaultSQLStatementHandlerTest {
 
         @Test
         void when_receive_conditions_expect_query_without_where() {
-            HashMap conditions = new HashMap();
-            ArrayList wildcard = new ArrayList();
-            ArrayList values = new ArrayList();
+            Map<String, String> conditions = new HashMap<>();
+            List<String> wildcard = new ArrayList<>();
+            List<String> values = new ArrayList<>();
 
             conditions.put("field1", "value1");
 
@@ -179,9 +185,9 @@ class DefaultSQLStatementHandlerTest {
 
         @Test
         void when_receive_conditions_and_wildcard_expect_query_without_where() {
-            HashMap conditions = new HashMap();
-            ArrayList wildcard = new ArrayList();
-            ArrayList values = new ArrayList();
+            Map<String, String> conditions = new HashMap<>();
+            List<String> wildcard = new ArrayList<>();
+            List<String> values = new ArrayList<>();
 
             conditions.put("field1", "value1");
             conditions.put("field2", "value2");
@@ -195,9 +201,9 @@ class DefaultSQLStatementHandlerTest {
 
         @Test
         void when_receive_conditions_and_wildcard_and_values_expect_query_without_where() {
-            HashMap conditions = new HashMap();
-            ArrayList wildcard = new ArrayList();
-            ArrayList values = new ArrayList();
+            Map<String, String> conditions = new HashMap<>();
+            List<String> wildcard = new ArrayList<>();
+            List<String> values = new ArrayList<>();
 
             conditions.put("field1", "value1");
             wildcard.add("wildcard1");
@@ -211,7 +217,7 @@ class DefaultSQLStatementHandlerTest {
 
         @Test
         void when_receive_conditions_but_not_wildcard_and_values_expect_Exception_NullPointerException() {
-            HashMap conditions = new HashMap();
+            Map<String, String> conditions = new HashMap<>();
 
             conditions.put("field1", "value1");
 
@@ -224,10 +230,6 @@ class DefaultSQLStatementHandlerTest {
         @Test
         void when_receive_one_table_expect_count_query() {
             var table = "my-table";
-            HashMap conditions = null;
-            ArrayList wildcards = null;
-            ArrayList countColumns = null;
-
             var result = defaultSQLStatementHandler.createCountQuery(table, null, null, null);
             var expected = "SELECT  COUNT(*) AS \"TotalRecordNumber\"  FROM  [my-table]";
 
@@ -239,11 +241,7 @@ class DefaultSQLStatementHandlerTest {
         @Test
         void when_receive_one_table_and_conditions_expect_count_query() {
             var table = "my-table";
-            HashMap conditions = null;
-            ArrayList wildcards = null;
-            ArrayList countColumns = null;
-
-            conditions = new HashMap();
+            Map<String, String> conditions = new HashMap<>();
             conditions.put("field1", "value1");
 
             var result = defaultSQLStatementHandler.createCountQuery(table, conditions, null, null);
@@ -257,9 +255,8 @@ class DefaultSQLStatementHandlerTest {
         @Test
         void when_receive_table_and_conditions_and_wildcards_expect_count_query() {
             var table = "my-table";
-            HashMap conditions = new HashMap();
-            ArrayList wildcards = new ArrayList();
-            ArrayList countColumns = null;
+            Map<String, String> conditions = new HashMap<>();
+            List<String> wildcards = new ArrayList<>();
 
 
             conditions.put("field1", "value1");
@@ -274,9 +271,9 @@ class DefaultSQLStatementHandlerTest {
         @Test
         void when_receive_table_and_conditions_and_wildcards_and_countColumns_expect_count_query() {
             var table = "my-table";
-            HashMap conditions = new HashMap();
-            ArrayList wildcards = new ArrayList();
-            ArrayList countColumns = new ArrayList();
+            Map<String, String> conditions = new HashMap<>();
+            List<String> wildcards = new ArrayList<>();
+            List<String> countColumns = new ArrayList<>();
 
 
             conditions.put("field1", "value1");
@@ -292,9 +289,7 @@ class DefaultSQLStatementHandlerTest {
         @Test
         void when_receive_table_and_countColumns_expect_count_query() {
             var table = "my-table";
-            HashMap conditions = null;
-            ArrayList wildcards = null;
-            ArrayList countColumns = new ArrayList();
+            List<String> countColumns = new ArrayList<>();
 
             countColumns.add("countColumns1");
 
@@ -311,9 +306,6 @@ class DefaultSQLStatementHandlerTest {
         @Test
         void when_receive_one_table_expect_select_query() {
             var table = "my-table";
-            HashMap conditions = null;
-            ArrayList wildcards = null;
-            ArrayList requestedColumns = null;
 
             var result = defaultSQLStatementHandler.createSelectQuery(table, null, null, null);
             var expected = "SELECT  *  FROM  [my-table]";
@@ -324,10 +316,7 @@ class DefaultSQLStatementHandlerTest {
         @Test
         void when_receive_table_and_requestedColumns_expect_select_query() {
             var table = "my-table";
-            ArrayList requestedColumns = new ArrayList();
-            HashMap conditions = null;
-            ArrayList wildcards = null;
-
+            List<String> requestedColumns = new ArrayList<>();
             requestedColumns.add("requestedColumns1");
 
             var result = defaultSQLStatementHandler.createSelectQuery(table, requestedColumns, null, null);
@@ -339,9 +328,8 @@ class DefaultSQLStatementHandlerTest {
         @Test
         void when_receive_table_and_requestedColumns_and_conditions_expect_select_query() {
             var table = "my-table";
-            ArrayList requestedColumns = new ArrayList();
-            HashMap conditions = new HashMap();
-            ArrayList wildcards = null;
+            List<String> requestedColumns = new ArrayList<>();
+            Map<String, String> conditions = new HashMap<>();
 
             requestedColumns.add("requestedColumns1");
             conditions.put("field1", "value1");
@@ -355,9 +343,9 @@ class DefaultSQLStatementHandlerTest {
         @Test
         void when_receive_table_and_requestedColumns_and_conditions_and_wildcards_expect_select_query() {
             var table = "my-table";
-            ArrayList requestedColumns = new ArrayList();
-            HashMap conditions = new HashMap();
-            ArrayList wildcards = new ArrayList();
+            List<String> requestedColumns = new ArrayList<>();
+            Map<String, String> conditions = new HashMap<>();
+            List<String> wildcards = new ArrayList<>();
 
             requestedColumns.add("requestedColumns1");
             conditions.put("field1", "value1");
@@ -373,11 +361,10 @@ class DefaultSQLStatementHandlerTest {
         @Test
         void when_receive_table_and_requestedColumns_and_conditions_and_wildcards_and_columnsSorting_expect_select_query() {
             var table = "my-table";
-            ArrayList requestedColumns = new ArrayList();
-            HashMap conditions = new HashMap();
-            ArrayList wildcards = new ArrayList();
-            ArrayList columnSorting = new ArrayList();
-            int recordCount = 1;
+            List<String> requestedColumns = new ArrayList<>();
+            Map<String, String> conditions = new HashMap<>();
+            List<String> wildcards = new ArrayList<>();
+            List<String> columnSorting = new ArrayList<>();
 
             requestedColumns.add("requestedColumns1");
             conditions.put("field1", "value1");
@@ -393,10 +380,10 @@ class DefaultSQLStatementHandlerTest {
         @Test
         void when_receive_table_and_requestedColumns_and_conditions_and_wildcards_and_columnsSorting_and_recordCount_expect_select_query() {
             var table = "my-table";
-            ArrayList requestedColumns = new ArrayList();
-            HashMap conditions = new HashMap();
-            ArrayList wildcards = new ArrayList();
-            ArrayList columnSorting = new ArrayList();
+            List<String> requestedColumns = new ArrayList<>();
+            Map<String, String> conditions = new HashMap<>();
+            List<String> wildcards = new ArrayList<>();
+            List<String> columnSorting = new ArrayList<>();
             int recordCount = 10;
 
             requestedColumns.add("requestedColumns1");
@@ -413,10 +400,10 @@ class DefaultSQLStatementHandlerTest {
         @Test
         void when_receive_table_and_requestedColumns_and_conditions_and_wildcards_and_columnsSorting_and_recordCount_and_descending_is_true_expect_select_query() {
             var table = "my-table";
-            ArrayList requestedColumns = new ArrayList();
-            HashMap conditions = new HashMap();
-            ArrayList wildcards = new ArrayList();
-            ArrayList columnSorting = new ArrayList();
+            List<String> requestedColumns = new ArrayList<>();
+            Map<String, String> conditions = new HashMap<>();
+            List<String> wildcards = new ArrayList<>();
+            List<String> columnSorting = new ArrayList<>();
             int recordCount = 10;
             boolean descending = true;
 
@@ -434,10 +421,10 @@ class DefaultSQLStatementHandlerTest {
         @Test
         void when_receive_table_and_requestedColumns_and_conditions_and_wildcards_and_columnsSorting_and_recordCount_and_descending_is_false_expect_select_query() {
             var table = "my-table";
-            ArrayList requestedColumns = new ArrayList();
-            HashMap conditions = new HashMap();
-            ArrayList wildcards = new ArrayList();
-            ArrayList columnSorting = new ArrayList();
+            List<String> requestedColumns = new ArrayList<>();
+            Map<String, String>conditions = new HashMap<>();
+            List<String> wildcards = new ArrayList<>();
+            List<String> columnSorting = new ArrayList<>();
             int recordCount = 10;
             boolean descending = false;
 
@@ -455,10 +442,10 @@ class DefaultSQLStatementHandlerTest {
         @Test
         void when_receive_table_and_requestedColumns_and_conditions_and_wildcards_and_columnsSorting_and_recordCount_and_offset_expect_select_query() {
             var table = "my-table";
-            ArrayList requestedColumns = new ArrayList();
-            HashMap conditions = new HashMap();
-            ArrayList wildcards = new ArrayList();
-            ArrayList columnSorting = new ArrayList();
+            List<String> requestedColumns = new ArrayList<>();
+            Map<String, String>conditions = new HashMap<>();
+            List<String> wildcards = new ArrayList<>();
+            List<String> columnSorting = new ArrayList<>();
             int recordCount = 10;
             int offset = 5;
 
@@ -476,10 +463,10 @@ class DefaultSQLStatementHandlerTest {
         @Test
         void when_receive_table_and_requestedColumns_and_conditions_and_wildcards_and_columnsSorting_and_recordCount_and_offset_and_descending_is_false_expect_select_query() {
             var table = "my-table";
-            ArrayList requestedColumns = new ArrayList();
-            HashMap conditions = new HashMap();
-            ArrayList wildcards = new ArrayList();
-            ArrayList columnSorting = new ArrayList();
+            List<String> requestedColumns = new ArrayList<>();
+            Map<String, String>conditions = new HashMap<>();
+            List<String> wildcards = new ArrayList<>();
+            List<String> columnSorting = new ArrayList<>();
             int recordCount = 10;
             int offset = 5;
             boolean descending = false;
@@ -499,10 +486,10 @@ class DefaultSQLStatementHandlerTest {
         @Test
         void when_receive_table_and_requestedColumns_and_conditions_and_wildcards_and_columnsSorting_and_recordCount_and_offset_and_descending_is_true_expect_select_query() {
             var table = "my-table";
-            ArrayList requestedColumns = new ArrayList();
-            HashMap conditions = new HashMap();
-            ArrayList wildcards = new ArrayList();
-            ArrayList columnSorting = new ArrayList();
+            List<String> requestedColumns = new ArrayList<>();
+            Map<String, String>conditions = new HashMap<>();
+            List<String> wildcards = new ArrayList<>();
+            List<String> columnSorting = new ArrayList<>();
             int recordCount = 10;
             int offset = 5;
             boolean descending = true;
@@ -530,10 +517,10 @@ class DefaultSQLStatementHandlerTest {
         @MethodSource("addDataCreateSelectQuery")
         void when_receive_table_and_requestedColumns_and_conditions_and_wildcards_and_columnsSorting_and_recordCount_and_descending_and_forceDistinct_expect_select_query(boolean descending, boolean forceDistinct, String expected) {
             var table = "my-table";
-            ArrayList requestedColumns = new ArrayList();
-            HashMap conditions = new HashMap();
-            ArrayList wildcards = new ArrayList();
-            ArrayList columnSorting = new ArrayList();
+            List<String> requestedColumns = new ArrayList<>();
+            Map<String, String>conditions = new HashMap<>();
+            List<String> wildcards = new ArrayList<>();
+            List<String> columnSorting = new ArrayList<>();
             int recordCount = 10;
 
 
@@ -551,10 +538,10 @@ class DefaultSQLStatementHandlerTest {
         @MethodSource("addDataCreateSelectQuery")
         void when_receive_table_and_requestedColumns_and_conditions_and_wildcards_and_columnsSorting_and_recordCount_sum_offset_and_descending_and_forceDistinct_expect_select_query(boolean descending, boolean forceDistinct, String expected) {
             var table = "my-table";
-            ArrayList requestedColumns = new ArrayList();
-            HashMap conditions = new HashMap();
-            ArrayList wildcards = new ArrayList();
-            ArrayList columnSorting = new ArrayList();
+            List<String> requestedColumns = new ArrayList<>();
+            Map<String, String>conditions = new HashMap<>();
+            List<String> wildcards = new ArrayList<>();
+            List<String> columnSorting = new ArrayList<>();
             int recordCount = 10;
             int offset = 1;
 
@@ -573,10 +560,10 @@ class DefaultSQLStatementHandlerTest {
         @MethodSource("addDataCreateSelectQueryWithDescending")
         void when_receive_table_and_requestedColumns_and_conditions_and_wildcards_and_columnsSorting_and_descending_expect_select_query(boolean descending, String expected) {
             var table = "my-table";
-            ArrayList requestedColumns = new ArrayList();
-            HashMap conditions = new HashMap();
-            ArrayList wildcards = new ArrayList();
-            ArrayList columnSorting = new ArrayList();
+            List<String> requestedColumns = new ArrayList<>();
+            Map<String, String>conditions = new HashMap<>();
+            List<String> wildcards = new ArrayList<>();
+            List<String> columnSorting = new ArrayList<>();
 
 
             requestedColumns.add("requestedColumns1");
@@ -593,10 +580,10 @@ class DefaultSQLStatementHandlerTest {
         @MethodSource("addDataCreateSelectQueryWithoutRecordCount")
         void when_receive_table_and_requestedColumns_and_conditions_and_wildcards_and_columnsSorting_and_descending_and_forceDistinct_expect_select_query(boolean descending, boolean forceDistinct, String expected) {
             var table = "my-table";
-            ArrayList requestedColumns = new ArrayList();
-            HashMap conditions = new HashMap();
-            ArrayList wildcards = new ArrayList();
-            ArrayList columnSorting = new ArrayList();
+            List<String> requestedColumns = new ArrayList<>();
+            Map<String, String>conditions = new HashMap<>();
+            List<String> wildcards = new ArrayList<>();
+            List<String> columnSorting = new ArrayList<>();
 
 
             requestedColumns.add("requestedColumns1");
@@ -643,7 +630,7 @@ class DefaultSQLStatementHandlerTest {
 
         @Test
         void when_receive_sortColumns_expect_SortStatement() {
-            ArrayList sortColumns = new ArrayList();
+            List<String> sortColumns = new ArrayList<>();
 
             sortColumns.add("sortColumns");
 
@@ -656,7 +643,7 @@ class DefaultSQLStatementHandlerTest {
 
         @Test
         void when_receive_sortColumns_and_descending_is_true_expect_SortStatement() {
-            ArrayList sortColumns = new ArrayList();
+            List<String> sortColumns = new ArrayList<>();
             boolean descending = true;
 
             sortColumns.add("sortColumns");
@@ -669,7 +656,7 @@ class DefaultSQLStatementHandlerTest {
 
         @Test
         void when_receive_sortColumns_and_descending_is_false_expect_SortStatement() {
-            ArrayList sortColumns = new ArrayList();
+            List<String> sortColumns = new ArrayList<>();
             boolean descending = false;
 
             sortColumns.add("sortColumns");
@@ -692,14 +679,14 @@ class DefaultSQLStatementHandlerTest {
 
             String principalTable = "principalTable";
             String secondaryTable = "secondaryTable";
-            ArrayList principalKeys = new ArrayList();
-            ArrayList secondaryKeys = new ArrayList();
-            ArrayList principalTableRequestedColumns = new ArrayList();
-            ArrayList secondaryTableRequestedColumns = new ArrayList();
-            HashMap principalTableConditions = new HashMap();
-            HashMap secondaryTableConditions = new HashMap();
-            ArrayList wildcards = new ArrayList();
-            ArrayList columnSorting = new ArrayList();
+            List<String> principalKeys = new ArrayList<>();
+            List<String> secondaryKeys = new ArrayList<>();
+            List<String> principalTableRequestedColumns = new ArrayList<>();
+            List<String> secondaryTableRequestedColumns = new ArrayList<>();
+            Map<String, String>principalTableConditions = new HashMap<>();
+            Map<String, String>secondaryTableConditions = new HashMap<>();
+            List<String> wildcards = new ArrayList<>();
+            List<String> columnSorting = new ArrayList<>();
 
 
             principalKeys.add("principalKeys");
@@ -734,14 +721,14 @@ class DefaultSQLStatementHandlerTest {
 
             String mainTable = "mainTable";
             String secondaryTable = "secondaryTable";
-            ArrayList mainKeys = new ArrayList();
-            ArrayList secondaryKeys = new ArrayList();
-            ArrayList mainTableRequestedColumns = new ArrayList();
-            ArrayList secondaryTableRequestedColumns = new ArrayList();
-            HashMap mainTableConditions = new HashMap();
-            HashMap secondaryTableConditions = new HashMap();
-            ArrayList wildcards = new ArrayList();
-            ArrayList columnSorting = new ArrayList();
+            List<String> mainKeys = new ArrayList<>();
+            List<String> secondaryKeys = new ArrayList<>();
+            List<String> mainTableRequestedColumns = new ArrayList<>();
+            List<String> secondaryTableRequestedColumns = new ArrayList<>();
+            Map<String, String>mainTableConditions = new HashMap<>();
+            Map<String, String>secondaryTableConditions = new HashMap<>();
+            List<String> wildcards = new ArrayList<>();
+            List<String> columnSorting = new ArrayList<>();
 
 
             mainKeys.add("mainKeys");
@@ -779,10 +766,8 @@ class DefaultSQLStatementHandlerTest {
         @MethodSource("addDataQualify")
         void when_receive_col_and_table_expect_col_with_ExpressionKEy(String col, String table) {
 
-            var result = defaultSQLStatementHandler.qualify(col, table);
-            var expected = col;
-
-            assertEquals(expected, result);
+            String result = defaultSQLStatementHandler.qualify(col, table);
+            assertEquals(col, result);
         }
 
         Stream<Arguments> addDataQualify() {
@@ -804,24 +789,6 @@ class DefaultSQLStatementHandlerTest {
             var expected = col + table;
 
             assertEquals(expected.trim(), result);
-        }
-
-        @Test
-        void when_receive_col_expect_col_with_ExpressionKey_expect_col_with_ExpressionKey_true() {
-            String col = "EXPRESSION_KEY_UNIQUE_IDENTIFIER";
-
-            var result = col.equals(SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY);
-
-            assertTrue(result);
-        }
-
-        @Test
-        void when_receive_col_expect_col_with_FilterKey_expect_col_with_FilterKey_true() {
-            String col = "FILTER_KEY_UNIQUE_IDENTIFIER";
-
-            var result = col.equals(SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.FILTER_KEY);
-
-            assertTrue(result);
         }
 
         @Test
@@ -851,14 +818,14 @@ class DefaultSQLStatementHandlerTest {
             String secondaryAlias = "secondaryAlias";
             String primaryQuery = "primaryQuery";
             String secondaryQuery = "secondaryQuery";
-            ArrayList primaryKeys = new ArrayList();
-            ArrayList secondaryKeys = new ArrayList();
-            ArrayList primaryTableRequestedColumns = new ArrayList();
-            ArrayList secondaryTableRequestedColumns = new ArrayList();
-            HashMap primaryTableConditions = new HashMap();
-            HashMap secondaryTableConditions = new HashMap();
-            ArrayList wildcards = new ArrayList();
-            ArrayList columnSorting = new ArrayList();
+            List<String> primaryKeys = new ArrayList<>();
+            List<String> secondaryKeys = new ArrayList<>();
+            List<String> primaryTableRequestedColumns = new ArrayList<>();
+            List<String> secondaryTableRequestedColumns = new ArrayList<>();
+            Map<String, String>primaryTableConditions = new HashMap<>();
+            Map<String, String>secondaryTableConditions = new HashMap<>();
+            List<String> wildcards = new ArrayList<>();
+            List<String> columnSorting = new ArrayList<>();
 
 
             primaryKeys.add("primaryKeys");
@@ -898,14 +865,14 @@ class DefaultSQLStatementHandlerTest {
             String mainTable = "mainTable";
             String subquery = "subquery";
             String secondaryTable = "secondaryTable";
-            ArrayList mainKeys = new ArrayList();
-            ArrayList secondaryKeys = new ArrayList();
-            ArrayList mainTableRequestedColumns = new ArrayList();
-            ArrayList secondaryTableRequestedColumns = new ArrayList();
-            HashMap mainTableConditions = new HashMap();
-            HashMap secondaryTableConditions = new HashMap();
-            ArrayList wildcards = new ArrayList();
-            ArrayList columnSorting = new ArrayList();
+            List<String> mainKeys = new ArrayList<>();
+            List<String> secondaryKeys = new ArrayList<>();
+            List<String> mainTableRequestedColumns = new ArrayList<>();
+            List<String> secondaryTableRequestedColumns = new ArrayList<>();
+            Map<String, String>mainTableConditions = new HashMap<>();
+            Map<String, String>secondaryTableConditions = new HashMap<>();
+            List<String> wildcards = new ArrayList<>();
+            List<String> columnSorting = new ArrayList<>();
             int recordNumber = 0;
             int startIndex = 0;
 
@@ -949,14 +916,14 @@ class DefaultSQLStatementHandlerTest {
             String mainTable = "mainTable";
             String subquery = "subquery";
             String secondaryTable = "secondaryTable";
-            ArrayList mainKeys = new ArrayList();
-            ArrayList secondaryKeys = new ArrayList();
-            ArrayList mainTableRequestedColumns = new ArrayList();
-            ArrayList secondaryTableRequestedColumns = new ArrayList();
-            HashMap mainTableConditions = new HashMap();
-            HashMap secondaryTableConditions = new HashMap();
-            ArrayList wildcards = new ArrayList();
-            ArrayList columnSorting = new ArrayList();
+            List<String> mainKeys = new ArrayList<>();
+            List<String> secondaryKeys = new ArrayList<>();
+            List<String> mainTableRequestedColumns = new ArrayList<>();
+            List<String> secondaryTableRequestedColumns = new ArrayList<>();
+            Map<String, String>mainTableConditions = new HashMap<>();
+            Map<String, String>secondaryTableConditions = new HashMap<>();
+            List<String> wildcards = new ArrayList<>();
+            List<String> columnSorting = new ArrayList<>();
 
 
             mainKeys.add("mainKeys");
@@ -996,7 +963,7 @@ class DefaultSQLStatementHandlerTest {
             int recordNumber = 1;
             int offset = 0;
             boolean delimited = true;
-            ArrayList columnNames = new ArrayList();
+            List<String> columnNames = new ArrayList<>();
 
             columnNames.add("column1");
 
@@ -1019,9 +986,9 @@ class DefaultSQLStatementHandlerTest {
      @Nested
     class GeneratedKeysToEntityResult {
         @Test
-        void when_receive_resultSet_and_entityResult_and_generatedKeys_expected_generate_keys_off_entityresult() throws Exception {
+        void when_receive_resultSet_and_entityResult_and_generatedKeys_expected_change_entityResult_key_to_uppercase() throws Exception {
             entityResult = new EntityResultMapImpl();
-            ArrayList generatedKeys = new ArrayList();
+            List<String> generatedKeys = new ArrayList<>();
 
             generatedKeys.add("COLUMN1");
 
@@ -1037,8 +1004,30 @@ class DefaultSQLStatementHandlerTest {
 
             defaultSQLStatementHandler.generatedKeysToEntityResult(resultSet, entityResult, generatedKeys);
 
-
+            assertTrue(entityResult.containsKey(generatedKeys.get(0)));
         }
+
+         @Test
+         void when_receive_resultSet_and_entityResult_and_generatedKeys_expected_change_entityResult_key_to_lowercase() throws Exception {
+             entityResult = new EntityResultMapImpl();
+             List<String> generatedKeys = new ArrayList<>();
+
+             generatedKeys.add("column1");
+
+             ResultSetMetaData resultSetMetaDatamock = Mockito.mock(ResultSetMetaData.class);
+
+
+             Mockito.doReturn(resultSetMetaDatamock).when(resultSet).getMetaData();
+             Mockito.doReturn(1).when(resultSetMetaDatamock).getColumnCount();
+             Mockito.doReturn("COLUMN1").when(resultSetMetaDatamock).getColumnLabel(1);
+             Mockito.doReturn(1).when(resultSetMetaDatamock).getColumnType(1);
+             Mockito.doReturn(true).doReturn(false).when(resultSet).next();
+             Mockito.doReturn("valueColumn1").when(resultSet).getObject("COLUMN1");
+
+             defaultSQLStatementHandler.generatedKeysToEntityResult(resultSet, entityResult, generatedKeys);
+
+             assertTrue(entityResult.containsKey(generatedKeys.get(0)));
+         }
 
     }
 
@@ -1106,9 +1095,9 @@ class DefaultSQLStatementHandlerTest {
         void when_receive_table_and_tables_and_keys_and_localeId_expect_count_query() throws SQLException {
 
             String table = "my-table";
-            ArrayList tables = new ArrayList();
-            LinkedHashMap keys = new LinkedHashMap();
-            LocalePair localeId = new LocalePair("field2", "value2");
+            List<String> tables = new ArrayList<>();
+            LinkedHashMap<String, String> keys = new LinkedHashMap<>();
+            LocalePair<String, Object> localeId = new LocalePair<>("field2", "value2");
 
             tables.add("wildcard1");
             keys.put("field1", "value1");
@@ -1126,8 +1115,8 @@ class DefaultSQLStatementHandlerTest {
         @Test
         void when_receive_subSqlQuery_and_attributes_and_hLocaleTablesAV_expect_inner_multilanguage_columns() {
             var subSqlQuery = " from";
-            ArrayList attributes = new ArrayList();
-            HashMap hLocaleTablesAV = new HashMap();
+            List<String> attributes = new ArrayList<>();
+            Map<String, String>hLocaleTablesAV = new HashMap<>();
 
             attributes.add("attr1");
             hLocaleTablesAV.put("field1", "value1");
@@ -1147,7 +1136,7 @@ class DefaultSQLStatementHandlerTest {
         void when_receive_sqlQuery_and_table_and_hLocaleTablesAV_expect_add_outer_multilanguage_columns() {
             var sqlQuery = " from";
             String table = "my table";
-            HashMap hLocaleTablesAV = new HashMap();
+            Map<String, String>hLocaleTablesAV = new HashMap<>();
 
             hLocaleTablesAV.put("field1", "value1");
 
@@ -1169,7 +1158,7 @@ class DefaultSQLStatementHandlerTest {
         void when_receive_sqlQuery_and_table_and_hLocaleTablesAV_expect_add_outer_multilanguage_columns_pageable() {
             var sqlQuery = " from";
             String table = "my table";
-            HashMap hLocaleTablesAV = new HashMap();
+            Map<String, String>hLocaleTablesAV = new HashMap<>();
 
             hLocaleTablesAV.put("field1", "value1");
 
