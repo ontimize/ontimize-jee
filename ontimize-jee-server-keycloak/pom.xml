@@ -1,134 +1,133 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>com.ontimize.jee</groupId>
-		<artifactId>ontimize-jee</artifactId>
-		<version>5.7.0-SNAPSHOT</version>
-	</parent>
-	<artifactId>ontimize-jee-server-keycloak</artifactId>
-	<organization>
-		<name>Imatia Innovation</name>
-		<url>http://imatia.com</url>
-	</organization>
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.ontimize.jee</groupId>
+    <artifactId>ontimize-jee</artifactId>
+    <version>5.7.0-SNAPSHOT</version>
+  </parent>
+  <artifactId>ontimize-jee-server-keycloak</artifactId>
 
-	<name>Ontimize EE (Keycloak module)</name>
-	<description>Ontimize EE (Keycloak module)</description>
-	<url>https://www.ontimize.com</url>
+  <name>Ontimize EE (Keycloak module)</name>
+  <description>Ontimize EE (Keycloak module)</description>
+  <url>https://www.ontimize.com</url>
+  <organization>
+    <name>Imatia Innovation</name>
+    <url>http://imatia.com</url>
+  </organization>
 
-	<developers>
-		<developer>
-			<name>Alberto Quintela Trabazos</name>
-			<email>alberto.quintela@imatia.com</email>
-			<organization>Imatia Innovation</organization>
-			<organizationUrl>http://imatia.com</organizationUrl>
-		</developer>
-		<developer>
-			<name>Ángel Vázquez Vázquez</name>
-			<email>angel.vazquez@imatia.com</email>
-			<organization>Imatia Innovation</organization>
-			<organizationUrl>http://imatia.com</organizationUrl>
-		</developer>
-		<developer>
-			<name>Daniel Graña Cousido</name>
-			<email>daniel.grana@imatia.com</email>
-			<organization>Imatia Innovation</organization>
-			<organizationUrl>http://imatia.com</organizationUrl>
-		</developer>
-		<developer>
-			<name>Enrique Álvarez Pereira</name>
-			<email>enrique.alvarez@imatia.com</email>
-			<organization>Imatia Innovation</organization>
-			<organizationUrl>http://imatia.com</organizationUrl>
-		</developer>
-		<developer>
-			<name>Faustino Lage Rego</name>
-			<email>faustino.lage@imatia.com</email>
-			<organization>Imatia Innovation</organization>
-			<organizationUrl>http://imatia.com</organizationUrl>
-		</developer>
-		<developer>
-			<name>Gonzalo Martínez Fernández</name>
-			<email>gonzalo.martinez@imatia.com</email>
-			<organization>Imatia Innovation</organization>
-			<organizationUrl>http://imatia.com</organizationUrl>
-		</developer>
-		<developer>
-			<name>Joaquín Romero Riveiro</name>
-			<email>joaquin.romero@imatia.com</email>
-			<organization>Imatia Innovation</organization>
-			<organizationUrl>http://imatia.com</organizationUrl>
-		</developer>
-		<developer>
-			<name>Jorge Diaz Seijo</name>
-			<email>jorge.diaz@imatia.com</email>
-			<organization>Imatia Innovation</organization>
-			<organizationUrl>http://imatia.com</organizationUrl>
-		</developer>
-		<developer>
-			<name>Pablo Martínez Kirsten</name>
-			<email>pablo.martinez@imatia.com</email>
-			<organization>Imatia Innovation</organization>
-			<organizationUrl>http://imatia.com</organizationUrl>
-		</developer>
-		<developer>
-			<name>Senén Diéguez López</name>
-			<email>senen.dieguez@imatia.com</email>
-			<organization>Imatia Innovation</organization>
-			<organizationUrl>http://imatia.com</organizationUrl>
-		</developer>
-		<developer>
-			<name>Tomás Fuentes Facal</name>
-			<email>tomas.fuentes@imatia.com</email>
-			<organization>Imatia Innovation</organization>
-			<organizationUrl>http://imatia.com</organizationUrl>
-		</developer>
-		<developer>
-			<name>Xoán Loureiro Santamaría</name>
-			<email>xoan.loureiro@imatia.com</email>
-			<organization>Imatia Innovation</organization>
-			<organizationUrl>http://imatia.com</organizationUrl>
-		</developer>
-	</developers>
+  <licenses>
+    <license>
+      <name>The Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
 
-	<licenses>
-		<license>
-			<name>The Apache License, Version 2.0</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-		</license>
-	</licenses>
+  <developers>
+    <developer>
+      <name>Alberto Quintela Trabazos</name>
+      <email>alberto.quintela@imatia.com</email>
+      <organization>Imatia Innovation</organization>
+      <organizationUrl>http://imatia.com</organizationUrl>
+    </developer>
+    <developer>
+      <name>Ángel Vázquez Vázquez</name>
+      <email>angel.vazquez@imatia.com</email>
+      <organization>Imatia Innovation</organization>
+      <organizationUrl>http://imatia.com</organizationUrl>
+    </developer>
+    <developer>
+      <name>Daniel Graña Cousido</name>
+      <email>daniel.grana@imatia.com</email>
+      <organization>Imatia Innovation</organization>
+      <organizationUrl>http://imatia.com</organizationUrl>
+    </developer>
+    <developer>
+      <name>Enrique Álvarez Pereira</name>
+      <email>enrique.alvarez@imatia.com</email>
+      <organization>Imatia Innovation</organization>
+      <organizationUrl>http://imatia.com</organizationUrl>
+    </developer>
+    <developer>
+      <name>Faustino Lage Rego</name>
+      <email>faustino.lage@imatia.com</email>
+      <organization>Imatia Innovation</organization>
+      <organizationUrl>http://imatia.com</organizationUrl>
+    </developer>
+    <developer>
+      <name>Gonzalo Martínez Fernández</name>
+      <email>gonzalo.martinez@imatia.com</email>
+      <organization>Imatia Innovation</organization>
+      <organizationUrl>http://imatia.com</organizationUrl>
+    </developer>
+    <developer>
+      <name>Joaquín Romero Riveiro</name>
+      <email>joaquin.romero@imatia.com</email>
+      <organization>Imatia Innovation</organization>
+      <organizationUrl>http://imatia.com</organizationUrl>
+    </developer>
+    <developer>
+      <name>Jorge Diaz Seijo</name>
+      <email>jorge.diaz@imatia.com</email>
+      <organization>Imatia Innovation</organization>
+      <organizationUrl>http://imatia.com</organizationUrl>
+    </developer>
+    <developer>
+      <name>Pablo Martínez Kirsten</name>
+      <email>pablo.martinez@imatia.com</email>
+      <organization>Imatia Innovation</organization>
+      <organizationUrl>http://imatia.com</organizationUrl>
+    </developer>
+    <developer>
+      <name>Senén Diéguez López</name>
+      <email>senen.dieguez@imatia.com</email>
+      <organization>Imatia Innovation</organization>
+      <organizationUrl>http://imatia.com</organizationUrl>
+    </developer>
+    <developer>
+      <name>Tomás Fuentes Facal</name>
+      <email>tomas.fuentes@imatia.com</email>
+      <organization>Imatia Innovation</organization>
+      <organizationUrl>http://imatia.com</organizationUrl>
+    </developer>
+    <developer>
+      <name>Xoán Loureiro Santamaría</name>
+      <email>xoan.loureiro@imatia.com</email>
+      <organization>Imatia Innovation</organization>
+      <organizationUrl>http://imatia.com</organizationUrl>
+    </developer>
+  </developers>
 
-	<scm>
-		<connection>scm:git:git://github.com/ontimize/ontimize-jee.git</connection>
-		<developerConnection>scm:git:ssh://github.com:ontimize/ontimize-jee.git</developerConnection>
-		<url>https://github.com/ontimize/ontimize-jee/tree/master</url>
-	</scm>
+  <scm>
+    <connection>scm:git:git://github.com/ontimize/ontimize-jee.git</connection>
+    <developerConnection>scm:git:ssh://github.com:ontimize/ontimize-jee.git</developerConnection>
+    <url>https://github.com/ontimize/ontimize-jee/tree/master</url>
+  </scm>
 
-	<dependencies>
-		<dependency>
-			<groupId>${projectGroupId}</groupId>
-			<artifactId>ontimize-jee-common</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.keycloak</groupId>
-			<artifactId>keycloak-core</artifactId>
-			<version>${keycloak.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.keycloak</groupId>
-			<artifactId>keycloak-adapter-core</artifactId>
-			<version>${keycloak.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.keycloak</groupId>
-			<artifactId>keycloak-adapter-spi</artifactId>
-			<version>${keycloak.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.keycloak</groupId>
-			<artifactId>keycloak-admin-client</artifactId>
-			<version>${keycloak.version}</version>
-		</dependency>
-	</dependencies>
+  <dependencies>
+    <dependency>
+      <groupId>${projectGroupId}</groupId>
+      <artifactId>ontimize-jee-common</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.keycloak</groupId>
+      <artifactId>keycloak-core</artifactId>
+      <version>${keycloak.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.keycloak</groupId>
+      <artifactId>keycloak-adapter-core</artifactId>
+      <version>${keycloak.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.keycloak</groupId>
+      <artifactId>keycloak-adapter-spi</artifactId>
+      <version>${keycloak.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.keycloak</groupId>
+      <artifactId>keycloak-admin-client</artifactId>
+      <version>${keycloak.version}</version>
+    </dependency>
+  </dependencies>
 </project>
