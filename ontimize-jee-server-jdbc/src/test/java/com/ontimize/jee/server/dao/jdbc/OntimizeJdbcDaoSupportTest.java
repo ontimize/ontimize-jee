@@ -177,7 +177,6 @@ class OntimizeJdbcDaoSupportTest {
 
     }
 
-    @Disabled
     @Nested
     class insert {
         @Test
