@@ -178,9 +178,9 @@
     <jaxb-runtime.version>2.3.1</jaxb-runtime.version>
     <jee.version>8.0</jee.version>
     <jmimemagic.version>0.1.2</jmimemagic.version>
-    <junit.version>5.9.2</junit.version>
+    <junit.version>5.9.1</junit.version>
     <keycloak.version>15.0.2</keycloak.version>
-    <log4j.version>2.19.0</log4j.version>
+    <log4j.version>2.18.0</log4j.version>
     <logback.version>1.2.3</logback.version>
     <mesp.version>1.0.2</mesp.version>
     <mockito.version>4.11.0</mockito.version>
