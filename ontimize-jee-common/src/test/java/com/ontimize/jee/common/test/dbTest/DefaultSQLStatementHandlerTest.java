@@ -1023,7 +1023,7 @@ class DefaultSQLStatementHandlerTest {
             entityResult = new EntityResultMapImpl();
             ArrayList generatedKeys = new ArrayList();
 
-            generatedKeys.add("column1");
+            generatedKeys.add("COLUMN1");
 
             ResultSetMetaData resultSetMetaDatamock = Mockito.mock(ResultSetMetaData.class);
 
