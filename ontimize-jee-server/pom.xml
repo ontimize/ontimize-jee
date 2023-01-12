@@ -1,218 +1,219 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>com.ontimize.jee</groupId>
-		<artifactId>ontimize-jee</artifactId>
-		<version>5.7.0-SNAPSHOT</version>
-	</parent>
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.ontimize.jee</groupId>
+    <artifactId>ontimize-jee</artifactId>
+    <version>5.7.0-SNAPSHOT</version>
+  </parent>
 
-	<artifactId>ontimize-jee-server</artifactId>
-	<packaging>jar</packaging>
-	
-	<organization>
-		<name>Imatia Innovation</name>
-		<url>http://imatia.com</url>
-	</organization>
-	
-	<name>Ontimize EE (Server module)</name>
-	<description>Ontimize EE (Server module)</description>
-	<url>https://www.ontimize.com</url>
+  <artifactId>ontimize-jee-server</artifactId>
+  <packaging>jar</packaging>
 
-	<developers>
-		<developer>
-			<name>Alberto Quintela Trabazos</name>
-			<email>alberto.quintela@imatia.com</email>
-			<organization>Imatia Innovation</organization>
-			<organizationUrl>http://imatia.com</organizationUrl>
-		</developer>
-		<developer>
-			<name>Ángel Vázquez Vázquez</name>
-			<email>angel.vazquez@imatia.com</email>
-			<organization>Imatia Innovation</organization>
-			<organizationUrl>http://imatia.com</organizationUrl>
-		</developer>
-		<developer>
-			<name>Daniel Graña Cousido</name>
-			<email>daniel.grana@imatia.com</email>
-			<organization>Imatia Innovation</organization>
-			<organizationUrl>http://imatia.com</organizationUrl>
-		</developer>
-		<developer>
-			<name>Enrique Álvarez Pereira</name>
-			<email>enrique.alvarez@imatia.com</email>
-			<organization>Imatia Innovation</organization>
-			<organizationUrl>http://imatia.com</organizationUrl>
-		</developer>
-		<developer>
-			<name>Faustino Lage Rego</name>
-			<email>faustino.lage@imatia.com</email>
-			<organization>Imatia Innovation</organization>
-			<organizationUrl>http://imatia.com</organizationUrl>
-		</developer>
-		<developer>
-			<name>Gonzalo Martínez Fernández</name>
-			<email>gonzalo.martinez@imatia.com</email>
-			<organization>Imatia Innovation</organization>
-			<organizationUrl>http://imatia.com</organizationUrl>
-		</developer>
-		<developer>
-			<name>Joaquín Romero Riveiro</name>
-			<email>joaquin.romero@imatia.com</email>
-			<organization>Imatia Innovation</organization>
-			<organizationUrl>http://imatia.com</organizationUrl>
-		</developer>
-		<developer>
-			<name>Jorge Diaz Seijo</name>
-			<email>jorge.diaz@imatia.com</email>
-			<organization>Imatia Innovation</organization>
-			<organizationUrl>http://imatia.com</organizationUrl>
-		</developer>
-		<developer>
-			<name>Pablo Martínez Kirsten</name>
-			<email>pablo.martinez@imatia.com</email>
-			<organization>Imatia Innovation</organization>
-			<organizationUrl>http://imatia.com</organizationUrl>
-		</developer>
-		<developer>
-			<name>Senén Diéguez López</name>
-			<email>senen.dieguez@imatia.com</email>
-			<organization>Imatia Innovation</organization>
-			<organizationUrl>http://imatia.com</organizationUrl>
-		</developer>
-		<developer>
-			<name>Tomás Fuentes Facal</name>
-			<email>tomas.fuentes@imatia.com</email>
-			<organization>Imatia Innovation</organization>
-			<organizationUrl>http://imatia.com</organizationUrl>
-		</developer>
-		<developer>
-			<name>Xoán Loureiro Santamaría</name>
-			<email>xoan.loureiro@imatia.com</email>
-			<organization>Imatia Innovation</organization>
-			<organizationUrl>http://imatia.com</organizationUrl>
-		</developer>
-	</developers>
+  <name>Ontimize EE (Server module)</name>
+  <description>Ontimize EE (Server module)</description>
+  <url>https://www.ontimize.com</url>
 
-	<licenses>
-		<license>
-			<name>The Apache License, Version 2.0</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-		</license>
-	</licenses>
+  <organization>
+    <name>Imatia Innovation</name>
+    <url>http://imatia.com</url>
+  </organization>
 
-	<scm>
-		<connection>scm:git:git://github.com/ontimize/ontimize-jee.git</connection>
-		<developerConnection>scm:git:ssh://github.com:ontimize/ontimize-jee.git</developerConnection>
-		<url>https://github.com/ontimize/ontimize-jee/tree/master</url>
-	</scm>
+  <licenses>
+    <license>
+      <name>The Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
 
-	<dependencies>
-		<dependency>
-			<groupId>${projectGroupId}</groupId>
-			<artifactId>ontimize-jee-common</artifactId>
-		</dependency>
+  <developers>
+    <developer>
+      <name>Alberto Quintela Trabazos</name>
+      <email>alberto.quintela@imatia.com</email>
+      <organization>Imatia Innovation</organization>
+      <organizationUrl>http://imatia.com</organizationUrl>
+    </developer>
+    <developer>
+      <name>Ángel Vázquez Vázquez</name>
+      <email>angel.vazquez@imatia.com</email>
+      <organization>Imatia Innovation</organization>
+      <organizationUrl>http://imatia.com</organizationUrl>
+    </developer>
+    <developer>
+      <name>Daniel Graña Cousido</name>
+      <email>daniel.grana@imatia.com</email>
+      <organization>Imatia Innovation</organization>
+      <organizationUrl>http://imatia.com</organizationUrl>
+    </developer>
+    <developer>
+      <name>Enrique Álvarez Pereira</name>
+      <email>enrique.alvarez@imatia.com</email>
+      <organization>Imatia Innovation</organization>
+      <organizationUrl>http://imatia.com</organizationUrl>
+    </developer>
+    <developer>
+      <name>Faustino Lage Rego</name>
+      <email>faustino.lage@imatia.com</email>
+      <organization>Imatia Innovation</organization>
+      <organizationUrl>http://imatia.com</organizationUrl>
+    </developer>
+    <developer>
+      <name>Gonzalo Martínez Fernández</name>
+      <email>gonzalo.martinez@imatia.com</email>
+      <organization>Imatia Innovation</organization>
+      <organizationUrl>http://imatia.com</organizationUrl>
+    </developer>
+    <developer>
+      <name>Joaquín Romero Riveiro</name>
+      <email>joaquin.romero@imatia.com</email>
+      <organization>Imatia Innovation</organization>
+      <organizationUrl>http://imatia.com</organizationUrl>
+    </developer>
+    <developer>
+      <name>Jorge Diaz Seijo</name>
+      <email>jorge.diaz@imatia.com</email>
+      <organization>Imatia Innovation</organization>
+      <organizationUrl>http://imatia.com</organizationUrl>
+    </developer>
+    <developer>
+      <name>Pablo Martínez Kirsten</name>
+      <email>pablo.martinez@imatia.com</email>
+      <organization>Imatia Innovation</organization>
+      <organizationUrl>http://imatia.com</organizationUrl>
+    </developer>
+    <developer>
+      <name>Senén Diéguez López</name>
+      <email>senen.dieguez@imatia.com</email>
+      <organization>Imatia Innovation</organization>
+      <organizationUrl>http://imatia.com</organizationUrl>
+    </developer>
+    <developer>
+      <name>Tomás Fuentes Facal</name>
+      <email>tomas.fuentes@imatia.com</email>
+      <organization>Imatia Innovation</organization>
+      <organizationUrl>http://imatia.com</organizationUrl>
+    </developer>
+    <developer>
+      <name>Xoán Loureiro Santamaría</name>
+      <email>xoan.loureiro@imatia.com</email>
+      <organization>Imatia Innovation</organization>
+      <organizationUrl>http://imatia.com</organizationUrl>
+    </developer>
+  </developers>
 
-		<!-- Spring -->
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-aop</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-web</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-beans</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context-support</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-webmvc</artifactId>
-		</dependency>
+  <scm>
+    <connection>scm:git:git://github.com/ontimize/ontimize-jee.git</connection>
+    <developerConnection>scm:git:ssh://github.com:ontimize/ontimize-jee.git</developerConnection>
+    <url>https://github.com/ontimize/ontimize-jee/tree/master</url>
+  </scm>
 
-		<!-- Spring Security -->
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-web</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-config</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.security.kerberos</groupId>
-			<artifactId>spring-security-kerberos-web</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-ldap</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.session</groupId>
-			<artifactId>spring-session</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.session</groupId>
-			<artifactId>spring-session-data-redis</artifactId>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-jwt</artifactId>
-		</dependency>
+  <dependencies>
+    <dependency>
+      <groupId>${projectGroupId}</groupId>
+      <artifactId>ontimize-jee-common</artifactId>
+    </dependency>
 
-		<dependency>
-			<groupId>javax.websocket</groupId>
-			<artifactId>javax.websocket-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-		</dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-core</artifactId>
-            <optional>true</optional>
-        </dependency>
-		<dependency>
-			<groupId>javax</groupId>
-			<artifactId>javaee-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>javax.xml.bind</groupId>
-			<artifactId>jaxb-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>javax.activation</groupId>
-			<artifactId>activation</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.glassfish.jaxb</groupId>
-			<artifactId>jaxb-runtime</artifactId>
-		</dependency>
+    <!-- Spring -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-aop</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-web</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-beans</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context-support</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-webmvc</artifactId>
+    </dependency>
 
-	</dependencies>
-	
+    <!-- Spring Security -->
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-web</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-config</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.security.kerberos</groupId>
+      <artifactId>spring-security-kerberos-web</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-ldap</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.session</groupId>
+      <artifactId>spring-session</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.session</groupId>
+      <artifactId>spring-session-data-redis</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-jwt</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.websocket</groupId>
+      <artifactId>javax.websocket-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-core</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>javax</groupId>
+      <artifactId>javaee-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax.xml.bind</groupId>
+      <artifactId>jaxb-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax.activation</groupId>
+      <artifactId>activation</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.glassfish.jaxb</groupId>
+      <artifactId>jaxb-runtime</artifactId>
+    </dependency>
+
+  </dependencies>
+
+
 </project>

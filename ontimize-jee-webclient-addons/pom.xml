@@ -1,165 +1,165 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>com.ontimize.jee</groupId>
-		<artifactId>ontimize-jee</artifactId>
-		<version>5.7.0-SNAPSHOT</version>
-	</parent>
-	<artifactId>ontimize-jee-webclient-addons</artifactId>
-	
-	<organization>
-		<name>Imatia Innovation</name>
-		<url>http://imatia.com</url>
-	</organization>
-	
-	<name>Ontimize EE (WebClient Addons module)</name>
-	<description>Ontimize EE (WebClient Addons module)</description>
-	<url>https://www.ontimize.com</url>
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.ontimize.jee</groupId>
+    <artifactId>ontimize-jee</artifactId>
+    <version>5.7.0-SNAPSHOT</version>
+  </parent>
+  <artifactId>ontimize-jee-webclient-addons</artifactId>
 
-	<developers>
-		<developer>
-			<name>Alberto Quintela Trabazos</name>
-			<email>alberto.quintela@imatia.com</email>
-			<organization>Imatia Innovation</organization>
-			<organizationUrl>http://imatia.com</organizationUrl>
-		</developer>
-		<developer>
-			<name>Ángel Vázquez Vázquez</name>
-			<email>angel.vazquez@imatia.com</email>
-			<organization>Imatia Innovation</organization>
-			<organizationUrl>http://imatia.com</organizationUrl>
-		</developer>
-		<developer>
-			<name>Daniel Graña Cousido</name>
-			<email>daniel.grana@imatia.com</email>
-			<organization>Imatia Innovation</organization>
-			<organizationUrl>http://imatia.com</organizationUrl>
-		</developer>
-		<developer>
-			<name>Enrique Álvarez Pereira</name>
-			<email>enrique.alvarez@imatia.com</email>
-			<organization>Imatia Innovation</organization>
-			<organizationUrl>http://imatia.com</organizationUrl>
-		</developer>
-		<developer>
-			<name>Faustino Lage Rego</name>
-			<email>faustino.lage@imatia.com</email>
-			<organization>Imatia Innovation</organization>
-			<organizationUrl>http://imatia.com</organizationUrl>
-		</developer>
-		<developer>
-			<name>Gonzalo Martínez Fernández</name>
-			<email>gonzalo.martinez@imatia.com</email>
-			<organization>Imatia Innovation</organization>
-			<organizationUrl>http://imatia.com</organizationUrl>
-		</developer>
-		<developer>
-			<name>Joaquín Romero Riveiro</name>
-			<email>joaquin.romero@imatia.com</email>
-			<organization>Imatia Innovation</organization>
-			<organizationUrl>http://imatia.com</organizationUrl>
-		</developer>
-		<developer>
-			<name>Jorge Diaz Seijo</name>
-			<email>jorge.diaz@imatia.com</email>
-			<organization>Imatia Innovation</organization>
-			<organizationUrl>http://imatia.com</organizationUrl>
-		</developer>
-		<developer>
-			<name>Pablo Martínez Kirsten</name>
-			<email>pablo.martinez@imatia.com</email>
-			<organization>Imatia Innovation</organization>
-			<organizationUrl>http://imatia.com</organizationUrl>
-		</developer>
-		<developer>
-			<name>Senén Diéguez López</name>
-			<email>senen.dieguez@imatia.com</email>
-			<organization>Imatia Innovation</organization>
-			<organizationUrl>http://imatia.com</organizationUrl>
-		</developer>
-		<developer>
-			<name>Tomás Fuentes Facal</name>
-			<email>tomas.fuentes@imatia.com</email>
-			<organization>Imatia Innovation</organization>
-			<organizationUrl>http://imatia.com</organizationUrl>
-		</developer>
-		<developer>
-			<name>Xoán Loureiro Santamaría</name>
-			<email>xoan.loureiro@imatia.com</email>
-			<organization>Imatia Innovation</organization>
-			<organizationUrl>http://imatia.com</organizationUrl>
-		</developer>
-	</developers>
+  <name>Ontimize EE (WebClient Addons module)</name>
+  <description>Ontimize EE (WebClient Addons module)</description>
+  <url>https://www.ontimize.com</url>
 
-	<licenses>
-		<license>
-			<name>The Apache License, Version 2.0</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-		</license>
-	</licenses>
+  <organization>
+    <name>Imatia Innovation</name>
+    <url>http://imatia.com</url>
+  </organization>
 
-	<scm>
-		<connection>scm:git:git://github.com/ontimize/ontimize-jee.git</connection>
-		<developerConnection>scm:git:ssh://github.com:ontimize/ontimize-jee.git</developerConnection>
-		<url>https://github.com/ontimize/ontimize-jee/tree/master</url>
-	</scm>
+  <licenses>
+    <license>
+      <name>The Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
 
-	<dependencies>
-		<dependency>
-			<groupId>${projectGroupId}</groupId>
-			<artifactId>ontimize-jee-server-rest</artifactId>
-		</dependency>
-		<!-- Servlet API -->
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-			<optional>true</optional>
-		</dependency>
-		<!-- POI -->
-		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi</artifactId>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi-ooxml</artifactId>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi-ooxml-schemas</artifactId>
-			<optional>true</optional>
-		</dependency>
+  <developers>
+    <developer>
+      <name>Alberto Quintela Trabazos</name>
+      <email>alberto.quintela@imatia.com</email>
+      <organization>Imatia Innovation</organization>
+      <organizationUrl>http://imatia.com</organizationUrl>
+    </developer>
+    <developer>
+      <name>Ángel Vázquez Vázquez</name>
+      <email>angel.vazquez@imatia.com</email>
+      <organization>Imatia Innovation</organization>
+      <organizationUrl>http://imatia.com</organizationUrl>
+    </developer>
+    <developer>
+      <name>Daniel Graña Cousido</name>
+      <email>daniel.grana@imatia.com</email>
+      <organization>Imatia Innovation</organization>
+      <organizationUrl>http://imatia.com</organizationUrl>
+    </developer>
+    <developer>
+      <name>Enrique Álvarez Pereira</name>
+      <email>enrique.alvarez@imatia.com</email>
+      <organization>Imatia Innovation</organization>
+      <organizationUrl>http://imatia.com</organizationUrl>
+    </developer>
+    <developer>
+      <name>Faustino Lage Rego</name>
+      <email>faustino.lage@imatia.com</email>
+      <organization>Imatia Innovation</organization>
+      <organizationUrl>http://imatia.com</organizationUrl>
+    </developer>
+    <developer>
+      <name>Gonzalo Martínez Fernández</name>
+      <email>gonzalo.martinez@imatia.com</email>
+      <organization>Imatia Innovation</organization>
+      <organizationUrl>http://imatia.com</organizationUrl>
+    </developer>
+    <developer>
+      <name>Joaquín Romero Riveiro</name>
+      <email>joaquin.romero@imatia.com</email>
+      <organization>Imatia Innovation</organization>
+      <organizationUrl>http://imatia.com</organizationUrl>
+    </developer>
+    <developer>
+      <name>Jorge Diaz Seijo</name>
+      <email>jorge.diaz@imatia.com</email>
+      <organization>Imatia Innovation</organization>
+      <organizationUrl>http://imatia.com</organizationUrl>
+    </developer>
+    <developer>
+      <name>Pablo Martínez Kirsten</name>
+      <email>pablo.martinez@imatia.com</email>
+      <organization>Imatia Innovation</organization>
+      <organizationUrl>http://imatia.com</organizationUrl>
+    </developer>
+    <developer>
+      <name>Senén Diéguez López</name>
+      <email>senen.dieguez@imatia.com</email>
+      <organization>Imatia Innovation</organization>
+      <organizationUrl>http://imatia.com</organizationUrl>
+    </developer>
+    <developer>
+      <name>Tomás Fuentes Facal</name>
+      <email>tomas.fuentes@imatia.com</email>
+      <organization>Imatia Innovation</organization>
+      <organizationUrl>http://imatia.com</organizationUrl>
+    </developer>
+    <developer>
+      <name>Xoán Loureiro Santamaría</name>
+      <email>xoan.loureiro@imatia.com</email>
+      <organization>Imatia Innovation</organization>
+      <organizationUrl>http://imatia.com</organizationUrl>
+    </developer>
+  </developers>
 
-		<dependency>
-			<groupId>org.dom4j</groupId>
-			<artifactId>dom4j</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.itextpdf</groupId>
-			<artifactId>kernel</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.itextpdf</groupId>
-			<artifactId>layout</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.ontimize.jee</groupId>
-			<artifactId>ontimize-jee-common</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-collections4</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.kie.modules</groupId>
-			<artifactId>org-junit</artifactId>
-			<type>pom</type>
-		</dependency>
-	</dependencies>
+  <scm>
+    <connection>scm:git:git://github.com/ontimize/ontimize-jee.git</connection>
+    <developerConnection>scm:git:ssh://github.com:ontimize/ontimize-jee.git</developerConnection>
+    <url>https://github.com/ontimize/ontimize-jee/tree/master</url>
+  </scm>
+
+  <dependencies>
+    <dependency>
+      <groupId>${projectGroupId}</groupId>
+      <artifactId>ontimize-jee-server-rest</artifactId>
+    </dependency>
+    <!-- Servlet API -->
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <!-- POI -->
+    <dependency>
+      <groupId>org.apache.poi</groupId>
+      <artifactId>poi</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.poi</groupId>
+      <artifactId>poi-ooxml</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.poi</groupId>
+      <artifactId>poi-ooxml-schemas</artifactId>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>org.dom4j</groupId>
+      <artifactId>dom4j</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.itextpdf</groupId>
+      <artifactId>kernel</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.itextpdf</groupId>
+      <artifactId>layout</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.ontimize.jee</groupId>
+      <artifactId>ontimize-jee-common</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-collections4</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.kie.modules</groupId>
+      <artifactId>org-junit</artifactId>
+      <type>pom</type>
+    </dependency>
+  </dependencies>
+
 
 </project>
