@@ -9,35 +9,31 @@ import com.ontimize.jee.common.util.calendar.TimePeriod;
  */
 public class ApplicationPermission extends AbstractClientPermission {
 
-    public ApplicationPermission(String permissionName, boolean restricted) {
-        this.name = permissionName;
-        this.restricted = restricted;
-    }
+	public ApplicationPermission(String permissionName, boolean restricted) {
+		this.name = permissionName;
+		this.restricted = restricted;
+	}
 
-    public ApplicationPermission(String permissionName, boolean restricted, TimePeriod period) {
-        this.name = permissionName;
-        this.restricted = restricted;
-        this.period = period;
-    }
+	public ApplicationPermission(String permissionName, boolean restricted, TimePeriod period) {
+		this.name = permissionName;
+		this.restricted = restricted;
+		this.period = period;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        } else if (o instanceof ApplicationPermission) {
-            if (this.name.equals(((ApplicationPermission) o).getPermissionName())) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o instanceof ApplicationPermission) {
+			return this.name.equals(((ApplicationPermission) o).getPermissionName());
+		}
+		return false;
+	}
 
-    @Override
-    public int hashCode() {
-        return this.name.hashCode();
-    }
+	@Override
+	public int hashCode() {
+		return this.name.hashCode();
+	}
 
 }
