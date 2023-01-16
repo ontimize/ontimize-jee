@@ -122,6 +122,7 @@
     <module>ontimize-jee-server-jdbc</module>
     <module>ontimize-jee-server-keycloak</module>
     <module>ontimize-jee-webclient-addons</module>
+    <module>jacoco-report-aggregate</module>
   </modules>
 
   <properties>
@@ -203,6 +204,15 @@
     <!-- SONARCloud configuration -->
     <sonar.organization>ontimize</sonar.organization>
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+
+    <surefire-argLine />
+    <failsafe-argLine />
+    <skip.unit.tests>false</skip.unit.tests>
+    <skip.integration.tests>false</skip.integration.tests>
+    <jacoco.version>0.8.8</jacoco.version>
+    <surefire.version>3.0.0-M5</surefire.version>
+    <failsafe.version>3.0.0-M5</failsafe.version>
+    
   </properties>
 
   <dependencyManagement>
