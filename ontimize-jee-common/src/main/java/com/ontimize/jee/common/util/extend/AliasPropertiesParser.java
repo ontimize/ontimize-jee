@@ -18,7 +18,7 @@ public class AliasPropertiesParser extends PropertiesParser {
 
 	@Override
 	protected void executeOperation(Properties propertiesFile, String operation, String parameters,
-			String operationValues) throws Exception {
+			String operationValues) throws OntimizeJEEException {
 
 		// ADD OPERATION
 		if (operation.equalsIgnoreCase(AliasPropertiesParser.ADD_ALIAS_OP)) {
@@ -33,7 +33,7 @@ public class AliasPropertiesParser extends PropertiesParser {
 	}
 
 	private void executeRemoveOperation(Properties propertiesFile, String parameters) {
-		ArrayList<String> parametersList = this.getValuesList(parameters, PropertiesParser.VALUES_SEPARATOR);
+		ArrayList<String> parametersList = this.getValuesList(parameters);
 		for (String parameter : parametersList) {
 
 			if (parameter != null) {
@@ -44,9 +44,8 @@ public class AliasPropertiesParser extends PropertiesParser {
 
 	private void executeAddOperation(Properties propertiesFile, String operation, String parameters,
 			String operationValues) throws OntimizeJEEException {
-		ArrayList<String> parametersList = this.getValuesList(parameters, PropertiesParser.VALUES_SEPARATOR);
-		ArrayList<String> operationValuesList = this.getValuesList(operationValues,
-				PropertiesParser.VALUES_SEPARATOR);
+		ArrayList<String> parametersList = this.getValuesList(parameters);
+		ArrayList<String> operationValuesList = this.getValuesList(operationValues);
 
 		if (parametersList.size() != operationValuesList.size()) {
 			throw new OntimizeJEEException(operation + ": PARAMETER_LENGHT_DISTINCT_VALUES_LENGHT");
