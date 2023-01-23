@@ -2089,6 +2089,26 @@ public abstract class SQLStatementBuilder {
          */
         private void createQueryConditionsIfOValuesInstanceOfString(List<Object> values, StringBuilder sbStringQuery, Enumeration<Object> enumKeys, Object oKey, Object oValue, boolean bracket) {
             StringBuilder sbCondition = new StringBuilder();
+            oValue = createConditionAndReturnValue(oValue, sbCondition);
+            // <pre>values.add(i - wildcardValues - nullValues -
+            // searchValuesInString, oValue);</pre>
+            values.add(oValue);
+            if (enumKeys.hasMoreElements()) {
+                sbStringQuery
+                        .append(this.addNonLastPairKeyValueInOrder(oKey, bracket, sbCondition.toString()));
+            } else {
+                sbStringQuery
+                        .append(this.addLastPairKeyValueInOrder(oKey, bracket, sbCondition.toString()));
+            }
+        }
+
+        /**
+         * Method created to avoid code duplication.
+         * @param oValue
+         * @param sbCondition
+         * @return
+         */
+        private Object createConditionAndReturnValue(Object oValue, StringBuilder sbCondition) {
             if (this.upperStrings) {
                 sbCondition.append(SQLStatementBuilder.EQUAL);
                 sbCondition.append(" " + DefaultSQLConditionValuesProcessor.UPPER_FUNCTION);
@@ -2110,16 +2130,7 @@ public abstract class SQLStatementBuilder {
                 }
                 oValue = ((String) oValue).substring(SQLStatementBuilder.NOT_EQUAL_ID.length());
             }
-            // <pre>values.add(i - wildcardValues - nullValues -
-            // searchValuesInString, oValue);</pre>
-            values.add(oValue);
-            if (enumKeys.hasMoreElements()) {
-                sbStringQuery
-                        .append(this.addNonLastPairKeyValueInOrder(oKey, bracket, sbCondition.toString()));
-            } else {
-                sbStringQuery
-                        .append(this.addLastPairKeyValueInOrder(oKey, bracket, sbCondition.toString()));
-            }
+            return oValue;
         }
 
         /**
@@ -2160,27 +2171,7 @@ public abstract class SQLStatementBuilder {
                 // There are no Wildcards
                 // Add values in order
                 StringBuilder sbCondition = new StringBuilder();
-                if (this.upperStrings) {
-                    sbCondition.append(SQLStatementBuilder.EQUAL);
-                    sbCondition.append(" " + DefaultSQLConditionValuesProcessor.UPPER_FUNCTION);
-                    sbCondition.append(SQLStatementBuilder.OPEN_PARENTHESIS);
-                    sbCondition.append(SQLStatementBuilder.QUESTIONMARK);
-                    sbCondition.append(SQLStatementBuilder.CLOSE_PARENTHESIS);
-                } else {
-                    sbCondition.append(SQLStatementBuilder.EQUAL_XQUESTIONMARK);
-                }
-                if (((String) oValue).indexOf(SQLStatementBuilder.NOT_EQUAL_ID) == 0) {
-                    if (this.upperStrings) {
-                        sbCondition.append(SQLStatementBuilder.NOT_EQUAL);
-                        sbCondition.append(" " + DefaultSQLConditionValuesProcessor.UPPER_FUNCTION);
-                        sbCondition.append(SQLStatementBuilder.OPEN_PARENTHESIS);
-                        sbCondition.append(SQLStatementBuilder.QUESTIONMARK);
-                        sbCondition.append(SQLStatementBuilder.CLOSE_PARENTHESIS);
-                    } else {
-                        sbCondition.append(SQLStatementBuilder.NOT_EQUAL_XQUESTIONMARK);
-                    }
-                    oValue = ((String) oValue).substring(SQLStatementBuilder.NOT_EQUAL_ID.length());
-                }
+                oValue = createConditionAndReturnValue(oValue, sbCondition);
 
                 // <pre>values.add(i - wildcardValues - nullValues -
                 // searchValuesInString, oValue);</pre>
