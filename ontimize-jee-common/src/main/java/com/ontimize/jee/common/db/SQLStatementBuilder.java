@@ -2257,17 +2257,7 @@ public abstract class SQLStatementBuilder {
                 }
             } else {
                 if (this.upperLike) {
-                    sbStringQuery.append(" " + DefaultSQLConditionValuesProcessor.UPPER_FUNCTION);
-                    sbStringQuery.append(SQLStatementBuilder.OPEN_PARENTHESIS);
-                    sbStringQuery.append(oKey);
-                    sbStringQuery.append(SQLStatementBuilder.CLOSE_PARENTHESIS);
-                    sbStringQuery.append(likeOperator);
-                    sbStringQuery.append(" " + DefaultSQLConditionValuesProcessor.UPPER_FUNCTION);
-                    sbStringQuery.append(SQLStatementBuilder.OPEN_PARENTHESIS);
-                    sbStringQuery.append("'");
-                    sbStringQuery.append(newValue);
-                    sbStringQuery.append("'");
-                    sbStringQuery.append(SQLStatementBuilder.CLOSE_PARENTHESIS);
+                    createConditionStringBuilder(oKey, newValue, likeOperator, sbStringQuery);
                 } else {
                     sbStringQuery.append(oKey);
                     sbStringQuery.append(likeOperator);
@@ -2276,6 +2266,27 @@ public abstract class SQLStatementBuilder {
                     sbStringQuery.append("'");
                 }
             }
+        }
+
+        /**
+         * Method created to avoid code duplication
+         * @param oKey
+         * @param newValue
+         * @param likeOperator
+         * @param sbStringQuery
+         */
+        private static void createConditionStringBuilder(String oKey, String newValue, String likeOperator, StringBuilder sbStringQuery) {
+            sbStringQuery.append(" " + DefaultSQLConditionValuesProcessor.UPPER_FUNCTION);
+            sbStringQuery.append(SQLStatementBuilder.OPEN_PARENTHESIS);
+            sbStringQuery.append(oKey);
+            sbStringQuery.append(SQLStatementBuilder.CLOSE_PARENTHESIS);
+            sbStringQuery.append(likeOperator);
+            sbStringQuery.append(" " + DefaultSQLConditionValuesProcessor.UPPER_FUNCTION);
+            sbStringQuery.append(SQLStatementBuilder.OPEN_PARENTHESIS);
+            sbStringQuery.append("'");
+            sbStringQuery.append(newValue);
+            sbStringQuery.append("'");
+            sbStringQuery.append(SQLStatementBuilder.CLOSE_PARENTHESIS);
         }
 
         /**
@@ -2315,17 +2326,7 @@ public abstract class SQLStatementBuilder {
                 }
             } else {
                 if (this.upperLike) {
-                    sbStringQuery.append(" " + DefaultSQLConditionValuesProcessor.UPPER_FUNCTION);
-                    sbStringQuery.append(SQLStatementBuilder.OPEN_PARENTHESIS);
-                    sbStringQuery.append(oKey);
-                    sbStringQuery.append(SQLStatementBuilder.CLOSE_PARENTHESIS);
-                    sbStringQuery.append(likeOperator);
-                    sbStringQuery.append(" " + DefaultSQLConditionValuesProcessor.UPPER_FUNCTION);
-                    sbStringQuery.append(SQLStatementBuilder.OPEN_PARENTHESIS);
-                    sbStringQuery.append("'");
-                    sbStringQuery.append(newValue);
-                    sbStringQuery.append("'");
-                    sbStringQuery.append(SQLStatementBuilder.CLOSE_PARENTHESIS);
+                    createConditionStringBuilder(oKey, newValue, likeOperator, sbStringQuery);
                     sbStringQuery.append(SQLStatementBuilder.AND);
                 } else {
                     sbStringQuery.append(oKey);
