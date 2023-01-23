@@ -2264,13 +2264,7 @@ public abstract class SQLStatementBuilder {
          * @param sbStringQuery
          */
         private static void createConditionWithBrackets(String oKey, String newValue, String likeOperator, StringBuilder sbStringQuery) {
-            sbStringQuery.append(" " + DefaultSQLConditionValuesProcessor.UPPER_FUNCTION);
-            sbStringQuery.append(SQLStatementBuilder.OPEN_PARENTHESIS);
-            sbStringQuery.append(SQLStatementBuilder.OPEN_SQUARE_BRACKET);
-            sbStringQuery.append(oKey);
-            sbStringQuery.append(SQLStatementBuilder.CLOSE_SQUARE_BRACKET);
-            sbStringQuery.append(SQLStatementBuilder.CLOSE_PARENTHESIS);
-            sbStringQuery.append(likeOperator);
+            conditionInBracketsOnlyWithField(oKey, likeOperator, sbStringQuery);
             sbStringQuery.append(" " + DefaultSQLConditionValuesProcessor.UPPER_FUNCTION);
             sbStringQuery.append(SQLStatementBuilder.OPEN_PARENTHESIS);
             sbStringQuery.append("'");
@@ -2352,13 +2346,7 @@ public abstract class SQLStatementBuilder {
             StringBuilder sbStringQuery = new StringBuilder();
             if (bracket) {
                 if (this.upperStrings) {
-                    sbStringQuery.append(" " + DefaultSQLConditionValuesProcessor.UPPER_FUNCTION);
-                    sbStringQuery.append(SQLStatementBuilder.OPEN_PARENTHESIS);
-                    sbStringQuery.append(SQLStatementBuilder.OPEN_SQUARE_BRACKET);
-                    sbStringQuery.append((String) oKey);
-                    sbStringQuery.append(SQLStatementBuilder.CLOSE_SQUARE_BRACKET);
-                    sbStringQuery.append(SQLStatementBuilder.CLOSE_PARENTHESIS);
-                    sbStringQuery.append(sbCondition);
+                    conditionInBracketsOnlyWithField((String) oKey, sbCondition, sbStringQuery);
                     sbStringQuery.append(SQLStatementBuilder.AND);
                 } else {
                     sbStringQuery.append(SQLStatementBuilder.OPEN_SQUARE_BRACKET);
@@ -2399,13 +2387,7 @@ public abstract class SQLStatementBuilder {
             StringBuilder sbStringQuery = new StringBuilder();
             if (bracket) {
                 if (this.upperStrings) {
-                    sbStringQuery.append(" " + DefaultSQLConditionValuesProcessor.UPPER_FUNCTION);
-                    sbStringQuery.append(SQLStatementBuilder.OPEN_PARENTHESIS);
-                    sbStringQuery.append(SQLStatementBuilder.OPEN_SQUARE_BRACKET);
-                    sbStringQuery.append((String) oKey);
-                    sbStringQuery.append(SQLStatementBuilder.CLOSE_SQUARE_BRACKET);
-                    sbStringQuery.append(SQLStatementBuilder.CLOSE_PARENTHESIS);
-                    sbStringQuery.append(sbCondition);
+                    conditionInBracketsOnlyWithField((String) oKey, sbCondition, sbStringQuery);
                 } else {
                     sbStringQuery.append(SQLStatementBuilder.OPEN_SQUARE_BRACKET);
                     sbStringQuery.append((String) oKey);
@@ -2439,13 +2421,7 @@ public abstract class SQLStatementBuilder {
             StringBuilder sbStringQuery = new StringBuilder();
             if (bracket) {
                 if (this.upperStrings) {
-                    sbStringQuery.append(" " + DefaultSQLConditionValuesProcessor.UPPER_FUNCTION);
-                    sbStringQuery.append(SQLStatementBuilder.OPEN_PARENTHESIS);
-                    sbStringQuery.append(SQLStatementBuilder.OPEN_SQUARE_BRACKET);
-                    sbStringQuery.append((String) oKey);
-                    sbStringQuery.append(SQLStatementBuilder.CLOSE_SQUARE_BRACKET);
-                    sbStringQuery.append(SQLStatementBuilder.CLOSE_PARENTHESIS);
-                    sbStringQuery.append(sbCondition);
+                    conditionInBracketsOnlyWithField((String) oKey, sbCondition, sbStringQuery);
                     sbStringQuery.append(SQLStatementBuilder.AND);
                 } else {
                     sbStringQuery.append(SQLStatementBuilder.OPEN_SQUARE_BRACKET);
@@ -2473,6 +2449,22 @@ public abstract class SQLStatementBuilder {
         }
 
         /**
+         * Method used to avoid code duplication.
+         * @param oKey
+         * @param sbCondition
+         * @param sbStringQuery
+         */
+        private static void conditionInBracketsOnlyWithField(String oKey, String sbCondition, StringBuilder sbStringQuery) {
+            sbStringQuery.append(" " + DefaultSQLConditionValuesProcessor.UPPER_FUNCTION);
+            sbStringQuery.append(SQLStatementBuilder.OPEN_PARENTHESIS);
+            sbStringQuery.append(SQLStatementBuilder.OPEN_SQUARE_BRACKET);
+            sbStringQuery.append(oKey);
+            sbStringQuery.append(SQLStatementBuilder.CLOSE_SQUARE_BRACKET);
+            sbStringQuery.append(SQLStatementBuilder.CLOSE_PARENTHESIS);
+            sbStringQuery.append(sbCondition);
+        }
+
+        /**
          * Method to reduce the complexity of {@link #createQueryConditions(Map, List, List)}
          *
          * @param sbStringQuery
@@ -2484,13 +2476,7 @@ public abstract class SQLStatementBuilder {
             StringBuilder sbStringQuery = new StringBuilder();
             if (bracket) {
                 if (this.upperStrings) {
-                    sbStringQuery.append(" " + DefaultSQLConditionValuesProcessor.UPPER_FUNCTION);
-                    sbStringQuery.append(SQLStatementBuilder.OPEN_PARENTHESIS);
-                    sbStringQuery.append(SQLStatementBuilder.OPEN_SQUARE_BRACKET);
-                    sbStringQuery.append((String) oKey);
-                    sbStringQuery.append(SQLStatementBuilder.CLOSE_SQUARE_BRACKET);
-                    sbStringQuery.append(SQLStatementBuilder.CLOSE_PARENTHESIS);
-                    sbStringQuery.append(sbCondition);
+                    conditionInBracketsOnlyWithField((String) oKey, sbCondition, sbStringQuery);
                 } else {
                     sbStringQuery.append(SQLStatementBuilder.OPEN_SQUARE_BRACKET);
                     sbStringQuery.append((String) oKey);
