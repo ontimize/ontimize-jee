@@ -330,13 +330,19 @@ public abstract class SQLStatementBuilder {
     protected static String createINQueryConditionsStringInstance(Object oValue, Object oKey, Object oSearchValue) {
         StringBuilder sbStringQuery = new StringBuilder();
         String sQuery = (String) oSearchValue;
+        putSearchValueBetweenParenthesis((SearchValue) oValue, oKey, sbStringQuery, sQuery);
+
+        return sbStringQuery.toString();
+    }
+
+    private static void putSearchValueBetweenParenthesis(SearchValue oValue, Object oKey, StringBuilder sbStringQuery, String sQuery) {
         boolean putParenthesis = true;
         if (SQLStatementBuilder.checkParenthesis && DefaultSQLConditionValuesProcessor.hasParenthesis(sQuery)) {
             putParenthesis = false;
         }
         sbStringQuery.append(oKey);
         sbStringQuery.append(" ");
-        sbStringQuery.append(SearchValue.conditionIntToStr(((SearchValue) oValue).getCondition()));
+        sbStringQuery.append(SearchValue.conditionIntToStr(oValue.getCondition()));
         sbStringQuery.append(" ");
         if (putParenthesis) {
             sbStringQuery.append(SQLStatementBuilder.OPEN_PARENTHESIS);
@@ -345,8 +351,6 @@ public abstract class SQLStatementBuilder {
         if (putParenthesis) {
             sbStringQuery.append(SQLStatementBuilder.CLOSE_PARENTHESIS);
         }
-
-        return sbStringQuery.toString();
     }
 
     /**
