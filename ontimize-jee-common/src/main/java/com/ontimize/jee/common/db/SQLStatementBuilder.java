@@ -149,7 +149,7 @@ public abstract class SQLStatementBuilder {
                 .setUseAsInSubqueries(useAsInSubqueries);
     }
 
-    public static StringBuilder createQueryConditionsSearchValue(Object oValue, List values, boolean bracket,
+    public static StringBuilder createQueryConditionsSearchValue(Object oValue, List<Object> values, boolean bracket,
                                                                  Object oKey) {
 
         StringBuilder sbStringQuery = new StringBuilder();
@@ -181,12 +181,12 @@ public abstract class SQLStatementBuilder {
      * @param sbStringQuery
      * @return
      */
-    private static boolean createQueryConditionSearchValueExistsNotIn(Object oValue, List values, Object oKey, StringBuilder sbStringQuery) {
+    private static boolean createQueryConditionSearchValueExistsNotIn(Object oValue, List<Object> values, Object oKey, StringBuilder sbStringQuery) {
         // If it is IN, then value is a List with
         // Objects
         Object oSearchValue = ((SearchValue) oValue).getValue();
         if (oSearchValue instanceof List) {
-            List vSearchValue = (List) oSearchValue;
+            List<Object> vSearchValue = (List<Object>) oSearchValue;
             if (!vSearchValue.isEmpty()) {
                 sbStringQuery.append(SQLStatementBuilder.createINQueryConditionsListInstance(oValue, values, oKey,
                         vSearchValue));
@@ -215,12 +215,12 @@ public abstract class SQLStatementBuilder {
      * @param sbStringQuery
      * @return
      */
-    private static boolean createQueryConditionSearchValueOR(SearchValue oValue, List values, boolean bracket, Object oKey, StringBuilder sbStringQuery) {
+    private static boolean createQueryConditionSearchValueOR(SearchValue oValue, List<Object> values, boolean bracket, Object oKey, StringBuilder sbStringQuery) {
         // If it is OR, then value is a List with
         // objects
         Object oSearchValue = oValue.getValue();
         if (oSearchValue instanceof List) {
-            List vSearchValues = (List) oSearchValue;
+            List<Object> vSearchValues = (List<Object>) oSearchValue;
             if (!vSearchValues.isEmpty()) {
                 sbStringQuery
                         .append(SQLStatementBuilder.createORQueryConditions(values, bracket, oKey, vSearchValues));
@@ -243,7 +243,7 @@ public abstract class SQLStatementBuilder {
      * @param sbStringQuery
      * @param vSearchValues
      */
-    protected static String createORQueryConditions(List values, boolean bracket, Object oKey, List vSearchValues) {
+    protected static String createORQueryConditions(List<Object> values, boolean bracket, Object oKey, List<Object> vSearchValues) {
 
         StringBuilder sbStringQuery = new StringBuilder();
 
@@ -292,8 +292,8 @@ public abstract class SQLStatementBuilder {
      * @param sbStringQuery
      * @param vSearchValue
      */
-    protected static String createINQueryConditionsListInstance(Object oValue, List values, Object oKey,
-                                                                List vSearchValue) {
+    protected static String createINQueryConditionsListInstance(Object oValue, List<Object> values, Object oKey,
+                                                                List<Object> vSearchValue) {
         StringBuilder sbStringQuery = new StringBuilder();
         sbStringQuery.append(oKey);
         sbStringQuery.append(" ");
@@ -359,7 +359,7 @@ public abstract class SQLStatementBuilder {
      * @param sbStringQuery
      * @param oSearchValue
      */
-    protected static String createINQueryConditionsSQLExpressionInstance(Object oValue, List values, Object oKey,
+    protected static String createINQueryConditionsSQLExpressionInstance(Object oValue, List<Object> values, Object oKey,
                                                                          Object oSearchValue) {
         String sQuery = ((SQLExpression) oSearchValue).getQuery();
         StringBuilder sbStringQuery = new StringBuilder();
@@ -404,13 +404,13 @@ public abstract class SQLStatementBuilder {
      * @param oKey
      * @param sbStringQuery
      */
-    protected static String createBETWEENQueryConditions(Object oValue, List values, boolean bracket, Object oKey) {
+    protected static String createBETWEENQueryConditions(Object oValue, List<Object> values, boolean bracket, Object oKey) {
         // If it is OR, then value is a List with
         // objects
         StringBuilder sbStringQuery = new StringBuilder();
         Object oSearchValue = ((SearchValue) oValue).getValue();
         if (oSearchValue instanceof List) {
-            List vSearchValues = (List) oSearchValue;
+            List<Object> vSearchValues = (List) oSearchValue;
             if ((vSearchValues.size() >= 2) && (vSearchValues.get(0) != null) && (vSearchValues.get(1) != null)) {
 
                 sbStringQuery.append(SQLStatementBuilder.OPEN_PARENTHESIS);
@@ -453,14 +453,14 @@ public abstract class SQLStatementBuilder {
      * @param oKey
      * @param sbStringQuery
      */
-    protected static String createNOTBETWEENQueryConditions(Object oValue, List values, boolean bracket,
+    protected static String createNOTBETWEENQueryConditions(Object oValue, List<Object> values, boolean bracket,
                                                             Object oKey) {
         // If it is OR, then value is a List with
         // objects
         StringBuilder sbStringQuery = new StringBuilder();
         Object oSearchValue = ((SearchValue) oValue).getValue();
         if (oSearchValue instanceof List) {
-            List vSearchValues = (List) oSearchValue;
+            List<Object> vSearchValues = (List) oSearchValue;
             if ((vSearchValues.size() >= 2) && (vSearchValues.get(0) != null) && (vSearchValues.get(1) != null)) {
 
                 sbStringQuery.append(SQLStatementBuilder.OPEN_PARENTHESIS);
@@ -504,12 +504,11 @@ public abstract class SQLStatementBuilder {
      * @param oKey
      * @param sbStringQuery
      */
-    protected static String createOtherQueryConditions(Object oValue, List values, boolean bracket, Object oKey) {
+    protected static String createOtherQueryConditions(Object oValue, List<Object> values, boolean bracket, Object oKey) {
         StringBuilder sbStringQuery = new StringBuilder();
         Object oSearchValue = ((SearchValue) oValue).getValue();
         if (oSearchValue != null) {
             values.add(oSearchValue);
-        } else {
         }
 
         // This is the last pair key-value
@@ -553,8 +552,8 @@ public abstract class SQLStatementBuilder {
      * @return a <code>SQLStatement</code> class
      */
 
-    public static SQLStatement createCountQuery(String table, Map conditions, List wildcards,
-                                                List countColumns) {
+    public static SQLStatement createCountQuery(String table, Map<String, Object> conditions, List<Object> wildcards,
+                                                List<Object> countColumns) {
         return SQLStatementBuilder.getSQLStatementHandler(SQLStatementBuilder.DEFAULT_HANDLER)
                 .createCountQuery(table, conditions, wildcards, countColumns);
     }
@@ -570,8 +569,8 @@ public abstract class SQLStatementBuilder {
      * @return a <code>SQLStatement</code> class
      * @see SQLStatementBuilder.SQLStatement
      */
-    public static SQLStatement createSelectQuery(String table, List requestedColumns, Map conditions,
-                                                 List wildcards) {
+    public static SQLStatement createSelectQuery(String table, List<Object> requestedColumns, Map<String, Object> conditions,
+                                                 List<Object> wildcards) {
         return SQLStatementBuilder.getSQLStatementHandler(SQLStatementBuilder.DEFAULT_HANDLER)
                 .createSelectQuery(table, requestedColumns, conditions, wildcards);
     }
@@ -2956,7 +2955,7 @@ public abstract class SQLStatementBuilder {
          * @param sb
          * @param ro
          */
-        private static void createQueryConditionsFromExpressionIfRightOperadIsNotNullOperatorInNotIn(List values, StringBuilder sb, List ro) {
+        private static void createQueryConditionsFromExpressionIfRightOperadIsNotNullOperatorInNotIn(List<Object> values, StringBuilder sb, List<Object> ro) {
             // ro has to be a List
             List valueList = ro;
             sb.append("(");
