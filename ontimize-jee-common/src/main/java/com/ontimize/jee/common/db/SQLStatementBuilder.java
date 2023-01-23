@@ -417,18 +417,7 @@ public abstract class SQLStatementBuilder {
             List<Object> vSearchValues = (List) oSearchValue;
             if ((vSearchValues.size() >= 2) && (vSearchValues.get(0) != null) && (vSearchValues.get(1) != null)) {
 
-                sbStringQuery.append(SQLStatementBuilder.OPEN_PARENTHESIS);
-
-                values.add(vSearchValues.get(0));
-                if (bracket) {
-                    sbStringQuery.append(SQLStatementBuilder.OPEN_SQUARE_BRACKET);
-                    sbStringQuery.append(oKey);
-                    sbStringQuery.append(SQLStatementBuilder.CLOSE_SQUARE_BRACKET);
-                    sbStringQuery.append(SQLStatementBuilder.MORE_EQUAL_XQUESTIONMARK);
-                } else {
-                    sbStringQuery.append(oKey);
-                    sbStringQuery.append(SQLStatementBuilder.MORE_EQUAL_XQUESTIONMARK);
-                }
+                openParenthesisAndBrackets(values, bracket, oKey, sbStringQuery, vSearchValues);
                 sbStringQuery.append(SQLStatementBuilder.AND);
                 values.add(vSearchValues.get(1));
                 if (bracket) {
@@ -445,6 +434,29 @@ public abstract class SQLStatementBuilder {
         }
 
         return sbStringQuery.toString();
+    }
+
+    /**
+     * This method is used to avoid code duplication
+     * @param values
+     * @param bracket
+     * @param oKey
+     * @param sbStringQuery
+     * @param vSearchValues
+     */
+    private static void openParenthesisAndBrackets(List<Object> values, boolean bracket, Object oKey, StringBuilder sbStringQuery, List<Object> vSearchValues) {
+        sbStringQuery.append(SQLStatementBuilder.OPEN_PARENTHESIS);
+
+        values.add(vSearchValues.get(0));
+        if (bracket) {
+            sbStringQuery.append(SQLStatementBuilder.OPEN_SQUARE_BRACKET);
+            sbStringQuery.append(oKey);
+            sbStringQuery.append(SQLStatementBuilder.CLOSE_SQUARE_BRACKET);
+            sbStringQuery.append(SQLStatementBuilder.MORE_EQUAL_XQUESTIONMARK);
+        } else {
+            sbStringQuery.append(oKey);
+            sbStringQuery.append(SQLStatementBuilder.MORE_EQUAL_XQUESTIONMARK);
+        }
     }
 
     /**
