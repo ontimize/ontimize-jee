@@ -552,7 +552,7 @@ public abstract class SQLStatementBuilder {
      * @return a <code>SQLStatement</code> class
      */
 
-    public static SQLStatement createCountQuery(String table, Map<String, Object> conditions, List<Object> wildcards,
+    public static SQLStatement createCountQuery(String table, Map<Object, Object> conditions, List<Object> wildcards,
                                                 List<Object> countColumns) {
         return SQLStatementBuilder.getSQLStatementHandler(SQLStatementBuilder.DEFAULT_HANDLER)
                 .createCountQuery(table, conditions, wildcards, countColumns);
@@ -569,7 +569,7 @@ public abstract class SQLStatementBuilder {
      * @return a <code>SQLStatement</code> class
      * @see SQLStatementBuilder.SQLStatement
      */
-    public static SQLStatement createSelectQuery(String table, List<Object> requestedColumns, Map<String, Object> conditions,
+    public static SQLStatement createSelectQuery(String table, List<Object> requestedColumns, Map<Object, Object> conditions,
                                                  List<Object> wildcards) {
         return SQLStatementBuilder.getSQLStatementHandler(SQLStatementBuilder.DEFAULT_HANDLER)
                 .createSelectQuery(table, requestedColumns, conditions, wildcards);
@@ -1331,7 +1331,7 @@ public abstract class SQLStatementBuilder {
          * @param o
          * @return
          */
-        private boolean evaluateLeftOperand(Map m, Object lo, Object ro, Object o) {
+        private boolean evaluateLeftOperand(Map<Object, Object> m, Object lo, Object ro, Object o) {
             String op = o.toString();
             String sField = lo.toString();
             Object oValue = m.get(sField);
@@ -1867,7 +1867,7 @@ public abstract class SQLStatementBuilder {
          * @return
          */
         private boolean evaluateBetweenList(Object lo, SearchValue ro, String sField, Object oValue) {
-            List listValues = (List) ro.getValue();
+            List<Object> listValues = (List) ro.getValue();
             if ((listValues.size() == 2) && (listValues.get(0) != null) && (listValues.get(1) != null)) {
                 Object min;
                 Object max;
@@ -2023,7 +2023,7 @@ public abstract class SQLStatementBuilder {
             return sbStringQuery.toString();
         }
 
-        private void createQueryConditionsIfNotMeetPreviousRequisites(List values, StringBuilder sbStringQuery, Enumeration enumKeys, String oKey, Object oValue, boolean bracket) {
+        private void createQueryConditionsIfNotMeetPreviousRequisites(List<Object> values, StringBuilder sbStringQuery, Enumeration<Object> enumKeys, String oKey, Object oValue, boolean bracket) {
             String sCondition = SQLStatementBuilder.EQUAL_XQUESTIONMARK;
             if ((oValue instanceof String)
                     && (((String) oValue).indexOf(SQLStatementBuilder.NOT_EQUAL_ID) == 0)) {
@@ -2071,7 +2071,7 @@ public abstract class SQLStatementBuilder {
          * @param oValue
          * @param bracket
          */
-        private void createQueryConditionsIfOValuesInstanceOfString(List values, StringBuilder sbStringQuery, Enumeration enumKeys, Object oKey, Object oValue, boolean bracket) {
+        private void createQueryConditionsIfOValuesInstanceOfString(List<Object> values, StringBuilder sbStringQuery, Enumeration<Object> enumKeys, Object oKey, Object oValue, boolean bracket) {
             StringBuilder sbCondition = new StringBuilder();
             if (this.upperStrings) {
                 sbCondition.append(SQLStatementBuilder.EQUAL);
@@ -2115,7 +2115,7 @@ public abstract class SQLStatementBuilder {
          * @param oValue
          * @param bracket
          */
-        private void createQueryConditionsIfOValuesIsSearchValue(List values, StringBuilder sbStringQuery, Enumeration enumKeys, Object oKey, Object oValue, boolean bracket) {
+        private void createQueryConditionsIfOValuesIsSearchValue(List<Object> values, StringBuilder sbStringQuery, Enumeration<Object> enumKeys, Object oKey, Object oValue, boolean bracket) {
             StringBuilder sbStringQueryAux = SQLStatementBuilder
                     .createQueryConditionsSearchValue(oValue, values, bracket, oKey);
             if (sbStringQueryAux != null) {
@@ -2135,7 +2135,7 @@ public abstract class SQLStatementBuilder {
          * @param oValue
          * @param bracket
          */
-        private void createQueryConditionsIfOValuesIsString(List values, StringBuilder sbStringQuery, Enumeration enumKeys, Object oKey, Object oValue, boolean bracket) {
+        private void createQueryConditionsIfOValuesIsString(List<Object> values, StringBuilder sbStringQuery, Enumeration<Object> enumKeys, Object oKey, Object oValue, boolean bracket) {
             if ((((String) oValue).indexOf(SQLStatementBuilder.ASTERISK_CHAR) >= 0)
                     || (((String) oValue).indexOf(SQLStatementBuilder.INTERROG) >= 0)) {
                 sbStringQuery
@@ -2885,7 +2885,7 @@ public abstract class SQLStatementBuilder {
          * @param ro
          * @param expressionOperator
          */
-        private void createQueryConditionsFromExpressionWhenLeftOperandIsField(BasicExpression expression, List values, StringBuilder sb, boolean upper, Object lo, Object ro, Object expressionOperator) {
+        private void createQueryConditionsFromExpressionWhenLeftOperandIsField(BasicExpression expression, List<Object> values, StringBuilder sb, boolean upper, Object lo, Object ro, Object expressionOperator) {
             lo = this.getColumnName(lo.toString());
             if ((BasicOperator.LIKE_OP.equals(expressionOperator)
                     || (BasicOperator.NOT_LIKE_OP.equals(expressionOperator)) && upper) || ((ro instanceof String) && this.upperStrings)) {
@@ -2913,7 +2913,7 @@ public abstract class SQLStatementBuilder {
          * @param ro
          * @param expressionOperator
          */
-        private void createQueryConditionsFromExpressionIfRightOperandIsNotNull(List values, StringBuilder sb, boolean upper, Object ro, Object expressionOperator) {
+        private void createQueryConditionsFromExpressionIfRightOperandIsNotNull(List<Object> values, StringBuilder sb, boolean upper, Object ro, Object expressionOperator) {
             if (ro instanceof Expression) {
                 this.createQueryConditionsFromExpression((Expression) ro, values, sb, upper);
             } else if (ro instanceof Field) {
@@ -2957,7 +2957,7 @@ public abstract class SQLStatementBuilder {
          */
         private static void createQueryConditionsFromExpressionIfRightOperadIsNotNullOperatorInNotIn(List<Object> values, StringBuilder sb, List<Object> ro) {
             // ro has to be a List
-            List valueList = ro;
+            List<Object> valueList = ro;
             sb.append("(");
             for (int i = 0; i < valueList.size(); i++) {
                 sb.append(" ? ");
