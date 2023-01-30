@@ -2,7 +2,6 @@ package com.ontimize.jee.common.util.extend;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -11,6 +10,7 @@ import java.util.Iterator;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
+import com.ontimize.jee.common.exceptions.OntimizeJEEException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,8 +18,8 @@ public abstract class PropertiesParser {
 
     private static final Logger logger = LoggerFactory.getLogger(PropertiesParser.class);
 
-    abstract protected void executeOperation(Properties propertiesFile, String operation, String parameters,
-            String operationValues) throws Exception;
+    protected abstract void executeOperation(Properties propertiesFile, String operation, String parameters,
+            String operationValues) throws OntimizeJEEException;
 
     protected static final String VALUES_SEPARATOR = ";";
 
@@ -29,9 +29,9 @@ public abstract class PropertiesParser {
 
     protected static final String PARAMETER_RIGHT = "]";
 
-    protected final String OPERATION_MATCH = "@.+\\[.+\\]";
+    protected static final String OPERATION_MATCH = "@.+\\[.+\\]";
 
-    protected final String OPERATION_ORDER_MATCH = "^@ORDER$";
+    protected static final String OPERATION_ORDER_MATCH = "^@ORDER$";
 
     public Properties parseProperties(Properties propertiesFile, Properties extendFile) {
         return this.parse(propertiesFile, extendFile);
@@ -39,12 +39,12 @@ public abstract class PropertiesParser {
 
     public int parseExtendPropertiesOrder(Properties extendFile) {
         int index = -1;
-        Enumeration extKeys = extendFile.keys();
+        Enumeration<Object> extKeys = extendFile.keys();
         while (extKeys.hasMoreElements()) {
             String extOperationKey = (String) extKeys.nextElement();
             String operationValue = extendFile.getProperty(extOperationKey);
 
-            if (extOperationKey.matches(this.OPERATION_ORDER_MATCH)) {
+            if (extOperationKey.matches(PropertiesParser.OPERATION_ORDER_MATCH)) {
                 index = Integer.parseInt(operationValue);
             }
         }
@@ -53,7 +53,7 @@ public abstract class PropertiesParser {
 
     protected Properties parse(Properties propertiesFile, Properties extendFile) {
 
-        Enumeration extendKeys = extendFile.keys();
+        Enumeration<Object> extendKeys = extendFile.keys();
         while (extendKeys.hasMoreElements()) {
             // Key of operation must be in the format @OPERATION[PARAMETERS] or
             // defined in OPERATION_MATCH
@@ -63,7 +63,7 @@ public abstract class PropertiesParser {
             String operationValues = extendFile.getProperty(extendOperationKey);
 
             // If key matches the format
-            if (extendOperationKey.matches(this.OPERATION_MATCH)) {
+            if (extendOperationKey.matches(PropertiesParser.OPERATION_MATCH)) {
                 try {
                     // Try to extract operation parameters and values
                     String[] operationElements = this.extractOperationElements(extendOperationKey);
@@ -75,7 +75,7 @@ public abstract class PropertiesParser {
                 } catch (Exception e) {
                     PropertiesParser.logger.error(null, e);
                 }
-            } else if (!extendOperationKey.matches(this.OPERATION_ORDER_MATCH)) {
+            } else if (!extendOperationKey.matches(PropertiesParser.OPERATION_ORDER_MATCH)) {
                 // If key not matches the format, simply adds the key and value
                 // in extendFile to the properties file
                 propertiesFile.put(extendOperationKey, operationValues);
@@ -104,9 +104,9 @@ public abstract class PropertiesParser {
         return operationElements;
     }
 
-    protected ArrayList getValuesList(String values, String valuesSeparator) {
+    protected ArrayList<String> getValuesList(String values) {
 
-        ArrayList valuesList = new ArrayList();
+        ArrayList<String> valuesList = new ArrayList<>();
 
         StringTokenizer st = new StringTokenizer(values, PropertiesParser.VALUES_SEPARATOR);
 
@@ -117,36 +117,32 @@ public abstract class PropertiesParser {
         return valuesList;
     }
 
-    protected String getValuesString(ArrayList valuesList, String valuesSeparator) {
+    protected String getValuesString(ArrayList<String> valuesList) {
 
-        String finalString = "";
+        StringBuilder finalString = new StringBuilder();
 
-        for (Iterator iter = valuesList.iterator(); iter.hasNext();) {
-            String element = (String) iter.next();
-
-            finalString = finalString + element + PropertiesParser.VALUES_SEPARATOR;
+        for (Iterator<String> iter = valuesList.iterator(); iter.hasNext();) {
+            String element = iter.next();
+            finalString.append(element);
+            finalString.append(PropertiesParser.VALUES_SEPARATOR);
         }
 
-        finalString = finalString.substring(0, finalString.length() - 1);
+        finalString.setLength(finalString.length() - 1);
 
-        return finalString;
+        return finalString.toString();
     }
 
     protected Properties loadPropertiesFile(File file) {
 
         Properties properties = new Properties();
 
-        InputStream fis;
-        try {
-            fis = new FileInputStream(file);
+
+        try (InputStream fis = new FileInputStream(file)){
             properties.load(fis);
-        } catch (FileNotFoundException e) {
-            PropertiesParser.logger.error(null, e);
         } catch (IOException e) {
             PropertiesParser.logger.error(null, e);
         }
 
         return properties;
     }
-
 }

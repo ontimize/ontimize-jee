@@ -1,8 +1,8 @@
 package com.ontimize.jee.common.util.extend;
 
+import com.ontimize.jee.common.exceptions.OntimizeJEEException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -54,11 +54,13 @@ public class EntitiesPropertiesParser extends PropertiesParser {
         return null;
     }
 
+
+
     @Override
     protected void executeOperation(Properties propertiesFile, String operation, String parameters,
-                                    String operationValues) throws Exception {
+                                    String operationValues) throws OntimizeJEEException {
 
-        ArrayList<String> parametersList = this.getValuesList(parameters, VALUES_SEPARATOR);
+        ArrayList<String> parametersList = this.getValuesList(parameters);
 
         // for each parameter in the list
         for (int i = 0; i < parametersList.size(); i++) {
@@ -99,10 +101,8 @@ public class EntitiesPropertiesParser extends PropertiesParser {
     private void executeRemoveOperation(Properties propertiesFile, String operationValues, String parameter) {
         String originalValues = (String) propertiesFile.get(parameter);
         if (originalValues != null) {
-            ArrayList <String> originalValuesList = this.getValuesList(originalValues,
-                    VALUES_SEPARATOR);
-            ArrayList <String> operationValuesList = this.getValuesList(operationValues,
-                    VALUES_SEPARATOR);
+            ArrayList<String> originalValuesList = this.getValuesList(originalValues);
+            ArrayList<String> operationValuesList = this.getValuesList(operationValues);
 
             // for each value to delete, try to remove it in the
             // original
@@ -120,8 +120,7 @@ public class EntitiesPropertiesParser extends PropertiesParser {
                 // If original values is not empty, update the new
                 // values in
                 // properties file
-                String valuesString = this.getValuesString(originalValuesList,
-                        VALUES_SEPARATOR);
+                String valuesString = this.getValuesString(originalValuesList);
                 propertiesFile.put(parameter, valuesString);
             }
         }
@@ -223,5 +222,4 @@ public class EntitiesPropertiesParser extends PropertiesParser {
 
         return newClassesProperties;
     }
-
 }
