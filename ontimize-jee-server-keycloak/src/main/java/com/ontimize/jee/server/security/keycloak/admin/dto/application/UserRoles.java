@@ -1,4 +1,4 @@
-package com.ontimize.jee.server.security.keycloak.dto.application;
+package com.ontimize.jee.server.security.keycloak.admin.dto.application;
 
 public class UserRoles {
 

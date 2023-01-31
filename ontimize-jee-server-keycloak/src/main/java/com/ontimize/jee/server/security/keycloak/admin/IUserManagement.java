@@ -1,4 +1,4 @@
-package com.ontimize.jee.server.security.keycloak;
+package com.ontimize.jee.server.security.keycloak.admin;
 
 import java.util.List;
 
@@ -7,10 +7,10 @@ import org.keycloak.representations.idm.GroupRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.http.HttpStatus;
 
-import com.ontimize.jee.server.security.keycloak.dto.RealmInfo;
-import com.ontimize.jee.server.security.keycloak.dto.application.ApplicationRoles;
-import com.ontimize.jee.server.security.keycloak.dto.application.RoleInfo;
-import com.ontimize.jee.server.security.keycloak.dto.application.UserRoles;
+import com.ontimize.jee.server.security.keycloak.admin.dto.RealmInfo;
+import com.ontimize.jee.server.security.keycloak.admin.dto.application.ApplicationRoles;
+import com.ontimize.jee.server.security.keycloak.admin.dto.application.RoleInfo;
+import com.ontimize.jee.server.security.keycloak.admin.dto.application.UserRoles;
 
 /**
  * Interface for the UserManagement of the RDU Corporate UI. The UserManagement

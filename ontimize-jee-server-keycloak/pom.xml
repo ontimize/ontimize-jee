@@ -110,6 +110,10 @@
       <artifactId>ontimize-jee-common</artifactId>
     </dependency>
     <dependency>
+      <groupId>${projectGroupId}</groupId>
+      <artifactId>ontimize-jee-server</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.keycloak</groupId>
       <artifactId>keycloak-core</artifactId>
       <version>${keycloak.version}</version>
@@ -122,6 +126,11 @@
     <dependency>
       <groupId>org.keycloak</groupId>
       <artifactId>keycloak-adapter-spi</artifactId>
+      <version>${keycloak.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.keycloak</groupId>
+      <artifactId>keycloak-spring-security-adapter</artifactId>
       <version>${keycloak.version}</version>
     </dependency>
     <dependency>

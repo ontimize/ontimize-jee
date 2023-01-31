@@ -1,4 +1,4 @@
-package com.ontimize.jee.server.security.keycloak;
+package com.ontimize.jee.server.security.keycloak.admin;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,10 +35,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import com.ontimize.jee.server.security.keycloak.dto.RealmInfo;
-import com.ontimize.jee.server.security.keycloak.dto.application.ApplicationRoles;
-import com.ontimize.jee.server.security.keycloak.dto.application.RoleInfo;
-import com.ontimize.jee.server.security.keycloak.dto.application.UserRoles;
+import com.ontimize.jee.server.security.keycloak.IOntimizeKeycloakSingleTenantConfiguration;
+import com.ontimize.jee.server.security.keycloak.admin.dto.RealmInfo;
+import com.ontimize.jee.server.security.keycloak.admin.dto.application.ApplicationRoles;
+import com.ontimize.jee.server.security.keycloak.admin.dto.application.RoleInfo;
+import com.ontimize.jee.server.security.keycloak.admin.dto.application.UserRoles;
 
 /**
  * UserManagement implementation with keycloak. It uses the keycloak admin
@@ -48,7 +49,7 @@ import com.ontimize.jee.server.security.keycloak.dto.application.UserRoles;
 @Service
 public class UserManagementKeycloakImpl implements IUserManagement {
 	@Autowired
-	private IOntimizeKeycloakConfiguration config;
+	private IOntimizeKeycloakSingleTenantConfiguration config;
 
 	@Value("${ontimize.security.keycloak.admin.realm}")
 	private String adminRealm;
