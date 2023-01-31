@@ -1679,9 +1679,8 @@ public class DefaultSQLStatementHandler implements SQLStatementHandler {
         if (in == null) {
             return null;
         } else {
-            BufferedInputStream bIn = null;
-            try {
-                bIn = new BufferedInputStream(in);
+
+            try (BufferedInputStream bIn = new BufferedInputStream(in)){
                 int b = -1;
                 StringBuilder buff = new StringBuilder();
                 while ((b = bIn.read()) != -1) {
@@ -1697,9 +1696,6 @@ public class DefaultSQLStatementHandler implements SQLStatementHandler {
                 return null;
             } finally {
                 try {
-                    if (bIn != null) {
-                        bIn.close();
-                    }
                     if (in != null) {
                         in.close();
                     }
