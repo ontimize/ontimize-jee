@@ -724,7 +724,7 @@ public class DefaultSQLStatementHandler implements SQLStatementHandler {
         boolean bBrackets = false;
         if (columnName.toUpperCase().indexOf(" AS ") >= 0) {
             // since 5.2071EN-0.2
-            String columnNameNoAs = columnName.toUpperCase().replaceAll(" AS ", "");
+            String columnNameNoAs = columnName.toUpperCase().replace(" AS ", "");
             if (columnNameNoAs.indexOf(' ') >= 0) {
                 return true;
             }
