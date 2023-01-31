@@ -208,7 +208,7 @@
         <spring-session.version>1.3.5.RELEASE</spring-session.version>
         <spring.version>5.3.6</spring.version>
         <xmlbeans.version>2.4.0</xmlbeans.version>
-        <zip4j.version>1.3.2</zip4j.version>
+        <zip4j.version>2.11.3</zip4j.version>
 
         <!-- SONARCloud configuration -->
         <sonar.organization>ontimize</sonar.organization>
