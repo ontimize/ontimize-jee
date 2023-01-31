@@ -1,6 +1,7 @@
 package com.ontimize.jee.common.test.dbTest;
 
 import com.ontimize.jee.common.db.LocalePair;
+import com.ontimize.jee.common.db.SQLStatementBuilder;
 import com.ontimize.jee.common.db.handler.DefaultSQLStatementHandler;
 import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.common.dto.EntityResultMapImpl;
@@ -73,7 +74,9 @@ class DefaultSQLStatementHandlerTest {
         result = this.defaultSQLStatementHandler.checkColumnName("MY COLUM 1 as MY ALIAS COLUMN 1");
         assertTrue(result);
 
-
+        this.defaultSQLStatementHandler.setSQLNameEval((SQLStatementBuilder.SQLNameEval) s -> true);
+        result = this.defaultSQLStatementHandler.checkColumnName("MY COLUM 1 as MY ALIAS COLUMN 1");
+        assertTrue(result);
     }
 
     @Test
