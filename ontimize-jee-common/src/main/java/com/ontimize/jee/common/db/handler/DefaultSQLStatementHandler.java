@@ -724,7 +724,7 @@ public class DefaultSQLStatementHandler implements SQLStatementHandler {
         boolean bBrackets = false;
         if (columnName.toUpperCase().indexOf(" AS ") >= 0) {
             // since 5.2071EN-0.2
-            String columnNameNoAs = columnName.toUpperCase().replaceAll(" AS ", "");
+            String columnNameNoAs = columnName.toUpperCase().replace(" AS ", "");
             if (columnNameNoAs.indexOf(' ') >= 0) {
                 return true;
             }
@@ -1026,28 +1026,35 @@ public class DefaultSQLStatementHandler implements SQLStatementHandler {
                     .startsWith(SQLStatementBuilder.OPEN_SQUARE_BRACKET.trim() + table
                             + SQLStatementBuilder.CLOSE_SQUARE_BRACKET.trim() + ".")) {
             return col;
-        } else {
+        } else return qualifyStartsNoParticularized(col, table);
+    }
 
-            if (this.checkColumnName(col)) {
-                if (this.checkColumnName(table)) {
-                    return SQLStatementBuilder.OPEN_SQUARE_BRACKET.trim() + table
-                            + SQLStatementBuilder.CLOSE_SQUARE_BRACKET.trim() + "."
-                            + SQLStatementBuilder.OPEN_SQUARE_BRACKET.trim() + col
-                            + SQLStatementBuilder.CLOSE_SQUARE_BRACKET.trim();
-                }
-                return table + "." + SQLStatementBuilder.OPEN_SQUARE_BRACKET.trim() + col
+    /**
+     * Method used to reduce cognitive complexity of {@link #qualify(String, String)}
+     * @param col
+     * @param table
+     * @return
+     */
+    private String qualifyStartsNoParticularized(String col, String table) {
+        if (this.checkColumnName(col)) {
+            if (this.checkColumnName(table)) {
+                return SQLStatementBuilder.OPEN_SQUARE_BRACKET.trim() + table
+                        + SQLStatementBuilder.CLOSE_SQUARE_BRACKET.trim() + "."
+                        + SQLStatementBuilder.OPEN_SQUARE_BRACKET.trim() + col
                         + SQLStatementBuilder.CLOSE_SQUARE_BRACKET.trim();
-            } else {
-                if (this.checkColumnName(table)) {
-                    table = table.substring(0, table.indexOf(" "));
-                }
-                if (col.indexOf(".") > 0) {
-                    return col;
-                } else {
-                    return table + "." + col;
-                }
-
             }
+            return table + "." + SQLStatementBuilder.OPEN_SQUARE_BRACKET.trim() + col
+                    + SQLStatementBuilder.CLOSE_SQUARE_BRACKET.trim();
+        } else {
+            if (this.checkColumnName(table)) {
+                table = table.substring(0, table.indexOf(" "));
+            }
+            if (col.indexOf(".") > 0) {
+                return col;
+            } else {
+                return table + "." + col;
+            }
+
         }
     }
 
@@ -1679,9 +1686,8 @@ public class DefaultSQLStatementHandler implements SQLStatementHandler {
         if (in == null) {
             return null;
         } else {
-            BufferedInputStream bIn = null;
-            try {
-                bIn = new BufferedInputStream(in);
+
+            try (BufferedInputStream bIn = new BufferedInputStream(in)){
                 int b = -1;
                 StringBuilder buff = new StringBuilder();
                 while ((b = bIn.read()) != -1) {
@@ -1697,9 +1703,6 @@ public class DefaultSQLStatementHandler implements SQLStatementHandler {
                 return null;
             } finally {
                 try {
-                    if (bIn != null) {
-                        bIn.close();
-                    }
                     if (in != null) {
                         in.close();
                     }
