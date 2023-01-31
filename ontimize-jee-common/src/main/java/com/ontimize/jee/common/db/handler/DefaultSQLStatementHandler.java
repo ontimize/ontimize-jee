@@ -1026,28 +1026,35 @@ public class DefaultSQLStatementHandler implements SQLStatementHandler {
                     .startsWith(SQLStatementBuilder.OPEN_SQUARE_BRACKET.trim() + table
                             + SQLStatementBuilder.CLOSE_SQUARE_BRACKET.trim() + ".")) {
             return col;
-        } else {
+        } else return qualifyStartsNoParticularized(col, table);
+    }
 
-            if (this.checkColumnName(col)) {
-                if (this.checkColumnName(table)) {
-                    return SQLStatementBuilder.OPEN_SQUARE_BRACKET.trim() + table
-                            + SQLStatementBuilder.CLOSE_SQUARE_BRACKET.trim() + "."
-                            + SQLStatementBuilder.OPEN_SQUARE_BRACKET.trim() + col
-                            + SQLStatementBuilder.CLOSE_SQUARE_BRACKET.trim();
-                }
-                return table + "." + SQLStatementBuilder.OPEN_SQUARE_BRACKET.trim() + col
+    /**
+     * Method used to reduce cognitive complexity of {@link #qualify(String, String)}
+     * @param col
+     * @param table
+     * @return
+     */
+    private String qualifyStartsNoParticularized(String col, String table) {
+        if (this.checkColumnName(col)) {
+            if (this.checkColumnName(table)) {
+                return SQLStatementBuilder.OPEN_SQUARE_BRACKET.trim() + table
+                        + SQLStatementBuilder.CLOSE_SQUARE_BRACKET.trim() + "."
+                        + SQLStatementBuilder.OPEN_SQUARE_BRACKET.trim() + col
                         + SQLStatementBuilder.CLOSE_SQUARE_BRACKET.trim();
-            } else {
-                if (this.checkColumnName(table)) {
-                    table = table.substring(0, table.indexOf(" "));
-                }
-                if (col.indexOf(".") > 0) {
-                    return col;
-                } else {
-                    return table + "." + col;
-                }
-
             }
+            return table + "." + SQLStatementBuilder.OPEN_SQUARE_BRACKET.trim() + col
+                    + SQLStatementBuilder.CLOSE_SQUARE_BRACKET.trim();
+        } else {
+            if (this.checkColumnName(table)) {
+                table = table.substring(0, table.indexOf(" "));
+            }
+            if (col.indexOf(".") > 0) {
+                return col;
+            } else {
+                return table + "." + col;
+            }
+
         }
     }
 
