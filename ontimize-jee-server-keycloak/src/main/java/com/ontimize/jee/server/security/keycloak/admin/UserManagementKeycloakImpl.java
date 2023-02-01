@@ -640,7 +640,7 @@ public class UserManagementKeycloakImpl implements IUserManagement {
 		// for users in realm, assign roles for those specified
 		for (UserRepresentation userRep : userR) {
 			final Optional<UserRoles> ur = userRoles.stream()
-					.filter(uroles -> uroles.getUser_().equalsIgnoreCase(userRep.getEmail())).findFirst();
+					.filter(uroles -> uroles.getUser().equalsIgnoreCase(userRep.getEmail())).findFirst();
 
 			if (ur.isPresent()) {
 				final List<String> roles = Arrays.asList(ur.get().getAssignedRoles());

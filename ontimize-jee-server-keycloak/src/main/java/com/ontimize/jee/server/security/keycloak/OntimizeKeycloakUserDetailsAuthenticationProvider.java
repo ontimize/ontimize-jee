@@ -18,7 +18,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
 import com.ontimize.jee.common.security.XMLClientUtilities;
@@ -47,7 +46,7 @@ public class OntimizeKeycloakUserDetailsAuthenticationProvider extends KeycloakA
 		final String username = accessToken.getPreferredUsername();
 
 		if (username == null) {
-			throw new UsernameNotFoundException("username was null");
+			throw new OntimizeJEERuntimeException("username was null");
 		}
 
 		final List<GrantedAuthority> authorities = new ArrayList<>();
