@@ -8,11 +8,9 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 public class OntimizePathMatcher {
-	private List<AntPathRequestMatcher> matchers = null;
+	private List<AntPathRequestMatcher> matchers = new ArrayList<>();
 
 	public OntimizePathMatcher(String[] paterns) {
-		this.matchers = new ArrayList<AntPathRequestMatcher>();
-		
 		for (final String pattern : paterns) {
 			this.matchers.add(new AntPathRequestMatcher(pattern));
 		}

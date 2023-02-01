@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.keycloak.adapters.OidcKeycloakAccount;
 import org.keycloak.adapters.springsecurity.authentication.KeycloakAuthenticationProvider;
@@ -35,7 +36,7 @@ public class OntimizeKeycloakUserDetailsAuthenticationProvider extends KeycloakA
 
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-		KeycloakAuthenticationToken token = (KeycloakAuthenticationToken) super.authenticate(authentication);
+		final KeycloakAuthenticationToken token = (KeycloakAuthenticationToken) super.authenticate(authentication);
 
 		if (token == null) {
 			return null;
@@ -44,16 +45,14 @@ public class OntimizeKeycloakUserDetailsAuthenticationProvider extends KeycloakA
 		final OidcKeycloakAccount account = token.getAccount();
 		final AccessToken accessToken = account.getKeycloakSecurityContext().getToken();
 		final String username = accessToken.getPreferredUsername();
-		final String name = accessToken.getName();
-		final String photo = accessToken.getPicture();
 
 		if (username == null) {
 			throw new UsernameNotFoundException("username was null");
 		}
 
-		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-		Collection<GrantedAuthority> kcAuthorities = token.getAuthorities();
+		final List<GrantedAuthority> authorities = new ArrayList<>();
 		Map<String, ?> clientPermissions = null;
+		final Collection<GrantedAuthority> kcAuthorities = token.getAuthorities();
 
 		if (kcAuthorities != null) {
 			ISecurityAuthorizator authorizator = ontimizeConfiguration.getSecurityConfiguration().getAuthorizator();
@@ -81,14 +80,23 @@ public class OntimizeKeycloakUserDetailsAuthenticationProvider extends KeycloakA
 			}
 		}
 
-		UserInformation userInformation = new UserInformation(username, null, authorities, clientPermissions);
+		final IDToken idtoken = account.getKeycloakSecurityContext().getIdToken();
+		final UserInformation userInformation = this.createUserInformation(accessToken, idtoken , authorities, clientPermissions);
 
-		IDToken idtoken = account.getKeycloakSecurityContext().getIdToken();
+		return new OntimizeKeycloakUserDetailsAuthenticationToken(userInformation, account, token.isInteractive(),
+				authorities);
+	}
+
+	private UserInformation createUserInformation(final AccessToken accessToken, final IDToken idtoken, 
+			final List<GrantedAuthority> authorities, final Map<String, ?> clientPermissions) {
+		final String username = accessToken.getPreferredUsername();
+		final UserInformation userInformation = new UserInformation(username, null, authorities, clientPermissions);
+
 		if (idtoken != null) {
 			Map<String, Object> otherClaims = idtoken.getOtherClaims();
-			for (String key : otherClaims.keySet()) {
-				userInformation.addOtherData(key, otherClaims.get(key));
-			}
+			otherClaims.entrySet().stream().forEach(claim ->
+				userInformation.addOtherData(claim.getKey(), claim.getValue())
+			);
 		}
 
 		Map<Object, Object> otherData = userInformation.getOtherData();
@@ -97,15 +105,16 @@ public class OntimizeKeycloakUserDetailsAuthenticationProvider extends KeycloakA
 			userInformation.addOtherData("usr_id", username);
 		}
 
+		final String name = accessToken.getName();
 		if (!otherData.keySet().contains("usr_name")) {
-			userInformation.addOtherData("usr_name", name == null ? username : name);
+			userInformation.addOtherData("usr_name", Objects.requireNonNullElse(name, username));
 		}
-
+		
+		final String photo = accessToken.getPicture();
 		if (!otherData.keySet().contains("usr_photo") && photo != null) {
 			userInformation.addOtherData("usr_photo", photo);
 		}
-
-		return new OntimizeKeycloakUserDetailsAuthenticationToken(userInformation, account, token.isInteractive(),
-				authorities);
+	
+		return userInformation;
 	}
 }
