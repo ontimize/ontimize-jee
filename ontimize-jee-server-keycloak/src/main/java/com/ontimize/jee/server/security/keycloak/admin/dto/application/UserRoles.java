@@ -1,16 +1,16 @@
-package com.ontimize.jee.server.security.keycloak.dto.application;
+package com.ontimize.jee.server.security.keycloak.admin.dto.application;
 
 public class UserRoles {
 
-	private String user_;
+	private String user;
 	private String[] assignedRoles;
 
-	public String getUser_() {
-		return user_;
+	public String getUser() {
+		return user;
 	}
 
-	public void setUser_(String user_) {
-		this.user_ = user_;
+	public void setUser(String user) {
+		this.user = user;
 	}
 
 	public String[] getAssignedRoles() {

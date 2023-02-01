@@ -1,4 +1,4 @@
-package com.ontimize.jee.server.security.keycloak.dto;
+package com.ontimize.jee.server.security.keycloak.admin.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
