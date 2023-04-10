@@ -68,7 +68,7 @@ public class ParseUtilsExt extends ParseTools {
             try {
                 return Base64Utils.decode(((String) base64).toCharArray());
             } catch (Exception error) {
-
+                return null;
             }
         }
         return null;
@@ -79,7 +79,7 @@ public class ParseUtilsExt extends ParseTools {
             try {
                 return java.util.UUID.fromString((String) uuid);
             } catch (Exception error) {
-
+                return null;
             }
         }
         return null;
