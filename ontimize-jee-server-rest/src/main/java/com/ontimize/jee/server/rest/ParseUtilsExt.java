@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.regex.Pattern;
+import java.util.UUID;
 
 import javax.xml.bind.DatatypeConverter;
 
@@ -12,7 +13,8 @@ import com.ontimize.jee.common.util.ParseTools;
 
 public class ParseUtilsExt extends ParseTools {
 
-    public final static int BASE64 = 6464;
+    public static final int BASE64 = 6464;
+    public static final int UUID = 6465;
 
     protected final static Pattern ISO8601 = Pattern.compile(
             "^([\\+-]?\\d{4}(?!\\d{2}\\b))((-?)((0[1-9]|1[0-2])(\\3([12]\\d|0[1-9]|3[01]))?|W([0-4]\\d|5[0-2])(-?[1-7])?|(00[1-9]|0[1-9]\\d|[12]\\d{2}|3([0-5]\\d|6[1-6])))([T\\s]((([01]\\d|2[0-3])((:?)[0-5]\\d)?|24\\:?00)([\\.,]\\d+(?!:))?)?(\\17[0-5]\\d([\\.,]\\d+)?)?([zZ]|([\\+-])([01]\\d|2[0-3]):?([0-5]\\d)?)?)?)?$");
@@ -26,6 +28,8 @@ public class ParseUtilsExt extends ParseTools {
                 return ParseUtilsExt.parseTimpestamp(object);
             case ParseUtilsExt.BASE64:
                 return ParseUtilsExt.parseBase64(object);
+            case ParseUtilsExt.UUID:
+                return ParseUtilsExt.parseUUID(object);
             default:
                 return ParseTools.getValueForSQLType(object, sqlType);
         }
@@ -70,4 +74,14 @@ public class ParseUtilsExt extends ParseTools {
         return null;
     }
 
+    public static UUID parseUUID(Object uuid) {
+        if (uuid instanceof String) {
+            try {
+                return java.util.UUID.fromString((String) uuid);
+            } catch (Exception error) {
+                return null;
+            }
+        }
+        return null;
+    }
 }
