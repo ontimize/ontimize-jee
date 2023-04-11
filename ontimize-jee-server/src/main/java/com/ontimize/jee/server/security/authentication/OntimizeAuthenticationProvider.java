@@ -3,6 +3,10 @@
  */
 package com.ontimize.jee.server.security.authentication;
 
+import com.ontimize.jee.common.naming.I18NNaming;
+import com.ontimize.jee.server.configuration.OntimizeConfiguration;
+import com.ontimize.jee.server.security.ISecurityUserInformationService;
+import com.ontimize.jee.server.security.encrypt.IPasswordEncryptHelper;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -12,11 +16,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import com.ontimize.jee.common.naming.I18NNaming;
-import com.ontimize.jee.server.configuration.OntimizeConfiguration;
-import com.ontimize.jee.server.security.ISecurityUserInformationService;
-import com.ontimize.jee.server.security.encrypt.IPasswordEncryptHelper;
 
 /**
  * The Class OntimizeAuthenticationProvider.
@@ -48,16 +47,21 @@ public class OntimizeAuthenticationProvider extends AbstractUserDetailsAuthentic
      * org.springframework.security.authentication.UsernamePasswordAuthenticationToken)
      */
     @Override
-    protected void additionalAuthenticationChecks(UserDetails userDetails,
-            UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {
+    protected void additionalAuthenticationChecks(UserDetails userDetails, UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {
         if (OntimizeAuthenticationProvider.NO_AUTHENTICATION_TOKEN != authentication.getCredentials()) {
             Object pass = authentication.getCredentials();
             if (pass == null) {
                 throw new AuthenticationCredentialsNotFoundException(I18NNaming.E_AUTH_PASSWORD_NOT_MATCH);
             }
-            pass = this.encryptPassword(pass.toString());
-            if ((pass == null) || (!userDetails.getPassword().equals(pass)
-                    && !userDetails.getPassword().equals(authentication.getCredentials()))) {
+            checkPassAgainstStoredCred(userDetails, pass);
+        }
+    }
+
+    private void checkPassAgainstStoredCred(UserDetails userDetails, Object pass) {
+        if (this.passwordEncrypter != null) {
+            this.passwordEncrypter.checkPasswords(userDetails.getPassword(), pass);
+        } else {
+            if ((pass == null) || (!userDetails.getPassword().equals(pass))) {
                 throw new AuthenticationCredentialsNotFoundException(I18NNaming.E_AUTH_PASSWORD_NOT_MATCH);
             }
         }
@@ -86,15 +90,8 @@ public class OntimizeAuthenticationProvider extends AbstractUserDetailsAuthentic
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.userInformationService = applicationContext.getBean(OntimizeConfiguration.class)
-            .getSecurityConfiguration()
-            .getUserInformationService();
-    }
-
-    protected String encryptPassword(String password) {
-        if (this.passwordEncrypter != null) {
-            return this.passwordEncrypter.encrypt(password);
-        }
-        return password;
+                .getSecurityConfiguration()
+                .getUserInformationService();
     }
 
     public void setUserInformationService(ISecurityUserInformationService userInformationService) {

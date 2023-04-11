@@ -1,14 +1,15 @@
 package com.ontimize.jee.server.security.encrypt;
 
-import java.security.MessageDigest;
-import java.util.Map;
-
+import com.ontimize.jee.common.naming.I18NNaming;
+import com.ontimize.jee.common.util.Base64Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.stereotype.Component;
 
-import com.ontimize.jee.common.util.Base64Utils;
+import java.security.MessageDigest;
+import java.util.Map;
 
 /**
  * The Class PasswordEncryptHelper.
@@ -17,29 +18,17 @@ import com.ontimize.jee.common.util.Base64Utils;
 @Lazy(value = true)
 public class PasswordEncryptHelper implements IPasswordEncryptHelper {
 
-    /** The Constant logger. */
+    /**
+     * The Constant logger.
+     */
     private static final Logger logger = LoggerFactory.getLogger(PasswordEncryptHelper.class);
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.ontimize.jee.server.security.IPasswordEncryptHelper#encryptMap(java.lang.String,
-     * java.util.Map)
-     */
     @Override
     public Map<?, ?> encryptMap(String columnName, Map<?, ?> keysValues) {
-        Object value = keysValues.get(columnName);
-        if (value != null) {
-            ((Map<Object, Object>) keysValues).put(columnName, this.encrypt((String) value));
-        }
+        ((Map<Object, Object>) keysValues).computeIfPresent(columnName, (k, v) -> this.encrypt((String) v));
         return keysValues;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.ontimize.jee.server.security.IPasswordEncryptHelper#encrypt(java.lang.String)
-     */
     @Override
     public String encrypt(String password) {
         try {
@@ -55,6 +44,14 @@ public class PasswordEncryptHelper implements IPasswordEncryptHelper {
         } catch (Exception e) {
             PasswordEncryptHelper.logger.error(null, e);
             return null;
+        }
+    }
+
+    @Override
+    public void checkPasswords(String storedPass, Object pass) {
+        if ((pass == null) || (!storedPass.equals(this.encrypt(pass.toString())) && !storedPass.equals(pass))) {
+            logger.error("Authorization denied!");
+            throw new AuthenticationCredentialsNotFoundException(I18NNaming.E_AUTH_PASSWORD_NOT_MATCH);
         }
     }
 
