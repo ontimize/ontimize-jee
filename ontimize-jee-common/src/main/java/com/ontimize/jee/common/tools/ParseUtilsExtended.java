@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.StringTokenizer;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 import javax.swing.Icon;
@@ -20,6 +21,7 @@ import javax.swing.SwingConstants;
 import javax.xml.bind.DatatypeConverter;
 
 import com.ontimize.jee.common.util.ParseTools;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,7 +34,8 @@ public class ParseUtilsExtended extends ParseTools {
 
     private static final Logger logger = LoggerFactory.getLogger(ParseUtilsExtended.class);
 
-    public final static int BASE64 = 6464;
+    public static final int BASE64 = 6464;
+    public static final int UUID = 6465;
 
     protected final static Pattern ISO8601 = Pattern.compile(
             "^([\\+-]?\\d{4}(?!\\d{2}\\b))((-?)((0[1-9]|1[0-2])(\\3([12]\\d|0[1-9]|3[01]))?|W([0-4]\\d|5[0-2])(-?[1-7])?|(00[1-9]|0[1-9]\\d|[12]\\d{2}|3([0-5]\\d|6[1-6])))([T\\s]((([01]\\d|2[0-3])((:?)[0-5]\\d)?|24\\:?00)([\\.,]\\d+(?!:))?)?(\\17[0-5]\\d([\\.,]\\d+)?)?([zZ]|([\\+-])([01]\\d|2[0-3]):?([0-5]\\d)?)?)?)?$");
@@ -454,6 +457,8 @@ public class ParseUtilsExtended extends ParseTools {
                 return ParseUtilsExtended.parseTimpestamp(object);
             case ParseUtilsExtended.BASE64:
                 return ParseUtilsExtended.parseBase64(object);
+            case ParseUtilsExtended.UUID:
+                return ParseUtilsExtended.parseUUID(object);
             default:
                 return ParseTools.getValueForSQLType(object, sqlType);
         }
@@ -498,4 +503,14 @@ public class ParseUtilsExtended extends ParseTools {
         return null;
     }
 
+    public static UUID parseUUID(Object uuid) {
+        if (uuid instanceof String) {
+            try {
+                return java.util.UUID.fromString((String) uuid);
+            } catch (Exception error) {
+                return null;
+            }
+        }
+        return null;
+    }
 }
