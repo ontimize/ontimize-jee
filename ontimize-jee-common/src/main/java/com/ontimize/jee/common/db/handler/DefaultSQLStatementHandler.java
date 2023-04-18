@@ -6,6 +6,7 @@ import com.ontimize.jee.common.db.SQLStatementBuilder;
 import com.ontimize.jee.common.db.util.DBFunctionName;
 import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.common.gui.LongString;
+import com.ontimize.jee.common.tools.ParseUtilsExtended;
 import com.ontimize.jee.common.util.remote.BytesBlock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -1504,10 +1505,7 @@ public class DefaultSQLStatementHandler implements SQLStatementHandler {
             String[] sColumnLabels = this.getColumnNames(rsMetaData);
 
             // Optimization: use column types.
-            int[] columnTypes = new int[sColumnLabels.length];
-            for (int i = 1; i <= columnTypes.length; i++) {
-                columnTypes[i - 1] = rsMetaData.getColumnType(i);
-            }
+            int[] columnTypes = this.getColumnTypes(rsMetaData);
 
             Map hColumnTypesAux = new HashMap();
             if (hColumnTypesAux != null) {
@@ -1546,7 +1544,7 @@ public class DefaultSQLStatementHandler implements SQLStatementHandler {
         }
     }
 
-    protected Object getResultSetValue(ResultSet resultSet, String columnLabel, int columnType) throws Exception {
+	protected Object getResultSetValue(ResultSet resultSet, String columnLabel, int columnType) throws Exception {
         // +1 is because array index starts in 0 and metadata index
         // starts in 1
         if (columnType == Types.BLOB) {
@@ -1586,10 +1584,7 @@ public class DefaultSQLStatementHandler implements SQLStatementHandler {
             String[] sColumnNames = this.getColumnNames(rsMetaData);
 
             // Optimization: use column types.
-            int[] columnTypes = new int[sColumnNames.length];
-            for (int i = 1; i <= columnTypes.length; i++) {
-                columnTypes[i - 1] = rsMetaData.getColumnType(i);
-            }
+            int[] columnTypes = this.getColumnTypes(rsMetaData);
 
             Map hColumnTypesAux = new HashMap();
             if (hColumnTypesAux != null) {
@@ -1673,6 +1668,24 @@ public class DefaultSQLStatementHandler implements SQLStatementHandler {
             DefaultSQLStatementHandler.logger.error(null, e);
         }
         return sColumnLabels;
+    }
+
+    protected int[] getColumnTypes(ResultSetMetaData rsMetaData) {
+        int[] columnTypes = null;
+        try {
+            columnTypes = new int[rsMetaData.getColumnCount()];
+            for (int i = 1; i <= rsMetaData.getColumnCount(); i++) {
+                columnTypes[i - 1] = rsMetaData.getColumnType(i);
+                if (columnTypes[i - 1] == java.sql.Types.OTHER) {
+                    if ("java.util.UUID".equals(rsMetaData.getColumnClassName(i))) {
+                        columnTypes[i - 1] = ParseUtilsExtended.UUID;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            DefaultSQLStatementHandler.logger.error(null, e);
+        }
+        return columnTypes;
     }
 
     /**
