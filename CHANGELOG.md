@@ -1,3 +1,6 @@
+## 5.8.0 - In progress
+### 🚀 Features:
+<!-- ### 🔧 Bug fixes: -->
 ## 5.7.0 - 20/04/2023
 ### 🚀 Features:
 * **POI Version**: POI version updated to 5.2.3.
@@ -6,4 +9,5 @@
 * **Sonar**: Fix some sonar code smells.
 * **Password encryption**: Now can use BCrypt as password encoder.
 * **Keycloak**: Allow to customize the source of the keycloak settings.
+* **UUID**: Add JDBC UUID support.
 <!-- ### 🔧 Bug fixes: -->
