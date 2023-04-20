@@ -1,4 +1,4 @@
-name: Build
+name: Analyze Analyze project with Sonar Cloud
 on:
   push:
     branches:
@@ -7,8 +7,8 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
-  build:
-    name: Build
+  Analyze-project-with-Sonar-Cloud:
+    name: Analyze project with Sonar Cloud
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

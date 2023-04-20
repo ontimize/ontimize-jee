@@ -86,7 +86,7 @@ public class PreferencesRestController {
         Map<String, Object> map = new HashMap<>();
         if (!entity.isEmpty() && !service.isEmpty()) {
             String entityService = entity.get() + "-" + service.get();
-            map.put("ENTITY", entityService);
+            map.put(ENTITY_QUERY, entityService);
         }
         if (!type.isEmpty()) {
 

@@ -9,13 +9,23 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpMethod;
+
+import com.ontimize.jee.server.requestfilter.OntimizePathMatcher;
 
 public class OntimizeJeeMultiTenantFilter implements Filter {
 
 	private static final Logger logger = LoggerFactory.getLogger(OntimizeJeeMultiTenantFilter.class);
+
+	@Autowired
+	@Qualifier("pathMatcherIgnorePaths")
+	private OntimizePathMatcher pathMatcherIgnorePaths;
 
 	@Override
 	public void destroy() {
@@ -27,16 +37,28 @@ public class OntimizeJeeMultiTenantFilter implements Filter {
 			throws IOException, ServletException {
 
 		if (request instanceof HttpServletRequest) {
-			final String tenantId = ((HttpServletRequest) request).getHeader("X-Tenant");
-			if (tenantId != null) {
-				MultiTenantContextHolder.setTenant(tenantId);
-			}
-		}
+			HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+			HttpServletResponse httpServletResponse = (HttpServletResponse) response;
 
-		try {
-			filterChain.doFilter(request, response);
-		} catch (Exception e) {
-			OntimizeJeeMultiTenantFilter.logger.error(null, e);
+			if (HttpMethod.OPTIONS.name().equals(httpServletRequest.getMethod()) || this.pathMatcherIgnorePaths.matches(httpServletRequest)) {
+				filterChain.doFilter(request, response);
+			} else if (httpServletRequest.getHeader("X-Tenant") == null) {
+				httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "No tenant provided");
+			} else {
+				MultiTenantContextHolder.setTenant(httpServletRequest.getHeader("X-Tenant"));
+
+				try {
+					filterChain.doFilter(request, response);
+				} catch (Exception e) {
+					OntimizeJeeMultiTenantFilter.logger.error(null, e);
+				}
+			}
+		} else {
+			try {
+				filterChain.doFilter(request, response);
+			} catch (Exception e) {
+				OntimizeJeeMultiTenantFilter.logger.error(null, e);
+			}
 		}
 	}
 
