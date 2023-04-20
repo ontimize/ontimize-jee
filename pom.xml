@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.ontimize.jee</groupId>
     <artifactId>ontimize-jee</artifactId>
-    <version>5.7.0-SNAPSHOT</version>
+    <version>5.8.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Ontimize EE</name>
@@ -71,6 +71,12 @@
         <developer>
             <name>Jorge Diaz Seijo</name>
             <email>jorge.diaz@imatia.com</email>
+            <organization>Imatia Innovation</organization>
+            <organizationUrl>http://imatia.com</organizationUrl>
+        </developer>
+        <developer>
+            <name>Lucía Fernández Núñez</name>
+            <email>lucia.fernandez@imatia.com</email>
             <organization>Imatia Innovation</organization>
             <organizationUrl>http://imatia.com</organizationUrl>
         </developer>
