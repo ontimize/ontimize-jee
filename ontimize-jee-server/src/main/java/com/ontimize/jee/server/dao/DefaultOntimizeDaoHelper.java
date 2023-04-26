@@ -119,7 +119,7 @@ public class DefaultOntimizeDaoHelper implements IOntimizeDaoHelper, Application
         List<?> vAttributes = new ArrayList<>(vMultipleTableAttributes);
 
         AdvancedEntityResult erResult = dao.paginationQuery(keysValues, vAttributes, recordNumber, startIndex, orderBy,
-                queryId);
+            queryId, adapter);
 
         if (!erResult.isWrong()) {
             // TODO
