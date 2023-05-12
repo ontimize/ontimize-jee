@@ -1,4 +1,4 @@
-# Ontimize Boot
+# Ontimize EE
 ## 📜 Introduction
 Ontimize EE uses Spring technology to separate the client and the server, allowing applications to be developed quickly and efficiently.
 ## ✍ Use
