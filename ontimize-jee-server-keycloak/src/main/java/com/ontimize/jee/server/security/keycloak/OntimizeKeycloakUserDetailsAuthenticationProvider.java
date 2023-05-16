@@ -54,16 +54,17 @@ public class OntimizeKeycloakUserDetailsAuthenticationProvider extends KeycloakA
 		final Collection<GrantedAuthority> kcAuthorities = token.getAuthorities();
 
 		if (kcAuthorities != null) {
-			ISecurityAuthorizator authorizator = ontimizeConfiguration.getSecurityConfiguration().getAuthorizator();
+			final ISecurityAuthorizator authorizator = ontimizeConfiguration.getSecurityConfiguration().getAuthorizator();
+			final List<Map<String, ?>> permissions = new ArrayList<>();
 
-			List<Map<String, ?>> permissions = new ArrayList<>();
-			for (GrantedAuthority authority : kcAuthorities) {
-				Role role = authorizator.getRole(authority.getAuthority());
+			for (final GrantedAuthority authority : kcAuthorities) {
+				final Role role = authorizator.getRole(authority.getAuthority());
 
 				if (role != null) {
 					authorities.add(new SimpleGrantedAuthority(role.getName()));
 
-					Map<String, ?> roleClientPermission = role.getClientPermissions();
+					final Map<String, ?> roleClientPermission = role.getClientPermissions();
+
 					if (roleClientPermission != null) {
 						permissions.add(roleClientPermission);
 					}

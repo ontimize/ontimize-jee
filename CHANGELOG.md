@@ -1,5 +1,6 @@
 ## 5.8.0 - In progress
 ### 🚀 Features:
+* **Keycloak**: Allow to configure roles without a database.
 ### 🔧 Bug fixes:
 * **DefaultOntimizeDaoHelper**: ISQLAdapter is now taking in consideration.
 ## 5.7.0 - 20/04/2023
