@@ -1,5 +1,6 @@
 ## 5.8.0 - In progress
 ### 🚀 Features:
+* **Keycloak**: Allow to configure roles without a database.
 ### 🔧 Bug fixes:
 * **DefaultOntimizeDaoHelper**: ISQLAdapter is now taking in consideration.
 ## 5.7.0 - 20/04/2023
@@ -9,6 +10,6 @@
 * **Test**: Added test to StatementHandlers.
 * **Sonar**: Fix some sonar code smells.
 * **Password encryption**: Now can use BCrypt as password encoder.
-* **Keycloak**: Allow to customize the source of the keycloak settings and to configure roles without a database.
+* **Keycloak**: Allow to customize the source of the keycloak settings.
 * **UUID**: Add JDBC UUID support.
 <!-- ### 🔧 Bug fixes: -->
