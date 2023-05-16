@@ -3,6 +3,7 @@
 * **Keycloak**: Allow to configure roles without a database.
 ### 🔧 Bug fixes:
 * **DefaultOntimizeDaoHelper**: ISQLAdapter is now taking in consideration.
+* **Ontimize rest controller**: Get the next level message when the current one is null
 ## 5.7.0 - 20/04/2023
 ### 🚀 Features:
 * **POI Version**: POI version updated to 5.2.3.

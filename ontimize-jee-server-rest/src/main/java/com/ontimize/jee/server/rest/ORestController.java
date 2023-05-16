@@ -1,5 +1,6 @@
 package com.ontimize.jee.server.rest;
 
+import java.lang.reflect.InvocationTargetException;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -75,11 +76,7 @@ public abstract class ORestController<S> {
                     attributes);
             return new ResponseEntity<>(eR, HttpStatus.OK);
         } catch (Exception error) {
-            ORestController.logger.error(null, error);
-            EntityResult entityResult = new EntityResultMapImpl(EntityResult.OPERATION_WRONG,
-                    EntityResult.BEST_COMPRESSION);
-            entityResult.setMessage(error.getMessage());
-            return new ResponseEntity<>(entityResult, HttpStatus.INTERNAL_SERVER_ERROR);
+            return this.processError(error);
         }
     }
 
@@ -210,16 +207,23 @@ public abstract class ORestController<S> {
 
     protected String getErrorMessage(Exception error) {
         if (this.exceptionTranslator != null) {
-            if (error.getCause() != null) {
-                // deberian venir siempre en una ontimizejeeruntimeexception que lanza reflectiontools
-                return this.exceptionTranslator.translateException(error.getCause()).getMessage();
+            // deberian venir siempre en una ontimizejeeruntimeexception que lanza reflectiontools
+            return this.exceptionTranslator.translateException(this.getCause(error)).getMessage();
+        }
+        return this.getCause(error).getMessage();
+    }
+
+    protected Throwable getCause(final Throwable cause) {
+        if (cause instanceof InvocationTargetException) {
+            final InvocationTargetException ite = (InvocationTargetException) cause;
+            if (ite.getTargetException() != null) {
+                return this.getCause(ite.getTargetException());
             }
-            return this.exceptionTranslator.translateException(error).getMessage();
         }
-        if (error.getCause() != null) {
-            return error.getCause().getMessage();
+        if (cause.getCause() != null && cause.getCause().getMessage() == null) {
+            return this.getCause(cause.getCause());
         }
-        return error.getMessage();
+        return cause;
     }
 
     protected Map<Object, Object> createKeysValues(String filter) {
