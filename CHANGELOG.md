@@ -9,6 +9,6 @@
 * **Test**: Added test to StatementHandlers.
 * **Sonar**: Fix some sonar code smells.
 * **Password encryption**: Now can use BCrypt as password encoder.
-* **Keycloak**: Allow to customize the source of the keycloak settings.
+* **Keycloak**: Allow to customize the source of the keycloak settings and to configure roles without a database.
 * **UUID**: Add JDBC UUID support.
 <!-- ### 🔧 Bug fixes: -->
