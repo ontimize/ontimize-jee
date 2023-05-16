@@ -11,4 +11,5 @@
 * **Password encryption**: Now can use BCrypt as password encoder.
 * **Keycloak**: Allow to customize the source of the keycloak settings.
 * **UUID**: Add JDBC UUID support.
+* **Ontimize rest controller**: Get the next level message when the current one is null
 <!-- ### 🔧 Bug fixes: -->
