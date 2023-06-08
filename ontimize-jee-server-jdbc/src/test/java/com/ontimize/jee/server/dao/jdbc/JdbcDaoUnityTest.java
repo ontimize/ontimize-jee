@@ -91,13 +91,13 @@ public class JdbcDaoUnityTest {
     public void testInsert() {
         Map<String, Object> attributesValues = new HashMap();
         attributesValues.put("employeeid", 1026);
-        attributesValues.put("name", "Messirve");
-        attributesValues.put("email", "messirve@imatia.com");
+        attributesValues.put("name", "Jhon");
+        attributesValues.put("email", "jdoe@example.com");
 
         jdbcInsert(attributesValues);
 
         Map<String, Object> keysValues = new HashMap();
-        keysValues.put("name", "Messirve");
+        keysValues.put("name", "Jhon");
 
         List<Object> attributes = new ArrayList();
         attributes.add("employeeid");
@@ -139,7 +139,7 @@ public class JdbcDaoUnityTest {
         assertEquals(1001, jdbcQuery(keysValues, attributes, null, null).getRecordValues(0).get("employeeid"));
 
         // Get all records ordered by name
-        assertEquals("Aaron", jdbcQuery(null, attributes, orderBy, null).getRecordValues(0).get("name"));
+        assertEquals("Anitra", jdbcQuery(null, attributes, orderBy, null).getRecordValues(0).get("name"));
 
         // Get all records
         assertEquals(25, jdbcQuery(null, attributes, null, null).calculateRecordNumber());
@@ -156,7 +156,7 @@ public class JdbcDaoUnityTest {
         attributes.add("email");
 
         EntityResult eR = jdbcQuery(keysValues, attributes, null, RepositoryUnityTestDao.INNER_JOIN);
-        assertEquals("Asmi", eR.getRecordValues(0).get("name"));
+        assertEquals("Valentin", eR.getRecordValues(0).get("name"));
     }
 
     @Test
@@ -187,18 +187,18 @@ public class JdbcDaoUnityTest {
 
         EntityResult eR = jdbcQuery(keysValues, attributes, orderBy, RepositoryUnityTestDao.ORDERBY);
 
-        assertEquals(1012, eR.getRecordValues(0).get("employeeid"));
+        assertEquals(1009, eR.getRecordValues(0).get("employeeid"));
 
         eR = jdbcQuery(keysValues, attributes, null, RepositoryUnityTestDao.ORDERCOLUMN);
 
-        assertEquals("Aaron", eR.getRecordValues(0).get("name"));
+        assertEquals("Anitra", eR.getRecordValues(0).get("name"));
 
     }
 
     @Test
     public void testWhereConcat() {
         Map<String, Object> keysValues = new HashMap();
-        keysValues.put("name", "Kutxa");
+        keysValues.put("name", "DuBuque Group");
         List<Object> attributes = new ArrayList();
         attributes.add("accountid");
         attributes.add("name");
@@ -212,7 +212,7 @@ public class JdbcDaoUnityTest {
     @Test
     public void testNestedTables() {
         Map<String, Object> keysValues = new HashMap();
-        keysValues.put("name", "Cris");
+        keysValues.put("name", "Paddy");
         List<Object> attributes = new ArrayList();
         attributes.add("accountid");
         attributes.add("name");
@@ -220,13 +220,12 @@ public class JdbcDaoUnityTest {
 
         EntityResult eR = jdbcQuery(keysValues, attributes, null, RepositoryUnityTestDao.NESTED_TABLES);
 
-        assertEquals(105, eR.getRecordValues(0).get("accountid"));
+        assertEquals(102, eR.getRecordValues(0).get("accountid"));
     }
 
     @Test
     public void testFunctionColumns() {
         Map<String, Object> keysValues = new HashMap();
-        // keysValues.put("name", "Cris");
         List<Object> attributes = new ArrayList();
         attributes.add("accountid");
         attributes.add("name");
@@ -262,10 +261,10 @@ public class JdbcDaoUnityTest {
         assertEquals(5, eR.calculateRecordNumber());
 
         // Get the first value ordered by name
-        assertEquals("Aaron", eR.getRecordValues(0).get("name"));
+        assertEquals("Anitra", eR.getRecordValues(0).get("name"));
 
         // Get the first value
-        assertEquals("Vinod", jdbcPaginationQuery(null, null).getRecordValues(0).get("name"));
+        assertEquals("Jeramie", jdbcPaginationQuery(null, null).getRecordValues(0).get("name"));
     }
 
     /**
@@ -278,7 +277,7 @@ public class JdbcDaoUnityTest {
         Map<String, Object> attributes = new HashMap();
 
         keysValues.put("employeeid", 1001);
-        attributes.put("name", "Coincidir");
+        attributes.put("name", "Smith");
 
         return repositoryUnityTestDao.update(attributes, keysValues);
     }
@@ -295,7 +294,7 @@ public class JdbcDaoUnityTest {
         attributes.add("email");
 
         // Get the updated value
-        assertEquals("Coincidir", jdbcQuery(keysValues, attributes, null, null).getRecordValues(0).get("name"));
+        assertEquals("Smith", jdbcQuery(keysValues, attributes, null, null).getRecordValues(0).get("name"));
     }
 
     /**
