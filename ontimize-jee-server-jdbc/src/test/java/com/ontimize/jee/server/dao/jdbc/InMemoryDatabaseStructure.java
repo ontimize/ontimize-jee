@@ -10,6 +10,7 @@ import java.sql.Statement;
 public class InMemoryDatabaseStructure {
 
     public void databaseStructureCreation(Statement dbStatement, Connection dbConnection) {
+        // Data generated with https://www.mockaroo.com/
         try {
             dbStatement.execute("CREATE TABLE employees (employeeid INT NOT NULL, name VARCHAR(50) NOT NULL,"
                     + "email VARCHAR(50) NOT NULL,"
@@ -24,37 +25,37 @@ public class InMemoryDatabaseStructure {
                     + "CONSTRAINT FK_ACCOUNT FOREIGN KEY(accountid) REFERENCES accounts(accountid))");
             dbConnection.commit();
 
-            dbStatement.executeUpdate("INSERT INTO employees VALUES (1001,'Vinod', 'vinod@imatia.com', 0)");
-            dbStatement.executeUpdate("INSERT INTO employees VALUES (1002,'Dhwani', 'dhwani@imatia.com', 1)");
-            dbStatement.executeUpdate("INSERT INTO employees VALUES (1003,'Asmi', 'asmi@imatia.com', 2)");
-            dbStatement.executeUpdate("INSERT INTO employees VALUES (1004,'Caroline', 'caroline@imatia.com', 3)");
-            dbStatement.executeUpdate("INSERT INTO employees VALUES (1005,'Cris', 'cris@imatia.com', 4)");
-            dbStatement.executeUpdate("INSERT INTO employees VALUES (1006,'Mark', 'mark@imatia.com', 5)");
-            dbStatement.executeUpdate("INSERT INTO employees VALUES (1007,'Greco','greco@imatia.com', 6)");
-            dbStatement.executeUpdate("INSERT INTO employees VALUES (1008,'Sara', 'sara@imatia.com', 7)");
-            dbStatement.executeUpdate("INSERT INTO employees VALUES (1009,'Unai', 'unai@imatia.com', 8)");
-            dbStatement.executeUpdate("INSERT INTO employees VALUES (1010,'Kike', 'kike@imatia.com', 9)");
-            dbStatement.executeUpdate("INSERT INTO employees VALUES (1011,'Pitt', 'pitt@imatia.com', 10)");
-            dbStatement.executeUpdate("INSERT INTO employees VALUES (1012,'Aaron', 'aaron@imatia.com', 11)");
-            dbStatement.executeUpdate("INSERT INTO employees VALUES (1013,'Maria', 'maria@imatia.com', 12)");
-            dbStatement.executeUpdate("INSERT INTO employees VALUES (1014,'Keery', 'kerry@imatia.com', 13)");
-            dbStatement.executeUpdate("INSERT INTO employees VALUES (1015,'Tolra', 'tolra@imatia.com', 14)");
-            dbStatement.executeUpdate("INSERT INTO employees VALUES (1016,'Elva', 'elva@imatia.com', 15)");
-            dbStatement.executeUpdate("INSERT INTO employees VALUES (1017,'Ander', 'ander@imatia.com', 16)");
-            dbStatement.executeUpdate("INSERT INTO employees VALUES (1018,'Ruben', 'ruben@imatia.com', 17)");
-            dbStatement.executeUpdate("INSERT INTO employees VALUES (1019,'Lenna', 'lenna@imatia.com', 18)");
-            dbStatement.executeUpdate("INSERT INTO employees VALUES (1020,'Solomeo', 'solomeo@imatia.com', 19)");
-            dbStatement.executeUpdate("INSERT INTO employees VALUES (1021,'Monica', 'monica@imatia.com', 20)");
-            dbStatement.executeUpdate("INSERT INTO employees VALUES (1022,'Maru', 'maru@imatia.com', 21)");
-            dbStatement.executeUpdate("INSERT INTO employees VALUES (1023,'Elsa', 'elsa@imatia.com', 22)");
-            dbStatement.executeUpdate("INSERT INTO employees VALUES (1024,'Alfonso', 'alfonso@imatia.com', 23)");
-            dbStatement.executeUpdate("INSERT INTO employees VALUES (1025,'Elver', 'elver@imatia.com', 24)");
+            dbStatement.executeUpdate("INSERT INTO employees VALUES (1001, 'Jeramie', 'jpenticost0@statcounter.com', 0)");
+            dbStatement.executeUpdate("INSERT INTO employees VALUES (1002, 'Paddy', 'poconnell1@flickr.com', 1)");
+            dbStatement.executeUpdate("INSERT INTO employees VALUES (1003, 'Valentin', 'vdongles2@opensource.org', 2)");
+            dbStatement.executeUpdate("INSERT INTO employees VALUES (1004, 'Byrle', 'bserjeant3@digg.com', 3)");
+            dbStatement.executeUpdate("INSERT INTO employees VALUES (1005, 'Karel', 'krickard4@forbes.com', 4)");
+            dbStatement.executeUpdate("INSERT INTO employees VALUES (1006, 'Dionis', 'dallard5@simplemachines.org', 5)");
+            dbStatement.executeUpdate("INSERT INTO employees VALUES (1007, 'Terrell', 'tpoynter6@ebay.co.uk', 6)");
+            dbStatement.executeUpdate("INSERT INTO employees VALUES (1008, 'Simon', 'shabbin7@gov.uk', 7)");
+            dbStatement.executeUpdate("INSERT INTO employees VALUES (1009, 'Anitra', 'abrocking8@cdbaby.com', 8)");
+            dbStatement.executeUpdate("INSERT INTO employees VALUES (1010, 'Marta', 'mpendrid9@webnode.com', 9)");
+            dbStatement.executeUpdate("INSERT INTO employees VALUES (1011, 'Ellynn', 'emorcoma@icq.com', 10)");
+            dbStatement.executeUpdate("INSERT INTO employees VALUES (1012, 'Brana', 'bgurleyb@telegraph.co.uk', 11)");
+            dbStatement.executeUpdate("INSERT INTO employees VALUES (1013, 'Vivian', 'vjaulmec@dmoz.org', 12)");
+            dbStatement.executeUpdate("INSERT INTO employees VALUES (1014, 'Arlyne', 'agartind@unicef.org', 13)");
+            dbStatement.executeUpdate("INSERT INTO employees VALUES (1015, 'Vania', 'vbournee@hao123.com', 14)");
+            dbStatement.executeUpdate("INSERT INTO employees VALUES (1016, 'Leoine', 'lchasteyf@i2i.jp', 15)");
+            dbStatement.executeUpdate("INSERT INTO employees VALUES (1017, 'Kai', 'kcalking@va.gov', 16)");
+            dbStatement.executeUpdate("INSERT INTO employees VALUES (1018, 'Hillyer', 'hgeorgeoth@house.gov', 17)");
+            dbStatement.executeUpdate("INSERT INTO employees VALUES (1019, 'Josey', 'jsevitti@salon.com', 18)");
+            dbStatement.executeUpdate("INSERT INTO employees VALUES (1020, 'Merrielle', 'mchisolmj@nyu.edu', 19)");
+            dbStatement.executeUpdate("INSERT INTO employees VALUES (1021, 'Lilias', 'leynaudk@un.org', 20)");
+            dbStatement.executeUpdate("INSERT INTO employees VALUES (1022, 'Verne', 'vphillpsl@godaddy.com', 21)");
+            dbStatement.executeUpdate("INSERT INTO employees VALUES (1023, 'Matthias', 'mfryem@altervista.org', 22)");
+            dbStatement.executeUpdate("INSERT INTO employees VALUES (1024, 'Felicio', 'fquantrilln@barnesandnoble.com', 23)");
+            dbStatement.executeUpdate("INSERT INTO employees VALUES (1025, 'Kevan', 'kelcoato@etsy.com', 24)");
 
-            dbStatement.executeUpdate("INSERT INTO accounts VALUES (101,'Abanca', 1890.23)");
-            dbStatement.executeUpdate("INSERT INTO accounts VALUES (102,'Caixabank', 567889.34)");
-            dbStatement.executeUpdate("INSERT INTO accounts VALUES (103,'Kutxa', 4532.10)");
-            dbStatement.executeUpdate("INSERT INTO accounts VALUES (104,'Kutxa', 4456645.77)");
-            dbStatement.executeUpdate("INSERT INTO accounts VALUES (105,'Santander', 18765.56)");
+            dbStatement.executeUpdate("INSERT INTO accounts VALUES (101,'Lehner Group', 1890.23)");
+            dbStatement.executeUpdate("INSERT INTO accounts VALUES (102,'Balistreri and Wiegand', 567889.34)");
+            dbStatement.executeUpdate("INSERT INTO accounts VALUES (103,'DuBuque Group', 4532.10)");
+            dbStatement.executeUpdate("INSERT INTO accounts VALUES (104,'Price and Sons', 4456645.77)");
+            dbStatement.executeUpdate("INSERT INTO accounts VALUES (105,'Mayer Inc', 18765.56)");
 
             dbStatement.executeUpdate("INSERT INTO employeeaccounts VALUES (1, 1001, 101, 'T1')");
             dbStatement.executeUpdate("INSERT INTO employeeaccounts VALUES (2, 1002, 102, 'T2')");
