@@ -1,4 +1,4 @@
-## 5.8.0 - In progress
+## 5.8.0 - 12/06/2023
 ### 🚀 Features:
 * **Keycloak**: Allow to configure roles without a database.
 ### 🔧 Bug fixes:
