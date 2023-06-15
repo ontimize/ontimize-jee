@@ -282,9 +282,12 @@ jobs:
                   <td style="overflow-wrap:break-word;word-break:break-word;padding:10px 10px 10px 20px;font-family:arial,helvetica,sans-serif;" align="left">
 
               <div style="color: #6b6b6b; line-height: 140%; text-align: left; word-wrap: break-word;">
-                <p style="font-size: 14px; line-height: 140%;"><span style="font-family: Lato, sans-serif; font-size: 14px; line-height: 19.6px;">Hemos lanzado la versión <strong>${{ env.VERSION }}</strong> de <strong>Ontimize EE</strong> 🚀</span></p>
+                <p style="font-size: 14px; line-height: 140%;"><span style="font-family: Lato, sans-serif; font-size: 14px; line-height: 19.6px;">Hemos lanzado la versión <strong>${{ env.VERSION }}</strong> de <strong>Ontimize EE</strong> 🚀</span>
+                <br/>
+                ${{ env.MULTI }}
+                <br/>
+                </p>
               </div>
-               <p style="font-size: 14px; line-height: 140%;"><span style="font-family: Lato, sans-serif; font-size: 14px; line-height: 19.6px;">${{ env.MULTI }}</p>
                   </td>
                 </tr>
               </tbody>
