@@ -53,6 +53,13 @@ jobs:
           echo 'MULTI<<EOF' >> $GITHUB_ENV
           sed -n '/^## \[.*\] - [0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}/,/^## \[.*\] - [0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}/{/^## \[.*\] - [0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}/!p}' CHANGELOG.md >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
+      - name: Set the value in bash
+        id: step_one
+        run: |
+          EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
+          echo "JSON_RESPONSE<<$EOF" >> "$GITHUB_ENV"
+          curl https://example.com >> "$GITHUB_ENV"
+          echo "$EOF" >> "$GITHUB_ENV"
       - name: Send email
         uses: dawidd6/action-send-mail@v3
         with:
@@ -64,4 +71,4 @@ jobs:
           to: ${{ env.RECIPIENT }}
           from: ${{secrets.EMAIL_USER_FROM}}
           html_body: |
-            ${{ env.MULTI }}
+            ${{ env.EOF }}
