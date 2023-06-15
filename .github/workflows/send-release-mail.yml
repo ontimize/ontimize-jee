@@ -72,3 +72,4 @@ jobs:
           from: ${{secrets.EMAIL_USER_FROM}}
           html_body: |
             ${{ env.JSON_RESPONSE }}
+            ${{ env.EOF }}
