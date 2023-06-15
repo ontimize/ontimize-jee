@@ -50,7 +50,7 @@ jobs:
       - name: Trim Changelog
         run: |
           changelog=$(sed -n '/^## \[.*\] - [0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}/,/^## \[.*\] - [0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}/{/^## \[.*\] - [0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}/!p}' CHANGELOG.md)
-          echo $changelog
+          echo "CHANGELOG=$changelog" >> $GITHUB_ENV
       - name: Send email
         uses: dawidd6/action-send-mail@v3
         with:
