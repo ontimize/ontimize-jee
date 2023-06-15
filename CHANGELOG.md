@@ -12,7 +12,7 @@
 * **Keycloak**: Allow to configure roles without a database.
 ### Fixed 🐛
 * **DefaultOntimizeDaoHelper**: ISQLAdapter is now taking in consideration.
-* **Ontimize rest controller**: Get the next level message when the current one is null
+* **Ontimize rest controller**: Get the next level message when the current one is null.
 ## [5.7.0] - 2023-04-20
 ### Added ✔️
 * **Test**: Added test to StatementHandlers.
