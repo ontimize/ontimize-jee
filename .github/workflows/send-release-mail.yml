@@ -71,5 +71,6 @@ jobs:
           to: ${{ env.RECIPIENT }}
           from: ${{secrets.EMAIL_USER_FROM}}
           html_body: |
-            ${{ env.JSON_RESPONSE }}
-            ${{ env.EOF }}
+            echo ${{ env.JSON_RESPONSE }}
+            echo ====
+            echo ${{ env.EOF }}
