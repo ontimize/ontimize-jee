@@ -46,6 +46,9 @@ jobs:
         run: |
           version=$(mvn help:evaluate -q -Dexpression=project.version -DforceStdout)
           echo "VERSION=$version" >> $GITHUB_ENV
+      - name: Trim Changelog
+        run: |
+          cat CHANGELOG.md
 #      - name: Send email
 #        uses: dawidd6/action-send-mail@v3
 #        with:
