@@ -10,13 +10,9 @@
 ## [5.8.0] - 2023-06-12
 ### Added ✔️
 * **Keycloak**: Allow to configure roles without a database.
-### Changed 🛠️
-### Deprecated 🚩
-### Removed ❌
 ### Fixed 🐛
 * **DefaultOntimizeDaoHelper**: ISQLAdapter is now taking in consideration.
 * **Ontimize rest controller**: Get the next level message when the current one is null
-### Security 🛡️
 ## [5.7.0] - 2023-04-20
 ### Added ✔️
 * **Test**: Added test to StatementHandlers.
@@ -27,11 +23,7 @@
 * **POI Version**: POI version updated to 5.2.3.
 * **POM**: Sorted pom alphabetically and sorted, extracted version to properties and put all dependencies into dependency manager.
 * **Sonar**: Fix some sonar code smells.
-### Deprecated 🚩
-### Removed ❌
-### Fixed 🐛
-### Security 🛡️
-
+* 
 [unreleased]: https://github.com/ontimize/ontimize-jee/compare/5.8.0...HEAD
 [5.8.0]: https://github.com/ontimize/ontimize-jee/compare/5.7.0...5.8.0
 [5.7.0]: https://github.com/ontimize/ontimize-jee/compare/5.6.0...5.7.0
