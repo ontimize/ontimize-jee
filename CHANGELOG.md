@@ -1,8 +1,8 @@
 <!-- ## [Unreleased] -->
 <!-- ### Added ✔️-->
 <!-- ### Changed 🛠️-->
-<!-- ### Deprecated 🚩-->
-<!-- ### Removed ❌-->
+<!-- ### Deprecated 🛑-->
+<!-- ### Removed 🗑️-->
 <!-- ### Fixed 🐛-->
 <!-- ### Security 🛡️-->
 
@@ -23,7 +23,7 @@
 * **POI Version**: POI version updated to 5.2.3.
 * **POM**: Sorted pom alphabetically and sorted, extracted version to properties and put all dependencies into dependency manager.
 * **Sonar**: Fix some sonar code smells.
-* 
+
 [unreleased]: https://github.com/ontimize/ontimize-jee/compare/5.8.0...HEAD
 [5.8.0]: https://github.com/ontimize/ontimize-jee/compare/5.7.0...5.8.0
 [5.7.0]: https://github.com/ontimize/ontimize-jee/compare/5.6.0...5.7.0
