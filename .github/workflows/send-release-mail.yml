@@ -14,9 +14,10 @@ on:
         description: 'Branch'
         type: choice
         required: true
-        default: 'main'
+        default: 'feature/update-mail'
         options:
           - main
+          - feature/update-mail
 jobs:
   Send-mail:
     runs-on: ubuntu-latest
