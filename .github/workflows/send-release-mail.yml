@@ -48,9 +48,10 @@ jobs:
           version=$(mvn help:evaluate -q -Dexpression=project.version -DforceStdout)
           echo "VERSION=$version" >> $GITHUB_ENV
       - name: Trim Changelog
+        id: changelog
         run: |
           changelog=$(sed -n '/^## \[.*\] - [0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}/,/^## \[.*\] - [0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}/{/^## \[.*\] - [0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}/!p}' CHANGELOG.md)
-          echo "CHANGELOG=$changelog" >> $GITHUB_ENV
+          echo "CHANGELOG=$changelog" >> $GITHUB_OUTPUT
       - name: Send email
         uses: dawidd6/action-send-mail@v3
         with:
@@ -276,7 +277,7 @@ jobs:
               <div style="color: #6b6b6b; line-height: 140%; text-align: left; word-wrap: break-word;">
                 <p style="font-size: 14px; line-height: 140%;"><span style="font-family: Lato, sans-serif; font-size: 14px; line-height: 19.6px;">Hemos lanzado la versión <strong>${{ env.VERSION }}</strong> de <strong>Ontimize EE</strong> 🚀</span></p>
               </div>
-                
+                ${{ steps.changelog.outputs.CHANGELOG }}
                   </td>
                 </tr>
               </tbody>
