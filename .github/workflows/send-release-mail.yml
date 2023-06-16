@@ -50,7 +50,7 @@ jobs:
       - name: Replace mail placeholders
         run: |
           sed -i 's/{{ PH_VERSION }}/${{ env.VERSION }}/g' ./.github/workflows/resources/mail.html
-          sed -i "s/{{ PH_CHANGELOG }}/$(sed -n '/^## \[.*\] - [0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}/,/^## \[.*\] - [0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}/{/^## \[.*\] - [0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}/!p}' CHANGELOG.md)/g" ./.github/workflows/resources/mail.html
+          sed -i 's/{{ PH_CHANGELOG }}/"$(sed -n '/^## \[.*\] - [0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}/,/^## \[.*\] - [0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}/{/^## \[.*\] - [0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}/!p}' CHANGELOG.md)"/g' ./.github/workflows/resources/mail.html
       - name: Send email
         uses: dawidd6/action-send-mail@v3
         with:
