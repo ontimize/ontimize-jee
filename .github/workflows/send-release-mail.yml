@@ -70,4 +70,4 @@ jobs:
           subject: TEST - Nueva versión de Ontimize EE 🚀
           to: ${{ env.RECIPIENT }}
           from: ${{secrets.EMAIL_USER_FROM}}
-          html_body: file://./resources/mail.html
+          html_body: file://./.github/workflows/resources/mail.html
