@@ -47,22 +47,10 @@ jobs:
         run: |
           version=$(mvn help:evaluate -q -Dexpression=project.version -DforceStdout)
           echo "VERSION=$version" >> $GITHUB_ENV
-      #- name: Trim Changelog
-        #id: changelog
-        #run: |
-          #echo 'MULTI<<EOF' >> $GITHUB_ENV
-          #sed -n '/^## \[.*\] - [0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}/,/^## \[.*\] - [0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}/{/^## \[.*\] - [0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}/!p}' CHANGELOG.md >> $GITHUB_ENV
-          #echo 'EOF' >> $GITHUB_ENV
-      #- name: Set the value in bash
-        #id: step_one
-        #run: |
-          #EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
-          #echo "JSON_RESPONSE<<$EOF" >> "$GITHUB_ENV"
-          #sed -n '/^## \[.*\] - [0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}/,/^## \[.*\] - [0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}/{/^## \[.*\] - [0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}/!p}' CHANGELOG.md "$GITHUB_ENV"
-          #echo "$EOF" >> "$GITHUB_ENV"
       - name: Replace mail placeholders
         run: |
           sed -i 's/{{ PH_VERSION }}/${{ env.VERSION }}/g' ./.github/workflows/resources/mail.html
+          sed -n '/^## \[.*\] - [0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}/,/^## \[.*\] - [0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}/{/^## \[.*\] - [0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}/!p}' CHANGELOG.md
       - name: Send email
         uses: dawidd6/action-send-mail@v3
         with:
