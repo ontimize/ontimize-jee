@@ -51,9 +51,9 @@ jobs:
         run: |
           sed -i 's/{{ PH_VERSION }}/${{ env.VERSION }}/g' ./.github/workflows/resources/mail.html
           sed -n '/^## \[.*\] - [0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}/,/^## \[.*\] - [0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}/{/^## \[.*\] - [0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}/!p}' CHANGELOG.md > current_change.md
-          sed '/{{ PH_CHANGELOG }}/Q' ./.github/workflows/resources/mail.html > new_mail.html
-          cat current_change.md >> new_mail.html
-          sed -e '1,/{{ PH_CHANGELOG }}/d' ./.github/workflows/resources/mail.html >> new_mail.html
+          sed '/{{ PH_CHANGELOG }}/Q' ./.github/workflows/resources/mail.html > mail_to_send.html
+          cat current_change.md >> mail_to_send.html
+          sed -e '1,/{{ PH_CHANGELOG }}/d' ./.github/workflows/resources/mail.html >> mail_to_send.html
       - name: Send email
         uses: dawidd6/action-send-mail@v3
         with:
@@ -61,8 +61,8 @@ jobs:
           server_port: 587
           username: ${{ secrets.EMAIL_USER }}
           password: ${{secrets.EMAIL_PASSWORD}}
-          subject: TEST - Nueva versión de Ontimize EE 🚀
+          subject: Nueva versión de Ontimize EE 🚀
           to: ${{ env.RECIPIENT }}
           from: ${{secrets.EMAIL_USER_FROM}}
-          html_body: file://new_mail.html
+          html_body: file://mail_to_send.html
           convert_markdown: true
