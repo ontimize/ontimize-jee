@@ -51,9 +51,8 @@ jobs:
         run: |
           sed -i 's/{{ PH_VERSION }}/${{ env.VERSION }}/g' ./.github/workflows/resources/mail.html
           sed -n '/^## \[.*\] - [0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}/,/^## \[.*\] - [0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}/{/^## \[.*\] - [0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}/!p}' CHANGELOG.md > current_change.md
-          fromfile2=$(cat current_change.md)
-          echo $fromfile2
-          sed -i "s/{{ PH_CHANGELOG }}/$fromfile2/g" ./.github/workflows/resources/mail.html
+          cat current_change.md
+          sed -i "s/{{ PH_CHANGELOG }}/$(cat current_change.md)/g" ./.github/workflows/resources/mail.html
       - name: Send email
         uses: dawidd6/action-send-mail@v3
         with:
