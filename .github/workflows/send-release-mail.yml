@@ -74,7 +74,7 @@ jobs:
           username: ${{ secrets.EMAIL_USER }}
           password: ${{secrets.EMAIL_PASSWORD}}
           subject: Nueva versión de Ontimize EE 🚀
-          to: testmensajes+imatia.com@yammer.com
+          to: ${{ env.YAMMER_POSTING_ADDRESS }}
           from: ${{secrets.EMAIL_USER_FROM}}
           html_body: file://mail_to_send.html
           convert_markdown: true
