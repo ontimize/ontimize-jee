@@ -66,3 +66,15 @@ jobs:
           from: ${{secrets.EMAIL_USER_FROM}}
           html_body: file://mail_to_send.html
           convert_markdown: true
+      - name: Send email
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.office365.com
+          server_port: 587
+          username: ${{ secrets.EMAIL_USER }}
+          password: ${{secrets.EMAIL_PASSWORD}}
+          subject: Nueva versión de Ontimize EE 🚀
+          to: testmensajes+imatia.com@yammer.com
+          from: ${{secrets.EMAIL_USER_FROM}}
+          html_body: file://mail_to_send.html
+          convert_markdown: true
