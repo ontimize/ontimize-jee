@@ -54,6 +54,7 @@ jobs:
           sed '/{{ PH_CHANGELOG }}/Q' ./.github/workflows/resources/mail.html > new_mail.html
           cat current_change.md >> new_mail.html
           cat new_mail.html
+          sed -e '1,/pattern/ d' ./.github/workflows/resources/mail.html>> new_mail.html
       - name: Send email
         uses: dawidd6/action-send-mail@v3
         with:
@@ -64,4 +65,4 @@ jobs:
           subject: TEST - Nueva versión de Ontimize EE 🚀
           to: ${{ env.RECIPIENT }}
           from: ${{secrets.EMAIL_USER_FROM}}
-          html_body: file://./.github/workflows/resources/mail.html
+          html_body: file://new_mail.html
