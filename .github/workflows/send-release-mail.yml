@@ -54,7 +54,6 @@ jobs:
           sed '/{{ PH_CHANGELOG }}/Q' ./.github/workflows/resources/mail.html > new_mail.html
           cat current_change.md >> new_mail.html
           sed -e '1,/{{ PH_CHANGELOG }}/d' ./.github/workflows/resources/mail.html >> new_mail.html
-          cat new_mail.html
       - name: Send email
         uses: dawidd6/action-send-mail@v3
         with:
