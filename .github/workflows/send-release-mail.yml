@@ -10,6 +10,14 @@ on:
         options:
           - Test
           - Imatia
+      BRANCH:
+        description: 'Branch'
+        type: choice
+        required: true
+        default: 'main'
+        options:
+          - main
+          - develop
 jobs:
   Send-mail:
     runs-on: ubuntu-latest
