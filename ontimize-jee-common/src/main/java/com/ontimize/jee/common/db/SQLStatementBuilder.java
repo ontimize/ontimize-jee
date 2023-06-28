@@ -2880,8 +2880,8 @@ public abstract class SQLStatementBuilder {
          */
         private void createQueryConditionsFromExpressionWhenLeftOperandIsField(BasicExpression expression, List<Object> values, StringBuilder sb, boolean upper, Object lo, Object ro, Object expressionOperator) {
             lo = this.getColumnName(lo.toString());
-            if ((BasicOperator.LIKE_OP.equals(expressionOperator)
-                    || (BasicOperator.NOT_LIKE_OP.equals(expressionOperator)) && upper) || ((ro instanceof String) && this.upperStrings)) {
+            if (((BasicOperator.LIKE_OP.equals(expressionOperator)
+                    || BasicOperator.NOT_LIKE_OP.equals(expressionOperator)) && upper) || ((ro instanceof String) && this.upperStrings)) {
                 lo = DefaultSQLConditionValuesProcessor.UPPER_FUNCTION + "(" + lo + ")";
             }
 
