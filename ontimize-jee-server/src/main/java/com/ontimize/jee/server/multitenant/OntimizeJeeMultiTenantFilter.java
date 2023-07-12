@@ -45,34 +45,30 @@ public class OntimizeJeeMultiTenantFilter implements Filter {
 					MultiTenantContextHolder.setTenant(tenantId);
 				}
 
-				try {
-					filterChain.doFilter(request, response);
-				} catch (Exception e) {
-					OntimizeJeeMultiTenantFilter.logger.error(null, e);
-				}
+				this.doFilter(filterChain, request, response);
 			} else if (tenantId == null) {
 				final HttpServletResponse httpServletResponse = (HttpServletResponse) response;
 				httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "No tenant provided");
 			} else {
 				MultiTenantContextHolder.setTenant(tenantId);
 
-				try {
-					filterChain.doFilter(request, response);
-				} catch (Exception e) {
-					OntimizeJeeMultiTenantFilter.logger.error(null, e);
-				}
+				this.doFilter(filterChain, request, response);
 			}
 		} else {
-			try {
-				filterChain.doFilter(request, response);
-			} catch (Exception e) {
-				OntimizeJeeMultiTenantFilter.logger.error(null, e);
-			}
+			this.doFilter(filterChain, request, response);
 		}
 	}
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
 		// TODO Auto-generated method stub
+	}
+
+	private void doFilter(final FilterChain filterChain, final ServletRequest request, final ServletResponse response) {
+		try {
+			filterChain.doFilter(request, response);
+		} catch (Exception e) {
+			OntimizeJeeMultiTenantFilter.logger.error(null, e);
+		}
 	}
 }
