@@ -37,15 +37,24 @@ public class OntimizeJeeMultiTenantFilter implements Filter {
 			throws IOException, ServletException {
 
 		if (request instanceof HttpServletRequest) {
-			HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-			HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+			final HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+			final String tenantId = httpServletRequest.getHeader("X-Tenant");
 
 			if (HttpMethod.OPTIONS.name().equals(httpServletRequest.getMethod()) || this.pathMatcherIgnorePaths.matches(httpServletRequest)) {
-				filterChain.doFilter(request, response);
-			} else if (httpServletRequest.getHeader("X-Tenant") == null) {
+				if (tenantId != null) {
+					MultiTenantContextHolder.setTenant(tenantId);
+				}
+
+				try {
+					filterChain.doFilter(request, response);
+				} catch (Exception e) {
+					OntimizeJeeMultiTenantFilter.logger.error(null, e);
+				}
+			} else if (tenantId == null) {
+				final HttpServletResponse httpServletResponse = (HttpServletResponse) response;
 				httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "No tenant provided");
 			} else {
-				MultiTenantContextHolder.setTenant(httpServletRequest.getHeader("X-Tenant"));
+				MultiTenantContextHolder.setTenant(tenantId);
 
 				try {
 					filterChain.doFilter(request, response);
