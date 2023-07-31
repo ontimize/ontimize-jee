@@ -7,6 +7,7 @@
 <!-- ### Security 🛡️-->
 
 ## [Unreleased]
+## [5.9.0] - 2023-07-31
 ### Added ✔️
 * **Multi tenant**: Add feature to set tenants on non-secured requests.
 ### Changed 🛠️
@@ -33,6 +34,7 @@
 * **POM**: Sorted pom alphabetically and sorted, extracted version to properties and put all dependencies into dependency manager.
 * **Sonar**: Fix some sonar code smells.
 
-[unreleased]: https://github.com/ontimize/ontimize-jee/compare/5.8.0...HEAD
+[unreleased]: https://github.com/ontimize/ontimize-jee/compare/5.9.0...HEAD
+[5.9.0]: https://github.com/ontimize/ontimize-jee/compare/5.8.0...5.9.0
 [5.8.0]: https://github.com/ontimize/ontimize-jee/compare/5.7.0...5.8.0
 [5.7.0]: https://github.com/ontimize/ontimize-jee/compare/5.6.0...5.7.0
