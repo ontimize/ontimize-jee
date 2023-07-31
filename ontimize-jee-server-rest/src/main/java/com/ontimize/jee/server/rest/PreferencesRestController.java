@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import com.ontimize.jee.server.dao.common.INameConvention;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -33,6 +34,8 @@ import com.ontimize.jee.common.services.preferences.IPreferencesService;
 @RestController
 @RequestMapping("${ontimize.report.preferences.url:/preferences}")
 public class PreferencesRestController {
+    @Autowired
+    private INameConvention nameConvention;
     @Qualifier("PreferencesService")
     @Autowired
     private IPreferencesService preferencesService;
@@ -40,6 +43,8 @@ public class PreferencesRestController {
     public IPreferencesService getService() {
         return this.preferencesService;
     }
+
+
 
     public static final String ID_QUERY = "ID";
     public static final String NAME_QUERY = "NAME";
@@ -54,17 +59,18 @@ public class PreferencesRestController {
         EntityResult res = new EntityResultMapImpl();
         if (param != null) {
             try {
+
                 ObjectMapper mapper = new ObjectMapper();
                 mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
                 mapper.setSerializationInclusion(Include.NON_NULL);
                 String serializedParams = mapper.writeValueAsString(param.getParams());
 
                 Map<String, Object> attrMap = new HashMap<>();
-                attrMap.put(NAME_QUERY, param.getName());
-                attrMap.put(DESCRIPTION_QUERY, param.getDescription());
-                attrMap.put(ENTITY_QUERY, param.getEntity() + "-" + param.getService());
-                attrMap.put(PREFERENCES_QUERY, serializedParams);
-                attrMap.put(TYPE_QUERY, param.getType().ordinal());
+                attrMap.put(this.nameConvention.convertName(NAME_QUERY), param.getName());
+                attrMap.put(this.nameConvention.convertName(DESCRIPTION_QUERY), param.getDescription());
+                attrMap.put(this.nameConvention.convertName(ENTITY_QUERY), param.getEntity() + "-" + param.getService());
+                attrMap.put(this.nameConvention.convertName(PREFERENCES_QUERY), serializedParams);
+                attrMap.put(this.nameConvention.convertName(TYPE_QUERY), param.getType().ordinal());
 
                 res = preferencesService.preferenceInsert(attrMap);
                 return new ResponseEntity<>(res, HttpStatus.OK);
