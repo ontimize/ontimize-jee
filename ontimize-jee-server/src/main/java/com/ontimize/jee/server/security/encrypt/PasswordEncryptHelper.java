@@ -1,15 +1,17 @@
 package com.ontimize.jee.server.security.encrypt;
 
-import com.ontimize.jee.common.naming.I18NNaming;
-import com.ontimize.jee.common.util.Base64Utils;
+import java.security.MessageDigest;
+import java.util.Map;
+
+import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.stereotype.Component;
 
-import java.security.MessageDigest;
-import java.util.Map;
+import com.ontimize.jee.common.naming.I18NNaming;
+import com.ontimize.jee.common.util.Base64Utils;
 
 /**
  * The Class PasswordEncryptHelper.
@@ -49,10 +51,16 @@ public class PasswordEncryptHelper implements IPasswordEncryptHelper {
 
     @Override
     public void checkPasswords(String storedPass, Object pass) {
-        if ((pass == null) || (!storedPass.equals(this.encrypt(pass.toString())) && !storedPass.equals(pass))) {
+        final boolean encrypted = this.isHash(storedPass);
+        if ((pass == null) || (encrypted && !storedPass.equals(this.encrypt(pass.toString())))
+                || (!encrypted && !storedPass.equals(pass))) {
             logger.error("Authorization denied!");
             throw new AuthenticationCredentialsNotFoundException(I18NNaming.E_AUTH_PASSWORD_NOT_MATCH);
         }
     }
 
+    private boolean isHash(String string) {
+        final int length = string.length();
+        return length >= 28 && length % 4 == 0 && Base64.isBase64(string);
+    }
 }
