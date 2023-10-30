@@ -186,7 +186,7 @@ public abstract class BasePdfExporter<T extends Document> implements Exporter<T>
 					final PdfCellStyle ret = new DefaultPdfPCellStyle();
 					ret.cloneStyleFrom(cellStyle);
 					return ret;
-				}, () -> new DefaultPdfDataFormat()));
+				}, DefaultPdfDataFormat::new));
 		if (userStyle != null) {
 			updateCellStyle(cell, userStyle);
 		}
@@ -371,7 +371,7 @@ public abstract class BasePdfExporter<T extends Document> implements Exporter<T>
 					final PdfCellStyle ret = new DefaultPdfPCellStyle();
 					ret.cloneStyleFrom(cellStyle);
 					return ret;
-				}, () -> new DefaultPdfDataFormat()));
+				}, DefaultPdfDataFormat::new));
 		if (userStyle != null) {
 			updateCellStyle(cell, userStyle);
 		}
