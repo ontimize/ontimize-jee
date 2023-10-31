@@ -7,7 +7,8 @@
 <!-- ### Security 🛡️-->
 
 ## [Unreleased]
-* **Security**: Do not allow logging in using the password hash
+* **Security**: Do not allow logging in using the password hash.
+* **Keycloak**: Allow to use the Keycloak authentication on non-http calls.
 ## [5.9.0] - 2023-07-31
 ### Added ✔️
 * **Multi tenant**: Add feature to set tenants on non-secured requests.

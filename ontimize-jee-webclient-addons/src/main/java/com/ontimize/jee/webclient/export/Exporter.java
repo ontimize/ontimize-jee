@@ -4,7 +4,6 @@ import com.ontimize.jee.webclient.export.exception.ExportException;
 import com.ontimize.jee.webclient.export.providers.ExportColumnProvider;
 import com.ontimize.jee.webclient.export.providers.ExportDataProvider;
 import com.ontimize.jee.webclient.export.providers.ExportStyleProvider;
-import com.ontimize.jee.webclient.export.providers.SheetNameProvider;
 import com.ontimize.jee.webclient.export.util.ExportOptions;
 
 /**
@@ -15,10 +14,8 @@ import com.ontimize.jee.webclient.export.util.ExportOptions;
 
 public interface Exporter<T> {
 
-    T export(
-            final ExportColumnProvider columnProvider,
-            final ExportDataProvider dataProvider,
-            final ExportStyleProvider styleProvider,
-            final ExportOptions exportOptions) throws ExportException;
+	T export(final ExportColumnProvider columnProvider, final ExportDataProvider dataProvider,
+			final ExportStyleProvider styleProvider, final ExportOptions exportOptions, final boolean landscape)
+			throws ExportException;
 
 }

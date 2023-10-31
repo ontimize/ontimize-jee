@@ -22,9 +22,14 @@ public class OntimizeKeycloakConfigResolver
 	private final Map<String, KeycloakDeployment> cache = new ConcurrentHashMap<>();
 
 	@Override
-	public KeycloakDeployment resolve(Request request) {
+	public KeycloakDeployment resolve(final Request request) {
+		final String tenantId = request.getHeader("X-Tenant");
+
+		return this.resolve(tenantId);
+	}
+
+	public KeycloakDeployment resolve(final String tenantId) {
 		KeycloakDeployment deployment = null;
-		String tenantId = null;
 
 		if (this.config instanceof IOntimizeKeycloakSingleTenantConfiguration) {
 			final IOntimizeKeycloakSingleTenantConfiguration singleTenantConfig = (IOntimizeKeycloakSingleTenantConfiguration) this.config;
@@ -43,41 +48,37 @@ public class OntimizeKeycloakConfigResolver
 
 				cache.put(singleTenantConfig.getRealm(), deployment);
 			}
+		} else if (tenantId == null) {
+			throw new OntimizeJEERuntimeException("No tenant provided");
+		} else if (cache.containsKey(tenantId)) {
+			deployment = cache.get(tenantId);
+		} else if (this.config instanceof IOntimizeKeycloakMultiTenantConfiguration) {
+			final IOntimizeKeycloakMultiTenantConfiguration multitTenantConfig = (IOntimizeKeycloakMultiTenantConfiguration) this.config;
+			final AdapterConfig ac = new AdapterConfig();
+			ac.setAuthServerUrl(multitTenantConfig.getAuthServerUrl());
+			ac.setRealm(tenantId); // Realm
+			ac.setResource(multitTenantConfig.getResource()); // Client Id
+			ac.setPublicClient(multitTenantConfig.isPublicClient());
+			ac.setUseResourceRoleMappings(multitTenantConfig.isUseResourceRoleMappings());
+
+			deployment = KeycloakDeploymentBuilder.build(ac);
+
+			cache.put(tenantId, deployment);
+		} else if (this.tenantsAuthenticationInfo == null) {
+			throw new OntimizeJEERuntimeException("No tenants authentication info provided");
+		} else if (this.tenantsAuthenticationInfo.containsKey(tenantId)) {
+			final ITenantAuthenticationInfo auth = this.tenantsAuthenticationInfo.get(tenantId);
+			final AdapterConfig ac = new AdapterConfig();
+			ac.setAuthServerUrl(auth.getUrl());
+			ac.setRealm(auth.getRealm()); // Realm
+			ac.setResource(auth.getClient()); // Client Id
+			ac.setPublicClient(this.config.isPublicClient());
+			ac.setUseResourceRoleMappings(this.config.isUseResourceRoleMappings());
+			deployment = KeycloakDeploymentBuilder.build(ac);
+
+			cache.put(tenantId, deployment);
 		} else {
-			tenantId = request.getHeader("X-Tenant");
-
-			if (tenantId == null) {
-				throw new OntimizeJEERuntimeException("No tenant provided");
-			} else if (cache.containsKey(tenantId)) {
-				deployment = cache.get(tenantId);
-			} else if (this.config instanceof IOntimizeKeycloakMultiTenantConfiguration) { 
-				final IOntimizeKeycloakMultiTenantConfiguration multitTenantConfig = (IOntimizeKeycloakMultiTenantConfiguration) this.config;
-				final AdapterConfig ac = new AdapterConfig();
-				ac.setAuthServerUrl(multitTenantConfig.getAuthServerUrl());
-				ac.setRealm(tenantId); // Realm
-				ac.setResource(multitTenantConfig.getResource()); // Client Id
-				ac.setPublicClient(multitTenantConfig.isPublicClient());
-				ac.setUseResourceRoleMappings(multitTenantConfig.isUseResourceRoleMappings());
-
-				deployment = KeycloakDeploymentBuilder.build(ac);
-
-				cache.put(tenantId, deployment);
-			} else if (this.tenantsAuthenticationInfo == null) {
-				throw new OntimizeJEERuntimeException("No tenants authentication info provided");
-			} else if (this.tenantsAuthenticationInfo.containsKey(tenantId)) {
-				final ITenantAuthenticationInfo auth = this.tenantsAuthenticationInfo.get(tenantId);
-				final AdapterConfig ac = new AdapterConfig();
-				ac.setAuthServerUrl(auth.getUrl());
-				ac.setRealm(auth.getRealm()); // Realm
-				ac.setResource(auth.getClient()); // Client Id
-				ac.setPublicClient(this.config.isPublicClient());
-				ac.setUseResourceRoleMappings(this.config.isUseResourceRoleMappings());
-				deployment = KeycloakDeploymentBuilder.build(ac);
-
-				cache.put(tenantId, deployment);
-			} else {
-				throw new OntimizeJEERuntimeException("No authentication info provided for tenant " + tenantId);
-			}
+			throw new OntimizeJEERuntimeException("No authentication info provided for tenant " + tenantId);
 		}
 
 		return deployment;

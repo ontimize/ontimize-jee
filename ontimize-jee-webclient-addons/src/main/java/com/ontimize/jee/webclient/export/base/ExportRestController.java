@@ -17,82 +17,87 @@ import java.io.File;
 
 public class ExportRestController extends BaseExportRestController<ExportService> implements ApplicationContextAware {
 
-    private static final Logger logger = LoggerFactory.getLogger(ExportRestController.class);
+	private static final Logger logger = LoggerFactory.getLogger(ExportRestController.class);
 
-    protected ApplicationContext applicationContext;
+	protected ApplicationContext applicationContext;
 
-    private ExportService exportService;
+	private ExportService exportService;
 
-    @Override
-    public ExportService getService() {
-        return this.exportService;
-    }
+	@Override
+	public ExportService getService() {
+		return this.exportService;
+	}
 
-    public ExportRestController() {
-        // no-op
-    }
+	public ExportRestController() {
+		// no-op
+	}
 
-    /**
-     * Receive the query parameters, creates the temporal file and call the service
-     *
-     * @param exportParam   The query parameters
-     * @param fileExtension The extension of the file to export
-     * @param response      The HTTP response
-     * @throws Exception
-     */
-    @PostMapping(value = {"/{extension}"}, consumes = {"application/json"}, produces = {"application/json"})
-    public ResponseEntity<Void> exportQuery(@PathVariable(name = "extension", required = true) final String fileExtension,
-                                            @RequestBody ExportQueryParameters exportParam, HttpServletResponse response) {
-        try {
-            // retrieve specific export service for file extension
-            this.exportService = configureExportService(fileExtension);
-            // verify required attributes
-            verifyExportParameter(exportParam);
-            // process query parameters (basic expressions, filter expression, etc.)
-            processQueryParameter(exportParam);
-            // do export
-            File exportFile = getService().export(exportParam);
-            // add export file to http response
-            return doResponse(response, exportFile);
-        } catch (Exception ex) {
-            logger.error(ex.getMessage(), ex);
-            return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+	/**
+	 * Receive the query parameters, creates the temporal file and call the service
+	 *
+	 * @param exportParam   The query parameters
+	 * @param fileExtension The extension of the file to export
+	 * @param response      The HTTP response
+	 * @throws Exception
+	 */
+	@PostMapping(value = { "/{extension}" }, consumes = { "application/json" }, produces = { "application/json" })
+	public ResponseEntity<Void> exportQuery(
+			@PathVariable(name = "extension", required = true) final String fileExtension,
+			@RequestBody ExportQueryParameters exportParam, HttpServletResponse response) {
+		try {
+			// retrieve specific export service for file extension
+			this.exportService = configureExportService(fileExtension);
+			// verify required attributes
+			verifyExportParameter(exportParam);
+			// process query parameters (basic expressions, filter expression, etc.)
+			processQueryParameter(exportParam);
+			// do export
+			File exportFile = getService().export(exportParam);
+			// add export file to http response
+			return doResponse(response, exportFile);
+		} catch (Exception ex) {
+			logger.error(ex.getMessage(), ex);
+			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 
-    protected ExportService configureExportService(final String fileExtension) throws ExportException {
-        ExportService.ExportExtensionTypes ext = ExportService.ExportExtensionTypes.valueOf(fileExtension);
-        ExportService service;
-        switch (ext) {
-            case xlsx:
-                service = loadServiceBean("ExcelExportService");
-                break;
-            case csv:
-                service = loadServiceBean("CsvExportService");
-                break;
-            case pdf:
-                service = loadServiceBean("PdfExportService");
-                break;
-            default:
-                service = null;
-        }
-        if (service == null) {
-            throw new ExportException(String.format("Export service for extension %s not found", fileExtension));
-        }
-        return service;
-    }
+	protected ExportService configureExportService(final String fileExtension) throws ExportException {
+		ExportService.ExportExtensionTypes ext = ExportService.ExportExtensionTypes.valueOf(fileExtension);
+		ExportService service;
+		switch (ext) {
+		case xlsx:
+			service = loadServiceBean("ExcelExportService");
+			break;
+		case csv:
+			service = loadServiceBean("CsvExportService");
+			break;
+		case pdf:
+			service = loadServiceBean("extendedPdfExportService");
+			if (service == null) {
+				service = loadServiceBean("PdfExportService");
+			}
 
-    protected ExportService loadServiceBean(final String beanName) {
-        ExportService bean = null;
-        Object serviceBean = applicationContext.getBean(beanName);
-        if (serviceBean instanceof ExportService) {
-            bean = (ExportService) serviceBean;
-        }
-        return bean;
-    }
+			break;
+		default:
+			service = null;
+		}
+		if (service == null) {
+			throw new ExportException(String.format("Export service for extension %s not found", fileExtension));
+		}
+		return service;
+	}
 
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
-    }
+	protected ExportService loadServiceBean(final String beanName) {
+		ExportService bean = null;
+		Object serviceBean = applicationContext.getBean(beanName);
+		if (serviceBean instanceof ExportService) {
+			bean = (ExportService) serviceBean;
+		}
+		return bean;
+	}
+
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+		this.applicationContext = applicationContext;
+	}
 }
