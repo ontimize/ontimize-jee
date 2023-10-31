@@ -1,6 +1,8 @@
 package com.ontimize.jee.common.db.handler;
 
 import com.ontimize.jee.common.db.SQLStatementBuilder;
+import com.ontimize.jee.common.db.sql.OracleSQLHandler;
+import com.ontimize.jee.common.db.sql.SQLHandler;
 import com.ontimize.jee.common.dto.EntityResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +20,18 @@ import java.util.Map;
 public class OracleSQLStatementHandler extends DefaultSQLStatementHandler {
 
     static final Logger logger = LoggerFactory.getLogger(SQLStatementBuilder.class);
+
+    public static final String CAST_FUNCTION = "CAST";
+
+    private SQLHandler sqlHandler = new OracleSQLHandler();
+
+    public SQLHandler getSqlHandler() {
+        return this.sqlHandler;
+    }
+
+    public void setSqlHandler(SQLHandler sqlHandler) {
+        this.sqlHandler = sqlHandler;
+    }
 
     public OracleSQLStatementHandler() {
         super();
@@ -164,4 +178,13 @@ public class OracleSQLStatementHandler extends DefaultSQLStatementHandler {
 
     }
 
+    @Override
+    public String addCastStatement(final String expression, final int fromSqlType, final int toSqlType) {
+        try {
+            return OracleSQLStatementHandler.CAST_FUNCTION + "(" + expression + " AS " + sqlHandler.getSQLTypeName(toSqlType) + ")";
+        } catch (Exception e) {
+            OracleSQLStatementHandler.logger.error("Could not add cast statement", e);
+            return expression;
+        }
+    }
 }

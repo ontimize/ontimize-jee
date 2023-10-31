@@ -12,11 +12,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
+import java.sql.Types;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -1074,9 +1076,15 @@ public abstract class SQLStatementBuilder {
     public static class BasicField implements Field {
 
         protected String name = null;
+        protected Integer sqlType = null;
 
         public BasicField(String name) {
             this.name = name;
+        }
+
+        public BasicField(final String name, final Integer sqlType) {
+            this.name = name;
+            this.sqlType = sqlType;
         }
 
         @Override
@@ -1084,6 +1092,13 @@ public abstract class SQLStatementBuilder {
             return this.name;
         }
 
+        public void setSqlType(final Integer sqlType) {
+            this.sqlType = sqlType;
+        }
+
+        public Integer getSqlType() {
+            return this.sqlType;
+        }
     }
 
     /**
@@ -2879,17 +2894,23 @@ public abstract class SQLStatementBuilder {
          * @param expressionOperator
          */
         private void createQueryConditionsFromExpressionWhenLeftOperandIsField(BasicExpression expression, List<Object> values, StringBuilder sb, boolean upper, Object lo, Object ro, Object expressionOperator) {
-            lo = this.getColumnName(lo.toString());
+            String lop = this.getColumnName(lo.toString());
             if (((BasicOperator.LIKE_OP.equals(expressionOperator)
                     || BasicOperator.NOT_LIKE_OP.equals(expressionOperator)) && upper) || ((ro instanceof String) && this.upperStrings)) {
-                lo = DefaultSQLConditionValuesProcessor.UPPER_FUNCTION + "(" + lo + ")";
+                if (this.handler != null && lo instanceof BasicField) {
+                    final Integer sqlType = ((BasicField) lo).getSqlType();
+                    if (Objects.requireNonNullElse(sqlType, Types.VARCHAR) != Types.VARCHAR) {
+                        lop = handler.addCastStatement(lop, sqlType, Types.VARCHAR);
+                    }
+                }
+                lop = DefaultSQLConditionValuesProcessor.UPPER_FUNCTION + "(" + lop + ")";
             }
 
             if (ro instanceof SearchValue) {
                 boolean brakets = expression.getBrackets();
-                sb.append(SQLStatementBuilder.createQueryConditionsSearchValue(ro, values, brakets, lo));
+                sb.append(SQLStatementBuilder.createQueryConditionsSearchValue(ro, values, brakets, lop));
             } else {
-                sb.append(lo);
+                sb.append(lop);
                 sb.append(" ");
                 sb.append(expressionOperator);
                 if (ro != null) {
