@@ -1,5 +1,8 @@
 package com.ontimize.jee.webclient.export.base;
 
+import com.itextpdf.kernel.geom.PageSize;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfPage;
 import com.itextpdf.layout.Document;
 import com.ontimize.jee.webclient.export.ExportColumn;
 import com.ontimize.jee.webclient.export.HeadExportColumn;
@@ -108,7 +111,10 @@ public class PdfExportService extends BaseExportService {
      */
     public Document generatePdfDocument(File pdfFile, ExportColumnProvider columnProvider, ExportDataProvider dataProvider,
                                         ExportStyleProvider<PdfCellStyle, PdfDataFormat> styleProvider, ExportOptions exportOptions) throws ExportException {
-        return new DefaultPdfExporter(pdfFile).export(columnProvider, dataProvider, styleProvider, exportOptions);
+        
+    	 return new DefaultPdfExporter(pdfFile).export(columnProvider, dataProvider, styleProvider, exportOptions, false);
+        
+       
     }
 
     @Override
