@@ -1,12 +1,15 @@
 package com.ontimize.jee.common.db.handler;
 
 import com.ontimize.jee.common.db.SQLStatementBuilder;
+import com.ontimize.jee.common.db.sql.MySQLSQLHandler;
+import com.ontimize.jee.common.db.sql.SQLHandler;
 import com.ontimize.jee.common.dto.EntityResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +21,18 @@ public class MySQLSQLStatementHandler extends DefaultSQLStatementHandler {
     public static final String LIMIT = " LIMIT ";
 
     public static final String OFFSET = " OFFSET ";
+
+    public static final String CAST_FUNCTION = "CAST";
+
+    private SQLHandler sqlHandler = new MySQLSQLHandler();
+
+    public SQLHandler getSqlHandler() {
+        return this.sqlHandler;
+    }
+
+    public void setSqlHandler(SQLHandler sqlHandler) {
+        this.sqlHandler = sqlHandler;
+    }
 
     @Override
     public SQLStatementBuilder.SQLStatement createSelectQuery(String table, List requestedColumns, Map conditions,
@@ -160,4 +175,14 @@ public class MySQLSQLStatementHandler extends DefaultSQLStatementHandler {
         return sql.toString();
     }
 
+    @Override
+    public String addCastStatement(final String expression, final int fromSqlType, final int toSqlType) {
+        try {
+            final int sqlType = (toSqlType == Types.VARCHAR ? Types.CHAR : toSqlType); 
+            return MySQLSQLStatementHandler.CAST_FUNCTION + "(" + expression + " AS " + sqlHandler.getSQLTypeName(sqlType) + ")";
+        } catch (Exception e) {
+            MySQLSQLStatementHandler.logger.error("Could not add cast statement", e);
+            return expression;
+        }
+    }
 }

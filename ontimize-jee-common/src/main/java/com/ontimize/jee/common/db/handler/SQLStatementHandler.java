@@ -158,4 +158,11 @@ public interface SQLStatementHandler {
      */
     public String convertPaginationStatement(String statement, int startIndex, int recordNumber);
 
+    /**
+     * Add a function to cast the expression as the provided sqltype
+     * @param expression
+     * @param sqlType
+     * @return a new sql expression with the cast function added
+     */
+    public String addCastStatement(final String expression, final int fromSqlType, final int toSqlType);
 }

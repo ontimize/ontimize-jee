@@ -1,9 +1,12 @@
 package com.ontimize.jee.common.db.handler;
 
 import com.ontimize.jee.common.db.SQLStatementBuilder;
+import com.ontimize.jee.common.db.sql.HSQLDBSQLHandler;
+import com.ontimize.jee.common.db.sql.SQLHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.List;
@@ -15,6 +18,18 @@ public class HSQLDBSQLStatementHandler extends DefaultSQLStatementHandler {
     public static final String LIMIT = " LIMIT ";
 
     public static final String OFFSET = " OFFSET ";
+
+    public static final String CAST_FUNCTION = "CAST";
+
+    private SQLHandler sqlHandler = new HSQLDBSQLHandler();
+
+    public SQLHandler getSqlHandler() {
+        return this.sqlHandler;
+    }
+
+    public void setSqlHandler(SQLHandler sqlHandler) {
+        this.sqlHandler = sqlHandler;
+    }
 
     @Override
     public boolean isPageable() {
@@ -117,4 +132,14 @@ public class HSQLDBSQLStatementHandler extends DefaultSQLStatementHandler {
         return sql.toString();
     }
 
+    @Override
+    public String addCastStatement(final String expression, final int fromSqlType, final int toSqlType) {
+        try {
+            final int sqlType = (toSqlType == Types.VARCHAR ? Types.LONGVARCHAR : toSqlType); 
+            return HSQLDBSQLStatementHandler.CAST_FUNCTION + "(" + expression + " AS " + sqlHandler.getSQLTypeName(sqlType) + ")";
+        } catch (Exception e) {
+            HSQLDBSQLStatementHandler.logger.error("Could not add cast statement", e);
+            return expression;
+        }
+    }
 }
