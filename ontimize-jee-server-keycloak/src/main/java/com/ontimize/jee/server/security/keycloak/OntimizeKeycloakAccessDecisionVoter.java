@@ -17,21 +17,6 @@ import com.ontimize.jee.server.security.authorization.OntimizeAccessDecisionVote
 public class OntimizeKeycloakAccessDecisionVoter extends OntimizeAccessDecisionVoter {
 
 	/**
-	 * Vote default.
-	 * 
-	 * @param arg0 arg0
-	 * @param arg1 arg1
-	 * @param arg2 arg2
-	 * @return the int
-	 */
-	private int voteDefault(final Authentication arg0, final Object arg1, final Collection<ConfigAttribute> arg2) {
-		if (this.getDefaultVoter() == null) {
-			return AccessDecisionVoter.ACCESS_ABSTAIN;
-		}
-		return this.getDefaultVoter().vote(arg0, arg1, arg2);
-	}
-
-	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -40,6 +25,9 @@ public class OntimizeKeycloakAccessDecisionVoter extends OntimizeAccessDecisionV
 		if (object instanceof ReflectiveMethodInvocation) {
 			return super.vote(authentication, object, attributes);
 		}
-		return this.voteDefault(authentication, object, attributes);
+		if (this.getDefaultVoter() == null) {
+			return AccessDecisionVoter.ACCESS_ABSTAIN;
+		}
+		return this.getDefaultVoter().vote(authentication, object, attributes);
 	}
 }
