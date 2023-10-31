@@ -84,6 +84,12 @@ public class BasicExpressionProcessor {
                 } else {
                     throw new OntimizeJEEException("'rop' isn't defined in basicexpression");
                 }
+            } else if (operator.equals(BasicOperator.LIKE_OP) || operator.equals(BasicOperator.NOT_LIKE_OP)) {
+                if (lo instanceof BasicField) {
+                    ro = this.processRightOperand(rValue, (BasicField) lo, null);
+                } else {
+                    ro = this.processRightOperand(rValue, null, null);
+                }
             } else {
                 if (lo instanceof BasicField) {
                     ro = this.processRightOperand(rValue, (BasicField) lo, hSqlTypes);
@@ -105,7 +111,12 @@ public class BasicExpressionProcessor {
         if (lValue instanceof Map) {
             return this.processBasicEspression(lValue, hSqlTypes);
         } else {
-            return new BasicField(lValue.toString());
+            if (hSqlTypes != null && hSqlTypes.containsKey(lValue.toString())) {
+                int type = (Integer) hSqlTypes.get(lValue.toString());
+                return new BasicField(lValue.toString(), type);
+            } else {
+                return new BasicField(lValue.toString());
+            }
         }
     }
 

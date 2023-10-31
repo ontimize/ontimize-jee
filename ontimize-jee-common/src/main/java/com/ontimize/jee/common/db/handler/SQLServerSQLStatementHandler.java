@@ -1,6 +1,8 @@
 package com.ontimize.jee.common.db.handler;
 
 import com.ontimize.jee.common.db.SQLStatementBuilder;
+import com.ontimize.jee.common.db.sql.SQLHandler;
+import com.ontimize.jee.common.db.sql.SQLServerSQLHandler;
 import com.ontimize.jee.common.dto.EntityResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +18,18 @@ public class SQLServerSQLStatementHandler extends DefaultSQLStatementHandler {
     public static final String GENERATED_KEY_COLUMN_NAME = "GENERATED_KEYS";
 
     public static final String TOP_100_PERCENT = " TOP 100 PERCENT ";
+
+    public static final String CAST_FUNCTION = "CAST";
+
+    private SQLHandler sqlHandler = new SQLServerSQLHandler();
+
+    public SQLHandler getSqlHandler() {
+        return this.sqlHandler;
+    }
+
+    public void setSqlHandler(SQLHandler sqlHandler) {
+        this.sqlHandler = sqlHandler;
+    }
 
     @Override
     public boolean isPageable() {
@@ -196,4 +210,13 @@ public class SQLServerSQLStatementHandler extends DefaultSQLStatementHandler {
         // return super.convertPaginationStatement(sqlTemplate, startIndex, recordNumber);
     }
 
+    @Override
+    public String addCastStatement(final String expression, final int fromSqlType, final int toSqlType) {
+        try {
+            return SQLServerSQLStatementHandler.CAST_FUNCTION + "(" + expression + " AS " + sqlHandler.getSQLTypeName(toSqlType) + ")";
+        } catch (Exception e) {
+            SQLServerSQLStatementHandler.logger.error("Could not add cast statement", e);
+            return expression;
+        }
+    }
 }

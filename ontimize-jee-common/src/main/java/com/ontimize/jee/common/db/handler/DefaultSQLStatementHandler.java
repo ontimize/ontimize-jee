@@ -1984,6 +1984,10 @@ public class DefaultSQLStatementHandler implements SQLStatementHandler {
         return sqlTemplate;
     }
 
+    @Override
+    public String addCastStatement(final String expression, final int fromSqlType, final int toSqlType) {
+        return expression;
+    }
 
     /**
      * Sets the following fields of the object <code>date</code> to zero:

@@ -1,6 +1,8 @@
 package com.ontimize.jee.common.db.handler;
 
 import com.ontimize.jee.common.db.SQLStatementBuilder;
+import com.ontimize.jee.common.db.sql.OracleSQLHandler;
+import com.ontimize.jee.common.db.sql.SQLHandler;
 import com.ontimize.jee.common.dto.EntityResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +26,18 @@ public class Oracle12cSQLStatementHandler extends DefaultSQLStatementHandler {
     public static final String END_FETCH = " ROWS ONLY ";
 
     public static final String OFFSET = " OFFSET ";
+
+    public static final String CAST_FUNCTION = "CAST";
+
+    private SQLHandler sqlHandler = new OracleSQLHandler();
+
+    public SQLHandler getSqlHandler() {
+        return this.sqlHandler;
+    }
+
+    public void setSqlHandler(SQLHandler sqlHandler) {
+        this.sqlHandler = sqlHandler;
+    }
 
     public Oracle12cSQLStatementHandler() {
         super();
@@ -187,4 +201,13 @@ public class Oracle12cSQLStatementHandler extends DefaultSQLStatementHandler {
         return sql.toString();
     }
 
+    @Override
+    public String addCastStatement(final String expression, final int fromSqlType, final int toSqlType) {
+        try {
+            return Oracle12cSQLStatementHandler.CAST_FUNCTION + "(" + expression + " AS " + sqlHandler.getSQLTypeName(toSqlType) + ")";
+        } catch (Exception e) {
+            Oracle12cSQLStatementHandler.logger.error("Could not add cast statement", e);
+            return expression;
+        }
+    }
 }
