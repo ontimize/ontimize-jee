@@ -29,10 +29,13 @@ jobs:
           echo "BRANCH=${{ github.event.inputs.BRANCH }}" >> $GITHUB_ENV
           DESTINY=${{ github.event.inputs.MAIL_DESTINY }}
           RECIPIENT=${{secrets.EMAIL_TARGET_TEST}}
+          SUBJECT="[TEST] - Nueva versión de Ontimize EE 🚀"
           if [ "$DESTINY" = "Imatia" ]; then
           RECIPIENT=${{secrets.EMAIL_TARGET}}
+          SUBJECT="Nueva versión de Ontimize EE 🚀"
           fi
           echo "RECIPIENT=$RECIPIENT" >> $GITHUB_ENV
+          echo "SUBJECT=$SUBJECT" >> $GITHUB_ENV
       - name: Checkout repository code
         uses: actions/checkout@v3
         with:
@@ -58,11 +61,11 @@ jobs:
       - name: Send email
         uses: dawidd6/action-send-mail@v3
         with:
-          server_address: smtp.office365.com
-          server_port: 587
+          server_address: ${{ secrets.EMAIL_SERVER_ADDRESS }}
+          server_port: ${{ secrets.EMAIL_SERVER_PORT }}
           username: ${{ secrets.EMAIL_USER }}
           password: ${{secrets.EMAIL_PASSWORD}}
-          subject: Nueva versión de Ontimize EE 🚀
+          subject: ${{ env.SUBJECT }}
           to: ${{ env.RECIPIENT }}
           from: ${{secrets.EMAIL_USER_FROM}}
           html_body: file://mail_to_send.html
