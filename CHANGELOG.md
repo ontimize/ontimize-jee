@@ -7,6 +7,7 @@
 <!-- ### Security 🛡️-->
 
 ## [Unreleased]
+## [5.10.0] - 2023-11-06
 * **Security**: Do not allow logging in using the password hash.
 * **Keycloak**: Allow to use the Keycloak authentication on non-http calls.
 * **Ontimize SQLStatementHandler**: Allow searching for a pattern in columns with any data type
@@ -37,7 +38,8 @@
 * **POM**: Sorted pom alphabetically and sorted, extracted version to properties and put all dependencies into dependency manager.
 * **Sonar**: Fix some sonar code smells.
 
-[unreleased]: https://github.com/ontimize/ontimize-jee/compare/5.9.0...HEAD
+[unreleased]: https://github.com/ontimize/ontimize-jee/compare/5.10.0...HEAD
+[5.10.0]: https://github.com/ontimize/ontimize-jee/compare/5.9.0...5.10.0
 [5.9.0]: https://github.com/ontimize/ontimize-jee/compare/5.8.0...5.9.0
 [5.8.0]: https://github.com/ontimize/ontimize-jee/compare/5.7.0...5.8.0
 [5.7.0]: https://github.com/ontimize/ontimize-jee/compare/5.6.0...5.7.0
