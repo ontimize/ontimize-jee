@@ -7,11 +7,13 @@
 <!-- ### Security 🛡️-->
 
 ## [Unreleased]
+### Changed 🛠️
+* **Send mail action**: Update the mailing action with organizational secrets. Modified the title if the recipient is for testing.
 ## [5.10.0] - 2023-11-06
-<!-- ### Added ✔️-->
+### Added ✔️
 * **Keycloak**: Allow to use the Keycloak authentication on non-http calls.
 * **Ontimize SQLStatementHandler**: Allow searching for a pattern in columns with any data type
-<!-- ### Changed 🛠️-->
+### Changed 🛠️
 * **Security**: Do not allow logging in using the password hash.
 ## [5.9.0] - 2023-07-31
 ### Added ✔️
