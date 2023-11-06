@@ -8,9 +8,11 @@
 
 ## [Unreleased]
 ## [5.10.0] - 2023-11-06
-* **Security**: Do not allow logging in using the password hash.
+<!-- ### Added ✔️-->
 * **Keycloak**: Allow to use the Keycloak authentication on non-http calls.
 * **Ontimize SQLStatementHandler**: Allow searching for a pattern in columns with any data type
+<!-- ### Changed 🛠️-->
+* **Security**: Do not allow logging in using the password hash.
 ## [5.9.0] - 2023-07-31
 ### Added ✔️
 * **Multi tenant**: Add feature to set tenants on non-secured requests.
