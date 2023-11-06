@@ -1,12 +1,13 @@
 package com.ontimize.jee.server.security.encrypt;
 
-import com.ontimize.jee.common.naming.I18NNaming;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
-import java.util.Map;
+import com.ontimize.jee.common.naming.I18NNaming;
 
 public class PasswordBCryptHelper implements IPasswordEncryptHelper {
 
@@ -60,10 +61,16 @@ public class PasswordBCryptHelper implements IPasswordEncryptHelper {
 
     @Override
     public void checkPasswords(String storedPass, Object pass) {
-        if ((pass == null) || (!this.checkHash(pass.toString(), storedPass) && !storedPass.equals(pass))) {
+        final boolean encrypted = isHash(storedPass);
+        if ((pass == null) || (encrypted && !this.checkHash(pass.toString(), storedPass))
+                || (!encrypted && !storedPass.equals(pass))) {
             logger.error("Authorization denied!");
             throw new AuthenticationCredentialsNotFoundException(I18NNaming.E_AUTH_PASSWORD_NOT_MATCH);
         }
+    }
+
+    private boolean isHash(final String string) {
+        return string.length() > 50 && string.startsWith("$2") && (string.charAt(2) == '$' || string.charAt(3) == '$');
     }
 }
 

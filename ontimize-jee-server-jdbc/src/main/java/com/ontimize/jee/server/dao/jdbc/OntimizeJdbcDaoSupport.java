@@ -738,15 +738,17 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	protected BasicField applyTransformationsToBasicField(BasicField originalField,
 			List<AmbiguousColumnType> ambiguousColumns, List<FunctionColumnType> functionColumns) {
 		String columnName = originalField.toString();
+		Integer columnType = originalField.getSqlType();
+		if (columnType == null) columnType = this.getColumnSQLType(columnName);
 		String resolvedAmbiguousColumn = this.resolveAmbiguousColumn(columnName, ambiguousColumns);
 		if (resolvedAmbiguousColumn != null) {
-			return new BasicField(resolvedAmbiguousColumn);
+			return new BasicField(resolvedAmbiguousColumn, columnType);
 		}
 		String resolvedFunctionColumn = this.resolveFunctionColumn(columnName, functionColumns);
 		if (resolvedFunctionColumn != null) {
-			return new BasicField(resolvedFunctionColumn);
+			return new BasicField(resolvedFunctionColumn, columnType);
 		}
-		return new BasicField(columnName);
+		return new BasicField(columnName, columnType);
 	}
 
 	/*
@@ -2136,4 +2138,15 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 		return template;
 	}
 
+	private Integer getColumnSQLType(final String column) {
+		if (!this.tableMetaDataContext.isProcessed()) {
+			this.compile();
+		}
+		for (final TableParameterMetaData data : this.tableMetaDataContext.getTableParameters()) {
+			if (column.equalsIgnoreCase(data.getParameterName())) {
+				return data.getSqlType();
+			}
+		}
+		return null;
+	}
 }
