@@ -7,6 +7,8 @@
 <!-- ### Security 🛡️-->
 
 ## [Unreleased]
+### Added ✔️
+* **Multi tenant**: Ask the tenant provider to load a tenant when it can not be found.
 ### Changed 🛠️
 * **Send mail action**: Update the mailing action with organizational secrets. Modified the title if the recipient is for testing.
 ## [5.10.0] - 2023-11-06
