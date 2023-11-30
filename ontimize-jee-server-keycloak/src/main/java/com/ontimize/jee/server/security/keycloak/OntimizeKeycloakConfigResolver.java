@@ -64,22 +64,9 @@ public class OntimizeKeycloakConfigResolver
 
 			cache.put(tenantId, deployment);
 		} else {
-			final Map<String, ITenantAuthenticationInfo> tenants;
+			final ITenantAuthenticationInfo auth = this.getTenant(tenantId);
 
-			if (this.ontimizeKeycloakTenantProvider != null) {
-				tenants = this.ontimizeKeycloakTenantProvider.getTenantsAuthenticationInfo();
-
-				if (tenants != null && !tenants.containsKey(tenantId)) {
-					this.ontimizeKeycloakTenantProvider.ensureTenant(tenantId);
-				}
-			} else {
-				tenants = this.tenantsAuthenticationInfo;
-			}
-
-			if (tenants == null) {
-				throw new OntimizeJEERuntimeException("No tenants authentication info provided");
-			} else if (tenants.containsKey(tenantId)) {
-				final ITenantAuthenticationInfo auth = tenants.get(tenantId);
+			if (auth != null) {
 				final AdapterConfig ac = new AdapterConfig();
 				ac.setAuthServerUrl(auth.getUrl());
 				ac.setRealm(auth.getRealm()); // Realm
@@ -105,5 +92,28 @@ public class OntimizeKeycloakConfigResolver
 	@Override
 	public void setTenantProvider(IOntimizeKeycloakTenantProvider ontimizeKeycloakTenantProvider) {
 		this.ontimizeKeycloakTenantProvider = ontimizeKeycloakTenantProvider;
+	}
+
+	private ITenantAuthenticationInfo getTenant(final String tenantId) {
+		ITenantAuthenticationInfo auth = null;
+		final Map<String, ITenantAuthenticationInfo> tenants;
+
+		if (this.ontimizeKeycloakTenantProvider != null) {
+			tenants = this.ontimizeKeycloakTenantProvider.getTenantsAuthenticationInfo();
+
+			if (tenants != null && !tenants.containsKey(tenantId)) {
+				this.ontimizeKeycloakTenantProvider.ensureTenant(tenantId);
+			}
+		} else {
+			tenants = this.tenantsAuthenticationInfo;
+		}
+
+		if (tenants == null) {
+			throw new OntimizeJEERuntimeException("No tenants authentication info provided");
+		} else if (tenants.containsKey(tenantId)) {
+			auth = tenants.get(tenantId);
+		}
+
+		return auth;
 	}
 }
