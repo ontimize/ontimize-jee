@@ -4,12 +4,12 @@ public class MultiTenantContextHolder {
 
 	private static final ThreadLocal<String> contextHolder = new ThreadLocal<>();
 
-	public static void setTenant(String tenantId) {
+	public static void setTenant(final String tenantId) {
 		contextHolder.set(tenantId);
 	}
 
 	public static String getTenant() {
-		return (String) contextHolder.get();
+		return contextHolder.get();
 	}
 
 	public static void clear() {

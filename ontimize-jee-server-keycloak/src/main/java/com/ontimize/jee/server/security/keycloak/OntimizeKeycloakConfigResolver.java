@@ -20,12 +20,11 @@ public class OntimizeKeycloakConfigResolver
 
 	private Map<String, ITenantAuthenticationInfo> tenantsAuthenticationInfo = null;
 	private final Map<String, KeycloakDeployment> cache = new ConcurrentHashMap<>();
+	private IOntimizeKeycloakTenantProvider ontimizeKeycloakTenantProvider = null;
 
 	@Override
 	public KeycloakDeployment resolve(final Request request) {
-		final String tenantId = request.getHeader("X-Tenant");
-
-		return this.resolve(tenantId);
+		return this.resolve(request.getHeader("X-Tenant"));
 	}
 
 	public KeycloakDeployment resolve(final String tenantId) {
@@ -64,28 +63,47 @@ public class OntimizeKeycloakConfigResolver
 			deployment = KeycloakDeploymentBuilder.build(ac);
 
 			cache.put(tenantId, deployment);
-		} else if (this.tenantsAuthenticationInfo == null) {
-			throw new OntimizeJEERuntimeException("No tenants authentication info provided");
-		} else if (this.tenantsAuthenticationInfo.containsKey(tenantId)) {
-			final ITenantAuthenticationInfo auth = this.tenantsAuthenticationInfo.get(tenantId);
-			final AdapterConfig ac = new AdapterConfig();
-			ac.setAuthServerUrl(auth.getUrl());
-			ac.setRealm(auth.getRealm()); // Realm
-			ac.setResource(auth.getClient()); // Client Id
-			ac.setPublicClient(this.config.isPublicClient());
-			ac.setUseResourceRoleMappings(this.config.isUseResourceRoleMappings());
-			deployment = KeycloakDeploymentBuilder.build(ac);
-
-			cache.put(tenantId, deployment);
 		} else {
-			throw new OntimizeJEERuntimeException("No authentication info provided for tenant " + tenantId);
+			final Map<String, ITenantAuthenticationInfo> tenants;
+
+			if (this.ontimizeKeycloakTenantProvider != null) {
+				tenants = this.ontimizeKeycloakTenantProvider.getTenantsAuthenticationInfo();
+
+				if (tenants != null && !tenants.containsKey(tenantId)) {
+					this.ontimizeKeycloakTenantProvider.ensureTenant(tenantId);
+				}
+			} else {
+				tenants = this.tenantsAuthenticationInfo;
+			}
+
+			if (tenants == null) {
+				throw new OntimizeJEERuntimeException("No tenants authentication info provided");
+			} else if (tenants.containsKey(tenantId)) {
+				final ITenantAuthenticationInfo auth = tenants.get(tenantId);
+				final AdapterConfig ac = new AdapterConfig();
+				ac.setAuthServerUrl(auth.getUrl());
+				ac.setRealm(auth.getRealm()); // Realm
+				ac.setResource(auth.getClient()); // Client Id
+				ac.setPublicClient(this.config.isPublicClient());
+				ac.setUseResourceRoleMappings(this.config.isUseResourceRoleMappings());
+				deployment = KeycloakDeploymentBuilder.build(ac);
+
+				cache.put(tenantId, deployment);
+			} else {
+				throw new OntimizeJEERuntimeException("No authentication info provided for tenant " + tenantId);
+			}
 		}
 
 		return deployment;
 	}
 
 	@Override
-	public void setTenantsAuthenticationInfo(Map<String, ITenantAuthenticationInfo> tenantsAuthenticationInfo) {
+	public void setTenantsAuthenticationInfo(final Map<String, ITenantAuthenticationInfo> tenantsAuthenticationInfo) {
 		this.tenantsAuthenticationInfo = tenantsAuthenticationInfo;
+	}
+
+	@Override
+	public void setTenantProvider(IOntimizeKeycloakTenantProvider ontimizeKeycloakTenantProvider) {
+		this.ontimizeKeycloakTenantProvider = ontimizeKeycloakTenantProvider;
 	}
 }
