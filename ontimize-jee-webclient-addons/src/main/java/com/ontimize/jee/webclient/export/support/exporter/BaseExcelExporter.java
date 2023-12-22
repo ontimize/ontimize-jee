@@ -66,17 +66,17 @@ public abstract class BaseExcelExporter<T extends Workbook> implements ExcelExpo
             final ExportDataProvider dataProvider,
             final ExportStyleProvider styleProvider,
             ExportOptions exportOptions) throws ExportException {
-        return this.export(exportColumnProvider, dataProvider, styleProvider, new DefaultSheetNameProvider(), exportOptions);
+        return this.export(exportColumnProvider, dataProvider, styleProvider, new DefaultSheetNameProvider(),
+                exportOptions);
     }
 
     /**
-     * Obtenemos primero los posibles estilos que pueden venir con las definiciones de columnas. Podrían
-     * venir de las anotaciones en la tabla. Pero podrían estar todas a null. Si no se usaron
-     * anotaciones, la forma de asignar estilo es es mediante el StyleProvider. Estos estilos
-     * complementan a los que tuvieran las columnas. En el StyleProvider hay tres estilos: - Cabecera:
-     * estilo por defecto para las cabeceras. - Columna: estilo de todas las celdas de una columna. -
-     * Celda: estilo para celdas concretas. DefaultStyleProvider proporciona por defecto unos estilos
-     * para todas las cabeceras y además unos por tipo para todas las columnas. Se pueden sobreescribir
+     * Obtenemos primero los posibles estilos que pueden venir con las definiciones de columnas. Podrían venir de las
+     * anotaciones en la tabla. Pero podrían estar todas a null. Si no se usaron anotaciones, la forma de asignar estilo
+     * es es mediante el StyleProvider. Estos estilos complementan a los que tuvieran las columnas. En el StyleProvider
+     * hay tres estilos: - Cabecera: estilo por defecto para las cabeceras. - Columna: estilo de todas las celdas de una
+     * columna. - Celda: estilo para celdas concretas. DefaultStyleProvider proporciona por defecto unos estilos para
+     * todas las cabeceras y además unos por tipo para todas las columnas. Se pueden sobreescribir
      */
     @Override
     public T export(
@@ -126,6 +126,15 @@ public abstract class BaseExcelExporter<T extends Workbook> implements ExcelExpo
                 headerCellStylesById,
                 sheetNameProvider,
                 exportOptions);
+
+        // Autosize columns
+        List<ExportColumn> bodyColumns = exportColumnProvider.getBodyColumns();
+        workBook.sheetIterator().forEachRemaining((currentSheet) -> {
+            bodyColumns.stream().forEach(column -> {
+                currentSheet.autoSizeColumn(bodyColumns.indexOf(column));
+            });
+        });
+
         this.removeTemplateSheet(workBook);
         return workBook;
     }
@@ -217,7 +226,6 @@ public abstract class BaseExcelExporter<T extends Workbook> implements ExcelExpo
                         value,
                         styleProvider,
                         bodyCellStyles);
-                actualSheet.autoSizeColumn(userColumns.indexOf(column));
             });
         });
     }
