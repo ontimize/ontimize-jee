@@ -129,11 +129,10 @@ public abstract class BaseExcelExporter<T extends Workbook> implements ExcelExpo
 
         // Autosize columns
         List<ExportColumn> bodyColumns = exportColumnProvider.getBodyColumns();
-        workBook.sheetIterator().forEachRemaining((currentSheet) -> {
-            bodyColumns.stream().forEach(column -> {
-                currentSheet.autoSizeColumn(bodyColumns.indexOf(column));
-            });
-        });
+        workBook.sheetIterator().forEachRemaining(currentSheet ->
+                bodyColumns.stream().forEach(column -> currentSheet.autoSizeColumn(bodyColumns.indexOf(column))
+                )
+        );
 
         this.removeTemplateSheet(workBook);
         return workBook;
