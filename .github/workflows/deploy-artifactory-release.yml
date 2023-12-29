@@ -53,3 +53,12 @@ jobs:
         run: |
           version=${{ steps.tag.outputs.version }}
           gh pr create -B develop -H sync/$version --title "Backmerge from main into develop" --body "Created by a GitHub Action → Resync develop branch with main branch and increase project version"
+      - name: Create release on Github
+        uses: ncipollo/release-action@2792aea87063cfd0d27953ac38e3ab45afacc154
+        with:
+          commit: ${{ github.ref }}"
+          tag: ${{ steps.tag.outputs.version }}
+          name: ${{ steps.tag.outputs.version }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          body: |
+            Check out the [changelog](CHANGELOG.md) for version ${{ steps.tag.outputs.version }}
