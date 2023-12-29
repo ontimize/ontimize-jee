@@ -1,11 +1,21 @@
-name: Generate a RELEASE in Artifactory
+name: Generate a RELEASE in Maven Central
 on:
-  push:
-    branches:
-      - main
+  pull_request:
+    types: [closed]
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      RELEASE_BRANCH:
+        description: 'Release branch'
+        type: choice
+        required: true
+        default: 'main'
+        options:
+          - main
 jobs:
-  Generate-a-RELEASE-in-Artifactory:
+  Generate-a-RELEASE-in-Maven-Central:
     runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' || (github.event.pull_request.merged == true && contains(join(github.event.pull_request.labels.*.name, ', '), 'release'))
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       CI_COMMIT_AUTHOR: ${{ secrets.CI_COMMIT_AUTHOR }}
@@ -14,8 +24,14 @@ jobs:
       MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
       MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
     steps:
+      - name: Get input parameters
+        run: |
+          echo "BRANCH=${{ github.event.inputs.RELEASE_BRANCH || github.ref }}" >> $GITHUB_ENV
       - name: Checkout repository code
         uses: actions/checkout@v3
+        with:
+          ref: ${{ env.BRANCH }}
+          fetch-depth: 0
       - name: Setup Java JDK and Maven
         uses: ontimize/setup-java-maven-gitAction@v3
         with:
@@ -53,3 +69,12 @@ jobs:
         run: |
           version=${{ steps.tag.outputs.version }}
           gh pr create -B develop -H sync/$version --title "Backmerge from main into develop" --body "Created by a GitHub Action → Resync develop branch with main branch and increase project version"
+      - name: Create release on Github
+        uses: ncipollo/release-action@2792aea87063cfd0d27953ac38e3ab45afacc154
+        with:
+          commit: ${{ env.BRANCH }}
+          tag: ${{ steps.tag.outputs.version }}
+          name: ${{ steps.tag.outputs.version }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          body: |
+            Check out the [changelog](CHANGELOG.md) for version ${{ steps.tag.outputs.version }}
