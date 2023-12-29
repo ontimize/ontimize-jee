@@ -13,7 +13,7 @@ on:
         options:
           - main
 jobs:
-  Generate-a-RELEASE-in-Artifactory:
+  Generate-a-RELEASE-in-Maven-Central:
     runs-on: ubuntu-latest
     if: github.event_name == 'workflow_dispatch' || (github.event.pull_request.merged == true && contains(join(github.event.pull_request.labels.*.name, ', '), 'release'))
     env:
