@@ -449,6 +449,12 @@ public final class EntityResultTools extends com.ontimize.jee.common.dto.EntityR
         if (toRename != null) {
             er.put(toColumn, toRename);
         }
+        if (er.getColumnSQLTypes() != null){
+            Object typeToRename = er.getColumnSQLTypes().remove(fromColumn);
+            if (typeToRename != null){
+                er.getColumnSQLTypes().put(toColumn,typeToRename);
+            }
+        }
     }
 
 
