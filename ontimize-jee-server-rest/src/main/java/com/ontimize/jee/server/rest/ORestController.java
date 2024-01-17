@@ -220,7 +220,7 @@ public abstract class ORestController<S> {
                 return this.getCause(ite.getTargetException());
             }
         }
-        if (cause.getCause() != null && cause.getCause().getMessage() == null) {
+        if (cause.getCause() != null && cause.getMessage() == null) {
             return this.getCause(cause.getCause());
         }
         return cause;
