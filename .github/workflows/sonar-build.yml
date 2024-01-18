@@ -35,4 +35,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=ontimize_ontimize-jee
+        run: mvn -B verify -Pjacoco org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=ontimize_ontimize-jee \
+          -Dsonar.coverage.jacoco.xmlReportPaths="$GITHUB_WORKSPACE/code/jacoco-report-aggregate/target/site/jacoco-aggregate/jacoco.xml"
