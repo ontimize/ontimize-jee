@@ -9,7 +9,7 @@
         <version>5.11.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>jacoco-report-aggregate</artifactId>
+    <artifactId>ontimize-jee-jacoco</artifactId>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>

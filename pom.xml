@@ -130,7 +130,7 @@
         <module>ontimize-jee-server-jdbc</module>
         <module>ontimize-jee-server-keycloak</module>
         <module>ontimize-jee-webclient-addons</module>
-        <module>jacoco-report-aggregate</module>
+        <module>ontimize-jee-jacoco</module>
     </modules>
 
     <properties>
@@ -220,10 +220,6 @@
         <sonar.organization>ontimize</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
 
-        <!-- Jacoco -->
-        <sonar.coverage.jacoco.xmlReportPaths>
-            ${project.basedir}/jacoco-report-aggregate/target/site/jacoco-aggregate/jacoco.xml
-        </sonar.coverage.jacoco.xmlReportPaths>
     </properties>
 
     <dependencyManagement>
