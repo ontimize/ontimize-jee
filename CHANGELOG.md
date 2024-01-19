@@ -11,6 +11,7 @@
 * **Multi tenant**: Ask the tenant provider to load a tenant when it can not be found.
 * **JaCoCo**: Add JaCoCo coverage on Sonar
 ### Changed 🛠️
+* **Preferences**: Now use name convention instead of harcoded columns.
 * **Send mail action**: Update the mailing action with organizational secrets. Modified the title if the recipient is for testing.
 * **Sonar**: Upgrade Java version on Sonar action
 ## [5.10.0] - 2023-11-06
