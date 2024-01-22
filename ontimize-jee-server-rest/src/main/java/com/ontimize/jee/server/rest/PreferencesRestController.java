@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import com.ontimize.jee.common.tools.EntityResultTools;
 import com.ontimize.jee.server.dao.common.INameConvention;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -105,8 +106,18 @@ public class PreferencesRestController {
         attrList.add(this.nameConvention.convertName(ENTITY_QUERY));
         attrList.add(this.nameConvention.convertName(TYPE_QUERY));
         attrList.add(this.nameConvention.convertName(PREFERENCES_QUERY));
-        return preferencesService.preferenceQuery(map, attrList);
+        EntityResult query = preferencesService.preferenceQuery(map, attrList);
+        convertToUpperColumnsEntityResult(query);
+        return query;
 
+    }
+
+    public void convertToUpperColumnsEntityResult(EntityResult res){
+
+        List<String> columns = new ArrayList<>(res.keySet());
+        for (String column : columns) {
+            EntityResultTools.renameColumn(res, column, column.toUpperCase());
+        }
     }
 
     @DeleteMapping(value = "/remove/{id}")
