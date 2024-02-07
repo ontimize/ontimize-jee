@@ -63,7 +63,7 @@ public abstract class BaseExcelExporter<T extends Workbook> implements ExcelExpo
     }
 
     public T export(final ExportColumnProvider exportColumnProvider, final ExportDataProvider dataProvider,
-            final ExportStyleProvider styleProvider, ExportOptions exportOptions) throws ExportException {
+            final DefaultExcelExportStyleProvider styleProvider, ExportOptions exportOptions) throws ExportException {
         return this.export(exportColumnProvider, dataProvider, styleProvider, new DefaultSheetNameProvider(),
                 exportOptions);
     }
@@ -101,13 +101,14 @@ public abstract class BaseExcelExporter<T extends Workbook> implements ExcelExpo
         this.templateSheet = this.createTemplateSheet(workBook);
 
         final Map<String, CellStyle> headerCellStylesById = this.addHeaderStyles(this.templateSheet,
-                exportColumnProvider.getHeaderColumns(), styleProvider);
+                exportColumnProvider.getHeaderColumns(), (DefaultExcelExportStyleProvider) styleProvider);
         this.addHeader(dataProvider, this.templateSheet, exportColumnProvider.getHeaderColumns(), headerCellStylesById,
-                exportOptions, styleProvider);
+                exportOptions, (DefaultExcelExportStyleProvider) styleProvider);
         final Map<String, CellStyle> bodyCellStyles = this.addBodyStyles(this.templateSheet,
-                exportColumnProvider.getBodyColumns(), dataProvider, styleProvider);
-        this.addBody(exportColumnProvider.getBodyColumns(), dataProvider, bodyCellStyles, styleProvider,
-                exportColumnProvider.getHeaderColumns(), headerCellStylesById, sheetNameProvider, exportOptions);
+                exportColumnProvider.getBodyColumns(), dataProvider, (DefaultExcelExportStyleProvider) styleProvider);
+        this.addBody(exportColumnProvider.getBodyColumns(), dataProvider, bodyCellStyles,
+                (DefaultExcelExportStyleProvider) styleProvider, exportColumnProvider.getHeaderColumns(),
+                headerCellStylesById, sheetNameProvider, exportOptions);
 
         // Autosize columns
         List<ExportColumn> bodyColumns = exportColumnProvider.getBodyColumns();
@@ -120,20 +121,20 @@ public abstract class BaseExcelExporter<T extends Workbook> implements ExcelExpo
 
     public void addHeader(final ExportDataProvider provider, final Sheet sheet,
             final List<HeadExportColumn> userHeaderColumns, final Map<String, CellStyle> headerCellStylesById,
-            final ExportOptions exportOptions, final ExportStyleProvider styleProvider) {
+            final ExportOptions exportOptions, final DefaultExcelExportStyleProvider styleProvider) {
         if (userHeaderColumns != null) {
             this.createHeader(provider, sheet, userHeaderColumns, headerCellStylesById, exportOptions, styleProvider);
         }
     }
 
     public void addCell(final Sheet sheet, final ExportColumn exportColumn, final int rowIndex, final int colUserIndex,
-            final Object value, final ExportStyleProvider styleProvider, final Map<String, CellStyle> bodyCellStyles) {
-        this.createCell(sheet, exportColumn, rowIndex, colUserIndex, value,
-                (DefaultExcelExportStyleProvider) styleProvider, bodyCellStyles);
+            final Object value, final DefaultExcelExportStyleProvider styleProvider,
+            final Map<String, CellStyle> bodyCellStyles) {
+        this.createCell(sheet, exportColumn, rowIndex, colUserIndex, value, styleProvider, bodyCellStyles);
     }
 
     protected void addBody(final List<ExportColumn> userColumns, final ExportDataProvider dataProvider,
-            final Map<String, CellStyle> bodyCellStyles, final ExportStyleProvider styleProvider,
+            final Map<String, CellStyle> bodyCellStyles, final DefaultExcelExportStyleProvider styleProvider,
             final List<HeadExportColumn> headerColumns, final Map<String, CellStyle> headerCellStylesById,
             final SheetNameProvider sheetNameProvider, final ExportOptions exportOptions) {
 
@@ -216,7 +217,7 @@ public abstract class BaseExcelExporter<T extends Workbook> implements ExcelExpo
 
     protected void createHeader(final ExportDataProvider provider, final Sheet sheet,
             final List<HeadExportColumn> userHeaderColumns, final Map<String, CellStyle> headerCellStylesById,
-            final ExportOptions exportOptions, final ExportStyleProvider styleProvider) {
+            final ExportOptions exportOptions, final DefaultExcelExportStyleProvider styleProvider) {
 
         final AtomicInteger columnIndex = new AtomicInteger(0);
         userHeaderColumns.forEach(exportColumn -> {
@@ -261,7 +262,7 @@ public abstract class BaseExcelExporter<T extends Workbook> implements ExcelExpo
 
     protected int createHeader(final Sheet sheet, final HeadExportColumn column, final int rowIndex,
             final int columnIndex, final Map<String, CellStyle> headerCellStylesById,
-            final ExportStyleProvider styleProvider) {
+            final DefaultExcelExportStyleProvider styleProvider) {
         Row currentRow = sheet.getRow(rowIndex);
         if (currentRow == null) {
             currentRow = sheet.createRow(rowIndex);
@@ -338,7 +339,7 @@ public abstract class BaseExcelExporter<T extends Workbook> implements ExcelExpo
     }
 
     private Map<String, CellStyle> addHeaderStyles(final Sheet sheet, final List<HeadExportColumn> columns,
-            final ExportStyleProvider styleProvider) {
+            final DefaultExcelExportStyleProvider styleProvider) {
 
         final Map<String, CellStyle> headerCellStylesById = new HashMap<>();
         for (final HeadExportColumn column : columns) {
@@ -348,7 +349,7 @@ public abstract class BaseExcelExporter<T extends Workbook> implements ExcelExpo
     }
 
     private Map<String, CellStyle> addBodyStyles(final Sheet sheet, final List<ExportColumn> bodyColumns,
-            final ExportDataProvider dataProvider, final ExportStyleProvider styleProvider) {
+            final ExportDataProvider dataProvider, final DefaultExcelExportStyleProvider styleProvider) {
 
         final Map<String, CellStyle> bodyCellStyles = new HashMap<>();
 
@@ -380,7 +381,7 @@ public abstract class BaseExcelExporter<T extends Workbook> implements ExcelExpo
 
     private Sheet selectSheetByName(final String newSheetName, final ExportDataProvider provider,
             final List<HeadExportColumn> headerColumns, final Map<String, CellStyle> headerCellStylesById,
-            final ExportOptions exportOptions, final ExportStyleProvider styleProvider) {
+            final ExportOptions exportOptions, final DefaultExcelExportStyleProvider styleProvider) {
         Sheet ret = null;
         ret = this.templateSheet.getWorkbook().getSheet(newSheetName);
         if (ret == null) {
@@ -474,7 +475,7 @@ public abstract class BaseExcelExporter<T extends Workbook> implements ExcelExpo
     }
 
     private void addHeaderStyles(final Sheet sheet, final HeadExportColumn column,
-            final Map<String, CellStyle> headerCellStylesById, final ExportStyleProvider styleProvider) {
+            final Map<String, CellStyle> headerCellStylesById, final DefaultExcelExportStyleProvider styleProvider) {
 
         DefaultHeadExportColumn<ExportColumnStyle> defaultHeadExportColumn = null;
         ExportColumnStyle styleFromAnnotations = null;
