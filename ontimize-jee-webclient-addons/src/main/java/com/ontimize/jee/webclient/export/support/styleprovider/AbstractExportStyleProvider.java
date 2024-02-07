@@ -1,6 +1,5 @@
 package com.ontimize.jee.webclient.export.support.styleprovider;
 
-
 import com.ontimize.jee.webclient.export.ExportColumnStyle;
 import com.ontimize.jee.webclient.export.base.AdvancedExportQueryParameters;
 import com.ontimize.jee.webclient.export.providers.ExportStyleProvider;
@@ -76,23 +75,18 @@ public abstract class AbstractExportStyleProvider<T, D> implements ExportStylePr
         final ExportColumnStyle style = new DefaultExportColumnStyle();
         if (ColumnCellUtils.isNumber(columnClass)) {
             style.setAlignment(ExportColumnStyle.HorizontalAlignment.RIGHT);
-            if (Double.class.isAssignableFrom(columnClass)
-                    || double.class.isAssignableFrom(columnClass)
-                    || Float.class.isAssignableFrom(columnClass)
-                    || float.class.isAssignableFrom(columnClass)) {
+            if (Double.class.isAssignableFrom(columnClass) || double.class.isAssignableFrom(columnClass)
+                    || Float.class.isAssignableFrom(columnClass) || float.class.isAssignableFrom(columnClass)) {
                 style.setDataFormatString("#,##0.00");
-            } else if (Long.class.isAssignableFrom(columnClass)
-                    || long.class.isAssignableFrom(columnClass)
-                    || Integer.class.isAssignableFrom(columnClass)
-                    || int.class.isAssignableFrom(columnClass)) {
+            } else if (Long.class.isAssignableFrom(columnClass) || long.class.isAssignableFrom(columnClass)
+                    || Integer.class.isAssignableFrom(columnClass) || int.class.isAssignableFrom(columnClass)) {
                 style.setDataFormatString("#,##0");
             }
         } else if (ColumnCellUtils.isBoolean(columnClass) || boolean.class.isAssignableFrom(columnClass)) {
             style.setDataFormatString("text");
 
         } else if (ColumnCellUtils.isDate(columnClass)) {
-            if (java.util.Date.class.isAssignableFrom(columnClass)
-                    || java.sql.Date.class.isAssignableFrom(columnClass)
+            if (java.util.Date.class.isAssignableFrom(columnClass) || java.sql.Date.class.isAssignableFrom(columnClass)
                     || java.sql.Time.class.isAssignableFrom(columnClass)
                     || java.sql.Timestamp.class.isAssignableFrom(columnClass)
                     || java.time.LocalDateTime.class.isAssignableFrom(columnClass)) {
@@ -126,21 +120,27 @@ public abstract class AbstractExportStyleProvider<T, D> implements ExportStylePr
         while (i.hasNext()) {
             Map.Entry<String, String> entry = i.next();
             switch (entry.getKey()) {
-                case "dataFormatString":
-                    style.setDataFormatString(entry.getValue());
-                    break;
-                case "alignment":
-                    style.setAlignment(ExportColumnStyle.HorizontalAlignment.valueOf(entry.getValue()));
-                    break;
-                case "verticalAlignment":
-                    style.setVerticalAlignment(ExportColumnStyle.VerticalAlignment.valueOf(entry.getValue()));
-                    break;
-                case "fillBackgroundColor":
-                    style.setFillBackgroundColor(ExportColumnStyle.CellColor.valueOf(entry.getValue()));
-                    break;
-                case "width":
-                    style.setWidth(Integer.valueOf(entry.getValue()));
-                    break;
+            case "dataFormatString":
+                style.setDataFormatString(entry.getValue());
+                break;
+            case "trueValue":
+                style.setTrueValue(entry.getValue());
+                break;
+            case "falseValue":
+                style.setFalseValue(entry.getValue());
+                break;
+            case "alignment":
+                style.setAlignment(ExportColumnStyle.HorizontalAlignment.valueOf(entry.getValue()));
+                break;
+            case "verticalAlignment":
+                style.setVerticalAlignment(ExportColumnStyle.VerticalAlignment.valueOf(entry.getValue()));
+                break;
+            case "fillBackgroundColor":
+                style.setFillBackgroundColor(ExportColumnStyle.CellColor.valueOf(entry.getValue()));
+                break;
+            case "width":
+                style.setWidth(Integer.valueOf(entry.getValue()));
+                break;
             }
         }
         return style;

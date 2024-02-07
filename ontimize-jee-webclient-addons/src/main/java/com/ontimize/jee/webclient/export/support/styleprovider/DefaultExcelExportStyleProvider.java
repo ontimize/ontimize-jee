@@ -56,6 +56,7 @@ public class DefaultExcelExportStyleProvider extends AbstractExportStyleProvider
         return null;
     }
 
+    
     @Override
     public XSSFCellStyle getCellStyle(CellStyleContext<XSSFCellStyle, DataFormat> context) {
         List<String> finalCombinedStyleNames = new ArrayList<>();
