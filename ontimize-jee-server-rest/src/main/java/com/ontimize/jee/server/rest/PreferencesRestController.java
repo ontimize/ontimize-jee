@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import com.ontimize.jee.common.tools.EntityResultTools;
 import com.ontimize.jee.server.dao.common.INameConvention;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -92,21 +93,31 @@ public class PreferencesRestController {
         Map<String, Object> map = new HashMap<>();
         if (!entity.isEmpty() && !service.isEmpty()) {
             String entityService = entity.get() + "-" + service.get();
-            map.put(ENTITY_QUERY, entityService);
+            map.put(this.nameConvention.convertName(ENTITY_QUERY), entityService);
         }
         if (!type.isEmpty()) {
 
-            map.put("TYPE", PreferencesType.valueOf(type.get()).ordinal());
+            map.put(this.nameConvention.convertName("TYPE"), PreferencesType.valueOf(type.get()).ordinal());
         }
         List<String> attrList = new ArrayList<>();
-        attrList.add(ID_QUERY);
-        attrList.add(NAME_QUERY);
-        attrList.add(DESCRIPTION_QUERY);
-        attrList.add(ENTITY_QUERY);
-        attrList.add(TYPE_QUERY);
-        attrList.add(PREFERENCES_QUERY);
-        return preferencesService.preferenceQuery(map, attrList);
+        attrList.add(this.nameConvention.convertName(ID_QUERY));
+        attrList.add(this.nameConvention.convertName(NAME_QUERY));
+        attrList.add(this.nameConvention.convertName(DESCRIPTION_QUERY));
+        attrList.add(this.nameConvention.convertName(ENTITY_QUERY));
+        attrList.add(this.nameConvention.convertName(TYPE_QUERY));
+        attrList.add(this.nameConvention.convertName(PREFERENCES_QUERY));
+        EntityResult query = preferencesService.preferenceQuery(map, attrList);
+        convertToUpperColumnsEntityResult(query);
+        return query;
 
+    }
+
+    public void convertToUpperColumnsEntityResult(EntityResult res){
+
+        List<String> columns = new ArrayList<>(res.keySet());
+        for (String column : columns) {
+            EntityResultTools.renameColumn(res, column, column.toUpperCase());
+        }
     }
 
     @DeleteMapping(value = "/remove/{id}")
@@ -114,7 +125,7 @@ public class PreferencesRestController {
         EntityResult res = new EntityResultMapImpl();
         Map<String, Object> attrMap = new HashMap<>();
         try {
-            attrMap.put("ID", id);
+            attrMap.put(this.nameConvention.convertName("ID"), id);
             this.preferencesService.preferenceDelete(attrMap);
             res.setCode(EntityResult.OPERATION_SUCCESSFUL);
             return new ResponseEntity<>(res, HttpStatus.OK);
@@ -137,12 +148,12 @@ public class PreferencesRestController {
                 String serializedParams = mapper.writeValueAsString(param.getParams());
 
                 Map<String, Object> attrMap = new HashMap<>();
-                attrMap.put(NAME_QUERY, param.getName());
-                attrMap.put(DESCRIPTION_QUERY, param.getDescription());
-                attrMap.put(PREFERENCES_QUERY, serializedParams);
+                attrMap.put(this.nameConvention.convertName(NAME_QUERY), param.getName());
+                attrMap.put(this.nameConvention.convertName(DESCRIPTION_QUERY), param.getDescription());
+                attrMap.put(this.nameConvention.convertName(PREFERENCES_QUERY), serializedParams);
 
                 Map<String, Object> attrKey = new HashMap<>();
-                attrKey.put("ID", id);
+                attrKey.put(this.nameConvention.convertName("ID"), id);
                 this.preferencesService.preferenceUpdate(attrMap, attrKey);
                 res.setCode(EntityResult.OPERATION_SUCCESSFUL);
                 return new ResponseEntity<>(res, HttpStatus.OK);

@@ -4,95 +4,125 @@ import com.ontimize.jee.webclient.export.ExportColumnStyle;
 
 public class DefaultExportColumnStyle implements ExportColumnStyle {
 
-  private String dataFormatString;
+    private String dataFormatString;
 
-  private HorizontalAlignment alignment;
+    private HorizontalAlignment alignment;
 
-  private VerticalAlignment verticalAlignment;
+    private VerticalAlignment verticalAlignment;
 
-  private CellColor fillBackgroundColor;
+    private CellColor fillBackgroundColor;
 
-  private int width = -1;
+    private int width = -1;
 
-  @Override
-  public DefaultExportColumnStyle set(final ExportColumnStyle style) {
-    if (style == null) {
-      return this;
+    private String trueValue;
+
+    private String falseValue;
+
+    @Override
+    public DefaultExportColumnStyle set(final ExportColumnStyle style) {
+        if (style == null) {
+            return this;
+        }
+        if (style.getAlignment() != null) {
+            this.setAlignment(style.getAlignment());
+        }
+        if (style.getFillBackgroundColor() != null) {
+            this.setFillBackgroundColor(style.getFillBackgroundColor());
+        }
+        if (style.getDataFormatString() != null) {
+            this.setDataFormatString(style.getDataFormatString());
+        }
+        if (style.getFalseValue() != null) {
+            this.setFalseValue(style.getFalseValue());
+        }
+        if (style.getTrueValue() != null) {
+            this.setTrueValue(style.getTrueValue());
+        }
+        if (style.getVerticalAlignment() != null) {
+            this.setVerticalAlignment(style.getVerticalAlignment());
+        }
+        if (style.getWidth() != -1) {
+            this.setWidth(style.getWidth());
+        }
+        return this;
     }
-    if (style.getAlignment() != null) {
-      this.setAlignment(style.getAlignment());
+
+    @Override
+    public void reset() {
+        this.setDataFormatString(null);
+        this.setAlignment(null);
+        this.setVerticalAlignment(null);
+        this.setFillBackgroundColor(null);
     }
-    if (style.getFillBackgroundColor() != null) {
-      this.setFillBackgroundColor(style.getFillBackgroundColor());
+
+    @Override
+    public String getDataFormatString() {
+        return this.dataFormatString;
     }
-    if (style.getDataFormatString() != null) {
-      this.setDataFormatString(style.getDataFormatString());
+
+    @Override
+    public void setDataFormatString(final String dataFormat) {
+        this.dataFormatString = dataFormat;
     }
-    if (style.getVerticalAlignment() != null) {
-      this.setVerticalAlignment(style.getVerticalAlignment());
+
+    @Override
+    public HorizontalAlignment getAlignment() {
+        return this.alignment;
     }
-    if (style.getWidth() != -1) {
-      this.setWidth(style.getWidth());
+
+    @Override
+    public void setAlignment(final HorizontalAlignment align) {
+        this.alignment = align;
     }
-    return this;
-  }
 
-  @Override
-  public void reset() {
-    this.setDataFormatString(null);
-    this.setAlignment(null);
-    this.setVerticalAlignment(null);
-    this.setFillBackgroundColor(null);
-  }
+    @Override
+    public VerticalAlignment getVerticalAlignment() {
+        return this.verticalAlignment;
+    }
 
-  @Override
-  public String getDataFormatString() {
-    return this.dataFormatString;
-  }
+    @Override
+    public void setVerticalAlignment(final VerticalAlignment align) {
+        this.verticalAlignment = align;
+    }
 
-  @Override
-  public void setDataFormatString(final String dataFormat) {
-    this.dataFormatString = dataFormat;
-  }
+    @Override
+    public CellColor getFillBackgroundColor() {
+        return this.fillBackgroundColor;
+    }
 
-  @Override
-  public HorizontalAlignment getAlignment() {
-    return this.alignment;
-  }
+    @Override
+    public void setFillBackgroundColor(final CellColor bg) {
+        this.fillBackgroundColor = bg;
+    }
 
-  @Override
-  public void setAlignment(final HorizontalAlignment align) {
-    this.alignment = align;
-  }
+    @Override
+    public int getWidth() {
+        return this.width;
+    }
 
-  @Override
-  public VerticalAlignment getVerticalAlignment() {
-    return this.verticalAlignment;
-  }
+    @Override
+    public void setWidth(final int width) {
+        this.width = width;
+    }
 
-  @Override
-  public void setVerticalAlignment(final VerticalAlignment align) {
-    this.verticalAlignment = align;
-  }
+    @Override
+    public String getTrueValue() {
+        return trueValue;
+    }
 
-  @Override
-  public CellColor getFillBackgroundColor() {
-    return this.fillBackgroundColor;
-  }
+    @Override
+    public void setTrueValue(String trueValue) {
+        this.trueValue = trueValue;
+    }
 
-  @Override
-  public void setFillBackgroundColor(final CellColor bg) {
-    this.fillBackgroundColor = bg;
-  }
+    @Override
+    public String getFalseValue() {
+        return falseValue;
+    }
 
-  @Override
-  public int getWidth() {
-    return this.width;
-  }
-
-  @Override
-  public void setWidth(final int width) {
-    this.width = width;
-  }
+    @Override
+    public void setFalseValue(String falseValue) {
+        this.falseValue = falseValue;
+    }
 
 }

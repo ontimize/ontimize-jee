@@ -7,10 +7,23 @@
 <!-- ### Security 🛡️-->
 
 ## [Unreleased]
+## [5.11.0] - 2024-02-23
+### Added ✔️
+* **Multi tenant**: Ask the tenant provider to load a tenant when it can not be found.
+* **JaCoCo**: Add JaCoCo coverage on Sonar.
+* **Export**: Added boolean values to excel export.
+### Changed 🛠️
+* **Preferences**: Now use name convention instead of harcoded columns.
+* **Send mail action**: Update the mailing action with organizational secrets. Modified the title if the recipient is for testing.
+* **Sonar**: Upgrade Java version on Sonar action.
+### Fixed 🐛
+* **Export**: Solved bug with pdf exporter.
 ## [5.10.0] - 2023-11-06
-* **Security**: Do not allow logging in using the password hash.
+### Added ✔️
 * **Keycloak**: Allow to use the Keycloak authentication on non-http calls.
-* **Ontimize SQLStatementHandler**: Allow searching for a pattern in columns with any data type
+* **Ontimize SQLStatementHandler**: Allow searching for a pattern in columns with any data type.
+### Changed 🛠️
+* **Security**: Do not allow logging in using the password hash.
 ## [5.9.0] - 2023-07-31
 ### Added ✔️
 * **Multi tenant**: Add feature to set tenants on non-secured requests.
@@ -38,7 +51,8 @@
 * **POM**: Sorted pom alphabetically and sorted, extracted version to properties and put all dependencies into dependency manager.
 * **Sonar**: Fix some sonar code smells.
 
-[unreleased]: https://github.com/ontimize/ontimize-jee/compare/5.10.0...HEAD
+[unreleased]: https://github.com/ontimize/ontimize-jee/compare/5.11.0...HEAD
+[5.11.0]: https://github.com/ontimize/ontimize-jee/compare/5.10.0...5.11.0
 [5.10.0]: https://github.com/ontimize/ontimize-jee/compare/5.9.0...5.10.0
 [5.9.0]: https://github.com/ontimize/ontimize-jee/compare/5.8.0...5.9.0
 [5.8.0]: https://github.com/ontimize/ontimize-jee/compare/5.7.0...5.8.0

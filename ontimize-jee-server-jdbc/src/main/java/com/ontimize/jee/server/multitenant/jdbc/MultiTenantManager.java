@@ -31,18 +31,18 @@ public class MultiTenantManager implements IMultiTenantManager {
 		if (dataSourceMap == null) {
 			dataSourceMap = new HashMap();
 
-			List<TenantConnectionInfo> tenantList = this.tenantStore.getAll();
+			final List<TenantConnectionInfo> tenantList = this.tenantStore.getAll();
 
 			for (TenantConnectionInfo configuration : tenantList) {
 				try {
-					DriverManagerDataSource dataSource = new DriverManagerDataSource();
+					final DriverManagerDataSource dataSource = new DriverManagerDataSource();
 					dataSource.setDriverClassName(configuration.getDriverClass());
 					dataSource.setUrl(configuration.getJdbcUrl());
 					dataSource.setUsername(configuration.getUsername());
 					dataSource.setPassword(configuration.getPassword());
 
 					// Check that new connection is 'live'. If not - throw exception
-					try (Connection c = dataSource.getConnection()) {
+					try (final Connection c = dataSource.getConnection()) {
 						dataSourceMap.put(configuration.getTenantId(), dataSource);
 					} catch (Exception ex) {
 						logger.warn("Error creating connection: {} ", configuration.getTenantId(), ex);
@@ -56,11 +56,11 @@ public class MultiTenantManager implements IMultiTenantManager {
 	}
 
 	@Override
-	public void setTenantRoutingDataSource(MultiTenantRoutingDataSource tenantRoutingDataSource) {
+	public void setTenantRoutingDataSource(final MultiTenantRoutingDataSource tenantRoutingDataSource) {
 		this.tenantRoutingDataSource = tenantRoutingDataSource;
 	}
 
-	public void removeTenant(String tenantId) {
+	public void removeTenant(final String tenantId) {
 		if (this.dataSourceMap.containsKey(tenantId)) {
 			this.tenantStore.removeTenant(tenantId);
 			this.dataSourceMap.remove(tenantId);
@@ -68,16 +68,16 @@ public class MultiTenantManager implements IMultiTenantManager {
 		}
 	}
 
-	public void addTenant(String tenantId, String driverClassName, String jdbcUrl, String username, String password)
+	public void addTenant(final String tenantId, final String driverClassName, final String jdbcUrl, final String username, final String password)
 			throws SQLException {
 		if (!dataSourceMap.containsKey(tenantId)) {
-			DriverManagerDataSource dataSource = new DriverManagerDataSource();
+			final DriverManagerDataSource dataSource = new DriverManagerDataSource();
 			dataSource.setDriverClassName(driverClassName);
 			dataSource.setUrl(jdbcUrl);
 			dataSource.setUsername(username);
 			dataSource.setPassword(password);
 
-			TenantConnectionInfo tenantConfiguration = new TenantConnectionInfo();
+			final TenantConnectionInfo tenantConfiguration = new TenantConnectionInfo();
 			tenantConfiguration.setTenantId(tenantId);
 			tenantConfiguration.setDriverClass(driverClassName);
 			tenantConfiguration.setJdbcUrl(jdbcUrl);
