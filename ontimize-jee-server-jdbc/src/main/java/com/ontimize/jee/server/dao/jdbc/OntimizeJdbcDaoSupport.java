@@ -1387,10 +1387,10 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 		if (!this.isCompiled()) {
 			final ConfigurationFile annotation = this.getClass().getAnnotation(ConfigurationFile.class);
 			if (annotation != null) {
-				this.loadConfigurationFile(annotation.configurationFile(), annotation.configurationFilePlaceholder());
-			} else {
-				this.loadConfigurationFile(this.configurationFile, this.configurationFilePlaceholder);
+				this.configurationFile = annotation.configurationFile();
+				this.configurationFilePlaceholder = annotation.configurationFilePlaceholder();
 			}
+			this.loadConfigurationFile(this.configurationFile, this.configurationFilePlaceholder);
 
 			if (this.getJdbcTemplate() == null) {
 				throw new IllegalArgumentException("'dataSource' or 'jdbcTemplate' is required");
@@ -1547,6 +1547,14 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	 */
 	public String getConfigurationFilePlaceholder() {
 		return this.configurationFilePlaceholder;
+	}
+
+	public INameConvention getNameConvention() {
+		return nameConvention;
+	}
+
+	public void setNameConvention(INameConvention nameConvention) {
+		this.nameConvention = nameConvention;
 	}
 
 	/**
