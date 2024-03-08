@@ -1636,7 +1636,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	 * <p>
 	 * Automatically called by {@code validateParameters}.
 	 */
-	protected void checkCompiled() {
+	public void checkCompiled() {
 		if (!this.isCompiled()) {
 			OntimizeJdbcDaoSupport.logger.debug("JdbcInsert not compiled before execution - invoking compile");
 			this.compile();
