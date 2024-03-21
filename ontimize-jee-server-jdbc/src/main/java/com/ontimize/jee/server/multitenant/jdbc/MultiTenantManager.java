@@ -17,42 +17,31 @@ import org.slf4j.LoggerFactory;
 
 public class MultiTenantManager implements IMultiTenantManager {
 
-	Logger logger = LoggerFactory.getLogger(MultiTenantManager.class);
+	protected static final Logger logger = LoggerFactory.getLogger(MultiTenantManager.class);
 
-	private MultiTenantRoutingDataSource tenantRoutingDataSource;
+	protected MultiTenantRoutingDataSource tenantRoutingDataSource;
 
-	private Map<Object, Object> dataSourceMap;
+	protected Map<Object, Object> dataSourceMap;
 
 	@Autowired
-	private ITenantStore tenantStore;
+	protected ITenantStore tenantStore;
 
 	@Override
 	public Map<Object, Object> getDataSourceHashMap() {
-		if (dataSourceMap == null) {
-			dataSourceMap = new HashMap();
+		if (this.dataSourceMap == null) {
+			this.dataSourceMap = new HashMap<>();
 
 			final List<TenantConnectionInfo> tenantList = this.tenantStore.getAll();
 
-			for (TenantConnectionInfo configuration : tenantList) {
+			for (final TenantConnectionInfo configuration : tenantList) {
 				try {
-					final DriverManagerDataSource dataSource = new DriverManagerDataSource();
-					dataSource.setDriverClassName(configuration.getDriverClass());
-					dataSource.setUrl(configuration.getJdbcUrl());
-					dataSource.setUsername(configuration.getUsername());
-					dataSource.setPassword(configuration.getPassword());
-
-					// Check that new connection is 'live'. If not - throw exception
-					try (final Connection c = dataSource.getConnection()) {
-						dataSourceMap.put(configuration.getTenantId(), dataSource);
-					} catch (Exception ex) {
-						logger.warn("Error creating connection: {} ", configuration.getTenantId(), ex);
-					}
-				} catch (Exception ex) {
+					this.addTenant(configuration);
+				} catch (final Exception ex) {
 					logger.warn("Error creating datasource", ex);
 				}
 			}
 		}
-		return dataSourceMap;
+		return this.dataSourceMap;
 	}
 
 	@Override
@@ -70,27 +59,28 @@ public class MultiTenantManager implements IMultiTenantManager {
 
 	public void addTenant(final String tenantId, final String driverClassName, final String jdbcUrl, final String username, final String password)
 			throws SQLException {
-		if (!dataSourceMap.containsKey(tenantId)) {
-			final DriverManagerDataSource dataSource = new DriverManagerDataSource();
-			dataSource.setDriverClassName(driverClassName);
-			dataSource.setUrl(jdbcUrl);
-			dataSource.setUsername(username);
-			dataSource.setPassword(password);
+		if (!this.dataSourceMap.containsKey(tenantId)) {
+			final TenantConnectionInfo tenant = new TenantConnectionInfo();
+			tenant.setTenantId(tenantId);
+			tenant.setDriverClass(driverClassName);
+			tenant.setJdbcUrl(jdbcUrl);
+			tenant.setUsername(username);
+			tenant.setPassword(password);
 
-			final TenantConnectionInfo tenantConfiguration = new TenantConnectionInfo();
-			tenantConfiguration.setTenantId(tenantId);
-			tenantConfiguration.setDriverClass(driverClassName);
-			tenantConfiguration.setJdbcUrl(jdbcUrl);
-			tenantConfiguration.setUsername(username);
-			tenantConfiguration.setPassword(password);
+			this.addTenant(tenant);
+		}
+	}
 
-			this.tenantStore.addTenant(tenantConfiguration);
+	protected void addTenant(final TenantConnectionInfo tenant) throws SQLException {
+		final DriverManagerDataSource dataSource = new DriverManagerDataSource();
+		dataSource.setDriverClassName(tenant.getDriverClass());
+		dataSource.setUrl(tenant.getJdbcUrl());
+		dataSource.setUsername(tenant.getUsername());
+		dataSource.setPassword(tenant.getPassword());
 
-			// Check that new connection is 'live'. If not - throw exception
-			try (Connection c = dataSource.getConnection()) {
-				dataSourceMap.put(tenantId, dataSource);
-				tenantRoutingDataSource.afterPropertiesSet();
-			}
+		// Check that new connection is 'live'. If not - throw exception
+		try (final Connection c = dataSource.getConnection()) {
+			this.dataSourceMap.put(tenant.getTenantId(), dataSource);
 		}
 	}
 }

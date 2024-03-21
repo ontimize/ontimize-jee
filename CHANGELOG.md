@@ -7,6 +7,8 @@
 <!-- ### Security 🛡️-->
 
 ## [Unreleased]
+### Added ✔️
+* **Multi tenant**: Allow to configure tenants using the preferences.
 ## [5.11.0] - 2024-02-23
 ### Added ✔️
 * **Multi tenant**: Ask the tenant provider to load a tenant when it can not be found.
