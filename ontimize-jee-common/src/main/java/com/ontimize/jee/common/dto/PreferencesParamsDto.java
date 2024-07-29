@@ -4,59 +4,59 @@ public class PreferencesParamsDto {
     public enum PreferencesType {
         REPORT, CHART
     }
-    private String name;
-    private String description;
-    private String entity;
-    private String service;
-    private PreferencesType type;
-    private Object params;
+    private String preferencename;
+    private String preferencedescription;
+    private String preferenceentity;
+    private String preferenceservice;
+    private PreferencesType preferencetype;
+    private Object preferencepreferences;
 
-    public String getName() {
-        return name;
+    public String getPreferencename() {
+        return preferencename;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setPreferencename(String preferencename) {
+        this.preferencename = preferencename;
     }
 
-    public String getDescription() {
-        return description;
+    public String getPreferencedescription() {
+        return preferencedescription;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDescription(String preferencedescription) {
+        this.preferencedescription = preferencedescription;
     }
 
-    public String getEntity() {
-        return entity;
+    public String getPreferenceentity() {
+        return preferenceentity;
     }
 
-    public void setEntity(String entity) {
-        this.entity = entity;
+    public void setPreferenceentity(String preferenceentity) {
+        this.preferenceentity = preferenceentity;
     }
 
-    public String getService() {
-        return service;
+    public String getPreferenceservice() {
+        return preferenceservice;
     }
 
-    public void setService(String service) {
-        this.service = service;
+    public void setPreferenceservice(String preferenceservice) {
+        this.preferenceservice = preferenceservice;
     }
 
-    public Object getParams() {
-        return params;
+    public Object getPreferencepreferences() {
+        return preferencepreferences;
     }
 
-    public void setParams(Object params) {
-        this.params = params;
+    public void setPreferencepreferences(Object preferencepreferences) {
+        this.preferencepreferences = preferencepreferences;
+    }	
+
+    public PreferencesType getPreferencetype() {
+        return preferencetype;
     }
 
-    public PreferencesType getType() {
-        return type;
-    }
-
-    public void setType(PreferencesType type) {
-        this.type = type;
+    public void setPreferencetype(PreferencesType preferencetype) {
+        this.preferencetype = preferencetype;
     }
 
 }
