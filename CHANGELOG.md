@@ -1,4 +1,5 @@
 <!-- ## [Unreleased] -->
+<!-- ### Breaking changes ⚠>
 <!-- ### Added ✔️-->
 <!-- ### Changed 🛠️-->
 <!-- ### Deprecated 🛑-->
