@@ -18,32 +18,32 @@ import com.ontimize.jee.server.dao.IOntimizeDaoSupport;
 
 public class TenantStoreDao implements ITenantStore, InitializingBean {
 	private static final String TENANT_REPOSITORY_KEY = "${ontimize.multitenant.configuration.tenant-repository}";
-	private static final String TENANT_QUERY_ID_KEY = "${ontimize.multitenant.configuration.query-id:default}";
-	private static final String TENANT_ID_KEY = "${ontimize.multitenant.configuration.tenant-id-column}";
-	private static final String DRIVER_CLASS_KEY = "${ontimize.multitenant.configuration.driver-class-column}";
-	private static final String JDBC_URL_KEY = "${ontimize.multitenant.configuration.jdbc-url-column}";
-	private static final String USERNAME_KEY = "${ontimize.multitenant.configuration.username-column}";
-	private static final String PASSWORD_KEY = "${ontimize.multitenant.configuration.password-column}";
+	private static final String QUERY_ID_KEY = "${ontimize.multitenant.configuration.query-id:default}";
+	private static final String TENANT_ID_COLUMN_KEY = "${ontimize.multitenant.configuration.tenant-id-column}";
+	private static final String DRIVER_CLASS_COLUMN_KEY = "${ontimize.multitenant.configuration.driver-class-column}";
+	private static final String JDBC_URL_COLUMN_KEY = "${ontimize.multitenant.configuration.jdbc-url-column}";
+	private static final String USERNAME_COLUMN_KEY = "${ontimize.multitenant.configuration.username-column}";
+	private static final String PASSWORD_COLUMN_KEY = "${ontimize.multitenant.configuration.password-column}";
 
 	@Value(TENANT_REPOSITORY_KEY)
 	private String tenantRepository;
 
-	@Value(TENANT_QUERY_ID_KEY)
+	@Value(QUERY_ID_KEY)
 	private String queryId;
 
-	@Value(TENANT_ID_KEY)
+	@Value(TENANT_ID_COLUMN_KEY)
 	private String tenantIdColumnName;
 
-	@Value(DRIVER_CLASS_KEY)
+	@Value(DRIVER_CLASS_COLUMN_KEY)
 	private String driverClassColumnName;
 
-	@Value(JDBC_URL_KEY)
+	@Value(JDBC_URL_COLUMN_KEY)
 	private String jdbcUrlColumnName;
 
-	@Value(USERNAME_KEY)
+	@Value(USERNAME_COLUMN_KEY)
 	private String usernameColumnName;
 
-	@Value(PASSWORD_KEY)
+	@Value(PASSWORD_COLUMN_KEY)
 	private String passwordColumnName;
 
 	@Autowired
@@ -65,8 +65,8 @@ public class TenantStoreDao implements ITenantStore, InitializingBean {
 
 			tci = new TenantConnectionInfo();
 
-			tci.setDriverClass((String) rec.get(this.driverClassColumnName));
 			tci.setTenantId((String) rec.get(this.tenantIdColumnName));
+			tci.setDriverClass((String) rec.get(this.driverClassColumnName));
 			tci.setJdbcUrl((String) rec.get(this.jdbcUrlColumnName));
 			tci.setUsername(((String) rec.get(this.usernameColumnName)));
 			tci.setPassword(((String) rec.get(this.passwordColumnName)));
@@ -87,8 +87,8 @@ public class TenantStoreDao implements ITenantStore, InitializingBean {
 			Map<Object, Object> rec = result.getRecordValues(i);
 			TenantConnectionInfo tci = new TenantConnectionInfo();
 
-			tci.setDriverClass((String) rec.get(this.driverClassColumnName));
 			tci.setTenantId((String) rec.get(this.tenantIdColumnName));
+			tci.setDriverClass((String) rec.get(this.driverClassColumnName));
 			tci.setJdbcUrl((String) rec.get(this.jdbcUrlColumnName));
 			tci.setUsername(((String) rec.get(this.usernameColumnName)));
 			tci.setPassword(((String) rec.get(this.passwordColumnName)));
@@ -102,8 +102,8 @@ public class TenantStoreDao implements ITenantStore, InitializingBean {
 	@Override
 	public void addTenant(TenantConnectionInfo settings) {
 		Map<Object, Object> data = new HashMap<>();
-		data.put(this.driverClassColumnName, settings.getDriverClass());
 		data.put(this.tenantIdColumnName, settings.getTenantId());
+		data.put(this.driverClassColumnName, settings.getDriverClass());
 		data.put(this.jdbcUrlColumnName, settings.getJdbcUrl());
 		data.put(this.usernameColumnName, settings.getUsername());
 		data.put(this.passwordColumnName, settings.getPassword());

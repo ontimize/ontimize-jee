@@ -2,15 +2,10 @@ package com.ontimize.jee.common.multitenant;
 
 public class TenantConnectionInfo {
 	private String tenantId;
-
 	private String tenantName;
-
 	private String driverClass;
-
 	private String jdbcUrl;
-
 	private String username;
-
 	private String password;
 
 	public String getTenantId() {
