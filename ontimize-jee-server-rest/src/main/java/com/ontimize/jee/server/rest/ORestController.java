@@ -76,7 +76,7 @@ public abstract class ORestController<S> {
                     attributes);
             return new ResponseEntity<>(eR, HttpStatus.OK);
         } catch (Exception error) {
-            return this.processError(error);
+            return this.processError(error, buffer.toString());
         }
     }
 
@@ -87,8 +87,8 @@ public abstract class ORestController<S> {
         ORestController.logger.debug("Invoked /{}/search", name);
         CheckingTools.failIf(this.getService() == null, NullPointerException.class, "Service is null");
         ORestController.logger.debug("Service name: {}", this.getService());
+        StringBuffer buffer = new StringBuffer();
         try {
-            StringBuffer buffer = new StringBuffer();
             buffer.append(name).append(ORestController.QUERY);
 
             Map<?, ?> kvQueryParameter = queryParameter.getFilter();
@@ -102,7 +102,7 @@ public abstract class ORestController<S> {
                     attributesValues);
             return new ResponseEntity<>(eR, HttpStatus.OK);
         } catch (Exception e) {
-            return this.processError(e);
+            return this.processError(e, buffer.toString());
         }
     }
 
@@ -113,8 +113,8 @@ public abstract class ORestController<S> {
         ORestController.logger.debug("Invoked /{}/advancedsearch", name);
         CheckingTools.failIf(this.getService() == null, NullPointerException.class, "Service is null");
         ORestController.logger.debug("Service name: {}", this.getService());
+        StringBuffer buffer = new StringBuffer();
         try {
-            StringBuffer buffer = new StringBuffer();
             buffer.append(name).append(ORestController.PAGINATION_QUERY);
 
             Map<?, ?> kvQueryParameter = aQueryParameter.getFilter();
@@ -131,7 +131,7 @@ public abstract class ORestController<S> {
                     buffer.toString(), keysValues, attributesValues, pagesize, offset, orderby);
             return new ResponseEntity<>(eR, HttpStatus.OK);
         } catch (Exception e) {
-            return this.processAdvancedError(e);
+            return this.processAdvancedError(e, buffer.toString());
         }
     }
 
@@ -148,7 +148,7 @@ public abstract class ORestController<S> {
             EntityResult eR = (EntityResult) ReflectionTools.invoke(this.getService(), buffer.toString(), attributes);
             return new ResponseEntity<>(eR, HttpStatus.OK);
         } catch (Exception e) {
-            return this.processError(e);
+            return this.processError(e, buffer.toString());
         }
     }
 
@@ -166,7 +166,7 @@ public abstract class ORestController<S> {
             EntityResult eR = (EntityResult) ReflectionTools.invoke(this.getService(), buffer.toString(), attributes);
             return new ResponseEntity<>(eR, HttpStatus.OK);
         } catch (Exception e) {
-            return this.processError(e);
+            return this.processError(e, buffer.toString());
         }
     }
 
@@ -185,32 +185,34 @@ public abstract class ORestController<S> {
             EntityResult eR = (EntityResult) ReflectionTools.invoke(this.getService(), buffer.toString(), av, kv);
             return new ResponseEntity<>(eR, HttpStatus.OK);
         } catch (Exception e) {
-            return this.processError(e);
+            return this.processError(e, buffer.toString());
         }
     }
 
-    protected ResponseEntity<EntityResult> processError(Exception error) {
-        ORestController.logger.error("{}", error.getMessage(), error);
+    protected ResponseEntity<EntityResult> processError(Exception error, String methodName) {
+        Throwable cause = this.getCause(error);
+        ORestController.logger.error("Exception in: {}, caused by: {}, method: {}, trace below:", this.getClass().getCanonicalName(), this.getService().getClass().getCanonicalName(), methodName, cause);
         EntityResult entityResult = new EntityResultMapImpl(EntityResult.OPERATION_WRONG,
                 EntityResult.BEST_COMPRESSION);
         entityResult.setMessage(this.getErrorMessage(error));
         return new ResponseEntity<>(entityResult, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    protected ResponseEntity<AdvancedEntityResult> processAdvancedError(Exception error) {
-        ORestController.logger.error("{}", error.getMessage(), error);
+    protected ResponseEntity<AdvancedEntityResult> processAdvancedError(Exception error, String methodName) {
+        Throwable cause = this.getCause(error);
+        ORestController.logger.error("Exception in: {}, caused by: {}, method: {}, trace below:", this.getClass().getCanonicalName(), this.getService().getClass().getCanonicalName(), methodName, cause);
         AdvancedEntityResult advancedEntityResult = new AdvancedEntityResultMapImpl(EntityResult.OPERATION_WRONG,
                 EntityResult.BEST_COMPRESSION);
         advancedEntityResult.setMessage(this.getErrorMessage(error));
         return new ResponseEntity<>(advancedEntityResult, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    protected String getErrorMessage(Exception error) {
+    protected String getErrorMessage(Throwable error) {
         if (this.exceptionTranslator != null) {
             // deberian venir siempre en una ontimizejeeruntimeexception que lanza reflectiontools
-            return this.exceptionTranslator.translateException(this.getCause(error)).getMessage();
+            return this.exceptionTranslator.translateException(error).getMessage();
         }
-        return this.getCause(error).getMessage();
+        return error.getMessage();
     }
 
     protected Throwable getCause(final Throwable cause) {
