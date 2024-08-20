@@ -11,7 +11,8 @@
 ### Added ✔️
 * **Multi tenant**: Allow to configure tenants using the preferences.
 ### Changed 🛠️
-* **Spring Framework**: Update Spring Framework version from 5.3.6 → 5.3.18 
+* **Spring Framework**: Update Spring Framework version from 5.3.6 → 5.3.18
+* **ORestController**: Improved logging of exceptions displayed when performing basic CRUD operations of a service. Issue #160
 ## [5.11.0] - 2024-02-23
 ### Added ✔️
 * **Multi tenant**: Ask the tenant provider to load a tenant when it can not be found.
