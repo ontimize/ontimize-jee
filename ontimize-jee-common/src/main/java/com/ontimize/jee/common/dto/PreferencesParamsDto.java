@@ -4,59 +4,59 @@ public class PreferencesParamsDto {
     public enum PreferencesType {
         REPORT, CHART
     }
-    private String preferencename;
-    private String preferencedescription;
-    private String preferenceentity;
-    private String preferenceservice;
-    private PreferencesType preferencetype;
-    private Object preferencepreferences;
+    private String preferenceName;
+    private String preferenceDescription;
+    private String preferenceEntity;
+    private String preferenceService;
+    private PreferencesType preferenceType;
+    private Object preferencePreferences;
 
-    public String getPreferencename() {
-        return preferencename;
+    public String getPreferenceName() {
+        return preferenceName;
     }
 
-    public void setPreferencename(String preferencename) {
-        this.preferencename = preferencename;
+    public void setPreferenceName(String preferenceName) {
+        this.preferenceName = preferenceName;
     }
 
-    public String getPreferencedescription() {
-        return preferencedescription;
+    public String getPreferenceDescription() {
+        return preferenceDescription;
     }
 
-    public void setDescription(String preferencedescription) {
-        this.preferencedescription = preferencedescription;
+    public void setDescription(String preferenceDescription) {
+        this.preferenceDescription = preferenceDescription;
     }
 
-    public String getPreferenceentity() {
-        return preferenceentity;
+    public String getPreferenceEntity() {
+        return preferenceEntity;
     }
 
-    public void setPreferenceentity(String preferenceentity) {
-        this.preferenceentity = preferenceentity;
+    public void setPreferenceEntity(String preferenceEntity) {
+        this.preferenceEntity = preferenceEntity;
     }
 
-    public String getPreferenceservice() {
-        return preferenceservice;
+    public String getPreferenceService() {
+        return preferenceService;
     }
 
-    public void setPreferenceservice(String preferenceservice) {
-        this.preferenceservice = preferenceservice;
+    public void setPreferenceService(String preferenceService) {
+        this.preferenceService = preferenceService;
     }
 
-    public Object getPreferencepreferences() {
-        return preferencepreferences;
+    public Object getPreferencePreferences() {
+        return preferencePreferences;
     }
 
-    public void setPreferencepreferences(Object preferencepreferences) {
-        this.preferencepreferences = preferencepreferences;
+    public void setPreferencePreferences(Object preferencePreferences) {
+        this.preferencePreferences = preferencePreferences;
     }	
 
-    public PreferencesType getPreferencetype() {
-        return preferencetype;
+    public PreferencesType getPreferenceType() {
+        return preferenceType;
     }
 
-    public void setPreferencetype(PreferencesType preferencetype) {
-        this.preferencetype = preferencetype;
+    public void setPreferenceType(PreferencesType preferenceType) {
+        this.preferenceType = preferenceType;
     }
 
 }

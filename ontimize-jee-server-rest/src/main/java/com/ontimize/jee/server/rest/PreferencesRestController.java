@@ -64,14 +64,14 @@ public class PreferencesRestController {
                 ObjectMapper mapper = new ObjectMapper();
                 mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
                 mapper.setSerializationInclusion(Include.NON_NULL);
-                String serializedParams = mapper.writeValueAsString(param.getPreferencepreferences());
+                String serializedParams = mapper.writeValueAsString(param.getPreferencePreferences());
 
                 Map<String, Object> attrMap = new HashMap<>();
-                attrMap.put(this.nameConvention.convertName(NAME_QUERY), param.getPreferencename());
-                attrMap.put(this.nameConvention.convertName(DESCRIPTION_QUERY), param.getPreferencedescription());
-                attrMap.put(this.nameConvention.convertName(ENTITY_QUERY), param.getPreferenceentity() + "-" + param.getPreferenceservice());
+                attrMap.put(this.nameConvention.convertName(NAME_QUERY), param.getPreferenceName());
+                attrMap.put(this.nameConvention.convertName(DESCRIPTION_QUERY), param.getPreferenceDescription());
+                attrMap.put(this.nameConvention.convertName(ENTITY_QUERY), param.getPreferenceEntity() + "-" + param.getPreferenceService());
                 attrMap.put(this.nameConvention.convertName(PREFERENCES_QUERY), serializedParams);
-                attrMap.put(this.nameConvention.convertName(TYPE_QUERY), param.getPreferencetype().ordinal());
+                attrMap.put(this.nameConvention.convertName(TYPE_QUERY), param.getPreferenceType().ordinal());
 
                 res = this.preferencesService.preferenceInsert(attrMap);
                 return new ResponseEntity<>(res, HttpStatus.OK);
@@ -145,11 +145,11 @@ public class PreferencesRestController {
             try {
                 ObjectMapper mapper = new ObjectMapper();
                 mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-                String serializedParams = mapper.writeValueAsString(param.getPreferencepreferences());
+                String serializedParams = mapper.writeValueAsString(param.getPreferencePreferences());
 
                 Map<String, Object> attrMap = new HashMap<>();
-                attrMap.put(this.nameConvention.convertName(NAME_QUERY), param.getPreferencename());
-                attrMap.put(this.nameConvention.convertName(DESCRIPTION_QUERY), param.getPreferencedescription());
+                attrMap.put(this.nameConvention.convertName(NAME_QUERY), param.getPreferenceName());
+                attrMap.put(this.nameConvention.convertName(DESCRIPTION_QUERY), param.getPreferenceDescription());
                 attrMap.put(this.nameConvention.convertName(PREFERENCES_QUERY), serializedParams);
 
                 Map<String, Object> attrKey = new HashMap<>();
