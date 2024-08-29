@@ -1,15 +1,29 @@
 package com.ontimize.jee.common.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class PreferencesParamsDto {
     public enum PreferencesType {
         REPORT, CHART
     }
+    
+    @JsonProperty("preferencename")
     private String preferenceName;
+    
+    @JsonProperty("preferencedescription")
     private String preferenceDescription;
+    
+    @JsonProperty("preferenceentity")
     private String preferenceEntity;
+    
+    @JsonProperty("preferenceservice")
     private String preferenceService;
+    
+    @JsonProperty("preferencetype")
     private PreferencesType preferenceType;
-    private Object preferencePreferences;
+    
+    @JsonProperty("preferenceparameters")
+    private Object preferenceParameters;
 
     public String getPreferenceName() {
         return preferenceName;
@@ -43,12 +57,12 @@ public class PreferencesParamsDto {
         this.preferenceService = preferenceService;
     }
 
-    public Object getPreferencePreferences() {
-        return preferencePreferences;
+    public Object getPreferenceParameters() {
+        return preferenceParameters;
     }
 
-    public void setPreferencePreferences(Object preferencePreferences) {
-        this.preferencePreferences = preferencePreferences;
+    public void setPreferenceParameters(Object preferenceParameters) {
+        this.preferenceParameters = preferenceParameters;
     }	
 
     public PreferencesType getPreferenceType() {

@@ -64,7 +64,7 @@ public class PreferencesRestController {
                 ObjectMapper mapper = new ObjectMapper();
                 mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
                 mapper.setSerializationInclusion(Include.NON_NULL);
-                String serializedParams = mapper.writeValueAsString(param.getPreferencePreferences());
+                String serializedParams = mapper.writeValueAsString(param.getPreferenceParameters());
 
                 Map<String, Object> attrMap = new HashMap<>();
                 attrMap.put(this.nameConvention.convertName(NAME_QUERY), param.getPreferenceName());
@@ -145,7 +145,7 @@ public class PreferencesRestController {
             try {
                 ObjectMapper mapper = new ObjectMapper();
                 mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-                String serializedParams = mapper.writeValueAsString(param.getPreferencePreferences());
+                String serializedParams = mapper.writeValueAsString(param.getPreferenceParameters());
 
                 Map<String, Object> attrMap = new HashMap<>();
                 attrMap.put(this.nameConvention.convertName(NAME_QUERY), param.getPreferenceName());
