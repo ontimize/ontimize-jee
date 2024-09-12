@@ -37,7 +37,7 @@ public class LdapAuthenticationMechanism implements IAuthenticationMechanism {
 	public static final String BINDDN_PROPERTY = "${ontimize.security.ldap.binddn}";
 	public static final String BASEDN_PROPERTY = "${ontimize.security.ldap.basedn}";
 	public static final String DOMAIN_PROPERTY = "${ontimize.security.ldap.domain}";
-	public static final String SSL_PROPERTY = "${ontimize.security.ldap.ssl}";
+	public static final String SSL_PROPERTY = "${ontimize.security.ldap.ssl:false}";
 
 
 	private String host;
