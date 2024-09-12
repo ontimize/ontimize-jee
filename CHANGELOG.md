@@ -1,5 +1,5 @@
 <!-- ## [Unreleased] -->
-<!-- ### Breaking changes ⚠>
+<!-- ### Breaking changes ⚠ -->
 <!-- ### Added ✔️-->
 <!-- ### Changed 🛠️-->
 <!-- ### Deprecated 🛑-->
@@ -10,6 +10,7 @@
 ## [Unreleased]
 ### Added ✔️
 * **Multi tenant**: Allow to configure tenants using the preferences.
+* **LdapAuthenticationMechanism**: Allow to use SSL in LDAP connections.
 ### Changed 🛠️
 * **Spring Framework**: Update Spring Framework version from 5.3.6 → 5.3.18
 * **ORestController**: Improved logging of exceptions displayed when performing basic CRUD operations of a service. Issue #160
