@@ -25,7 +25,7 @@ import java.util.Map.Entry;
 import java.util.Properties;
 
 import javax.sql.DataSource;
-import javax.xml.bind.JAXB;
+import jakarta.xml.bind.JAXB;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -1784,7 +1784,8 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 			// Postgres uses a RETURNING
 			// clause while HSQL uses a second query that has to be executed
 			// with the same connection.
-			final String keyQuery = this.tableMetaDataContext.getSimulationQueryForGetGeneratedKey(
+
+			final String keyQuery = this.tableMetaDataContext.getSimpleQueryForGetGeneratedKey(
 					this.tableMetaDataContext.getTableName(), this.getGeneratedKeyNames()[0]);
 			Assert.notNull(keyQuery, "Query for simulating get generated keys can't be null");
 			if (keyQuery.toUpperCase().startsWith("RETURNING")) {

@@ -29,7 +29,7 @@ public class DefaultOAuth2ClientUserInfoProviderImpl implements IOAuth2ClientUse
             return userInfoMapEntity.getBody();
         } else {
             DefaultOAuth2ClientUserInfoProviderImpl.logger.error("cannot get user info");
-            throw new InvalidCredentialsException(userInfoMapEntity.getStatusCode().getReasonPhrase());
+            throw new InvalidCredentialsException(userInfoMapEntity.getStatusCode().toString());
         }
     }
 

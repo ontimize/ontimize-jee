@@ -14,9 +14,11 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.redis.core.RedisOperations;
-import org.springframework.session.ExpiringSession;
+//import org.springframework.session.ExpiringSession;
+import org.springframework.session.Session;
 import org.springframework.session.SessionRepository;
-import org.springframework.session.data.redis.RedisOperationsSessionRepository;
+import org.springframework.session.data.redis.RedisIndexedSessionRepository;
+//import org.springframework.session.data.redis.RedisOperationsSessionRepository;
 import org.springframework.stereotype.Component;
 
 import com.ontimize.jee.common.exceptions.OntimizeJEEException;
@@ -44,18 +46,18 @@ public class SessionHelper implements ApplicationContextAware {
         if (this.sessionRepo instanceof StatisticsMapSessionRepository) {
             Collection<String> sessionList = ((StatisticsMapSessionRepository) this.sessionRepo).getActiveSessions();
             for (String sesId : sessionList) {
-                ExpiringSession session = (ExpiringSession) this.sessionRepo.getSession(sesId);
+                Session session = this.sessionRepo.findById(sesId);
                 if (session != null) {
                     res.add(this.toDto(session));
                 }
             }
-        } else if (this.sessionRepo instanceof RedisOperationsSessionRepository) {
+        } else if (this.sessionRepo instanceof RedisIndexedSessionRepository) {
             RedisOperations<String, Object> redisOps = this.applicationContext.getBean(RedisOperations.class);
             Set<String> keys = redisOps.keys(SessionHelper.REDIS_KEY_PREFIX + "*");
             SessionHelper.LOG.info("Number of active sessions: " + keys.size());
             for (String key : keys) {
                 String id = key.substring(SessionHelper.REDIS_KEY_PREFIX.length());
-                ExpiringSession session = (ExpiringSession) this.sessionRepo.getSession(id);
+                Session session = this.sessionRepo.findById(id);
                 if (session != null) {
                     res.add(this.toDto(session));
                 }
@@ -67,15 +69,15 @@ public class SessionHelper implements ApplicationContextAware {
 
     }
 
-    private SessionDto toDto(ExpiringSession session) {
+    private SessionDto toDto(Session session) {
         HashMap<String, Object> sessionAttrs = new HashMap<>(session.getAttributeNames().size());
         for (String attrName : session.getAttributeNames()) {
             Object attrValue = session.getAttribute(attrName);
             sessionAttrs.put(attrName, attrValue);
         }
 
-        return new SessionDto(session.getId(), sessionAttrs, session.getLastAccessedTime(), session.getCreationTime(),
-                session.getMaxInactiveIntervalInSeconds());
+        return new SessionDto(session.getId(), sessionAttrs, session.getLastAccessedTime().toEpochMilli(), session.getCreationTime().toEpochMilli(),
+                Math.toIntExact(session.getMaxInactiveInterval().getSeconds()));
     }
 
     @Override

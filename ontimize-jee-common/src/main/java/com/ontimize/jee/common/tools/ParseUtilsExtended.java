@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 
 import javax.swing.Icon;
 import javax.swing.SwingConstants;
-import javax.xml.bind.DatatypeConverter;
+import jakarta.xml.bind.DatatypeConverter;
 
 import com.ontimize.jee.common.util.ParseTools;
 

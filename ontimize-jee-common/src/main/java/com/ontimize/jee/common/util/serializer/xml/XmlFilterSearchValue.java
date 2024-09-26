@@ -4,8 +4,8 @@ import com.ontimize.jee.common.gui.SearchValue;
 import com.ontimize.jee.common.util.serializer.xml.adapters.XmlStaticAdapters;
 import org.w3c.dom.Element;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 @XmlRootElement(name = "search-value")

@@ -6,10 +6,13 @@
     <parent>
         <groupId>com.ontimize.jee</groupId>
         <artifactId>ontimize-jee</artifactId>
-        <version>5.12.0-SNAPSHOT</version>
+        <version>17.0.0-SNAPSHOT</version>
     </parent>
 
+    <name>Ontimize EE (JaCoCo module)</name>
+    <description>Ontimize EE (JaCoCo module)</description>
     <artifactId>ontimize-jee-jacoco</artifactId>
+
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>

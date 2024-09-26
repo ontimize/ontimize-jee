@@ -1,18 +1,25 @@
 package com.ontimize.jee.server.security.authentication.jwt;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.Map;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.jwt.Jwt;
-import org.springframework.security.jwt.JwtHelper;
-import org.springframework.security.jwt.crypto.sign.MacSigner;
-import org.springframework.security.jwt.crypto.sign.SignerVerifier;
+//import org.springframework.security.jwt.Jwt;
+//import org.springframework.security.jwt.JwtHelper;
+//import org.springframework.security.jwt.crypto.sign.MacSigner;
+//import org.springframework.security.jwt.crypto.sign.SignerVerifier;
 import org.springframework.util.Assert;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import javax.crypto.SecretKey;
 
 /**
  * The Class DefaultJwtTokenService.
@@ -28,8 +35,11 @@ public class DefaultJwtService implements IJwtService {
     /** The secret. */
     private String secret;
 
+    /** Secret key created in the constructor */
+    private final SecretKey secretKey;
+
     /** The signer verifier. */
-    private final SignerVerifier signerVerifier;
+//    private final SignerVerifier signerVerifier;
 
     /**
      * Instantiates a new default jwt token service.
@@ -38,7 +48,8 @@ public class DefaultJwtService implements IJwtService {
     public DefaultJwtService(String secret) {
         Assert.notNull(secret, "secret must not be null");
         this.secret = secret;
-        this.signerVerifier = new MacSigner(secret);
+        this.secretKey = Keys.hmacShaKeyFor(secret.getBytes());
+//        this.signerVerifier = new MacSigner(secret);
     }
 
     /*
@@ -49,8 +60,13 @@ public class DefaultJwtService implements IJwtService {
     @Override
     public String sign(Map<String, Object> claims) {
         try {
-            Jwt jwt = JwtHelper.encode(this.objectMapper.writeValueAsString(claims), this.signerVerifier);
-            return jwt.getEncoded();
+//            Jwt jwt = JwtHelper.encode(this.objectMapper.writeValueAsString(claims), this.signerVerifier);
+//            return jwt.getEncoded();
+            return Jwts.builder()
+                    .setSubject(objectMapper.writeValueAsString(claims))
+                    .setIssuedAt(new Date())
+                    .signWith(this.secretKey, SignatureAlgorithm.HS256)
+                    .compact();
         } catch (JsonProcessingException error) {
             DefaultJwtService.logger.error(null, error);
             return null;
@@ -65,13 +81,14 @@ public class DefaultJwtService implements IJwtService {
      */
     @Override
     public Map<String, Object> verify(String token) {
-        Jwt jwt = JwtHelper.decodeAndVerify(token, this.signerVerifier);
-        try {
-            return this.objectMapper.readValue(jwt.getClaims(), Map.class);
-        } catch (IOException error) {
-            DefaultJwtService.logger.error(null, error);
-            return null;
-        }
+//        Jwt jwt = JwtHelper.decodeAndVerify(token, this.signerVerifier);
+        //            return this.objectMapper.readValue(jwt.getClaims(), Map.class);
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(this.secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+        return claims;
     }
 
     /**

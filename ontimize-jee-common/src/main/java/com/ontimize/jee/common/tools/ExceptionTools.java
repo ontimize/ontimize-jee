@@ -4,9 +4,10 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.UndeclaredThrowableException;
+import java.rmi.RemoteException;
 
 import org.springframework.core.NestedRuntimeException;
-import org.springframework.remoting.RemoteAccessException;
+//import org.springframework.remoting.RemoteAccessException;
 
 import com.ontimize.jee.common.exceptions.OntimizeJEEException;
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
@@ -61,7 +62,7 @@ public class ExceptionTools {
     public static Throwable rescueCorrectExceptionToClient(Throwable error) {
         if ((error instanceof InvalidDelegateException) && (error.getCause() != null)) {
             return rescueCorrectExceptionToClient(error.getCause());
-        } else if ((error instanceof RemoteAccessException) && (error.getCause() != null)) {
+        } else if ((error instanceof RemoteException) && (error.getCause() != null)) {
             return rescueCorrectExceptionToClient(error.getCause());
         } else if ((error instanceof OntimizeJEERuntimeException) && (error.getCause() != null)
                 && (error.getMessage() == null)) {

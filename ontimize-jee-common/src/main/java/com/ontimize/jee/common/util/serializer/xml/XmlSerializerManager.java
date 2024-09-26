@@ -2,9 +2,9 @@ package com.ontimize.jee.common.util.serializer.xml;
 
 import com.ontimize.jee.common.util.serializer.ISerializerManager;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.Marshaller;
+import jakarta.xml.bind.Unmarshaller;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.Map;

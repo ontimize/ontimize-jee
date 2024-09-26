@@ -7,7 +7,7 @@ package com.ontimize.jee.server.requestfilter;
 
 import java.util.Enumeration;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * The Class RequestHeaderProvider.

@@ -1,6 +1,6 @@
 package com.ontimize.jee.webclient.export.base;
 
-import javax.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlElement;
 import java.util.Map;
 
 public class AdvancedExportQueryParameters extends BaseExportQueryParameters {

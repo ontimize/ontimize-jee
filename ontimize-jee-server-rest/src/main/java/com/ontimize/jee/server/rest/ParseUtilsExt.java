@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.regex.Pattern;
 import java.util.UUID;
 
-import javax.xml.bind.DatatypeConverter;
+import jakarta.xml.bind.DatatypeConverter;
 
 import com.ontimize.jee.common.util.Base64Utils;
 import com.ontimize.jee.common.util.ParseTools;

@@ -6,6 +6,6 @@
 // Generated on: 2014.07.16 at 04:38:17 PM CEST
 //
 
-@javax.xml.bind.annotation.XmlSchema(namespace = "http://www.ontimize.com/schema/jdbc",
-        elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
+@jakarta.xml.bind.annotation.XmlSchema(namespace = "http://www.ontimize.com/schema/jdbc",
+        elementFormDefault = jakarta.xml.bind.annotation.XmlNsForm.QUALIFIED)
 package com.ontimize.jee.server.dao.jdbc.setup;

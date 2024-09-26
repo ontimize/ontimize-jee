@@ -1,6 +1,6 @@
 package com.ontimize.jee.server.spring;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.web.context.ServletContextAware;

@@ -1,12 +1,13 @@
 package com.ontimize.jee.server.exceptiontranslator;
 
 import java.lang.reflect.InvocationTargetException;
+import java.rmi.RemoteException;
 import java.sql.SQLException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.NestedRuntimeException;
-import org.springframework.remoting.RemoteAccessException;
+//import org.springframework.remoting.RemoteAccessException;
 
 import com.ontimize.jee.common.exceptions.IParametrizedException;
 import com.ontimize.jee.common.exceptions.NoTraceOntimizeJEEException;
@@ -42,7 +43,7 @@ public class OntimizeExceptionTranslator
     protected Throwable rescueCorrectExceptionToClient(Throwable error) {
         if ((error instanceof InvalidDelegateException) && (error.getCause() != null)) {
             return this.rescueCorrectExceptionToClient(error.getCause());
-        } else if ((error instanceof RemoteAccessException) && (error.getCause() != null)) {
+        } else if ((error instanceof RemoteException) && (error.getCause() != null)) {
             return this.rescueCorrectExceptionToClient(error.getCause());
         } else if ((error instanceof OntimizeJEERuntimeException) && (error.getCause() != null)
                 && (error.getMessage() == null)) {

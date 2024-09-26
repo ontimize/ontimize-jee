@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import javax.websocket.Session;
+import jakarta.websocket.Session;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextImpl;

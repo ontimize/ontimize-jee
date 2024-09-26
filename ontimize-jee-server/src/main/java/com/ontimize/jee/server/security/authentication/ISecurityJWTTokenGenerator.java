@@ -2,7 +2,7 @@ package com.ontimize.jee.server.security.authentication;
 
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.security.core.Authentication;
 
