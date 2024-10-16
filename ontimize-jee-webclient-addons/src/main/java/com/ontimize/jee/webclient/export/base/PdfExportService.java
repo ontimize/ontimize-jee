@@ -89,7 +89,9 @@ public class PdfExportService extends BaseExportService {
             // ExportOptions
             ExportOptions exportOptions = this.createExportOptions(exportParam, new ArrayList<>() /*orderColumns*/);
 
-            generatePdfDocument(pdfFile, columnProvider, dataProvider, styleProvider, exportOptions);
+            Boolean landscape = exportParam.getLandscape();
+
+            generatePdfDocument(pdfFile, columnProvider, dataProvider, styleProvider, exportOptions, landscape);
 
         } catch (final ExportException e) {
             logger.error("{}", e.getMessage(), e);
@@ -110,11 +112,11 @@ public class PdfExportService extends BaseExportService {
      * @param exportOptions  Is null, it creates it in the BaseExcelExporter
      */
     public Document generatePdfDocument(File pdfFile, ExportColumnProvider columnProvider, ExportDataProvider dataProvider,
-                                        ExportStyleProvider<PdfCellStyle, PdfDataFormat> styleProvider, ExportOptions exportOptions) throws ExportException {
-        
-    	 return new DefaultPdfExporter(pdfFile).export(columnProvider, dataProvider, styleProvider, exportOptions, false);
-        
-       
+                                        ExportStyleProvider<PdfCellStyle, PdfDataFormat> styleProvider, ExportOptions exportOptions, Boolean landscape) throws ExportException {
+
+    	 return new DefaultPdfExporter(pdfFile).export(columnProvider, dataProvider, styleProvider, exportOptions, landscape);
+
+
     }
 
     @Override

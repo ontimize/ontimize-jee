@@ -26,6 +26,7 @@ public interface ExportQueryParameters {
 
     String getService();
 
+    Boolean getLandscape();
 
     String getPath();
 
