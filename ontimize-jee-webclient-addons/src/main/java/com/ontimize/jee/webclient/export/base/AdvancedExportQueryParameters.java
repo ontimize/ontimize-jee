@@ -30,7 +30,7 @@ public class AdvancedExportQueryParameters extends BaseExportQueryParameters {
     private Map<String, Object> cellStyles;
 
     @XmlElement
-    private Boolean landscape;
+    private Boolean landscape = false;
 
     public AdvancedExportQueryParameters() {
         super();
