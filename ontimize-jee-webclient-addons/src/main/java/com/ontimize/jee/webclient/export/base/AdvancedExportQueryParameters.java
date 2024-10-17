@@ -29,6 +29,9 @@ public class AdvancedExportQueryParameters extends BaseExportQueryParameters {
     @XmlElement
     private Map<String, Object> cellStyles;
 
+    @XmlElement
+    private Boolean landscape = false;
+
     public AdvancedExportQueryParameters() {
         super();
     }
@@ -97,4 +100,11 @@ public class AdvancedExportQueryParameters extends BaseExportQueryParameters {
         this.columnHeaderStyles = columnHeaderStyles;
     }
 
+    public Boolean getLandscape() {
+      return landscape;
+    }
+
+    public void setLandscape(Boolean landscape) {
+      this.landscape = landscape;
+    }
 }
