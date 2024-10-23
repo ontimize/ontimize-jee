@@ -609,7 +609,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 			if (kvEntry.getKey() instanceof String) {
 				String key = (String) kvEntry.getKey();
 				boolean transformed = false;
-				if (ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY.equals(key)
+				if ( (ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY.equals(key) || ExtendedSQLConditionValuesProcessor.FILTER_KEY.equals(key))
 						&& (kvEntry.getValue() instanceof BasicExpression)) {
 					res.put(key, this.applyTransformationsToBasicExpression((BasicExpression) kvEntry.getValue(),
 							ambiguousColumns, functionColumns));
