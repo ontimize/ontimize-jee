@@ -1,62 +1,76 @@
 package com.ontimize.jee.common.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class PreferencesParamsDto {
     public enum PreferencesType {
         REPORT, CHART
     }
-    private String name;
-    private String description;
-    private String entity;
-    private String service;
-    private PreferencesType type;
-    private Object params;
+    
+    @JsonProperty("preferencename")
+    private String preferenceName;
+    
+    @JsonProperty("preferencedescription")
+    private String preferenceDescription;
+    
+    @JsonProperty("preferenceentity")
+    private String preferenceEntity;
+    
+    @JsonProperty("preferenceservice")
+    private String preferenceService;
+    
+    @JsonProperty("preferencetype")
+    private PreferencesType preferenceType;
+    
+    @JsonProperty("preferenceparameters")
+    private Object preferenceParameters;
 
-    public String getName() {
-        return name;
+    public String getPreferenceName() {
+        return preferenceName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setPreferenceName(String preferenceName) {
+        this.preferenceName = preferenceName;
     }
 
-    public String getDescription() {
-        return description;
+    public String getPreferenceDescription() {
+        return preferenceDescription;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDescription(String preferenceDescription) {
+        this.preferenceDescription = preferenceDescription;
     }
 
-    public String getEntity() {
-        return entity;
+    public String getPreferenceEntity() {
+        return preferenceEntity;
     }
 
-    public void setEntity(String entity) {
-        this.entity = entity;
+    public void setPreferenceEntity(String preferenceEntity) {
+        this.preferenceEntity = preferenceEntity;
     }
 
-    public String getService() {
-        return service;
+    public String getPreferenceService() {
+        return preferenceService;
     }
 
-    public void setService(String service) {
-        this.service = service;
+    public void setPreferenceService(String preferenceService) {
+        this.preferenceService = preferenceService;
     }
 
-    public Object getParams() {
-        return params;
+    public Object getPreferenceParameters() {
+        return preferenceParameters;
     }
 
-    public void setParams(Object params) {
-        this.params = params;
+    public void setPreferenceParameters(Object preferenceParameters) {
+        this.preferenceParameters = preferenceParameters;
+    }	
+
+    public PreferencesType getPreferenceType() {
+        return preferenceType;
     }
 
-    public PreferencesType getType() {
-        return type;
-    }
-
-    public void setType(PreferencesType type) {
-        this.type = type;
+    public void setPreferenceType(PreferencesType preferenceType) {
+        this.preferenceType = preferenceType;
     }
 
 }

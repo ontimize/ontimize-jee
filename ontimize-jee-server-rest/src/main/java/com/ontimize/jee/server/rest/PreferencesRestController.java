@@ -47,12 +47,12 @@ public class PreferencesRestController {
 
 
 
-    public static final String ID_QUERY = "ID";
-    public static final String NAME_QUERY = "NAME";
-    public static final String DESCRIPTION_QUERY = "DESCRIPTION";
-    public static final String ENTITY_QUERY = "ENTITY";
-    public static final String PREFERENCES_QUERY = "PREFERENCES";
-    public static final String TYPE_QUERY = "TYPE";
+    public static final String ID_QUERY = "PREFERENCEID";
+    public static final String NAME_QUERY = "PREFERENCENAME";
+    public static final String DESCRIPTION_QUERY = "PREFERENCEDESCRIPTION";
+    public static final String ENTITY_QUERY = "PREFERENCEENTITY";
+    public static final String PREFERENCES_QUERY = "PREFERENCEPREFERENCES";
+    public static final String TYPE_QUERY = "PREFERENCETYPE";
 
     @PostMapping(value = "/save", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<EntityResult> savePreferences(@RequestBody PreferencesParamsDto param) {
@@ -64,16 +64,16 @@ public class PreferencesRestController {
                 ObjectMapper mapper = new ObjectMapper();
                 mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
                 mapper.setSerializationInclusion(Include.NON_NULL);
-                String serializedParams = mapper.writeValueAsString(param.getParams());
+                String serializedParams = mapper.writeValueAsString(param.getPreferenceParameters());
 
                 Map<String, Object> attrMap = new HashMap<>();
-                attrMap.put(this.nameConvention.convertName(NAME_QUERY), param.getName());
-                attrMap.put(this.nameConvention.convertName(DESCRIPTION_QUERY), param.getDescription());
-                attrMap.put(this.nameConvention.convertName(ENTITY_QUERY), param.getEntity() + "-" + param.getService());
+                attrMap.put(this.nameConvention.convertName(NAME_QUERY), param.getPreferenceName());
+                attrMap.put(this.nameConvention.convertName(DESCRIPTION_QUERY), param.getPreferenceDescription());
+                attrMap.put(this.nameConvention.convertName(ENTITY_QUERY), param.getPreferenceEntity() + "-" + param.getPreferenceService());
                 attrMap.put(this.nameConvention.convertName(PREFERENCES_QUERY), serializedParams);
-                attrMap.put(this.nameConvention.convertName(TYPE_QUERY), param.getType().ordinal());
+                attrMap.put(this.nameConvention.convertName(TYPE_QUERY), param.getPreferenceType().ordinal());
 
-                res = preferencesService.preferenceInsert(attrMap);
+                res = this.preferencesService.preferenceInsert(attrMap);
                 return new ResponseEntity<>(res, HttpStatus.OK);
             } catch (Exception ex) {
                 res.setMessage(ex.getMessage());
@@ -97,7 +97,7 @@ public class PreferencesRestController {
         }
         if (!type.isEmpty()) {
 
-            map.put(this.nameConvention.convertName("TYPE"), PreferencesType.valueOf(type.get()).ordinal());
+            map.put(this.nameConvention.convertName(TYPE_QUERY), PreferencesType.valueOf(type.get()).ordinal());
         }
         List<String> attrList = new ArrayList<>();
         attrList.add(this.nameConvention.convertName(ID_QUERY));
@@ -125,7 +125,7 @@ public class PreferencesRestController {
         EntityResult res = new EntityResultMapImpl();
         Map<String, Object> attrMap = new HashMap<>();
         try {
-            attrMap.put(this.nameConvention.convertName("ID"), id);
+            attrMap.put(this.nameConvention.convertName(ID_QUERY), id);
             this.preferencesService.preferenceDelete(attrMap);
             res.setCode(EntityResult.OPERATION_SUCCESSFUL);
             return new ResponseEntity<>(res, HttpStatus.OK);
@@ -145,15 +145,15 @@ public class PreferencesRestController {
             try {
                 ObjectMapper mapper = new ObjectMapper();
                 mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-                String serializedParams = mapper.writeValueAsString(param.getParams());
+                String serializedParams = mapper.writeValueAsString(param.getPreferenceParameters());
 
                 Map<String, Object> attrMap = new HashMap<>();
-                attrMap.put(this.nameConvention.convertName(NAME_QUERY), param.getName());
-                attrMap.put(this.nameConvention.convertName(DESCRIPTION_QUERY), param.getDescription());
+                attrMap.put(this.nameConvention.convertName(NAME_QUERY), param.getPreferenceName());
+                attrMap.put(this.nameConvention.convertName(DESCRIPTION_QUERY), param.getPreferenceDescription());
                 attrMap.put(this.nameConvention.convertName(PREFERENCES_QUERY), serializedParams);
 
                 Map<String, Object> attrKey = new HashMap<>();
-                attrKey.put(this.nameConvention.convertName("ID"), id);
+                attrKey.put(this.nameConvention.convertName(ID_QUERY), id);
                 this.preferencesService.preferenceUpdate(attrMap, attrKey);
                 res.setCode(EntityResult.OPERATION_SUCCESSFUL);
                 return new ResponseEntity<>(res, HttpStatus.OK);
