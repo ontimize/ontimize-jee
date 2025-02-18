@@ -84,7 +84,8 @@ public class BasicExpressionProcessor {
                 } else {
                     throw new OntimizeJEEException("'rop' isn't defined in basicexpression");
                 }
-            } else if (operator.equals(BasicOperator.LIKE_OP) || operator.equals(BasicOperator.NOT_LIKE_OP)) {
+            } else if (operator.equals(BasicOperator.LIKE_OP) || operator.equals(BasicOperator.NOT_LIKE_OP)
+                    || operator.equals(BasicOperator.IN_OP) || operator.equals(BasicOperator.NOT_IN_OP)) {
                 if (lo instanceof BasicField) {
                     ro = this.processRightOperand(rValue, (BasicField) lo, null);
                 } else {
