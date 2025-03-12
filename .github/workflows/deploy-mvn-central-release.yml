@@ -28,12 +28,12 @@ jobs:
         run: |
           echo "BRANCH=${{ github.event.inputs.RELEASE_BRANCH || github.ref }}" >> $GITHUB_ENV
       - name: Checkout repository code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ env.BRANCH }}
           fetch-depth: 0
       - name: Setup Java JDK and Maven
-        uses: ontimize/setup-java-maven-gitAction@v3
+        uses: ontimize/setup-java-maven-gitAction@v4
         with:
           distribution: 'temurin'
           java-version: '11'

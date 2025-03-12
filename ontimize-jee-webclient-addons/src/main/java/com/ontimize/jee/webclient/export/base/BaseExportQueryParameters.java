@@ -11,10 +11,12 @@ public class BaseExportQueryParameters implements ExportQueryParameters {
     private String dao;
 
     private String service;
-    
+
     private String path;
 
     private boolean advQuery;
+
+    private Boolean landscape;
 
 
     public BaseExportQueryParameters() {
@@ -67,7 +69,15 @@ public class BaseExportQueryParameters implements ExportQueryParameters {
     }
 
     public void setAdvQuery(boolean advQuery) {
-        this.advQuery = advQuery;
+      this.advQuery = advQuery;
+    }
+
+    public Boolean getLandscape() {
+      return landscape;
+    }
+
+    public void setLandscape(Boolean landscape) {
+      this.landscape = landscape;
     }
 
 }

@@ -609,7 +609,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 			if (kvEntry.getKey() instanceof String) {
 				String key = (String) kvEntry.getKey();
 				boolean transformed = false;
-				if (ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY.equals(key)
+				if ( (ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY.equals(key) || ExtendedSQLConditionValuesProcessor.FILTER_KEY.equals(key))
 						&& (kvEntry.getValue() instanceof BasicExpression)) {
 					res.put(key, this.applyTransformationsToBasicExpression((BasicExpression) kvEntry.getValue(),
 							ambiguousColumns, functionColumns));
@@ -1387,10 +1387,10 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 		if (!this.isCompiled()) {
 			final ConfigurationFile annotation = this.getClass().getAnnotation(ConfigurationFile.class);
 			if (annotation != null) {
-				this.loadConfigurationFile(annotation.configurationFile(), annotation.configurationFilePlaceholder());
-			} else {
-				this.loadConfigurationFile(this.configurationFile, this.configurationFilePlaceholder);
+				this.configurationFile = annotation.configurationFile();
+				this.configurationFilePlaceholder = annotation.configurationFilePlaceholder();
 			}
+			this.loadConfigurationFile(this.configurationFile, this.configurationFilePlaceholder);
 
 			if (this.getJdbcTemplate() == null) {
 				throw new IllegalArgumentException("'dataSource' or 'jdbcTemplate' is required");
@@ -1549,6 +1549,14 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 		return this.configurationFilePlaceholder;
 	}
 
+	public INameConvention getNameConvention() {
+		return nameConvention;
+	}
+
+	public void setNameConvention(INameConvention nameConvention) {
+		this.nameConvention = nameConvention;
+	}
+
 	/**
 	 * Check dao config.
 	 */
@@ -1628,7 +1636,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	 * <p>
 	 * Automatically called by {@code validateParameters}.
 	 */
-	protected void checkCompiled() {
+	public void checkCompiled() {
 		if (!this.isCompiled()) {
 			OntimizeJdbcDaoSupport.logger.debug("JdbcInsert not compiled before execution - invoking compile");
 			this.compile();

@@ -37,6 +37,8 @@ public class LdapAuthenticationMechanism implements IAuthenticationMechanism {
 	public static final String BINDDN_PROPERTY = "${ontimize.security.ldap.binddn}";
 	public static final String BASEDN_PROPERTY = "${ontimize.security.ldap.basedn}";
 	public static final String DOMAIN_PROPERTY = "${ontimize.security.ldap.domain}";
+	public static final String SSL_PROPERTY = "${ontimize.security.ldap.ssl:false}";
+
 
 	private String host;
 	private int port;
@@ -44,19 +46,22 @@ public class LdapAuthenticationMechanism implements IAuthenticationMechanism {
 	private String bindDn;
 	private String baseDn;
 	private String domain;
+	private boolean ssl;
 
 	public LdapAuthenticationMechanism(@Value(value = LdapAuthenticationMechanism.HOST_PROPERTY) String hostProperty,
 			@Value(value = LdapAuthenticationMechanism.PORT_PROPERTY) int portProperty,
 			@Value(value = LdapAuthenticationMechanism.LOGINTYPE_PROPERTY) String loginTypeProperty,
 			@Value(value = LdapAuthenticationMechanism.BINDDN_PROPERTY) String bindDnProperty,
 			@Value(value = LdapAuthenticationMechanism.BASEDN_PROPERTY) String baseDnProperty,
-			@Value(value = LdapAuthenticationMechanism.DOMAIN_PROPERTY) String domainProperty) {
+			@Value(value = LdapAuthenticationMechanism.DOMAIN_PROPERTY) String domainProperty,
+			@Value(value = LdapAuthenticationMechanism.SSL_PROPERTY) boolean sslProperty) {
 		this.host = hostProperty;
 		this.port = portProperty;
 		this.loginType = loginTypeProperty;
 		this.bindDn = bindDnProperty;
 		this.baseDn = baseDnProperty;
 		this.domain = domainProperty;
+		this.ssl = sslProperty;
 	}
 
 	@Override
@@ -82,10 +87,10 @@ public class LdapAuthenticationMechanism implements IAuthenticationMechanism {
 
 			if (this.loginType.equals("DN")) {
 				String userDn = "uid=" + username + "," + this.bindDn;
-				dirContext = LdapAuthenticationMechanism.connect(userDn, password, this.host, this.port, null, false);
+				dirContext = LdapAuthenticationMechanism.connect(userDn, password, this.host, this.port, null, this.ssl);
 			} else if (this.loginType.equals("simple")) {
 				dirContext = LdapAuthenticationMechanism.connect(username, password, this.host, this.port, this.domain,
-						false);
+						this.ssl);
 			}
 
 			if (dirContext != null) {
@@ -110,7 +115,7 @@ public class LdapAuthenticationMechanism implements IAuthenticationMechanism {
 	}
 
 	public static synchronized DirContext connect(final String user, final String password, final String hosts,
-			final int port, final String adddomain, boolean ssl)
+			final int port, final String adddomain, final boolean ssl)
 					throws NamingException, java.io.IOException, LoginException {
 
 		if ((hosts == null) || (hosts.length() == 0)) {
@@ -130,7 +135,7 @@ public class LdapAuthenticationMechanism implements IAuthenticationMechanism {
 	}
 
 	private static synchronized DirContext _connect(final String user, final String password, final String host,
-			final int port, final String adddomain, boolean ssl)
+			final int port, final String adddomain, final boolean ssl)
 					throws NamingException, java.io.IOException, LoginException {
 
 		Hashtable<String, String> props = new Hashtable<>();
