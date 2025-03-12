@@ -16,7 +16,6 @@
 ### Changed 🛠️
 * **Spring Framework**: Update Spring Framework version from 5.3.6 → 5.3.18 #154
 * **ORestController**: Improved logging of exceptions displayed when performing basic CRUD operations of a service. #160
-* **Preferences**: Rename variables in camelCase and parameters in PreferencesParamsDTO. #167
 ## [5.11.0] - 2024-02-23
 ### Added ✔️
 * **Multi tenant**: Ask the tenant provider to load a tenant when it can not be found.
