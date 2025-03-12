@@ -9,11 +9,14 @@
 
 ## [Unreleased]
 ### Added ✔️
-* **Multi tenant**: Allow to configure tenants using the preferences.
-* **LdapAuthenticationMechanism**: Allow to use SSL in LDAP connections.
+* **Multi tenant**: Allow to configure tenants using the preferences. #153
+* **LdapAuthenticationMechanism**: Allow to use SSL in LDAP connections. #144
+* **Template transformation**: Apply template transformation with ExpressionKey and FilterKey. #166
+* **OntimizeJDBCDaoSupport**: Allow searching for a list of values in columns with any data type with IN operator in BasicExpression. #167
 ### Changed 🛠️
-* **Spring Framework**: Update Spring Framework version from 5.3.6 → 5.3.18
-* **ORestController**: Improved logging of exceptions displayed when performing basic CRUD operations of a service. Issue #160
+* **Spring Framework**: Update Spring Framework version from 5.3.6 → 5.3.18 #154
+* **ORestController**: Improved logging of exceptions displayed when performing basic CRUD operations of a service. #160
+* **Preferences**: Rename variables in camelCase and parameters in PreferencesParamsDTO. #167
 ## [5.11.0] - 2024-02-23
 ### Added ✔️
 * **Multi tenant**: Ask the tenant provider to load a tenant when it can not be found.
