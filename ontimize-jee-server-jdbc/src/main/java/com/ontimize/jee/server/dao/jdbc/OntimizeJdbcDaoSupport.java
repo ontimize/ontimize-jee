@@ -395,7 +395,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	 * @param sort the sort
 	 * @return the SQL statement
 	 */
-	protected SQLStatement composeQuerySql(final String queryId, final List<?> attributes, final Map<?, ?> keysValues,
+	public SQLStatement composeQuerySql(final String queryId, final List<?> attributes, final Map<?, ?> keysValues,
 			final List<?> sort, PageableInfo pageableInfo,
 			ISQLQueryAdapter queryAdapter) {
 		final QueryTemplateInformation queryTemplateInformation = this.getQueryTemplateInformation(queryId);
