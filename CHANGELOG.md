@@ -8,6 +8,8 @@
 <!-- ### Security 🛡️-->
 
 ## [Unreleased]
+## [5.12.1] - 2025-04-11
+* **OntimizeJdbcDaoSupport**: Changed visibility of composeSQL method (protected → public) #174
 ## [5.12.0] - 2025-03-12
 ### Added ✔️
 * **Multi tenant**: Allow to configure tenants using the preferences. #153
@@ -61,7 +63,8 @@
 * **POM**: Sorted pom alphabetically and sorted, extracted version to properties and put all dependencies into dependency manager.
 * **Sonar**: Fix some sonar code smells.
 
-[unreleased]: https://github.com/ontimize/ontimize-jee/compare/5.12.0...HEAD
+[unreleased]: https://github.com/ontimize/ontimize-jee/compare/5.12.1...HEAD
+[5.12.1]: https://github.com/ontimize/ontimize-jee/compare/5.12.0...5.12.1
 [5.12.0]: https://github.com/ontimize/ontimize-jee/compare/5.11.0...5.12.0
 [5.11.0]: https://github.com/ontimize/ontimize-jee/compare/5.10.0...5.11.0
 [5.10.0]: https://github.com/ontimize/ontimize-jee/compare/5.9.0...5.10.0
