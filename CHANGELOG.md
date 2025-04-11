@@ -9,6 +9,7 @@
 
 ## [Unreleased]
 ## [5.12.1] - 2025-04-11
+### Changed 🛠️
 * **OntimizeJdbcDaoSupport**: Changed visibility of composeSQL method (protected → public) #174
 ## [5.12.0] - 2025-03-12
 ### Added ✔️
