@@ -8,6 +8,8 @@
 <!-- ### Security 🛡️-->
 
 ## [Unreleased]
+### Added ✔️
+* **OntimizeJdbcDaoSupport**: Created executeSQLStatement() to use DDL statements. #175
 ## [5.12.1] - 2025-04-11
 ### Changed 🛠️
 * **OntimizeJdbcDaoSupport**: Changed visibility of composeSQL method (protected → public) #174
