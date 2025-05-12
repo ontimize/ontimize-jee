@@ -152,6 +152,7 @@
         <failsafe-argLine/>
         <skip.unit.tests>false</skip.unit.tests>
         <skip.integration.tests>false</skip.integration.tests>
+        <central-publishing-maven-plugin.version>0.7.0</central-publishing-maven-plugin.version>
         <!-- =========================================================== -->
         <!-- Versions -->
         <!-- =========================================================== -->
@@ -755,13 +756,14 @@
                         <artifactId>maven-javadoc-plugin</artifactId>
                     </plugin>
                     <plugin>
-                        <groupId>org.sonatype.central</groupId>
-                        <artifactId>central-publishing-maven-plugin</artifactId>
-                        <version>0.7.0</version>
-                        <extensions>true</extensions>
-                        <configuration>
-                            <publishingServerId>central</publishingServerId>
-                        </configuration>
+                      <groupId>org.sonatype.central</groupId>
+                      <version>${central-publishing-maven-plugin.version}</version>
+                      <version>0.7.0</version>
+                      <extensions>true</extensions>
+                      <configuration>
+                         <publishingServerId>central</publishingServerId>
+                         <autoPublish>true</autoPublish>
+                      </configuration>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
