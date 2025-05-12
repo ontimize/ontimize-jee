@@ -757,8 +757,8 @@
                     </plugin>
                     <plugin>
                       <groupId>org.sonatype.central</groupId>
+                      <artifactId>central-publishing-maven-plugin</artifactId>
                       <version>${central-publishing-maven-plugin.version}</version>
-                      <version>0.7.0</version>
                       <extensions>true</extensions>
                       <configuration>
                          <publishingServerId>central</publishingServerId>
