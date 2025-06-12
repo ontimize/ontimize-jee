@@ -46,7 +46,7 @@ jobs:
           date=$(date +%F)
           version_header="## [$version] - $date"
           sed -i "/^## \[Unreleased\]/a $version_header" CHANGELOG.md
-          pattern="^\[unreleased\]: https://github.com/ontimize/ontimize-jee/compare/"
+          pattern="^\[unreleased\]: https://github.com/.*?/compare/"
           linenum=$(grep -n "$pattern" CHANGELOG.md | cut -d: -f1)
           linecontent=$(sed -n "${linenum}p" CHANGELOG.md)
           linecontent=$(echo "$linecontent" | sed -E "s|^\[[^]]+\]|[$version]|")
