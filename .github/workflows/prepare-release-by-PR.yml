@@ -55,6 +55,7 @@ jobs:
           linecontent=$(sed -n "${linenum}p" CHANGELOG.md)
           linecontent=$(echo "$linecontent" | sed -E "s|(compare/).*?(.\.\.\HEAD)|\1$version\2|")
           sed -i "${linenum}s|.*|$linecontent|" CHANGELOG.md
+          git add CHANGELOG.md
       - name: Prepare version to release
         id: tag
         run: |
