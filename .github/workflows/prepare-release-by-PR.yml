@@ -40,6 +40,21 @@ jobs:
         run: |
           git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}"
           git config --global user.email "${{ secrets.CI_COMMIT_MAIL }}"
+      - name: Prepare CHANGELOG.md
+        run: |
+          version=$(echo "${{ steps.version.outputs.version }}" | sed 's/-SNAPSHOT//' )
+          date=$(date +%F)
+          version_header="## [$version] - $date"
+          sed -i "/^## \[Unreleased\]/a $version_header" CHANGELOG.md
+          pattern="^\[unreleased\]: https://github.com/ontimize/ontimize-jee/compare/"
+          linenum=$(grep -n "$pattern" CHANGELOG.md | cut -d: -f1)
+          linecontent=$(sed -n "${linenum}p" CHANGELOG.md)
+          linecontent=$(echo "$linecontent" | sed -E "s|^\[[^]]+\]|[$version]|")
+          linecontent=$(echo "$linecontent" | sed -E "s|\.\.\.HEAD|...$version|")
+          sed -i "${linenum}a $linecontent" CHANGELOG.md
+          linecontent=$(sed -n "${linenum}p" CHANGELOG.md)
+          linecontent=$(echo "$linecontent" | sed -E "s|(compare/).*?(.\.\.\HEAD)|\1$version\2|")
+          sed -i "${linenum}s|.*|$linecontent|" CHANGELOG.md
       - name: Prepare version to release
         id: tag
         run: |
