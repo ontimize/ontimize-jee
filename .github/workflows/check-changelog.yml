@@ -22,7 +22,7 @@ jobs:
             return hasLabel;
       - name: Check for 'skip-changelog' comment
         id: check-body
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         with:
           result-encoding: string
           script: |
@@ -32,7 +32,7 @@ jobs:
               pull_number: context.issue.number,
             });
             return pr.data.body || '';
-      - name: Evaluar si puede omitirse el CHANGELOG
+      - name: Eval if changelog can be omited
         id: skip-check
         run: |
           echo "Label: ${{ steps.check-label.outputs.result }}"
@@ -51,8 +51,9 @@ jobs:
       - name: CHANGELOG.md verify
         if: env.SKIP != 'true'
         run: |
-          git fetch origin develop
-          FILE_CHANGED=$(git diff --name-only origin/develop...HEAD | grep "CHANGELOG.md" || true)
+          git fetch origin develop --depth=1
+          git checkout ${{ github.head_ref }}
+          FILE_CHANGED=$(git diff --name-only FETCH_HEAD | grep -x "CHANGELOG.md" || true)
           if [ -z "$FILE_CHANGED" ]; then
             echo "CHANGELOG.md ❌"
             exit 1
