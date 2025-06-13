@@ -57,4 +57,9 @@ jobs:
           git fetch origin develop --depth=1
           git checkout ${{ github.head_ref }}
           git diff --name-only FETCH_HEAD > changed_files.txt
-          cat changed_files.txt
+          if grep -xq "CHANGELOG.md" changed_files.txt; then
+            echo "CHANGELOG.md updated ✅"
+          else
+            echo "CHANGELOG.md not updated ❌"
+            exit 1
+          fi
