@@ -22,7 +22,7 @@ jobs:
             return hasLabel;
       - name: Check for 'skip-changelog' comment
         id: check-body
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         with:
           result-encoding: string
           script: |
