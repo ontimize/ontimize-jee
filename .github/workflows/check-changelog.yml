@@ -51,8 +51,9 @@ jobs:
       - name: CHANGELOG.md verify
         if: env.SKIP != 'true'
         run: |
-          git fetch origin develop
-          FILE_CHANGED=$(git diff --name-only origin/develop...HEAD | grep "CHANGELOG.md" || true)
+          git fetch origin develop --depth=1
+          git checkout ${{ github.head_ref }}
+          FILE_CHANGED=$(git diff --name-only FETCH_HEAD | grep -x "CHANGELOG.md" || true)
           if [ -z "$FILE_CHANGED" ]; then
             echo "CHANGELOG.md ❌"
             exit 1
