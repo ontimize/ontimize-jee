@@ -65,6 +65,7 @@
 * **POI Version**: POI version updated to 5.2.3.
 * **POM**: Sorted pom alphabetically and sorted, extracted version to properties and put all dependencies into dependency manager.
 * **Sonar**: Fix some sonar code smells.
+#test
 
 [unreleased]: https://github.com/ontimize/ontimize-jee/compare/5.12.1...HEAD
 [5.12.1]: https://github.com/ontimize/ontimize-jee/compare/5.12.0...5.12.1
