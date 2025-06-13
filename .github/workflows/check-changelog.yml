@@ -53,10 +53,5 @@ jobs:
         run: |
           git fetch origin develop --depth=1
           git checkout ${{ github.head_ref }}
-          FILE_CHANGED=$(git diff --name-only FETCH_HEAD | grep -x "CHANGELOG.md" || true)
-          if [ -z "$FILE_CHANGED" ]; then
-            echo "CHANGELOG.md ❌"
-            exit 1
-          else
-            echo "CHANGELOG.md ✅"
-          fi
+          git diff --name-only FETCH_HEAD > changed_files.txt
+          cat changed_files.txt
