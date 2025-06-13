@@ -20,28 +20,12 @@ jobs:
             });
             const hasLabel = labels.data.some(label => label.name === 'skip-changelog');
             return hasLabel;
-      - name: Check for 'skip-changelog' comment
-        id: check-body
-        uses: actions/github-script@v7
-        with:
-          result-encoding: string
-          script: |
-            const pr = await github.rest.pulls.get({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: context.issue.number,
-            });
-            return pr.data.body || '';
       - name: Eval if changelog can be omited
         id: skip-check
         run: |
           echo "Label: ${{ steps.check-label.outputs.result }}"
           echo "Comment: ${{ steps.check-body.outputs.result }}"
           if [[ "${{ steps.check-label.outputs.result }}" == "true" ]]; then
-            echo "Label detected"
-            echo "SKIP=true" >> $GITHUB_ENV
-          elif echo "${{ steps.check-body.outputs.result }}" | grep -qE '^#skip-changelog$'; then
-            echo "Comment detected"
             echo "SKIP=true" >> $GITHUB_ENV
           else
             echo "SKIP=false" >> $GITHUB_ENV
