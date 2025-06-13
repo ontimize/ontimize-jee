@@ -32,7 +32,7 @@ jobs:
               pull_number: context.issue.number,
             });
             return pr.data.body || '';
-      - name: Evaluar si puede omitirse el CHANGELOG
+      - name: Eval if changelog can be omited
         id: skip-check
         run: |
           echo "Label: ${{ steps.check-label.outputs.result }}"
