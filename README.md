@@ -10,4 +10,4 @@ All the versions and dependencies of the artifacts contained in this project can
 ## :gear: Changelog
 You can consult our changelog at the following [link](CHANGELOG.md)
 ## 🐛 Bug / 🚀 Features
-If you have a bug or consider that a feature can be added, you can use the [issues on GitHub](https://github.com/ontimize/ontimize-jee/issues)
+If you have a bug or consider that a feature can be added, you can use the [issues on GitHub](https://github.com/ontimize/ontimize-jee/issues).
