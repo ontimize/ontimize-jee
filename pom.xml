@@ -175,7 +175,7 @@
         <httpclient.version>4.5.13</httpclient.version>
         <itext.version>7.2.4</itext.version>
         <itextpdf.version>7.2.3</itextpdf.version>
-        <jackson.version>2.12.3</jackson.version>
+        <jackson.version>2.12.7.1</jackson.version>
         <jasperreports.version>6.2.0</jasperreports.version>
         <javax.websocket-api.version>1.0</javax.websocket-api.version>
         <jaxb-api.version>2.3.1</jaxb-api.version>
