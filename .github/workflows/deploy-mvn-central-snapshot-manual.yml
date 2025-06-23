@@ -28,9 +28,13 @@ jobs:
           gpg-passphrase: MAVEN_GPG_PASSPHRASE       
       - name: Publish to Apache Maven Central
         run: |
-          mvn -B build-helper:parse-version versions:set \
-            -DnewVersion="\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion}.\${parsedVersion.incrementalVersion}-${{github.event.inputs.version-suffix}}-SNAPSHOT"
-          mvn -U clean deploy -Pgenerate-version
+          if [ -n "${{ github.event.inputs.version-suffix }}" ]; then
+            mvn -B build-helper:parse-version versions:set \
+              -DnewVersion="\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion}.\${parsedVersion.incrementalVersion}-${{ github.event.inputs.version-suffix }}-SNAPSHOT"
+          else
+            echo "No version suffix provided. Using current project version."
+          fi
+          mvn -B -U clean deploy -Pgenerate-version
         env:
           MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
