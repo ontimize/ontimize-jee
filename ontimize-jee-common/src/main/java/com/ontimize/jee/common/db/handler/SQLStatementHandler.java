@@ -165,4 +165,47 @@ public interface SQLStatementHandler {
      * @return a new sql expression with the cast function added
      */
     public String addCastStatement(final String expression, final int fromSqlType, final int toSqlType);
+
+    /**
+     * TODO TRADUCIR
+     * Esta enumeración es para indicar que debe hacer con las elementos de la tabla temporal. El scope de "GLOBAL"
+     * solo tiene uso para el handler de SQLServer
+     */
+    enum TemporalTableScope{
+        SESSION("SESSION", "ON COMMIT PRESERVE ROWS"),
+        TRANSACTION("TRANSACTION", "ON COMMIT DELETE ROWS"),
+        GLOBAL("GLOBAL", ""); // Only for SQL Server
+
+        private final String name;
+        private final String commitBehaviour;
+
+        TemporalTableScope(String name, String commitBehaviour) {
+            this.name = name;
+            this.commitBehaviour = commitBehaviour;
+        }
+
+        public String getName() {
+            return this.name;
+        }
+
+        public String getCommitBehaviour() {
+            return this.commitBehaviour;
+        }
+    }
+
+    /**
+     * TODO TRADUCIR
+     * Devuelve el {@link SQLStatementBuilder.SQLStatement} de la consulta para la creación de una tabla temporal
+     *
+     * @return
+     */
+    SQLStatementBuilder.SQLStatement createTemporalTableStatement(String tableName, SQLStatementBuilder.SQLStatement selectSql, TemporalTableScope scope);
+
+    /**
+     * TODO TRADUCIR
+     * Devuelve el {@link SQLStatementBuilder.SQLStatement} de la consulta para la eliminación de una tabla temporal
+     *
+     * @return
+     */
+    SQLStatementBuilder.SQLStatement dropTemporalTableStatement(String tableName, TemporalTableScope scope);
 }

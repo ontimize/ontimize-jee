@@ -210,4 +210,17 @@ public class Oracle12cSQLStatementHandler extends DefaultSQLStatementHandler {
             return expression;
         }
     }
+
+    @Override
+    public SQLStatementBuilder.SQLStatement createTemporalTableStatement(String tableName, SQLStatementBuilder.SQLStatement selectSql, TemporalTableScope scope) {
+        String sentence = "CREATE GLOBAL TEMPORARY TABLE " + tableName + " " + scope.getCommitBehaviour() + " AS" + selectSql.getSQLStatement() + ";";
+        List<Object> sentenceValues = selectSql.getValues();
+        return new SQLStatementBuilder.SQLStatement(sentence, sentenceValues);
+    }
+
+    @Override
+    public SQLStatementBuilder.SQLStatement dropTemporalTableStatement(String tableName, TemporalTableScope scope) {
+        String sentence = "DROP TABLE " + tableName + ";";
+        return new SQLStatementBuilder.SQLStatement(sentence);
+    }
 }

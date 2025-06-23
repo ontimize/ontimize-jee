@@ -1990,6 +1990,32 @@ public class DefaultSQLStatementHandler implements SQLStatementHandler {
     }
 
     /**
+     *
+     * @param tableName
+     * @param selectSql
+     * @param scope In this implementation, this value is not relevant, so it is null.
+     * @return
+     */
+    @Override
+    public SQLStatementBuilder.SQLStatement createTemporalTableStatement(String tableName, SQLStatementBuilder.SQLStatement selectSql, TemporalTableScope scope) {
+        String sentence = "CREATE TEMPORARY TABLE " + tableName + " AS" + selectSql.getSQLStatement() + ";";
+        List<Object> sententeValues = selectSql.getValues();
+        return new SQLStatementBuilder.SQLStatement(sentence,sententeValues);
+    }
+
+    /**
+     *
+     * @param tableName
+     * @param scope In this implementation, this value is not relevant, so it is null.
+     * @return
+     */
+    @Override
+    public SQLStatementBuilder.SQLStatement dropTemporalTableStatement(String tableName, TemporalTableScope scope) {
+        String sentence = "DROP TEMPORARY TABLE IF EXISTS " + tableName + ";";
+        return new SQLStatementBuilder.SQLStatement(sentence);
+    }
+
+    /**
      * Sets the following fields of the object <code>date</code> to zero:
      * <p>
      * Calendar.MILLISECOND,Calendar.SECOND

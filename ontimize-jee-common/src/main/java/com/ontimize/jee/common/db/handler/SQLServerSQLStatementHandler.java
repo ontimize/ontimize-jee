@@ -219,4 +219,20 @@ public class SQLServerSQLStatementHandler extends DefaultSQLStatementHandler {
             return expression;
         }
     }
+
+    @Override
+    public SQLStatementBuilder.SQLStatement createTemporalTableStatement(String tableName, SQLStatementBuilder.SQLStatement selectSql, TemporalTableScope scope) {
+        String prefix = (scope == TemporalTableScope.GLOBAL) ? "##" : "#";
+        String sentence = "SELECT * INTO " + prefix + tableName + " FROM (" + selectSql.getSQLStatement() + ") AS origen;";
+        List<Object> sentenceValues = selectSql.getValues();
+        return new SQLStatementBuilder.SQLStatement(sentence, sentenceValues);
+    }
+
+    @Override
+    public SQLStatementBuilder.SQLStatement dropTemporalTableStatement(String tableName, TemporalTableScope scope) {
+        String prefix = (scope == TemporalTableScope.GLOBAL) ? "##" : "#";
+        String sentence = "DROP TABLE IF EXISTS " + prefix + tableName + ";";
+        return new SQLStatementBuilder.SQLStatement(sentence);
+
+    }
 }
