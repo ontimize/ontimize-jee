@@ -13,7 +13,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.*;
+
+import static com.ontimize.jee.webclient.openai.naming.OpenAINaming.*;
 
 public class OpenAiImageProcessorService<T> {
     private final OpenAiClientConfig config;
@@ -56,40 +59,52 @@ public class OpenAiImageProcessorService<T> {
     }
 
     private String callVisionApi(String promptText, MultipartFile image) throws Exception {
-        byte[] imageBytes = image.getBytes();
-        String base64Image = Base64.getEncoder().encodeToString(imageBytes);
-        Map<String, Object> payload = new HashMap<>();
-        payload.put("model", config.getModel().getValue());
-        payload.put("messages", List.of(
-                Map.of(
-                        "role", "user",
-                        "content", List.of(
-                                Map.of("type", "text", "text", promptText),
-                                Map.of("type", "image_url", "image_url", Map.of(
-                                        "url", "data:image/jpeg;base64," + base64Image,
-                                        "detail", "high"
-                                ))
-                        )
-                )
-        ));
-        payload.put("max_tokens", config.getMaxTokens());
-        payload.put("temperature", config.getTemperature());
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setBearerAuth(config.getApiKey());
-        HttpEntity<Map<String, Object>> request = new HttpEntity<>(payload, headers);
+        HttpEntity<Map<String, Object>> request = prepareRequest(promptText, image);
         RestTemplate restTemplate = new RestTemplate();
+
         ResponseEntity<String> response = restTemplate.postForEntity(
-                "https://api.openai.com/v1/chat/completions",
+                COMPLETIONS_URL,
                 request,
                 String.class
         );
+
         if (!response.getStatusCode().is2xxSuccessful()) {
-            throw new Exception("OpenAI API error: " + response.getStatusCode() + " - " + response.getBody());
+            throw new Exception(OPENAI_API_ERROR + response.getStatusCode() + " - " + response.getBody());
         }
+
         return objectMapper.readTree(response.getBody())
-                .path("choices").get(0)
-                .path("message").path("content")
+                .path(CHOICES).get(0)
+                .path(MESSAGE).path(CONTENT)
                 .asText();
+    }
+
+    private HttpEntity<Map<String, Object>> prepareRequest(String promptText, MultipartFile image) throws IOException {
+        byte[] imageBytes = image.getBytes();
+        String base64Image = Base64.getEncoder().encodeToString(imageBytes);
+
+        Map<String, Object> imageUrlContent = Map.of(
+                URL, IMAGE_TYPE + base64Image,
+                DETAIL, HIGH
+        );
+
+        Map<String, Object> contentItem1 = Map.of(TYPE, TEXT, TEXT, promptText);
+        Map<String, Object> contentItem2 = Map.of(TYPE, IMAGE_URL, IMAGE_URL, imageUrlContent);
+
+        Map<String, Object> message = Map.of(
+                ROLE, USER,
+                CONTENT, List.of(contentItem1, contentItem2)
+        );
+
+        Map<String, Object> payload = new HashMap<>();
+        payload.put(MODEL, config.getModel().getValue());
+        payload.put(MESSAGES, List.of(message));
+        payload.put(MAX_TOKENS, config.getMaxTokens());
+        payload.put(TEMPERATURE, config.getTemperature());
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBearerAuth(config.getApiKey());
+
+        return new HttpEntity<>(payload, headers);
     }
 }

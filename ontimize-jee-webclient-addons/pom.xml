@@ -168,7 +168,6 @@
     <dependency>
       <groupId>com.github.erosb</groupId>
       <artifactId>everit-json-schema</artifactId>
-      <version>1.14.6</version>
     </dependency>
   </dependencies>
 
