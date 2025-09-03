@@ -2,11 +2,11 @@ package com.ontimize.jee.webclient.openai.model;
 
 public class OpenAiClientConfig {
     private String apiKey;
-    private OpenAiModel model;
+    private String model;
     private int maxTokens;
     private double temperature;
 
-    public OpenAiClientConfig(String apiKey, OpenAiModel model, int maxTokens, double temperature) {
+    public OpenAiClientConfig(String apiKey, String model, int maxTokens, double temperature) {
         this.apiKey = apiKey;
         this.model = model;
         this.maxTokens = maxTokens;
@@ -21,11 +21,11 @@ public class OpenAiClientConfig {
         this.apiKey = apiKey;
     }
 
-    public OpenAiModel getModel() {
+    public String getModel() {
         return model;
     }
 
-    public void setModel(OpenAiModel model) {
+    public void setModel(String model) {
         this.model = model;
     }
 

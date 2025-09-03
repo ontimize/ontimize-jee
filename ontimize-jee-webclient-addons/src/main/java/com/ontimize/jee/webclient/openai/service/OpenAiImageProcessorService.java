@@ -96,7 +96,7 @@ public class OpenAiImageProcessorService<T> {
         );
 
         Map<String, Object> payload = new HashMap<>();
-        payload.put(MODEL, config.getModel().getValue());
+        payload.put(MODEL, config.getModel());
         payload.put(MESSAGES, List.of(message));
         payload.put(MAX_TOKENS, config.getMaxTokens());
         payload.put(TEMPERATURE, config.getTemperature());
