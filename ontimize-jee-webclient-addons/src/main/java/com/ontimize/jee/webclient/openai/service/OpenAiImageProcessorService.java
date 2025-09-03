@@ -1,7 +1,6 @@
 package com.ontimize.jee.webclient.openai.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ontimize.jee.webclient.openai.model.OpenAiClientConfig;
 import com.ontimize.jee.webclient.openai.model.ProcessRequest;
 import com.ontimize.jee.webclient.openai.model.ProcessResult;
 import com.ontimize.jee.webclient.openai.util.JsonSchemaValidator;
@@ -19,17 +18,17 @@ import java.util.*;
 import static com.ontimize.jee.webclient.openai.naming.OpenAINaming.*;
 
 public class OpenAiImageProcessorService<T> {
-    private final OpenAiClientConfig config;
     private final PromptBuilder promptBuilder;
     private final JsonSchemaValidator jsonSchemaValidator;
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private final String apiKey;
 
-    public OpenAiImageProcessorService(OpenAiClientConfig config,
+    public OpenAiImageProcessorService(String apiKey,
                                        PromptBuilder promptBuilder,
                                        JsonSchemaValidator jsonSchemaValidator) {
-        this.config = config;
         this.promptBuilder = promptBuilder;
         this.jsonSchemaValidator = jsonSchemaValidator;
+        this.apiKey = apiKey;
     }
 
     public ProcessResult<T> processImage(ProcessRequest<T> request) {
@@ -46,7 +45,8 @@ public class OpenAiImageProcessorService<T> {
                         outputSchemaJson,
                         actualTry > 0 ? errors.get(errors.size() - 1) : null
                 );
-                String responseJson = callVisionApi(prompt, file);
+                String responseJson = callVisionApi(prompt, file, request.getModel(), request.getMaxTokens(),
+                        request.getTemperature());
                 T result = objectMapper.readValue(responseJson, outputClass);
                 jsonSchemaValidator.validate(result, outputSchemaJson);
                 return new ProcessResult<>(result, errors, actualTry);
@@ -58,8 +58,9 @@ public class OpenAiImageProcessorService<T> {
         return new ProcessResult<>(null, errors, actualTry);
     }
 
-    private String callVisionApi(String promptText, MultipartFile image) throws Exception {
-        HttpEntity<Map<String, Object>> request = prepareRequest(promptText, image);
+    private String callVisionApi(String promptText, MultipartFile image, String model, int maxTokens,
+                                 double temperature) throws Exception {
+        HttpEntity<Map<String, Object>> request = prepareRequest(promptText, image, model, maxTokens, temperature);
         RestTemplate restTemplate = new RestTemplate();
 
         ResponseEntity<String> response = restTemplate.postForEntity(
@@ -78,7 +79,8 @@ public class OpenAiImageProcessorService<T> {
                 .asText();
     }
 
-    private HttpEntity<Map<String, Object>> prepareRequest(String promptText, MultipartFile image) throws IOException {
+    private HttpEntity<Map<String, Object>> prepareRequest(String promptText, MultipartFile image, String model,
+                                                           int maxTokens, double temperature) throws IOException {
         byte[] imageBytes = image.getBytes();
         String base64Image = Base64.getEncoder().encodeToString(imageBytes);
 
@@ -96,14 +98,14 @@ public class OpenAiImageProcessorService<T> {
         );
 
         Map<String, Object> payload = new HashMap<>();
-        payload.put(MODEL, config.getModel());
+        payload.put(MODEL, model);
         payload.put(MESSAGES, List.of(message));
-        payload.put(MAX_TOKENS, config.getMaxTokens());
-        payload.put(TEMPERATURE, config.getTemperature());
+        payload.put(MAX_TOKENS, maxTokens);
+        payload.put(TEMPERATURE, temperature);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setBearerAuth(config.getApiKey());
+        headers.setBearerAuth(this.apiKey);
 
         return new HttpEntity<>(payload, headers);
     }

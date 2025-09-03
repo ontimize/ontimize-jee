@@ -8,6 +8,9 @@ public class ProcessRequest<T> {
     private String prompt;
     private int retries;
     private Class<T> outputClass;
+    private String model;
+    private int maxTokens;
+    private double temperature;
 
     public MultipartFile getFile() {
         return file;
@@ -39,5 +42,29 @@ public class ProcessRequest<T> {
 
     public void setRetries(int retries) {
         this.retries = retries;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public int getMaxTokens() {
+        return maxTokens;
+    }
+
+    public void setMaxTokens(int maxTokens) {
+        this.maxTokens = maxTokens;
+    }
+
+    public double getTemperature() {
+        return temperature;
+    }
+
+    public void setTemperature(double temperature) {
+        this.temperature = temperature;
     }
 }
