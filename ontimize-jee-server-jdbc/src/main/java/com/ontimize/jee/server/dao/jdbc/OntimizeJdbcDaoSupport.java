@@ -27,7 +27,6 @@ import java.util.Properties;
 import javax.sql.DataSource;
 import javax.xml.bind.JAXB;
 
-import org.apache.poi.ss.formula.functions.T;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -2194,3 +2193,4 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 		return null;
 	}
 }
+
