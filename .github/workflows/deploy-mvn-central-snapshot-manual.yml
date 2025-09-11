@@ -17,20 +17,24 @@ jobs:
       - name : Checkout repository code
         uses: actions/checkout@v4
       - name: Setup Java JDK and Maven
-        uses: ontimize/setup-java-maven-gitAction@v4
+        uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '11'
-          server-id: ossrh
+          server-id: central
           server-username: MAVEN_USERNAME
           server-password: MAVEN_CENTRAL_TOKEN
           gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
           gpg-passphrase: MAVEN_GPG_PASSPHRASE       
       - name: Publish to Apache Maven Central
         run: |
-          mvn -B build-helper:parse-version versions:set \
-            -DnewVersion="\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion}.\${parsedVersion.incrementalVersion}-${{github.event.inputs.version-suffix}}-SNAPSHOT"
-          mvn -U clean deploy -Pgenerate-version
+          if [ -n "${{ github.event.inputs.version-suffix }}" ]; then
+            mvn -B build-helper:parse-version versions:set \
+              -DnewVersion="\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion}.\${parsedVersion.incrementalVersion}-${{ github.event.inputs.version-suffix }}-SNAPSHOT"
+          else
+            echo "No version suffix provided. Using current project version."
+          fi
+          mvn -B -U clean deploy -Pgenerate-version
         env:
           MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_CENTRAL_TOKEN }}

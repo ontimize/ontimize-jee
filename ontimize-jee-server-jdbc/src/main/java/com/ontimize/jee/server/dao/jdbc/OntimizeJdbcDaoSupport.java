@@ -531,6 +531,41 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	}
 
 	/**
+	 * Executes a single SQL statement using a prepared statement with the given parameters.
+	 *
+	 * <p>This method is intended for executing a single SQL command (e.g., CREATE, DROP, UPDATE), and supports parameter
+	 * substitution using placeholders.</p>
+	 *
+	 * <p>Restrictions:
+	 * <ul>
+	 * <li>Only one SQL statement can be executed per call. Do not pass multiple statements separated by semicolons.</li>
+	 * <li>Dynamic WHERE clauses not working with DLL statements.</li>
+	 * <li>This method does not return results.</li>
+	 * </ul>
+	 * </p>
+	 *
+	 * @param sqlStatement The SQL statement to execute.
+	 * @param vValues      The list of values for the prepared statement.
+	 */
+	public boolean executeComposeSQLStatement(String sqlStatement, List<?> vValues) {
+		Chronometer chrono = new Chronometer().start();
+		try {
+			JdbcTemplate jdbcTemplate = this.getJdbcTemplate();
+			if (jdbcTemplate != null) {
+				jdbcTemplate.execute((ConnectionCallback<Boolean>) con -> {
+					PreparedStatement ps = con.prepareStatement(sqlStatement);
+					ArgumentPreparedStatementSetter pss = new ArgumentPreparedStatementSetter(vValues.toArray());
+					pss.setValues(ps);
+					return ps.execute();
+				});
+			}
+			return false;
+		} finally {
+			logger.trace("Time consumed in statement= {} ms", chrono.stopMs());
+		}
+    }
+
+	/**
 	 * Creates the row mapper.
 	 * @param <T> the generic type
 	 * @param clazz the clazz
