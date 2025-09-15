@@ -2,9 +2,14 @@ package com.ontimize.jee.webclient.openai.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.victools.jsonschema.generator.OptionPreset;
+import com.github.victools.jsonschema.generator.SchemaGenerator;
+import com.github.victools.jsonschema.generator.SchemaGeneratorConfigBuilder;
+import com.github.victools.jsonschema.generator.SchemaVersion;
 import com.ontimize.jee.webclient.openai.model.ProcessRequest;
 import com.ontimize.jee.webclient.openai.model.ProcessResult;
 import com.ontimize.jee.webclient.openai.util.JsonSchemaValidator;
+import com.ontimize.jee.webclient.openai.util.Utils;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;

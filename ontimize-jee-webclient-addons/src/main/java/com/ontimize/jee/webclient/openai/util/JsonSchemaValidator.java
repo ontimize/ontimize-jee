@@ -10,6 +10,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
+import static com.ontimize.jee.webclient.openai.naming.OpenAINaming.OPENAI_API_NO_JSON_ERROR;
+import static com.ontimize.jee.webclient.openai.naming.OpenAINaming.PROPERTIES;
+
 @Component
 public class JsonSchemaValidator {
     private static final ObjectMapper LENIENT = new ObjectMapper().configure(JsonParser.Feature.ALLOW_COMMENTS, true).configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true).configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true).configure(JsonParser.Feature.ALLOW_NUMERIC_LEADING_ZEROS, true).configure(JsonParser.Feature.ALLOW_TRAILING_COMMA, true);
