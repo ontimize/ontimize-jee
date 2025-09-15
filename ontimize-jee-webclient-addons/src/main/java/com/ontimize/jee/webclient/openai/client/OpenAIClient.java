@@ -6,11 +6,11 @@ import com.ontimize.jee.webclient.openai.model.ProcessResult;
 import com.ontimize.jee.webclient.openai.service.OpenAiImageProcessorService;
 import com.ontimize.jee.webclient.openai.util.JsonSchemaValidator;
 
-public class OpenAiClient {
+public class OpenAIClient {
 
     private final String apiKey;
 
-    public OpenAiClient(String apiKey) {
+    public OpenAIClient(String apiKey) {
         this.apiKey = apiKey;
     }
 
