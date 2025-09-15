@@ -6,9 +6,9 @@ import static com.ontimize.jee.webclient.openai.naming.OpenAINaming.INITIAL_PROM
 import static com.ontimize.jee.webclient.openai.naming.OpenAINaming.RETRY_PROMPT_FORMAT;
 
 @Component
-public class PromptBuilder {
+public class Utils {
 
-    public String buildPrompt(String userPrompt, String jsonSchema, String error) {
+    public static String buildPrompt(String userPrompt, String jsonSchema, String error) {
         return error == null
                 ? String.format(INITIAL_PROMPT_FORMAT, userPrompt, jsonSchema)
                 : String.format(RETRY_PROMPT_FORMAT, error, jsonSchema);

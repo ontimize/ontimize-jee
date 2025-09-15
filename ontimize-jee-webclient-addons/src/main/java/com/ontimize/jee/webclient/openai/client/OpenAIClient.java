@@ -5,7 +5,6 @@ import com.ontimize.jee.webclient.openai.model.ProcessRequest;
 import com.ontimize.jee.webclient.openai.model.ProcessResult;
 import com.ontimize.jee.webclient.openai.service.OpenAiImageProcessorService;
 import com.ontimize.jee.webclient.openai.util.JsonSchemaValidator;
-import com.ontimize.jee.webclient.openai.util.PromptBuilder;
 
 public class OpenAiClient {
 
@@ -16,11 +15,7 @@ public class OpenAiClient {
     }
 
     public <T> ProcessResult<T> processImage(ProcessRequest<T> request) {
-        OpenAiImageProcessorService<T> service = new OpenAiImageProcessorService<>(
-                this.apiKey,
-                new PromptBuilder(),
-                new JsonSchemaValidator()
-        );
+        OpenAiImageProcessorService<T> service = new OpenAiImageProcessorService<>(this.apiKey, new JsonSchemaValidator());
         return service.processImage(request);
     }
 }
