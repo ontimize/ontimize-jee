@@ -69,10 +69,10 @@ public class Log4j2LoggerHelper implements ILoggerHelper {
         if (!Files.exists(file)) {
             throw new OntimizeJEEException("File not found");
         }
-        final PipedInputStream pis = new PipedInputStream();
-        final PipedOutputStream pos = new PipedOutputStream(pis);
+        final PipedInputStream inputStream = new PipedInputStream();
+        final PipedOutputStream outputStream = new PipedOutputStream(inputStream);
         new Thread(() -> {
-            try (ZipOutputStream zos = new ZipOutputStream(pos)) {
+            try (ZipOutputStream zos = new ZipOutputStream(outputStream)) {
                 zos.putNextEntry(new ZipEntry(file.getFileName().toString()));
                 StreamUtils.copy(Files.newInputStream(file), zos);
                 zos.closeEntry();
@@ -81,7 +81,7 @@ public class Log4j2LoggerHelper implements ILoggerHelper {
             }
         }, "LoggerHelper copy stream").start();
 
-        return pis;
+        return inputStream;
     }
 
     private Path getLogFolder() {
