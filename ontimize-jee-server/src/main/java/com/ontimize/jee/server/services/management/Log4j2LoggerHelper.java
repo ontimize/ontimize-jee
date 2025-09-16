@@ -35,11 +35,12 @@ public class Log4j2LoggerHelper implements ILoggerHelper {
     private static final Logger logger = LoggerFactory.getLogger(Log4j2LoggerHelper.class);
 
     public Log4j2LoggerHelper() {
+        // Empty constructor required for framework instantiation and reflection.
+        // No initialization logic needed here.
     }
 
     @Override
     public InputStream openLogStream() throws IOException {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -50,7 +51,7 @@ public class Log4j2LoggerHelper implements ILoggerHelper {
             return new EntityResultMapImpl(EntityResult.OPERATION_SUCCESSFUL_SHOW_MESSAGE, EntityResult.NODATA_RESULT,
                     "No hay ficheros que mostrar");
         }
-        final EntityResult res = new EntityResultMapImpl(Arrays.asList(new String[] { "FILE_NAME", "FILE_SIZE" }));
+        final EntityResult res = new EntityResultMapImpl(Arrays.asList("FILE_NAME", "FILE_SIZE"));
         Files.walkFileTree(folder, new java.nio.file.SimpleFileVisitor<Path>() {
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
@@ -61,6 +62,7 @@ public class Log4j2LoggerHelper implements ILoggerHelper {
         });
         return res;
     }
+
 
     @Override
     public InputStream getLogFileContent(String fileName) throws Exception {
@@ -85,20 +87,18 @@ public class Log4j2LoggerHelper implements ILoggerHelper {
     }
 
     private Path getLogFolder() {
-        for (Logger logger : LogManagerFactory.getLogManager().getLoggerList()) {
+        for (Logger log : LogManagerFactory.getLogManager().getLoggerList()) {
             ILoggerFactory loggerFactory = LoggerFactory.getILoggerFactory();
-            Map loggersToUse = this.getValidLoggersToUse(loggerFactory);
-            org.apache.logging.log4j.core.Logger innerLogger = this.getInnerLogger(loggersToUse.get(logger.getName()));
+            Map<Object, Map> loggersToUse = this.getValidLoggersToUse(loggerFactory);
+            org.apache.logging.log4j.core.Logger innerLogger = this.getInnerLogger(loggersToUse.get(log.getName()));
 
             for (Appender appender : innerLogger.getAppenders().values()) {
                 if (appender instanceof FileAppender) {
                     Path file = Paths.get(((FileAppender) appender).getFileName());
-                    Path folder = file.getParent();
-                    return folder;
+                    return file.getParent();
                 } else if (appender instanceof RollingFileAppender) {
                     Path file = Paths.get(((RollingFileAppender) appender).getFileName());
-                    Path folder = file.getParent();
-                    return folder;
+                    return file.getParent();
                 }
             }
         }
@@ -111,13 +111,12 @@ public class Log4j2LoggerHelper implements ILoggerHelper {
         return (org.apache.logging.log4j.core.Logger) Log4jManager.getReflectionFieldValue(logger2, "logger");
     }
 
-    // For some extrange reason, when a lloger is requested to logerFactory it gets from a "Default"
+    // For some strange reason, when a logger is requested to loggerFactory it gets from a "Default"
     // context, and not from our own context.
-    private Map getValidLoggersToUse(ILoggerFactory loggerFactory) {
+    private Map<Object, Map> getValidLoggersToUse(ILoggerFactory loggerFactory) {
         Map<Object, Map> registry = (Map<Object, Map>) Log4jManager.getReflectionFieldValue(loggerFactory,
                 "registry");
-        Map loggersToUse = registry.get(org.apache.logging.log4j.core.LoggerContext.getContext(false));
-        return loggersToUse;
+        return registry.get(org.apache.logging.log4j.core.LoggerContext.getContext(false));
     }
 
 }
