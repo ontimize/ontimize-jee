@@ -206,7 +206,6 @@
 
         <!-- SONARCloud configuration -->
         <sonar.organization>ontimize</sonar.organization>
-        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
 
     </properties>
 
