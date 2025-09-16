@@ -64,6 +64,12 @@ public class Log4j2LoggerHelper implements ILoggerHelper {
     }
 
 
+    /**
+     * @param fileName The name of the log file to retrieve.
+     * @return InputStream zipped with the content of the log file. This stream must be closed by the caller.
+     * @throws Exception
+     */
+    @SuppressWarnings("java:S2095")
     @Override
     public InputStream getLogFileContent(String fileName) throws Exception {
         Path folder = this.getLogFolder();
@@ -89,7 +95,7 @@ public class Log4j2LoggerHelper implements ILoggerHelper {
     private Path getLogFolder() {
         for (Logger log : LogManagerFactory.getLogManager().getLoggerList()) {
             ILoggerFactory loggerFactory = LoggerFactory.getILoggerFactory();
-            Map<Object, Map> loggersToUse = this.getValidLoggersToUse(loggerFactory);
+            Map loggersToUse = this.getValidLoggersToUse(loggerFactory);
             org.apache.logging.log4j.core.Logger innerLogger = this.getInnerLogger(loggersToUse.get(log.getName()));
 
             for (Appender appender : innerLogger.getAppenders().values()) {
@@ -113,7 +119,7 @@ public class Log4j2LoggerHelper implements ILoggerHelper {
 
     // For some strange reason, when a logger is requested to loggerFactory it gets from a "Default"
     // context, and not from our own context.
-    private Map<Object, Map> getValidLoggersToUse(ILoggerFactory loggerFactory) {
+    private Map getValidLoggersToUse(ILoggerFactory loggerFactory) {
         Map<Object, Map> registry = (Map<Object, Map>) Log4jManager.getReflectionFieldValue(loggerFactory,
                 "registry");
         return registry.get(org.apache.logging.log4j.core.LoggerContext.getContext(false));
