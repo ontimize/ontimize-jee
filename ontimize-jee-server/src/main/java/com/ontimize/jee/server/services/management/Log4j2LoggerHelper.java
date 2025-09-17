@@ -69,6 +69,7 @@ public class Log4j2LoggerHelper implements ILoggerHelper {
      * @return InputStream zipped with the content of the log file. This stream must be closed by the caller.
      * @throws Exception
      */
+    // Suppress resource leak warning because the PipedInputStream is returned to the caller.
     @SuppressWarnings("java:S2095")
     @Override
     public InputStream getLogFileContent(String fileName) throws Exception {
