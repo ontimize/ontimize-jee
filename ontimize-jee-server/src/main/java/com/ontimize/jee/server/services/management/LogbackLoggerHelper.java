@@ -230,6 +230,7 @@ public class LogbackLoggerHelper implements ILoggerHelper {
         return null;
     }
 
+    @SuppressWarnings("java:S2095") // False positive, the stream must be closed by the caller
     public InputStream getLogFileContent(String fileName) throws Exception {
         Path folder = this.getLogFolder();
         final Path file = folder.resolve(fileName);
