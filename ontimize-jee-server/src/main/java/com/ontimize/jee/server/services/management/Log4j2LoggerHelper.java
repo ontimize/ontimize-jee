@@ -73,6 +73,9 @@ public class Log4j2LoggerHelper implements ILoggerHelper {
     @Override
     public InputStream getLogFileContent(String fileName) throws Exception {
         Path folder = this.getLogFolder();
+        if (folder == null) {
+            throw new OntimizeJEEException("Folder not found");
+        }
         final Path file = folder.resolve(fileName);
         if (!Files.exists(file)) {
             throw new OntimizeJEEException("File not found");
@@ -95,7 +98,7 @@ public class Log4j2LoggerHelper implements ILoggerHelper {
     private Path getLogFolder() {
         for (Logger log : LogManagerFactory.getLogManager().getLoggerList()) {
             ILoggerFactory loggerFactory = LoggerFactory.getILoggerFactory();
-            Map loggersToUse = this.getValidLoggersToUse(loggerFactory);
+            Map<String, Object> loggersToUse = this.getValidLoggersToUse(loggerFactory);
             org.apache.logging.log4j.core.Logger innerLogger = this.getInnerLogger(loggersToUse.get(log.getName()));
 
             for (Appender appender : innerLogger.getAppenders().values()) {
@@ -119,10 +122,9 @@ public class Log4j2LoggerHelper implements ILoggerHelper {
 
     // For some strange reason, when a logger is requested to loggerFactory it gets from a "Default"
     // context, and not from our own context.
-    private Map getValidLoggersToUse(ILoggerFactory loggerFactory) {
-        Map<Object, Map> registry = (Map<Object, Map>) Log4jManager.getReflectionFieldValue(loggerFactory,
+    private Map<String, Object> getValidLoggersToUse(ILoggerFactory loggerFactory) {
+        Map<Object, Map<String,Object>> registry = (Map<Object, Map<String,Object>>) Log4jManager.getReflectionFieldValue(loggerFactory,
                 "registry");
         return registry.get(org.apache.logging.log4j.core.LoggerContext.getContext(false));
     }
-
 }
