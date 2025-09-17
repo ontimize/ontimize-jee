@@ -1831,14 +1831,14 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 			// Postgres uses a RETURNING
 			// clause while HSQL uses a second query that has to be executed
 			// with the same connection.
-			final String keyQuery = this.tableMetaDataContext.getSimulationQueryForGetGeneratedKey(
+			final String keyQuery = this.tableMetaDataContext.getSimpleQueryForGetGeneratedKey(
 					this.tableMetaDataContext.getTableName(), this.getGeneratedKeyNames()[0]);
 			Assert.notNull(keyQuery, "Query for simulating get generated keys can't be null");
 			if (keyQuery.toUpperCase().startsWith("RETURNING")) {
 				final Long key = this.getJdbcTemplate()
 						.queryForObject(holder.getInsertString() + " " + keyQuery,
-								holder.getValues().toArray(new Object[holder.getValues().size()]),
-								Long.class);
+								Long.class,
+								holder.getValues().toArray(new Object[holder.getValues().size()]));
 				final Map<String, Object> keys = new HashMap<>(1);
 				keys.put(this.getGeneratedKeyNames()[0], key);
 				keyHolder.getKeyList().add(keys);
