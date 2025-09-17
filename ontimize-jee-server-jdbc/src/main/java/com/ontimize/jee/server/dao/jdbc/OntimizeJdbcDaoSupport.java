@@ -331,23 +331,11 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 			}
 			cond = cond.trim();
 
-			List<Object> vValuesTemp = new ArrayList<Object>();
+			List<Object> vValuesTemp = new ArrayList<>();
 			vValuesTemp.addAll(vValues);
 
-			Pair<String, Integer> replaceAll = StringTools.replaceAll(sqlTemplate,
-					OntimizeJdbcDaoSupport.PLACEHOLDER_WHERE_CONCAT,
-					cond.length() == 0 ? "" : SQLStatementBuilder.AND + " " + cond);
-			sqlTemplate = replaceAll.getFirst();
-			for (int i = 1; i < replaceAll.getSecond(); i++) {
-				vValues.addAll(vValuesTemp);
-			}
+			sqlTemplate = this.applyWherePlaceholders(sqlTemplate, cond, vValues, vValuesTemp);
 
-			replaceAll = StringTools.replaceAll(sqlTemplate, OntimizeJdbcDaoSupport.PLACEHOLDER_WHERE,
-					cond.length() == 0 ? "" : SQLStatementBuilder.WHERE + " " + cond);
-			sqlTemplate = replaceAll.getFirst();
-			for (int i = 1; i < replaceAll.getSecond(); i++) {
-				vValues.addAll(vValuesTemp);
-			}
 			sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_SCHEMA, this.getSchemaName());
 			sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_ORDER_CONCAT, "");
 			sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_ORDER, "");
@@ -361,8 +349,9 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 		String sqlQuery = stSQL.getSQLStatement();
 		List vValues = stSQL.getValues();
 		EntityResult erResult = this.getJdbcTemplate()
-				.query(sqlQuery, vValues.toArray(),
-						new EntityResultResultSetExtractor(this.getStatementHandler(), queryTemplateInformation));
+				.query(sqlQuery,
+						new EntityResultResultSetExtractor(this.getStatementHandler(), queryTemplateInformation),
+						vValues.toArray());
 
 		if ((erResult == null) || (erResult.getCode() == EntityResult.OPERATION_WRONG)) {
 			OntimizeJdbcDaoSupport.logger.error("Error executed record count query:{} : {}", erResult.getMessage(),
@@ -458,23 +447,10 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 			}
 			cond = cond.trim();
 
-			List<Object> vValuesTemp = new ArrayList<Object>();
+			List<Object> vValuesTemp = new ArrayList<>();
 			vValuesTemp.addAll(vValues);
 
-			Pair<String, Integer> replaceAll = StringTools.replaceAll(sqlTemplate,
-					OntimizeJdbcDaoSupport.PLACEHOLDER_WHERE_CONCAT,
-					cond.length() == 0 ? "" : SQLStatementBuilder.AND + " " + cond);
-			sqlTemplate = replaceAll.getFirst();
-			for (int i = 1; i < replaceAll.getSecond(); i++) {
-				vValues.addAll(vValuesTemp);
-			}
-
-			replaceAll = StringTools.replaceAll(sqlTemplate, OntimizeJdbcDaoSupport.PLACEHOLDER_WHERE,
-					cond.length() == 0 ? "" : SQLStatementBuilder.WHERE + " " + cond);
-			sqlTemplate = replaceAll.getFirst();
-			for (int i = 1; i < replaceAll.getSecond(); i++) {
-				vValues.addAll(vValuesTemp);
-			}
+			sqlTemplate = this.applyWherePlaceholders(sqlTemplate, cond, vValues, vValuesTemp);
 
 			// Order by
 			List<OrderColumnType> orderColumns = queryTemplateInformation.getOrderColumns();
@@ -503,6 +479,33 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 		return stSQL;
 	}
 
+	/**
+	 * Replaces the WHERE placeholders in the SQL template and updates the values.
+	 *
+	 * @param sqlTemplate   The original SQL template.
+	 * @param cond          The generated condition.
+	 * @param vValues       The list of values to be updated.
+	 * @param vValuesTemp   Temporary list of condition values.
+	 * @return The modified sqlTemplate with the placeholders replaced.
+	 */
+	public String applyWherePlaceholders(String sqlTemplate, String cond, List<Object> vValues, List<Object> vValuesTemp) {
+		Pair<String, Integer> replaceAll = StringTools.replaceAll(sqlTemplate,
+				OntimizeJdbcDaoSupport.PLACEHOLDER_WHERE_CONCAT,
+				cond.length() == 0 ? "" : SQLStatementBuilder.AND + " " + cond);
+		sqlTemplate = replaceAll.getFirst();
+		for (int i = 1; i < replaceAll.getSecond(); i++) {
+			vValues.addAll(vValuesTemp);
+		}
+
+		replaceAll = StringTools.replaceAll(sqlTemplate, OntimizeJdbcDaoSupport.PLACEHOLDER_WHERE,
+				cond.length() == 0 ? "" : SQLStatementBuilder.WHERE + " " + cond);
+		sqlTemplate = replaceAll.getFirst();
+		for (int i = 1; i < replaceAll.getSecond(); i++) {
+			vValues.addAll(vValuesTemp);
+		}
+		return sqlTemplate;
+	}
+
 	@Override
 	public <T> List<T> query(final Map<?, ?> keysValues, final List<?> sort, final String queryId,
 			final Class<T> clazz) {
@@ -527,7 +530,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 				sort, null, queryAdapter);
 		final String sqlQuery = stSQL.getSQLStatement();
 		final List<?> vValues = stSQL.getValues();
-		return this.getJdbcTemplate().query(sqlQuery, vValues.toArray(), rowMapper);
+		return this.getJdbcTemplate().query(sqlQuery, rowMapper, vValues.toArray());
 	}
 
 	/**
@@ -1610,7 +1613,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	public void addQueryTemplateInformation(final String id, final String value,
 			final List<AmbiguousColumnType> ambiguousColumns, final List<FunctionColumnType> functionColumns,
 			List<OrderColumnType> orderColumns) {
-		this.addQueryTemplateInformation(id, value, ambiguousColumns, functionColumns, new ArrayList<String>(),
+		this.addQueryTemplateInformation(id, value, ambiguousColumns, functionColumns, new ArrayList<>(),
 				orderColumns);
 	}
 
