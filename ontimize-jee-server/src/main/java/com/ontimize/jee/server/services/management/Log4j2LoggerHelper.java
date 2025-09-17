@@ -123,7 +123,7 @@ public class Log4j2LoggerHelper implements ILoggerHelper {
     // For some strange reason, when a logger is requested to loggerFactory it gets from a "Default"
     // context, and not from our own context.
     private Map<String, Object> getValidLoggersToUse(ILoggerFactory loggerFactory) {
-        Map<Object, Map<String,Object>> registry = (Map<Object, Map<String,Object>>) Log4jManager.getReflectionFieldValue(loggerFactory,
+        Map<Object, Map<String, Object>> registry = (Map<Object, Map<String, Object>>) Log4jManager.getReflectionFieldValue(loggerFactory,
                 "registry");
         return registry.get(org.apache.logging.log4j.core.LoggerContext.getContext(false));
     }
