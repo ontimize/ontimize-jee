@@ -696,7 +696,7 @@ public abstract class XMLClientUtilities {
         if (namedNodeAttributes != null) {
             for (int i = 0; i < namedNodeAttributes.getLength(); i++) {
                 Node n = namedNodeAttributes.item(i);
-                sbAttributes.append(n.getNodeName() + "=\"" + n.getNodeValue() + "\" ");
+                sbAttributes.append(n.getNodeName()).append("=\"").append(n.getNodeValue()).append("\" ");
             }
         }
         if (node.getNodeType() == Node.ELEMENT_NODE) {
