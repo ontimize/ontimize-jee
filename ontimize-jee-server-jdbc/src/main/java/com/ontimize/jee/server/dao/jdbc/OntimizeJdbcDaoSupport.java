@@ -458,7 +458,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 			}
 			cond = cond.trim();
 
-			List<Object> vValuesTemp = new ArrayList<Object>();
+			List<Object> vValuesTemp = new ArrayList<>();
 			vValuesTemp.addAll(vValues);
 
 			Pair<String, Integer> replaceAll = StringTools.replaceAll(sqlTemplate,
