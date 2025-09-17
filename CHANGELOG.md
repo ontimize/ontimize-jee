@@ -12,7 +12,7 @@
 - **Log4j2LoggerHelper**: Clarified variable names, added null checks, enhanced type safety, and improved Javadoc documentation.
 - **LogbackLoggerHelper**: Improved Javadoc documentation and suppress false positives on Sonar.
 - **XMLClientUtilities**: Refactored string concatenation to use StringBuilder for improved readability and performance.
-- **OntimizeJdbcDaoSupport**: Refactored SQL placeholder handling, introduced a helper method, and improved type safety to resolve SonarQube issues.
+- **OntimizeJdbcDaoSupport**: Refactored SQL placeholder and property handling, introduced a helper method, and improved type safety using Java streams to resolve SonarQube issues.
 - **OntimizeJdbcDaoSupportTest**: Updated mocks to match the modified method signatures.
 ## [5.13.0] - 2025-09-11
 ### Added ✔️
