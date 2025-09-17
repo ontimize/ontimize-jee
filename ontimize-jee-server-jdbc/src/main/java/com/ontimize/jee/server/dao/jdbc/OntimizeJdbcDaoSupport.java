@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import javax.sql.DataSource;
 import javax.xml.bind.JAXB;
@@ -1485,8 +1487,15 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 					if (isPlaceHolder != null) {
 						prop.load(isPlaceHolder);
 					}
+
+					Map<String, String> mapProperties = prop.stringPropertyNames()
+							.stream()
+							.collect(Collectors.toMap(
+									Function.identity(),
+									prop::getProperty
+							));
 					reader = new ReplaceTokensFilterReader(new InputStreamReader(is),
-							new HashMap<String, String>((Map) prop));
+							mapProperties);
 				}
 			} else {
 				reader = new InputStreamReader(is);
