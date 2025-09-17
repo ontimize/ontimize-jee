@@ -10,6 +10,7 @@
 ## [Unreleased]
 ### Changed
 - **Log4j2LoggerHelper**: Clarified variable names, added null checks, enhanced type safety, and improved Javadoc documentation.
+- **LogbackLoggerHelper**: Improved Javadoc documentation and suppress false positives on Sonar.
 ## [5.13.0] - 2025-09-11
 ### Added ✔️
 * **OntimizeJdbcDaoSupport**: Created executeSQLStatement() to use DDL statements. #175
