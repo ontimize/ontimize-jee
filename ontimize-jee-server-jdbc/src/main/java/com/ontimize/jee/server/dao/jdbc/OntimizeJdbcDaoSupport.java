@@ -361,8 +361,9 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 		String sqlQuery = stSQL.getSQLStatement();
 		List vValues = stSQL.getValues();
 		EntityResult erResult = this.getJdbcTemplate()
-				.query(sqlQuery, vValues.toArray(),
-						new EntityResultResultSetExtractor(this.getStatementHandler(), queryTemplateInformation));
+				.query(sqlQuery,
+						new EntityResultResultSetExtractor(this.getStatementHandler(), queryTemplateInformation),
+						vValues.toArray());
 
 		if ((erResult == null) || (erResult.getCode() == EntityResult.OPERATION_WRONG)) {
 			OntimizeJdbcDaoSupport.logger.error("Error executed record count query:{} : {}", erResult.getMessage(),
@@ -527,7 +528,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 				sort, null, queryAdapter);
 		final String sqlQuery = stSQL.getSQLStatement();
 		final List<?> vValues = stSQL.getValues();
-		return this.getJdbcTemplate().query(sqlQuery, vValues.toArray(), rowMapper);
+		return this.getJdbcTemplate().query(sqlQuery, rowMapper, vValues.toArray());
 	}
 
 	/**
@@ -1610,7 +1611,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	public void addQueryTemplateInformation(final String id, final String value,
 			final List<AmbiguousColumnType> ambiguousColumns, final List<FunctionColumnType> functionColumns,
 			List<OrderColumnType> orderColumns) {
-		this.addQueryTemplateInformation(id, value, ambiguousColumns, functionColumns, new ArrayList<String>(),
+		this.addQueryTemplateInformation(id, value, ambiguousColumns, functionColumns, new ArrayList<>(),
 				orderColumns);
 	}
 
