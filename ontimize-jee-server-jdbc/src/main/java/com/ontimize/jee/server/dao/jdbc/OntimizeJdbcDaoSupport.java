@@ -899,7 +899,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
         }
 
         if (keysValuesChecked.isEmpty()) {
-            OntimizeJdbcDaoSupport.logger.debug("Delete:  Keys does not contain any pair key-value valid:" + keysValues);
+            OntimizeJdbcDaoSupport.logger.debug("Delete:  Keys does not contain any pair key-value valid: {}", keysValues);
             throw new SQLWarningException(I18NNaming.M_IT_HAS_NOT_CHANGED_ANY_RECORD, null);
         }
 
@@ -966,7 +966,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
                 hValidKeysValues.put(element, keysValues.get(element));
             }
         }
-        OntimizeJdbcDaoSupport.logger.debug(" Update valid keys values: Input: " + keysValues + " -> Result: " + hValidKeysValues);
+        OntimizeJdbcDaoSupport.logger.debug(" Update valid keys values: Input: {} -> Result: {}",keysValues, hValidKeysValues);
         return hValidKeysValues;
     }
 
@@ -990,7 +990,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
                 hValidKeysValues.put((String) oKey, oValue);
             }
         }
-        OntimizeJdbcDaoSupport.logger.debug(" Update valid attributes values: Input: " + inputAttributesValues + " -> Result: " + hValidKeysValues);
+        OntimizeJdbcDaoSupport.logger.debug(" Update valid attributes values: Input: {} -> Result: {}", inputAttributesValues, hValidKeysValues);
         return hValidKeysValues;
     }
 
@@ -1146,7 +1146,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
                 hValidKeysValues.put(entry.getKey(), entry.getValue());
             }
         }
-        OntimizeJdbcDaoSupport.logger.debug(" Query valid keys values: Input: " + inputKeysValues + " -> Result: " + hValidKeysValues);
+        OntimizeJdbcDaoSupport.logger.debug(" Query valid keys values: Input: {} -> Result: {}", inputKeysValues, hValidKeysValues);
         return hValidKeysValues;
     }
 
@@ -2121,7 +2121,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
         OntimizeJdbcDaoSupport.logger.trace("Creating new JdbcTemplate with fetchSize=1000");
         JdbcTemplate template = super.createJdbcTemplate(dataSource);
         template.setFetchSize(1000);
-        OntimizeJdbcDaoSupport.logger.trace("Creating new JdbcTemplate has finally fetchSize=" + template.getFetchSize());
+        OntimizeJdbcDaoSupport.logger.trace("Creating new JdbcTemplate has finally fetchSize={}", template.getFetchSize());
         return template;
     }
 
