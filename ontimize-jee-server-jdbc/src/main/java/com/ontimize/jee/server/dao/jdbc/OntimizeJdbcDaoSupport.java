@@ -1825,6 +1825,9 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 								+ this.getGeneratedKeyNames().length + " columns specified: " + Arrays
 								.asList(this.getGeneratedKeyNames()));
 			}
+			if (this.tableMetaDataContext.getTableName() == null) {
+				throw new InvalidDataAccessApiUsageException("Table name is required to simulate getGeneratedKeys");
+			}
 			// This is a hack to be able to get the generated key from a
 			// database that doesn't support
 			// get generated keys feature. HSQL is one, PostgreSQL is another.
