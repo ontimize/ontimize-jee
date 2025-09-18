@@ -1813,8 +1813,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 			try {
                 this.validateKeyGenerationSupport();
 			} catch (InvalidDataAccessApiUsageException ex) {
-				OntimizeJdbcDaoSupport.logger.error("Error in key generation validation: {}", ex.getMessage());
-				throw ex;
+				throw new InvalidDataAccessApiUsageException("Error in key generation validation: {}" + ex.getMessage());
 			}
 
 			// This is a hack to be able to get the generated key from a
