@@ -1810,30 +1810,25 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 				holder.getInsertString(), holder.getValues());
 		final KeyHolder keyHolder = new GeneratedKeyHolder();
 		if (!this.tableMetaDataContext.isGetGeneratedKeysSupported()) {
-			if (!this.tableMetaDataContext.isGetGeneratedKeysSimulated()) {
-				throw new InvalidDataAccessResourceUsageException(
-						"The getGeneratedKeys feature is not supported by this database");
+			try {
+                this.validateKeyGenerationSupport();
+			} catch (InvalidDataAccessApiUsageException ex) {
+				OntimizeJdbcDaoSupport.logger.error("Error in key generation validation: {}", ex.getMessage());
+				throw ex;
 			}
-			if (this.getGeneratedKeyNames().length < 1) {
-				throw new InvalidDataAccessApiUsageException(
-						"Generated Key Name(s) not specificed. "
-								+ "Using the generated keys features requires specifying the name(s) of the generated column(s)");
-			}
-			if (this.getGeneratedKeyNames().length > 1) {
-				throw new InvalidDataAccessApiUsageException(
-						"Current database only supports retreiving the key for a single column. There are "
-								+ this.getGeneratedKeyNames().length + " columns specified: " + Arrays
-								.asList(this.getGeneratedKeyNames()));
-			}
-			if (this.tableMetaDataContext.getTableName() == null) {
-				throw new InvalidDataAccessApiUsageException("Table name is required to simulate getGeneratedKeys");
-			}
+
 			// This is a hack to be able to get the generated key from a
 			// database that doesn't support
 			// get generated keys feature. HSQL is one, PostgreSQL is another.
 			// Postgres uses a RETURNING
 			// clause while HSQL uses a second query that has to be executed
 			// with the same connection.
+			final String tableName = this.tableMetaDataContext.getTableName();
+
+			if (tableName == null) {
+				throw new IllegalArgumentException("Table name must not be null");
+			}
+
 			final String keyQuery = this.tableMetaDataContext.getSimpleQueryForGetGeneratedKey(
 					this.tableMetaDataContext.getTableName(), this.getGeneratedKeyNames()[0]);
 			Assert.notNull(keyQuery, "Query for simulating get generated keys can't be null");
@@ -1892,6 +1887,24 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 			}
 		}, keyHolder);
 		return keyHolder;
+	}
+
+	protected void validateKeyGenerationSupport() {
+		if (!this.tableMetaDataContext.isGetGeneratedKeysSimulated()) {
+			throw new InvalidDataAccessResourceUsageException(
+					"The getGeneratedKeys feature is not supported by this database");
+		}
+		if (this.getGeneratedKeyNames().length < 1) {
+			throw new InvalidDataAccessApiUsageException(
+					"Generated Key Name(s) not specificed. "
+							+ "Using the generated keys features requires specifying the name(s) of the generated column(s)");
+		}
+		if (this.getGeneratedKeyNames().length > 1) {
+			throw new InvalidDataAccessApiUsageException(
+					"Current database only supports retreiving the key for a single column. There are "
+							+ this.getGeneratedKeyNames().length + " columns specified: " + Arrays
+							.asList(this.getGeneratedKeyNames()));
+		}
 	}
 
 	/**
