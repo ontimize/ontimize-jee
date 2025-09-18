@@ -1822,59 +1822,56 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 			// Postgres uses a RETURNING
 			// clause while HSQL uses a second query that has to be executed
 			// with the same connection.
-			final String tableName = this.tableMetaDataContext.getTableName();
 
-			if (tableName == null) {
-				throw new IllegalArgumentException("Table name must not be null");
-			}
+            if (this.tableMetaDataContext.getTableName() != null) {
+                final String keyQuery = this.tableMetaDataContext.getSimpleQueryForGetGeneratedKey(
+                        this.tableMetaDataContext.getTableName(), this.getGeneratedKeyNames()[0]);
+                Assert.notNull(keyQuery, "Query for simulating get generated keys can't be null");
+                if (keyQuery.toUpperCase().startsWith("RETURNING")) {
+                    final Long key = this.getJdbcTemplate()
+                            .queryForObject(holder.getInsertString() + " " + keyQuery,
+                                    Long.class,
+                                    holder.getValues().toArray(new Object[holder.getValues().size()]));
+                    final Map<String, Object> keys = new HashMap<>(1);
+                    keys.put(this.getGeneratedKeyNames()[0], key);
+                    keyHolder.getKeyList().add(keys);
+                } else {
+                    this.getJdbcTemplate().execute(new ConnectionCallback<Object>() {
 
-			final String keyQuery = this.tableMetaDataContext.getSimpleQueryForGetGeneratedKey(
-					this.tableMetaDataContext.getTableName(), this.getGeneratedKeyNames()[0]);
-			Assert.notNull(keyQuery, "Query for simulating get generated keys can't be null");
-			if (keyQuery.toUpperCase().startsWith("RETURNING")) {
-				final Long key = this.getJdbcTemplate()
-						.queryForObject(holder.getInsertString() + " " + keyQuery,
-								Long.class,
-								holder.getValues().toArray(new Object[holder.getValues().size()]));
-				final Map<String, Object> keys = new HashMap<>(1);
-				keys.put(this.getGeneratedKeyNames()[0], key);
-				keyHolder.getKeyList().add(keys);
-			} else {
-				this.getJdbcTemplate().execute(new ConnectionCallback<Object>() {
-
-					@Override
-					public Object doInConnection(final Connection con) throws SQLException, DataAccessException {
-						// Do the insert
-						PreparedStatement ps = null;
-						try {
-							ps = con.prepareStatement(holder.getInsertString());
-							OntimizeJdbcDaoSupport.this.setParameterValues(ps, holder.getValues(),
-									holder.getInsertTypes());
-							ps.executeUpdate();
-						} finally {
-							JdbcUtils.closeStatement(ps);
-						}
-						// Get the key
-						ResultSet rs = null;
-						final Map<String, Object> keys = new HashMap<>(1);
-						final Statement keyStmt = con.createStatement();
-						try {
-							rs = keyStmt.executeQuery(keyQuery);
-							if (rs.next()) {
-								final long key = rs.getLong(1);
-								keys.put(OntimizeJdbcDaoSupport.this.getGeneratedKeyNames()[0], key);
-								keyHolder.getKeyList().add(keys);
-							}
-						} finally {
-							JdbcUtils.closeResultSet(rs);
-							JdbcUtils.closeStatement(keyStmt);
-						}
-						return null;
-					}
-				});
-			}
-			return keyHolder;
-		}
+                        @Override
+                        public Object doInConnection(final Connection con) throws SQLException, DataAccessException {
+                            // Do the insert
+                            PreparedStatement ps = null;
+                            try {
+                                ps = con.prepareStatement(holder.getInsertString());
+                                OntimizeJdbcDaoSupport.this.setParameterValues(ps, holder.getValues(),
+                                        holder.getInsertTypes());
+                                ps.executeUpdate();
+                            } finally {
+                                JdbcUtils.closeStatement(ps);
+                            }
+                            // Get the key
+                            ResultSet rs = null;
+                            final Map<String, Object> keys = new HashMap<>(1);
+                            final Statement keyStmt = con.createStatement();
+                            try {
+                                rs = keyStmt.executeQuery(keyQuery);
+                                if (rs.next()) {
+                                    final long key = rs.getLong(1);
+                                    keys.put(OntimizeJdbcDaoSupport.this.getGeneratedKeyNames()[0], key);
+                                    keyHolder.getKeyList().add(keys);
+                                }
+                            } finally {
+                                JdbcUtils.closeResultSet(rs);
+                                JdbcUtils.closeStatement(keyStmt);
+                            }
+                            return null;
+                        }
+                    });
+                }
+                return keyHolder;
+            }
+        }
 		this.getJdbcTemplate().update(new PreparedStatementCreator() {
 
 			@Override
