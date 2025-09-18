@@ -504,7 +504,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
      * @param vValidAttributes    the v valid attributes
      * @return the list
      */
-    protected List<?> applyTransformations(final QueryTemplateInformation templateInformation, final List<?> vValidAttributes) {
+    protected List<Object> applyTransformations(final QueryTemplateInformation templateInformation, final List<?> vValidAttributes) {
         final List<AmbiguousColumnType> ambiguousColumns = templateInformation.getAmbiguousColumns();
         final List<FunctionColumnType> functionColumns = templateInformation.getFunctionColumns();
 
