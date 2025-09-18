@@ -1859,7 +1859,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 		return keyHolder;
 	}
 
-	private void simulatingWithoutReturning(InsertMetaInfoHolder holder, String keyQuery, KeyHolder keyHolder) {
+	protected void simulatingWithoutReturning(InsertMetaInfoHolder holder, String keyQuery, KeyHolder keyHolder) {
 		this.getJdbcTemplate().execute(new ConnectionCallback<Object>() {
 
 			@Override
@@ -1894,7 +1894,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 		});
 	}
 
-	private void simulatingWithReturning(InsertMetaInfoHolder holder, String keyQuery, KeyHolder keyHolder) {
+	protected void simulatingWithReturning(InsertMetaInfoHolder holder, String keyQuery, KeyHolder keyHolder) {
 		final Long key = this.getJdbcTemplate()
 				.queryForObject(holder.getInsertString() + " " + keyQuery,
 						Long.class,
