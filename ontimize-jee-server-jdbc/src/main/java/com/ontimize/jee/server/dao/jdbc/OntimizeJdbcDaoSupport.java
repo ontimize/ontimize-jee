@@ -1404,19 +1404,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 
         try (InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(path)) {
             Reader reader = null;
-            if (pathToPlaceHolder != null) {
-                try (InputStream isPlaceHolder = Thread.currentThread().getContextClassLoader().getResourceAsStream(pathToPlaceHolder)) {
-                    final Properties prop = new Properties();
-                    if (isPlaceHolder != null) {
-                        prop.load(isPlaceHolder);
-                    }
-
-                    Map<String, String> mapProperties = prop.stringPropertyNames().stream().collect(Collectors.toMap(Function.identity(), prop::getProperty));
-                    reader = new ReplaceTokensFilterReader(new InputStreamReader(is), mapProperties);
-                }
-            } else {
-                reader = new InputStreamReader(is);
-            }
+            reader = this.createReaderConfigurationFile(pathToPlaceHolder, is);
 
             JdbcEntitySetupType baseSetup = JAXB.unmarshal(reader, JdbcEntitySetupType.class);
 
@@ -1451,6 +1439,24 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
             throw new InvalidDataAccessApiUsageException(I18NNaming.M_ERROR_LOADING_CONFIGURATION_FILE, e);
         }
 
+    }
+
+    protected Reader createReaderConfigurationFile(String pathToPlaceHolder, InputStream is) throws IOException {
+        Reader reader;
+        if (pathToPlaceHolder != null) {
+            try (InputStream isPlaceHolder = Thread.currentThread().getContextClassLoader().getResourceAsStream(pathToPlaceHolder)) {
+                final Properties prop = new Properties();
+                if (isPlaceHolder != null) {
+                    prop.load(isPlaceHolder);
+                }
+
+                Map<String, String> mapProperties = prop.stringPropertyNames().stream().collect(Collectors.toMap(Function.identity(), prop::getProperty));
+                reader = new ReplaceTokensFilterReader(new InputStreamReader(is), mapProperties);
+            }
+        } else {
+            reader = new InputStreamReader(is);
+        }
+        return reader;
     }
 
     protected JdbcEntitySetupType checkDaoExtensions(JdbcEntitySetupType baseSetup, final String path, final String pathToPlaceHolder) {
