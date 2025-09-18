@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.ontimize.jee.server.dao.jdbc;
 
 import java.io.IOException;
@@ -203,7 +200,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	 */
 	@Override
 	public EntityResult query(final Map<?, ?> keysValues, final List<?> attributes, final List<?> sort,
-			final String queryId, ISQLQueryAdapter queryAdapter) {
+							  final String queryId, ISQLQueryAdapter queryAdapter) {
 		this.checkCompiled();
 		final QueryTemplateInformation queryTemplateInformation = this.getQueryTemplateInformation(queryId);
 
@@ -237,7 +234,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 
 	@Override
 	public AdvancedEntityResult paginationQuery(Map<?, ?> keysValues, List<?> attributes, int recordNumber,
-			int startIndex, List<?> orderBy, String queryId) {
+												int startIndex, List<?> orderBy, String queryId) {
 		return this.paginationQuery(keysValues, attributes, recordNumber, startIndex, orderBy, queryId, null);
 	}
 
@@ -253,8 +250,8 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	 */
 	@Override
 	public AdvancedEntityResult paginationQuery(Map<?, ?> keysValues, List<?> attributes, int recordNumber,
-			int startIndex, List<?> orderBy, String queryId,
-			ISQLQueryAdapter queryAdapter) {
+												int startIndex, List<?> orderBy, String queryId,
+												ISQLQueryAdapter queryAdapter) {
 		this.checkCompiled();
 		final QueryTemplateInformation queryTemplateInformation = this.getQueryTemplateInformation(queryId);
 		final SQLStatement stSQL = this.composeQuerySql(queryId, attributes, keysValues, orderBy,
@@ -364,7 +361,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 		List<?> v = (List<?>) erResult.get(SQLStatementBuilder.COUNT_COLUMN_NAME);
 		if ((v == null) || v.isEmpty()) {
 			OntimizeJdbcDaoSupport.logger
-			.error("Error executed record cound query. The result not contain record number.");
+					.error("Error executed record cound query. The result not contain record number.");
 			return 0;
 		}
 		return ((Number) v.get(0)).intValue();
@@ -387,8 +384,8 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	 * @return the SQL statement
 	 */
 	public SQLStatement composeQuerySql(final String queryId, final List<?> attributes, final Map<?, ?> keysValues,
-			final List<?> sort, PageableInfo pageableInfo,
-			ISQLQueryAdapter queryAdapter) {
+										final List<?> sort, PageableInfo pageableInfo,
+										ISQLQueryAdapter queryAdapter) {
 		final QueryTemplateInformation queryTemplateInformation = this.getQueryTemplateInformation(queryId);
 
 		final Map<?, ?> kvWithoutReferenceAttributes = this.processReferenceDataFieldAttributes(keysValues);
@@ -510,7 +507,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 
 	@Override
 	public <T> List<T> query(final Map<?, ?> keysValues, final List<?> sort, final String queryId,
-			final Class<T> clazz) {
+							 final Class<T> clazz) {
 		return this.query(keysValues, sort, queryId, clazz, null);
 	}
 
@@ -525,7 +522,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	 */
 	@Override
 	public <T> List<T> query(final Map<?, ?> keysValues, final List<?> sort, final String queryId, final Class<T> clazz,
-			ISQLQueryAdapter queryAdapter) {
+							 ISQLQueryAdapter queryAdapter) {
 		this.checkCompiled();
 		BeanPropertyRowMapper<T> rowMapper = this.createRowMapper(clazz);
 		final SQLStatement stSQL = this.composeQuerySql(queryId, rowMapper.convertBeanPropertiesToDB(clazz), keysValues,
@@ -568,7 +565,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 		} finally {
 			logger.trace("Time consumed in statement= {} ms", chrono.stopMs());
 		}
-    }
+	}
 
 	/**
 	 * Creates the row mapper.
@@ -587,7 +584,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	 * @return the list
 	 */
 	protected List<?> applyTransformations(final QueryTemplateInformation templateInformation,
-			final List<?> vValidAttributes) {
+										   final List<?> vValidAttributes) {
 		final List<AmbiguousColumnType> ambiguousColumns = templateInformation.getAmbiguousColumns();
 		final List<FunctionColumnType> functionColumns = templateInformation.getFunctionColumns();
 
@@ -640,7 +637,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	 * @return the Map
 	 */
 	protected Map<Object, Object> applyTransformations(final QueryTemplateInformation templateInformation,
-			final Map<Object, Object> kvValidKeysValues) {
+													   final Map<Object, Object> kvValidKeysValues) {
 		final List<AmbiguousColumnType> ambiguousColumns = templateInformation.getAmbiguousColumns();
 		final List<FunctionColumnType> functionColumns = templateInformation.getFunctionColumns();
 
@@ -737,8 +734,8 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	 * @return the object
 	 */
 	protected BasicExpression applyTransformationsToBasicExpression(final BasicExpression original,
-			List<AmbiguousColumnType> ambiguousColumns,
-			List<FunctionColumnType> functionColumns) {
+																	List<AmbiguousColumnType> ambiguousColumns,
+																	List<FunctionColumnType> functionColumns) {
 		Object originalLeftOperand = original.getLeftOperand();
 		Operator originalOperator = original.getOperator();
 		Object originalRightOperand = original.getRightOperand();
@@ -776,7 +773,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	 * @return the basic field
 	 */
 	protected BasicField applyTransformationsToBasicField(BasicField originalField,
-			List<AmbiguousColumnType> ambiguousColumns, List<FunctionColumnType> functionColumns) {
+														  List<AmbiguousColumnType> ambiguousColumns, List<FunctionColumnType> functionColumns) {
 		String columnName = originalField.toString();
 		Integer columnType = originalField.getSqlType();
 		if (columnType == null) columnType = this.getColumnSQLType(columnName);
@@ -893,7 +890,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	 * @return the entity result
 	 */
 	protected EntityResult innerUpdate(final Map<?, ?> attributesValues, final Map<?, ?> keysValues,
-			final boolean safe) {
+									   final boolean safe) {
 		this.checkCompiled();
 		final EntityResult erResult = new EntityResultMapImpl();
 
@@ -994,7 +991,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 
 		if (keysValuesChecked.isEmpty()) {
 			OntimizeJdbcDaoSupport.logger
-			.debug("Delete:  Keys does not contain any pair key-value valid:" + keysValues);
+					.debug("Delete:  Keys does not contain any pair key-value valid:" + keysValues);
 			throw new SQLWarningException(I18NNaming.M_IT_HAS_NOT_CHANGED_ANY_RECORD, null);
 		}
 
@@ -1060,7 +1057,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 			}
 		}
 		OntimizeJdbcDaoSupport.logger
-		.debug(" Update valid keys values: Input: " + keysValues + " -> Result: " + hValidKeysValues);
+				.debug(" Update valid keys values: Input: " + keysValues + " -> Result: " + hValidKeysValues);
 		return hValidKeysValues;
 	}
 
@@ -1225,7 +1222,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	 * @return
 	 */
 	protected Map<Object, Object> getValidQueryingKeysValues(Map<Object, Object> inputKeysValues,
-			List<String> validColumns) {
+															 List<String> validColumns) {
 		if ((validColumns == null) || validColumns.isEmpty()) {
 			return inputKeysValues;
 		}
@@ -1237,7 +1234,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 			}
 		}
 		OntimizeJdbcDaoSupport.logger
-		.debug(" Query valid keys values: Input: " + inputKeysValues + " -> Result: " + hValidKeysValues);
+				.debug(" Query valid keys values: Input: " + inputKeysValues + " -> Result: " + hValidKeysValues);
 		return hValidKeysValues;
 	}
 
@@ -1517,10 +1514,10 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 					this.addQueryTemplateInformation(query.getId(), query.getSentence().getValue(), //
 							query.getAmbiguousColumns() == null ? null
 									: query.getAmbiguousColumns().getAmbiguousColumn(), //
-									query.getFunctionColumns() == null ? null : query.getFunctionColumns().getFunctionColumn(), //
-											query.getValidColumns() != null ? query.getValidColumns().getColumn()
-													: new ArrayList<String>(), //
-													query.getOrderColumns() == null ? null : query.getOrderColumns().getOrderColumn());
+							query.getFunctionColumns() == null ? null : query.getFunctionColumns().getFunctionColumn(), //
+							query.getValidColumns() != null ? query.getValidColumns().getColumn()
+									: new ArrayList<String>(), //
+							query.getOrderColumns() == null ? null : query.getOrderColumns().getOrderColumn());
 				}
 			}
 			this.setGeneratedKeyName(setupConfig.getGeneratedKey());
@@ -1540,7 +1537,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	}
 
 	protected JdbcEntitySetupType checkDaoExtensions(JdbcEntitySetupType baseSetup, final String path,
-			final String pathToPlaceHolder) {
+													 final String pathToPlaceHolder) {
 		if (this.daoExtensionHelper == null) {
 			return baseSetup;
 		}
@@ -1620,8 +1617,8 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	 * @param functionColumns the function columns
 	 */
 	public void addQueryTemplateInformation(final String id, final String value,
-			final List<AmbiguousColumnType> ambiguousColumns, final List<FunctionColumnType> functionColumns,
-			List<OrderColumnType> orderColumns) {
+											final List<AmbiguousColumnType> ambiguousColumns, final List<FunctionColumnType> functionColumns,
+											List<OrderColumnType> orderColumns) {
 		this.addQueryTemplateInformation(id, value, ambiguousColumns, functionColumns, new ArrayList<>(),
 				orderColumns);
 	}
@@ -1635,8 +1632,8 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	 * @param validColumns
 	 */
 	public void addQueryTemplateInformation(final String id, final String value,
-			final List<AmbiguousColumnType> ambiguousColumns, final List<FunctionColumnType> functionColumns,
-			List<String> validColumns, List<OrderColumnType> orderColumns) {
+											final List<AmbiguousColumnType> ambiguousColumns, final List<FunctionColumnType> functionColumns,
+											List<String> validColumns, List<OrderColumnType> orderColumns) {
 		this.sqlQueries.put(id,
 				new QueryTemplateInformation(value, ambiguousColumns, functionColumns, validColumns, orderColumns));
 	}
@@ -1810,10 +1807,20 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 				holder.getInsertString(), holder.getValues());
 		final KeyHolder keyHolder = new GeneratedKeyHolder();
 		if (!this.tableMetaDataContext.isGetGeneratedKeysSupported()) {
-			try {
-                this.validateKeyGenerationSupport();
-			} catch (InvalidDataAccessApiUsageException ex) {
-				throw new InvalidDataAccessApiUsageException("Error in key generation validation: {}" + ex.getMessage());
+			if (!this.tableMetaDataContext.isGetGeneratedKeysSimulated()) {
+				throw new InvalidDataAccessResourceUsageException(
+						"The getGeneratedKeys feature is not supported by this database");
+			}
+			if (this.getGeneratedKeyNames().length < 1) {
+				throw new InvalidDataAccessApiUsageException(
+						"Generated Key Name(s) not specificed. "
+								+ "Using the generated keys features requires specifying the name(s) of the generated column(s)");
+			}
+			if (this.getGeneratedKeyNames().length > 1) {
+				throw new InvalidDataAccessApiUsageException(
+						"Current database only supports retreiving the key for a single column. There are "
+								+ this.getGeneratedKeyNames().length + " columns specified: " + Arrays
+								.asList(this.getGeneratedKeyNames()));
 			}
 
 			// This is a hack to be able to get the generated key from a
@@ -1823,57 +1830,60 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 			// clause while HSQL uses a second query that has to be executed
 			// with the same connection.
 
-			String tableName = (this.tableMetaDataContext.getTableName() != null) ? this.tableMetaDataContext.getTableName() : null;
+			String tableName = this.tableMetaDataContext.getTableName() != null ? this.tableMetaDataContext.getTableName() : null;
+			String keyQuery = null;
 
-            if (tableName != null) {
-                final String keyQuery = this.tableMetaDataContext.getSimpleQueryForGetGeneratedKey(
-                        tableName, this.getGeneratedKeyNames()[0]);
-                Assert.notNull(keyQuery, "Query for simulating get generated keys can't be null");
-                if (keyQuery.toUpperCase().startsWith("RETURNING")) {
-                    final Long key = this.getJdbcTemplate()
-                            .queryForObject(holder.getInsertString() + " " + keyQuery,
-                                    Long.class,
-                                    holder.getValues().toArray(new Object[holder.getValues().size()]));
-                    final Map<String, Object> keys = new HashMap<>(1);
-                    keys.put(this.getGeneratedKeyNames()[0], key);
-                    keyHolder.getKeyList().add(keys);
-                } else {
-                    this.getJdbcTemplate().execute(new ConnectionCallback<Object>() {
+			if (tableName != null){
+				keyQuery = this.tableMetaDataContext.getSimpleQueryForGetGeneratedKey(
+						tableName, this.getGeneratedKeyNames()[0]);
+			}
 
-                        @Override
-                        public Object doInConnection(final Connection con) throws SQLException, DataAccessException {
-                            // Do the insert
-                            PreparedStatement ps = null;
-                            try {
-                                ps = con.prepareStatement(holder.getInsertString());
-                                OntimizeJdbcDaoSupport.this.setParameterValues(ps, holder.getValues(),
-                                        holder.getInsertTypes());
-                                ps.executeUpdate();
-                            } finally {
-                                JdbcUtils.closeStatement(ps);
-                            }
-                            // Get the key
-                            ResultSet rs = null;
-                            final Map<String, Object> keys = new HashMap<>(1);
-                            final Statement keyStmt = con.createStatement();
-                            try {
-                                rs = keyStmt.executeQuery(keyQuery);
-                                if (rs.next()) {
-                                    final long key = rs.getLong(1);
-                                    keys.put(OntimizeJdbcDaoSupport.this.getGeneratedKeyNames()[0], key);
-                                    keyHolder.getKeyList().add(keys);
-                                }
-                            } finally {
-                                JdbcUtils.closeResultSet(rs);
-                                JdbcUtils.closeStatement(keyStmt);
-                            }
-                            return null;
-                        }
-                    });
-                }
-                return keyHolder;
-            }
-        }
+			Assert.notNull(keyQuery, "Query for simulating get generated keys can't be null");
+
+			if (keyQuery.toUpperCase().startsWith("RETURNING")) {
+				final Long key = this.getJdbcTemplate()
+						.queryForObject(holder.getInsertString() + " " + keyQuery,
+								Long.class,
+								holder.getValues().toArray(new Object[holder.getValues().size()]));
+				final Map<String, Object> keys = new HashMap<>(1);
+				keys.put(this.getGeneratedKeyNames()[0], key);
+				keyHolder.getKeyList().add(keys);
+			} else {
+				this.getJdbcTemplate().execute(new ConnectionCallback<Object>() {
+
+					@Override
+					public Object doInConnection(final Connection con) throws SQLException, DataAccessException {
+						// Do the insert
+						PreparedStatement ps = null;
+						try {
+							ps = con.prepareStatement(holder.getInsertString());
+							OntimizeJdbcDaoSupport.this.setParameterValues(ps, holder.getValues(),
+									holder.getInsertTypes());
+							ps.executeUpdate();
+						} finally {
+							JdbcUtils.closeStatement(ps);
+						}
+						// Get the key
+						ResultSet rs = null;
+						final Map<String, Object> keys = new HashMap<>(1);
+						final Statement keyStmt = con.createStatement();
+						try {
+							rs = keyStmt.executeQuery(keyQuery);
+							if (rs.next()) {
+								final long key = rs.getLong(1);
+								keys.put(OntimizeJdbcDaoSupport.this.getGeneratedKeyNames()[0], key);
+								keyHolder.getKeyList().add(keys);
+							}
+						} finally {
+							JdbcUtils.closeResultSet(rs);
+							JdbcUtils.closeStatement(keyStmt);
+						}
+						return null;
+					}
+				});
+			}
+			return keyHolder;
+		}
 		this.getJdbcTemplate().update(new PreparedStatementCreator() {
 
 			@Override
@@ -1885,24 +1895,6 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 			}
 		}, keyHolder);
 		return keyHolder;
-	}
-
-	protected void validateKeyGenerationSupport() {
-		if (!this.tableMetaDataContext.isGetGeneratedKeysSimulated()) {
-			throw new InvalidDataAccessResourceUsageException(
-					"The getGeneratedKeys feature is not supported by this database");
-		}
-		if (this.getGeneratedKeyNames().length < 1) {
-			throw new InvalidDataAccessApiUsageException(
-					"Generated Key Name(s) not specificed. "
-							+ "Using the generated keys features requires specifying the name(s) of the generated column(s)");
-		}
-		if (this.getGeneratedKeyNames().length > 1) {
-			throw new InvalidDataAccessApiUsageException(
-					"Current database only supports retreiving the key for a single column. There are "
-							+ this.getGeneratedKeyNames().length + " columns specified: " + Arrays
-							.asList(this.getGeneratedKeyNames()));
-		}
 	}
 
 	/**
@@ -1955,7 +1947,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	 * @return array of number of rows affected
 	 */
 	protected int[] doExecuteInsertBatch(final SqlParameterSource[] batch, final String insertString,
-			final int[] insertTypes) {
+										 final int[] insertTypes) {
 		this.checkCompiled();
 		final List<Object>[] batchValues = new ArrayList[batch.length];
 		int i = 0;
@@ -1972,7 +1964,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	 * @return the int[]
 	 */
 	protected int[] executeInsertBatchInternal(final List<Object>[] batchValues, final String insertString,
-			final int[] insertTypes) {
+											   final int[] insertTypes) {
 		OntimizeJdbcDaoSupport.logger.debug("Executing statement {} with batch of size: {}", insertString,
 				batchValues.length);
 		return this.getJdbcTemplate().batchUpdate(insertString, new BatchPreparedStatementSetter() {
@@ -1998,7 +1990,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 	 * @throws SQLException the sQL exception
 	 */
 	protected void setParameterValues(final PreparedStatement preparedStatement, final List<Object> values,
-			final int[] columnTypes) throws SQLException {
+									  final int[] columnTypes) throws SQLException {
 
 		int colIndex = 0;
 		for (Object value : values) {
@@ -2203,7 +2195,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 		JdbcTemplate template = super.createJdbcTemplate(dataSource);
 		template.setFetchSize(1000);
 		OntimizeJdbcDaoSupport.logger
-		.trace("Creating new JdbcTemplate has finally fetchSize=" + template.getFetchSize());
+				.trace("Creating new JdbcTemplate has finally fetchSize=" + template.getFetchSize());
 		return template;
 	}
 
