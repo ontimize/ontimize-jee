@@ -387,8 +387,8 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
             }
             order = order.trim();
 
-            sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_ORDER_CONCAT, order.length() == 0 ? "" : SQLStatementBuilder.COMMA + " " + order);
-            sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_ORDER, order.length() == 0 ? "" : SQLStatementBuilder.ORDER_BY + " " + order);
+            sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_ORDER_CONCAT, order.isEmpty() ? "" : SQLStatementBuilder.COMMA + " " + order);
+            sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_ORDER, order.isEmpty() ? "" : SQLStatementBuilder.ORDER_BY + " " + order);
             if (pageableInfo != null) {
                 sqlTemplate = this.performPlaceHolderPagination(sqlTemplate, pageableInfo);
             }
@@ -412,13 +412,13 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
      * @return The modified sqlTemplate with the placeholders replaced.
      */
     public String applyWherePlaceholders(String sqlTemplate, String cond, List<Object> vValues, List<Object> vValuesTemp) {
-        Pair<String, Integer> replaceAll = StringTools.replaceAll(sqlTemplate, OntimizeJdbcDaoSupport.PLACEHOLDER_WHERE_CONCAT, cond.length() == 0 ? "" : SQLStatementBuilder.AND + " " + cond);
+        Pair<String, Integer> replaceAll = StringTools.replaceAll(sqlTemplate, OntimizeJdbcDaoSupport.PLACEHOLDER_WHERE_CONCAT, cond.isEmpty() ? "" : SQLStatementBuilder.AND + " " + cond);
         sqlTemplate = replaceAll.getFirst();
         for (int i = 1; i < replaceAll.getSecond(); i++) {
             vValues.addAll(vValuesTemp);
         }
 
-        replaceAll = StringTools.replaceAll(sqlTemplate, OntimizeJdbcDaoSupport.PLACEHOLDER_WHERE, cond.length() == 0 ? "" : SQLStatementBuilder.WHERE + " " + cond);
+        replaceAll = StringTools.replaceAll(sqlTemplate, OntimizeJdbcDaoSupport.PLACEHOLDER_WHERE, cond.isEmpty() ? "" : SQLStatementBuilder.WHERE + " " + cond);
         sqlTemplate = replaceAll.getFirst();
         for (int i = 1; i < replaceAll.getSecond(); i++) {
             vValues.addAll(vValuesTemp);
