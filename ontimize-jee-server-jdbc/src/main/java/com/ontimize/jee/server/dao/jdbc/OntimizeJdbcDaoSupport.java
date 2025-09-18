@@ -1823,9 +1823,11 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
 			// clause while HSQL uses a second query that has to be executed
 			// with the same connection.
 
-            if (this.tableMetaDataContext.getTableName() != null) {
+			String tableName = (this.tableMetaDataContext.getTableName() != null) ? this.tableMetaDataContext.getTableName() : null;
+
+            if (tableName != null) {
                 final String keyQuery = this.tableMetaDataContext.getSimpleQueryForGetGeneratedKey(
-                        this.tableMetaDataContext.getTableName(), this.getGeneratedKeyNames()[0]);
+                        tableName, this.getGeneratedKeyNames()[0]);
                 Assert.notNull(keyQuery, "Query for simulating get generated keys can't be null");
                 if (keyQuery.toUpperCase().startsWith("RETURNING")) {
                     final Long key = this.getJdbcTemplate()
