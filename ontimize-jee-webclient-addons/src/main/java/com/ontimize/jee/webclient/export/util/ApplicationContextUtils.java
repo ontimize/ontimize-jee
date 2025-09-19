@@ -84,9 +84,7 @@ public class ApplicationContextUtils implements ApplicationContextAware {
     private Object getBeanForName(final String beanName) {
         Object bean = null;
         ORestController<?> oRestController = applicationContext.getBean(beanName, ORestController.class);
-        if (oRestController != null) {
-            bean = oRestController.getService();
-        }
+        bean = oRestController.getService();
         return bean;
     }
     private Object getBean(final Class<?> beanClazz) {
