@@ -1417,15 +1417,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
             this.setCatalogName(setupConfig.getCatalog());
             this.setDeleteKeys(setupConfig.getDeleteKeys().getColumn());
             this.setUpdateKeys(setupConfig.getUpdateKeys().getColumn());
-            if (setupConfig.getQueries() != null) {
-                for (final QueryType query : setupConfig.getQueries().getQuery()) {//
-                    this.addQueryTemplateInformation(query.getId(), query.getSentence().getValue(), //
-                            query.getAmbiguousColumns() == null ? null : query.getAmbiguousColumns().getAmbiguousColumn(), //
-                            query.getFunctionColumns() == null ? null : query.getFunctionColumns().getFunctionColumn(), //
-                            query.getValidColumns() != null ? query.getValidColumns().getColumn() : new ArrayList<String>(), //
-                            query.getOrderColumns() == null ? null : query.getOrderColumns().getOrderColumn());
-                }
-            }
+            this.setupsConfigureQueries(setupConfig);
             this.setGeneratedKeyName(setupConfig.getGeneratedKey());
             this.setDataSource((DataSource) this.applicationContext.getBean(setupConfig.getDatasource()));
             this.setStatementHandler((SQLStatementHandler) this.applicationContext.getBean(setupConfig.getSqlhandler()));
@@ -1439,6 +1431,22 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
             throw new InvalidDataAccessApiUsageException(I18NNaming.M_ERROR_LOADING_CONFIGURATION_FILE, e);
         }
 
+    }
+
+    /**
+     * Setups the queries defined in configuration file.
+     * @param setupConfig
+     */
+    protected void setupsConfigureQueries(JdbcEntitySetupType setupConfig) {
+        if (setupConfig.getQueries() != null) {
+            for (final QueryType query : setupConfig.getQueries().getQuery()) {//
+                this.addQueryTemplateInformation(query.getId(), query.getSentence().getValue(), //
+                        query.getAmbiguousColumns() == null ? null : query.getAmbiguousColumns().getAmbiguousColumn(), //
+                        query.getFunctionColumns() == null ? null : query.getFunctionColumns().getFunctionColumn(), //
+                        query.getValidColumns() != null ? query.getValidColumns().getColumn() : new ArrayList<String>(), //
+                        query.getOrderColumns() == null ? null : query.getOrderColumns().getOrderColumn());
+            }
+        }
     }
 
     protected Reader createReaderConfigurationFile(String pathToPlaceHolder, InputStream is) throws IOException {
