@@ -512,31 +512,41 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
         for (final Object ob : vValidAttributes) {
             boolean transformed = false;
             if (ambiguousColumns != null) {
-                for (final AmbiguousColumnType ambiguosColumn : ambiguousColumns) {
-                    if (ob.toString().equalsIgnoreCase(ambiguosColumn.getName())) {
-                        final String dbName = ambiguosColumn.getDatabaseName() == null ? ambiguosColumn.getName() : ambiguosColumn.getDatabaseName();
-                        String sb = ambiguosColumn.getPrefix() + "." + dbName + SQLStatementBuilder.AS + ambiguosColumn.getName();
-                        res.add(sb);
-                        transformed = true;
-                        break;
-                    }
-                }
+                transformed = this.transformWithAmbiguousColumns(ob, ambiguousColumns, res, transformed);
             }
             if (!transformed && (functionColumns != null)) {
-                for (final FunctionColumnType functionColumn : functionColumns) {
-                    if (ob.toString().equalsIgnoreCase(functionColumn.getName())) {
-                        String sb = SQLStatementBuilder.OPEN_PARENTHESIS + functionColumn.getValue() + SQLStatementBuilder.CLOSE_PARENTHESIS + SQLStatementBuilder.AS + functionColumn.getName();
-                        res.add(sb);
-                        transformed = true;
-                        break;
-                    }
-                }
+                transformed = this.transformWithFunctionColumns(ob, functionColumns, res, transformed);
             }
             if (!transformed) {
                 res.add(ob);
             }
         }
         return res;
+    }
+
+    private boolean transformWithFunctionColumns(Object ob, List<FunctionColumnType> functionColumns, List<Object> res, boolean transformed) {
+        for (final FunctionColumnType functionColumn : functionColumns) {
+            if (ob.toString().equalsIgnoreCase(functionColumn.getName())) {
+                String sb = SQLStatementBuilder.OPEN_PARENTHESIS + functionColumn.getValue() + SQLStatementBuilder.CLOSE_PARENTHESIS + SQLStatementBuilder.AS + functionColumn.getName();
+                res.add(sb);
+                transformed = true;
+                break;
+            }
+        }
+        return transformed;
+    }
+
+    private boolean transformWithAmbiguousColumns(Object ob, List<AmbiguousColumnType> ambiguousColumns, List<Object> res, boolean transformed) {
+        for (final AmbiguousColumnType ambiguosColumn : ambiguousColumns) {
+            if (ob.toString().equalsIgnoreCase(ambiguosColumn.getName())) {
+                final String dbName = ambiguosColumn.getDatabaseName() == null ? ambiguosColumn.getName() : ambiguosColumn.getDatabaseName();
+                String sb = ambiguosColumn.getPrefix() + "." + dbName + SQLStatementBuilder.AS + ambiguosColumn.getName();
+                res.add(sb);
+                transformed = true;
+                break;
+            }
+        }
+        return transformed;
     }
 
     /**
@@ -555,22 +565,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
             if (kvEntry.getKey() instanceof String) {
                 String key = (String) kvEntry.getKey();
                 boolean transformed = false;
-                if ((SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY.equals(key) || SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.FILTER_KEY.equals(key)) && (kvEntry.getValue() instanceof SQLStatementBuilder.BasicExpression)) {
-                    res.put(key, this.applyTransformationsToBasicExpression((SQLStatementBuilder.BasicExpression) kvEntry.getValue(), ambiguousColumns, functionColumns));
-                    transformed = true;
-                } else {
-                    String resolvedAmbiguousColumn = this.resolveAmbiguousColumn(key, ambiguousColumns);
-                    if (resolvedAmbiguousColumn != null) {
-                        res.put(resolvedAmbiguousColumn, kvEntry.getValue());
-                        transformed = true;
-                    } else {
-                        String resolvedFunctionColumn = this.resolveFunctionColumn(key, functionColumns);
-                        if (resolvedFunctionColumn != null) {
-                            res.put(resolvedFunctionColumn, kvEntry.getValue());
-                            transformed = true;
-                        }
-                    }
-                }
+                transformed = this.transformedStringKey(kvEntry, key, res, ambiguousColumns, functionColumns, transformed);
                 if (!transformed) {
                     res.put(key, kvEntry.getValue());
                 }
@@ -579,6 +574,26 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
             }
         }
         return res;
+    }
+
+    private boolean transformedStringKey(Map.Entry<Object, Object> kvEntry, String key, Map<Object, Object> res, List<AmbiguousColumnType> ambiguousColumns, List<FunctionColumnType> functionColumns, boolean transformed) {
+        if ((SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY.equals(key) || SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.FILTER_KEY.equals(key)) && (kvEntry.getValue() instanceof SQLStatementBuilder.BasicExpression)) {
+            res.put(key, this.applyTransformationsToBasicExpression((SQLStatementBuilder.BasicExpression) kvEntry.getValue(), ambiguousColumns, functionColumns));
+            transformed = true;
+        } else {
+            String resolvedAmbiguousColumn = this.resolveAmbiguousColumn(key, ambiguousColumns);
+            if (resolvedAmbiguousColumn != null) {
+                res.put(resolvedAmbiguousColumn, kvEntry.getValue());
+                transformed = true;
+            } else {
+                String resolvedFunctionColumn = this.resolveFunctionColumn(key, functionColumns);
+                if (resolvedFunctionColumn != null) {
+                    res.put(resolvedFunctionColumn, kvEntry.getValue());
+                    transformed = true;
+                }
+            }
+        }
+        return transformed;
     }
 
     protected List<Object> applyOrderColumns(final List<?> sort, final List<OrderColumnType> orderColumns) {
