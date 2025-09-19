@@ -1927,30 +1927,34 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
                 StatementCreatorUtils.setParameterValue(preparedStatement, colIndex, SqlTypeValue.TYPE_UNKNOWN, value);
             } else {
                 final int sqlType = columnTypes[colIndex - 1];
-                if (ObjectTools.isIn(sqlType, Types.BLOB, Types.BINARY, Types.VARBINARY) && ((value instanceof byte[]) || (value instanceof InputStream))) {
-                    if (value instanceof byte[]) {
-                        preparedStatement.setBytes(colIndex, (byte[]) value);
-                    } else {
-                        try {
-                            // TODO esto no esta soportado por los drivers jdbc 4.0
-                            // TODO segun el driver puede ser que sea mas rapido llamar al metodo con la longitud
-                            preparedStatement.setBlob(colIndex, (InputStream) value);
-                        } catch (AbstractMethodError ex) {
-                            OntimizeJdbcDaoSupport.logger.debug(null, ex);
-                            try {
-                                preparedStatement.setBinaryStream(colIndex, (InputStream) value, ((InputStream) value).available());
-                            } catch (IOException error) {
-                                throw new SQLException(error);
-                            }
-                        }
-                    }
-                } else if (value instanceof NullValue) {
+                if (ObjectTools.isIn(sqlType, Types.BLOB, Types.BINARY, Types.VARBINARY) && ((value instanceof byte[]) || (value instanceof InputStream)))
+                    this.parametersIfTheyAreBinary(preparedStatement, value, colIndex);
+                else if (value instanceof NullValue) {
                     // TODO At this point we could retrieve sqlType from ((NullValue)value).getSQLDataType()
                     // but it is preferable to use the sqlType retrieved from table metadata.
                     value = new SqlParameterValue(sqlType, null);
                     StatementCreatorUtils.setParameterValue(preparedStatement, colIndex, sqlType, value);
                 } else {
                     StatementCreatorUtils.setParameterValue(preparedStatement, colIndex, sqlType, value);
+                }
+            }
+        }
+    }
+
+    protected void parametersIfTheyAreBinary(PreparedStatement preparedStatement, Object value, int colIndex) throws SQLException {
+        if (value instanceof byte[]) {
+            preparedStatement.setBytes(colIndex, (byte[]) value);
+        } else {
+            try {
+                // TODO esto no esta soportado por los drivers jdbc 4.0
+                // TODO segun el driver puede ser que sea mas rapido llamar al metodo con la longitud
+                preparedStatement.setBlob(colIndex, (InputStream) value);
+            } catch (AbstractMethodError ex) {
+                OntimizeJdbcDaoSupport.logger.debug(null, ex);
+                try {
+                    preparedStatement.setBinaryStream(colIndex, (InputStream) value, ((InputStream) value).available());
+                } catch (IOException error) {
+                    throw new SQLException(error);
                 }
             }
         }
