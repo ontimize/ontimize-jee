@@ -1121,13 +1121,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
             if ((ob instanceof String) || (ob instanceof DBFunctionName)) {
                 boolean isValid = true;
                 if (ob instanceof String) {
-                    if (SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY.equals(ob)) {
-                        isValid = true;
-                    } else if (!inputValidColumns.isEmpty() && !inputValidColumns.contains(ob)) {
-                        isValid = false;
-                    } else {
-                        isValid = this.isColumnNameValid((String) ob);
-                    }
+                    isValid = this.isInstanceOfStringValid(ob, inputValidColumns);
                 }
                 if (isValid) {
                     validAttributes.add(ob);
@@ -1135,6 +1129,18 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
             }
         }
         return validAttributes;
+    }
+
+    public boolean isInstanceOfStringValid(Object ob, List<String> inputValidColumns) {
+        boolean isValid;
+        if (SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY.equals(ob)) {
+            isValid = true;
+        } else if (!inputValidColumns.isEmpty() && !inputValidColumns.contains(ob)) {
+            isValid = false;
+        } else {
+            isValid = this.isColumnNameValid((String) ob);
+        }
+        return isValid;
     }
 
     /**
