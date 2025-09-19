@@ -340,11 +340,7 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
             vValidAttributes = this.getValidAttributes(vValidAttributes, null);
             CheckingTools.failIf(vValidAttributes.isEmpty(), "NO_ATTRIBUTES_TO_QUERY");
             // use table
-            if (pageableInfo != null) {
-                stSQL = this.getStatementHandler().createSelectQuery(this.getSchemaTable(), new ArrayList<>(vValidAttributes), new HashMap<>(kvValidKeysValues), new ArrayList<>(), new ArrayList<>(sort == null ? Collections.emptyList() : sort), pageableInfo.getRecordNumber(), pageableInfo.getStartIndex());
-            } else {
-                stSQL = this.getStatementHandler().createSelectQuery(this.getSchemaTable(), new ArrayList<>(vValidAttributes), new HashMap<>(kvValidKeysValues), new ArrayList<>(), new ArrayList<>(sort == null ? Collections.emptyList() : sort));
-            }
+            stSQL = this.getSqlStatement(sort, pageableInfo, vValidAttributes, kvValidKeysValues);
 
         } else {
             List<String> validColumns = queryTemplateInformation.getValidColumns();
@@ -379,26 +375,42 @@ public class OntimizeJdbcDaoSupport extends JdbcDaoSupport implements Applicatio
             sqlTemplate = this.applyWherePlaceholders(sqlTemplate, cond, vValues, vValuesTemp);
 
             // Order by
-            List<OrderColumnType> orderColumns = queryTemplateInformation.getOrderColumns();
-            List<Object> sortColumns = this.applyOrderColumns(sort, orderColumns);
-            String order = this.getStatementHandler().createSortStatement(sortColumns, false);
-            if (order.length() > 0) {
-                order = order.substring(SQLStatementBuilder.ORDER_BY.length());
-            }
-            order = order.trim();
-
-            sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_ORDER_CONCAT, order.isEmpty() ? "" : SQLStatementBuilder.COMMA + " " + order);
-            sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_ORDER, order.isEmpty() ? "" : SQLStatementBuilder.ORDER_BY + " " + order);
-            if (pageableInfo != null) {
-                sqlTemplate = this.performPlaceHolderPagination(sqlTemplate, pageableInfo);
-            }
-            sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_SCHEMA, this.getSchemaName());
-            stSQL = new SQLStatementBuilder.SQLStatement(sqlTemplate, vValues);
+            stSQL = this.getSqlStatementOrderBy(sort, pageableInfo, queryTemplateInformation, sqlTemplate, vValues);
         }
         if (queryAdapter != null) {
             stSQL = queryAdapter.adaptQuery(stSQL, this, keysValues, kvValidKeysValues, attributes, vValidAttributes, sort, queryId);
         }
         OntimizeJdbcDaoSupport.logger.trace(stSQL.getSQLStatement());
+        return stSQL;
+    }
+
+    public SQLStatementBuilder.SQLStatement getSqlStatementOrderBy(List<?> sort, PageableInfo pageableInfo, QueryTemplateInformation queryTemplateInformation, String sqlTemplate, List<Object> vValues) {
+        SQLStatementBuilder.SQLStatement stSQL;
+        List<OrderColumnType> orderColumns = queryTemplateInformation.getOrderColumns();
+        List<Object> sortColumns = this.applyOrderColumns(sort, orderColumns);
+        String order = this.getStatementHandler().createSortStatement(sortColumns, false);
+        if (!order.isEmpty()) {
+            order = order.substring(SQLStatementBuilder.ORDER_BY.length());
+        }
+        order = order.trim();
+
+        sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_ORDER_CONCAT, order.isEmpty() ? "" : SQLStatementBuilder.COMMA + " " + order);
+        sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_ORDER, order.isEmpty() ? "" : SQLStatementBuilder.ORDER_BY + " " + order);
+        if (pageableInfo != null) {
+            sqlTemplate = this.performPlaceHolderPagination(sqlTemplate, pageableInfo);
+        }
+        sqlTemplate = sqlTemplate.replaceAll(OntimizeJdbcDaoSupport.PLACEHOLDER_SCHEMA, this.getSchemaName());
+        stSQL = new SQLStatementBuilder.SQLStatement(sqlTemplate, vValues);
+        return stSQL;
+    }
+
+    public SQLStatementBuilder.SQLStatement getSqlStatement(List<?> sort, PageableInfo pageableInfo, List<?> vValidAttributes, Map<Object, Object> kvValidKeysValues) {
+        SQLStatementBuilder.SQLStatement stSQL;
+        if (pageableInfo != null) {
+            stSQL = this.getStatementHandler().createSelectQuery(this.getSchemaTable(), new ArrayList<>(vValidAttributes), new HashMap<>(kvValidKeysValues), new ArrayList<>(), new ArrayList<>(sort == null ? Collections.emptyList() : sort), pageableInfo.getRecordNumber(), pageableInfo.getStartIndex());
+        } else {
+            stSQL = this.getStatementHandler().createSelectQuery(this.getSchemaTable(), new ArrayList<>(vValidAttributes), new HashMap<>(kvValidKeysValues), new ArrayList<>(), new ArrayList<>(sort == null ? Collections.emptyList() : sort));
+        }
         return stSQL;
     }
 
