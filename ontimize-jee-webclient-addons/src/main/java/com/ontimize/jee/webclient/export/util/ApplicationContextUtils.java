@@ -67,11 +67,7 @@ public class ApplicationContextUtils implements ApplicationContextAware {
         if(serviceBean == null) {
             serviceBean = this.applicationContext.getBean(serviceName.concat("Service"));
         }
-        
-        if(serviceBean == null) {
-            throw new ExportException("Impossible to retrieve service to query data");
-        }
-        
+
         return serviceBean;
     }
     
