@@ -27,48 +27,52 @@ public class ApplicationContextUtils implements ApplicationContextAware {
     
     public Object getServiceBean(final String serviceName , final String servicePath) throws ExportException {
 
-        Object serviceBean = null;
-        
-        //Method 1. Retrieve bean from controller 'path'
-        if(!StringUtils.isBlank(servicePath)) {
-            RequestMappingHandlerMapping requestMappingHandlerMapping = applicationContext
-                    .getBean("requestMappingHandlerMapping", RequestMappingHandlerMapping.class);
-            Map<RequestMappingInfo, HandlerMethod> requestMap = requestMappingHandlerMapping.getHandlerMethods();
+        try {
+            Object serviceBean = null;
 
-            List<HandlerMethod> requestMapHandlerMethodList = requestMap.keySet().stream()
-                    .filter(key -> key.getActivePatternsCondition().toString().equals("[" + servicePath + "/{name}/search]"))
-                    .map(requestMap::get)
-                    .collect(Collectors.toList());
+            //Method 1. Retrieve bean from controller 'path'
+            if(!StringUtils.isBlank(servicePath)) {
+                RequestMappingHandlerMapping requestMappingHandlerMapping = applicationContext
+                        .getBean("requestMappingHandlerMapping", RequestMappingHandlerMapping.class);
+                Map<RequestMappingInfo, HandlerMethod> requestMap = requestMappingHandlerMapping.getHandlerMethods();
 
-            if (requestMapHandlerMethodList.size() == 1) {
-                Class<?> restControllerBeanType = requestMapHandlerMethodList.get(0).getBeanType();
-                serviceBean = getBean(restControllerBeanType);
+                List<HandlerMethod> requestMapHandlerMethodList = requestMap.keySet().stream()
+                        .filter(key -> key.getActivePatternsCondition().toString().equals("[" + servicePath + "/{name}/search]"))
+                        .map(requestMap::get)
+                        .collect(Collectors.toList());
+
+                if (requestMapHandlerMethodList.size() == 1) {
+                    Class<?> restControllerBeanType = requestMapHandlerMethodList.get(0).getBeanType();
+                    serviceBean = getBean(restControllerBeanType);
+                }
             }
-        }
-        
-        //Method 2. Retrieve controller from service name and then the service bean
-        if(serviceBean == null && !StringUtils.isBlank(serviceName)) {
-            String[] beanNamesForType = applicationContext.getBeanNamesForType(ORestController.class);
-            List<String> restControllerNames = findCandidates(serviceName, beanNamesForType);
-            
-            if(restControllerNames.size() > 0) {
-                if(restControllerNames.size() == 1) {
-                    serviceBean = getBeanForName(restControllerNames.get(0));
-                } else {
-                    String beanName = this.fitBestControllerName(serviceName, restControllerNames);
-                    if(!StringUtils.isBlank(beanName)) {
-                        serviceBean = getBeanForName(beanName);
+
+            //Method 2. Retrieve controller from service name and then the service bean
+            if(serviceBean == null && !StringUtils.isBlank(serviceName)) {
+                String[] beanNamesForType = applicationContext.getBeanNamesForType(ORestController.class);
+                List<String> restControllerNames = findCandidates(serviceName, beanNamesForType);
+
+                if(restControllerNames.size() > 0) {
+                    if(restControllerNames.size() == 1) {
+                        serviceBean = getBeanForName(restControllerNames.get(0));
+                    } else {
+                        String beanName = this.fitBestControllerName(serviceName, restControllerNames);
+                        if(!StringUtils.isBlank(beanName)) {
+                            serviceBean = getBeanForName(beanName);
+                        }
                     }
                 }
             }
-        }
-        
-        // Method 3. Retrieve bean from service name
-        if(serviceBean == null) {
-            serviceBean = this.applicationContext.getBean(serviceName.concat("Service"));
-        }
 
-        return serviceBean;
+            // Method 3. Retrieve bean from service name
+            if(serviceBean == null) {
+                serviceBean = this.applicationContext.getBean(serviceName.concat("Service"));
+            }
+
+            return serviceBean;
+        } catch (BeansException e) {
+            throw new ExportException("Impossible to retrieve service to query data", e);
+        }
     }
     
     @Override
