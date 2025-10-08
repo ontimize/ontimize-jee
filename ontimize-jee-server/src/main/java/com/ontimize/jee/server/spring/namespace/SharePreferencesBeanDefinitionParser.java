@@ -64,17 +64,18 @@ public class SharePreferencesBeanDefinitionParser extends AbstractSingleBeanDefi
         // Set the directory property
         Element item = DomUtils.getChildElementByTagName(element,
                 SharePreferencesBeanDefinitionParser.SHARE_PREF_ENGINE_PROPERTY);
-        Element child = DomUtils.getChildElements(item).get(0);
         Object engine = null;
-
-        if (SharePreferencesBeanDefinitionParser.SHARE_PREF_DATABASE_CONFIGURATION_PROPERTY
-            .equals(child.getLocalName())) {
-            final ParserContext nestedCtx = new ParserContext(ctx.getReaderContext(), ctx.getDelegate(),
-                    builder.getBeanDefinition());
-            engine = new DatabaseSharePreferencesParser().parse(child, nestedCtx);
-        } else {
-            engine = DefinitionParserUtil.parseNode(child, ctx, builder.getBeanDefinition(),
-                    element.getAttribute(SharePreferencesBeanDefinitionParser.SCOPE), false);
+        if (item != null) {
+            Element child = DomUtils.getChildElements(item).get(0);
+            if (SharePreferencesBeanDefinitionParser.SHARE_PREF_DATABASE_CONFIGURATION_PROPERTY
+                .equals(child.getLocalName())) {
+                final ParserContext nestedCtx = new ParserContext(ctx.getReaderContext(), ctx.getDelegate(),
+                        builder.getBeanDefinition());
+                engine = new DatabaseSharePreferencesParser().parse(child, nestedCtx);
+            } else {
+                engine = DefinitionParserUtil.parseNode(child, ctx, builder.getBeanDefinition(),
+                        element.getAttribute(SharePreferencesBeanDefinitionParser.SCOPE), false);
+            }
         }
         builder.addPropertyValue(SharePreferencesBeanDefinitionParser.ENGINE, engine);
         builder.setLazyInit(true);
