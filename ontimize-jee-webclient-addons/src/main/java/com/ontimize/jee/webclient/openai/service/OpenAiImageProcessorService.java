@@ -38,7 +38,8 @@ public class OpenAiImageProcessorService<T> {
         MultipartFile file = request.getFile();
         Class<T> outputClass = request.getOutputClass();
 
-        SchemaGeneratorConfigBuilder cfgBuilder = new SchemaGeneratorConfigBuilder(SchemaVersion.DRAFT_2019_09, OptionPreset.PLAIN_JSON);
+        SchemaGeneratorConfigBuilder cfgBuilder = new SchemaGeneratorConfigBuilder(SchemaVersion.DRAFT_2019_09,
+                OptionPreset.PLAIN_JSON);
         cfgBuilder.forTypesInGeneral().withAdditionalPropertiesResolver(scope -> null);
 
         SchemaGenerator generator = new SchemaGenerator(cfgBuilder.build());
@@ -58,11 +59,14 @@ public class OpenAiImageProcessorService<T> {
             return new ProcessResult<>(null, errors, actualTry);
         }
 
+        ProcessResult<T> parsedResult = null;
+
         while (actualTry < request.getRetries()) {
             try {
-                String prompt = Utils.buildPrompt(request.getPrompt(), schemaStr, actualTry > 0 ? errors.get(errors.size() - 1) : null);
+                String prompt = Utils.buildPrompt(request.getPrompt(), schemaStr, parsedResult, errors);
 
-                String responseJsonRaw = callVisionApi(prompt, file, request.getModel(), request.getMaxTokens(), request.getTemperature());
+                String responseJsonRaw = callVisionApi(prompt, file, request.getModel(), request.getMaxTokens(),
+                        request.getTemperature());
 
                 String responseJson = JsonSchemaValidator.extractRawJson(responseJsonRaw);
                 if (responseJson == null || responseJson.isBlank()) {
@@ -72,7 +76,10 @@ public class OpenAiImageProcessorService<T> {
                 jsonSchemaValidator.validate(responseJson, schemaStr);
 
                 T result = objectMapper.readValue(responseJson, outputClass);
-                return new ProcessResult<>(result, errors, actualTry);
+
+                parsedResult = new ProcessResult<>(result, errors, actualTry);
+
+                return parsedResult;
 
             } catch (Exception e) {
                 errors.add(e.getMessage());
@@ -82,7 +89,8 @@ public class OpenAiImageProcessorService<T> {
         return new ProcessResult<>(null, errors, actualTry);
     }
 
-    private String callVisionApi(String promptText, MultipartFile image, String model, int maxTokens, double temperature) throws Exception {
+    private String callVisionApi(String promptText, MultipartFile image, String model, int maxTokens,
+            double temperature) throws Exception {
         HttpEntity<Map<String, Object>> request = prepareRequest(promptText, image, model, maxTokens, temperature);
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.postForEntity(COMPLETIONS_URL, request, String.class);
@@ -92,7 +100,8 @@ public class OpenAiImageProcessorService<T> {
         return objectMapper.readTree(response.getBody()).path(CHOICES).get(0).path(MESSAGE).path(CONTENT).asText();
     }
 
-    private HttpEntity<Map<String, Object>> prepareRequest(String promptText, MultipartFile image, String model, int maxTokens, double temperature) throws IOException {
+    private HttpEntity<Map<String, Object>> prepareRequest(String promptText, MultipartFile image, String model,
+            int maxTokens, double temperature) throws IOException {
         byte[] imageBytes = image.getBytes();
         String base64Image = Base64.getEncoder().encodeToString(imageBytes);
 
