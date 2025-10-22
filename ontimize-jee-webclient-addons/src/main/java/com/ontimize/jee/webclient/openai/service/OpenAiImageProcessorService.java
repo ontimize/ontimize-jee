@@ -1,11 +1,6 @@
 package com.ontimize.jee.webclient.openai.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.victools.jsonschema.generator.OptionPreset;
-import com.github.victools.jsonschema.generator.SchemaGenerator;
-import com.github.victools.jsonschema.generator.SchemaGeneratorConfigBuilder;
-import com.github.victools.jsonschema.generator.SchemaVersion;
 import com.ontimize.jee.webclient.openai.model.ProcessRequest;
 import com.ontimize.jee.webclient.openai.model.ProcessResult;
 import com.ontimize.jee.webclient.openai.util.JsonSchemaValidator;
@@ -37,29 +32,18 @@ public class OpenAiImageProcessorService<T> {
         List<String> errors = new ArrayList<>();
         MultipartFile file = request.getFile();
         Class<T> outputClass = request.getOutputClass();
+        ObjectMapper objectMapper = new ObjectMapper();
 
-        SchemaGeneratorConfigBuilder cfgBuilder = new SchemaGeneratorConfigBuilder(SchemaVersion.DRAFT_2019_09,
-                OptionPreset.PLAIN_JSON);
-        cfgBuilder.forTypesInGeneral().withAdditionalPropertiesResolver(scope -> null);
-
-        SchemaGenerator generator = new SchemaGenerator(cfgBuilder.build());
-        JsonNode jsonSchema;
+        String schemaStr;
         try {
-            jsonSchema = generator.generateSchema(outputClass);
+            schemaStr = Utils.generateFullSchemaJson(outputClass);
         } catch (Exception e) {
             errors.add(OPENAI_API_SCHEMA_GENERATION_ERROR + e.getMessage());
             return new ProcessResult<>(null, errors, actualTry);
         }
 
-        String schemaStr;
-        try {
-            schemaStr = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonSchema);
-        } catch (Exception e) {
-            errors.add(OPENAI_API_SCHEMA_SERIALIZATION_ERROR + e.getMessage());
-            return new ProcessResult<>(null, errors, actualTry);
-        }
-
-        ProcessResult<T> parsedResult = null;
+        String parsedResult = null;
+        ProcessResult<T> finalResult = null;
 
         while (actualTry < request.getRetries()) {
             try {
@@ -73,20 +57,19 @@ public class OpenAiImageProcessorService<T> {
                     throw new IllegalStateException(OPENAI_API_NO_JSON_ERROR);
                 }
 
+                parsedResult = responseJsonRaw;
                 jsonSchemaValidator.validate(responseJson, schemaStr);
 
                 T result = objectMapper.readValue(responseJson, outputClass);
-
-                parsedResult = new ProcessResult<>(result, errors, actualTry);
-
-                return parsedResult;
+                finalResult = new ProcessResult<>(result, new ArrayList<>(errors), actualTry);
+                break;
 
             } catch (Exception e) {
                 errors.add(e.getMessage());
                 actualTry++;
             }
         }
-        return new ProcessResult<>(null, errors, actualTry);
+        return finalResult != null ? finalResult : new ProcessResult<>(null, errors, actualTry);
     }
 
     private String callVisionApi(String promptText, MultipartFile image, String model, int maxTokens,

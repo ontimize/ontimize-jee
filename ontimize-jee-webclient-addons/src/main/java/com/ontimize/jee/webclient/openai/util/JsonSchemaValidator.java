@@ -11,16 +11,26 @@ import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
 import static com.ontimize.jee.webclient.openai.naming.OpenAINaming.OPENAI_API_NO_JSON_ERROR;
-import static com.ontimize.jee.webclient.openai.naming.OpenAINaming.PROPERTIES;
 
 @Component
 public class JsonSchemaValidator {
-    private static final ObjectMapper LENIENT = new ObjectMapper().configure(JsonParser.Feature.ALLOW_COMMENTS, true).configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true).configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true).configure(JsonParser.Feature.ALLOW_NUMERIC_LEADING_ZEROS, true).configure(JsonParser.Feature.ALLOW_TRAILING_COMMA, true);
+    private static final ObjectMapper LENIENT = new ObjectMapper().configure(JsonParser.Feature.ALLOW_COMMENTS, true)
+            .configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true)
+            .configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true)
+            .configure(JsonParser.Feature.ALLOW_NUMERIC_LEADING_ZEROS, true)
+            .configure(JsonParser.Feature.ALLOW_TRAILING_COMMA, true);
     private final ObjectMapper mapper = new ObjectMapper();
 
     public static String extractRawJson(String content) {
-        if (content == null) return null;
-        String s = content.replace("\uFEFF", "").replace('\u201C', '"').replace('\u201D', '"').replace('\u2018', '\'').replace('\u2019', '\'').trim();
+        if (content == null) {
+            return null;
+        }
+        String s = content.replace("\uFEFF", "")
+                .replace('\u201C', '"')
+                .replace('\u201D', '"')
+                .replace('\u2018', '\'')
+                .replace('\u2019', '\'')
+                .trim();
 
         if (s.startsWith("```")) {
             int first = s.indexOf('\n');
@@ -50,13 +60,13 @@ public class JsonSchemaValidator {
             String raw = (dataObject instanceof String) ? (String) dataObject : mapper.writeValueAsString(dataObject);
 
             String extracted = extractRawJson(raw);
-            if (extracted == null) throw new IllegalArgumentException(OPENAI_API_NO_JSON_ERROR);
+            if (extracted == null) {
+                throw new IllegalArgumentException(OPENAI_API_NO_JSON_ERROR);
+            }
             JsonNode node = LENIENT.readTree(extracted);
             String normalized = mapper.writeValueAsString(node);
-            JSONObject schemaObj = new JSONObject(schemaJson);
-            JSONObject rawSchema = schemaObj.getJSONObject(PROPERTIES);
-            JSONObject jsonSchema = new JSONObject(mapper.writeValueAsString(rawSchema));
-            Schema schema = SchemaLoader.load(jsonSchema);
+            JSONObject rawSchema = new JSONObject(schemaJson);
+            Schema schema = SchemaLoader.load(rawSchema);
             if (normalized.trim().startsWith("{")) {
                 schema.validate(new JSONObject(normalized));
             } else {
