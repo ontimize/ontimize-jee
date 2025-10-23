@@ -1,6 +1,8 @@
 package com.ontimize.jee.webclient.openai.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ontimize.jee.webclient.openai.exception.OpenAIClientException;
 import com.ontimize.jee.webclient.openai.model.ProcessRequest;
 import com.ontimize.jee.webclient.openai.model.ProcessResult;
 import com.ontimize.jee.webclient.openai.util.JsonSchemaValidator;
@@ -32,7 +34,7 @@ public class OpenAiImageProcessorService<T> {
         List<String> errors = new ArrayList<>();
         MultipartFile file = request.getFile();
         Class<T> outputClass = request.getOutputClass();
-        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectMapper localObjectMapper = new ObjectMapper();
 
         String schemaStr;
         try {
@@ -60,7 +62,7 @@ public class OpenAiImageProcessorService<T> {
                 parsedResult = responseJsonRaw;
                 jsonSchemaValidator.validate(responseJson, schemaStr);
 
-                T result = objectMapper.readValue(responseJson, outputClass);
+                T result = localObjectMapper.readValue(responseJson, outputClass);
                 finalResult = new ProcessResult<>(result, new ArrayList<>(errors), actualTry);
                 break;
 
@@ -73,36 +75,41 @@ public class OpenAiImageProcessorService<T> {
     }
 
     private String callVisionApi(String promptText, MultipartFile image, String model, int maxTokens,
-            double temperature) throws Exception {
+            double temperature) throws OpenAIClientException, JsonProcessingException {
         HttpEntity<Map<String, Object>> request = prepareRequest(promptText, image, model, maxTokens, temperature);
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.postForEntity(COMPLETIONS_URL, request, String.class);
         if (!response.getStatusCode().is2xxSuccessful()) {
-            throw new Exception(OPENAI_API_ERROR + response.getStatusCode() + " - " + response.getBody());
+            throw new OpenAIClientException(OPENAI_API_ERROR + response.getStatusCode() + " - " + response.getBody());
         }
         return objectMapper.readTree(response.getBody()).path(CHOICES).get(0).path(MESSAGE).path(CONTENT).asText();
     }
 
     private HttpEntity<Map<String, Object>> prepareRequest(String promptText, MultipartFile image, String model,
-            int maxTokens, double temperature) throws IOException {
-        byte[] imageBytes = image.getBytes();
-        String base64Image = Base64.getEncoder().encodeToString(imageBytes);
+            int maxTokens, double temperature) throws OpenAIClientException {
+        try {
+            byte[] imageBytes = null;
+            imageBytes = image.getBytes();
+            String base64Image = Base64.getEncoder().encodeToString(imageBytes);
 
-        Map<String, Object> imageUrlContent = Map.of(URL, IMAGE_TYPE + base64Image, DETAIL, HIGH);
-        Map<String, Object> contentItem1 = Map.of(TYPE, TEXT, TEXT, promptText);
-        Map<String, Object> contentItem2 = Map.of(TYPE, IMAGE_URL, IMAGE_URL, imageUrlContent);
-        Map<String, Object> message = Map.of(ROLE, USER, CONTENT, List.of(contentItem1, contentItem2));
+            Map<String, Object> imageUrlContent = Map.of(URL, IMAGE_TYPE + base64Image, DETAIL, HIGH);
+            Map<String, Object> contentItem1 = Map.of(TYPE, TEXT, TEXT, promptText);
+            Map<String, Object> contentItem2 = Map.of(TYPE, IMAGE_URL, IMAGE_URL, imageUrlContent);
+            Map<String, Object> message = Map.of(ROLE, USER, CONTENT, List.of(contentItem1, contentItem2));
 
-        Map<String, Object> payload = new HashMap<>();
-        payload.put(MODEL, model);
-        payload.put(MESSAGES, List.of(message));
-        payload.put(MAX_TOKENS, maxTokens);
-        payload.put(TEMPERATURE, temperature);
+            Map<String, Object> payload = new HashMap<>();
+            payload.put(MODEL, model);
+            payload.put(MESSAGES, List.of(message));
+            payload.put(MAX_TOKENS, maxTokens);
+            payload.put(TEMPERATURE, temperature);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setBearerAuth(this.apiKey);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.setBearerAuth(this.apiKey);
 
-        return new HttpEntity<>(payload, headers);
+            return new HttpEntity<>(payload, headers);
+        } catch (IOException e) {
+            throw new OpenAIClientException(e.getMessage());
+        }
     }
 }

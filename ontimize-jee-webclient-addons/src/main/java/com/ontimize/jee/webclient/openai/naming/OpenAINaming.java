@@ -1,6 +1,13 @@
 package com.ontimize.jee.webclient.openai.naming;
 
-public class OpenAINaming {
+import com.ontimize.jee.webclient.openai.exception.OpenAIClientException;
+
+public final class OpenAINaming {
+
+    private OpenAINaming() {
+        throw new OpenAIClientException("");
+    }
+
     public static final String MODEL = "model";
     public static final String MESSAGES = "messages";
     public static final String ROLE = "role";
@@ -18,42 +25,46 @@ public class OpenAINaming {
     public static final String COMPLETIONS_URL = "https://api.openai.com/v1/chat/completions";
     public static final String CHOICES = "choices";
     public static final String MESSAGE = "message";
+
     public static final String INITIAL_PROMPT_FORMAT =
-            "Tu tarea es procesar la siguiente imagen y devolver la información estructurada en el formato JSON que " +
-                    "se indica más abajo.\n\n" +
-                    "=== INSTRUCCIONES DE CONTEXTO ===\n" +
-                    "%s\n\n" +
-                    "=== ESTRUCTURA ESPERADA ===\n" +
-                    "Devuelve únicamente un JSON que siga esta estructura:\n%s\n\n" +
-                    "IMPORTANTE:\n" +
-                    "No incluyas explicaciones ni comentarios.\n" +
-                    "Usa null si no puedes identificar un valor.\n" +
-                    "Respeta el tipo de dato especificado: si se espera un número o una fecha, devuélvelo " +
-                    "correctamente formateado.\n" +
-                    "Asegúrate de que el JSON es válido y parseable.";
+            "Your task is to process the following image and return the structured information "
+                    + "in the JSON format described below.\n\n"
+                    + "=== CONTEXT INSTRUCTIONS ===\n"
+                    + "%s\n\n"
+                    + "=== EXPECTED STRUCTURE ===\n"
+                    + "Return only a JSON that follows this structure:\n%s\n\n"
+                    + "IMPORTANT:\n"
+                    + "- Do not include explanations or comments.\n"
+                    + "- Use null if you cannot identify a value.\n"
+                    + "- Respect the specified data type: if a number or date is expected, "
+                    + "return it correctly formatted.\n"
+                    + "- Make sure the JSON is valid and parseable.";
+
     public static final String RETRY_PROMPT_FORMAT =
-            "El siguiente JSON no cumple con la estructura esperada ni con las validaciones. Corrige los errores y " +
-                    "vuelve a generar solo el JSON corregido.\n\n" +
-                    "=== INSTRUCCIONES DE CONTEXTO ===\n" +
-                    "%s\n\n" +
-                    "=== ESTRUCTURA ESPERADA ===\n" +
-                    "%s\n\n" +
-                    "=== RESPUESTA ANTERIOR CON ERRORES ===\n" +
-                    "%s\n\n" +
-                    "=== ERRORES DETECTADOS ===\n" +
-                    "%s\n\n" +
-                    "Por favor, genera una nueva versión del JSON que sea válida, esté bien formada y siga " +
-                    "exactamente la estructura definida.\n\n" +
-                    "RECUERDA:\n" +
-                    "No incluyas explicaciones ni comentarios.\n" +
-                    "Usa null si no puedes identificar un valor.\n" +
-                    "Respeta el tipo de dato especificado: si se espera un número o una fecha, devuélvelo " +
-                    "correctamente formateado.\n" +
-                    "Asegúrate de que el JSON es válido y parseable.";
+            "The following JSON does not meet the expected structure or validation rules. "
+                    + "Please correct the errors and regenerate only the corrected JSON.\n\n"
+                    + "=== CONTEXT INSTRUCTIONS ===\n"
+                    + "%s\n\n"
+                    + "=== EXPECTED STRUCTURE ===\n"
+                    + "%s\n\n"
+                    + "=== PREVIOUS INVALID RESPONSE ===\n"
+                    + "%s\n\n"
+                    + "=== DETECTED ERRORS ===\n"
+                    + "%s\n\n"
+                    + "Please generate a new version of the JSON that is valid, well-formed, "
+                    + "and strictly follows the defined structure.\n\n"
+                    + "REMEMBER:\n"
+                    + "- Do not include explanations or comments.\n"
+                    + "- Use null if you cannot identify a value.\n"
+                    + "- Respect the specified data type: if a number or date is expected, "
+                    + "return it correctly formatted.\n"
+                    + "- Make sure the JSON is valid and parseable.";
+
     public static final String OPENAI_API_ERROR = "OpenAI API error: ";
-    public static final String OPENAI_API_NO_JSON_ERROR = "No se encontró JSON en la cadena de entrada";
-    public static final String OPENAI_API_SCHEMA_GENERATION_ERROR = "Error generando schema: ";
-    public static final String OPENAI_API_SCHEMA_SERIALIZATION_ERROR = "Error serializando schema: ";
+    public static final String OPENAI_API_NO_JSON_ERROR = "No JSON found in the input string";
+    public static final String OPENAI_API_SCHEMA_GENERATION_ERROR = "Error generating schema: ";
+    public static final String OPENAI_API_SCHEMA_SERIALIZATION_ERROR = "Error serializing schema: ";
 
     public static final String PROPERTIES = "properties";
 }
+

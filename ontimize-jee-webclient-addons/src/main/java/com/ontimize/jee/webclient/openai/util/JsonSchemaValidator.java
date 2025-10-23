@@ -3,6 +3,7 @@ package com.ontimize.jee.webclient.openai.util;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ontimize.jee.webclient.openai.exception.OpenAIClientException;
 import org.everit.json.schema.Schema;
 import org.everit.json.schema.ValidationException;
 import org.everit.json.schema.loader.SchemaLoader;
@@ -44,7 +45,15 @@ public class JsonSchemaValidator {
 
         int open = s.indexOf('{');
         int openArr = s.indexOf('[');
-        int start = (open == -1) ? openArr : (openArr == -1 ? open : Math.min(open, openArr));
+        int start;
+        if (open == -1) {
+            start = openArr;
+        } else if (openArr == -1) {
+            start = open;
+        } else {
+            start = Math.min(open, openArr);
+        }
+
         int end = Math.max(s.lastIndexOf('}'), s.lastIndexOf(']'));
         if (start >= 0 && end > start) {
             String candidate = s.substring(start, end + 1).trim();
@@ -75,9 +84,9 @@ public class JsonSchemaValidator {
 
         } catch (ValidationException ve) {
             String message = "Error de validación JSON: " + String.join("; ", ve.getAllMessages());
-            throw new RuntimeException(message, ve);
+            throw new OpenAIClientException(message, ve);
         } catch (Exception e) {
-            throw new RuntimeException("Error inesperado durante la validación JSON: " + e.getMessage(), e);
+            throw new OpenAIClientException("Error inesperado durante la validación JSON: " + e.getMessage(), e);
         }
     }
 }

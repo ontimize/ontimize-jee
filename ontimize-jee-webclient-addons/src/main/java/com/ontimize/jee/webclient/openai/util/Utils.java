@@ -2,6 +2,7 @@ package com.ontimize.jee.webclient.openai.util;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.victools.jsonschema.generator.*;
+import com.ontimize.jee.webclient.openai.exception.OpenAIClientException;
 import com.sun.istack.NotNull;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Component;
@@ -15,6 +16,10 @@ import static com.ontimize.jee.webclient.openai.naming.OpenAINaming.RETRY_PROMPT
 
 @Component
 public class Utils {
+
+    private Utils() {
+        throw new OpenAIClientException("");
+    }
 
     public static String buildPrompt(String userPrompt, String jsonSchema, String processResult,
             List<String> errors) {
