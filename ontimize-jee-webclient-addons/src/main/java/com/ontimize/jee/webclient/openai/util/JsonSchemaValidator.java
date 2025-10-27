@@ -58,7 +58,9 @@ public class JsonSchemaValidator {
         if (start >= 0 && end > start) {
             String candidate = s.substring(start, end + 1).trim();
             if (candidate.startsWith("{") || candidate.startsWith("[")) {
-                return candidate;
+                candidate = candidate.replaceAll("\"\\$schema\"\\s*:\\s*\"[^\"]*\"\\s*,?", "");
+                candidate = candidate.replaceAll(",\\s*}", "}").replaceAll(",\\s*]", "]");
+                return candidate.trim();
             }
         }
         return null;
