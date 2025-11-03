@@ -8,6 +8,7 @@
 <!-- ### Security 🛡️-->
 
 ## [Unreleased]
+## [5.14.0] - 2025-11-03
 ### Changed
 - **ApplicationContextUtils**: Simplified the getBeanForName method for more streamlined service retrieval.
 - **DefaultDaoExtensionHelper**: Improved property placeholder handling with Java streams for type safety and clarity, addressing SonarQube findings.
@@ -76,7 +77,8 @@
 * **POM**: Sorted pom alphabetically and sorted, extracted version to properties and put all dependencies into dependency manager.
 * **Sonar**: Fix some sonar code smells.
 
-[unreleased]: https://github.com/ontimize/ontimize-jee/compare/5.13.0...HEAD
+[unreleased]: https://github.com/ontimize/ontimize-jee/compare/5.14.0...HEAD
+[5.14.0]: https://github.com/ontimize/ontimize-jee/compare/5.13.0...5.14.0
 [5.13.0]: https://github.com/ontimize/ontimize-jee/compare/5.12.1...5.13.0
 [5.12.1]: https://github.com/ontimize/ontimize-jee/compare/5.12.0...5.12.1
 [5.12.0]: https://github.com/ontimize/ontimize-jee/compare/5.11.0...5.12.0
