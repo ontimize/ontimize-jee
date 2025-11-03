@@ -85,10 +85,10 @@ public class JsonSchemaValidator {
             }
 
         } catch (ValidationException ve) {
-            String message = "Error de validación JSON: " + String.join("; ", ve.getAllMessages());
-            throw new OpenAIClientException(message, ve);
+            String message = "JSON validation error: " + String.join("; ", ve.getAllMessages());
+            throw new RuntimeException(message, ve);
         } catch (Exception e) {
-            throw new OpenAIClientException("Error inesperado durante la validación JSON: " + e.getMessage(), e);
+            throw new RuntimeException("Unexpected error during JSON validation: " + e.getMessage(), e);
         }
     }
 }
