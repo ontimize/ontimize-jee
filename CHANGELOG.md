@@ -8,6 +8,15 @@
 <!-- ### Security 🛡️-->
 
 ## [Unreleased]
+### Changed
+- **ApplicationContextUtils**: Simplified the getBeanForName method for more streamlined service retrieval.
+- **DefaultDaoExtensionHelper**: Improved property placeholder handling with Java streams for type safety and clarity, addressing SonarQube findings.
+- **Log4j2LoggerHelper**: Clarified variable names, added null checks, enhanced type safety, and improved Javadoc documentation.
+- **LogbackLoggerHelper**: Improved Javadoc documentation and suppress false positives on Sonar.
+- **OntimizeJdbcDaoSupport**: Refactored SQL placeholder and property handling, introduced a helper method, corrected key retrieval logic, and improved type safety using Java streams to resolve SonarQube issues.
+- **OntimizeJdbcDaoSupportTest**: Updated mocks to match the modified method signatures.
+- **SharePreferencesBeanDefinitionParser**: Added null check and refactored engine parsing logic for safer and clearer configuration handling.
+- **XMLClientUtilities**: Refactored string concatenation to use StringBuilder for improved readability and performance.
 ## [5.13.0] - 2025-09-11
 ### Added ✔️
 * **OntimizeJdbcDaoSupport**: Created executeSQLStatement() to use DDL statements. #175
