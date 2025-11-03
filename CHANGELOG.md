@@ -8,6 +8,21 @@
 <!-- ### Security 🛡️-->
 
 ## [Unreleased]
+## [5.14.0] - 2025-11-03
+### Added ✔️
+- **OpenAI Client**
+
+    An OpenAI client has been implemented with a method to process images. This method accepts a parameter of type ProcessRequest<T>, which contains the following:
+    - The image file to be processed.
+    - An optional prompt to provide additional instructions (the default behavior is to analyze the image and return it in a specific format).
+    - The number of retries for the request.
+    - The output class type (T) expected as a result.
+    
+    The client is initialized via a constructor that receives an OpenAiClientConfig object. This configuration object includes:
+    - The user's API key.
+    - The model to be used.
+    - The maximum number of tokens allowed per request.
+    - The temperature setting (which controls how creative the responses should be).
 ### Changed
 - **ApplicationContextUtils**: Simplified the getBeanForName method for more streamlined service retrieval.
 - **DefaultDaoExtensionHelper**: Improved property placeholder handling with Java streams for type safety and clarity, addressing SonarQube findings.
@@ -76,7 +91,8 @@
 * **POM**: Sorted pom alphabetically and sorted, extracted version to properties and put all dependencies into dependency manager.
 * **Sonar**: Fix some sonar code smells.
 
-[unreleased]: https://github.com/ontimize/ontimize-jee/compare/5.13.0...HEAD
+[unreleased]: https://github.com/ontimize/ontimize-jee/compare/5.14.0...HEAD
+[5.14.0]: https://github.com/ontimize/ontimize-jee/compare/5.13.0...5.14.0
 [5.13.0]: https://github.com/ontimize/ontimize-jee/compare/5.12.1...5.13.0
 [5.12.1]: https://github.com/ontimize/ontimize-jee/compare/5.12.0...5.12.1
 [5.12.0]: https://github.com/ontimize/ontimize-jee/compare/5.11.0...5.12.0
