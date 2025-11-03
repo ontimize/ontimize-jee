@@ -8,10 +8,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import javax.xml.bind.JAXB;
 
@@ -139,8 +140,17 @@ public class DefaultDaoExtensionHelper implements IDaoExtensionHelper {
                 if (isPlaceHolder != null) {
                     prop.load(isPlaceHolder);
                 }
+
+                Map<String, String> mapProperties = prop.stringPropertyNames()
+                        .stream()
+                        .collect(Collectors.toMap(
+                                Function.identity(),
+                                prop::getProperty
+                        ));
+
                 return new ReplaceTokensFilterReader(new InputStreamReader(is),
-                        new HashMap<String, String>((Map) prop));
+                        mapProperties);
+
             }
         } else {
             return new InputStreamReader(is);

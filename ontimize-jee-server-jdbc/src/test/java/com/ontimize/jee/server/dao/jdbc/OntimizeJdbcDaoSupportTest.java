@@ -122,7 +122,7 @@ class OntimizeJdbcDaoSupportTest {
 
             JdbcTemplate jdbcTemplate = Mockito.mock(JdbcTemplate.class);
             Mockito.doReturn(new AdvancedEntityResultMapImpl(EntityResult.OPERATION_SUCCESSFUL, EntityResult.DATA_RESULT)).when(jdbcTemplate).query(Mockito.any(PreparedStatementCreator.class), Mockito.any(), Mockito.any());
-            Mockito.doReturn(new EntityResultMapImpl()).when(jdbcTemplate).query(Mockito.any(String.class), (Object[]) Mockito.any(), Mockito.any(ResultSetExtractor.class));
+            Mockito.doReturn(new EntityResultMapImpl()).when(jdbcTemplate).query(Mockito.any(String.class), Mockito.any(ResultSetExtractor.class), (Object[]) Mockito.any());
             ontimizeJdbcDaoSupport.setJdbcTemplate(jdbcTemplate);
             ontimizeJdbcDaoSupport.setStatementHandler(new DefaultSQLStatementHandler());
             ReflectionTestUtils.setField(ontimizeJdbcDaoSupport, "compiled", true);

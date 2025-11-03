@@ -230,6 +230,13 @@ public class LogbackLoggerHelper implements ILoggerHelper {
         return null;
     }
 
+    /**
+     * @param fileName The name of the log file to retrieve.
+     * @return InputStream zipped with the content of the log file. This stream must be closed by the caller.
+     * @throws Exception
+     */
+    // Suppress resource leak warning because the PipedInputStream is returned to the caller.
+    @SuppressWarnings("java:S2095")
     public InputStream getLogFileContent(String fileName) throws Exception {
         Path folder = this.getLogFolder();
         final Path file = folder.resolve(fileName);
