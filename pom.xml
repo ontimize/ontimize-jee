@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.ontimize.jee</groupId>
@@ -119,7 +119,7 @@
         <module>ontimize-jee-server-jdbc</module>
         <module>ontimize-jee-server-keycloak</module>
         <module>ontimize-jee-webclient-addons</module>
-<!--        <module>ontimize-jee-jacoco</module>-->
+        <!--        <module>ontimize-jee-jacoco</module>-->
     </modules>
 
     <properties>
@@ -203,6 +203,8 @@
         <spring.version>5.3.18</spring.version>
         <xmlbeans.version>2.4.0</xmlbeans.version>
         <zip4j.version>1.3.2</zip4j.version>
+        <everit-json-schema.version>1.14.6</everit-json-schema.version>
+        <victools-jsonschema-generator.version>4.37.0</victools-jsonschema-generator.version>
 
         <!-- SONARCloud configuration -->
         <sonar.organization>ontimize</sonar.organization>
@@ -603,6 +605,16 @@
                 <artifactId>hsqldb</artifactId>
                 <version>${hsqldb.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.github.erosb</groupId>
+                <artifactId>everit-json-schema</artifactId>
+                <version>${everit-json-schema.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.victools</groupId>
+                <artifactId>jsonschema-generator</artifactId>
+                <version>${victools-jsonschema-generator.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -756,14 +768,14 @@
                         <artifactId>maven-javadoc-plugin</artifactId>
                     </plugin>
                     <plugin>
-                      <groupId>org.sonatype.central</groupId>
-                      <artifactId>central-publishing-maven-plugin</artifactId>
-                      <version>${central-publishing-maven-plugin.version}</version>
-                      <extensions>true</extensions>
-                      <configuration>
-                         <publishingServerId>central</publishingServerId>
-                         <autoPublish>true</autoPublish>
-                      </configuration>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <version>${central-publishing-maven-plugin.version}</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <publishingServerId>central</publishingServerId>
+                            <autoPublish>true</autoPublish>
+                        </configuration>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
